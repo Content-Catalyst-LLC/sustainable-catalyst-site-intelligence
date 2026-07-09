@@ -18,7 +18,7 @@
       client_time: new Date().toISOString(),
       metadata: {
         href: params && params.href ? params.href : '',
-        version: cfg.version || '0.8.0'
+        version: cfg.version || '0.8.1'
       }
     }, params || {});
 
@@ -100,20 +100,30 @@
     });
   }
 
+  function cleanErrorMessage(value, fallback) {
+    let msg = String(value || '').trim();
+    if (!msg) return fallback;
+    if (/<!doctype|<html|cloudflare|bad gateway|cf-wrapper/i.test(msg)) {
+      return 'Site Intelligence backend or site proxy returned a gateway error. The raw HTML error was suppressed; test the direct Render endpoint and redeploy if needed.';
+    }
+    msg = msg.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    return msg.length > 280 ? msg.slice(0, 277) + '…' : msg;
+  }
+
   function errorMessageFromResponse(data, fallback) {
     if (!data) return fallback;
-    if (data.message) return data.message;
+    if (data.message) return cleanErrorMessage(data.message, fallback);
     if (data.detail) {
-      if (typeof data.detail === 'string') return data.detail;
+      if (typeof data.detail === 'string') return cleanErrorMessage(data.detail, fallback);
       if (data.detail.message) {
         let msg = data.detail.message;
         if (data.detail.error_type || data.detail.error_message) {
           msg += ' (' + [data.detail.error_type, data.detail.error_message].filter(Boolean).join(': ') + ')';
         }
-        return msg;
+        return cleanErrorMessage(msg, fallback);
       }
     }
-    if (data.code && data.message) return data.code + ': ' + data.message;
+    if (data.code && data.message) return cleanErrorMessage(data.code + ': ' + data.message, fallback);
     return fallback;
   }
 

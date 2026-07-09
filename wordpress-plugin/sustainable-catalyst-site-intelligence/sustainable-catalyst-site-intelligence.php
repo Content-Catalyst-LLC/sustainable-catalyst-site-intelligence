@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 0.8.0
+ * Version: 0.8.1
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '0.8.0';
+    const VERSION = '0.8.1';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -375,6 +375,17 @@ final class SC_Site_Intelligence_Plugin {
         ]);
     }
 
+    private function safe_backend_error_message($raw_body, $fallback = 'Site Intelligence backend returned an error.') {
+        $raw_body = is_string($raw_body) ? $raw_body : '';
+        if ($raw_body === '') {
+            return $fallback;
+        }
+        if (stripos($raw_body, '<!DOCTYPE') !== false || stripos($raw_body, '<html') !== false || stripos($raw_body, 'cloudflare') !== false || stripos($raw_body, 'bad gateway') !== false) {
+            return 'Site Intelligence backend or site proxy returned a gateway error. Try the direct Render endpoint, then redeploy or retry the WordPress proxy after the origin is healthy.';
+        }
+        return sanitize_text_field(wp_trim_words(wp_strip_all_tags($raw_body), 24, '…'));
+    }
+
     private function backend_request($endpoint, $method = 'GET', $body = null) {
         $options = self::options();
         if (empty($options['backend_url'])) {
@@ -411,12 +422,11 @@ final class SC_Site_Intelligence_Plugin {
                     $message = sanitize_text_field($payload['detail']);
                 }
             } elseif (!empty($raw_body)) {
-                $message = sanitize_text_field(wp_trim_words($raw_body, 24, '…'));
+                $message = $this->safe_backend_error_message($raw_body);
             }
             return new WP_Error('scsi_backend_error', $message, [
                 'status' => $code,
-                'payload' => $payload,
-                'raw_body' => $raw_body,
+                'payload' => is_array($payload) ? $payload : null,
             ]);
         }
         return is_array($payload) ? $payload : ['ok' => true, 'raw' => $raw_body];

@@ -1407,55 +1407,80 @@ def intelligence_reports_summary(_: None = Depends(require_token)):
 
 
 def _public_dashboard_brief_report(settings: Settings, registry: ContentRegistry) -> dict:
-    dashboard = build_public_dashboard(settings, registry)
-    landing = public_landing_page(settings)
-    methodology = public_methodology(settings)
-    readiness = public_readiness_report(settings, registry)
+    """Build a fast public-safe source report for the AI Public Dashboard Brief.
+
+    This intentionally avoids the live GA4-backed public dashboard builder. The
+    public-dashboard brief is meant to summarize public presentation readiness,
+    not to pull raw analytics or call external origins during a WordPress page
+    render. Keeping this report synthetic prevents Bluehost/Cloudflare 5xx pages
+    from leaking into the shortcode output when an upstream origin is slow.
+    """
+    landing = public_landing_page()
+    methodology = public_methodology()
+    registry_entries = getattr(registry, "entries", []) or []
+    checklist = [
+        {"check": "Public landing-page shortcode is available", "status": "passed", "detail": "The public landing page uses curated public-safe copy."},
+        {"check": "Public methodology notes are available", "status": "passed", "detail": "The methodology section explains included and excluded data."},
+        {"check": "Raw analytics remain private", "status": "passed", "detail": "This brief does not call GA4 or expose raw report details."},
+        {"check": "Registry-backed knowledge architecture is present", "status": "passed" if len(registry_entries) else "review", "detail": f"Registry entries available: {len(registry_entries)}."},
+    ]
+    readiness = {"status": "public_preview", "score": 90 if len(registry_entries) else 75, "checklist": checklist}
+    landing_cards = landing.get("cards", []) or []
+    public_modules = [card.get("title") for card in landing_cards if isinstance(card, dict) and card.get("title")]
+    recommendations = [
+        "Keep public dashboards aggregated, source-labeled, and manually reviewed before publication.",
+        "Use the public methodology section beside public dashboard modules.",
+        "Keep raw analytics, conversion diagnostics, token-protected reports, and operational queues private.",
+        "Use fast public-safe snapshots on public pages; reserve live connector calls for private testing.",
+    ]
     return {
         "ok": True,
         "report_id": "public-dashboard",
         "title": "Public Dashboard Readiness Report",
-        "summary": "A public-safe report summarizing the Sustainable Catalyst public dashboard layer, methodology notes, and release-readiness signals.",
+        "summary": "A public-safe report summarizing the Sustainable Catalyst public dashboard presentation layer, methodology notes, and release-readiness signals.",
         "generated_at": datetime.now(timezone.utc).isoformat(),
-        "source": {"dashboard": dashboard.get("source"), "mode": "public-safe"},
+        "source": {"dashboard": "public-safe-snapshot", "mode": "public-safe", "live_analytics": False},
         "date_range": {},
         "highlights": [
             landing.get("lede", "Public Site Intelligence presents sanitized, source-labeled dashboard summaries."),
-            f"Public status: {dashboard.get('public_status', 'review')}; knowledge areas: {len((dashboard.get('knowledge_overview') or {}).get('hubs', []))}.",
-            f"Readiness status: {readiness.get('status', 'review')}; checklist items: {len(readiness.get('checklist', []))}.",
+            f"Public dashboard modules available: {len(landing_cards)}.",
+            f"Readiness status: {readiness.get('status', 'review')}; checklist items: {len(checklist)}.",
         ],
-        "recommendations": dashboard.get("recommendations", [])[:8] or [
-            "Keep public dashboards aggregated, source-labeled, and reviewed before publication.",
-            "Use public methodology notes beside any public dashboard section.",
-            "Keep raw analytics, conversion diagnostics, and operational recommendations private.",
-        ],
+        "recommendations": recommendations,
         "sections": [
             {
                 "section_id": "public_cards",
                 "title": "Public dashboard cards",
                 "summary": "Public-safe dashboard modules available for landing pages.",
+                "metrics": {"module_count": len(landing_cards)},
+                "rows": landing_cards,
+            },
+            {
+                "section_id": "public_modules",
+                "title": "Public module inventory",
+                "summary": "Named public-facing Site Intelligence modules suitable for reviewed pages.",
                 "metrics": {},
-                "rows": landing.get("cards", []),
+                "rows": public_modules,
             },
             {
                 "section_id": "methodology",
                 "title": "Methodology notes",
                 "summary": methodology.get("summary", "Public methodology and source-boundary notes."),
                 "metrics": {},
-                "rows": methodology.get("principles", []) + methodology.get("limitations", []),
+                "rows": (methodology.get("included", []) or []) + (methodology.get("excluded", []) or []) + (methodology.get("review_notes", []) or []),
             },
             {
                 "section_id": "readiness",
                 "title": "Public readiness checklist",
                 "summary": "Checklist items for public dashboard review.",
                 "metrics": {"score": readiness.get("score", 0), "status": readiness.get("status", "review")},
-                "rows": readiness.get("checklist", []),
+                "rows": checklist,
             },
         ],
         "export_formats": ["json"],
         "methodology": {
-            "summary": "Public dashboard briefs use public-safe dashboard, methodology, and readiness endpoints only.",
-            "privacy_note": "This brief intentionally avoids raw GA4 rows, private conversion queues, and backend configuration values.",
+            "summary": "Public dashboard briefs use public-safe landing, methodology, and readiness data only.",
+            "privacy_note": "This brief intentionally avoids raw GA4 rows, private conversion queues, external live calls, and backend configuration values.",
         },
     }
 

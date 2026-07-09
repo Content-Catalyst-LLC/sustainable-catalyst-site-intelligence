@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="SC_SI_", env_file=".env", extra="ignore")
 
     app_name: str = "Sustainable Catalyst Site Intelligence"
-    version: str = "0.8.0"
+    version: str = "0.8.1"
     environment: str = "development"
     demo_mode: bool = True
     api_token: str = "dev-token-change-me"
@@ -76,7 +76,7 @@ class Settings(BaseSettings):
     gbif_base_url: str = "https://api.gbif.org"
 
 
-    # AI-Assisted Intelligence Briefs v0.8.0. Disabled by default; deterministic
+    # AI-Assisted Intelligence Briefs v0.8.1. Disabled by default; deterministic
     # fallback briefs remain available without external model calls.
     ai_provider: str = "disabled"
     gemini_api_key: str = ""
