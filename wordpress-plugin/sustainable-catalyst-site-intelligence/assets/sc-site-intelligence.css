@@ -1,0 +1,396 @@
+/* Sustainable Catalyst Site Intelligence */
+.scsi-card {
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  border-radius: 18px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  background: #fffdf8;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+.scsi-eyebrow {
+  margin: 0 0 .5rem;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-size: .78rem;
+  font-weight: 700;
+  color: #b00000;
+}
+.scsi-card h2 {
+  margin: 0 0 .75rem;
+}
+.scsi-muted {
+  color: #555;
+}
+.scsi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: .9rem;
+  margin: 1rem 0;
+}
+.scsi-stat {
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 14px;
+  padding: 1rem;
+  background: #fff;
+}
+.scsi-stat strong {
+  display: block;
+  font-size: 1.35rem;
+}
+.scsi-list {
+  margin: 1rem 0 0;
+  padding-left: 1.25rem;
+}
+.scsi-page-row {
+  border-top: 1px solid rgba(0,0,0,.08);
+  padding: .75rem 0;
+}
+.scsi-badge {
+  display: inline-block;
+  padding: .16rem .55rem;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  font-size: .75rem;
+  margin-right: .35rem;
+}
+.scsi-badge-explicit { background: #165b32; }
+.scsi-badge-inferred { background: #7a4b00; }
+.scsi-badge-unmapped { background: #b00000; }
+.scsi-badge-excluded { background: #555; }
+.scsi-badge-soft { background: #f4efe7; color: #111; border: 1px solid rgba(0,0,0,.12); }
+.scsi-unmapped-row code {
+  display: inline-block;
+  margin: .2rem 0;
+  padding: .15rem .35rem;
+  border-radius: 6px;
+  background: rgba(0,0,0,.05);
+  font-size: .85rem;
+}
+.scsi-unmapped-row details {
+  margin-top: .45rem;
+}
+.scsi-unmapped-row pre {
+  white-space: pre-wrap;
+  overflow-x: auto;
+  background: #111;
+  color: #fff;
+  padding: .75rem;
+  border-radius: 10px;
+  font-size: .78rem;
+}
+.scsi-page-row small {
+  color: #555;
+}
+
+
+.scsi-event-row small,
+.scsi-opportunity-row small {
+  display: block;
+  margin-top: 0.35rem;
+}
+
+.scsi-badge-active,
+.scsi-badge-ready {
+  border-color: rgba(20, 110, 55, 0.26);
+  background: rgba(20, 110, 55, 0.08);
+}
+
+.scsi-badge-missing,
+.scsi-badge-not_ready {
+  border-color: rgba(180, 0, 0, 0.22);
+  background: rgba(180, 0, 0, 0.08);
+}
+
+.scsi-badge-low_volume,
+.scsi-badge-partial {
+  border-color: rgba(160, 110, 0, 0.24);
+  background: rgba(160, 110, 0, 0.08);
+}
+
+.scsi-external-row small,
+.scsi-indicator-row small,
+.scsi-layer-row small,
+.scsi-emissions-row small {
+  display: block;
+  margin-top: 0.35rem;
+}
+
+.scsi-layer-row code {
+  display: inline-block;
+  margin: .25rem 0;
+  padding: .15rem .35rem;
+  border-radius: 6px;
+  background: rgba(0,0,0,.05);
+  font-size: .82rem;
+}
+
+.scsi-badge-healthy {
+  background: rgba(20, 110, 55, 0.10);
+  color: #123d22;
+  border: 1px solid rgba(20, 110, 55, 0.22);
+}
+
+.scsi-badge-fallback,
+.scsi-badge-unknown {
+  background: rgba(160, 110, 0, 0.10);
+  color: #4a3300;
+  border: 1px solid rgba(160, 110, 0, 0.22);
+}
+
+.scsi-cache-row code {
+  display: inline-block;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  margin: .25rem 0;
+  padding: .15rem .35rem;
+  border-radius: 6px;
+  background: rgba(0,0,0,.05);
+  font-size: .78rem;
+}
+
+.scsi-badge-stale {
+  background: rgba(160, 110, 0, 0.10);
+  color: #4a3300;
+  border: 1px solid rgba(160, 110, 0, 0.22);
+}
+
+.scsi-badge-stable,
+.scsi-badge-public_candidate {
+  background: rgba(20, 110, 55, 0.10);
+  color: #123d22;
+  border: 1px solid rgba(20, 110, 55, 0.22);
+}
+
+.scsi-metadata-row,
+.scsi-internal-link-row,
+.scsi-seo-rec-row {
+  border-left: 4px solid rgba(120, 0, 0, 0.28);
+}
+
+.scsi-anchor-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.45rem 0;
+}
+
+.scsi-indexing-row,
+.scsi-sitemap-row,
+.scsi-404-row {
+  border-left: 4px solid rgba(150, 0, 0, 0.3);
+}
+
+.scsi-404-row {
+  border-left-color: rgba(180, 0, 0, 0.55);
+}
+
+.scsi-badge-covered {
+  background: rgba(20, 110, 55, 0.10);
+  color: #123d22;
+  border: 1px solid rgba(20, 110, 55, 0.22);
+}
+
+.scsi-badge-search_visible_unmapped,
+.scsi-badge-traffic_unmapped,
+.scsi-badge-sitemap_unmapped,
+.scsi-badge-registry_not_in_sitemap,
+.scsi-badge-diagnostic {
+  background: rgba(180, 0, 0, 0.08);
+  color: #5a0000;
+  border: 1px solid rgba(180, 0, 0, 0.22);
+}
+
+.scsi-badge-registry_inactive,
+.scsi-badge-partial {
+  background: rgba(160, 110, 0, 0.10);
+  color: #4a3300;
+  border: 1px solid rgba(160, 110, 0, 0.22);
+}
+
+/* v0.4.0 publishing intelligence */
+.scsi-content-strategy,
+.scsi-topic-momentum,
+.scsi-update-priorities,
+.scsi-publishing-opportunities {
+  border-top: 4px solid #9b111e;
+}
+.scsi-publishing-row,
+.scsi-article-map-row,
+.scsi-topic-row,
+.scsi-update-row,
+.scsi-newsletter-row,
+.scsi-promotion-row {
+  background: rgba(155, 17, 30, 0.035);
+}
+.scsi-badge-rising { background: #e8f5e9; color: #1b5e20; }
+.scsi-badge-decay { background: #fff3e0; color: #8a4b08; }
+.scsi-badge-search_opportunity { background: #e3f2fd; color: #0d47a1; }
+.scsi-badge-mapping_review { background: #f3e5f5; color: #4a148c; }
+.scsi-badge-maintain { background: #f5f5f5; color: #333; }
+
+/* v0.5.0 public dashboard framework */
+.scsi-public-dashboard,
+.scsi-public-knowledge-overview,
+.scsi-public-climate-energy,
+.scsi-public-methodology,
+.scsi-public-readiness {
+  border-top: 4px solid #111;
+  background: #fffdf8;
+}
+.scsi-public-module-row,
+.scsi-public-area-row,
+.scsi-public-surface-row,
+.scsi-public-source-row,
+.scsi-public-check-row {
+  background: rgba(0, 0, 0, 0.025);
+}
+.scsi-badge-public_ready,
+.scsi-badge-passed {
+  background: rgba(20, 110, 55, 0.10);
+  color: #123d22;
+  border: 1px solid rgba(20, 110, 55, 0.22);
+}
+.scsi-badge-internal_review,
+.scsi-badge-review {
+  background: rgba(160, 110, 0, 0.10);
+  color: #4a3300;
+  border: 1px solid rgba(160, 110, 0, 0.22);
+}
+.scsi-badge-not_public_ready {
+  background: rgba(180, 0, 0, 0.08);
+  color: #5a0000;
+  border: 1px solid rgba(180, 0, 0, 0.22);
+}
+
+/* v0.5.2 public dashboard visual polish */
+.scsi-public-landing,
+.scsi-public-dashboard,
+.scsi-public-knowledge-overview,
+.scsi-public-climate-energy,
+.scsi-public-methodology {
+  border-top: 5px solid #9b111e;
+  background: linear-gradient(180deg, #fffdf8 0%, #fff8ef 100%);
+}
+
+.scsi-public-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.25rem;
+  align-items: start;
+  padding: 1.15rem;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,.08);
+  margin: 1rem 0;
+}
+
+.scsi-public-hero h3 {
+  margin: 0 0 .45rem;
+  font-size: clamp(1.35rem, 2vw, 2rem);
+}
+
+.scsi-public-hero p:last-child {
+  margin-bottom: 0;
+}
+
+.scsi-public-status-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  justify-content: flex-end;
+}
+
+.scsi-public-card-grid .scsi-stat,
+.scsi-public-polish-card {
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  justify-content: flex-start;
+}
+
+.scsi-public-label {
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-size: .72rem;
+  font-weight: 700;
+  color: #9b111e;
+}
+
+.scsi-public-polish-card small,
+.scsi-public-section-row small,
+.scsi-public-method-note {
+  display: block;
+  color: #555;
+  margin-top: .35rem;
+  line-height: 1.5;
+}
+
+.scsi-public-section-row code {
+  display: inline-block;
+  margin: .3rem 0;
+  padding: .18rem .42rem;
+  border-radius: 8px;
+  background: rgba(0,0,0,.05);
+  overflow-wrap: anywhere;
+}
+
+.scsi-public-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  margin: 1.25rem 0 .75rem;
+}
+
+.scsi-public-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: .75rem 1rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  background: #9b111e;
+  color: #fff;
+  border: 1px solid #9b111e;
+}
+
+.scsi-public-cta:hover,
+.scsi-public-cta:focus {
+  background: #000;
+  border-color: #000;
+  color: #fff;
+}
+
+.scsi-public-notes {
+  padding: 1rem 1.2rem;
+  border-radius: 14px;
+  background: rgba(155,17,30,.06);
+  border: 1px solid rgba(155,17,30,.14);
+}
+
+.scsi-badge-sanitized,
+.scsi-badge-public_safe,
+.scsi-badge-enabled,
+.scsi-badge-public_ready {
+  background: rgba(20, 110, 55, 0.10);
+  color: #123d22;
+  border: 1px solid rgba(20, 110, 55, 0.22);
+}
+
+.scsi-badge-review,
+.scsi-badge-public_preview {
+  background: rgba(160, 110, 0, 0.10);
+  color: #4a3300;
+  border: 1px solid rgba(160, 110, 0, 0.22);
+}
+
+@media (max-width: 720px) {
+  .scsi-public-hero {
+    grid-template-columns: 1fr;
+  }
+  .scsi-public-status-stack {
+    justify-content: flex-start;
+  }
+}

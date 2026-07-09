@@ -1,0 +1,1285 @@
+from __future__ import annotations
+
+from datetime import datetime, timezone
+from typing import Optional
+
+from fastapi import Depends, FastAPI, Header, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
+
+from .config import Settings, get_settings
+from .ga4_client import GA4Client, get_ga4_client
+from .metrics import build_page_metrics, dashboard_totals, hub_summary, mapping_coverage, unmapped_suggestions
+from .events import event_diagnostics, event_setup_recommendations, page_opportunities
+from .models import CollectedEvent, DashboardResponse, EventAck
+from .connectors.external_data import ExternalDataHub, SAMPLE_POWER_DATA, SAMPLE_GIBS_LAYERS, SAMPLE_TRACE, _power_indicators, cache_status, clear_cache
+from .connectors.advanced_external import AdvancedExternalDataHub
+from .recommendations import site_recommendations
+from .registry import ContentRegistry
+from .search_console import SearchConsoleClient
+from .seo_intelligence import internal_link_review, metadata_review, seo_recommendations
+from .indexing_intelligence import (
+    SitemapFetcher,
+    four_oh_four_report,
+    indexing_intelligence,
+    indexing_recommendations,
+    orphan_candidates,
+    sitemap_report,
+)
+from .publishing_intelligence import publishing_intelligence, topic_momentum_report
+from .public_dashboard import build_public_dashboard, public_landing_page, public_methodology, public_readiness_report
+
+
+def require_token(
+    settings: Settings = Depends(get_settings),
+    x_sc_intelligence_token: Optional[str] = Header(default=None),
+):
+    if settings.environment == "production" and settings.api_token:
+        if x_sc_intelligence_token != settings.api_token:
+            raise HTTPException(status_code=401, detail="Invalid or missing Site Intelligence API token.")
+
+
+def get_registry(settings: Settings = Depends(get_settings)) -> ContentRegistry:
+    return ContentRegistry(settings.registry_path)
+
+
+settings = get_settings()
+app = FastAPI(title=settings.app_name, version=settings.version)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=settings.cors_origin_list,
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["*"],
+)
+
+
+@app.get("/")
+def root(settings: Settings = Depends(get_settings)):
+    return {
+        "ok": True,
+        "name": settings.app_name,
+        "version": settings.version,
+        "docs": "/docs",
+        "health": "/health",
+    }
+
+
+@app.get("/health")
+def health(settings: Settings = Depends(get_settings), ga4: GA4Client = Depends(get_ga4_client)):
+    return {
+        "ok": True,
+        "service": settings.app_name,
+        "version": settings.version,
+        "environment": settings.environment,
+        "demo_mode": settings.demo_mode,
+        "ga4_enabled": ga4.enabled,
+        "time": datetime.now(timezone.utc).isoformat(),
+    }
+
+
+@app.get("/diagnostics/ga4")
+def ga4_diagnostics(ga4: GA4Client = Depends(get_ga4_client), _: None = Depends(require_token)):
+    return {"ok": True, "ga4": ga4.diagnostics()}
+
+
+@app.get("/registry")
+def registry(registry: ContentRegistry = Depends(get_registry), _: None = Depends(require_token)):
+    return registry.registry.model_dump()
+
+
+@app.get("/analytics/pages")
+def analytics_pages(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("today"),
+    ga4: GA4Client = Depends(get_ga4_client),
+    _: None = Depends(require_token),
+):
+    return {
+        "ok": True,
+        "source": "ga4" if ga4.enabled else "demo",
+        "rows": [row.model_dump() for row in ga4.page_report(start_date, end_date)],
+    }
+
+
+@app.get("/analytics/events")
+def analytics_events(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("today"),
+    ga4: GA4Client = Depends(get_ga4_client),
+    _: None = Depends(require_token),
+):
+    return {
+        "ok": True,
+        "source": "ga4" if ga4.enabled else "demo",
+        "rows": [row.model_dump() for row in ga4.event_report(start_date, end_date)],
+    }
+
+
+@app.get("/intelligence/dashboard", response_model=DashboardResponse)
+def intelligence_dashboard(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("today"),
+    ga4: GA4Client = Depends(get_ga4_client),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        page_rows = ga4.page_report(start_date, end_date)
+        event_rows = ga4.event_report(start_date, end_date)
+        metrics = build_page_metrics(page_rows, event_rows, registry)
+    except Exception as exc:  # noqa: BLE001 - return a useful setup error to WordPress instead of a plain 500.
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "GA4 report request failed.",
+                "error_type": exc.__class__.__name__,
+                "error_message": str(exc),
+                "hint": "Check SC_SI_GA4_PROPERTY_ID, service account Viewer access, Google Analytics Data API activation, and SC_SI_GOOGLE_APPLICATION_CREDENTIALS_JSON.",
+            },
+        ) from exc
+    return DashboardResponse(
+        generated_at=datetime.now(timezone.utc).isoformat(),
+        source="ga4" if ga4.enabled else "demo",
+        date_range={"start_date": start_date, "end_date": end_date},
+        totals=dashboard_totals(metrics),
+        top_pages=metrics[:25],
+        hub_summary=hub_summary(metrics),
+        recommendations=site_recommendations(metrics) + event_setup_recommendations(event_diagnostics(event_rows, metrics)),
+        registry_count=registry.count(),
+        unmapped_pages=unmapped_suggestions(metrics, registry, limit=12),
+        mapping_coverage=mapping_coverage(metrics),
+        event_diagnostics=event_diagnostics(event_rows, metrics),
+        conversion_readiness=event_diagnostics(event_rows, metrics).get("readiness", {}),
+    )
+
+
+@app.get("/intelligence/page")
+def intelligence_page(
+    path: str = Query(...),
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("today"),
+    ga4: GA4Client = Depends(get_ga4_client),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        page_rows = ga4.page_report(start_date, end_date)
+        event_rows = ga4.event_report(start_date, end_date)
+        metrics = build_page_metrics(page_rows, event_rows, registry)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "GA4 page request failed.",
+                "error_type": exc.__class__.__name__,
+                "error_message": str(exc),
+                "hint": "Check GA4 credentials, property ID, and service account access.",
+            },
+        ) from exc
+    normalized = ContentRegistry._norm(path)
+    for metric in metrics:
+        if ContentRegistry._norm(metric.path) == normalized:
+            return {"ok": True, "source": "ga4" if ga4.enabled else "demo", "page": metric.model_dump()}
+    item = registry.find(path)
+    return {
+        "ok": True,
+        "source": "ga4" if ga4.enabled else "demo",
+        "page": None,
+        "registry_match": item.model_dump() if item else None,
+        "message": "No GA4 row was returned for this path in the selected date range.",
+    }
+
+
+@app.get("/intelligence/unmapped")
+def intelligence_unmapped(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("today"),
+    limit: int = Query(25, ge=1, le=100),
+    ga4: GA4Client = Depends(get_ga4_client),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        page_rows = ga4.page_report(start_date, end_date)
+        event_rows = ga4.event_report(start_date, end_date)
+        metrics = build_page_metrics(page_rows, event_rows, registry)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "GA4 unmapped-pages request failed.",
+                "error_type": exc.__class__.__name__,
+                "error_message": str(exc),
+                "hint": "Check GA4 credentials, property ID, and service account access.",
+            },
+        ) from exc
+    return {
+        "ok": True,
+        "source": "ga4" if ga4.enabled else "demo",
+        "date_range": {"start_date": start_date, "end_date": end_date},
+        "mapping_coverage": mapping_coverage(metrics),
+        "suggestions": [item.model_dump() for item in unmapped_suggestions(metrics, registry, limit=limit)],
+    }
+
+
+@app.get("/registry/resolve")
+def registry_resolve(
+    path: str = Query(...),
+    title: str = Query(""),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    match = registry.resolve(path, title)
+    return {
+        "ok": True,
+        "path": ContentRegistry._norm(path),
+        "status": match.status,
+        "confidence": match.confidence,
+        "reason": match.reason,
+        "item": match.item.model_dump() if match.item else None,
+    }
+
+
+@app.get("/public/landing-page")
+def public_landing_page_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public Site Intelligence dashboards are disabled.")
+    return public_landing_page()
+
+@app.get("/public/status")
+def public_status(settings: Settings = Depends(get_settings)):
+    return {
+        "ok": True,
+        "enabled": settings.public_dashboards_enabled,
+        "mode": settings.public_default_mode,
+        "version": settings.version,
+        "safe_output": True,
+        "exposes_raw_ga4": False,
+        "exposes_private_strategy": False,
+    }
+
+
+@app.get("/public/methodology")
+def public_dashboard_methodology():
+    return public_methodology()
+
+
+@app.get("/public/dashboard")
+def public_dashboard(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("today"),
+    settings: Settings = Depends(get_settings),
+    ga4: GA4Client = Depends(get_ga4_client),
+    registry: ContentRegistry = Depends(get_registry),
+):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public Site Intelligence dashboards are disabled.")
+    try:
+        return build_public_dashboard(ga4, registry, start_date=start_date, end_date=end_date)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "Public dashboard request failed.",
+                "error_type": exc.__class__.__name__,
+                "error_message": str(exc),
+                "hint": "Check GA4/demo mode, registry path, and public dashboard settings.",
+            },
+        ) from exc
+
+
+@app.get("/public/knowledge-overview")
+def public_knowledge_overview(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("today"),
+    ga4: GA4Client = Depends(get_ga4_client),
+    registry: ContentRegistry = Depends(get_registry),
+):
+    report = build_public_dashboard(ga4, registry, start_date=start_date, end_date=end_date)
+    return {
+        "ok": True,
+        "generated_at": report.get("generated_at"),
+        "source": report.get("source"),
+        "summary": report.get("summary", {}),
+        "knowledge_areas": report.get("knowledge_areas", []),
+        "featured_surfaces": report.get("featured_surfaces", []),
+        "methodology": report.get("methodology", {}),
+    }
+
+
+@app.get("/public/climate-energy-summary")
+def public_climate_energy_summary(
+    latitude: Optional[float] = Query(default=None),
+    longitude: Optional[float] = Query(default=None),
+    country: Optional[str] = Query(default=None),
+    start: str = Query("20260101"),
+    end: str = Query("20260105"),
+    year: int = Query(2024, ge=2021, le=2100),
+    live: bool = Query(False),
+    settings: Settings = Depends(get_settings),
+):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public Site Intelligence dashboards are disabled.")
+
+    def _dump_items(items):
+        dumped = []
+        for item in (items or [])[:6]:
+            if hasattr(item, "model_dump"):
+                dumped.append(item.model_dump())
+            elif isinstance(item, dict):
+                dumped.append(item)
+            else:
+                dumped.append({"value": str(item)})
+        return dumped
+
+    # Public pages should not block on slow upstream APIs. By default, return a
+    # stable source-labeled snapshot using the pilot fallback dataset. Editors can
+    # test live connector output by calling ?live=true or shortcode live="true".
+    if not live:
+        lat = settings.external_default_latitude if latitude is None else latitude
+        lon = settings.external_default_longitude if longitude is None else longitude
+        country_code = country or settings.external_default_country
+        power = {**SAMPLE_POWER_DATA, "live": False, "source": "public-stable-snapshot"}
+        indicators = _power_indicators(power)
+        return {
+            "ok": True,
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "source": "public-stable-snapshot",
+            "location": {"latitude": lat, "longitude": lon, "country": country_code, "start": start, "end": end, "emissions_year": year},
+            "stability": {
+                "status": "stable",
+                "public_status": "public_ready",
+                "live_sources": 0,
+                "fallback_sources": 3,
+                "cached_sources": 0,
+                "stale_sources": 0,
+                "message": "Public snapshot mode is using stable fallback data so the page loads quickly.",
+            },
+            "indicators": _dump_items(indicators),
+            "earth_observation_layers": _dump_items(SAMPLE_GIBS_LAYERS),
+            "emissions_summary": {
+                **SAMPLE_TRACE,
+                "live": False,
+                "year": year,
+                "country": country_code,
+                "top_sectors": SAMPLE_TRACE.get("sectors", [])[:6],
+                "message": "Public snapshot mode; live connector checks remain available on private/internal dashboards.",
+                "cache": {"status": "public_snapshot"},
+            },
+            "linked_article_maps": ["Climate Change", "Energy Systems", "Environmental Science", "Earth Science", "Urban Resilience"],
+            "linked_workbench_tools": ["energy-systems-calculator", "climate-change-scenario-tool", "environmental-monitoring-qaqc-tool"],
+            "notes": [
+                "This public section is optimized for reliability and uses source-labeled fallback data by default.",
+                "Use private/internal dashboards for live connector diagnostics, cache status, and force-refresh checks.",
+            ],
+            "methodology": {
+                "public_status": "public_ready",
+                "summary": "Public climate and energy summaries are stable, source-labeled, and intended as interpretive signals rather than professional advice.",
+                "review_note": "Live external API calls can be tested with live=true, but public pages should prefer stable snapshot mode.",
+            },
+        }
+
+    hub = ExternalDataHub(settings)
+    try:
+        dashboard = hub.climate_energy_dashboard(
+            latitude=latitude,
+            longitude=longitude,
+            country=country,
+            start=start,
+            end=end,
+            year=year,
+            force_refresh=False,
+        )
+        return {
+            "ok": True,
+            "generated_at": dashboard.get("generated_at"),
+            "source": dashboard.get("source"),
+            "location": dashboard.get("location", {}),
+            "stability": dashboard.get("stability", {}),
+            "indicators": _dump_items(dashboard.get("indicators", [])),
+            "earth_observation_layers": _dump_items(dashboard.get("earth_observation_layers", [])),
+            "emissions_summary": dashboard.get("emissions_summary", {}),
+            "linked_article_maps": dashboard.get("linked_article_maps", []),
+            "linked_workbench_tools": dashboard.get("linked_workbench_tools", []),
+            "notes": dashboard.get("notes", []),
+            "methodology": dashboard.get("methodology", {}),
+        }
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "Public climate and energy live summary failed.",
+                "error_type": exc.__class__.__name__,
+                "error_message": str(exc),
+                "hint": "Use default snapshot mode for public pages or check external connector settings.",
+            },
+        ) from exc
+
+
+@app.get("/intelligence/public-readiness")
+def intelligence_public_readiness(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("today"),
+    ga4: GA4Client = Depends(get_ga4_client),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        return public_readiness_report(ga4, registry, start_date=start_date, end_date=end_date)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail={"message": "Public readiness request failed.", "error_type": exc.__class__.__name__, "error_message": str(exc)}) from exc
+
+
+@app.get("/intelligence/event-diagnostics")
+def intelligence_event_diagnostics(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("today"),
+    ga4: GA4Client = Depends(get_ga4_client),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        page_rows = ga4.page_report(start_date, end_date)
+        event_rows = ga4.event_report(start_date, end_date)
+        metrics = build_page_metrics(page_rows, event_rows, registry)
+        diagnostics = event_diagnostics(event_rows, metrics)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "GA4 event-diagnostics request failed.",
+                "error_type": exc.__class__.__name__,
+                "error_message": str(exc),
+                "hint": "Check GA4 credentials and whether Sustainable Catalyst custom events are visible in GA4.",
+            },
+        ) from exc
+    return {
+        "ok": True,
+        "source": "ga4" if ga4.enabled else "demo",
+        "date_range": {"start_date": start_date, "end_date": end_date},
+        "diagnostics": diagnostics,
+        "recommendations": event_setup_recommendations(diagnostics),
+    }
+
+
+@app.get("/intelligence/conversions")
+def intelligence_conversions(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("today"),
+    ga4: GA4Client = Depends(get_ga4_client),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        page_rows = ga4.page_report(start_date, end_date)
+        event_rows = ga4.event_report(start_date, end_date)
+        metrics = build_page_metrics(page_rows, event_rows, registry)
+        diagnostics = event_diagnostics(event_rows, metrics)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "GA4 conversion-readiness request failed.",
+                "error_type": exc.__class__.__name__,
+                "error_message": str(exc),
+                "hint": "Check GA4 event visibility and event bridge configuration.",
+            },
+        ) from exc
+    return {
+        "ok": True,
+        "source": "ga4" if ga4.enabled else "demo",
+        "date_range": {"start_date": start_date, "end_date": end_date},
+        "readiness": diagnostics.get("readiness", {}),
+        "events": diagnostics.get("events", []),
+    }
+
+
+@app.get("/intelligence/page-opportunities")
+def intelligence_page_opportunities(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("today"),
+    limit: int = Query(25, ge=1, le=100),
+    ga4: GA4Client = Depends(get_ga4_client),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        page_rows = ga4.page_report(start_date, end_date)
+        event_rows = ga4.event_report(start_date, end_date)
+        metrics = build_page_metrics(page_rows, event_rows, registry)
+        opportunities = page_opportunities(metrics, limit=limit)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "GA4 page-opportunities request failed.",
+                "error_type": exc.__class__.__name__,
+                "error_message": str(exc),
+                "hint": "Check GA4 event visibility and page registry mapping.",
+            },
+        ) from exc
+    return {
+        "ok": True,
+        "source": "ga4" if ga4.enabled else "demo",
+        "date_range": {"start_date": start_date, "end_date": end_date},
+        "opportunities": opportunities,
+    }
+
+
+@app.get("/intelligence/events")
+def intelligence_events_alias(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("today"),
+    ga4: GA4Client = Depends(get_ga4_client),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    return intelligence_event_diagnostics(start_date, end_date, ga4, registry, _)
+
+
+@app.get("/external/connectors")
+def external_connectors(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    hub = ExternalDataHub(settings)
+    return {
+        "ok": True,
+        "version": settings.version,
+        "registry": hub.registry.model_dump(),
+    }
+
+
+@app.get("/external/cache")
+def external_cache_status(_: None = Depends(require_token)):
+    return cache_status()
+
+
+@app.post("/external/cache/clear")
+def external_cache_clear(_: None = Depends(require_token)):
+    return clear_cache()
+
+
+@app.get("/external/health")
+def external_health(
+    force_refresh: bool = Query(False),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    hub = ExternalDataHub(settings)
+    return {
+        "ok": True,
+        "source": "external-live" if settings.external_live else "sample-fallback",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "cache": cache_status(),
+        "connectors": [item.model_dump() for item in hub.health(force_refresh=force_refresh)],
+    }
+
+
+@app.get("/external/nasa-power/timeseries")
+def external_nasa_power_timeseries(
+    latitude: Optional[float] = Query(default=None),
+    longitude: Optional[float] = Query(default=None),
+    start: str = Query("20260101"),
+    end: str = Query("20260105"),
+    parameters: str = Query("T2M,T2M_MAX,T2M_MIN,PRECTOTCORR,WS10M,ALLSKY_SFC_SW_DWN"),
+    force_refresh: bool = Query(False),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    hub = ExternalDataHub(settings)
+    params = [part.strip() for part in parameters.split(",") if part.strip()]
+    return {"ok": True, "data": hub.nasa_power_timeseries(latitude, longitude, start, end, params, force_refresh=force_refresh)}
+
+
+@app.get("/external/nasa-gibs/layers")
+def external_nasa_gibs_layers(
+    limit: int = Query(12, ge=1, le=100),
+    force_refresh: bool = Query(False),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    hub = ExternalDataHub(settings)
+    return {"ok": True, "data": hub.nasa_gibs_layers(limit=limit, force_refresh=force_refresh)}
+
+
+@app.get("/external/climate-trace/emissions")
+def external_climate_trace_emissions(
+    year: int = Query(2024, ge=2021, le=2100),
+    country: Optional[str] = Query(default=None),
+    force_refresh: bool = Query(False),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    hub = ExternalDataHub(settings)
+    return {"ok": True, "data": hub.climate_trace_emissions(year=year, country=country, force_refresh=force_refresh)}
+
+
+@app.get("/intelligence/dashboards/climate-energy")
+def climate_energy_dashboard(
+    latitude: Optional[float] = Query(default=None),
+    longitude: Optional[float] = Query(default=None),
+    country: Optional[str] = Query(default=None),
+    start: str = Query("20260101"),
+    end: str = Query("20260105"),
+    year: int = Query(2024, ge=2021, le=2100),
+    force_refresh: bool = Query(False),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    try:
+        hub = ExternalDataHub(settings)
+        return hub.climate_energy_dashboard(latitude=latitude, longitude=longitude, country=country, start=start, end=end, year=year, force_refresh=force_refresh)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "Climate + Energy Intelligence request failed.",
+                "error_type": exc.__class__.__name__,
+                "error_message": str(exc),
+                "hint": "Check external registry path, live connector settings, and upstream API availability.",
+            },
+        ) from exc
+
+
+@app.get("/external/advanced/health")
+def external_advanced_health(
+    force_refresh: bool = Query(False),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    hub = AdvancedExternalDataHub(settings)
+    return {
+        "ok": True,
+        "version": settings.version,
+        "source": "advanced-external-live" if settings.external_live else "advanced-external-fallback",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "connectors": [item.model_dump() for item in hub.health(force_refresh=force_refresh)],
+    }
+
+
+@app.get("/external/noaa/climate")
+def external_noaa_climate(
+    latitude: Optional[float] = Query(default=None),
+    longitude: Optional[float] = Query(default=None),
+    force_refresh: bool = Query(False),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    return {"ok": True, "data": AdvancedExternalDataHub(settings).noaa_weather_climate(latitude, longitude, force_refresh=force_refresh)}
+
+
+@app.get("/external/eia/energy")
+def external_eia_energy(
+    state: str = Query("IL"),
+    force_refresh: bool = Query(False),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    return {"ok": True, "data": AdvancedExternalDataHub(settings).eia_energy(state=state, force_refresh=force_refresh)}
+
+
+@app.get("/external/epa/air-quality")
+def external_epa_air_quality(
+    state: str = Query("17"),
+    county: str = Query("031"),
+    force_refresh: bool = Query(False),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    return {"ok": True, "data": AdvancedExternalDataHub(settings).epa_air_quality(state=state, county=county, force_refresh=force_refresh)}
+
+
+@app.get("/external/census/context")
+def external_census_context(
+    state: str = Query("17"),
+    county: str = Query("031"),
+    force_refresh: bool = Query(False),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    return {"ok": True, "data": AdvancedExternalDataHub(settings).census_context(state=state, county=county, force_refresh=force_refresh)}
+
+
+@app.get("/external/usgs/land-cover")
+def external_usgs_land_cover(
+    latitude: Optional[float] = Query(default=None),
+    longitude: Optional[float] = Query(default=None),
+    force_refresh: bool = Query(False),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    return {"ok": True, "data": AdvancedExternalDataHub(settings).usgs_land_cover(latitude, longitude, force_refresh=force_refresh)}
+
+
+@app.get("/external/gbif/biodiversity")
+def external_gbif_biodiversity(
+    country: str = Query("US"),
+    limit: int = Query(20, ge=1, le=100),
+    force_refresh: bool = Query(False),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    return {"ok": True, "data": AdvancedExternalDataHub(settings).gbif_biodiversity(country=country, limit=limit, force_refresh=force_refresh)}
+
+
+@app.get("/intelligence/dashboards/environmental-monitoring")
+def environmental_monitoring_dashboard(
+    latitude: Optional[float] = Query(default=None),
+    longitude: Optional[float] = Query(default=None),
+    state: str = Query("17"),
+    county: str = Query("031"),
+    force_refresh: bool = Query(False),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    return AdvancedExternalDataHub(settings).environmental_monitoring_dashboard(latitude, longitude, state=state, county=county, force_refresh=force_refresh)
+
+
+@app.get("/intelligence/dashboards/urban-resilience")
+def urban_resilience_dashboard(
+    latitude: Optional[float] = Query(default=None),
+    longitude: Optional[float] = Query(default=None),
+    country: str = Query("USA"),
+    state: str = Query("17"),
+    county: str = Query("031"),
+    force_refresh: bool = Query(False),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    return AdvancedExternalDataHub(settings).urban_resilience_dashboard(latitude, longitude, country=country, state=state, county=county, force_refresh=force_refresh)
+
+
+@app.get("/intelligence/dashboards/biodiversity-land-use")
+def biodiversity_land_use_dashboard(
+    latitude: Optional[float] = Query(default=None),
+    longitude: Optional[float] = Query(default=None),
+    country: str = Query("US"),
+    force_refresh: bool = Query(False),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    return AdvancedExternalDataHub(settings).biodiversity_land_use_dashboard(latitude, longitude, country=country, force_refresh=force_refresh)
+
+
+@app.get("/intelligence/dashboards/energy-systems")
+def energy_systems_dashboard(
+    latitude: Optional[float] = Query(default=None),
+    longitude: Optional[float] = Query(default=None),
+    country: str = Query("USA"),
+    state: str = Query("IL"),
+    start: str = Query("20260101"),
+    end: str = Query("20260105"),
+    force_refresh: bool = Query(False),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    return AdvancedExternalDataHub(settings).energy_systems_dashboard(latitude, longitude, country=country, state=state, start=start, end=end, force_refresh=force_refresh)
+
+
+@app.get("/search/health")
+def search_health(
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    client = SearchConsoleClient(settings)
+    return {"ok": True, "search_console": client.diagnostics()}
+
+
+@app.get("/search/performance")
+def search_performance(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("yesterday"),
+    dimensions: str = Query("query,page"),
+    row_limit: int = Query(250, ge=1, le=25000),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    try:
+        client = SearchConsoleClient(settings)
+        dims = [item.strip() for item in dimensions.split(",") if item.strip()]
+        return {
+            "ok": True,
+            "source": "search-console" if client.enabled else "sample-search",
+            "rows": client.performance(start_date=start_date, end_date=end_date, dimensions=dims, row_limit=row_limit),
+        }
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "Search Console performance request failed.",
+                "error_type": exc.__class__.__name__,
+                "error_message": str(exc),
+                "hint": "Check Search Console property access, Google service account access, and SC_SI_SEARCH_CONSOLE_SITE_URL.",
+            },
+        ) from exc
+
+
+@app.get("/search/pages")
+def search_pages(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("yesterday"),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        client = SearchConsoleClient(settings)
+        return {
+            "ok": True,
+            "source": "search-console" if client.enabled else "sample-search",
+            "pages": client.page_summary(registry, start_date=start_date, end_date=end_date),
+        }
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail={"message": "Search page summary request failed.", "error_type": exc.__class__.__name__, "error_message": str(exc)}) from exc
+
+
+@app.get("/search/queries")
+def search_queries(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("yesterday"),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    try:
+        client = SearchConsoleClient(settings)
+        return {
+            "ok": True,
+            "source": "search-console" if client.enabled else "sample-search",
+            "queries": client.query_summary(start_date=start_date, end_date=end_date),
+            "topic_momentum": client.topic_momentum(start_date=start_date, end_date=end_date),
+        }
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail={"message": "Search query summary request failed.", "error_type": exc.__class__.__name__, "error_message": str(exc)}) from exc
+
+
+@app.get("/search/opportunities")
+def search_opportunities(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("yesterday"),
+    limit: int = Query(25, ge=1, le=100),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        client = SearchConsoleClient(settings)
+        pages = client.page_summary(registry, start_date=start_date, end_date=end_date)
+        return {
+            "ok": True,
+            "source": "search-console" if client.enabled else "sample-search",
+            "date_range": {"start_date": start_date, "end_date": end_date},
+            "opportunities": pages[:limit],
+        }
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail={"message": "Search opportunities request failed.", "error_type": exc.__class__.__name__, "error_message": str(exc)}) from exc
+
+
+@app.get("/intelligence/search")
+def search_intelligence(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("yesterday"),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        client = SearchConsoleClient(settings)
+        return client.search_intelligence(registry, start_date=start_date, end_date=end_date)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "Search Intelligence request failed.",
+                "error_type": exc.__class__.__name__,
+                "error_message": str(exc),
+                "hint": "Add the service account to Search Console, verify the site URL, and confirm Google Search Console API access.",
+            },
+        ) from exc
+
+
+@app.get("/seo/metadata")
+def seo_metadata(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("yesterday"),
+    limit: int = Query(25, ge=1, le=100),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        client = SearchConsoleClient(settings)
+        return metadata_review(client, registry, start_date=start_date, end_date=end_date, limit=limit)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "Metadata Intelligence request failed.",
+                "error_type": exc.__class__.__name__,
+                "error_message": str(exc),
+                "hint": "Check Search Console access and registry mapping before running metadata/title review.",
+            },
+        ) from exc
+
+
+@app.get("/seo/internal-links")
+def seo_internal_links(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("yesterday"),
+    limit: int = Query(25, ge=1, le=100),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        client = SearchConsoleClient(settings)
+        return internal_link_review(client, registry, start_date=start_date, end_date=end_date, limit=limit)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "Internal Link Intelligence request failed.",
+                "error_type": exc.__class__.__name__,
+                "error_message": str(exc),
+                "hint": "Check Search Console access, registry mapping, and page summary availability.",
+            },
+        ) from exc
+
+
+@app.get("/seo/recommendations")
+def seo_recommendation_report(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("yesterday"),
+    limit: int = Query(25, ge=1, le=100),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        client = SearchConsoleClient(settings)
+        return seo_recommendations(client, registry, start_date=start_date, end_date=end_date, limit=limit)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "SEO Recommendation Intelligence request failed.",
+                "error_type": exc.__class__.__name__,
+                "error_message": str(exc),
+                "hint": "Check Search Console access and registry mapping.",
+            },
+        ) from exc
+
+
+@app.get("/intelligence/seo")
+def seo_intelligence_report(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("yesterday"),
+    limit: int = Query(25, ge=1, le=100),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        client = SearchConsoleClient(settings)
+        return {
+            "ok": True,
+            "source": "search-console" if client.enabled else "sample-search",
+            "metadata": metadata_review(client, registry, start_date=start_date, end_date=end_date, limit=limit),
+            "internal_links": internal_link_review(client, registry, start_date=start_date, end_date=end_date, limit=limit),
+            "recommendations": seo_recommendations(client, registry, start_date=start_date, end_date=end_date, limit=limit),
+        }
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "Combined SEO Intelligence request failed.",
+                "error_type": exc.__class__.__name__,
+                "error_message": str(exc),
+                "hint": "Check Search Console access and registry mapping.",
+            },
+        ) from exc
+
+
+@app.get("/indexing/sitemap")
+def indexing_sitemap(
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        return sitemap_report(settings, registry)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "Sitemap coverage request failed.",
+                "error_type": exc.__class__.__name__,
+                "error_message": str(exc),
+                "hint": "Check SC_SI_SITEMAP_URL, sitemap availability, and registry path.",
+            },
+        ) from exc
+
+
+@app.get("/indexing/coverage")
+def indexing_coverage(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("yesterday"),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    ga4: GA4Client = Depends(get_ga4_client),
+    _: None = Depends(require_token),
+):
+    try:
+        return indexing_intelligence(settings, registry, ga4, SearchConsoleClient(settings), start_date=start_date, end_date=end_date)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "Indexing coverage request failed.",
+                "error_type": exc.__class__.__name__,
+                "error_message": str(exc),
+                "hint": "Check sitemap fetch settings, GA4/Search Console access, and registry mapping.",
+            },
+        ) from exc
+
+
+@app.get("/indexing/orphans")
+def indexing_orphans(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("yesterday"),
+    limit: int = Query(25, ge=1, le=100),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    ga4: GA4Client = Depends(get_ga4_client),
+    _: None = Depends(require_token),
+):
+    try:
+        intel = indexing_intelligence(settings, registry, ga4, SearchConsoleClient(settings), start_date=start_date, end_date=end_date)
+        return orphan_candidates(intel, limit=limit)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail={"message": "Orphan candidate request failed.", "error_type": exc.__class__.__name__, "error_message": str(exc)}) from exc
+
+
+@app.get("/indexing/404s")
+def indexing_404s(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("yesterday"),
+    limit: int = Query(25, ge=1, le=100),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    ga4: GA4Client = Depends(get_ga4_client),
+    _: None = Depends(require_token),
+):
+    try:
+        intel = indexing_intelligence(settings, registry, ga4, SearchConsoleClient(settings), start_date=start_date, end_date=end_date)
+        return four_oh_four_report(intel, limit=limit)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail={"message": "404 intelligence request failed.", "error_type": exc.__class__.__name__, "error_message": str(exc)}) from exc
+
+
+@app.get("/indexing/recommendations")
+def indexing_recommendation_report(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("yesterday"),
+    limit: int = Query(25, ge=1, le=100),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    ga4: GA4Client = Depends(get_ga4_client),
+    _: None = Depends(require_token),
+):
+    try:
+        intel = indexing_intelligence(settings, registry, ga4, SearchConsoleClient(settings), start_date=start_date, end_date=end_date)
+        return indexing_recommendations(intel, limit=limit)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail={"message": "Indexing recommendation request failed.", "error_type": exc.__class__.__name__, "error_message": str(exc)}) from exc
+
+
+@app.get("/intelligence/indexing")
+def indexing_intelligence_report(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("yesterday"),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    ga4: GA4Client = Depends(get_ga4_client),
+    _: None = Depends(require_token),
+):
+    try:
+        return indexing_intelligence(settings, registry, ga4, SearchConsoleClient(settings), start_date=start_date, end_date=end_date)
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "Combined Indexing Intelligence request failed.",
+                "error_type": exc.__class__.__name__,
+                "error_message": str(exc),
+                "hint": "Check sitemap, GA4, Search Console, and registry configuration.",
+            },
+        ) from exc
+
+
+@app.post("/collect/event", response_model=EventAck)
+def collect_event(event: CollectedEvent, _: None = Depends(require_token)):
+    # v0.1.0 acknowledges events without storing them. The next version can add
+    # SQLite/Postgres persistence or Measurement Protocol forwarding.
+    return EventAck(
+        ok=True,
+        stored=False,
+        event_name=event.event_name,
+        message="Event accepted. Persistence is disabled in v0.3.2; use GA4/dataLayer as the primary event store.",
+    )
+
+@app.get("/publishing/content-strategy")
+def publishing_content_strategy(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("yesterday"),
+    prior_start_date: str = Query("56daysAgo"),
+    prior_end_date: str = Query("29daysAgo"),
+    limit: int = Query(25, ge=1, le=100),
+    ga4: GA4Client = Depends(get_ga4_client),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        return publishing_intelligence(
+            ga4,
+            SearchConsoleClient(settings),
+            registry,
+            start_date=start_date,
+            end_date=end_date,
+            prior_start_date=prior_start_date,
+            prior_end_date=prior_end_date,
+            limit=limit,
+        )
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "message": "Content Strategy Intelligence request failed.",
+                "error_type": exc.__class__.__name__,
+                "error_message": str(exc),
+                "hint": "Check GA4, Search Console, and registry access before running publishing strategy reports.",
+            },
+        ) from exc
+
+
+@app.get("/publishing/topic-momentum")
+def publishing_topic_momentum(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("yesterday"),
+    prior_start_date: str = Query("56daysAgo"),
+    prior_end_date: str = Query("29daysAgo"),
+    limit: int = Query(25, ge=1, le=100),
+    ga4: GA4Client = Depends(get_ga4_client),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    report = publishing_intelligence(
+        ga4,
+        SearchConsoleClient(settings),
+        registry,
+        start_date=start_date,
+        end_date=end_date,
+        prior_start_date=prior_start_date,
+        prior_end_date=prior_end_date,
+        limit=limit,
+    )
+    return {
+        "ok": True,
+        "generated_at": report.get("generated_at"),
+        "source": report.get("source", {}),
+        "date_range": report.get("date_range", {}),
+        "comparison_range": report.get("comparison_range", {}),
+        "topics": report.get("topic_momentum", []),
+        "article_map_performance": report.get("article_map_performance", []),
+        "recommendations": [
+            "Use topic momentum to choose article updates, newsletter angles, LinkedIn posts, and Workbench prompts.",
+            "Prioritize topics that combine search visibility, GA4 engagement, and clear Sustainable Catalyst article-map structure.",
+        ],
+    }
+
+
+@app.get("/publishing/update-priorities")
+def publishing_update_priorities(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("yesterday"),
+    prior_start_date: str = Query("56daysAgo"),
+    prior_end_date: str = Query("29daysAgo"),
+    limit: int = Query(25, ge=1, le=100),
+    ga4: GA4Client = Depends(get_ga4_client),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    report = publishing_intelligence(
+        ga4,
+        SearchConsoleClient(settings),
+        registry,
+        start_date=start_date,
+        end_date=end_date,
+        prior_start_date=prior_start_date,
+        prior_end_date=prior_end_date,
+        limit=limit,
+    )
+    return {
+        "ok": True,
+        "generated_at": report.get("generated_at"),
+        "source": report.get("source", {}),
+        "date_range": report.get("date_range", {}),
+        "comparison_range": report.get("comparison_range", {}),
+        "content_decay": report.get("content_decay", []),
+        "rising_pages": report.get("rising_pages", []),
+        "publishing_queue": report.get("publishing_queue", []),
+        "newsletter_candidates": report.get("newsletter_candidates", []),
+        "recommendations": report.get("recommendations", []),
+    }
+
+
+@app.get("/publishing/promotion-opportunities")
+def publishing_promotion_opportunities(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("yesterday"),
+    prior_start_date: str = Query("56daysAgo"),
+    prior_end_date: str = Query("29daysAgo"),
+    limit: int = Query(25, ge=1, le=100),
+    ga4: GA4Client = Depends(get_ga4_client),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    report = publishing_intelligence(
+        ga4,
+        SearchConsoleClient(settings),
+        registry,
+        start_date=start_date,
+        end_date=end_date,
+        prior_start_date=prior_start_date,
+        prior_end_date=prior_end_date,
+        limit=limit,
+    )
+    return {
+        "ok": True,
+        "generated_at": report.get("generated_at"),
+        "source": report.get("source", {}),
+        "date_range": report.get("date_range", {}),
+        "promotion_opportunities": report.get("promotion_opportunities", []),
+        "newsletter_candidates": report.get("newsletter_candidates", []),
+        "recommendations": [
+            "Use promotion opportunities to decide which pages should become LinkedIn updates, Substack topics, GitHub CTA improvements, or Workbench prompts.",
+            "Keep raw conversion gaps internal until public dashboard mode is available.",
+        ],
+    }
+
+
+@app.get("/intelligence/publishing")
+def publishing_intelligence_report(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("yesterday"),
+    prior_start_date: str = Query("56daysAgo"),
+    prior_end_date: str = Query("29daysAgo"),
+    limit: int = Query(25, ge=1, le=100),
+    ga4: GA4Client = Depends(get_ga4_client),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    return publishing_content_strategy(start_date, end_date, prior_start_date, prior_end_date, limit, ga4, settings, registry, _)
+

@@ -1,0 +1,852 @@
+{
+  "version": "0.3.1",
+  "site": "Sustainable Catalyst",
+  "base_url": "https://sustainablecatalyst.com",
+  "generated_at": "2026-07-09T07:50:24.582962+00:00",
+  "items": [
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [],
+      "research_librarian_scope": null,
+      "intended_next_paths": [
+        "/research-library/",
+        "/publications/",
+        "/workbench/"
+      ],
+      "tags": [
+        "home",
+        "institution"
+      ],
+      "id": "home",
+      "title": "Sustainable Catalyst",
+      "url_path": "/",
+      "content_type": "home",
+      "hub": "Institution",
+      "article_map": "Institution",
+      "discipline": "Knowledge Infrastructure",
+      "pathway_id": "site-home"
+    },
+    {
+      "id": "decision-studio",
+      "title": "Decision Studio",
+      "url_path": "/decision-studio/",
+      "content_type": "platform",
+      "hub": "Platform",
+      "article_map": "Decision Studio",
+      "discipline": "Decision Science",
+      "pathway_id": "platform-decision-studio",
+      "repository_url": null,
+      "workbench_tool_ids": [
+        "decision-brief-builder"
+      ],
+      "research_librarian_scope": "platform",
+      "intended_next_paths": [
+        "/workbench/",
+        "/research-library/"
+      ],
+      "tags": [
+        "decision science",
+        "briefs",
+        "strategy"
+      ]
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [],
+      "research_librarian_scope": null,
+      "intended_next_paths": [],
+      "tags": [
+        "feature suggestions",
+        "feedback"
+      ],
+      "id": "feature-suggestions",
+      "title": "Feature Suggestions",
+      "url_path": "/feature-suggestions/",
+      "content_type": "platform",
+      "hub": "Platform",
+      "article_map": "Feature Suggestions",
+      "discipline": "Community Infrastructure",
+      "pathway_id": "feature-suggestions"
+    },
+    {
+      "repository_url": "https://github.com/Content-Catalyst-LLC",
+      "workbench_tool_ids": [],
+      "research_librarian_scope": null,
+      "intended_next_paths": [],
+      "tags": [
+        "github",
+        "repositories",
+        "open source"
+      ],
+      "id": "github",
+      "title": "GitHub",
+      "url_path": "/github/",
+      "content_type": "platform",
+      "hub": "Platform",
+      "article_map": "Repositories",
+      "discipline": "Open Source",
+      "pathway_id": "github-main"
+    },
+    {
+      "id": "research-librarian-ai",
+      "title": "Research Librarian AI",
+      "url_path": "/research-librarian-ai/",
+      "content_type": "platform",
+      "hub": "Platform",
+      "article_map": "Research Librarian",
+      "discipline": "Knowledge Systems",
+      "pathway_id": "platform-research-librarian",
+      "repository_url": null,
+      "workbench_tool_ids": [],
+      "research_librarian_scope": "site-wide",
+      "intended_next_paths": [
+        "/research-library/",
+        "/workbench/"
+      ],
+      "tags": [
+        "ai",
+        "research assistant",
+        "library"
+      ]
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [
+        "site-intelligence-dashboard"
+      ],
+      "research_librarian_scope": null,
+      "intended_next_paths": [],
+      "tags": [
+        "analytics",
+        "ga4",
+        "site intelligence"
+      ],
+      "id": "site-intelligence",
+      "title": "Sustainable Catalyst Site Intelligence",
+      "url_path": "/site-intelligence/",
+      "content_type": "platform",
+      "hub": "Platform",
+      "article_map": "Site Intelligence",
+      "discipline": "Analytics and Knowledge Systems",
+      "pathway_id": "platform-site-intelligence"
+    },
+    {
+      "id": "workbench",
+      "title": "Sustainable Catalyst Workbench",
+      "url_path": "/workbench/",
+      "content_type": "platform",
+      "hub": "Platform",
+      "article_map": "Workbench",
+      "discipline": "Modeling and Analytics",
+      "pathway_id": "platform-workbench",
+      "repository_url": null,
+      "workbench_tool_ids": [
+        "risk-resilience-scorecard",
+        "energy-systems-calculator",
+        "economics-calculator",
+        "environmental-science-calculator"
+      ],
+      "research_librarian_scope": "platform",
+      "intended_next_paths": [
+        "/research-librarian-ai/",
+        "/decision-studio/"
+      ],
+      "tags": [
+        "workbench",
+        "tools",
+        "analytics"
+      ]
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [],
+      "research_librarian_scope": null,
+      "intended_next_paths": [],
+      "tags": [
+        "channel",
+        "youtube",
+        "spoken essays"
+      ],
+      "id": "channel",
+      "title": "Channel",
+      "url_path": "/channel/",
+      "content_type": "publication",
+      "hub": "Publications",
+      "article_map": "Channel",
+      "discipline": "Media",
+      "pathway_id": "channel-main"
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [],
+      "research_librarian_scope": null,
+      "intended_next_paths": [
+        "/channel/",
+        "/research-library/"
+      ],
+      "tags": [
+        "publications",
+        "blog",
+        "essays"
+      ],
+      "id": "publications",
+      "title": "Publications",
+      "url_path": "/publications/",
+      "content_type": "hub",
+      "hub": "Publications",
+      "article_map": "Publications",
+      "discipline": "Publishing",
+      "pathway_id": "publications-main"
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [],
+      "research_librarian_scope": null,
+      "intended_next_paths": [],
+      "tags": [
+        "substack",
+        "newsletter"
+      ],
+      "id": "substack",
+      "title": "Substack",
+      "url_path": "/substack/",
+      "content_type": "publication",
+      "hub": "Publications",
+      "article_map": "Substack",
+      "discipline": "Publishing",
+      "pathway_id": "substack-main"
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [],
+      "research_librarian_scope": null,
+      "intended_next_paths": [],
+      "tags": [
+        "aesthetics",
+        "beauty",
+        "art"
+      ],
+      "id": "aesthetics",
+      "title": "Aesthetics",
+      "url_path": "/aesthetics/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Aesthetics",
+      "discipline": "Humanities",
+      "pathway_id": "aesthetics-main"
+    },
+    {
+      "repository_url": "https://github.com/Content-Catalyst-LLC",
+      "workbench_tool_ids": [],
+      "research_librarian_scope": null,
+      "intended_next_paths": [
+        "/workbench/",
+        "/research-library/"
+      ],
+      "tags": [
+        "algorithms",
+        "computer science",
+        "governance"
+      ],
+      "id": "algorithms-computational-reasoning",
+      "title": "Algorithms and Computational Reasoning",
+      "url_path": "/algorithms-computational-reasoning/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Algorithms and Computational Reasoning",
+      "discipline": "Computer Science",
+      "pathway_id": "algorithms-main"
+    },
+    {
+      "id": "artificial-intelligence",
+      "title": "Artificial Intelligence",
+      "url_path": "/artificial-intelligence/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Artificial Intelligence",
+      "discipline": "Technology",
+      "pathway_id": "ai",
+      "repository_url": null,
+      "workbench_tool_ids": [
+        "ai-risk-and-governance-tool"
+      ],
+      "research_librarian_scope": "technology",
+      "intended_next_paths": [
+        "/algorithmic-transparency/",
+        "/responsible-automation/"
+      ],
+      "tags": [
+        "ai",
+        "technology",
+        "governance"
+      ]
+    },
+    {
+      "id": "beauty-aesthetics-meaning",
+      "title": "Beauty, Aesthetics, and Meaning",
+      "url_path": "/beauty-aesthetics-and-meaning/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Beauty, Aesthetics, and Meaning",
+      "discipline": "Humanities",
+      "pathway_id": "aesthetics",
+      "repository_url": null,
+      "workbench_tool_ids": [],
+      "research_librarian_scope": "meaning",
+      "intended_next_paths": [
+        "/color-theory/",
+        "/music-theory/"
+      ],
+      "tags": [
+        "beauty",
+        "aesthetics",
+        "art"
+      ]
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [
+        "psychology-research-tool"
+      ],
+      "research_librarian_scope": null,
+      "intended_next_paths": [],
+      "tags": [
+        "psychology",
+        "behavioral science"
+      ],
+      "id": "behavioral-science-psychology",
+      "title": "Behavioral Science and Psychology",
+      "url_path": "/behavioral-science-psychology/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Behavioral Science and Psychology",
+      "discipline": "Psychology",
+      "pathway_id": "psychology-main"
+    },
+    {
+      "id": "calculus-systems",
+      "title": "Calculus for Systems Modeling",
+      "url_path": "/calculus-for-systems-modeling/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Calculus for Systems Modeling",
+      "discipline": "Mathematics",
+      "pathway_id": "calculus-systems",
+      "repository_url": null,
+      "workbench_tool_ids": [
+        "calculus-systems-calculator"
+      ],
+      "research_librarian_scope": "mathematics",
+      "intended_next_paths": [
+        "/linear-algebra-for-systems-modeling/",
+        "/differential-equations-for-systems-modeling/"
+      ],
+      "tags": [
+        "calculus",
+        "systems modeling"
+      ]
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [
+        "climate-change-scenario-tool"
+      ],
+      "research_librarian_scope": null,
+      "intended_next_paths": [],
+      "tags": [
+        "climate",
+        "emissions",
+        "risk"
+      ],
+      "id": "climate-change",
+      "title": "Climate Change",
+      "url_path": "/climate-change/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Climate Change",
+      "discipline": "Climate Science",
+      "pathway_id": "climate-main"
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [],
+      "research_librarian_scope": null,
+      "intended_next_paths": [],
+      "tags": [
+        "color",
+        "design",
+        "aesthetics"
+      ],
+      "id": "color-theory",
+      "title": "Color Theory",
+      "url_path": "/color-theory/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Color Theory",
+      "discipline": "Aesthetics",
+      "pathway_id": "color-theory-main"
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [
+        "decision-brief-builder"
+      ],
+      "research_librarian_scope": null,
+      "intended_next_paths": [],
+      "tags": [
+        "decision science",
+        "risk",
+        "tradeoffs"
+      ],
+      "id": "decision-science",
+      "title": "Decision Science",
+      "url_path": "/decision-science/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Decision Science",
+      "discipline": "Decision Science",
+      "pathway_id": "decision-science-main"
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [
+        "differential-equations-calculator"
+      ],
+      "research_librarian_scope": null,
+      "intended_next_paths": [],
+      "tags": [
+        "differential equations",
+        "dynamics",
+        "modeling"
+      ],
+      "id": "differential-equations",
+      "title": "Differential Equations for Systems Modeling",
+      "url_path": "/differential-equations-for-systems-modeling/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Differential Equations",
+      "discipline": "Mathematics",
+      "pathway_id": "differential-equations-main"
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [
+        "economics-calculator",
+        "economics-forecasting-and-scenario-tool"
+      ],
+      "research_librarian_scope": null,
+      "intended_next_paths": [],
+      "tags": [
+        "economics",
+        "policy",
+        "forecasting"
+      ],
+      "id": "economics",
+      "title": "Economics",
+      "url_path": "/economics/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Economics",
+      "discipline": "Economics",
+      "pathway_id": "economics-main"
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [
+        "energy-systems-calculator"
+      ],
+      "research_librarian_scope": null,
+      "intended_next_paths": [],
+      "tags": [
+        "energy",
+        "climate",
+        "infrastructure"
+      ],
+      "id": "energy-systems",
+      "title": "Energy Systems",
+      "url_path": "/energy-systems/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Energy Systems",
+      "discipline": "Energy Systems",
+      "pathway_id": "energy-systems-main"
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [
+        "environmental-science-calculator",
+        "environmental-monitoring-qaqc-tool"
+      ],
+      "research_librarian_scope": null,
+      "intended_next_paths": [],
+      "tags": [
+        "environment",
+        "monitoring",
+        "natural science"
+      ],
+      "id": "environmental-science",
+      "title": "Environmental Science",
+      "url_path": "/environmental-science/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Environmental Science",
+      "discipline": "Environmental Science",
+      "pathway_id": "environmental-science-main"
+    },
+    {
+      "id": "governance",
+      "title": "Governance",
+      "url_path": "/governance/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Governance",
+      "discipline": "Governance",
+      "pathway_id": "governance",
+      "repository_url": null,
+      "workbench_tool_ids": [
+        "governance-risk-scorecard"
+      ],
+      "research_librarian_scope": "governance",
+      "intended_next_paths": [
+        "/accountability/",
+        "/public-institutions/"
+      ],
+      "tags": [
+        "governance",
+        "accountability"
+      ]
+    },
+    {
+      "id": "international-law",
+      "title": "International Law",
+      "url_path": "/international-law/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "International Law",
+      "discipline": "Law",
+      "pathway_id": "international-law",
+      "repository_url": null,
+      "workbench_tool_ids": [
+        "international-law-authority-map"
+      ],
+      "research_librarian_scope": "law",
+      "intended_next_paths": [
+        "/primary-authorities-in-international-law/",
+        "/human-rights-law/"
+      ],
+      "tags": [
+        "law",
+        "international law",
+        "primary authorities"
+      ]
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [],
+      "research_librarian_scope": null,
+      "intended_next_paths": [
+        "/international-law/"
+      ],
+      "tags": [
+        "international law",
+        "war crimes",
+        "genocide",
+        "human rights"
+      ],
+      "id": "war-crimes-icl",
+      "title": "War Crimes, Crimes Against Humanity, Genocide, and the Architecture of International Criminal Law",
+      "url_path": "/war-crimes-crimes-against-humanity-genocide-and-the-architecture-of-international-criminal-law/",
+      "content_type": "article",
+      "hub": "Research",
+      "article_map": "International Law",
+      "discipline": "Law",
+      "pathway_id": "international-law-icl"
+    },
+    {
+      "id": "linear-algebra-systems",
+      "title": "Linear Algebra for Systems Modeling",
+      "url_path": "/linear-algebra-for-systems-modeling/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Linear Algebra for Systems Modeling",
+      "discipline": "Mathematics",
+      "pathway_id": "linear-algebra-systems",
+      "repository_url": "https://github.com/contentcatalyst/linear-algebra-for-systems-modeling",
+      "workbench_tool_ids": [
+        "linear-algebra-systems-calculator"
+      ],
+      "research_librarian_scope": "mathematics",
+      "intended_next_paths": [
+        "/rank-nullity-and-structural-dependence/",
+        "/stability-analysis-with-eigenvalues/"
+      ],
+      "tags": [
+        "linear algebra",
+        "matrices",
+        "systems modeling"
+      ]
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [],
+      "research_librarian_scope": null,
+      "intended_next_paths": [
+        "/mathematical-modeling/",
+        "/linear-algebra-for-systems-modeling/",
+        "/calculus-for-systems-modeling/"
+      ],
+      "tags": [
+        "archive",
+        "mathematics",
+        "modeling"
+      ],
+      "id": "mathematical-modeling-archive",
+      "title": "Mathematical Modeling Archives",
+      "url_path": "/category/mathematical-modeling/",
+      "content_type": "archive",
+      "hub": "Research",
+      "article_map": "Mathematical Modeling",
+      "discipline": "Mathematics",
+      "pathway_id": "math-modeling-archive"
+    },
+    {
+      "id": "mathematical-modeling",
+      "title": "Mathematical Modeling",
+      "url_path": "/mathematical-modeling/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Mathematical Modeling",
+      "discipline": "Mathematics",
+      "pathway_id": "math-modeling",
+      "repository_url": null,
+      "workbench_tool_ids": [
+        "mathematical-modeling-workbench"
+      ],
+      "research_librarian_scope": "mathematics",
+      "intended_next_paths": [
+        "/calculus-for-systems-modeling/",
+        "/linear-algebra-for-systems-modeling/"
+      ],
+      "tags": [
+        "mathematics",
+        "systems modeling"
+      ]
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [],
+      "research_librarian_scope": null,
+      "intended_next_paths": [
+        "/story-myth-and-meaning/"
+      ],
+      "tags": [
+        "meaning",
+        "myth",
+        "symbol",
+        "ritual"
+      ],
+      "id": "meaning",
+      "title": "Meaning",
+      "url_path": "/meaning/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Meaning",
+      "discipline": "Humanities",
+      "pathway_id": "meaning-main"
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [
+        "music-design-systems-tool"
+      ],
+      "research_librarian_scope": null,
+      "intended_next_paths": [],
+      "tags": [
+        "music",
+        "pattern",
+        "meaning"
+      ],
+      "id": "music-theory",
+      "title": "Music Theory",
+      "url_path": "/music-theory/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Music Theory",
+      "discipline": "Music",
+      "pathway_id": "music-theory-main"
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [
+        "statistics-calculator",
+        "probability-calculator"
+      ],
+      "research_librarian_scope": null,
+      "intended_next_paths": [],
+      "tags": [
+        "probability",
+        "statistics",
+        "modeling"
+      ],
+      "id": "probability-statistics",
+      "title": "Probability and Statistics for Systems Modeling",
+      "url_path": "/probability-statistics-systems-modeling/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Probability and Statistics",
+      "discipline": "Mathematics",
+      "pathway_id": "probability-statistics-main"
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [],
+      "research_librarian_scope": null,
+      "intended_next_paths": [
+        "/research-library/",
+        "/workbench/",
+        "/research-librarian-ai/"
+      ],
+      "tags": [
+        "learning architecture",
+        "research library"
+      ],
+      "id": "learning-architecture",
+      "title": "Learning Architecture: How the Research Library Works",
+      "url_path": "/learning-architecture-how-the-research-library-works/",
+      "content_type": "article",
+      "hub": "Research",
+      "article_map": "Research Library",
+      "discipline": "Knowledge Systems",
+      "pathway_id": "library-learning-architecture"
+    },
+    {
+      "id": "research-library",
+      "title": "Research Library",
+      "url_path": "/research-library/",
+      "content_type": "hub",
+      "hub": "Research",
+      "article_map": "Research Library",
+      "discipline": "Knowledge Systems",
+      "pathway_id": "library-main",
+      "repository_url": null,
+      "workbench_tool_ids": [],
+      "research_librarian_scope": "site-wide",
+      "intended_next_paths": [
+        "/mathematical-modeling/",
+        "/algorithms-computational-reasoning/",
+        "/international-law/",
+        "/meaning/"
+      ],
+      "tags": [
+        "research",
+        "library",
+        "knowledge architecture"
+      ]
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [],
+      "research_librarian_scope": null,
+      "intended_next_paths": [],
+      "tags": [
+        "story",
+        "myth",
+        "meaning"
+      ],
+      "id": "story-myth-meaning",
+      "title": "Story, Myth, and Meaning",
+      "url_path": "/story-myth-and-meaning/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Story, Myth, and Meaning",
+      "discipline": "Humanities",
+      "pathway_id": "story-myth-meaning-main"
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [
+        "sustainable-development-indicator-tool",
+        "climate-change-scenario-tool"
+      ],
+      "research_librarian_scope": null,
+      "intended_next_paths": [],
+      "tags": [
+        "sustainability",
+        "climate",
+        "development"
+      ],
+      "id": "sustainability",
+      "title": "Sustainability",
+      "url_path": "/sustainability/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Sustainability",
+      "discipline": "Sustainable Development",
+      "pathway_id": "sustainability-main"
+    },
+    {
+      "id": "sustainable-development",
+      "title": "Sustainable Development",
+      "url_path": "/sustainable-development/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Sustainable Development",
+      "discipline": "Sustainability",
+      "pathway_id": "sustainable-development",
+      "repository_url": null,
+      "workbench_tool_ids": [
+        "sustainable-development-indicator-tool"
+      ],
+      "research_librarian_scope": "sustainability",
+      "intended_next_paths": [
+        "/climate-change/",
+        "/governance/"
+      ],
+      "tags": [
+        "sustainability",
+        "development",
+        "systems"
+      ]
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [
+        "systems-modeling-workbench"
+      ],
+      "research_librarian_scope": null,
+      "intended_next_paths": [],
+      "tags": [
+        "systems",
+        "modeling",
+        "dynamics"
+      ],
+      "id": "systems-modeling",
+      "title": "Systems Modeling",
+      "url_path": "/systems-modeling/",
+      "content_type": "article_map",
+      "hub": "Research",
+      "article_map": "Systems Modeling",
+      "discipline": "Systems Thinking",
+      "pathway_id": "systems-modeling-main"
+    },
+    {
+      "repository_url": null,
+      "workbench_tool_ids": [],
+      "research_librarian_scope": null,
+      "intended_next_paths": [],
+      "tags": [
+        "404",
+        "diagnostics",
+        "broken links"
+      ],
+      "id": "not-found",
+      "title": "Page not found",
+      "url_path": "/404/",
+      "content_type": "system",
+      "hub": "System",
+      "article_map": "Site Diagnostics",
+      "discipline": "Operations",
+      "pathway_id": "system-404"
+    }
+  ]
+}

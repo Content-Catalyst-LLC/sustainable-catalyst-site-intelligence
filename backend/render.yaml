@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: sustainable-catalyst-site-intelligence
+    env: python
+    plan: free
+    rootDir: .
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: SC_SI_ENVIRONMENT
+        value: production
+      - key: SC_SI_DEMO_MODE
+        value: "true"
+      - key: SC_SI_CORS_ORIGINS
+        value: https://sustainablecatalyst.com
+      - key: SC_SI_API_TOKEN
+        sync: false
+      - key: SC_SI_GA4_PROPERTY_ID
+        sync: false
+      - key: SC_SI_GOOGLE_APPLICATION_CREDENTIALS_JSON
+        sync: false
+      - key: SC_SI_SEARCH_CONSOLE_LIVE
+        value: "true"
+      - key: SC_SI_SEARCH_CONSOLE_SITE_URL
+        value: https://sustainablecatalyst.com/

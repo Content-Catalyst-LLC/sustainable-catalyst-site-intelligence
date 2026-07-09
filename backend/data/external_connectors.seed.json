@@ -1,0 +1,300 @@
+{
+  "version": "0.6.0",
+  "generated_at": "2026-07-09T00:00:00Z",
+  "connectors": [
+    {
+      "connector_id": "nasa_power",
+      "name": "NASA POWER",
+      "provider": "NASA Langley Research Center",
+      "connector_type": "time_series_api",
+      "description": "Solar and meteorological time-series data for climate, energy, agriculture, infrastructure, and environmental modeling.",
+      "domains": [
+        "climate",
+        "energy",
+        "solar",
+        "meteorology",
+        "infrastructure"
+      ],
+      "auth_required": false,
+      "status": "pilot",
+      "cache_policy": "daily",
+      "documentation_url": "https://power.larc.nasa.gov/docs/services/api/temporal/daily/",
+      "linked_dashboards": [
+        "climate_energy_intelligence",
+        "climate_change_map",
+        "energy_systems_data"
+      ],
+      "linked_tools": [
+        "energy-systems-calculator",
+        "climate-change-scenario-tool"
+      ],
+      "linked_article_maps": [
+        "Climate Change",
+        "Energy Systems",
+        "Environmental Science",
+        "Earth Science"
+      ]
+    },
+    {
+      "connector_id": "nasa_gibs",
+      "name": "NASA GIBS",
+      "provider": "NASA Earthdata / ESDIS",
+      "connector_type": "map_tile_service",
+      "description": "Earth observation imagery and layer metadata through WMTS, WMS, TWMS, and tile services for map-based dashboards.",
+      "domains": [
+        "earth_observation",
+        "climate",
+        "environmental_monitoring",
+        "land",
+        "water",
+        "atmosphere"
+      ],
+      "auth_required": false,
+      "status": "pilot",
+      "cache_policy": "metadata_daily_tiles_external",
+      "documentation_url": "https://nasa-gibs.github.io/gibs-api-docs/access-basics/",
+      "linked_dashboards": [
+        "nasa_earth_observation",
+        "climate_change_map",
+        "environmental_monitoring"
+      ],
+      "linked_tools": [
+        "environmental-monitoring-qaqc-tool",
+        "climate-change-scenario-tool"
+      ],
+      "linked_article_maps": [
+        "Earth Science",
+        "Climate Change",
+        "Environmental Monitoring",
+        "Urban Resilience"
+      ]
+    },
+    {
+      "connector_id": "climate_trace",
+      "name": "Climate TRACE",
+      "provider": "Climate TRACE Coalition",
+      "connector_type": "emissions_api",
+      "description": "Emissions intelligence by sector, source, country, and time for climate, energy, economics, and policy analysis.",
+      "domains": [
+        "climate",
+        "emissions",
+        "energy",
+        "industry",
+        "transportation",
+        "policy"
+      ],
+      "auth_required": false,
+      "status": "pilot",
+      "cache_policy": "weekly",
+      "documentation_url": "https://api.climatetrace.org/",
+      "linked_dashboards": [
+        "climate_energy_intelligence",
+        "climate_change_map",
+        "energy_systems_data",
+        "urban_resilience"
+      ],
+      "linked_tools": [
+        "climate-change-scenario-tool",
+        "economics-forecasting-and-scenario-tool",
+        "energy-systems-calculator"
+      ],
+      "linked_article_maps": [
+        "Climate Change",
+        "Energy Systems",
+        "Economics",
+        "Environmental Governance"
+      ]
+    },
+    {
+      "connector_id": "noaa_weather_climate",
+      "name": "NOAA / National Weather Service",
+      "provider": "NOAA",
+      "connector_type": "weather_climate_api",
+      "description": "Weather, forecast, alert, and climate-context signals for environmental monitoring and urban resilience dashboards.",
+      "domains": [
+        "weather",
+        "climate",
+        "environmental_monitoring",
+        "urban_resilience",
+        "hazards"
+      ],
+      "auth_required": false,
+      "status": "pilot",
+      "cache_policy": "hourly",
+      "documentation_url": "https://www.weather.gov/documentation/services-web-api",
+      "linked_dashboards": [
+        "environmental_monitoring",
+        "urban_resilience",
+        "climate_change_map"
+      ],
+      "linked_tools": [
+        "environmental-monitoring-qaqc-tool",
+        "climate-change-scenario-tool"
+      ],
+      "linked_article_maps": [
+        "Environmental Monitoring",
+        "Climate Change",
+        "Urban Resilience",
+        "Earth Science"
+      ]
+    },
+    {
+      "connector_id": "eia_energy",
+      "name": "U.S. Energy Information Administration Open Data",
+      "provider": "EIA",
+      "connector_type": "energy_data_api",
+      "description": "Energy production, consumption, electricity, price, and fuel-system indicators for energy systems intelligence.",
+      "domains": [
+        "energy",
+        "electricity",
+        "economics",
+        "emissions",
+        "infrastructure"
+      ],
+      "auth_required": true,
+      "status": "pilot_optional_key",
+      "cache_policy": "daily",
+      "documentation_url": "https://www.eia.gov/opendata/documentation.php",
+      "linked_dashboards": [
+        "energy_systems_data",
+        "climate_energy_intelligence",
+        "urban_resilience"
+      ],
+      "linked_tools": [
+        "energy-systems-calculator",
+        "economics-forecasting-and-scenario-tool"
+      ],
+      "linked_article_maps": [
+        "Energy Systems",
+        "Economics",
+        "Climate Change",
+        "Infrastructure"
+      ]
+    },
+    {
+      "connector_id": "epa_aqs_air_quality",
+      "name": "EPA AQS / Air Quality",
+      "provider": "U.S. Environmental Protection Agency",
+      "connector_type": "air_quality_api",
+      "description": "Air-quality monitoring signals for environmental monitoring, health, urban resilience, and emissions interpretation.",
+      "domains": [
+        "air_quality",
+        "environmental_monitoring",
+        "public_health",
+        "urban_resilience"
+      ],
+      "auth_required": true,
+      "status": "pilot_optional_key",
+      "cache_policy": "daily",
+      "documentation_url": "https://aqs.epa.gov/aqsweb/documents/data_api.html",
+      "linked_dashboards": [
+        "environmental_monitoring",
+        "urban_resilience"
+      ],
+      "linked_tools": [
+        "environmental-monitoring-qaqc-tool"
+      ],
+      "linked_article_maps": [
+        "Environmental Monitoring",
+        "Urban Resilience",
+        "Public Health",
+        "Climate Change"
+      ]
+    },
+    {
+      "connector_id": "census_context",
+      "name": "U.S. Census Data API",
+      "provider": "U.S. Census Bureau",
+      "connector_type": "demographic_context_api",
+      "description": "Population and place-context indicators for urban resilience, public systems, infrastructure, and environmental justice interpretation.",
+      "domains": [
+        "population",
+        "urban_resilience",
+        "infrastructure",
+        "governance",
+        "environmental_justice"
+      ],
+      "auth_required": false,
+      "status": "pilot",
+      "cache_policy": "monthly",
+      "documentation_url": "https://www.census.gov/data/developers/data-sets.html",
+      "linked_dashboards": [
+        "urban_resilience",
+        "environmental_monitoring"
+      ],
+      "linked_tools": [
+        "risk-resilience-scorecard"
+      ],
+      "linked_article_maps": [
+        "Urban Resilience",
+        "Governance",
+        "Environmental Monitoring",
+        "Economics"
+      ]
+    },
+    {
+      "connector_id": "usgs_land_cover",
+      "name": "USGS Land Cover",
+      "provider": "U.S. Geological Survey",
+      "connector_type": "land_cover_context",
+      "description": "Land-cover and land-use context for biodiversity, urban heat, watershed, and ecological pressure dashboards.",
+      "domains": [
+        "land_use",
+        "land_cover",
+        "biodiversity",
+        "urban_resilience",
+        "watersheds"
+      ],
+      "auth_required": false,
+      "status": "registry_context",
+      "cache_policy": "monthly",
+      "documentation_url": "https://www.usgs.gov/centers/eros/science/national-land-cover-database",
+      "linked_dashboards": [
+        "biodiversity_land_use",
+        "urban_resilience",
+        "environmental_monitoring"
+      ],
+      "linked_tools": [
+        "environmental-science-calculator",
+        "environmental-monitoring-qaqc-tool"
+      ],
+      "linked_article_maps": [
+        "Biodiversity",
+        "Land Use",
+        "Earth Science",
+        "Urban Resilience"
+      ]
+    },
+    {
+      "connector_id": "gbif_biodiversity",
+      "name": "GBIF Species Occurrence",
+      "provider": "Global Biodiversity Information Facility",
+      "connector_type": "biodiversity_api",
+      "description": "Species occurrence and biodiversity context for biodiversity, land-use, conservation, and ecological pressure dashboards.",
+      "domains": [
+        "biodiversity",
+        "species",
+        "ecology",
+        "land_use",
+        "conservation"
+      ],
+      "auth_required": false,
+      "status": "pilot",
+      "cache_policy": "daily",
+      "documentation_url": "https://techdocs.gbif.org/en/openapi/",
+      "linked_dashboards": [
+        "biodiversity_land_use",
+        "environmental_monitoring"
+      ],
+      "linked_tools": [
+        "environmental-science-calculator"
+      ],
+      "linked_article_maps": [
+        "Biodiversity",
+        "Environmental Science",
+        "Earth Science",
+        "Land Use"
+      ]
+    }
+  ]
+}

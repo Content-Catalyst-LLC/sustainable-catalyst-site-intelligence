@@ -1,0 +1,29 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Google / cloud credentials
+*service-account*.json
+*credentials*.json
+*credential*.json
+*key*.json
+*.pem
+*.key
+
+# Local Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+
+# OS/editor
+.DS_Store
+.idea/
+.vscode/
+
+# Build artifacts
+dist/
+build/
+*.zip
