@@ -5,6 +5,7 @@ from typing import Optional
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import PlainTextResponse
 
 from .config import Settings, get_settings
 from .ga4_client import GA4Client, get_ga4_client
@@ -27,6 +28,17 @@ from .indexing_intelligence import (
 )
 from .publishing_intelligence import publishing_intelligence, topic_momentum_report
 from .public_dashboard import build_public_dashboard, public_landing_page, public_methodology, public_readiness_report
+from .report_generator import (
+    bundle_report,
+    climate_energy_report,
+    content_strategy_report,
+    external_sources_report,
+    indexing_report,
+    search_intelligence_report,
+    site_intelligence_report,
+    to_csv,
+    to_markdown,
+)
 
 
 def require_token(
@@ -1112,6 +1124,273 @@ def indexing_intelligence_report(
                 "hint": "Check sitemap, GA4, Search Console, and registry configuration.",
             },
         ) from exc
+
+
+
+# ---------------------------------------------------------------------------
+# Report Generator and Export Intelligence (v0.7.0)
+# ---------------------------------------------------------------------------
+
+REPORT_FORMATS = {"json", "markdown", "md", "csv"}
+
+
+def _format_report_response(report: dict, export_format: str = "json", filename: str = "site-intelligence-report"):
+    fmt = (export_format or "json").lower().strip()
+    if fmt not in REPORT_FORMATS:
+        raise HTTPException(status_code=400, detail="Unsupported report format. Use json, markdown, or csv.")
+    if fmt in {"markdown", "md"}:
+        return PlainTextResponse(
+            to_markdown(report),
+            media_type="text/markdown; charset=utf-8",
+            headers={"Content-Disposition": f'inline; filename="{filename}.md"'},
+        )
+    if fmt == "csv":
+        return PlainTextResponse(
+            to_csv(report),
+            media_type="text/csv; charset=utf-8",
+            headers={"Content-Disposition": f'inline; filename="{filename}.csv"'},
+        )
+    return report
+
+
+def _site_report_data(ga4: GA4Client, registry: ContentRegistry, start_date: str, end_date: str) -> dict:
+    page_rows = ga4.page_report(start_date, end_date)
+    event_rows = ga4.event_report(start_date, end_date)
+    metrics = build_page_metrics(page_rows, event_rows, registry)
+    diagnostics = event_diagnostics(event_rows, metrics)
+    dashboard = DashboardResponse(
+        generated_at=datetime.now(timezone.utc).isoformat(),
+        source="ga4" if ga4.enabled else "demo",
+        date_range={"start_date": start_date, "end_date": end_date},
+        totals=dashboard_totals(metrics),
+        top_pages=metrics[:25],
+        hub_summary=hub_summary(metrics),
+        recommendations=site_recommendations(metrics) + event_setup_recommendations(diagnostics),
+        registry_count=registry.count(),
+        unmapped_pages=unmapped_suggestions(metrics, registry, limit=12),
+        mapping_coverage=mapping_coverage(metrics),
+        event_diagnostics=diagnostics,
+        conversion_readiness=diagnostics.get("readiness", {}),
+    ).model_dump()
+    return site_intelligence_report(dashboard)
+
+
+def _search_report_data(settings: Settings, registry: ContentRegistry, start_date: str, end_date: str) -> dict:
+    search = SearchConsoleClient(settings).search_intelligence(registry, start_date=start_date, end_date=end_date)
+    return search_intelligence_report(search)
+
+
+def _content_report_data(ga4: GA4Client, settings: Settings, registry: ContentRegistry, start_date: str, end_date: str, prior_start_date: str, prior_end_date: str, limit: int) -> dict:
+    search_client = SearchConsoleClient(settings)
+    publishing = publishing_intelligence(
+        ga4,
+        search_client,
+        registry,
+        start_date=start_date,
+        end_date=end_date,
+        prior_start_date=prior_start_date,
+        prior_end_date=prior_end_date,
+        limit=limit,
+    )
+    return content_strategy_report(publishing)
+
+
+def _indexing_report_data(settings: Settings, registry: ContentRegistry, ga4: GA4Client, start_date: str, end_date: str) -> dict:
+    search_client = SearchConsoleClient(settings)
+    intel = indexing_intelligence(settings, registry, ga4, search_client, start_date=start_date, end_date=end_date)
+    return indexing_report(intel)
+
+
+def _external_sources_report_data(settings: Settings) -> dict:
+    base_hub = ExternalDataHub(settings)
+    advanced_hub = AdvancedExternalDataHub(settings)
+    base_health = {
+        "ok": True,
+        "source": "external-live" if settings.external_live else "external-fallback",
+        "connectors": [item.model_dump() for item in base_hub.health()],
+        "source_notes": [
+            "NASA POWER, NASA GIBS, and Climate TRACE support the first climate/energy pilot layer.",
+            "Public dashboards should use cached or snapshot mode unless live API latency is acceptable.",
+        ],
+    }
+    advanced_health = {
+        "ok": True,
+        "source": "advanced-external-live" if settings.external_live else "advanced-external-fallback",
+        "connectors": [item.model_dump() for item in advanced_hub.health()],
+    }
+    return external_sources_report(base_health, advanced_health)
+
+
+def _climate_energy_report_data(settings: Settings, latitude: Optional[float], longitude: Optional[float], country: Optional[str], start: str, end: str, year: int, live: bool) -> dict:
+    if live:
+        summary = ExternalDataHub(settings).climate_energy_dashboard(latitude=latitude, longitude=longitude, country=country, start=start, end=end, year=year, force_refresh=False)
+    else:
+        summary = public_climate_energy_summary(latitude=latitude, longitude=longitude, country=country, start=start, end=end, year=year, live=False, settings=settings)
+    return climate_energy_report(summary)
+
+
+@app.get("/reports/site-intelligence")
+def reports_site_intelligence(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("today"),
+    format: str = Query("json"),
+    ga4: GA4Client = Depends(get_ga4_client),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        return _format_report_response(_site_report_data(ga4, registry, start_date, end_date), format, "site-intelligence-report")
+    except HTTPException:
+        raise
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail={"message": "Site Intelligence report generation failed.", "error_type": exc.__class__.__name__, "error_message": str(exc)}) from exc
+
+
+@app.get("/reports/search-intelligence")
+def reports_search_intelligence(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("yesterday"),
+    format: str = Query("json"),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        return _format_report_response(_search_report_data(settings, registry, start_date, end_date), format, "search-intelligence-report")
+    except HTTPException:
+        raise
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail={"message": "Search Intelligence report generation failed.", "error_type": exc.__class__.__name__, "error_message": str(exc)}) from exc
+
+
+@app.get("/reports/content-strategy")
+def reports_content_strategy(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("today"),
+    prior_start_date: str = Query("56daysAgo"),
+    prior_end_date: str = Query("29daysAgo"),
+    limit: int = Query(25, ge=1, le=100),
+    format: str = Query("json"),
+    ga4: GA4Client = Depends(get_ga4_client),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        report = _content_report_data(ga4, settings, registry, start_date, end_date, prior_start_date, prior_end_date, limit)
+        return _format_report_response(report, format, "content-strategy-report")
+    except HTTPException:
+        raise
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail={"message": "Content Strategy report generation failed.", "error_type": exc.__class__.__name__, "error_message": str(exc)}) from exc
+
+
+@app.get("/reports/external-sources")
+def reports_external_sources(
+    format: str = Query("json"),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    try:
+        return _format_report_response(_external_sources_report_data(settings), format, "external-sources-report")
+    except HTTPException:
+        raise
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail={"message": "External Sources report generation failed.", "error_type": exc.__class__.__name__, "error_message": str(exc)}) from exc
+
+
+@app.get("/reports/climate-energy")
+def reports_climate_energy(
+    latitude: Optional[float] = Query(default=None),
+    longitude: Optional[float] = Query(default=None),
+    country: Optional[str] = Query(default=None),
+    start: str = Query("20260101"),
+    end: str = Query("20260105"),
+    year: int = Query(2024, ge=2021, le=2100),
+    live: bool = Query(False),
+    format: str = Query("json"),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    try:
+        return _format_report_response(_climate_energy_report_data(settings, latitude, longitude, country, start, end, year, live), format, "climate-energy-report")
+    except HTTPException:
+        raise
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail={"message": "Climate + Energy report generation failed.", "error_type": exc.__class__.__name__, "error_message": str(exc)}) from exc
+
+
+@app.get("/reports/indexing")
+def reports_indexing(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("yesterday"),
+    format: str = Query("json"),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    ga4: GA4Client = Depends(get_ga4_client),
+    _: None = Depends(require_token),
+):
+    try:
+        return _format_report_response(_indexing_report_data(settings, registry, ga4, start_date, end_date), format, "indexing-coverage-report")
+    except HTTPException:
+        raise
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail={"message": "Indexing report generation failed.", "error_type": exc.__class__.__name__, "error_message": str(exc)}) from exc
+
+
+@app.get("/reports/export")
+def reports_export_bundle(
+    report: str = Query("all"),
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("today"),
+    format: str = Query("json"),
+    ga4: GA4Client = Depends(get_ga4_client),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        requested = {item.strip() for item in report.split(",") if item.strip()} if report != "all" else {"site", "search", "content", "external", "climate", "indexing"}
+        reports = []
+        if "site" in requested or "site-intelligence" in requested:
+            reports.append(_site_report_data(ga4, registry, start_date, end_date))
+        if "search" in requested or "search-intelligence" in requested:
+            reports.append(_search_report_data(settings, registry, start_date, "yesterday" if end_date == "today" else end_date))
+        if "content" in requested or "content-strategy" in requested:
+            reports.append(_content_report_data(ga4, settings, registry, start_date, end_date, "56daysAgo", "29daysAgo", 20))
+        if "external" in requested or "external-sources" in requested:
+            reports.append(_external_sources_report_data(settings))
+        if "climate" in requested or "climate-energy" in requested:
+            reports.append(_climate_energy_report_data(settings, None, None, None, "20260101", "20260105", 2024, False))
+        if "indexing" in requested:
+            reports.append(_indexing_report_data(settings, registry, ga4, start_date, "yesterday" if end_date == "today" else end_date))
+        return _format_report_response(bundle_report(reports), format, "site-intelligence-export-bundle")
+    except HTTPException:
+        raise
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail={"message": "Report export bundle generation failed.", "error_type": exc.__class__.__name__, "error_message": str(exc)}) from exc
+
+
+@app.get("/intelligence/reports")
+def intelligence_reports_summary(_: None = Depends(require_token)):
+    return {
+        "ok": True,
+        "version": settings.version,
+        "reports": [
+            {"id": "site-intelligence", "endpoint": "/reports/site-intelligence", "formats": ["json", "markdown", "csv"]},
+            {"id": "search-intelligence", "endpoint": "/reports/search-intelligence", "formats": ["json", "markdown", "csv"]},
+            {"id": "content-strategy", "endpoint": "/reports/content-strategy", "formats": ["json", "markdown", "csv"]},
+            {"id": "external-sources", "endpoint": "/reports/external-sources", "formats": ["json", "markdown", "csv"]},
+            {"id": "climate-energy", "endpoint": "/reports/climate-energy", "formats": ["json", "markdown", "csv"]},
+            {"id": "indexing", "endpoint": "/reports/indexing", "formats": ["json", "markdown", "csv"]},
+            {"id": "export-bundle", "endpoint": "/reports/export", "formats": ["json", "markdown", "csv"]},
+        ],
+        "notes": [
+            "Markdown exports are suitable for planning notes, GitHub documentation, or editorial drafts.",
+            "CSV exports flatten highlights, recommendations, section metrics, and section rows for spreadsheet review.",
+            "Use public dashboard endpoints for public pages; report endpoints are intended for internal planning unless manually reviewed.",
+        ],
+    }
 
 
 @app.post("/collect/event", response_model=EventAck)

@@ -18,7 +18,7 @@
       client_time: new Date().toISOString(),
       metadata: {
         href: params && params.href ? params.href : '',
-        version: cfg.version || '0.5.0'
+        version: cfg.version || '0.7.0'
       }
     }, params || {});
 
@@ -315,7 +315,7 @@
     keys.forEach(function (key) {
       const value = root.dataset[key];
       if (value) {
-        const wireKey = key === 'latitude' ? 'latitude' : key === 'longitude' ? 'longitude' : key === 'start' ? 'start_date' : key === 'end' ? 'end_date' : key === 'priorStart' ? 'prior_start_date' : key === 'priorEnd' ? 'prior_end_date' : key === 'forceRefresh' ? 'force_refresh' : key;
+        const wireKey = key === 'latitude' ? 'latitude' : key === 'longitude' ? 'longitude' : key === 'startDate' ? 'start_date' : key === 'endDate' ? 'end_date' : key === 'start' ? 'start_date' : key === 'end' ? 'end_date' : key === 'priorStart' ? 'prior_start_date' : key === 'priorEnd' ? 'prior_end_date' : key === 'priorStartDate' ? 'prior_start_date' : key === 'priorEndDate' ? 'prior_end_date' : key === 'forceRefresh' ? 'force_refresh' : key;
         params.set(wireKey, value);
       }
     });
@@ -1373,8 +1373,119 @@
     out.appendChild(list);
   }
 
+
+  function renderReport(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    const title = data.title || 'Site Intelligence Report';
+    const dateRange = data.date_range || {};
+    muted.textContent = 'Generated ' + (data.generated_at || 'now') + (dateRange.start_date ? ' · ' + dateRange.start_date + ' to ' + (dateRange.end_date || '') : '') + ' · Formats: ' + ((data.export_formats || ['json']).join(', '));
+    out.innerHTML = '';
+
+    const summary = document.createElement('p');
+    summary.className = 'scsi-report-summary';
+    summary.textContent = data.summary || '';
+    out.appendChild(summary);
+
+    if ((data.highlights || []).length) {
+      const h = document.createElement('h3');
+      h.textContent = 'Highlights';
+      out.appendChild(h);
+      const list = document.createElement('ul');
+      list.className = 'scsi-list scsi-report-highlights';
+      (data.highlights || []).forEach(function (item) {
+        const li = document.createElement('li');
+        li.textContent = item;
+        list.appendChild(li);
+      });
+      out.appendChild(list);
+    }
+
+    if ((data.recommendations || []).length) {
+      const h = document.createElement('h3');
+      h.textContent = 'Recommendations';
+      out.appendChild(h);
+      const list = document.createElement('ul');
+      list.className = 'scsi-list scsi-report-recommendations';
+      (data.recommendations || []).slice(0, 10).forEach(function (item) {
+        const li = document.createElement('li');
+        li.textContent = item;
+        list.appendChild(li);
+      });
+      out.appendChild(list);
+    }
+
+    (data.sections || []).slice(0, 6).forEach(function (section) {
+      const wrap = document.createElement('div');
+      wrap.className = 'scsi-report-section';
+      let html = '<h3>' + escapeHtml(section.title || 'Report section') + '</h3>';
+      if (section.summary) html += '<p class="scsi-muted">' + escapeHtml(section.summary) + '</p>';
+      const metrics = section.metrics || {};
+      const metricKeys = Object.keys(metrics).slice(0, 8);
+      if (metricKeys.length) {
+        html += '<div class="scsi-grid scsi-report-metrics">';
+        metricKeys.forEach(function (key) {
+          html += '<div class="scsi-stat"><strong>' + escapeHtml(metrics[key]) + '</strong><span>' + escapeHtml(key.replace(/_/g, ' ')) + '</span></div>';
+        });
+        html += '</div>';
+      }
+      wrap.innerHTML = html;
+      out.appendChild(wrap);
+      (section.rows || []).slice(0, 8).forEach(function (item) {
+        const row = document.createElement('div');
+        row.className = 'scsi-page-row scsi-report-row';
+        if (typeof item === 'object' && item !== null) {
+          const label = item.title || item.name || item.path || item.query || item.connector_id || 'Report item';
+          const status = item.status || item.mapping_status || item.public_status || item.source || '';
+          const actions = (item.actions || item.recommendations || []).slice ? (item.actions || item.recommendations || []).slice(0, 3) : [];
+          row.innerHTML = '<strong>' + escapeHtml(label) + '</strong><br>' +
+            (status ? statusBadge(String(status)) : '') +
+            (item.strategy_score || item.opportunity_score || item.coverage_score ? '<span class="scsi-badge scsi-badge-soft">Score ' + escapeHtml(item.strategy_score || item.opportunity_score || item.coverage_score) + '</span>' : '') +
+            '<small>' + escapeHtml(item.summary || item.path || item.query || item.message || '') + '</small>' +
+            (actions.length ? '<ul class="scsi-list">' + actions.map(function (a) { return '<li>' + escapeHtml(a) + '</li>'; }).join('') + '</ul>' : '');
+        } else {
+          row.textContent = String(item || '');
+        }
+        out.appendChild(row);
+      });
+    });
+
+    const methodology = data.methodology || {};
+    if (methodology.summary) {
+      const note = document.createElement('p');
+      note.className = 'scsi-muted scsi-report-methodology';
+      note.textContent = methodology.summary + (methodology.privacy_note ? ' ' + methodology.privacy_note : '');
+      out.appendChild(note);
+    }
+
+    const exportNote = document.createElement('p');
+    exportNote.className = 'scsi-muted scsi-report-export-note';
+    exportNote.textContent = 'Export endpoints are available through the backend with ?format=markdown or ?format=csv for internal planning.';
+    out.appendChild(exportNote);
+  }
+
+  function reportEndpoint(type) {
+    const map = {
+      'site-intelligence': '/report-site-intelligence',
+      'search-intelligence': '/report-search-intelligence',
+      'content-strategy': '/report-content-strategy',
+      'external-sources': '/report-external-sources',
+      'climate-energy': '/report-climate-energy',
+      'indexing': '/report-indexing',
+      'export': '/report-export'
+    };
+    return map[type] || '/report-site-intelligence';
+  }
+
   function fetchDashboards() {
     if (!cfg.restBase) return;
+    document.querySelectorAll('[data-scsi-report]').forEach(function (root) {
+      const type = root.dataset.reportType || 'site-intelligence';
+      fetchJson(cfg.restBase + reportEndpoint(type) + queryFromDataset(root, ['startDate', 'endDate', 'priorStartDate', 'priorEndDate', 'limit', 'latitude', 'longitude', 'country', 'start', 'end', 'year', 'live', 'report']))
+        .then(function (data) { renderReport(root, data); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load report generator.'); });
+    });
+
     document.querySelectorAll('[data-scsi-dashboard]').forEach(function (root) {
       fetchJson(cfg.restBase + '/dashboard')
         .then(function (data) { renderDashboard(root, data); })

@@ -394,3 +394,30 @@
     justify-content: flex-start;
   }
 }
+
+/* v0.7.0 report generator */
+.scsi-report-card .scsi-report-summary {
+  font-size: 1.02rem;
+  line-height: 1.65;
+  margin: 0 0 1.1rem;
+}
+.scsi-report-section {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(20, 20, 20, 0.10);
+}
+.scsi-report-section h3 {
+  margin-bottom: 0.35rem;
+}
+.scsi-report-row small {
+  display: block;
+  margin-top: 0.35rem;
+}
+.scsi-report-export-note,
+.scsi-report-methodology {
+  margin-top: 1.25rem;
+}
+.scsi-report-highlights li,
+.scsi-report-recommendations li {
+  margin-bottom: 0.45rem;
+}

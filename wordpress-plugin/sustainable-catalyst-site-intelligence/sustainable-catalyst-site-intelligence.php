@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 0.6.0
+ * Version: 0.7.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '0.6.0';
+    const VERSION = '0.7.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -52,6 +52,13 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_urban_resilience_intelligence', [$this, 'urban_resilience_shortcode']);
         add_shortcode('sc_biodiversity_land_use_intelligence', [$this, 'biodiversity_land_use_shortcode']);
         add_shortcode('sc_energy_systems_intelligence', [$this, 'energy_systems_shortcode']);
+        add_shortcode('sc_site_intelligence_report', [$this, 'site_intelligence_report_shortcode']);
+        add_shortcode('sc_search_intelligence_report', [$this, 'search_intelligence_report_shortcode']);
+        add_shortcode('sc_content_strategy_report', [$this, 'content_strategy_report_shortcode']);
+        add_shortcode('sc_external_sources_report', [$this, 'external_sources_report_shortcode']);
+        add_shortcode('sc_climate_energy_report', [$this, 'climate_energy_report_shortcode']);
+        add_shortcode('sc_indexing_report', [$this, 'indexing_report_shortcode']);
+        add_shortcode('sc_report_export_bundle', [$this, 'report_export_bundle_shortcode']);
     }
 
     public static function defaults() {
@@ -271,6 +278,47 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/energy-systems', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_energy_systems'],
+            'permission_callback' => '__return_true',
+        ]);
+
+        register_rest_route(self::REST_NAMESPACE, '/report-site-intelligence', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_report_site_intelligence'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/report-search-intelligence', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_report_search_intelligence'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/report-content-strategy', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_report_content_strategy'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/report-external-sources', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_report_external_sources'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/report-climate-energy', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_report_climate_energy'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/report-indexing', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_report_indexing'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/report-export', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_report_export'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/reports-summary', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_reports_summary'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/event', [
@@ -779,6 +827,59 @@ final class SC_Site_Intelligence_Plugin {
         $query = $this->advanced_external_query_from_request($request);
         $endpoint = 'intelligence/dashboards/energy-systems' . (!empty($query) ? '?' . http_build_query($query) : '');
         $result = $this->backend_request($endpoint);
+        if (is_wp_error($result)) { return $result; }
+        return rest_ensure_response($result);
+    }
+
+
+    private function report_query_args(WP_REST_Request $request, $keys = []) {
+        $query = [];
+        foreach ($keys as $key) {
+            $value = $request->get_param($key);
+            if (!empty($value)) {
+                $query[$key] = sanitize_text_field($value);
+            }
+        }
+        return $query;
+    }
+
+    private function proxy_report($endpoint, WP_REST_Request $request, $keys = []) {
+        $query = $this->report_query_args($request, array_merge(['start_date', 'end_date', 'format'], $keys));
+        $result = $this->backend_request($endpoint . (!empty($query) ? '?' . http_build_query($query) : ''));
+        if (is_wp_error($result)) { return $result; }
+        return rest_ensure_response($result);
+    }
+
+    public function rest_report_site_intelligence(WP_REST_Request $request) {
+        return $this->proxy_report('reports/site-intelligence', $request);
+    }
+
+    public function rest_report_search_intelligence(WP_REST_Request $request) {
+        return $this->proxy_report('reports/search-intelligence', $request);
+    }
+
+    public function rest_report_content_strategy(WP_REST_Request $request) {
+        return $this->proxy_report('reports/content-strategy', $request, ['prior_start_date', 'prior_end_date', 'limit']);
+    }
+
+    public function rest_report_external_sources(WP_REST_Request $request) {
+        return $this->proxy_report('reports/external-sources', $request);
+    }
+
+    public function rest_report_climate_energy(WP_REST_Request $request) {
+        return $this->proxy_report('reports/climate-energy', $request, ['latitude', 'longitude', 'country', 'start', 'end', 'year', 'live']);
+    }
+
+    public function rest_report_indexing(WP_REST_Request $request) {
+        return $this->proxy_report('reports/indexing', $request);
+    }
+
+    public function rest_report_export(WP_REST_Request $request) {
+        return $this->proxy_report('reports/export', $request, ['report']);
+    }
+
+    public function rest_reports_summary(WP_REST_Request $request) {
+        $result = $this->backend_request('intelligence/reports');
         if (is_wp_error($result)) { return $result; }
         return rest_ensure_response($result);
     }
@@ -1546,6 +1647,72 @@ final class SC_Site_Intelligence_Plugin {
             <div class="scsi-output" aria-live="polite"></div>
         </section>
         <?php return ob_get_clean();
+    }
+
+
+    private function report_shortcode_atts($atts, $shortcode) {
+        return shortcode_atts([
+            'start_date' => '',
+            'end_date' => '',
+            'prior_start_date' => '',
+            'prior_end_date' => '',
+            'limit' => '',
+            'latitude' => '',
+            'longitude' => '',
+            'country' => '',
+            'start' => '',
+            'end' => '',
+            'year' => '',
+            'live' => '',
+            'report' => '',
+        ], $atts, $shortcode);
+    }
+
+    private function report_shortcode($atts, $shortcode, $type, $eyebrow, $title, $loading) {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') { return ''; }
+        $atts = $this->report_shortcode_atts($atts, $shortcode);
+        ob_start(); ?>
+        <section class="scsi-card scsi-report-card" data-scsi-report data-report-type="<?php echo esc_attr($type); ?>"
+            data-start-date="<?php echo esc_attr($atts['start_date']); ?>" data-end-date="<?php echo esc_attr($atts['end_date']); ?>"
+            data-prior-start-date="<?php echo esc_attr($atts['prior_start_date']); ?>" data-prior-end-date="<?php echo esc_attr($atts['prior_end_date']); ?>"
+            data-limit="<?php echo esc_attr($atts['limit']); ?>" data-latitude="<?php echo esc_attr($atts['latitude']); ?>" data-longitude="<?php echo esc_attr($atts['longitude']); ?>"
+            data-country="<?php echo esc_attr($atts['country']); ?>" data-start="<?php echo esc_attr($atts['start']); ?>" data-end="<?php echo esc_attr($atts['end']); ?>"
+            data-year="<?php echo esc_attr($atts['year']); ?>" data-live="<?php echo esc_attr($atts['live']); ?>" data-report="<?php echo esc_attr($atts['report']); ?>">
+            <p class="scsi-eyebrow"><?php echo esc_html($eyebrow); ?></p>
+            <h2><?php echo esc_html($title); ?></h2>
+            <p class="scsi-muted"><?php echo esc_html($loading); ?></p>
+            <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php return ob_get_clean();
+    }
+
+    public function site_intelligence_report_shortcode($atts = []) {
+        return $this->report_shortcode($atts, 'sc_site_intelligence_report', 'site-intelligence', 'Report Generator', 'Weekly Site Intelligence Report', 'Loading Site Intelligence report…');
+    }
+
+    public function search_intelligence_report_shortcode($atts = []) {
+        return $this->report_shortcode($atts, 'sc_search_intelligence_report', 'search-intelligence', 'Search Report', 'Search Intelligence Report', 'Loading Search Intelligence report…');
+    }
+
+    public function content_strategy_report_shortcode($atts = []) {
+        return $this->report_shortcode($atts, 'sc_content_strategy_report', 'content-strategy', 'Publishing Report', 'Content Strategy Report', 'Loading Content Strategy report…');
+    }
+
+    public function external_sources_report_shortcode($atts = []) {
+        return $this->report_shortcode($atts, 'sc_external_sources_report', 'external-sources', 'External Sources Report', 'External Data Source Brief', 'Loading External Sources report…');
+    }
+
+    public function climate_energy_report_shortcode($atts = []) {
+        return $this->report_shortcode($atts, 'sc_climate_energy_report', 'climate-energy', 'Climate + Energy Report', 'Climate + Energy Snapshot Report', 'Loading Climate + Energy report…');
+    }
+
+    public function indexing_report_shortcode($atts = []) {
+        return $this->report_shortcode($atts, 'sc_indexing_report', 'indexing', 'Indexing Report', 'Registry and Indexing Coverage Report', 'Loading Indexing Coverage report…');
+    }
+
+    public function report_export_bundle_shortcode($atts = []) {
+        return $this->report_shortcode($atts, 'sc_report_export_bundle', 'export', 'Export Bundle', 'Site Intelligence Export Bundle', 'Loading export bundle summary…');
     }
 
 }
