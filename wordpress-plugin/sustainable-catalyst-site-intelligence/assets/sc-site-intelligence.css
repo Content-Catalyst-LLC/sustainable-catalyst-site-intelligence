@@ -575,3 +575,84 @@
   .scsi-public-flagship { padding: 20px; border-radius: 20px; }
   .scsi-flagship-hero, .scsi-public-builder-hero { padding: 18px; }
 }
+
+/* v0.10.1 Public Dashboard Visual QA and Copy Polish */
+.scsi-public-flagship {
+  background: linear-gradient(180deg, #fffdfb 0%, #fbf7f1 100%);
+}
+.scsi-public-flagship .scsi-card {
+  border-color: rgba(0,0,0,.075);
+  box-shadow: 0 14px 36px rgba(0,0,0,.045);
+}
+.scsi-flagship-hero {
+  position: relative;
+  overflow: hidden;
+}
+.scsi-flagship-hero:after {
+  content: "";
+  position: absolute;
+  right: -60px;
+  top: -80px;
+  width: 220px;
+  height: 220px;
+  border-radius: 999px;
+  background: rgba(196,0,0,.05);
+  pointer-events: none;
+}
+.scsi-flagship-lede {
+  color: #2f2a27;
+}
+.scsi-public-visual-qa,
+.scsi-public-page-builder,
+.scsi-public-shortcode-bundle {
+  border-top: 4px solid #c40000;
+}
+.scsi-public-qa-hero,
+.scsi-public-copy-box {
+  padding: 18px 20px;
+  border: 1px solid rgba(0,0,0,.08);
+  background: #fffdf9;
+  border-radius: 18px;
+  margin: 16px 0;
+}
+.scsi-public-qa-hero h3 {
+  margin: 0 0 8px;
+}
+.scsi-public-qa-row small,
+.scsi-public-copy-box small {
+  display: block;
+  margin-top: 6px;
+}
+.scsi-public-qa-list li {
+  margin-bottom: .45rem;
+}
+.scsi-error-box {
+  margin-top: 12px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid rgba(196,0,0,.18);
+  background: rgba(196,0,0,.045);
+}
+.scsi-error-box small {
+  display: block;
+  margin-top: 4px;
+}
+.scsi-public-section-row code,
+.scsi-public-preset-row code,
+.scsi-public-copy-box code {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 760px) {
+  .scsi-flagship-lede,
+  .scsi-public-builder-hero p {
+    font-size: 1rem;
+  }
+  .scsi-public-cta {
+    width: 100%;
+  }
+  .scsi-public-qa-hero,
+  .scsi-public-copy-box {
+    padding: 15px;
+  }
+}

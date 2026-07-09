@@ -18,7 +18,7 @@
       client_time: new Date().toISOString(),
       metadata: {
         href: params && params.href ? params.href : '',
-        version: cfg.version || '0.10.0'
+        version: cfg.version || '0.10.1'
       }
     }, params || {});
 
@@ -137,8 +137,13 @@
   }
 
   function showError(root, message) {
+    const safeMessage = cleanErrorMessage(message || 'Unable to load Site Intelligence backend.', 'Site Intelligence panel is temporarily unavailable.');
     const muted = root.querySelector('.scsi-muted');
-    if (muted) muted.textContent = message || 'Unable to load Site Intelligence backend.';
+    if (muted) muted.textContent = safeMessage;
+    const out = root.querySelector('.scsi-output');
+    if (out && !out.innerHTML) {
+      out.innerHTML = '<div class="scsi-error-box"><strong>Panel unavailable</strong><small>' + escapeHtml(safeMessage) + '</small></div>';
+    }
   }
 
   function fetchJson(url) {
@@ -1942,6 +1947,55 @@
     });
   }
 
+  function renderPublicVisualQa(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    muted.textContent = (data.summary || 'Public dashboard QA guidance.') + ' · Status: ' + (data.status || 'review');
+    out.innerHTML = '';
+
+    const hero = document.createElement('div');
+    hero.className = 'scsi-public-qa-hero';
+    hero.innerHTML = '<p class="scsi-eyebrow">' + escapeHtml(data.eyebrow || 'Public Flagship QA') + '</p>' +
+      '<h3>' + escapeHtml(data.title || 'Public Dashboard Visual QA') + '</h3>' +
+      '<p>' + escapeHtml(data.summary || '') + '</p>' +
+      '<div class="scsi-mini-badges">' + statusBadge(data.status || 'review') + '<span class="scsi-badge scsi-badge-soft">Score ' + formatNumber(data.score || 0) + '%</span></div>';
+    out.appendChild(hero);
+
+    const copy = data.public_page_copy || {};
+    const copyBox = document.createElement('div');
+    copyBox.className = 'scsi-page-row scsi-public-copy-box';
+    copyBox.innerHTML = '<strong>Suggested public page copy</strong>' +
+      '<small><b>Title:</b> ' + escapeHtml(copy.suggested_title || '') + '</small>' +
+      '<small><b>Excerpt:</b> ' + escapeHtml(copy.suggested_excerpt || '') + '</small>' +
+      '<small><b>Meta:</b> ' + escapeHtml(copy.suggested_meta_description || '') + '</small>' +
+      '<code>' + escapeHtml(data.recommended_public_shortcode || '[sc_site_intelligence_public_flagship]') + '</code>';
+    out.appendChild(copyBox);
+
+    const checksTitle = document.createElement('h3');
+    checksTitle.textContent = 'QA checks';
+    out.appendChild(checksTitle);
+    (data.checks || []).forEach(function (check) {
+      const row = document.createElement('div');
+      row.className = 'scsi-page-row scsi-public-qa-row';
+      row.innerHTML = '<strong>' + escapeHtml(check.label || check.id) + '</strong><br>' +
+        statusBadge(check.status || 'review') +
+        '<small>' + escapeHtml(check.detail || '') + '</small>' +
+        '<small><b>Review note:</b> ' + escapeHtml(check.recommendation || '') + '</small>';
+      out.appendChild(row);
+    });
+
+    [['Copy polish guidance', data.copy_guidelines || []], ['Visual review guidance', data.visual_guidelines || []], ['Launch notes', data.launch_notes || []]].forEach(function (group) {
+      if (!group[1].length) return;
+      const h = document.createElement('h3');
+      h.textContent = group[0];
+      out.appendChild(h);
+      const ul = document.createElement('ul');
+      ul.className = 'scsi-list scsi-public-qa-list';
+      group[1].forEach(function (item) { const li = document.createElement('li'); li.textContent = item; ul.appendChild(li); });
+      out.appendChild(ul);
+    });
+  }
+
   function fetchDashboards() {
     if (!cfg.restBase) return;
     document.querySelectorAll('[data-scsi-admin-control]').forEach(function (root) {
@@ -2114,6 +2168,11 @@
       fetchJson(cfg.restBase + '/public-page-builder-shortcodes')
         .then(function (data) { renderPublicShortcodeBundles(root, data); })
         .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public shortcode bundles.'); });
+    });
+    document.querySelectorAll('[data-scsi-public-visual-qa]').forEach(function (root) {
+      fetchJson(cfg.restBase + '/public-page-builder-visual-qa')
+        .then(function (data) { renderPublicVisualQa(root, data); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public dashboard visual QA.'); });
     });
     document.querySelectorAll('[data-scsi-public-landing]').forEach(function (root) {
       fetchJson(cfg.restBase + '/public-landing-page')

@@ -28,7 +28,7 @@ from .indexing_intelligence import (
 )
 from .publishing_intelligence import publishing_intelligence, topic_momentum_report
 from .public_dashboard import build_public_dashboard, public_landing_page, public_methodology, public_readiness_report
-from .public_page_builder import public_page_builder, public_page_builder_readiness, public_shortcode_bundles
+from .public_page_builder import public_dashboard_visual_qa, public_page_builder, public_page_builder_readiness, public_shortcode_bundles
 from .report_generator import (
     bundle_manifest_report,
     bundle_report,
@@ -315,6 +315,13 @@ def public_page_builder_readiness_endpoint(settings: Settings = Depends(get_sett
     if not settings.public_dashboards_enabled:
         raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
     return public_page_builder_readiness(settings)
+
+
+@app.get("/public/page-builder/visual-qa")
+def public_page_builder_visual_qa_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return public_dashboard_visual_qa(settings)
 
 
 @app.get("/intelligence/public-page-builder")

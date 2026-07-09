@@ -1,34 +1,30 @@
 # Sustainable Catalyst Site Intelligence
 
-Version: 0.10.0
+Version: 0.10.1
 
 Site Intelligence is the Sustainable Catalyst analytics, registry, external-source, reporting, AI-brief, public-dashboard, and admin-control platform.
 
-## v0.10.0 highlights
+## v0.10.1 highlights
 
-- WordPress admin UX polish
-- Diagnostic stabilization
-- Backend connection checker
-- Public/private visibility warning layer
-- One-click diagnostic summary
-- Shortcode copy/placement support
+- Public dashboard visual QA layer
+- Copy polish guidance for the flagship public page
+- Mobile spacing and card-stacking QA notes
+- Safer public empty/error state presentation
+- Public page title, excerpt, and meta-description suggestions
+- Private/review shortcode for launch-readiness checks
 
-## New backend endpoints
+## New backend endpoint
 
-- `/admin/status`
-- `/admin/connection-check`
-- `/admin/public-readiness-check`
-- `/admin/diagnostic-summary`
+- `/public/page-builder/visual-qa`
 
-## New private shortcodes
+## New private/review shortcode
 
-- `[sc_site_intelligence_diagnostic_summary]`
-- `[sc_site_intelligence_connection_check]`
+- `[sc_public_dashboard_visual_qa]`
 
-Keep admin shortcodes on private/admin-only pages.
+Keep visual QA, page-builder, readiness, reports, AI briefs, Search Console, and GA4 shortcodes on private/review pages unless manually approved.
 
 
-## v0.10.0 — Public Flagship Dashboard Page Builder
+## v0.10.1 — Public Flagship Dashboard Page Builder
 
 Adds a public-safe page-builder layer for assembling the flagship Sustainable Catalyst Site Intelligence dashboard.
 
@@ -46,3 +42,18 @@ New WordPress shortcodes:
 - `[sc_public_dashboard_shortcode_bundle]`
 
 The flagship shortcode uses only public-safe modules and local presentation copy by default.
+
+
+## v0.10.1 — Public Dashboard Visual QA and Copy Polish
+
+Adds a final public dashboard quality-assurance layer before v1.0 public release.
+
+New public-safe review endpoint:
+
+- `/public/page-builder/visual-qa`
+
+New private/review shortcode:
+
+- `[sc_public_dashboard_visual_qa]`
+
+Use this shortcode on an internal review page to check copy tone, visual hierarchy, mobile spacing, public/private boundaries, and launch polish before promoting the flagship dashboard publicly.

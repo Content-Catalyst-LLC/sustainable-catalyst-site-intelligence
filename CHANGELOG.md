@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.1 — Public Dashboard Visual QA and Copy Polish
+
+- Added public-dashboard visual QA endpoint for final public page review.
+- Added WordPress visual QA shortcode for private/review pages.
+- Polished flagship dashboard copy, safety language, CTA labels, and empty-state messaging.
+- Added mobile/spacing/readability QA checks and copy-ready public page notes.
+- Added v0.10.1 tests for visual QA payloads and shortcode catalog registration.
+
 ## 0.10.0 — Public Flagship Dashboard Page Builder
 
 - Added public-safe page-builder endpoints.

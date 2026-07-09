@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 0.10.0
+ * Version: 0.10.1
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '0.10.0';
+    const VERSION = '0.10.1';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -45,6 +45,7 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_site_intelligence_public_flagship', [$this, 'public_flagship_shortcode']);
         add_shortcode('sc_site_intelligence_public_page_builder', [$this, 'public_page_builder_shortcode']);
         add_shortcode('sc_public_dashboard_shortcode_bundle', [$this, 'public_shortcode_bundle_shortcode']);
+        add_shortcode('sc_public_dashboard_visual_qa', [$this, 'public_visual_qa_shortcode']);
         add_shortcode('sc_public_site_intelligence', [$this, 'public_site_intelligence_shortcode']);
         add_shortcode('sc_public_knowledge_overview', [$this, 'public_knowledge_overview_shortcode']);
         add_shortcode('sc_public_climate_energy_summary', [$this, 'public_climate_energy_summary_shortcode']);
@@ -256,6 +257,11 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-page-builder-readiness', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_page_builder_readiness'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-page-builder-visual-qa', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_page_builder_visual_qa'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/public-dashboard', [
@@ -890,6 +896,14 @@ final class SC_Site_Intelligence_Plugin {
         return rest_ensure_response($result);
     }
 
+    public function rest_public_page_builder_visual_qa(WP_REST_Request $request) {
+        $result = $this->backend_request('public/page-builder/visual-qa');
+        if (is_wp_error($result)) {
+            return new WP_REST_Response(['ok' => false, 'message' => $result->get_error_message()], 502);
+        }
+        return rest_ensure_response($result);
+    }
+
     public function rest_public_dashboard(WP_REST_Request $request) {
         $query = $this->public_query_from_request($request);
         $endpoint = 'public/dashboard' . (!empty($query) ? '?' . http_build_query($query) : '');
@@ -1056,7 +1070,7 @@ final class SC_Site_Intelligence_Plugin {
             'generated_at' => gmdate('c'),
             'mode' => 'public',
             'provider' => 'deterministic-local',
-            'model' => 'wordpress-fallback-v0.10.0',
+            'model' => 'wordpress-fallback-v0.10.1',
             'source_report' => [
                 'report_id' => 'public-dashboard',
                 'title' => 'Public Dashboard Readiness Report',
@@ -1796,14 +1810,14 @@ final class SC_Site_Intelligence_Plugin {
         }
         $atts = shortcode_atts([
             'title' => 'Sustainable Catalyst Site Intelligence',
-            'subtitle' => 'A public-safe dashboard for knowledge architecture, public source signals, and platform transparency.',
+            'subtitle' => 'A public-safe dashboard for knowledge architecture, public source signals, methodology, and platform transparency.',
             'show_cta' => 'true',
         ], $atts, 'sc_site_intelligence_public_flagship');
         ob_start();
         ?>
         <section class="scsi-public-flagship" data-scsi-public-flagship>
             <div class="scsi-flagship-hero">
-                <p class="scsi-eyebrow">Sustainable Catalyst Public Dashboard</p>
+                <p class="scsi-eyebrow">Sustainable Catalyst Site Intelligence</p>
                 <h2><?php echo esc_html($atts['title']); ?></h2>
                 <p class="scsi-flagship-lede"><?php echo esc_html($atts['subtitle']); ?></p>
                 <p class="scsi-public-boundary">Educational and informational only. This page does not provide legal, financial, medical, engineering, climate-risk, ESG, compliance, assurance, or investment advice.</p>
@@ -1811,7 +1825,7 @@ final class SC_Site_Intelligence_Plugin {
                 <div class="scsi-public-cta-row scsi-flagship-cta-row">
                     <a class="scsi-public-cta" href="https://sustainablecatalyst.com/research-library/" data-scsi-event="sc_library_nav">Explore the Research Library</a>
                     <a class="scsi-public-cta" href="https://sustainablecatalyst.com/workbench/" data-scsi-event="sc_workbench_open">Open the Workbench</a>
-                    <a class="scsi-public-cta" href="https://github.com/Content-Catalyst-LLC" target="_blank" rel="noopener" data-scsi-event="sc_repository_click">View GitHub</a>
+                    <a class="scsi-public-cta" href="https://github.com/Content-Catalyst-LLC" target="_blank" rel="noopener" data-scsi-event="sc_repository_click">View the GitHub Repositories</a>
                 </div>
                 <?php endif; ?>
             </div>
@@ -1857,6 +1871,23 @@ final class SC_Site_Intelligence_Plugin {
             <p class="scsi-eyebrow">Public Dashboard Shortcode Bundles</p>
             <h2>Copy-Ready Public Dashboard Bundles</h2>
             <p class="scsi-muted">Loading public-safe shortcode bundles…</p>
+            <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
+    public function public_visual_qa_shortcode($atts = []) {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') {
+            return '';
+        }
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-public-visual-qa" data-scsi-public-visual-qa>
+            <p class="scsi-eyebrow">Public Dashboard Visual QA</p>
+            <h2>Visual QA and Copy Polish</h2>
+            <p class="scsi-muted">Loading public dashboard visual QA, copy guidance, and launch notes…</p>
             <div class="scsi-output" aria-live="polite"></div>
         </section>
         <?php

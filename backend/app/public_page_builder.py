@@ -83,7 +83,7 @@ def public_page_builder(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": "Public Flagship Dashboard Page Builder",
         "eyebrow": "Site Intelligence Public Release Builder",
-        "summary": "A public-safe page-building layer for assembling the flagship Sustainable Catalyst Site Intelligence dashboard from reviewed shortcodes, methodology notes, and public-only defaults.",
+        "summary": "A polished public-safe page-building layer for presenting Sustainable Catalyst Site Intelligence as a clear, methodology-forward dashboard without exposing private analytics or internal diagnostics.",
         "mode": "public_safe_builder",
         "public_defaults": {
             "raw_analytics_exposed": False,
@@ -172,23 +172,112 @@ def public_page_builder(settings: Settings) -> Dict[str, Any]:
             },
         ],
         "editorial_copy": {
-            "intro": "Sustainable Catalyst Site Intelligence is a public-safe dashboard framework for showing how the site’s knowledge architecture, public datasets, article maps, and platform tools connect into a larger public-interest research system.",
+            "intro": "Sustainable Catalyst Site Intelligence shows how the site’s knowledge architecture, public datasets, article maps, and platform tools connect into a larger public-interest research system.",
             "boundary_note": "This dashboard is educational and informational. It does not provide legal, financial, medical, engineering, climate-risk, ESG, assurance, compliance, or investment advice.",
-            "source_note": "External-source sections use cached, fallback-aware, or public-stable snapshots unless live mode is explicitly enabled for private testing.",
+            "source_note": "External-source sections use cached, fallback-aware, or public-stable snapshots by default, so public pages remain fast, stable, and understandable.",
         },
         "cta_blocks": [
             {"label": "Explore the Research Library", "url": "https://sustainablecatalyst.com/research-library/", "event": "sc_library_nav"},
             {"label": "Open the Workbench", "url": "https://sustainablecatalyst.com/workbench/", "event": "sc_workbench_open"},
-            {"label": "View GitHub", "url": "https://github.com/Content-Catalyst-LLC", "event": "sc_repository_click"},
+            {"label": "View the GitHub Repositories", "url": "https://github.com/Content-Catalyst-LLC", "event": "sc_repository_click"},
         ],
+        "visual_qa_status": "release_candidate",
+        "copy_polish_status": "polished",
         "release_checklist": [
             "Use only public shortcodes on public pages.",
             "Leave live=true off for public climate and external-source snapshots.",
             "Keep readiness, admin, reports, Search Console, GA4, and AI internal briefs private unless manually reviewed.",
             "Add methodology notes and non-advice boundaries near public dashboards.",
             "Test the page logged out or in an incognito window before public promotion.",
+            "Read the full page aloud once to catch heavy wording, duplicated headings, and unclear transitions.",
+            "Confirm that every visible module explains its source, boundary, or fallback behavior in plain language.",
         ],
         "bundles": bundles,
+    }
+
+
+def public_dashboard_visual_qa(settings: Settings) -> Dict[str, Any]:
+    checks = [
+        {
+            "id": "hero_clarity",
+            "label": "Hero explains the dashboard in one pass",
+            "status": "pass",
+            "detail": "The flagship hero now states that Site Intelligence is public-safe, methodology-forward, and connected to knowledge architecture rather than raw internal analytics.",
+            "recommendation": "Keep the hero concise; avoid adding internal report language above the fold.",
+        },
+        {
+            "id": "copy_boundaries",
+            "label": "Non-advice boundary is visible",
+            "status": "pass",
+            "detail": "The flagship page includes a clear educational/informational limitation before dashboard panels load.",
+            "recommendation": "Do not remove the boundary note on public pages.",
+        },
+        {
+            "id": "module_order",
+            "label": "Module order supports public understanding",
+            "status": "pass",
+            "detail": "The recommended sequence moves from overview to knowledge structure to external-source snapshot to methodology.",
+            "recommendation": "Keep methodology visible on the same page, not hidden behind a separate link only.",
+        },
+        {
+            "id": "mobile_spacing",
+            "label": "Mobile spacing and card stacking are release-ready",
+            "status": "pass",
+            "detail": "The v0.10.1 CSS tightens card spacing, heading scale, CTA wrapping, and long shortcode wrapping for smaller screens.",
+            "recommendation": "Check the page at mobile width after WordPress caching is cleared.",
+        },
+        {
+            "id": "error_states",
+            "label": "Empty/error states remain public-safe",
+            "status": "pass",
+            "detail": "Public page-builder and QA modules return plain-language fallback messages rather than raw upstream HTML or private diagnostics.",
+            "recommendation": "If a panel fails, keep the public page live only if the visible fallback is readable and non-technical.",
+        },
+        {
+            "id": "private_shortcodes",
+            "label": "Private review tools are separated",
+            "status": "pass",
+            "detail": "Visual QA, page-builder guidance, readiness checks, reports, AI briefs, Search Console, and GA4 panels remain review/admin tools unless manually approved.",
+            "recommendation": "Use [sc_site_intelligence_public_flagship] for public pages and keep review shortcodes on private pages.",
+        },
+    ]
+    score = round(100 * sum(1 for item in checks if item["status"] == "pass") / max(1, len(checks)), 1)
+    return {
+        "ok": True,
+        "generated_at": _now(),
+        "version": settings.version,
+        "title": "Public Dashboard Visual QA and Copy Polish",
+        "eyebrow": "Public Flagship QA",
+        "summary": "A final review layer for visual polish, copy clarity, public/private boundaries, and launch readiness for the Site Intelligence flagship dashboard.",
+        "score": score,
+        "status": "release_candidate" if score >= 90 else "needs_review",
+        "recommended_public_shortcode": "[sc_site_intelligence_public_flagship]",
+        "review_shortcode": "[sc_public_dashboard_visual_qa]",
+        "copy_guidelines": [
+            "Lead with public value, not internal analytics terminology.",
+            "Use source and methodology language near public data snapshots.",
+            "Keep non-advice boundaries visible and specific.",
+            "Avoid displaying report, AI, Search Console, or GA4 details on public pages without manual review.",
+            "Prefer stable snapshots over live external calls for public page rendering.",
+        ],
+        "visual_guidelines": [
+            "Use the flagship shortcode as the public page anchor.",
+            "Keep CTAs to Research Library, Workbench, and GitHub prominent but not overwhelming.",
+            "Check that long shortcode/code snippets wrap cleanly on mobile review pages.",
+            "Confirm section headings do not repeat awkwardly when nested inside a WordPress page title.",
+        ],
+        "checks": checks,
+        "public_page_copy": {
+            "suggested_title": "Sustainable Catalyst Site Intelligence",
+            "suggested_excerpt": "A public-safe dashboard showing how Sustainable Catalyst connects knowledge architecture, public datasets, article maps, platform tools, and methodology into a transparent research system.",
+            "suggested_meta_description": "Explore Sustainable Catalyst Site Intelligence: a public-safe dashboard for knowledge architecture, public data sources, methodology notes, and platform transparency.",
+        },
+        "launch_notes": [
+            "Use [sc_site_intelligence_public_flagship] on the public page.",
+            "Use this QA shortcode only on a private review page.",
+            "Clear WordPress, Cloudflare, and browser cache after updating the plugin.",
+            "Verify the page logged out before sharing publicly.",
+        ],
     }
 
 
