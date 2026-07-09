@@ -1409,6 +1409,42 @@
     out.appendChild(list);
   }
 
+
+  function publicDashboardBriefFallback() {
+    return {
+      ok: true,
+      brief_id: 'public-dashboard-ai-brief',
+      title: 'AI-Assisted Public Dashboard Brief',
+      generated_at: new Date().toISOString(),
+      mode: 'public',
+      provider: 'deterministic-local',
+      model: 'browser-fallback-v0.8.2',
+      source_report: {title: 'Public Dashboard Readiness Report'},
+      executive_summary: 'The Sustainable Catalyst public dashboard layer is suitable for reviewed public presentation when it uses sanitized, source-labeled summaries, methodology notes, and public-safe snapshots rather than raw analytics or live operational diagnostics.',
+      key_findings: [
+        'Public dashboard modules should remain aggregated, reviewed, and source-labeled.',
+        'Raw GA4 analytics, conversion diagnostics, report queues, and operational notes should remain private.',
+        'Public pages should use fast snapshots by default and reserve live connector calls for private testing.'
+      ],
+      recommended_actions: [
+        'Use the public landing, public knowledge overview, climate/energy summary, and methodology shortcodes on public pages.',
+        'Keep the Public Dashboard Brief deterministic unless directly testing the backend route.',
+        'Pair public summaries with clear educational and analytical boundaries.'
+      ],
+      content_opportunities: [
+        'Use the public dashboard as portfolio evidence for open infrastructure, analytics, and responsible sustainability tooling.',
+        'Turn reviewed public dashboard findings into LinkedIn or Substack updates only after manual review.'
+      ],
+      risk_notes: [
+        'Public dashboards should not expose raw analytics, private recommendations, API configuration, or backend diagnostic details.',
+        'This local fallback exists so the page remains stable even when Render, Bluehost, Cloudflare, or an AI provider is unavailable.'
+      ],
+      public_safe_summary: 'Public Site Intelligence can be presented as a reviewed, source-labeled dashboard framework for Sustainable Catalyst. It should emphasize methodology, knowledge architecture, public data context, and educational boundaries while keeping raw analytics and operational diagnostics private.',
+      private_notes: [],
+      confidence: {level: 'medium', basis: 'Generated from the v0.8.2 browser fallback to avoid gateway-dependent public rendering.'}
+    };
+  }
+
   function renderAiBrief(root, data) {
     const out = root.querySelector('.scsi-output');
     const muted = root.querySelector('.scsi-muted');
@@ -1591,9 +1627,15 @@
 
     document.querySelectorAll('[data-scsi-ai-brief]').forEach(function (root) {
       const type = root.dataset.briefType || 'site-intelligence';
-      fetchJson(cfg.restBase + aiBriefEndpoint(type) + queryFromDataset(root, ['startDate', 'endDate', 'priorStartDate', 'priorEndDate', 'limit', 'mode', 'useAi']))
+      fetchJson(cfg.restBase + aiBriefEndpoint(type) + queryFromDataset(root, ['startDate', 'endDate', 'priorStartDate', 'priorEndDate', 'limit', 'mode', 'useAi', 'live']))
         .then(function (data) { renderAiBrief(root, data); })
-        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load AI-assisted brief.'); });
+        .catch(function (err) {
+          if (type === 'public-dashboard') {
+            renderAiBrief(root, publicDashboardBriefFallback());
+            return;
+          }
+          showError(root, err && err.message ? err.message : 'Unable to load AI-assisted brief.');
+        });
     });
     document.querySelectorAll('[data-scsi-report]').forEach(function (root) {
       const type = root.dataset.reportType || 'site-intelligence';

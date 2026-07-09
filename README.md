@@ -1,34 +1,40 @@
 # Sustainable Catalyst Site Intelligence
 
-**Version:** 0.8.1  
-**Build:** Public Dashboard Brief Gateway Patch
+**Version:** 0.8.2  
+**Build:** Public Dashboard Brief Local Fallback Patch
 
-Site Intelligence is a FastAPI + WordPress plugin system for Sustainable Catalyst analytics, registry coverage, search intelligence, external source dashboards, public dashboard summaries, reports, exports, and AI-assisted internal briefs.
+Site Intelligence connects Sustainable Catalyst analytics, registry intelligence, search visibility, publishing priorities, public dashboard summaries, external connectors, report exports, and AI-assisted briefs.
 
-## v0.8.1 patch
+## v0.8.2 patch
 
-v0.8.1 patches the AI Public Dashboard Brief so public-page rendering remains stable:
+v0.8.2 stabilizes the final AI brief shortcode:
 
-- `[sc_ai_public_dashboard_brief]` now relies on a fast public-safe snapshot.
-- The source report avoids live analytics-backed public dashboard generation during shortcode render.
-- WordPress proxy errors suppress raw HTML/Cloudflare gateway pages.
-- Frontend JavaScript sanitizes unexpected HTML errors before displaying them.
-
-## Deployment
-
-Render build command:
-
-```bash
-pip install -r backend/requirements.txt
+```text
+[sc_ai_public_dashboard_brief]
 ```
 
-Render start command:
+The Public Dashboard Brief now renders locally by default inside WordPress. This prevents Bluehost, Cloudflare, Render, external connector, or AI-provider gateway errors from affecting the page.
 
-```bash
-cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+To test the backend route directly from WordPress, opt in explicitly:
+
+```text
+[sc_ai_public_dashboard_brief live="true"]
 ```
 
-Health/version check:
+For normal dashboard pages, leave `live` off.
+
+## Key behavior
+
+- Default public-dashboard brief is deterministic and public-safe.
+- No raw analytics are exposed.
+- No external API calls are made by the default shortcode.
+- No AI-provider call is made by the default shortcode.
+- Raw HTML gateway pages are suppressed.
+- Backend endpoint `/ai/briefs/public-dashboard` defaults to `use_ai=false`.
+
+## Deploy check
+
+After pushing and redeploying, test:
 
 ```bash
 curl "https://sustainable-catalyst-site-intelligence.onrender.com/"
@@ -37,18 +43,11 @@ curl "https://sustainable-catalyst-site-intelligence.onrender.com/"
 Expected version:
 
 ```json
-{"version":"0.8.1"}
+{"version":"0.8.2"}
 ```
 
-## AI brief shortcodes
+Then update the WordPress plugin ZIP and use:
 
 ```text
-[sc_ai_brief_status]
-[sc_ai_site_intelligence_brief]
-[sc_ai_search_brief]
-[sc_ai_publishing_brief]
-[sc_ai_external_sources_brief]
 [sc_ai_public_dashboard_brief]
 ```
-
-AI remains disabled by default unless provider environment variables are configured.

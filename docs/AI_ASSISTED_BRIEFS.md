@@ -1,7 +1,25 @@
 # AI-Assisted Intelligence Briefs
 
-Site Intelligence v0.8.1 includes a stability patch for the AI Public Dashboard Brief.
+v0.8.2 keeps AI assistance optional and disabled by default. Deterministic fallback briefs remain available even when no AI provider is configured.
 
-The Public Dashboard Brief uses public-safe presentation, methodology, and readiness data. It avoids raw analytics rows, private operational queues, live external calls, and backend configuration details.
+## Public Dashboard Brief stability
 
-The WordPress proxy and frontend suppress raw upstream HTML gateway pages so Cloudflare/host 5xx responses are not printed into dashboard cards.
+`[sc_ai_public_dashboard_brief]` renders a local deterministic public-safe brief by default. This avoids gateway errors from Render, Bluehost, Cloudflare, external connectors, or an AI provider.
+
+Use live mode only for private testing:
+
+```text
+[sc_ai_public_dashboard_brief live="true"]
+```
+
+The public-dashboard backend route defaults to deterministic mode:
+
+```text
+/ai/briefs/public-dashboard
+```
+
+Use explicit AI only for private testing:
+
+```text
+/ai/briefs/public-dashboard?use_ai=true
+```

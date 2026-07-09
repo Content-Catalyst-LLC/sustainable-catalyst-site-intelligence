@@ -1590,7 +1590,7 @@ def ai_external_sources_brief(
 @app.get("/ai/briefs/public-dashboard")
 def ai_public_dashboard_brief(
     mode: str = Query("public"),
-    use_ai: bool = Query(True),
+    use_ai: bool = Query(False),
     format: str = Query("json"),
     settings: Settings = Depends(get_settings),
     registry: ContentRegistry = Depends(get_registry),
@@ -1600,7 +1600,32 @@ def ai_public_dashboard_brief(
         report = _public_dashboard_brief_report(settings, registry)
         return _format_ai_brief_response(build_ai_brief(report, "public-dashboard", settings, mode=mode, use_ai=use_ai), format, "ai-public-dashboard-brief")
     except Exception as exc:  # noqa: BLE001
-        raise HTTPException(status_code=502, detail={"message": "AI Public Dashboard brief generation failed.", "error_type": exc.__class__.__name__, "error_message": str(exc)}) from exc
+        fallback_report = {
+            "ok": True,
+            "report_id": "public-dashboard",
+            "title": "Public Dashboard Readiness Report",
+            "summary": "A public-safe fallback report summarizing Site Intelligence public dashboard readiness without calling live analytics or external connectors.",
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "source": {"dashboard": "local-public-safe-fallback", "mode": "public-safe", "live_analytics": False},
+            "date_range": {},
+            "highlights": [
+                "Public Site Intelligence should present sanitized, source-labeled dashboard summaries.",
+                "Public dashboard language should be manually reviewed before publication.",
+                "Raw analytics, conversion diagnostics, and operational queues should remain private.",
+            ],
+            "recommendations": [
+                "Use the public landing, public knowledge overview, climate/energy summary, and methodology shortcodes for public pages.",
+                "Keep the Public Dashboard Brief deterministic unless testing the backend route directly.",
+                "Reserve live connector and AI-provider calls for private review pages.",
+            ],
+            "sections": [],
+            "methodology": {
+                "summary": "Fallback brief generated locally because public-dashboard brief assembly failed.",
+                "privacy_note": "No raw analytics, private report details, or external API results are exposed.",
+                "error_type": exc.__class__.__name__,
+            },
+        }
+        return _format_ai_brief_response(build_ai_brief(fallback_report, "public-dashboard", settings, mode=mode, use_ai=False), format, "ai-public-dashboard-brief")
 
 
 @app.get("/intelligence/ai-briefs")

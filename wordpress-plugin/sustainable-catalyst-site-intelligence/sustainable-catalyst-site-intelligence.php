@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 0.8.1
+ * Version: 0.8.2
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '0.8.1';
+    const VERSION = '0.8.2';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -937,6 +937,58 @@ final class SC_Site_Intelligence_Plugin {
     }
 
 
+
+    private function local_public_dashboard_ai_brief() {
+        return [
+            'ok' => true,
+            'brief_id' => 'public-dashboard-ai-brief',
+            'title' => 'AI-Assisted Public Dashboard Brief',
+            'summary' => 'Interpret public-safe dashboard status, methodology notes, knowledge overview, and public release readiness.',
+            'generated_at' => gmdate('c'),
+            'mode' => 'public',
+            'provider' => 'deterministic-local',
+            'model' => 'wordpress-fallback-v0.8.2',
+            'source_report' => [
+                'report_id' => 'public-dashboard',
+                'title' => 'Public Dashboard Readiness Report',
+                'source' => ['dashboard' => 'wordpress-local-fallback', 'mode' => 'public-safe', 'live_analytics' => false],
+                'date_range' => [],
+            ],
+            'executive_summary' => 'The Sustainable Catalyst public dashboard layer is suitable for reviewed public presentation when it uses sanitized, source-labeled summaries, methodology notes, and public-safe snapshots rather than raw analytics or live operational diagnostics.',
+            'key_findings' => [
+                'Public dashboard modules should remain aggregated, reviewed, and source-labeled.',
+                'Raw GA4 analytics, conversion diagnostics, report queues, and operational notes should remain private.',
+                'Public pages should use fast snapshots by default and reserve live connector calls for private testing.',
+            ],
+            'recommended_actions' => [
+                'Use the public landing, public knowledge overview, climate/energy summary, and methodology shortcodes on public pages.',
+                'Keep the Public Dashboard Brief deterministic unless directly testing the backend route.',
+                'Review all public copy before promoting the dashboard as a flagship platform asset.',
+                'Pair public summaries with clear educational and analytical boundaries.',
+            ],
+            'content_opportunities' => [
+                'Create a public Site Intelligence landing page that explains the knowledge-system layer without exposing private analytics.',
+                'Use the public dashboard as portfolio evidence for open infrastructure, analytics, and responsible sustainability tooling.',
+                'Turn reviewed public dashboard findings into LinkedIn or Substack updates only after manual review.',
+            ],
+            'risk_notes' => [
+                'Public dashboards should not expose raw analytics, private recommendations, API configuration, or backend diagnostic details.',
+                'External-source summaries can be delayed, cached, or unavailable; public copy should describe source and freshness limits.',
+                'This local fallback exists so the page remains stable even when Render, Bluehost, Cloudflare, or an AI provider is unavailable.',
+            ],
+            'public_safe_summary' => 'Public Site Intelligence can be presented as a reviewed, source-labeled dashboard framework for Sustainable Catalyst. It should emphasize methodology, knowledge architecture, public data context, and educational boundaries while keeping raw analytics and operational diagnostics private.',
+            'private_notes' => [],
+            'confidence' => [
+                'level' => 'medium',
+                'basis' => 'Generated from the v0.8.2 WordPress local fallback to avoid gateway-dependent public rendering.',
+            ],
+            'methodology' => [
+                'summary' => 'v0.8.2 renders the public-dashboard brief locally by default to prevent gateway errors from affecting dashboard pages.',
+                'privacy_note' => 'No raw analytics, external API calls, API tokens, or private report payloads are used in this fallback.',
+            ],
+        ];
+    }
+
     private function ai_brief_query_args(WP_REST_Request $request, $keys = []) {
         $query = [];
         foreach ($keys as $key) {
@@ -978,7 +1030,15 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function rest_ai_public_dashboard_brief(WP_REST_Request $request) {
-        return $this->proxy_ai_brief('ai/briefs/public-dashboard', $request);
+        $live = $request->get_param('live');
+        if ($live !== 'true' && $live !== '1') {
+            return rest_ensure_response($this->local_public_dashboard_ai_brief());
+        }
+        $result = $this->proxy_ai_brief('ai/briefs/public-dashboard', $request);
+        if (is_wp_error($result)) {
+            return rest_ensure_response($this->local_public_dashboard_ai_brief());
+        }
+        return $result;
     }
 
     public function rest_ai_briefs_summary(WP_REST_Request $request) {
@@ -1835,6 +1895,7 @@ final class SC_Site_Intelligence_Plugin {
             'limit' => '',
             'mode' => '',
             'use_ai' => '',
+            'live' => '',
         ], $atts, $shortcode);
     }
 
@@ -1859,7 +1920,7 @@ final class SC_Site_Intelligence_Plugin {
         <section class="scsi-card scsi-ai-brief-card" data-scsi-ai-brief data-brief-type="<?php echo esc_attr($type); ?>"
             data-start-date="<?php echo esc_attr($atts['start_date']); ?>" data-end-date="<?php echo esc_attr($atts['end_date']); ?>"
             data-prior-start-date="<?php echo esc_attr($atts['prior_start_date']); ?>" data-prior-end-date="<?php echo esc_attr($atts['prior_end_date']); ?>"
-            data-limit="<?php echo esc_attr($atts['limit']); ?>" data-mode="<?php echo esc_attr($atts['mode']); ?>" data-use-ai="<?php echo esc_attr($atts['use_ai']); ?>">
+            data-limit="<?php echo esc_attr($atts['limit']); ?>" data-mode="<?php echo esc_attr($atts['mode']); ?>" data-use-ai="<?php echo esc_attr($atts['use_ai']); ?>" data-live="<?php echo esc_attr($atts['live']); ?>">
             <p class="scsi-eyebrow"><?php echo esc_html($eyebrow); ?></p>
             <h2><?php echo esc_html($title); ?></h2>
             <p class="scsi-muted"><?php echo esc_html($loading); ?></p>
@@ -1885,7 +1946,36 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function ai_public_dashboard_brief_shortcode($atts = []) {
-        return $this->ai_brief_shortcode($atts, 'sc_ai_public_dashboard_brief', 'public-dashboard', 'AI-Assisted Brief', 'Public Dashboard Brief', 'Loading AI-assisted Public Dashboard brief…');
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') { return ''; }
+        $atts = shortcode_atts([
+            'live' => '',
+        ], $atts, 'sc_ai_public_dashboard_brief');
+        if ($atts['live'] === 'true' || $atts['live'] === '1') {
+            return $this->ai_brief_shortcode($atts, 'sc_ai_public_dashboard_brief', 'public-dashboard', 'AI-Assisted Brief', 'Public Dashboard Brief', 'Loading AI-assisted Public Dashboard brief…');
+        }
+        $brief = $this->local_public_dashboard_ai_brief();
+        ob_start(); ?>
+        <section class="scsi-card scsi-ai-brief-card scsi-ai-public-dashboard-local">
+            <p class="scsi-eyebrow">AI-Assisted Brief</p>
+            <h2>Public Dashboard Brief</h2>
+            <p class="scsi-muted">Provider: <?php echo esc_html($brief['provider']); ?> · Model: <?php echo esc_html($brief['model']); ?> · Mode: public · Source: local public-safe fallback</p>
+            <div class="scsi-output" aria-live="polite">
+                <div class="scsi-ai-summary"><h3>Executive summary</h3><p><?php echo esc_html($brief['executive_summary']); ?></p></div>
+                <p class="scsi-muted scsi-ai-confidence">Confidence: <?php echo esc_html($brief['confidence']['level']); ?> · <?php echo esc_html($brief['confidence']['basis']); ?></p>
+                <h3>Key findings</h3><ul class="scsi-list scsi-ai-list">
+                    <?php foreach ($brief['key_findings'] as $item): ?><li><?php echo esc_html($item); ?></li><?php endforeach; ?>
+                </ul>
+                <h3>Recommended next actions</h3><ul class="scsi-list scsi-ai-list">
+                    <?php foreach ($brief['recommended_actions'] as $item): ?><li><?php echo esc_html($item); ?></li><?php endforeach; ?>
+                </ul>
+                <h3>Risk and uncertainty notes</h3><ul class="scsi-list scsi-ai-list">
+                    <?php foreach ($brief['risk_notes'] as $item): ?><li><?php echo esc_html($item); ?></li><?php endforeach; ?>
+                </ul>
+                <div class="scsi-ai-public-summary"><h3>Public-safe summary draft</h3><p><?php echo esc_html($brief['public_safe_summary']); ?></p></div>
+            </div>
+        </section>
+        <?php return ob_get_clean();
     }
 
 }
