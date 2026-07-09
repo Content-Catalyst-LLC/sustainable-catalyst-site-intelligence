@@ -18,7 +18,7 @@
       client_time: new Date().toISOString(),
       metadata: {
         href: params && params.href ? params.href : '',
-        version: cfg.version || '0.10.1'
+        version: cfg.version || '1.0.0'
       }
     }, params || {});
 
@@ -1646,7 +1646,8 @@
       'status': '/admin-status',
       'connection-check': '/admin-connection-check',
       'public-readiness': '/admin-public-readiness-check',
-      'diagnostic-summary': '/admin-diagnostic-summary'
+      'diagnostic-summary': '/admin-diagnostic-summary',
+      'release-status': '/release-status'
     };
     return map[type] || '/admin-overview';
   }
@@ -1657,11 +1658,18 @@
     out.innerHTML = '';
     muted.textContent = 'Generated: ' + (data.generated_at || 'now') + (data.version ? ' · Version ' + data.version : '') + ' · Private admin control plane';
 
-    if (type === 'connection-check' || type === 'diagnostic-summary' || type === 'status' || type === 'public-readiness') {
+    if (type === 'connection-check' || type === 'diagnostic-summary' || type === 'status' || type === 'public-readiness' || type === 'release-status') {
       const counts = data.counts || data.status_counts || {};
       const grid = document.createElement('div');
       grid.className = 'scsi-grid scsi-admin-grid';
-      if (type === 'diagnostic-summary') {
+      if (type === 'release-status') {
+        [['Score', data.release_score || data.score || 0], ['Passed', counts.pass || 0], ['Review', counts.review || 0], ['Failed', counts.fail || 0]].forEach(function (item) {
+          const card = document.createElement('div');
+          card.className = 'scsi-stat';
+          card.innerHTML = '<strong>' + formatNumber(item[1]) + '</strong><span>' + escapeHtml(item[0]) + '</span>';
+          grid.appendChild(card);
+        });
+      } else if (type === 'diagnostic-summary') {
         [['Warnings', counts.warnings || 0], ['Modules', counts.modules || 0], ['Shortcodes', counts.shortcodes || 0], ['External connectors', counts.external_connectors || 0]].forEach(function (item) {
           const card = document.createElement('div');
           card.className = 'scsi-stat';
@@ -1691,11 +1699,11 @@
         checks.forEach(function (item) {
           const row = document.createElement('div');
           row.className = 'scsi-page-row scsi-admin-row';
-          row.innerHTML = '<strong>' + escapeHtml(item.label || item.id || '') + '</strong><br>' + statusBadge(item.status || 'unknown') + '<small>' + escapeHtml(item.message || String(item.value || '')) + '</small>';
+          row.innerHTML = '<strong>' + escapeHtml(item.label || item.id || '') + '</strong><br>' + statusBadge(item.status || 'unknown') + '<small>' + escapeHtml(item.message || item.detail || String(item.value || '')) + '</small>' + (item.action ? '<small><b>Action:</b> ' + escapeHtml(item.action) + '</small>' : '');
           out.appendChild(row);
         });
       }
-      const actions = data.recommended_next_actions || data.troubleshooting || data.warnings || [];
+      const actions = data.recommended_next_actions || data.troubleshooting || data.launch_notes || data.warnings || [];
       if (actions.length) {
         const h2 = document.createElement('h3');
         h2.textContent = type === 'public-readiness' ? 'Public/private warnings' : 'Recommended next actions';
@@ -1715,6 +1723,20 @@
           row.innerHTML = '<code>' + escapeHtml(code) + '</code> <button type="button" class="scsi-copy-button" data-scsi-copy="' + escapeHtml(code) + '">Copy</button>';
           out.appendChild(row);
         });
+      }
+      if (type === 'release-status') {
+        if (data.public_shortcode) {
+          const row = document.createElement('div');
+          row.className = 'scsi-page-row scsi-admin-row scsi-release-status-row';
+          row.innerHTML = '<strong>Recommended public shortcode</strong><br><code>' + escapeHtml(data.public_shortcode) + '</code> <button type="button" class="scsi-copy-button" data-scsi-copy="' + escapeHtml(data.public_shortcode) + '">Copy</button>';
+          out.appendChild(row);
+        }
+        if (data.metadata) {
+          const meta = document.createElement('div');
+          meta.className = 'scsi-page-row scsi-admin-row scsi-release-metadata-row';
+          meta.innerHTML = '<strong>Suggested metadata</strong><br><small><b>SEO title:</b> ' + escapeHtml(data.metadata.seo_title || '') + '</small><small><b>Meta description:</b> ' + escapeHtml(data.metadata.meta_description || '') + '</small>';
+          out.appendChild(meta);
+        }
       }
       return;
     }

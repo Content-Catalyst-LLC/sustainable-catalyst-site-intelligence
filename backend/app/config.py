@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="SC_SI_", env_file=".env", extra="ignore")
 
     app_name: str = "Sustainable Catalyst Site Intelligence"
-    version: str = "0.10.1"
+    version: str = "1.0.0"
     environment: str = "development"
     demo_mode: bool = True
     api_token: str = "dev-token-change-me"

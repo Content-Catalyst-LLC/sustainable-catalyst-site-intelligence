@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.0 — Public Flagship Release
+
+- Added v1.0.0 release status endpoint for launch readiness review.
+- Added release checklist endpoint for final public/private boundary, methodology, metadata, WordPress, and smoke-test checks.
+- Added production smoke-test endpoint with release-critical endpoint map and post-deploy commands.
+- Added public release summary endpoint with public value statement, boundaries, recommended page metadata, and launch placement guidance.
+- Added private WordPress shortcode `[sc_site_intelligence_release_status]` for release review pages.
+- Added release module and release shortcode to the admin catalog.
+- Updated backend, WordPress plugin, JavaScript event metadata, README, and docs to v1.0.0.
+- Added v1.0.0 tests for release endpoints, metadata, smoke checks, and admin catalog integration.
+
 ## 0.10.1 — Public Dashboard Visual QA and Copy Polish
 
 - Added public-dashboard visual QA endpoint for final public page review.
@@ -15,7 +26,6 @@
 - Added copy-ready shortcode bundles and public page presets.
 - Added public release checklist and methodology-forward page guidance.
 - Added v0.10.0 tests for public-safe defaults, shortcodes, and admin catalog integration.
-
 
 ## v0.9.1 — WordPress Admin UX Polish and Diagnostic Stabilization
 

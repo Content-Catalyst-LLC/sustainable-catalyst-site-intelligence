@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 0.10.1
+ * Version: 1.0.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '0.10.1';
+    const VERSION = '1.0.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -74,6 +74,7 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_site_intelligence_module_status', [$this, 'module_status_shortcode']);
         add_shortcode('sc_site_intelligence_diagnostic_summary', [$this, 'diagnostic_summary_shortcode']);
         add_shortcode('sc_site_intelligence_connection_check', [$this, 'connection_check_shortcode']);
+        add_shortcode('sc_site_intelligence_release_status', [$this, 'release_status_shortcode']);
     }
 
     public static function defaults() {
@@ -451,6 +452,16 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/admin-diagnostic-summary', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_admin_diagnostic_summary'],
+            'permission_callback' => function () { return current_user_can('manage_options'); },
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/release-status', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_release_status'],
+            'permission_callback' => function () { return current_user_can('manage_options'); },
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/release-smoke-test', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_release_smoke_test'],
             'permission_callback' => function () { return current_user_can('manage_options'); },
         ]);
         register_rest_route(self::REST_NAMESPACE, '/event', [
@@ -1070,7 +1081,7 @@ final class SC_Site_Intelligence_Plugin {
             'generated_at' => gmdate('c'),
             'mode' => 'public',
             'provider' => 'deterministic-local',
-            'model' => 'wordpress-fallback-v0.10.1',
+            'model' => 'wordpress-fallback-v1.0.0',
             'source_report' => [
                 'report_id' => 'public-dashboard',
                 'title' => 'Public Dashboard Readiness Report',
@@ -1225,6 +1236,14 @@ final class SC_Site_Intelligence_Plugin {
         return $this->proxy_admin_control('admin/diagnostic-summary');
     }
 
+    public function rest_release_status(WP_REST_Request $request) {
+        return $this->proxy_admin_control('release/status');
+    }
+
+    public function rest_release_smoke_test(WP_REST_Request $request) {
+        return $this->proxy_admin_control('release/smoke-test');
+    }
+
     public function rest_event(WP_REST_Request $request) {
         $body = json_decode($request->get_body(), true);
         if (!is_array($body)) {
@@ -1317,6 +1336,7 @@ final class SC_Site_Intelligence_Plugin {
             <p><code>[sc_site_intelligence_module_status]</code></p>
             <p><code>[sc_site_intelligence_diagnostic_summary]</code></p>
             <p><code>[sc_site_intelligence_connection_check]</code></p>
+            <p><code>[sc_site_intelligence_release_status]</code></p>
             <h2>Diagnostics</h2>
             <p>After saving settings, open <a href="<?php echo esc_url(rest_url(self::REST_NAMESPACE . '/diagnostics/ga4')); ?>" target="_blank" rel="noopener">GA4 diagnostics</a> while logged in.</p>
         </div>
@@ -2294,6 +2314,10 @@ final class SC_Site_Intelligence_Plugin {
 
     public function connection_check_shortcode($atts = []) {
         return $this->admin_control_shortcode('connection-check', 'Admin Diagnostics', 'Connection Check', 'Loading backend, token, registry, source, and public-readiness checks…');
+    }
+
+    public function release_status_shortcode($atts = []) {
+        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.0.0 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
     }
 
 }

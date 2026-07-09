@@ -29,6 +29,7 @@ from .indexing_intelligence import (
 from .publishing_intelligence import publishing_intelligence, topic_momentum_report
 from .public_dashboard import build_public_dashboard, public_landing_page, public_methodology, public_readiness_report
 from .public_page_builder import public_dashboard_visual_qa, public_page_builder, public_page_builder_readiness, public_shortcode_bundles
+from .release import release_checklist, release_public_summary, release_status as build_release_status, smoke_test as release_smoke_test
 from .report_generator import (
     bundle_manifest_report,
     bundle_report,
@@ -327,6 +328,28 @@ def public_page_builder_visual_qa_endpoint(settings: Settings = Depends(get_sett
 @app.get("/intelligence/public-page-builder")
 def public_page_builder_private_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return public_page_builder(settings)
+
+@app.get("/release/public-summary")
+def release_public_summary_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public Site Intelligence dashboards are disabled.")
+    return release_public_summary(settings)
+
+
+@app.get("/release/status")
+def release_status_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return build_release_status(settings)
+
+
+@app.get("/release/checklist")
+def release_checklist_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return release_checklist(settings)
+
+
+@app.get("/release/smoke-test")
+def release_smoke_test_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return release_smoke_test(settings)
+
 
 @app.get("/public/dashboard")
 def public_dashboard(

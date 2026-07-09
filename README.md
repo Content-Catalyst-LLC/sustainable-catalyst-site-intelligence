@@ -1,59 +1,79 @@
 # Sustainable Catalyst Site Intelligence
 
-Version: 0.10.1
+Version: 1.0.0
 
-Site Intelligence is the Sustainable Catalyst analytics, registry, external-source, reporting, AI-brief, public-dashboard, and admin-control platform.
+Site Intelligence is the Sustainable Catalyst analytics, registry, external-source, reporting, AI-brief, public-dashboard, admin-control, and public flagship dashboard platform.
 
-## v0.10.1 highlights
+## v1.0.0 — Public Flagship Release
 
-- Public dashboard visual QA layer
-- Copy polish guidance for the flagship public page
-- Mobile spacing and card-stacking QA notes
-- Safer public empty/error state presentation
-- Public page title, excerpt, and meta-description suggestions
-- Private/review shortcode for launch-readiness checks
+This release hardens the public-facing Site Intelligence dashboard for launch. It focuses on final public/private boundaries, stable public defaults, smoke-test guidance, release metadata, and production documentation rather than adding another broad feature layer.
 
-## New backend endpoint
+### Public flagship shortcode
 
-- `/public/page-builder/visual-qa`
+Use this on the public page:
 
-## New private/review shortcode
+```text
+[sc_site_intelligence_public_flagship]
+```
 
-- `[sc_public_dashboard_visual_qa]`
+The flagship shortcode renders the public-safe stack:
 
-Keep visual QA, page-builder, readiness, reports, AI briefs, Search Console, and GA4 shortcodes on private/review pages unless manually approved.
+- Public dashboard hero
+- Public Site Intelligence
+- Knowledge overview
+- Climate, energy, and external-source snapshot
+- Public methodology
 
+### New release endpoints
 
-## v0.10.1 — Public Flagship Dashboard Page Builder
+Private/admin endpoints:
 
-Adds a public-safe page-builder layer for assembling the flagship Sustainable Catalyst Site Intelligence dashboard.
+- `/release/status`
+- `/release/checklist`
+- `/release/smoke-test`
 
-New public endpoints:
+Public-safe endpoint:
 
-- `/public/page-builder`
-- `/public/page-builder/shortcodes`
-- `/public/page-builder/readiness`
-- `/intelligence/public-page-builder`
+- `/release/public-summary`
 
-New WordPress shortcodes:
+### New private/review shortcode
 
-- `[sc_site_intelligence_public_flagship]`
-- `[sc_site_intelligence_public_page_builder]`
-- `[sc_public_dashboard_shortcode_bundle]`
+Use this only on private/admin review pages:
 
-The flagship shortcode uses only public-safe modules and local presentation copy by default.
+```text
+[sc_site_intelligence_release_status]
+```
 
+### Suggested public page metadata
 
-## v0.10.1 — Public Dashboard Visual QA and Copy Polish
+- Page title: `Site Intelligence`
+- SEO title: `Site Intelligence: Public Dashboard for Sustainable Catalyst Knowledge Infrastructure`
+- Meta description: `Explore Sustainable Catalyst Site Intelligence: a public-safe dashboard for knowledge architecture, platform tools, public data-source notes, and methodology boundaries.`
 
-Adds a final public dashboard quality-assurance layer before v1.0 public release.
+### Public/private boundary
 
-New public-safe review endpoint:
+Public pages should use only public-safe shortcodes unless a module has been manually reviewed. Keep the following private:
 
-- `/public/page-builder/visual-qa`
+- Raw GA4 dashboards
+- Search Console reports
+- Conversion diagnostics
+- Admin control panels
+- Reports and exports
+- AI-assisted internal briefs
+- Source diagnostics and operational queues
 
-New private/review shortcode:
+### Deployment check
 
-- `[sc_public_dashboard_visual_qa]`
+After pushing and redeploying Render, confirm:
 
-Use this shortcode on an internal review page to check copy tone, visual hierarchy, mobile spacing, public/private boundaries, and launch polish before promoting the flagship dashboard publicly.
+```bash
+curl "https://sustainable-catalyst-site-intelligence.onrender.com/"
+```
+
+Expected version:
+
+```json
+"version":"1.0.0"
+```
+
+Then install the v1.0.0 WordPress plugin ZIP and test the public flagship page logged out or in an incognito window.
