@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.0.0';
+    const VERSION = '1.0.1';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -1081,7 +1081,7 @@ final class SC_Site_Intelligence_Plugin {
             'generated_at' => gmdate('c'),
             'mode' => 'public',
             'provider' => 'deterministic-local',
-            'model' => 'wordpress-fallback-v1.0.0',
+            'model' => 'wordpress-fallback-v1.0.1',
             'source_report' => [
                 'report_id' => 'public-dashboard',
                 'title' => 'Public Dashboard Readiness Report',
@@ -2317,7 +2317,7 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function release_status_shortcode($atts = []) {
-        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.0.0 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
+        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.0.1 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
     }
 
 }

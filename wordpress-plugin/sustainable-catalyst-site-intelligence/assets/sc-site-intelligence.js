@@ -18,7 +18,7 @@
       client_time: new Date().toISOString(),
       metadata: {
         href: params && params.href ? params.href : '',
-        version: cfg.version || '1.0.0'
+        version: cfg.version || '1.0.1'
       }
     }, params || {});
 

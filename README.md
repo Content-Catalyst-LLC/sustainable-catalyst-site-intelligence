@@ -1,8 +1,23 @@
 # Sustainable Catalyst Site Intelligence
 
-Version: 1.0.0
+Version: 1.0.1
 
 Site Intelligence is the Sustainable Catalyst analytics, registry, external-source, reporting, AI-brief, public-dashboard, admin-control, and public flagship dashboard platform.
+
+## v1.0.1 — Public Shortcode Visual Alignment
+
+This patch aligns the public shortcode output with the current Sustainable Catalyst public-platform visual system. It updates the WordPress public dashboard module styling for the smaller public shortcodes used inside the custom Site Intelligence page shell.
+
+Public page shortcodes recommended for custom HTML:
+
+```text
+[sc_public_site_intelligence]
+[sc_public_knowledge_overview]
+[sc_public_climate_energy_summary]
+[sc_public_methodology]
+```
+
+Keep `[sc_site_intelligence_public_flagship]` for a standalone all-in-one page only; do not nest it inside a custom page shell.
 
 ## v1.0.0 — Public Flagship Release
 
@@ -73,7 +88,7 @@ curl "https://sustainable-catalyst-site-intelligence.onrender.com/"
 Expected version:
 
 ```json
-"version":"1.0.0"
+"version":"1.0.1"
 ```
 
-Then install the v1.0.0 WordPress plugin ZIP and test the public flagship page logged out or in an incognito window.
+Then install the v1.0.1 WordPress plugin ZIP and test the public flagship page logged out or in an incognito window.

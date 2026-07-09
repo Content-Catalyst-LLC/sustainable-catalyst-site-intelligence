@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.1 — Public Shortcode Visual Alignment
+
+- Updated WordPress plugin version to 1.0.1.
+- Updated backend version to 1.0.1 for deployment verification.
+- Added a public-shortcode visual alignment layer for `[sc_public_site_intelligence]`, `[sc_public_knowledge_overview]`, `[sc_public_climate_energy_summary]`, and `[sc_public_methodology]`.
+- Restyled public shortcode modules to match the current Sustainable Catalyst public-platform style: cream panels, black top rules, red accent labels, compact uppercase buttons, square cards, and methodology-style rows.
+- Added CSS handling for public shortcodes embedded inside the custom `ccp-site-intelligence-public` page shell, preventing nested legacy-card appearance.
+- Clarified that `[sc_site_intelligence_public_flagship]` is for standalone all-in-one pages, while custom HTML pages should use the four smaller public shortcodes.
+
 ## 1.0.0 — Public Flagship Release
 
 - Added v1.0.0 release status endpoint for launch readiness review.

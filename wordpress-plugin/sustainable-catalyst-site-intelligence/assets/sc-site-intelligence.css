@@ -656,3 +656,360 @@
     padding: 15px;
   }
 }
+
+/* =========================================================
+   v1.0.1 Public Shortcode Visual Alignment
+   Aligns public dashboard shortcodes with current Sustainable Catalyst
+   ccp/scmethod-style public-platform panels.
+   ========================================================= */
+
+.scsi-public-dashboard,
+.scsi-public-knowledge-overview,
+.scsi-public-climate-energy,
+.scsi-public-methodology {
+  --scsi-public-black: #000000;
+  --scsi-public-red: #9b1111;
+  --scsi-public-white: #ffffff;
+  --scsi-public-cream: #f7f3ea;
+  --scsi-public-cream-soft: #fbfaf6;
+  --scsi-public-border: #d9d2c4;
+  --scsi-public-text: #171717;
+  --scsi-public-muted: #555555;
+  --scsi-public-shadow: 0 10px 26px rgba(0, 0, 0, 0.045);
+
+  margin: 28px 0;
+  padding: 30px;
+  color: var(--scsi-public-text);
+  background: var(--scsi-public-white);
+  border: 1px solid var(--scsi-public-border);
+  border-top: 7px solid var(--scsi-public-black);
+  border-radius: 0;
+  box-shadow: var(--scsi-public-shadow);
+}
+
+.scsi-public-dashboard *,
+.scsi-public-knowledge-overview *,
+.scsi-public-climate-energy *,
+.scsi-public-methodology * {
+  box-sizing: border-box;
+}
+
+.scsi-public-dashboard > .scsi-eyebrow,
+.scsi-public-knowledge-overview > .scsi-eyebrow,
+.scsi-public-climate-energy > .scsi-eyebrow,
+.scsi-public-methodology > .scsi-eyebrow {
+  margin: 0 0 12px;
+  color: var(--scsi-public-red);
+  font-size: 0.75rem;
+  font-weight: 850;
+  letter-spacing: 0.16em;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.scsi-public-dashboard > h2,
+.scsi-public-knowledge-overview > h2,
+.scsi-public-climate-energy > h2,
+.scsi-public-methodology > h2 {
+  margin: 0 0 14px;
+  color: var(--scsi-public-black);
+  font-size: clamp(1.65rem, 3vw, 2.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  font-weight: 900;
+}
+
+.scsi-public-dashboard > .scsi-muted,
+.scsi-public-knowledge-overview > .scsi-muted,
+.scsi-public-climate-energy > .scsi-muted,
+.scsi-public-methodology > .scsi-muted {
+  max-width: 940px;
+  margin: 0 0 22px;
+  color: var(--scsi-public-muted);
+  font-size: 1rem;
+  line-height: 1.72;
+}
+
+.scsi-public-dashboard .scsi-output,
+.scsi-public-knowledge-overview .scsi-output,
+.scsi-public-climate-energy .scsi-output,
+.scsi-public-methodology .scsi-output {
+  margin-top: 18px;
+}
+
+.scsi-public-dashboard .scsi-grid,
+.scsi-public-knowledge-overview .scsi-grid,
+.scsi-public-climate-energy .scsi-grid,
+.scsi-public-methodology .scsi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 18px 0;
+}
+
+.scsi-public-dashboard .scsi-stat,
+.scsi-public-knowledge-overview .scsi-stat,
+.scsi-public-climate-energy .scsi-stat,
+.scsi-public-methodology .scsi-stat {
+  min-width: 0;
+  height: 100%;
+  padding: 20px;
+  background: var(--scsi-public-cream-soft);
+  border: 1px solid var(--scsi-public-border);
+  border-top: 4px solid var(--scsi-public-black);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.scsi-public-dashboard .scsi-stat strong,
+.scsi-public-knowledge-overview .scsi-stat strong,
+.scsi-public-climate-energy .scsi-stat strong,
+.scsi-public-methodology .scsi-stat strong {
+  display: block;
+  margin: 0 0 8px;
+  color: var(--scsi-public-black);
+  font-size: clamp(1.15rem, 2vw, 1.65rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-weight: 900;
+}
+
+.scsi-public-dashboard .scsi-stat span,
+.scsi-public-knowledge-overview .scsi-stat span,
+.scsi-public-climate-energy .scsi-stat span,
+.scsi-public-methodology .scsi-stat span {
+  color: var(--scsi-public-muted);
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.scsi-public-dashboard .scsi-output h3,
+.scsi-public-knowledge-overview .scsi-output h3,
+.scsi-public-climate-energy .scsi-output h3,
+.scsi-public-methodology .scsi-output h3 {
+  margin: 28px 0 12px;
+  color: var(--scsi-public-black);
+  font-size: clamp(1.18rem, 2vw, 1.45rem);
+  line-height: 1.15;
+  font-weight: 900;
+  letter-spacing: -0.025em;
+}
+
+.scsi-public-dashboard .scsi-output h4,
+.scsi-public-knowledge-overview .scsi-output h4,
+.scsi-public-climate-energy .scsi-output h4,
+.scsi-public-methodology .scsi-output h4 {
+  margin: 20px 0 10px;
+  color: var(--scsi-public-red);
+  font-size: 0.75rem;
+  line-height: 1.15;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.scsi-public-dashboard .scsi-page-row,
+.scsi-public-knowledge-overview .scsi-page-row,
+.scsi-public-climate-energy .scsi-page-row,
+.scsi-public-methodology .scsi-page-row {
+  margin: 12px 0;
+  padding: 18px 20px;
+  background: var(--scsi-public-cream-soft);
+  border: 1px solid var(--scsi-public-border);
+  border-left: 4px solid var(--scsi-public-red);
+  border-radius: 0;
+}
+
+.scsi-public-dashboard .scsi-page-row strong,
+.scsi-public-knowledge-overview .scsi-page-row strong,
+.scsi-public-climate-energy .scsi-page-row strong,
+.scsi-public-methodology .scsi-page-row strong {
+  display: block;
+  margin: 0 0 8px;
+  color: var(--scsi-public-black);
+  font-size: 1rem;
+  line-height: 1.25;
+  font-weight: 900;
+}
+
+.scsi-public-dashboard .scsi-page-row small,
+.scsi-public-knowledge-overview .scsi-page-row small,
+.scsi-public-climate-energy .scsi-page-row small,
+.scsi-public-methodology .scsi-page-row small,
+.scsi-public-method-note {
+  display: block;
+  margin-top: 8px;
+  color: var(--scsi-public-muted);
+  font-size: 0.93rem;
+  line-height: 1.62;
+}
+
+.scsi-public-dashboard code,
+.scsi-public-knowledge-overview code,
+.scsi-public-climate-energy code,
+.scsi-public-methodology code {
+  display: inline-block;
+  max-width: 100%;
+  margin: 4px 0 6px;
+  padding: 3px 6px;
+  color: var(--scsi-public-black);
+  background: rgba(0, 0, 0, 0.045);
+  border-radius: 0;
+  overflow-wrap: anywhere;
+  font-size: 0.82rem;
+}
+
+.scsi-public-dashboard .scsi-badge,
+.scsi-public-knowledge-overview .scsi-badge,
+.scsi-public-climate-energy .scsi-badge,
+.scsi-public-methodology .scsi-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  margin: 4px 6px 4px 0;
+  padding: 6px 9px;
+  background: var(--scsi-public-white);
+  border: 1px solid var(--scsi-public-border);
+  border-radius: 0;
+  color: var(--scsi-public-black);
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.scsi-public-dashboard .scsi-list,
+.scsi-public-knowledge-overview .scsi-list,
+.scsi-public-climate-energy .scsi-list,
+.scsi-public-methodology .scsi-list {
+  margin: 16px 0 0;
+  padding-left: 20px;
+  color: var(--scsi-public-muted);
+  font-size: 0.95rem;
+  line-height: 1.66;
+}
+
+.scsi-public-dashboard .scsi-list li,
+.scsi-public-knowledge-overview .scsi-list li,
+.scsi-public-climate-energy .scsi-list li,
+.scsi-public-methodology .scsi-list li {
+  margin: 0 0 8px;
+}
+
+.scsi-public-dashboard .scsi-public-notes,
+.scsi-public-knowledge-overview .scsi-public-notes,
+.scsi-public-climate-energy .scsi-public-notes,
+.scsi-public-methodology .scsi-public-notes {
+  padding: 18px 20px;
+  background: var(--scsi-public-cream);
+  border: 1px solid var(--scsi-public-border);
+  border-left: 4px solid var(--scsi-public-red);
+  border-radius: 0;
+}
+
+.scsi-public-dashboard .scsi-public-cta-row,
+.scsi-public-knowledge-overview .scsi-public-cta-row,
+.scsi-public-climate-energy .scsi-public-cta-row,
+.scsi-public-methodology .scsi-public-cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.scsi-public-dashboard .scsi-public-cta,
+.scsi-public-knowledge-overview .scsi-public-cta,
+.scsi-public-climate-energy .scsi-public-cta,
+.scsi-public-methodology .scsi-public-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 10px 15px;
+  background: var(--scsi-public-red);
+  border: 1px solid var(--scsi-public-red);
+  border-radius: 0;
+  color: var(--scsi-public-white);
+  text-decoration: none;
+  font-size: 0.76rem;
+  font-weight: 850;
+  letter-spacing: 0.075em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  transition: background 0.16s ease, color 0.16s ease, transform 0.16s ease;
+}
+
+.scsi-public-dashboard .scsi-public-cta:hover,
+.scsi-public-dashboard .scsi-public-cta:focus-visible,
+.scsi-public-knowledge-overview .scsi-public-cta:hover,
+.scsi-public-knowledge-overview .scsi-public-cta:focus-visible,
+.scsi-public-climate-energy .scsi-public-cta:hover,
+.scsi-public-climate-energy .scsi-public-cta:focus-visible,
+.scsi-public-methodology .scsi-public-cta:hover,
+.scsi-public-methodology .scsi-public-cta:focus-visible {
+  background: var(--scsi-public-black);
+  border-color: var(--scsi-public-black);
+  color: var(--scsi-public-white);
+  transform: translateY(-1px);
+}
+
+/* When public shortcodes are embedded in the custom ccp page shell, avoid a
+   nested card-inside-card effect. The shortcode content keeps the current
+   visual language while the outer ccp-live-shell supplies the frame. */
+.ccp-site-intelligence-public .ccp-live-shell > .scsi-public-dashboard,
+.ccp-site-intelligence-public .ccp-live-shell > .scsi-public-knowledge-overview,
+.ccp-site-intelligence-public .ccp-live-shell > .scsi-public-climate-energy,
+.ccp-site-intelligence-public .ccp-live-shell > .scsi-public-methodology {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.ccp-site-intelligence-public .ccp-live-shell > .scsi-public-dashboard > .scsi-eyebrow,
+.ccp-site-intelligence-public .ccp-live-shell > .scsi-public-knowledge-overview > .scsi-eyebrow,
+.ccp-site-intelligence-public .ccp-live-shell > .scsi-public-climate-energy > .scsi-eyebrow,
+.ccp-site-intelligence-public .ccp-live-shell > .scsi-public-methodology > .scsi-eyebrow {
+  margin-top: 0;
+}
+
+.ccp-site-intelligence-public .ccp-live-shell > .scsi-public-dashboard > h2,
+.ccp-site-intelligence-public .ccp-live-shell > .scsi-public-knowledge-overview > h2,
+.ccp-site-intelligence-public .ccp-live-shell > .scsi-public-climate-energy > h2,
+.ccp-site-intelligence-public .ccp-live-shell > .scsi-public-methodology > h2 {
+  font-size: clamp(1.35rem, 2.4vw, 1.9rem);
+}
+
+@media (max-width: 1100px) {
+  .scsi-public-dashboard .scsi-grid,
+  .scsi-public-knowledge-overview .scsi-grid,
+  .scsi-public-climate-energy .scsi-grid,
+  .scsi-public-methodology .scsi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .scsi-public-dashboard,
+  .scsi-public-knowledge-overview,
+  .scsi-public-climate-energy,
+  .scsi-public-methodology {
+    padding: 24px 20px;
+  }
+
+  .scsi-public-dashboard .scsi-grid,
+  .scsi-public-knowledge-overview .scsi-grid,
+  .scsi-public-climate-energy .scsi-grid,
+  .scsi-public-methodology .scsi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .scsi-public-dashboard .scsi-public-cta,
+  .scsi-public-knowledge-overview .scsi-public-cta,
+  .scsi-public-climate-energy .scsi-public-cta,
+  .scsi-public-methodology .scsi-public-cta {
+    width: 100%;
+  }
+}
