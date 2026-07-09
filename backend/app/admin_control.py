@@ -85,6 +85,8 @@ def _shortcodes() -> List[Dict[str, Any]]:
         {"shortcode": "[sc_site_intelligence_admin_overview]", "category": "admin", "visibility": "private", "endpoint": "/intelligence/admin", "purpose": "Admin overview for registry, modules, sources, and diagnostics."},
         {"shortcode": "[sc_site_intelligence_shortcode_catalog]", "category": "admin", "visibility": "private", "endpoint": "/admin/shortcodes", "purpose": "Shortcode catalog and placement guidance."},
         {"shortcode": "[sc_site_intelligence_module_status]", "category": "admin", "visibility": "private", "endpoint": "/admin/modules", "purpose": "Module and endpoint status matrix."},
+        {"shortcode": "[sc_site_intelligence_diagnostic_summary]", "category": "admin", "visibility": "private", "endpoint": "/admin/diagnostic-summary", "purpose": "One-screen operational diagnostic summary."},
+        {"shortcode": "[sc_site_intelligence_connection_check]", "category": "admin", "visibility": "private", "endpoint": "/admin/connection-check", "purpose": "Backend, token, registry, source, and public-readiness connection check."},
     ]
 
 
@@ -344,6 +346,114 @@ def diagnostics(settings: Settings, registry: ContentRegistry) -> Dict[str, Any]
         ],
     }
 
+
+
+def admin_status(settings: Settings, registry: ContentRegistry) -> Dict[str, Any]:
+    """Small, fast admin status payload for WordPress settings screens."""
+    diag = diagnostics(settings, registry)
+    warning_count = len(diag.get("warnings", []))
+    return {
+        "ok": True,
+        "generated_at": _now(),
+        "version": settings.version,
+        "environment": settings.environment,
+        "overall_status": "needs_review" if warning_count else "healthy",
+        "warning_count": warning_count,
+        "checks": diag.get("checks", []),
+        "connection": {
+            "backend": True,
+            "api_token_configured": bool(settings.api_token),
+            "registry_file_exists": registry.registry_path.exists(),
+            "external_registry_file_exists": _safe_exists(settings.external_registry_path),
+        },
+        "admin_notes": [
+            "Use this panel after each GitHub push and Render deploy to confirm the backend and WordPress plugin are aligned.",
+            "If WordPress reports a token or gateway error, test the direct Render root endpoint and then the relevant protected endpoint.",
+        ],
+    }
+
+
+def connection_check(settings: Settings, registry: ContentRegistry) -> Dict[str, Any]:
+    checks = [
+        {"id": "backend_root", "label": "Backend process", "status": "healthy", "message": f"{settings.app_name} {settings.version} is responding."},
+        {"id": "environment", "label": "Environment", "status": "healthy" if settings.environment in {"production", "development"} else "warning", "message": settings.environment},
+        {"id": "api_token", "label": "Protected endpoint token", "status": "healthy" if bool(settings.api_token) else "warning", "message": "configured" if settings.api_token else "missing or disabled"},
+        {"id": "registry", "label": "Content registry", "status": "healthy" if registry.registry_path.exists() else "warning", "message": str(registry.registry_path)},
+        {"id": "external_registry", "label": "External source registry", "status": "healthy" if _safe_exists(settings.external_registry_path) else "warning", "message": settings.external_registry_path},
+        {"id": "public_dashboards", "label": "Public dashboards", "status": "healthy" if settings.public_dashboards_enabled else "disabled", "message": str(settings.public_dashboards_enabled)},
+        {"id": "search_console", "label": "Search Console live mode", "status": "healthy" if settings.search_console_live else "fallback", "message": str(settings.search_console_live)},
+        {"id": "ai_provider", "label": "AI provider", "status": "healthy" if settings.ai_provider != "disabled" else "fallback", "message": settings.ai_provider},
+    ]
+    status_counts = Counter(item["status"] for item in checks)
+    return {
+        "ok": True,
+        "generated_at": _now(),
+        "version": settings.version,
+        "overall_status": "warning" if status_counts.get("warning") else "healthy",
+        "status_counts": dict(status_counts),
+        "checks": checks,
+        "troubleshooting": [
+            "Confirm the Render root endpoint returns the same version as the WordPress plugin.",
+            "If a WordPress panel fails but Render works, check API token mismatch, WordPress cache, Cloudflare cache, and shortcode placement.",
+            "If Render is stale, push the update package and use Manual Deploy → Deploy latest commit.",
+        ],
+    }
+
+
+def public_readiness_check(settings: Settings) -> Dict[str, Any]:
+    visibility = visibility_matrix(settings)
+    public_rows = [row for row in visibility.get("rows", []) if row.get("visibility") == "public"]
+    review_rows = [row for row in visibility.get("rows", []) if row.get("requires_review")]
+    return {
+        "ok": True,
+        "generated_at": _now(),
+        "version": settings.version,
+        "public_dashboards_enabled": settings.public_dashboards_enabled,
+        "public_safe_modules": public_rows,
+        "requires_review_count": len(review_rows),
+        "warnings": [
+            "Keep admin, report, AI brief, Search Console, GA4, conversion, and operational diagnostics on private pages.",
+            "Use public dashboard endpoints and public shortcodes only after reviewing page copy and methodology language.",
+        ],
+        "recommended_public_stack": [
+            "[sc_site_intelligence_public_landing]",
+            "[sc_public_site_intelligence]",
+            "[sc_public_knowledge_overview]",
+            "[sc_public_climate_energy_summary]",
+            "[sc_public_methodology]",
+        ],
+    }
+
+
+def diagnostic_summary(settings: Settings, registry: ContentRegistry) -> Dict[str, Any]:
+    diag = diagnostics(settings, registry)
+    sources = source_manager(settings)
+    modules = module_manager(settings)
+    shortcodes = shortcode_catalog()
+    connection = connection_check(settings, registry)
+    warnings = diag.get("warnings", [])
+    return {
+        "ok": True,
+        "generated_at": _now(),
+        "version": settings.version,
+        "overall_status": "needs_review" if warnings else "healthy",
+        "summary": "One-click operational diagnostic summary for backend, registry, source connectors, modules, shortcodes, visibility, and public/private boundaries.",
+        "counts": {
+            "diagnostic_checks": len(diag.get("checks", [])),
+            "warnings": len(warnings),
+            "modules": modules.get("count", 0),
+            "shortcodes": shortcodes.get("count", 0),
+            "external_connectors": sources.get("connector_registry", {}).get("count", 0),
+        },
+        "connection": connection,
+        "warnings": warnings,
+        "recommended_next_actions": [
+            "Confirm Render and WordPress plugin versions match after each release.",
+            "Use the Shortcode Catalog before adding a panel to a public page.",
+            "Review public dashboard copy before publishing AI-assisted or external-source summaries.",
+            "Keep registry/source changes in Git until a write-enabled editor is added with authentication and rollback support.",
+        ],
+    }
 
 def admin_overview(settings: Settings, registry: ContentRegistry) -> Dict[str, Any]:
     registry_report = registry_manager(registry)

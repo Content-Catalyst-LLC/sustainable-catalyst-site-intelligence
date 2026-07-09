@@ -43,8 +43,12 @@ from .report_generator import (
 from .ai_briefs import ai_status, build_ai_brief
 from .admin_control import (
     admin_overview,
+    admin_status,
+    connection_check,
+    diagnostic_summary,
     diagnostics as admin_diagnostics,
     module_manager,
+    public_readiness_check,
     registry_coverage,
     registry_manager,
     shortcode_catalog,
@@ -1699,6 +1703,26 @@ def admin_visibility_endpoint(settings: Settings = Depends(get_settings), _: Non
 @app.get("/admin/source-control")
 def admin_source_control_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return source_control_tools(settings)
+
+
+@app.get("/admin/status")
+def admin_status_endpoint(settings: Settings = Depends(get_settings), registry: ContentRegistry = Depends(get_registry), _: None = Depends(require_token)):
+    return admin_status(settings, registry)
+
+
+@app.get("/admin/connection-check")
+def admin_connection_check_endpoint(settings: Settings = Depends(get_settings), registry: ContentRegistry = Depends(get_registry), _: None = Depends(require_token)):
+    return connection_check(settings, registry)
+
+
+@app.get("/admin/public-readiness-check")
+def admin_public_readiness_check_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return public_readiness_check(settings)
+
+
+@app.get("/admin/diagnostic-summary")
+def admin_diagnostic_summary_endpoint(settings: Settings = Depends(get_settings), registry: ContentRegistry = Depends(get_registry), _: None = Depends(require_token)):
+    return diagnostic_summary(settings, registry)
 
 
 @app.get("/intelligence/admin")
