@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.0.1
+ * Version: 1.1.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.0.1';
+    const VERSION = '1.1.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -50,6 +50,13 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_public_knowledge_overview', [$this, 'public_knowledge_overview_shortcode']);
         add_shortcode('sc_public_climate_energy_summary', [$this, 'public_climate_energy_summary_shortcode']);
         add_shortcode('sc_public_methodology', [$this, 'public_methodology_shortcode']);
+        add_shortcode('sc_public_dashboard_directory', [$this, 'public_dashboard_directory_shortcode']);
+        add_shortcode('sc_public_climate_energy_dashboard', [$this, 'public_topic_dashboard_shortcode']);
+        add_shortcode('sc_public_environmental_monitoring_dashboard', [$this, 'public_topic_dashboard_shortcode']);
+        add_shortcode('sc_public_biodiversity_land_use_dashboard', [$this, 'public_topic_dashboard_shortcode']);
+        add_shortcode('sc_public_knowledge_system_dashboard', [$this, 'public_topic_dashboard_shortcode']);
+        add_shortcode('sc_public_search_discovery_dashboard', [$this, 'public_topic_dashboard_shortcode']);
+        add_shortcode('sc_public_source_methodology', [$this, 'public_source_methodology_shortcode']);
         add_shortcode('sc_public_dashboard_readiness', [$this, 'public_dashboard_readiness_shortcode']);
         add_shortcode('sc_advanced_external_data_health', [$this, 'advanced_external_health_shortcode']);
         add_shortcode('sc_environmental_monitoring_intelligence', [$this, 'environmental_monitoring_shortcode']);
@@ -283,6 +290,22 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-methodology', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_methodology'],
+            'permission_callback' => '__return_true',
+        ]);
+
+        register_rest_route(self::REST_NAMESPACE, '/public-dashboard-directory', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_dashboard_directory'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-topic-dashboard', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_topic_dashboard'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-source-methodology', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_source_methodology'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/public-readiness', [
@@ -953,6 +976,36 @@ final class SC_Site_Intelligence_Plugin {
         return rest_ensure_response($result);
     }
 
+
+    public function rest_public_dashboard_directory(WP_REST_Request $request) {
+        $result = $this->backend_request('public/dashboards');
+        if (is_wp_error($result)) {
+            return new WP_REST_Response(['ok' => false, 'message' => $result->get_error_message()], 502);
+        }
+        return rest_ensure_response($result);
+    }
+
+    public function rest_public_topic_dashboard(WP_REST_Request $request) {
+        $topic = sanitize_key($request->get_param('topic'));
+        $allowed = ['climate-energy', 'environmental-monitoring', 'biodiversity-land-use', 'knowledge-system', 'search-discovery'];
+        if (!in_array($topic, $allowed, true)) {
+            return new WP_REST_Response(['ok' => false, 'message' => 'Unknown public topic dashboard.'], 400);
+        }
+        $result = $this->backend_request('public/dashboards/' . $topic);
+        if (is_wp_error($result)) {
+            return new WP_REST_Response(['ok' => false, 'message' => $result->get_error_message()], 502);
+        }
+        return rest_ensure_response($result);
+    }
+
+    public function rest_public_source_methodology(WP_REST_Request $request) {
+        $result = $this->backend_request('public/source-methodology');
+        if (is_wp_error($result)) {
+            return new WP_REST_Response(['ok' => false, 'message' => $result->get_error_message()], 502);
+        }
+        return rest_ensure_response($result);
+    }
+
     public function rest_public_readiness(WP_REST_Request $request) {
         $query = $this->public_query_from_request($request);
         $endpoint = 'intelligence/public-readiness' . (!empty($query) ? '?' . http_build_query($query) : '');
@@ -1081,7 +1134,7 @@ final class SC_Site_Intelligence_Plugin {
             'generated_at' => gmdate('c'),
             'mode' => 'public',
             'provider' => 'deterministic-local',
-            'model' => 'wordpress-fallback-v1.0.1',
+            'model' => 'wordpress-fallback-v1.1.0',
             'source_report' => [
                 'report_id' => 'public-dashboard',
                 'title' => 'Public Dashboard Readiness Report',
@@ -2013,6 +2066,77 @@ final class SC_Site_Intelligence_Plugin {
         return ob_get_clean();
     }
 
+
+    public function public_dashboard_directory_shortcode($atts = []) {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') {
+            return '';
+        }
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-public-topic-directory" data-scsi-public-dashboard-directory>
+            <p class="scsi-eyebrow">Public Topic Dashboards</p>
+            <h2>Public Dashboard Directory</h2>
+            <p class="scsi-muted">Loading public-safe topic dashboard directory…</p>
+            <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
+    private function topic_from_shortcode_tag($tag) {
+        $map = [
+            'sc_public_climate_energy_dashboard' => 'climate-energy',
+            'sc_public_environmental_monitoring_dashboard' => 'environmental-monitoring',
+            'sc_public_biodiversity_land_use_dashboard' => 'biodiversity-land-use',
+            'sc_public_knowledge_system_dashboard' => 'knowledge-system',
+            'sc_public_search_discovery_dashboard' => 'search-discovery',
+        ];
+        return isset($map[$tag]) ? $map[$tag] : 'knowledge-system';
+    }
+
+    public function public_topic_dashboard_shortcode($atts = [], $content = null, $tag = '') {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') {
+            return '';
+        }
+        $topic = $this->topic_from_shortcode_tag($tag);
+        $titles = [
+            'climate-energy' => 'Climate + Energy Public Dashboard',
+            'environmental-monitoring' => 'Environmental Monitoring Public Dashboard',
+            'biodiversity-land-use' => 'Biodiversity + Land Use Public Dashboard',
+            'knowledge-system' => 'Knowledge-System Public Dashboard',
+            'search-discovery' => 'Search + Discovery Public Dashboard',
+        ];
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-public-topic-dashboard" data-scsi-public-topic-dashboard data-topic="<?php echo esc_attr($topic); ?>">
+            <p class="scsi-eyebrow">Public Topic Dashboard</p>
+            <h2><?php echo esc_html($titles[$topic]); ?></h2>
+            <p class="scsi-muted">Loading public-safe topic dashboard…</p>
+            <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
+    public function public_source_methodology_shortcode($atts = []) {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') {
+            return '';
+        }
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-public-source-methodology" data-scsi-public-source-methodology>
+            <p class="scsi-eyebrow">Public Source Methodology</p>
+            <h2>Source Notes, Fallbacks, and Public Boundaries</h2>
+            <p class="scsi-muted">Loading public source methodology…</p>
+            <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
     public function public_dashboard_readiness_shortcode($atts = []) {
         $options = self::options();
         if ($options['enable_dashboard'] !== '1') {
@@ -2317,7 +2441,7 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function release_status_shortcode($atts = []) {
-        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.0.1 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
+        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.1.0 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
     }
 
 }

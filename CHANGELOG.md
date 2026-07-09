@@ -1,5 +1,16 @@
 # Changelog
 
+
+## 1.1.0 — Public Topic Dashboards and Source Pages
+
+- Added public dashboard directory endpoint `/public/dashboards`.
+- Added public-safe topic dashboard endpoints for climate/energy, environmental monitoring, biodiversity/land use, knowledge-system, and search/discovery pages.
+- Added public source-methodology endpoint `/public/source-methodology`.
+- Added WordPress shortcodes for public topic dashboard pages and source methodology.
+- Added JavaScript renderers for topic dashboard cards, section pipelines, source-methodology rows, and dashboard-directory output.
+- Added CSS alignment for topic dashboard modules using the current Sustainable Catalyst public-platform visual language.
+- Added v1.1.0 backend tests for public topic dashboard payloads and public-safe boundaries.
+
 ## 1.0.1 — Public Shortcode Visual Alignment
 
 - Updated WordPress plugin version to 1.0.1.

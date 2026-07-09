@@ -1,8 +1,37 @@
 # Sustainable Catalyst Site Intelligence
 
-Version: 1.0.1
+Version: 1.1.0
 
 Site Intelligence is the Sustainable Catalyst analytics, registry, external-source, reporting, AI-brief, public-dashboard, admin-control, and public flagship dashboard platform.
+
+
+## v1.1.0 — Public Topic Dashboards and Source Pages
+
+This release expands Site Intelligence beyond one flagship public page into a small public topic-dashboard ecosystem. It adds public-safe topic dashboard endpoints, WordPress shortcodes, a dashboard directory, and a source-methodology page.
+
+New public shortcodes:
+
+```text
+[sc_public_dashboard_directory]
+[sc_public_climate_energy_dashboard]
+[sc_public_environmental_monitoring_dashboard]
+[sc_public_biodiversity_land_use_dashboard]
+[sc_public_knowledge_system_dashboard]
+[sc_public_search_discovery_dashboard]
+[sc_public_source_methodology]
+```
+
+New public endpoints:
+
+```text
+/public/dashboards
+/public/dashboards/climate-energy
+/public/dashboards/environmental-monitoring
+/public/dashboards/biodiversity-land-use
+/public/dashboards/knowledge-system
+/public/dashboards/search-discovery
+/public/source-methodology
+```
 
 ## v1.0.1 — Public Shortcode Visual Alignment
 

@@ -30,6 +30,7 @@ from .publishing_intelligence import publishing_intelligence, topic_momentum_rep
 from .public_dashboard import build_public_dashboard, public_landing_page, public_methodology, public_readiness_report
 from .public_page_builder import public_dashboard_visual_qa, public_page_builder, public_page_builder_readiness, public_shortcode_bundles
 from .release import release_checklist, release_public_summary, release_status as build_release_status, smoke_test as release_smoke_test
+from .public_topic_dashboards import topic_dashboard_directory, public_topic_dashboard, public_source_methodology
 from .report_generator import (
     bundle_manifest_report,
     bundle_report,
@@ -270,6 +271,60 @@ def registry_resolve(
         "item": match.item.model_dump() if match.item else None,
     }
 
+
+
+@app.get("/public/dashboards")
+def public_topic_dashboard_directory_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return topic_dashboard_directory()
+
+
+@app.get("/public/dashboards/climate-energy")
+def public_climate_energy_dashboard_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return public_topic_dashboard("climate-energy")
+
+
+@app.get("/public/dashboards/environmental-monitoring")
+def public_environmental_monitoring_dashboard_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return public_topic_dashboard("environmental-monitoring")
+
+
+@app.get("/public/dashboards/biodiversity-land-use")
+def public_biodiversity_land_use_dashboard_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return public_topic_dashboard("biodiversity-land-use")
+
+
+@app.get("/public/dashboards/knowledge-system")
+def public_knowledge_system_dashboard_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return public_topic_dashboard("knowledge-system")
+
+
+@app.get("/public/dashboards/search-discovery")
+def public_search_discovery_dashboard_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return public_topic_dashboard("search-discovery")
+
+
+@app.get("/public/source-methodology")
+def public_source_methodology_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return public_source_methodology()
+
+
+@app.get("/intelligence/public-topic-dashboards")
+def intelligence_public_topic_dashboards(_: None = Depends(require_token)):
+    return topic_dashboard_directory()
 
 @app.get("/public/landing-page")
 def public_landing_page_endpoint(settings: Settings = Depends(get_settings)):

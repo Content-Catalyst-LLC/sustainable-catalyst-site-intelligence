@@ -18,7 +18,7 @@
       client_time: new Date().toISOString(),
       metadata: {
         href: params && params.href ? params.href : '',
-        version: cfg.version || '1.0.1'
+        version: cfg.version || '1.1.0'
       }
     }, params || {});
 
@@ -2018,6 +2018,122 @@
     });
   }
 
+
+  function renderPublicTopicDirectory(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    muted.textContent = (data.summary || 'Public-safe dashboard directory.') + ' · Status: ' + (data.public_status || 'review');
+    out.innerHTML = '';
+    const grid = document.createElement('div');
+    grid.className = 'scsi-grid scsi-public-topic-grid';
+    (data.dashboards || []).forEach(function (item) {
+      const card = document.createElement('div');
+      card.className = 'scsi-stat scsi-public-topic-card';
+      card.innerHTML = '<span class="scsi-public-label">' + escapeHtml(item.eyebrow || item.slug || '') + '</span>' +
+        '<strong>' + escapeHtml(item.title || '') + '</strong>' +
+        '<small>' + escapeHtml(item.summary || '') + '</small>' +
+        '<code>' + escapeHtml(item.shortcode || '') + '</code>' +
+        '<span class="scsi-badge scsi-badge-soft">' + escapeHtml(item.public_status || 'review') + '</span>';
+      grid.appendChild(card);
+    });
+    out.appendChild(grid);
+    const notes = document.createElement('ul');
+    notes.className = 'scsi-list scsi-public-notes';
+    (data.review_notes || []).forEach(function (note) { const li = document.createElement('li'); li.textContent = note; notes.appendChild(li); });
+    out.appendChild(notes);
+  }
+
+  function renderPublicTopicDashboard(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    muted.textContent = (data.summary || '') + ' · Status: ' + (data.public_status || 'review') + ' · Source mode: ' + (data.source_mode || 'public_safe');
+    out.innerHTML = '';
+
+    const grid = document.createElement('div');
+    grid.className = 'scsi-grid scsi-public-topic-grid';
+    (data.cards || []).forEach(function (card) {
+      const el = document.createElement('div');
+      el.className = 'scsi-stat scsi-public-topic-card';
+      el.innerHTML = '<span class="scsi-public-label">' + escapeHtml(card.label || '') + '</span>' +
+        '<strong>' + escapeHtml(card.value || '') + '</strong>' +
+        '<small>' + escapeHtml(card.note || '') + '</small>';
+      grid.appendChild(el);
+    });
+    out.appendChild(grid);
+
+    if ((data.recommended_sections || []).length) {
+      const h = document.createElement('h3');
+      h.textContent = 'Recommended public page sections';
+      out.appendChild(h);
+      const pipeline = document.createElement('ol');
+      pipeline.className = 'scsi-public-topic-pipeline';
+      (data.recommended_sections || []).forEach(function (item, index) {
+        const li = document.createElement('li');
+        li.innerHTML = '<strong>Section ' + (index + 1) + '</strong>' + escapeHtml(item || '');
+        pipeline.appendChild(li);
+      });
+      out.appendChild(pipeline);
+    }
+
+    const methodology = data.methodology || {};
+    if ((methodology.shown || []).length || (methodology.hidden || []).length) {
+      const wrap = document.createElement('div');
+      wrap.className = 'scsi-public-topic-methodology';
+      wrap.innerHTML = '<div><h4>Shown</h4><ul class="scsi-list">' + (methodology.shown || []).map(function (item) { return '<li>' + escapeHtml(item) + '</li>'; }).join('') + '</ul></div>' +
+        '<div><h4>Hidden</h4><ul class="scsi-list">' + (methodology.hidden || []).map(function (item) { return '<li>' + escapeHtml(item) + '</li>'; }).join('') + '</ul></div>';
+      out.appendChild(wrap);
+    }
+
+    if ((data.ctas || []).length) {
+      const cta = document.createElement('div');
+      cta.className = 'scsi-public-cta-row';
+      (data.ctas || []).forEach(function (item) {
+        const a = document.createElement('a');
+        a.className = 'scsi-public-cta';
+        a.href = item.url || '#';
+        a.textContent = item.label || 'Open';
+        if ((item.url || '').indexOf('http') === 0) { a.target = '_blank'; a.rel = 'noopener'; }
+        cta.appendChild(a);
+      });
+      out.appendChild(cta);
+    }
+
+    const notes = document.createElement('ul');
+    notes.className = 'scsi-list scsi-public-notes';
+    (data.review_notes || []).forEach(function (note) { const li = document.createElement('li'); li.textContent = note; notes.appendChild(li); });
+    out.appendChild(notes);
+  }
+
+  function renderPublicSourceMethodology(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    muted.textContent = (data.summary || 'Public source methodology.') + ' · Status: ' + (data.public_status || 'review');
+    out.innerHTML = '';
+    const grid = document.createElement('div');
+    grid.className = 'scsi-grid scsi-public-topic-grid';
+    (data.principles || []).forEach(function (item) {
+      const card = document.createElement('div');
+      card.className = 'scsi-stat scsi-public-topic-card';
+      card.innerHTML = '<span class="scsi-public-label">' + escapeHtml(item.label || '') + '</span>' +
+        '<strong>' + escapeHtml(item.title || '') + '</strong>' +
+        '<small>' + escapeHtml(item.detail || '') + '</small>';
+      grid.appendChild(card);
+    });
+    out.appendChild(grid);
+
+    const h = document.createElement('h3');
+    h.textContent = 'Source families';
+    out.appendChild(h);
+    (data.source_families || []).forEach(function (item) {
+      const row = document.createElement('div');
+      row.className = 'scsi-page-row scsi-public-source-row';
+      row.innerHTML = '<strong>' + escapeHtml(item.family || '') + '</strong><br>' +
+        '<span class="scsi-badge scsi-badge-soft">' + escapeHtml(item.examples || '') + '</span>' +
+        '<small>' + escapeHtml(item.public_use || '') + '</small>';
+      out.appendChild(row);
+    });
+  }
+
   function fetchDashboards() {
     if (!cfg.restBase) return;
     document.querySelectorAll('[data-scsi-admin-control]').forEach(function (root) {
@@ -2180,6 +2296,24 @@
         .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load Energy Systems Data Intelligence.'); });
     });
 
+
+
+    document.querySelectorAll('[data-scsi-public-dashboard-directory]').forEach(function (root) {
+      fetchJson(cfg.restBase + '/public-dashboard-directory')
+        .then(function (data) { renderPublicTopicDirectory(root, data); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public topic dashboard directory.'); });
+    });
+    document.querySelectorAll('[data-scsi-public-topic-dashboard]').forEach(function (root) {
+      const topic = root.dataset.topic || 'knowledge-system';
+      fetchJson(cfg.restBase + '/public-topic-dashboard?topic=' + encodeURIComponent(topic))
+        .then(function (data) { renderPublicTopicDashboard(root, data); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public topic dashboard.'); });
+    });
+    document.querySelectorAll('[data-scsi-public-source-methodology]').forEach(function (root) {
+      fetchJson(cfg.restBase + '/public-source-methodology')
+        .then(function (data) { renderPublicSourceMethodology(root, data); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public source methodology.'); });
+    });
 
     document.querySelectorAll('[data-scsi-public-page-builder]').forEach(function (root) {
       fetchJson(cfg.restBase + '/public-page-builder')

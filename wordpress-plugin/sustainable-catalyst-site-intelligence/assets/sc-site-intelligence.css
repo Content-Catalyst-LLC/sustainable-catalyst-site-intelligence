@@ -658,7 +658,7 @@
 }
 
 /* =========================================================
-   v1.0.1 Public Shortcode Visual Alignment
+   v1.1.0 Public Shortcode Visual Alignment
    Aligns public dashboard shortcodes with current Sustainable Catalyst
    ccp/scmethod-style public-platform panels.
    ========================================================= */
@@ -1011,5 +1011,164 @@
   .scsi-public-climate-energy .scsi-public-cta,
   .scsi-public-methodology .scsi-public-cta {
     width: 100%;
+  }
+}
+
+/* =========================================================
+   PUBLIC TOPIC DASHBOARDS — v1.1.0
+   Topic pages and source-methodology modules.
+   ========================================================= */
+
+.scsi-public-topic-directory,
+.scsi-public-topic-dashboard,
+.scsi-public-source-methodology {
+  --scsi-public-black: #000000;
+  --scsi-public-red: #9b1111;
+  --scsi-public-white: #ffffff;
+  --scsi-public-cream: #f7f3ea;
+  --scsi-public-cream-soft: #fbfaf6;
+  --scsi-public-border: #d9d2c4;
+  --scsi-public-muted: #555555;
+  --scsi-public-shadow: 0 10px 26px rgba(0, 0, 0, 0.045);
+  background: var(--scsi-public-white);
+  border: 1px solid var(--scsi-public-border);
+  border-top: 7px solid var(--scsi-public-black);
+  border-radius: 0;
+  box-shadow: var(--scsi-public-shadow);
+}
+
+.scsi-public-topic-directory > .scsi-eyebrow,
+.scsi-public-topic-dashboard > .scsi-eyebrow,
+.scsi-public-source-methodology > .scsi-eyebrow,
+.scsi-public-topic-card .scsi-public-label {
+  color: var(--scsi-public-red);
+  font-size: 0.75rem;
+  font-weight: 850;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.scsi-public-topic-directory > h2,
+.scsi-public-topic-dashboard > h2,
+.scsi-public-source-methodology > h2 {
+  color: var(--scsi-public-black);
+  font-size: clamp(1.65rem, 3vw, 2.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+  font-weight: 900;
+}
+
+.scsi-public-topic-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.scsi-public-topic-card {
+  min-width: 0;
+  height: 100%;
+  padding: 22px 20px;
+  background: var(--scsi-public-cream-soft);
+  border: 1px solid var(--scsi-public-border);
+  border-top: 4px solid var(--scsi-public-black);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.scsi-public-topic-card strong {
+  display: block;
+  margin: 0 0 10px;
+  color: var(--scsi-public-black);
+  font-size: 1.13rem;
+  line-height: 1.18;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.scsi-public-topic-card small {
+  display: block;
+  margin-top: 8px;
+  color: var(--scsi-public-muted);
+  font-size: 0.93rem;
+  line-height: 1.62;
+}
+
+.scsi-public-topic-card code {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 6px;
+  background: rgba(0, 0, 0, 0.045);
+  color: var(--scsi-public-black);
+  font-size: 0.82rem;
+  overflow-wrap: anywhere;
+}
+
+.scsi-public-topic-pipeline {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.scsi-public-topic-pipeline li {
+  min-width: 0;
+  padding: 20px;
+  background: var(--scsi-public-cream-soft);
+  border: 1px solid var(--scsi-public-border);
+  border-top: 4px solid var(--scsi-public-black);
+  color: var(--scsi-public-muted);
+  font-size: 0.9rem;
+  line-height: 1.56;
+}
+
+.scsi-public-topic-pipeline strong {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--scsi-public-red);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.scsi-public-topic-methodology {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.scsi-public-topic-methodology > div {
+  padding: 18px 20px;
+  background: var(--scsi-public-cream);
+  border: 1px solid var(--scsi-public-border);
+  border-left: 4px solid var(--scsi-public-red);
+}
+
+.ccp-site-intelligence-public .ccp-live-shell > .scsi-public-topic-directory,
+.ccp-site-intelligence-public .ccp-live-shell > .scsi-public-topic-dashboard,
+.ccp-site-intelligence-public .ccp-live-shell > .scsi-public-source-methodology {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+@media (max-width: 1100px) {
+  .scsi-public-topic-grid,
+  .scsi-public-topic-pipeline {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .scsi-public-topic-grid,
+  .scsi-public-topic-pipeline,
+  .scsi-public-topic-methodology {
+    grid-template-columns: 1fr;
   }
 }
