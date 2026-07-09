@@ -40,6 +40,7 @@ from .report_generator import (
     to_csv,
     to_markdown,
 )
+from .ai_briefs import ai_status, build_ai_brief
 
 
 def require_token(
@@ -1400,6 +1401,200 @@ def intelligence_reports_summary(_: None = Depends(require_token)):
             "Markdown exports are suitable for planning notes, GitHub documentation, or editorial drafts.",
             "CSV exports flatten highlights, recommendations, section metrics, and section rows for spreadsheet review.",
             "Use public dashboard endpoints for public pages; report endpoints are intended for internal planning unless manually reviewed.",
+        ],
+    }
+
+
+
+def _public_dashboard_brief_report(settings: Settings, registry: ContentRegistry) -> dict:
+    dashboard = build_public_dashboard(settings, registry)
+    landing = public_landing_page(settings)
+    methodology = public_methodology(settings)
+    readiness = public_readiness_report(settings, registry)
+    return {
+        "ok": True,
+        "report_id": "public-dashboard",
+        "title": "Public Dashboard Readiness Report",
+        "summary": "A public-safe report summarizing the Sustainable Catalyst public dashboard layer, methodology notes, and release-readiness signals.",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "source": {"dashboard": dashboard.get("source"), "mode": "public-safe"},
+        "date_range": {},
+        "highlights": [
+            landing.get("lede", "Public Site Intelligence presents sanitized, source-labeled dashboard summaries."),
+            f"Public status: {dashboard.get('public_status', 'review')}; knowledge areas: {len((dashboard.get('knowledge_overview') or {}).get('hubs', []))}.",
+            f"Readiness status: {readiness.get('status', 'review')}; checklist items: {len(readiness.get('checklist', []))}.",
+        ],
+        "recommendations": dashboard.get("recommendations", [])[:8] or [
+            "Keep public dashboards aggregated, source-labeled, and reviewed before publication.",
+            "Use public methodology notes beside any public dashboard section.",
+            "Keep raw analytics, conversion diagnostics, and operational recommendations private.",
+        ],
+        "sections": [
+            {
+                "section_id": "public_cards",
+                "title": "Public dashboard cards",
+                "summary": "Public-safe dashboard modules available for landing pages.",
+                "metrics": {},
+                "rows": landing.get("cards", []),
+            },
+            {
+                "section_id": "methodology",
+                "title": "Methodology notes",
+                "summary": methodology.get("summary", "Public methodology and source-boundary notes."),
+                "metrics": {},
+                "rows": methodology.get("principles", []) + methodology.get("limitations", []),
+            },
+            {
+                "section_id": "readiness",
+                "title": "Public readiness checklist",
+                "summary": "Checklist items for public dashboard review.",
+                "metrics": {"score": readiness.get("score", 0), "status": readiness.get("status", "review")},
+                "rows": readiness.get("checklist", []),
+            },
+        ],
+        "export_formats": ["json"],
+        "methodology": {
+            "summary": "Public dashboard briefs use public-safe dashboard, methodology, and readiness endpoints only.",
+            "privacy_note": "This brief intentionally avoids raw GA4 rows, private conversion queues, and backend configuration values.",
+        },
+    }
+
+
+@app.get("/ai/status")
+def ai_brief_status(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return ai_status(settings)
+
+
+def _format_ai_brief_response(brief: dict, format: str, filename: str):
+    normalized = (format or "json").lower()
+    if normalized == "markdown":
+        lines = [f"# {brief.get('title', 'Site Intelligence Brief')}", "", brief.get("executive_summary", "")]
+        for title, key in [
+            ("Key findings", "key_findings"),
+            ("Recommended actions", "recommended_actions"),
+            ("Content and platform opportunities", "content_opportunities"),
+            ("Risk and uncertainty notes", "risk_notes"),
+            ("Public-safe summary", "public_safe_summary"),
+        ]:
+            value = brief.get(key)
+            if not value:
+                continue
+            lines.extend(["", f"## {title}"])
+            if isinstance(value, list):
+                lines.extend([f"- {item}" for item in value])
+            else:
+                lines.extend(["", str(value)])
+        return PlainTextResponse("\n".join(lines).strip() + "\n", media_type="text/markdown", headers={"Content-Disposition": f"inline; filename={filename}.md"})
+    return brief
+
+
+@app.get("/ai/briefs/site-intelligence")
+def ai_site_intelligence_brief(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("today"),
+    mode: str = Query("private"),
+    use_ai: bool = Query(True),
+    format: str = Query("json"),
+    ga4: GA4Client = Depends(get_ga4_client),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        report = _site_report_data(ga4, registry, start_date, end_date)
+        return _format_ai_brief_response(build_ai_brief(report, "site-intelligence", settings, mode=mode, use_ai=use_ai), format, "ai-site-intelligence-brief")
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail={"message": "AI Site Intelligence brief generation failed.", "error_type": exc.__class__.__name__, "error_message": str(exc)}) from exc
+
+
+@app.get("/ai/briefs/search")
+def ai_search_brief(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("yesterday"),
+    mode: str = Query("private"),
+    use_ai: bool = Query(True),
+    format: str = Query("json"),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        report = _search_report_data(settings, registry, start_date, end_date)
+        return _format_ai_brief_response(build_ai_brief(report, "search", settings, mode=mode, use_ai=use_ai), format, "ai-search-brief")
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail={"message": "AI Search brief generation failed.", "error_type": exc.__class__.__name__, "error_message": str(exc)}) from exc
+
+
+@app.get("/ai/briefs/publishing")
+def ai_publishing_brief(
+    start_date: str = Query("28daysAgo"),
+    end_date: str = Query("today"),
+    prior_start_date: str = Query("56daysAgo"),
+    prior_end_date: str = Query("29daysAgo"),
+    limit: int = Query(25, ge=1, le=100),
+    mode: str = Query("private"),
+    use_ai: bool = Query(True),
+    format: str = Query("json"),
+    ga4: GA4Client = Depends(get_ga4_client),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        report = _content_report_data(ga4, settings, registry, start_date, end_date, prior_start_date, prior_end_date, limit)
+        return _format_ai_brief_response(build_ai_brief(report, "publishing", settings, mode=mode, use_ai=use_ai), format, "ai-publishing-brief")
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail={"message": "AI Publishing brief generation failed.", "error_type": exc.__class__.__name__, "error_message": str(exc)}) from exc
+
+
+@app.get("/ai/briefs/external-sources")
+def ai_external_sources_brief(
+    mode: str = Query("private"),
+    use_ai: bool = Query(True),
+    format: str = Query("json"),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    try:
+        report = _external_sources_report_data(settings)
+        return _format_ai_brief_response(build_ai_brief(report, "external-sources", settings, mode=mode, use_ai=use_ai), format, "ai-external-sources-brief")
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail={"message": "AI External Sources brief generation failed.", "error_type": exc.__class__.__name__, "error_message": str(exc)}) from exc
+
+
+@app.get("/ai/briefs/public-dashboard")
+def ai_public_dashboard_brief(
+    mode: str = Query("public"),
+    use_ai: bool = Query(True),
+    format: str = Query("json"),
+    settings: Settings = Depends(get_settings),
+    registry: ContentRegistry = Depends(get_registry),
+    _: None = Depends(require_token),
+):
+    try:
+        report = _public_dashboard_brief_report(settings, registry)
+        return _format_ai_brief_response(build_ai_brief(report, "public-dashboard", settings, mode=mode, use_ai=use_ai), format, "ai-public-dashboard-brief")
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=502, detail={"message": "AI Public Dashboard brief generation failed.", "error_type": exc.__class__.__name__, "error_message": str(exc)}) from exc
+
+
+@app.get("/intelligence/ai-briefs")
+def intelligence_ai_briefs(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return {
+        "ok": True,
+        "version": settings.version,
+        "ai_status": ai_status(settings),
+        "briefs": [
+            {"id": "site-intelligence", "title": "AI-Assisted Weekly Site Intelligence Brief", "endpoint": "/ai/briefs/site-intelligence", "shortcode": "[sc_ai_site_intelligence_brief]"},
+            {"id": "search", "title": "AI-Assisted Search Intelligence Brief", "endpoint": "/ai/briefs/search", "shortcode": "[sc_ai_search_brief]"},
+            {"id": "publishing", "title": "AI-Assisted Publishing Strategy Brief", "endpoint": "/ai/briefs/publishing", "shortcode": "[sc_ai_publishing_brief]"},
+            {"id": "external-sources", "title": "AI-Assisted External Data Sources Brief", "endpoint": "/ai/briefs/external-sources", "shortcode": "[sc_ai_external_sources_brief]"},
+            {"id": "public-dashboard", "title": "AI-Assisted Public Dashboard Brief", "endpoint": "/ai/briefs/public-dashboard", "shortcode": "[sc_ai_public_dashboard_brief]"},
+        ],
+        "notes": [
+            "AI briefs fall back to deterministic interpretation when SC_SI_AI_PROVIDER is disabled or not configured.",
+            "Use mode=public only for public-safe summaries and review all public copy before publication.",
+            "Gemini can be enabled with SC_SI_AI_PROVIDER=gemini and SC_SI_GEMINI_API_KEY in Render.",
         ],
     }
 

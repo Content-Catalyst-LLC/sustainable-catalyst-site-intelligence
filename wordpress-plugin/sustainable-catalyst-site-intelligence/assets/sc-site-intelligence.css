@@ -421,3 +421,39 @@
 .scsi-report-recommendations li {
   margin-bottom: 0.45rem;
 }
+
+/* v0.8.0 AI-Assisted Intelligence Briefs */
+.scsi-ai-brief-card,
+.scsi-ai-status {
+  border-top: 4px solid #8b0000;
+}
+
+.scsi-ai-summary,
+.scsi-ai-public-summary {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 14px;
+  background: rgba(255,255,255,.68);
+}
+
+.scsi-ai-summary h3,
+.scsi-ai-public-summary h3 {
+  margin-top: 0;
+}
+
+.scsi-ai-public-summary {
+  background: rgba(255,250,245,.9);
+}
+
+.scsi-ai-confidence,
+.scsi-ai-private-note,
+.scsi-ai-error {
+  border-left: 3px solid rgba(139,0,0,.35);
+  padding-left: .75rem;
+}
+
+.scsi-ai-list li,
+.scsi-ai-notes li {
+  margin-bottom: .4rem;
+}

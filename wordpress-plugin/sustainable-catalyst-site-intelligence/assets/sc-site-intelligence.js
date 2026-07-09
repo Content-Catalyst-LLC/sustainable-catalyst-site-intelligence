@@ -18,7 +18,7 @@
       client_time: new Date().toISOString(),
       metadata: {
         href: params && params.href ? params.href : '',
-        version: cfg.version || '0.7.0'
+        version: cfg.version || '0.8.0'
       }
     }, params || {});
 
@@ -315,7 +315,7 @@
     keys.forEach(function (key) {
       const value = root.dataset[key];
       if (value) {
-        const wireKey = key === 'latitude' ? 'latitude' : key === 'longitude' ? 'longitude' : key === 'startDate' ? 'start_date' : key === 'endDate' ? 'end_date' : key === 'start' ? 'start_date' : key === 'end' ? 'end_date' : key === 'priorStart' ? 'prior_start_date' : key === 'priorEnd' ? 'prior_end_date' : key === 'priorStartDate' ? 'prior_start_date' : key === 'priorEndDate' ? 'prior_end_date' : key === 'forceRefresh' ? 'force_refresh' : key;
+        const wireKey = key === 'latitude' ? 'latitude' : key === 'longitude' ? 'longitude' : key === 'startDate' ? 'start_date' : key === 'endDate' ? 'end_date' : key === 'start' ? 'start_date' : key === 'end' ? 'end_date' : key === 'priorStart' ? 'prior_start_date' : key === 'priorEnd' ? 'prior_end_date' : key === 'priorStartDate' ? 'prior_start_date' : key === 'priorEndDate' ? 'prior_end_date' : key === 'forceRefresh' ? 'force_refresh' : key === 'useAi' ? 'use_ai' : key;
         params.set(wireKey, value);
       }
     });
@@ -1374,6 +1374,88 @@
   }
 
 
+  function renderAiStatus(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    muted.textContent = 'Provider: ' + (data.provider || 'disabled') + ' · Mode: ' + (data.mode || 'deterministic-fallback') + ' · Model: ' + (data.model || 'rules');
+    out.innerHTML = '';
+    const grid = document.createElement('div');
+    grid.className = 'scsi-grid scsi-ai-status-grid';
+    [
+      ['Enabled', data.enabled ? 'Yes' : 'No'],
+      ['Configured', data.configured ? 'Yes' : 'No'],
+      ['Provider', data.provider || 'disabled'],
+      ['Public safe', data.public_safe ? 'Yes' : 'Review']
+    ].forEach(function (item) {
+      const card = document.createElement('div');
+      card.className = 'scsi-stat';
+      card.innerHTML = '<strong>' + escapeHtml(item[1]) + '</strong><span>' + escapeHtml(item[0]) + '</span>';
+      grid.appendChild(card);
+    });
+    out.appendChild(grid);
+    const list = document.createElement('ul');
+    list.className = 'scsi-list scsi-ai-notes';
+    (data.notes || []).forEach(function (note) { const li = document.createElement('li'); li.textContent = note; list.appendChild(li); });
+    out.appendChild(list);
+  }
+
+  function renderAiBrief(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    const source = data.source_report || {};
+    muted.textContent = 'Provider: ' + (data.provider || 'deterministic') + ' · Model: ' + (data.model || 'rules') + ' · Mode: ' + (data.mode || 'private') + (source.title ? ' · Source: ' + source.title : '');
+    out.innerHTML = '';
+
+    const summary = document.createElement('div');
+    summary.className = 'scsi-ai-summary';
+    summary.innerHTML = '<h3>Executive summary</h3><p>' + escapeHtml(data.executive_summary || data.summary || '') + '</p>';
+    out.appendChild(summary);
+
+    const conf = data.confidence || {};
+    const meta = document.createElement('p');
+    meta.className = 'scsi-muted scsi-ai-confidence';
+    meta.textContent = 'Confidence: ' + (conf.level || 'review') + (conf.basis ? ' · ' + conf.basis : '');
+    out.appendChild(meta);
+
+    [
+      ['Key findings', data.key_findings || []],
+      ['Recommended next actions', data.recommended_actions || []],
+      ['Content and platform opportunities', data.content_opportunities || []],
+      ['Risk and uncertainty notes', data.risk_notes || []]
+    ].forEach(function (group) {
+      if (!group[1].length) return;
+      const h = document.createElement('h3');
+      h.textContent = group[0];
+      out.appendChild(h);
+      const list = document.createElement('ul');
+      list.className = 'scsi-list scsi-ai-list';
+      group[1].slice(0, 8).forEach(function (item) { const li = document.createElement('li'); li.textContent = item; list.appendChild(li); });
+      out.appendChild(list);
+    });
+
+    if (data.public_safe_summary) {
+      const pub = document.createElement('div');
+      pub.className = 'scsi-ai-public-summary';
+      pub.innerHTML = '<h3>Public-safe summary draft</h3><p>' + escapeHtml(data.public_safe_summary) + '</p>';
+      out.appendChild(pub);
+    }
+
+    if ((data.private_notes || []).length) {
+      const note = document.createElement('p');
+      note.className = 'scsi-muted scsi-ai-private-note';
+      note.textContent = (data.private_notes || []).join(' ');
+      out.appendChild(note);
+    }
+
+    if (data.ai_error) {
+      const err = document.createElement('p');
+      err.className = 'scsi-muted scsi-ai-error';
+      err.textContent = 'AI provider fallback: ' + (data.ai_error.error_type || 'error') + ' — ' + (data.ai_error.message || 'The deterministic brief was used.');
+      out.appendChild(err);
+    }
+  }
+
+
   function renderReport(root, data) {
     const out = root.querySelector('.scsi-output');
     const muted = root.querySelector('.scsi-muted');
@@ -1464,6 +1546,18 @@
     out.appendChild(exportNote);
   }
 
+  function aiBriefEndpoint(type) {
+    const map = {
+      'site-intelligence': '/ai-site-intelligence-brief',
+      'search': '/ai-search-brief',
+      'publishing': '/ai-publishing-brief',
+      'external-sources': '/ai-external-sources-brief',
+      'public-dashboard': '/ai-public-dashboard-brief'
+    };
+    return map[type] || '/ai-site-intelligence-brief';
+  }
+
+
   function reportEndpoint(type) {
     const map = {
       'site-intelligence': '/report-site-intelligence',
@@ -1479,6 +1573,18 @@
 
   function fetchDashboards() {
     if (!cfg.restBase) return;
+    document.querySelectorAll('[data-scsi-ai-status]').forEach(function (root) {
+      fetchJson(cfg.restBase + '/ai-status')
+        .then(function (data) { renderAiStatus(root, data); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load AI brief status.'); });
+    });
+
+    document.querySelectorAll('[data-scsi-ai-brief]').forEach(function (root) {
+      const type = root.dataset.briefType || 'site-intelligence';
+      fetchJson(cfg.restBase + aiBriefEndpoint(type) + queryFromDataset(root, ['startDate', 'endDate', 'priorStartDate', 'priorEndDate', 'limit', 'mode', 'useAi']))
+        .then(function (data) { renderAiBrief(root, data); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load AI-assisted brief.'); });
+    });
     document.querySelectorAll('[data-scsi-report]').forEach(function (root) {
       const type = root.dataset.reportType || 'site-intelligence';
       fetchJson(cfg.restBase + reportEndpoint(type) + queryFromDataset(root, ['startDate', 'endDate', 'priorStartDate', 'priorEndDate', 'limit', 'latitude', 'longitude', 'country', 'start', 'end', 'year', 'live', 'report']))

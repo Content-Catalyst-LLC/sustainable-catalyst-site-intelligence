@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 0.7.0
+ * Version: 0.8.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '0.7.0';
+    const VERSION = '0.8.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -59,6 +59,12 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_climate_energy_report', [$this, 'climate_energy_report_shortcode']);
         add_shortcode('sc_indexing_report', [$this, 'indexing_report_shortcode']);
         add_shortcode('sc_report_export_bundle', [$this, 'report_export_bundle_shortcode']);
+        add_shortcode('sc_ai_brief_status', [$this, 'ai_brief_status_shortcode']);
+        add_shortcode('sc_ai_site_intelligence_brief', [$this, 'ai_site_intelligence_brief_shortcode']);
+        add_shortcode('sc_ai_search_brief', [$this, 'ai_search_brief_shortcode']);
+        add_shortcode('sc_ai_publishing_brief', [$this, 'ai_publishing_brief_shortcode']);
+        add_shortcode('sc_ai_external_sources_brief', [$this, 'ai_external_sources_brief_shortcode']);
+        add_shortcode('sc_ai_public_dashboard_brief', [$this, 'ai_public_dashboard_brief_shortcode']);
     }
 
     public static function defaults() {
@@ -319,6 +325,42 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/reports-summary', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_reports_summary'],
+            'permission_callback' => '__return_true',
+        ]);
+
+        register_rest_route(self::REST_NAMESPACE, '/ai-status', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_ai_status'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/ai-site-intelligence-brief', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_ai_site_intelligence_brief'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/ai-search-brief', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_ai_search_brief'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/ai-publishing-brief', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_ai_publishing_brief'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/ai-external-sources-brief', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_ai_external_sources_brief'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/ai-public-dashboard-brief', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_ai_public_dashboard_brief'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/ai-briefs-summary', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_ai_briefs_summary'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/event', [
@@ -884,6 +926,57 @@ final class SC_Site_Intelligence_Plugin {
         return rest_ensure_response($result);
     }
 
+
+    private function ai_brief_query_args(WP_REST_Request $request, $keys = []) {
+        $query = [];
+        foreach ($keys as $key) {
+            $value = $request->get_param($key);
+            if ($value !== null && $value !== '') {
+                $query[$key] = sanitize_text_field($value);
+            }
+        }
+        return $query;
+    }
+
+    private function proxy_ai_brief($endpoint, WP_REST_Request $request, $keys = []) {
+        $query = $this->ai_brief_query_args($request, array_merge(['start_date', 'end_date', 'prior_start_date', 'prior_end_date', 'limit', 'mode', 'use_ai', 'format'], $keys));
+        $result = $this->backend_request($endpoint . (!empty($query) ? '?' . http_build_query($query) : ''));
+        if (is_wp_error($result)) { return $result; }
+        return rest_ensure_response($result);
+    }
+
+    public function rest_ai_status(WP_REST_Request $request) {
+        $result = $this->backend_request('ai/status');
+        if (is_wp_error($result)) { return $result; }
+        return rest_ensure_response($result);
+    }
+
+    public function rest_ai_site_intelligence_brief(WP_REST_Request $request) {
+        return $this->proxy_ai_brief('ai/briefs/site-intelligence', $request);
+    }
+
+    public function rest_ai_search_brief(WP_REST_Request $request) {
+        return $this->proxy_ai_brief('ai/briefs/search', $request);
+    }
+
+    public function rest_ai_publishing_brief(WP_REST_Request $request) {
+        return $this->proxy_ai_brief('ai/briefs/publishing', $request);
+    }
+
+    public function rest_ai_external_sources_brief(WP_REST_Request $request) {
+        return $this->proxy_ai_brief('ai/briefs/external-sources', $request);
+    }
+
+    public function rest_ai_public_dashboard_brief(WP_REST_Request $request) {
+        return $this->proxy_ai_brief('ai/briefs/public-dashboard', $request);
+    }
+
+    public function rest_ai_briefs_summary(WP_REST_Request $request) {
+        $result = $this->backend_request('intelligence/ai-briefs');
+        if (is_wp_error($result)) { return $result; }
+        return rest_ensure_response($result);
+    }
+
     public function rest_event(WP_REST_Request $request) {
         $body = json_decode($request->get_body(), true);
         if (!is_array($body)) {
@@ -958,6 +1051,13 @@ final class SC_Site_Intelligence_Plugin {
             <p><code>[sc_urban_resilience_intelligence]</code></p>
             <p><code>[sc_biodiversity_land_use_intelligence]</code></p>
             <p><code>[sc_energy_systems_intelligence]</code></p>
+            <h2>AI-Assisted Briefs</h2>
+            <p><code>[sc_ai_brief_status]</code></p>
+            <p><code>[sc_ai_site_intelligence_brief]</code></p>
+            <p><code>[sc_ai_search_brief]</code></p>
+            <p><code>[sc_ai_publishing_brief]</code></p>
+            <p><code>[sc_ai_external_sources_brief]</code></p>
+            <p><code>[sc_ai_public_dashboard_brief]</code></p>
             <h2>Diagnostics</h2>
             <p>After saving settings, open <a href="<?php echo esc_url(rest_url(self::REST_NAMESPACE . '/diagnostics/ga4')); ?>" target="_blank" rel="noopener">GA4 diagnostics</a> while logged in.</p>
         </div>
@@ -1713,6 +1813,69 @@ final class SC_Site_Intelligence_Plugin {
 
     public function report_export_bundle_shortcode($atts = []) {
         return $this->report_shortcode($atts, 'sc_report_export_bundle', 'export', 'Export Bundle', 'Site Intelligence Export Bundle', 'Loading export bundle summary…');
+    }
+
+
+    private function ai_brief_shortcode_atts($atts, $shortcode) {
+        return shortcode_atts([
+            'start_date' => '',
+            'end_date' => '',
+            'prior_start_date' => '',
+            'prior_end_date' => '',
+            'limit' => '',
+            'mode' => '',
+            'use_ai' => '',
+        ], $atts, $shortcode);
+    }
+
+    public function ai_brief_status_shortcode($atts = []) {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') { return ''; }
+        ob_start(); ?>
+        <section class="scsi-card scsi-ai-status" data-scsi-ai-status>
+            <p class="scsi-eyebrow">AI Briefs</p>
+            <h2>AI Brief Provider Status</h2>
+            <p class="scsi-muted">Loading AI provider status…</p>
+            <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php return ob_get_clean();
+    }
+
+    private function ai_brief_shortcode($atts, $shortcode, $type, $eyebrow, $title, $loading) {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') { return ''; }
+        $atts = $this->ai_brief_shortcode_atts($atts, $shortcode);
+        ob_start(); ?>
+        <section class="scsi-card scsi-ai-brief-card" data-scsi-ai-brief data-brief-type="<?php echo esc_attr($type); ?>"
+            data-start-date="<?php echo esc_attr($atts['start_date']); ?>" data-end-date="<?php echo esc_attr($atts['end_date']); ?>"
+            data-prior-start-date="<?php echo esc_attr($atts['prior_start_date']); ?>" data-prior-end-date="<?php echo esc_attr($atts['prior_end_date']); ?>"
+            data-limit="<?php echo esc_attr($atts['limit']); ?>" data-mode="<?php echo esc_attr($atts['mode']); ?>" data-use-ai="<?php echo esc_attr($atts['use_ai']); ?>">
+            <p class="scsi-eyebrow"><?php echo esc_html($eyebrow); ?></p>
+            <h2><?php echo esc_html($title); ?></h2>
+            <p class="scsi-muted"><?php echo esc_html($loading); ?></p>
+            <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php return ob_get_clean();
+    }
+
+    public function ai_site_intelligence_brief_shortcode($atts = []) {
+        return $this->ai_brief_shortcode($atts, 'sc_ai_site_intelligence_brief', 'site-intelligence', 'AI-Assisted Brief', 'Weekly Site Intelligence Brief', 'Loading AI-assisted Site Intelligence brief…');
+    }
+
+    public function ai_search_brief_shortcode($atts = []) {
+        return $this->ai_brief_shortcode($atts, 'sc_ai_search_brief', 'search', 'AI-Assisted Brief', 'Search Intelligence Brief', 'Loading AI-assisted Search brief…');
+    }
+
+    public function ai_publishing_brief_shortcode($atts = []) {
+        return $this->ai_brief_shortcode($atts, 'sc_ai_publishing_brief', 'publishing', 'AI-Assisted Brief', 'Publishing Strategy Brief', 'Loading AI-assisted Publishing brief…');
+    }
+
+    public function ai_external_sources_brief_shortcode($atts = []) {
+        return $this->ai_brief_shortcode($atts, 'sc_ai_external_sources_brief', 'external-sources', 'AI-Assisted Brief', 'External Data Sources Brief', 'Loading AI-assisted External Sources brief…');
+    }
+
+    public function ai_public_dashboard_brief_shortcode($atts = []) {
+        return $this->ai_brief_shortcode($atts, 'sc_ai_public_dashboard_brief', 'public-dashboard', 'AI-Assisted Brief', 'Public Dashboard Brief', 'Loading AI-assisted Public Dashboard brief…');
     }
 
 }

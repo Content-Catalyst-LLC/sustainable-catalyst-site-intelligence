@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="SC_SI_", env_file=".env", extra="ignore")
 
     app_name: str = "Sustainable Catalyst Site Intelligence"
-    version: str = "0.7.1"
+    version: str = "0.8.0"
     environment: str = "development"
     demo_mode: bool = True
     api_token: str = "dev-token-change-me"
@@ -74,6 +74,16 @@ class Settings(BaseSettings):
     epa_aqs_key: str = ""
     census_base_url: str = "https://api.census.gov"
     gbif_base_url: str = "https://api.gbif.org"
+
+
+    # AI-Assisted Intelligence Briefs v0.8.0. Disabled by default; deterministic
+    # fallback briefs remain available without external model calls.
+    ai_provider: str = "disabled"
+    gemini_api_key: str = ""
+    gemini_model: str = "gemini-1.5-flash"
+    ai_temperature: float = Field(default=0.2, ge=0.0, le=2.0)
+    ai_max_output_tokens: int = Field(default=1200, ge=256, le=8192)
+    ai_timeout_seconds: int = Field(default=12, ge=3, le=30)
 
     @property
     def cors_origin_list(self) -> List[str]:

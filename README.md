@@ -1,30 +1,89 @@
 # Sustainable Catalyst Site Intelligence
 
-**Version:** 0.7.1  
-**Build:** Export Bundle Timeout Patch
+**Version:** 0.8.0  
+**Build:** AI-Assisted Intelligence Briefs
 
-Site Intelligence is a custom backend and WordPress bridge for Sustainable Catalyst. It combines GA4 analytics, Search Console intelligence, registry/page mapping, event validation, external data connectors, public dashboard summaries, and report/export tools.
+Site Intelligence is a custom FastAPI backend and WordPress bridge for Sustainable Catalyst. It combines GA4 analytics, Search Console intelligence, registry/page mapping, event validation, external data connectors, public dashboard summaries, report/export tools, and AI-assisted internal planning briefs.
 
-## v0.7.1 Patch
+## v0.8.0 — AI-Assisted Intelligence Briefs
 
-v0.7.1 fixes a WordPress timeout issue on the export bundle shortcode. The previous default `/reports/export` call attempted to assemble all report payloads at once, which could exceed the WordPress proxy timeout window.
+v0.8.0 adds an AI-brief layer on top of the existing report generator. The layer is intentionally safe by default:
 
-The endpoint now behaves as follows:
+- AI provider is disabled unless configured through Render environment variables.
+- Deterministic fallback briefs always work without external model calls.
+- Brief endpoints are token-protected and intended for internal review.
+- Public-dashboard briefs use public-safe dashboard/methodology/readiness inputs.
+- Gemini is supported optionally; OpenAI is not required.
 
-- `/reports/export` returns a lightweight manifest suitable for WordPress pages.
-- `/reports/export?full=true` returns the complete combined report bundle for direct internal use.
-- `/reports/export?full=true&format=markdown` returns a full Markdown bundle.
-- `/reports/export?full=true&format=csv` returns a full flattened CSV bundle.
-
-For WordPress pages, use the shortcode normally:
+## New Backend Endpoints
 
 ```text
-[sc_report_export_bundle]
+/ai/status
+/ai/briefs/site-intelligence
+/ai/briefs/search
+/ai/briefs/publishing
+/ai/briefs/external-sources
+/ai/briefs/public-dashboard
+/intelligence/ai-briefs
 ```
 
-For large exports, call individual report endpoints or the `full=true` export directly from Terminal/internal workflows.
+AI brief endpoints support:
 
-## Core Report Endpoints
+```text
+mode=private|public
+use_ai=true|false
+format=json|markdown
+```
+
+## New WordPress Shortcodes
+
+```text
+[sc_ai_brief_status]
+[sc_ai_site_intelligence_brief]
+[sc_ai_search_brief]
+[sc_ai_publishing_brief]
+[sc_ai_external_sources_brief]
+[sc_ai_public_dashboard_brief]
+```
+
+Recommended internal brief page:
+
+```text
+[sc_ai_brief_status]
+
+[sc_ai_site_intelligence_brief]
+
+[sc_ai_search_brief]
+
+[sc_ai_publishing_brief]
+
+[sc_ai_external_sources_brief]
+
+[sc_ai_public_dashboard_brief]
+```
+
+## Optional AI Provider Configuration
+
+No new variables are required. Without these, v0.8.0 returns deterministic fallback briefs.
+
+To enable Gemini on Render:
+
+```text
+SC_SI_AI_PROVIDER=gemini
+SC_SI_GEMINI_API_KEY=<your-gemini-api-key>
+SC_SI_GEMINI_MODEL=gemini-1.5-flash
+SC_SI_AI_TEMPERATURE=0.2
+SC_SI_AI_MAX_OUTPUT_TOKENS=1200
+SC_SI_AI_TIMEOUT_SECONDS=12
+```
+
+To keep AI disabled explicitly:
+
+```text
+SC_SI_AI_PROVIDER=disabled
+```
+
+## Existing Core Report Endpoints
 
 ```text
 /reports/site-intelligence
@@ -37,7 +96,7 @@ For large exports, call individual report endpoints or the `full=true` export di
 /intelligence/reports
 ```
 
-All private report endpoints require `X-SC-Intelligence-Token`.
+All private report and AI brief endpoints require `X-SC-Intelligence-Token`.
 
 ## Required Render Variables
 
@@ -84,5 +143,5 @@ curl https://sustainable-catalyst-site-intelligence.onrender.com/
 Expected version:
 
 ```json
-{"version":"0.7.1"}
+{"version":"0.8.0"}
 ```
