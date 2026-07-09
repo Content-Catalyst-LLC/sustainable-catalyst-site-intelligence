@@ -18,7 +18,7 @@
       client_time: new Date().toISOString(),
       metadata: {
         href: params && params.href ? params.href : '',
-        version: cfg.version || '0.8.1'
+        version: cfg.version || '0.9.0'
       }
     }, params || {});
 
@@ -1418,7 +1418,7 @@
       generated_at: new Date().toISOString(),
       mode: 'public',
       provider: 'deterministic-local',
-      model: 'browser-fallback-v0.8.2',
+      model: 'browser-fallback-v0.9.0',
       source_report: {title: 'Public Dashboard Readiness Report'},
       executive_summary: 'The Sustainable Catalyst public dashboard layer is suitable for reviewed public presentation when it uses sanitized, source-labeled summaries, methodology notes, and public-safe snapshots rather than raw analytics or live operational diagnostics.',
       key_findings: [
@@ -1441,7 +1441,7 @@
       ],
       public_safe_summary: 'Public Site Intelligence can be presented as a reviewed, source-labeled dashboard framework for Sustainable Catalyst. It should emphasize methodology, knowledge architecture, public data context, and educational boundaries while keeping raw analytics and operational diagnostics private.',
       private_notes: [],
-      confidence: {level: 'medium', basis: 'Generated from the v0.8.2 browser fallback to avoid gateway-dependent public rendering.'}
+      confidence: {level: 'medium', basis: 'Generated from the v0.9.0 browser fallback to avoid gateway-dependent public rendering.'}
     };
   }
 
@@ -1617,8 +1617,166 @@
     return map[type] || '/report-site-intelligence';
   }
 
+
+
+  function adminEndpoint(type) {
+    const map = {
+      'overview': '/admin-overview',
+      'registry': '/admin-registry',
+      'sources': '/admin-sources',
+      'modules': '/admin-modules',
+      'shortcodes': '/admin-shortcodes',
+      'diagnostics': '/admin-diagnostics',
+      'visibility': '/admin-visibility',
+      'source-control': '/admin-source-control'
+    };
+    return map[type] || '/admin-overview';
+  }
+
+  function renderAdminControl(root, data, type) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    out.innerHTML = '';
+    muted.textContent = 'Generated: ' + (data.generated_at || 'now') + (data.version ? ' · Version ' + data.version : '') + ' · Private admin control plane';
+
+    if (type === 'shortcodes') {
+      const counts = data.category_counts || {};
+      const visibility = data.visibility_counts || {};
+      const grid = document.createElement('div');
+      grid.className = 'scsi-grid scsi-admin-grid';
+      [
+        ['Shortcodes', data.count || 0],
+        ['Public', visibility.public || 0],
+        ['Private', visibility.private || 0],
+        ['Categories', Object.keys(counts).length]
+      ].forEach(function (item) {
+        const card = document.createElement('div');
+        card.className = 'scsi-stat';
+        card.innerHTML = '<strong>' + formatNumber(item[1]) + '</strong><span>' + escapeHtml(item[0]) + '</span>';
+        grid.appendChild(card);
+      });
+      out.appendChild(grid);
+      (data.placement_notes || []).forEach(function (note) {
+        const p = document.createElement('p');
+        p.className = 'scsi-muted';
+        p.textContent = note;
+        out.appendChild(p);
+      });
+      (data.shortcodes || []).forEach(function (item) {
+        const row = document.createElement('div');
+        row.className = 'scsi-page-row scsi-admin-row';
+        row.innerHTML = '<strong><code>' + escapeHtml(item.shortcode || '') + '</code></strong><br>' +
+          statusBadge(item.visibility || 'private') + '<span class="scsi-badge scsi-badge-soft">' + escapeHtml(item.category || 'general') + '</span>' +
+          (item.endpoint ? '<span class="scsi-badge scsi-badge-soft">' + escapeHtml(item.endpoint) + '</span>' : '') +
+          '<small>' + escapeHtml(item.purpose || '') + '</small>';
+        out.appendChild(row);
+      });
+      return;
+    }
+
+    if (type === 'modules') {
+      const modules = data.modules || [];
+      const grid = document.createElement('div');
+      grid.className = 'scsi-grid scsi-admin-grid';
+      [
+        ['Modules', data.count || modules.length],
+        ['Active', (data.status_counts || {}).active || 0],
+        ['Public', (data.visibility_counts || {}).public || 0],
+        ['Private', (data.visibility_counts || {}).private || 0]
+      ].forEach(function (item) {
+        const card = document.createElement('div');
+        card.className = 'scsi-stat';
+        card.innerHTML = '<strong>' + formatNumber(item[1]) + '</strong><span>' + escapeHtml(item[0]) + '</span>';
+        grid.appendChild(card);
+      });
+      out.appendChild(grid);
+      modules.forEach(function (item) {
+        const row = document.createElement('div');
+        row.className = 'scsi-page-row scsi-admin-row';
+        row.innerHTML = '<strong>' + escapeHtml(item.name || item.id) + '</strong><br>' +
+          statusBadge(item.status || 'unknown') + '<span class="scsi-badge scsi-badge-soft">' + escapeHtml(item.visibility || 'private') + '</span>' +
+          '<small>' + escapeHtml(item.notes || '') + '</small>' +
+          (item.shortcodes && item.shortcodes.length ? '<p class="scsi-muted">Shortcodes: ' + item.shortcodes.map(escapeHtml).join(' · ') + '</p>' : '') +
+          (item.endpoints && item.endpoints.length ? '<p class="scsi-muted">Endpoints: ' + item.endpoints.map(escapeHtml).join(' · ') + '</p>' : '');
+        out.appendChild(row);
+      });
+      return;
+    }
+
+    const totals = data.totals || {};
+    const grid = document.createElement('div');
+    grid.className = 'scsi-grid scsi-admin-grid';
+    [
+      ['Registry items', totals.registry_items || 0],
+      ['Hubs', totals.hubs || 0],
+      ['External connectors', totals.external_connectors || 0],
+      ['Modules', totals.modules || 0],
+      ['Shortcodes', totals.shortcodes || 0],
+      ['Warnings', totals.warnings || 0]
+    ].forEach(function (item) {
+      const card = document.createElement('div');
+      card.className = 'scsi-stat';
+      card.innerHTML = '<strong>' + formatNumber(item[1]) + '</strong><span>' + escapeHtml(item[0]) + '</span>';
+      grid.appendChild(card);
+    });
+    out.appendChild(grid);
+
+    if (data.summary) {
+      const p = document.createElement('p');
+      p.className = 'scsi-muted';
+      p.textContent = data.summary;
+      out.appendChild(p);
+    }
+
+    const diag = data.diagnostics || {};
+    if ((diag.checks || []).length) {
+      const h = document.createElement('h3');
+      h.textContent = 'Diagnostic checks';
+      out.appendChild(h);
+      (diag.checks || []).forEach(function (item) {
+        const row = document.createElement('div');
+        row.className = 'scsi-page-row scsi-admin-row';
+        row.innerHTML = '<strong>' + escapeHtml(item.label || item.id) + '</strong><br>' + statusBadge(item.status || 'unknown') + '<small>' + escapeHtml(String(item.value)) + '</small>';
+        out.appendChild(row);
+      });
+    }
+
+    if ((data.modules || []).length) {
+      const h2 = document.createElement('h3');
+      h2.textContent = 'Modules';
+      out.appendChild(h2);
+      (data.modules || []).slice(0, 12).forEach(function (item) {
+        const row = document.createElement('div');
+        row.className = 'scsi-page-row scsi-admin-row';
+        row.innerHTML = '<strong>' + escapeHtml(item.name || item.id) + '</strong><br>' + statusBadge(item.status || 'unknown') + '<span class="scsi-badge scsi-badge-soft">' + escapeHtml(item.visibility || '') + '</span><small>' + escapeHtml(item.notes || '') + '</small>';
+        out.appendChild(row);
+      });
+    }
+
+    const actions = data.next_actions || data.recommendations || [];
+    if (actions.length) {
+      const h3 = document.createElement('h3');
+      h3.textContent = 'Recommended next actions';
+      out.appendChild(h3);
+      const list = document.createElement('ul');
+      list.className = 'scsi-list';
+      actions.forEach(function (rec) {
+        const li = document.createElement('li');
+        li.textContent = rec;
+        list.appendChild(li);
+      });
+      out.appendChild(list);
+    }
+  }
+
   function fetchDashboards() {
     if (!cfg.restBase) return;
+    document.querySelectorAll('[data-scsi-admin-control]').forEach(function (root) {
+      const type = root.dataset.adminType || 'overview';
+      fetchJson(cfg.restBase + adminEndpoint(type))
+        .then(function (data) { renderAdminControl(root, data, type); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load Site Intelligence admin control plane.'); });
+    });
     document.querySelectorAll('[data-scsi-ai-status]').forEach(function (root) {
       fetchJson(cfg.restBase + '/ai-status')
         .then(function (data) { renderAiStatus(root, data); })

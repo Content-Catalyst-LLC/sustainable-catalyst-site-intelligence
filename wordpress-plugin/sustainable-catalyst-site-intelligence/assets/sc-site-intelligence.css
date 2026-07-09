@@ -457,3 +457,21 @@
 .scsi-ai-notes li {
   margin-bottom: .4rem;
 }
+
+/* v0.9.0 admin control plane */
+.scsi-admin-control-card {
+  border-left: 4px solid #111;
+}
+.scsi-admin-grid .scsi-stat strong {
+  letter-spacing: -0.03em;
+}
+.scsi-admin-row code {
+  white-space: normal;
+  word-break: break-word;
+}
+.scsi-admin-row .scsi-muted {
+  margin: 0.35rem 0 0;
+}
+.scsi-admin-control-card .scsi-output h3 {
+  margin-top: 1.25rem;
+}

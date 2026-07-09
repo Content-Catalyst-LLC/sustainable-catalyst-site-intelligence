@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 0.8.2
+ * Version: 0.9.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '0.8.2';
+    const VERSION = '0.9.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -65,6 +65,9 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_ai_publishing_brief', [$this, 'ai_publishing_brief_shortcode']);
         add_shortcode('sc_ai_external_sources_brief', [$this, 'ai_external_sources_brief_shortcode']);
         add_shortcode('sc_ai_public_dashboard_brief', [$this, 'ai_public_dashboard_brief_shortcode']);
+        add_shortcode('sc_site_intelligence_admin_overview', [$this, 'admin_overview_shortcode']);
+        add_shortcode('sc_site_intelligence_shortcode_catalog', [$this, 'shortcode_catalog_shortcode']);
+        add_shortcode('sc_site_intelligence_module_status', [$this, 'module_status_shortcode']);
     }
 
     public static function defaults() {
@@ -362,6 +365,47 @@ final class SC_Site_Intelligence_Plugin {
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_ai_briefs_summary'],
             'permission_callback' => '__return_true',
+        ]);
+
+        register_rest_route(self::REST_NAMESPACE, '/admin-overview', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_admin_overview'],
+            'permission_callback' => function () { return current_user_can('manage_options'); },
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/admin-registry', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_admin_registry'],
+            'permission_callback' => function () { return current_user_can('manage_options'); },
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/admin-sources', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_admin_sources'],
+            'permission_callback' => function () { return current_user_can('manage_options'); },
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/admin-modules', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_admin_modules'],
+            'permission_callback' => function () { return current_user_can('manage_options'); },
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/admin-shortcodes', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_admin_shortcodes'],
+            'permission_callback' => function () { return current_user_can('manage_options'); },
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/admin-diagnostics', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_admin_diagnostics'],
+            'permission_callback' => function () { return current_user_can('manage_options'); },
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/admin-visibility', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_admin_visibility'],
+            'permission_callback' => function () { return current_user_can('manage_options'); },
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/admin-source-control', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_admin_source_control'],
+            'permission_callback' => function () { return current_user_can('manage_options'); },
         ]);
         register_rest_route(self::REST_NAMESPACE, '/event', [
             'methods' => WP_REST_Server::CREATABLE,
@@ -947,7 +991,7 @@ final class SC_Site_Intelligence_Plugin {
             'generated_at' => gmdate('c'),
             'mode' => 'public',
             'provider' => 'deterministic-local',
-            'model' => 'wordpress-fallback-v0.8.2',
+            'model' => 'wordpress-fallback-v0.9.0',
             'source_report' => [
                 'report_id' => 'public-dashboard',
                 'title' => 'Public Dashboard Readiness Report',
@@ -980,10 +1024,10 @@ final class SC_Site_Intelligence_Plugin {
             'private_notes' => [],
             'confidence' => [
                 'level' => 'medium',
-                'basis' => 'Generated from the v0.8.2 WordPress local fallback to avoid gateway-dependent public rendering.',
+                'basis' => 'Generated from the v0.9.0 WordPress local fallback to avoid gateway-dependent public rendering.',
             ],
             'methodology' => [
-                'summary' => 'v0.8.2 renders the public-dashboard brief locally by default to prevent gateway errors from affecting dashboard pages.',
+                'summary' => 'v0.9.0 renders the public-dashboard brief locally by default to prevent gateway errors from affecting dashboard pages.',
                 'privacy_note' => 'No raw analytics, external API calls, API tokens, or private report payloads are used in this fallback.',
             ],
         ];
@@ -1045,6 +1089,44 @@ final class SC_Site_Intelligence_Plugin {
         $result = $this->backend_request('intelligence/ai-briefs');
         if (is_wp_error($result)) { return $result; }
         return rest_ensure_response($result);
+    }
+
+    private function proxy_admin_control($endpoint) {
+        $result = $this->backend_request($endpoint);
+        if (is_wp_error($result)) { return $result; }
+        return rest_ensure_response($result);
+    }
+
+    public function rest_admin_overview(WP_REST_Request $request) {
+        return $this->proxy_admin_control('intelligence/admin');
+    }
+
+    public function rest_admin_registry(WP_REST_Request $request) {
+        return $this->proxy_admin_control('admin/registry');
+    }
+
+    public function rest_admin_sources(WP_REST_Request $request) {
+        return $this->proxy_admin_control('admin/sources');
+    }
+
+    public function rest_admin_modules(WP_REST_Request $request) {
+        return $this->proxy_admin_control('admin/modules');
+    }
+
+    public function rest_admin_shortcodes(WP_REST_Request $request) {
+        return $this->proxy_admin_control('admin/shortcodes');
+    }
+
+    public function rest_admin_diagnostics(WP_REST_Request $request) {
+        return $this->proxy_admin_control('admin/diagnostics');
+    }
+
+    public function rest_admin_visibility(WP_REST_Request $request) {
+        return $this->proxy_admin_control('admin/visibility');
+    }
+
+    public function rest_admin_source_control(WP_REST_Request $request) {
+        return $this->proxy_admin_control('admin/source-control');
     }
 
     public function rest_event(WP_REST_Request $request) {
@@ -1128,6 +1210,10 @@ final class SC_Site_Intelligence_Plugin {
             <p><code>[sc_ai_publishing_brief]</code></p>
             <p><code>[sc_ai_external_sources_brief]</code></p>
             <p><code>[sc_ai_public_dashboard_brief]</code></p>
+            <h2>Admin Control Plane</h2>
+            <p><code>[sc_site_intelligence_admin_overview]</code></p>
+            <p><code>[sc_site_intelligence_shortcode_catalog]</code></p>
+            <p><code>[sc_site_intelligence_module_status]</code></p>
             <h2>Diagnostics</h2>
             <p>After saving settings, open <a href="<?php echo esc_url(rest_url(self::REST_NAMESPACE . '/diagnostics/ga4')); ?>" target="_blank" rel="noopener">GA4 diagnostics</a> while logged in.</p>
         </div>
@@ -1976,6 +2062,35 @@ final class SC_Site_Intelligence_Plugin {
             </div>
         </section>
         <?php return ob_get_clean();
+    }
+
+
+    private function admin_control_shortcode($type, $eyebrow, $title, $loading) {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') { return ''; }
+        if (!current_user_can('manage_options')) {
+            return '<section class="scsi-card scsi-admin-control-card"><p class="scsi-muted">Site Intelligence admin controls are private.</p></section>';
+        }
+        ob_start(); ?>
+        <section class="scsi-card scsi-admin-control-card" data-scsi-admin-control data-admin-type="<?php echo esc_attr($type); ?>">
+            <p class="scsi-eyebrow"><?php echo esc_html($eyebrow); ?></p>
+            <h2><?php echo esc_html($title); ?></h2>
+            <p class="scsi-muted"><?php echo esc_html($loading); ?></p>
+            <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php return ob_get_clean();
+    }
+
+    public function admin_overview_shortcode($atts = []) {
+        return $this->admin_control_shortcode('overview', 'Admin Control Plane', 'Site Intelligence Admin Overview', 'Loading registry, source, module, and diagnostic status…');
+    }
+
+    public function shortcode_catalog_shortcode($atts = []) {
+        return $this->admin_control_shortcode('shortcodes', 'Admin Control Plane', 'Shortcode Catalog', 'Loading shortcode catalog and placement guidance…');
+    }
+
+    public function module_status_shortcode($atts = []) {
+        return $this->admin_control_shortcode('modules', 'Admin Control Plane', 'Module Status Matrix', 'Loading module status and visibility matrix…');
     }
 
 }

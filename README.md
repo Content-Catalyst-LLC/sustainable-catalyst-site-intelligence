@@ -1,40 +1,62 @@
 # Sustainable Catalyst Site Intelligence
 
-**Version:** 0.8.2  
-**Build:** Public Dashboard Brief Local Fallback Patch
+**Version:** 0.9.0  
+**Build:** Admin Registry Manager and Source Control Tools
 
-Site Intelligence connects Sustainable Catalyst analytics, registry intelligence, search visibility, publishing priorities, public dashboard summaries, external connectors, report exports, and AI-assisted briefs.
+Sustainable Catalyst Site Intelligence is a FastAPI + WordPress plugin layer for interpreting Sustainable Catalyst analytics, search visibility, publishing strategy, public dashboards, external data connectors, reports, and AI-assisted briefs.
 
-## v0.8.2 patch
+## v0.9.0 release
 
-v0.8.2 stabilizes the final AI brief shortcode:
+v0.9.0 adds the administrative control plane needed before the public flagship release. It gives the site owner a private overview of what exists, what is connected, what is public, what is private, and which registry/source files control the platform.
 
-```text
-[sc_ai_public_dashboard_brief]
-```
-
-The Public Dashboard Brief now renders locally by default inside WordPress. This prevents Bluehost, Cloudflare, Render, external connector, or AI-provider gateway errors from affecting the page.
-
-To test the backend route directly from WordPress, opt in explicitly:
+### New backend endpoints
 
 ```text
-[sc_ai_public_dashboard_brief live="true"]
+/admin/registry
+/admin/registry/coverage
+/admin/sources
+/admin/modules
+/admin/shortcodes
+/admin/diagnostics
+/admin/visibility
+/admin/source-control
+/intelligence/admin
 ```
 
-For normal dashboard pages, leave `live` off.
+### New WordPress shortcodes
 
-## Key behavior
+```text
+[sc_site_intelligence_admin_overview]
+[sc_site_intelligence_shortcode_catalog]
+[sc_site_intelligence_module_status]
+```
 
-- Default public-dashboard brief is deterministic and public-safe.
-- No raw analytics are exposed.
-- No external API calls are made by the default shortcode.
-- No AI-provider call is made by the default shortcode.
-- Raw HTML gateway pages are suppressed.
-- Backend endpoint `/ai/briefs/public-dashboard` defaults to `use_ai=false`.
+Keep these shortcodes on private/admin-only pages.
 
-## Deploy check
+### Admin control-plane features
 
-After pushing and redeploying, test:
+- Registry Manager: hub counts, content-type counts, article-map counts, missing repository links, missing Workbench tool IDs, missing next-paths, and registry grouping.
+- Source Manager: content registry file, external connector registry file, live/fallback settings, cache settings, Search Console mode, public-dashboard mode, AI-provider mode, and optional API-key status without exposing secret values.
+- Module Manager: private/public visibility, endpoint groups, shortcode groups, and module-level notes.
+- Shortcode Catalog: every known shortcode grouped by category, visibility, endpoint, and placement purpose.
+- Diagnostics: backend version, registry/source file status, API token presence, GA4 mode, Search Console mode, public dashboard mode, and AI provider mode.
+- Source Control Tools: read-only audit mode, managed file list, safe Git workflow, and secret-handling guardrails.
+
+## Deployment
+
+Render build command:
+
+```bash
+pip install -r backend/requirements.txt
+```
+
+Render start command:
+
+```bash
+cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+```
+
+After deployment, test:
 
 ```bash
 curl "https://sustainable-catalyst-site-intelligence.onrender.com/"
@@ -43,11 +65,27 @@ curl "https://sustainable-catalyst-site-intelligence.onrender.com/"
 Expected version:
 
 ```json
-{"version":"0.8.2"}
+{"version":"0.9.0"}
 ```
 
-Then update the WordPress plugin ZIP and use:
+## Required configuration
+
+No new Render environment variables are required for v0.9.0.
+
+Existing key variables still apply:
 
 ```text
-[sc_ai_public_dashboard_brief]
+SC_SI_ENVIRONMENT=production
+SC_SI_API_TOKEN=<private-token>
+SC_SI_CORS_ORIGINS=https://sustainablecatalyst.com
+SC_SI_REGISTRY_PATH=backend/data/site_registry.seed.json
 ```
+
+Optional variables remain available for GA4, Search Console, external connectors, and Gemini.
+
+## Security notes
+
+- Admin control-plane endpoints are protected by the existing Site Intelligence API token on the backend.
+- WordPress admin REST routes require `manage_options`.
+- Source-control tools are read-only in v0.9.0.
+- Do not commit API tokens, Google service-account JSON, Gemini keys, EIA keys, or EPA AQS credentials.

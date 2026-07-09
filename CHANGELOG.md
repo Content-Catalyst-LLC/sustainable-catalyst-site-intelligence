@@ -1,23 +1,41 @@
 # Changelog
 
+## v0.9.0 — Admin Registry Manager and Source Control Tools
+
+Adds the Site Intelligence admin control plane.
+
+### Added
+
+- Registry Manager endpoint: `/admin/registry`
+- Registry coverage endpoint: `/admin/registry/coverage`
+- Source Manager endpoint: `/admin/sources`
+- Module Manager endpoint: `/admin/modules`
+- Shortcode Catalog endpoint: `/admin/shortcodes`
+- Diagnostics endpoint: `/admin/diagnostics`
+- Visibility Matrix endpoint: `/admin/visibility`
+- Source Control Tools endpoint: `/admin/source-control`
+- Combined admin overview endpoint: `/intelligence/admin`
+- WordPress shortcode: `[sc_site_intelligence_admin_overview]`
+- WordPress shortcode: `[sc_site_intelligence_shortcode_catalog]`
+- WordPress shortcode: `[sc_site_intelligence_module_status]`
+- JavaScript renderers for admin overview, module status, and shortcode catalog
+- WordPress admin settings-page references for new control-plane shortcodes
+- Backend tests for v0.9.0 admin endpoints and shortcode catalog
+
+### Notes
+
+- v0.9.0 is read-only for registry/source control. It does not write to registry files from WordPress.
+- Admin WordPress REST proxy routes require `manage_options`.
+- Backend admin routes remain protected by the existing `SC_SI_API_TOKEN` in production.
+
 ## v0.8.2 — Public Dashboard Brief Local Fallback Patch
 
-- Makes `[sc_ai_public_dashboard_brief]` render a local deterministic public-safe brief by default.
-- Adds `live="true"` as an opt-in backend route test mode for the public-dashboard AI brief.
-- Updates the WordPress REST proxy to return a local public-safe fallback when the backend/proxy returns a gateway error.
-- Adds a browser-side fallback for the public-dashboard brief if the REST call fails.
-- Changes the backend public-dashboard AI brief endpoint to deterministic mode by default (`use_ai=false`).
-- Adds a backend fallback response instead of returning a 502 if public-dashboard brief assembly fails.
-- Keeps raw analytics, live connectors, and AI-provider calls out of the default public-dashboard brief rendering path.
+Stabilized the public dashboard brief shortcode with a local WordPress fallback.
 
 ## v0.8.1 — Public Dashboard Brief Gateway Patch
 
-- Suppressed raw HTML gateway errors in WordPress output.
-- Moved the public-dashboard brief toward a fast public-safe source report.
+Suppressed raw Cloudflare/host gateway HTML in AI brief rendering.
 
 ## v0.8.0 — AI-Assisted Intelligence Briefs
 
-- Added AI brief provider status.
-- Added deterministic fallback briefs.
-- Added optional Gemini support.
-- Added Site Intelligence, Search, Publishing, External Sources, and Public Dashboard brief endpoints and shortcodes.
+Added AI-assisted brief endpoints, deterministic fallback briefs, optional Gemini support, and WordPress AI brief shortcodes.

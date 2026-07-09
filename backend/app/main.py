@@ -41,6 +41,17 @@ from .report_generator import (
     to_markdown,
 )
 from .ai_briefs import ai_status, build_ai_brief
+from .admin_control import (
+    admin_overview,
+    diagnostics as admin_diagnostics,
+    module_manager,
+    registry_coverage,
+    registry_manager,
+    shortcode_catalog,
+    source_control_tools,
+    source_manager,
+    visibility_matrix,
+)
 
 
 def require_token(
@@ -1647,6 +1658,52 @@ def intelligence_ai_briefs(settings: Settings = Depends(get_settings), _: None =
             "Gemini can be enabled with SC_SI_AI_PROVIDER=gemini and SC_SI_GEMINI_API_KEY in Render.",
         ],
     }
+
+
+
+@app.get("/admin/registry")
+def admin_registry_endpoint(registry: ContentRegistry = Depends(get_registry), _: None = Depends(require_token)):
+    return registry_manager(registry)
+
+
+@app.get("/admin/registry/coverage")
+def admin_registry_coverage_endpoint(registry: ContentRegistry = Depends(get_registry), _: None = Depends(require_token)):
+    return registry_coverage(registry)
+
+
+@app.get("/admin/sources")
+def admin_sources_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return source_manager(settings)
+
+
+@app.get("/admin/modules")
+def admin_modules_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return module_manager(settings)
+
+
+@app.get("/admin/shortcodes")
+def admin_shortcodes_endpoint(_: None = Depends(require_token)):
+    return shortcode_catalog()
+
+
+@app.get("/admin/diagnostics")
+def admin_diagnostics_endpoint(settings: Settings = Depends(get_settings), registry: ContentRegistry = Depends(get_registry), _: None = Depends(require_token)):
+    return admin_diagnostics(settings, registry)
+
+
+@app.get("/admin/visibility")
+def admin_visibility_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return visibility_matrix(settings)
+
+
+@app.get("/admin/source-control")
+def admin_source_control_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return source_control_tools(settings)
+
+
+@app.get("/intelligence/admin")
+def intelligence_admin_endpoint(settings: Settings = Depends(get_settings), registry: ContentRegistry = Depends(get_registry), _: None = Depends(require_token)):
+    return admin_overview(settings, registry)
 
 
 @app.post("/collect/event", response_model=EventAck)
