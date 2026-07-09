@@ -1,40 +1,30 @@
-# Sustainable Catalyst Site Intelligence v0.7.0
+# Sustainable Catalyst Site Intelligence
 
-Site Intelligence is the analytics, search, SEO, registry, external data, public dashboard, and reporting intelligence layer for Sustainable Catalyst.
+**Version:** 0.7.1  
+**Build:** Export Bundle Timeout Patch
 
-Version **0.7.0 — Report Generator and Export Intelligence** turns the dashboard system into exportable planning reports.
+Site Intelligence is a custom backend and WordPress bridge for Sustainable Catalyst. It combines GA4 analytics, Search Console intelligence, registry/page mapping, event validation, external data connectors, public dashboard summaries, and report/export tools.
 
-## Core modules
+## v0.7.1 Patch
 
-- GA4 analytics intelligence
-- Registry and article-map intelligence
-- Event and conversion validation
-- External source connectors
-- Search Console and SEO intelligence
-- Metadata, title, and internal-link intelligence
-- Sitemap, indexing, and coverage intelligence
-- Publishing strategy intelligence
-- Public dashboard framework
-- Advanced external data connectors
-- Report generator and export intelligence
+v0.7.1 fixes a WordPress timeout issue on the export bundle shortcode. The previous default `/reports/export` call attempted to assemble all report payloads at once, which could exceed the WordPress proxy timeout window.
 
-## New in v0.7.0
+The endpoint now behaves as follows:
 
-The report generator creates structured internal reports with:
+- `/reports/export` returns a lightweight manifest suitable for WordPress pages.
+- `/reports/export?full=true` returns the complete combined report bundle for direct internal use.
+- `/reports/export?full=true&format=markdown` returns a full Markdown bundle.
+- `/reports/export?full=true&format=csv` returns a full flattened CSV bundle.
 
-- title
-- summary
-- generated timestamp
-- source notes
-- highlights
-- recommendations
-- report sections
-- methodology/privacy notes
-- JSON, Markdown, and CSV export support
+For WordPress pages, use the shortcode normally:
 
-## Backend endpoints
+```text
+[sc_report_export_bundle]
+```
 
-Protected report endpoints:
+For large exports, call individual report endpoints or the `full=true` export directly from Terminal/internal workflows.
+
+## Core Report Endpoints
 
 ```text
 /reports/site-intelligence
@@ -47,85 +37,52 @@ Protected report endpoints:
 /intelligence/reports
 ```
 
-Each report endpoint supports:
+All private report endpoints require `X-SC-Intelligence-Token`.
 
-```text
-?format=json
-?format=markdown
-?format=csv
-```
-
-Example:
-
-```bash
-curl -H "X-SC-Intelligence-Token: $SC_SI_API_TOKEN" \
-  "https://sustainable-catalyst-site-intelligence.onrender.com/reports/site-intelligence?format=markdown"
-```
-
-Combined export bundle:
-
-```bash
-curl -H "X-SC-Intelligence-Token: $SC_SI_API_TOKEN" \
-  "https://sustainable-catalyst-site-intelligence.onrender.com/reports/export?report=site,search,content&format=csv"
-```
-
-## WordPress shortcodes
-
-Private/internal report panels:
-
-```text
-[sc_site_intelligence_report]
-[sc_search_intelligence_report]
-[sc_content_strategy_report]
-[sc_external_sources_report]
-[sc_climate_energy_report]
-[sc_indexing_report]
-[sc_report_export_bundle]
-```
-
-Recommended private report page:
-
-```text
-[sc_site_intelligence_report]
-
-[sc_search_intelligence_report]
-
-[sc_content_strategy_report]
-
-[sc_external_sources_report]
-
-[sc_climate_energy_report]
-
-[sc_indexing_report]
-
-[sc_report_export_bundle]
-```
-
-## Required Render variables
-
-Existing v0.6.0 variables still apply. No new required variables are added in v0.7.0.
+## Required Render Variables
 
 ```text
 SC_SI_ENVIRONMENT=production
 SC_SI_DEMO_MODE=false
 SC_SI_API_TOKEN=<private-token>
+SC_SI_CORS_ORIGINS=https://sustainablecatalyst.com
 SC_SI_GA4_PROPERTY_ID=<numeric-ga4-property-id>
 SC_SI_GOOGLE_APPLICATION_CREDENTIALS_JSON=<one-line-service-account-json>
-SC_SI_CORS_ORIGINS=https://sustainablecatalyst.com
 SC_SI_REGISTRY_PATH=backend/data/site_registry.seed.json
+SC_SI_SEARCH_CONSOLE_LIVE=true
 SC_SI_SEARCH_CONSOLE_SITE_URL=https://sustainablecatalyst.com/
 ```
 
-## Public/private rule
-
-Report endpoints are intended for internal planning. Public-facing pages should use the public dashboard framework instead:
+Optional external-source variables:
 
 ```text
-[sc_site_intelligence_public_landing]
-[sc_public_site_intelligence]
-[sc_public_knowledge_overview]
-[sc_public_climate_energy_summary]
-[sc_public_methodology]
+SC_SI_EIA_API_KEY=
+SC_SI_EPA_AQS_EMAIL=
+SC_SI_EPA_AQS_KEY=
 ```
 
-Do not expose raw reports publicly until they have been manually reviewed and sanitized.
+## Deployment
+
+Build command:
+
+```bash
+pip install -r backend/requirements.txt
+```
+
+Start command:
+
+```bash
+cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+```
+
+Health/root check:
+
+```bash
+curl https://sustainable-catalyst-site-intelligence.onrender.com/
+```
+
+Expected version:
+
+```json
+{"version":"0.7.1"}
+```

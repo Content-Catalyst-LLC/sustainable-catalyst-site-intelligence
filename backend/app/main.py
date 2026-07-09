@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import Optional
+from typing import Any, Optional
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -29,6 +29,7 @@ from .indexing_intelligence import (
 from .publishing_intelligence import publishing_intelligence, topic_momentum_report
 from .public_dashboard import build_public_dashboard, public_landing_page, public_methodology, public_readiness_report
 from .report_generator import (
+    bundle_manifest_report,
     bundle_report,
     climate_energy_report,
     content_strategy_report,
@@ -1338,12 +1339,24 @@ def reports_indexing(
         raise HTTPException(status_code=502, detail={"message": "Indexing report generation failed.", "error_type": exc.__class__.__name__, "error_message": str(exc)}) from exc
 
 
+def _report_export_catalog() -> list[dict[str, Any]]:
+    return [
+        {"id": "site-intelligence", "title": "Weekly Site Intelligence Report", "endpoint": "/reports/site-intelligence", "formats": ["json", "markdown", "csv"], "cost": "medium"},
+        {"id": "search-intelligence", "title": "Search Intelligence Report", "endpoint": "/reports/search-intelligence", "formats": ["json", "markdown", "csv"], "cost": "medium"},
+        {"id": "content-strategy", "title": "Content Strategy and Publishing Report", "endpoint": "/reports/content-strategy", "formats": ["json", "markdown", "csv"], "cost": "high"},
+        {"id": "external-sources", "title": "External Data Sources Report", "endpoint": "/reports/external-sources", "formats": ["json", "markdown", "csv"], "cost": "low"},
+        {"id": "climate-energy", "title": "Climate + Energy Snapshot Report", "endpoint": "/reports/climate-energy", "formats": ["json", "markdown", "csv"], "cost": "low"},
+        {"id": "indexing", "title": "Registry and Indexing Coverage Report", "endpoint": "/reports/indexing", "formats": ["json", "markdown", "csv"], "cost": "high"},
+    ]
+
+
 @app.get("/reports/export")
 def reports_export_bundle(
     report: str = Query("all"),
     start_date: str = Query("28daysAgo"),
     end_date: str = Query("today"),
     format: str = Query("json"),
+    full: bool = Query(False),
     ga4: GA4Client = Depends(get_ga4_client),
     settings: Settings = Depends(get_settings),
     registry: ContentRegistry = Depends(get_registry),
@@ -1351,6 +1364,12 @@ def reports_export_bundle(
 ):
     try:
         requested = {item.strip() for item in report.split(",") if item.strip()} if report != "all" else {"site", "search", "content", "external", "climate", "indexing"}
+        if not full:
+            manifest = bundle_manifest_report(_report_export_catalog(), sorted(requested))
+            manifest["full_bundle_endpoint"] = "/reports/export?full=true"
+            manifest["timeout_note"] = "The default export endpoint returns this lightweight manifest so WordPress pages do not wait on every upstream report. Use full=true for direct internal exports."
+            return _format_report_response(manifest, format, "site-intelligence-export-bundle")
+
         reports = []
         if "site" in requested or "site-intelligence" in requested:
             reports.append(_site_report_data(ga4, registry, start_date, end_date))
@@ -1376,15 +1395,7 @@ def intelligence_reports_summary(_: None = Depends(require_token)):
     return {
         "ok": True,
         "version": settings.version,
-        "reports": [
-            {"id": "site-intelligence", "endpoint": "/reports/site-intelligence", "formats": ["json", "markdown", "csv"]},
-            {"id": "search-intelligence", "endpoint": "/reports/search-intelligence", "formats": ["json", "markdown", "csv"]},
-            {"id": "content-strategy", "endpoint": "/reports/content-strategy", "formats": ["json", "markdown", "csv"]},
-            {"id": "external-sources", "endpoint": "/reports/external-sources", "formats": ["json", "markdown", "csv"]},
-            {"id": "climate-energy", "endpoint": "/reports/climate-energy", "formats": ["json", "markdown", "csv"]},
-            {"id": "indexing", "endpoint": "/reports/indexing", "formats": ["json", "markdown", "csv"]},
-            {"id": "export-bundle", "endpoint": "/reports/export", "formats": ["json", "markdown", "csv"]},
-        ],
+        "reports": _report_export_catalog() + [{"id": "export-bundle", "title": "Site Intelligence Export Bundle", "endpoint": "/reports/export", "formats": ["json", "markdown", "csv"], "cost": "manifest"}],
         "notes": [
             "Markdown exports are suitable for planning notes, GitHub documentation, or editorial drafts.",
             "CSV exports flatten highlights, recommendations, section metrics, and section rows for spreadsheet review.",

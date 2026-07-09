@@ -204,6 +204,49 @@ def bundle_report(reports: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
     }
 
 
+def bundle_manifest_report(available_reports: Sequence[Mapping[str, Any]] | None = None, requested: Sequence[str] | None = None) -> Dict[str, Any]:
+    reports = list(available_reports or [])
+    requested_list = list(requested or [])
+    report = report_shell(
+        "site-intelligence-export-bundle",
+        "Site Intelligence Export Bundle",
+        "A lightweight export manifest for Sustainable Catalyst planning reports. Use individual report endpoints, or request full=true for a complete combined bundle when running outside the WordPress timeout window.",
+        {"source": "manifest", "mode": "lightweight"},
+        {},
+    )
+    report["highlights"] = [
+        f"{len(reports)} exportable report endpoints are available.",
+        "The WordPress shortcode loads a lightweight manifest to avoid proxy timeouts.",
+        "Full JSON, Markdown, or CSV exports remain available through individual protected backend report endpoints.",
+    ]
+    report["recommendations"] = [
+        "Use individual report shortcodes for review pages and the export manifest as the navigation/index card.",
+        "For large exports, call /reports/export?full=true directly from Terminal or an internal workflow rather than through the WordPress page proxy.",
+        "Keep report pages private/internal unless manually reviewed for public release.",
+    ]
+    add_section(
+        report,
+        "available_reports",
+        "Available report exports",
+        "Protected backend report endpoints and supported export formats.",
+        rows=reports,
+    )
+    add_section(
+        report,
+        "export_modes",
+        "Export modes",
+        "How to use the export bundle without blocking WordPress page loads.",
+        rows=[
+            {"name": "Lightweight manifest", "endpoint": "/reports/export", "use": "Default WordPress-safe summary."},
+            {"name": "Full bundle", "endpoint": "/reports/export?full=true", "use": "Complete combined payload for Terminal/internal use."},
+            {"name": "Markdown", "endpoint": "/reports/export?full=true&format=markdown", "use": "Planning brief or GitHub/Markdown draft."},
+            {"name": "CSV", "endpoint": "/reports/export?full=true&format=csv", "use": "Spreadsheet-friendly flattened rows."},
+        ],
+    )
+    report["requested_reports"] = requested_list
+    return report
+
+
 def flatten_rows(report: Mapping[str, Any]) -> List[Dict[str, Any]]:
     rows: List[Dict[str, Any]] = []
     for key, value in (report.get("date_range") or {}).items():
