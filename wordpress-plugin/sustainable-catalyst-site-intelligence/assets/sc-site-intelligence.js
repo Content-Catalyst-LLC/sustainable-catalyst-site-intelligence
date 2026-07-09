@@ -18,7 +18,7 @@
       client_time: new Date().toISOString(),
       metadata: {
         href: params && params.href ? params.href : '',
-        version: cfg.version || '0.9.0'
+        version: cfg.version || '0.10.0'
       }
     }, params || {});
 
@@ -53,6 +53,15 @@
 
   function setupClickTracking() {
     document.addEventListener('click', function (event) {
+      const copyButton = event.target.closest ? event.target.closest('[data-scsi-copy]') : null;
+      if (copyButton) {
+        const value = copyButton.getAttribute('data-scsi-copy') || '';
+        if (navigator.clipboard && value) {
+          navigator.clipboard.writeText(value).then(function () { copyButton.textContent = 'Copied'; }).catch(function () {});
+        }
+        event.preventDefault();
+        return;
+      }
       const anchor = event.target.closest ? event.target.closest('a') : null;
       if (!anchor) return;
       const eventName = classifyLink(anchor);
@@ -1628,7 +1637,11 @@
       'shortcodes': '/admin-shortcodes',
       'diagnostics': '/admin-diagnostics',
       'visibility': '/admin-visibility',
-      'source-control': '/admin-source-control'
+      'source-control': '/admin-source-control',
+      'status': '/admin-status',
+      'connection-check': '/admin-connection-check',
+      'public-readiness': '/admin-public-readiness-check',
+      'diagnostic-summary': '/admin-diagnostic-summary'
     };
     return map[type] || '/admin-overview';
   }
@@ -1638,6 +1651,68 @@
     const muted = root.querySelector('.scsi-muted');
     out.innerHTML = '';
     muted.textContent = 'Generated: ' + (data.generated_at || 'now') + (data.version ? ' · Version ' + data.version : '') + ' · Private admin control plane';
+
+    if (type === 'connection-check' || type === 'diagnostic-summary' || type === 'status' || type === 'public-readiness') {
+      const counts = data.counts || data.status_counts || {};
+      const grid = document.createElement('div');
+      grid.className = 'scsi-grid scsi-admin-grid';
+      if (type === 'diagnostic-summary') {
+        [['Warnings', counts.warnings || 0], ['Modules', counts.modules || 0], ['Shortcodes', counts.shortcodes || 0], ['External connectors', counts.external_connectors || 0]].forEach(function (item) {
+          const card = document.createElement('div');
+          card.className = 'scsi-stat';
+          card.innerHTML = '<strong>' + formatNumber(item[1]) + '</strong><span>' + escapeHtml(item[0]) + '</span>';
+          grid.appendChild(card);
+        });
+      } else {
+        [['Healthy', counts.healthy || 0], ['Warnings', counts.warning || data.warning_count || 0], ['Fallback', counts.fallback || 0], ['Disabled', counts.disabled || 0]].forEach(function (item) {
+          const card = document.createElement('div');
+          card.className = 'scsi-stat';
+          card.innerHTML = '<strong>' + formatNumber(item[1]) + '</strong><span>' + escapeHtml(item[0]) + '</span>';
+          grid.appendChild(card);
+        });
+      }
+      out.appendChild(grid);
+      if (data.summary) {
+        const p = document.createElement('p');
+        p.className = 'scsi-muted';
+        p.textContent = data.summary;
+        out.appendChild(p);
+      }
+      const checks = data.checks || (data.connection && data.connection.checks) || [];
+      if (checks.length) {
+        const h = document.createElement('h3');
+        h.textContent = 'Checks';
+        out.appendChild(h);
+        checks.forEach(function (item) {
+          const row = document.createElement('div');
+          row.className = 'scsi-page-row scsi-admin-row';
+          row.innerHTML = '<strong>' + escapeHtml(item.label || item.id || '') + '</strong><br>' + statusBadge(item.status || 'unknown') + '<small>' + escapeHtml(item.message || String(item.value || '')) + '</small>';
+          out.appendChild(row);
+        });
+      }
+      const actions = data.recommended_next_actions || data.troubleshooting || data.warnings || [];
+      if (actions.length) {
+        const h2 = document.createElement('h3');
+        h2.textContent = type === 'public-readiness' ? 'Public/private warnings' : 'Recommended next actions';
+        out.appendChild(h2);
+        const list = document.createElement('ul');
+        list.className = 'scsi-list';
+        actions.forEach(function (rec) { const li = document.createElement('li'); li.textContent = typeof rec === 'string' ? rec : (rec.label || rec.id || JSON.stringify(rec)); list.appendChild(li); });
+        out.appendChild(list);
+      }
+      if (data.recommended_public_stack) {
+        const h3 = document.createElement('h3');
+        h3.textContent = 'Recommended public shortcode stack';
+        out.appendChild(h3);
+        data.recommended_public_stack.forEach(function (code) {
+          const row = document.createElement('div');
+          row.className = 'scsi-page-row scsi-admin-row';
+          row.innerHTML = '<code>' + escapeHtml(code) + '</code> <button type="button" class="scsi-copy-button" data-scsi-copy="' + escapeHtml(code) + '">Copy</button>';
+          out.appendChild(row);
+        });
+      }
+      return;
+    }
 
     if (type === 'shortcodes') {
       const counts = data.category_counts || {};
@@ -1665,7 +1740,7 @@
       (data.shortcodes || []).forEach(function (item) {
         const row = document.createElement('div');
         row.className = 'scsi-page-row scsi-admin-row';
-        row.innerHTML = '<strong><code>' + escapeHtml(item.shortcode || '') + '</code></strong><br>' +
+        row.innerHTML = '<strong><code>' + escapeHtml(item.shortcode || '') + '</code></strong> <button type="button" class="scsi-copy-button" data-scsi-copy="' + escapeHtml(item.shortcode || '') + '">Copy</button><br>' +
           statusBadge(item.visibility || 'private') + '<span class="scsi-badge scsi-badge-soft">' + escapeHtml(item.category || 'general') + '</span>' +
           (item.endpoint ? '<span class="scsi-badge scsi-badge-soft">' + escapeHtml(item.endpoint) + '</span>' : '') +
           '<small>' + escapeHtml(item.purpose || '') + '</small>';
@@ -1767,6 +1842,104 @@
       });
       out.appendChild(list);
     }
+  }
+
+
+
+  function renderPublicPageBuilder(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    const defaults = data.public_defaults || {};
+    muted.textContent = (data.summary || 'Public-safe page-builder guidance.') + ' · Mode: ' + (data.mode || 'public_safe_builder');
+    out.innerHTML = '';
+
+    const copy = data.editorial_copy || {};
+    const hero = document.createElement('div');
+    hero.className = 'scsi-public-builder-hero';
+    hero.innerHTML = '<p class="scsi-eyebrow">' + escapeHtml(data.eyebrow || 'Public Dashboard Builder') + '</p>' +
+      '<h3>' + escapeHtml(data.title || 'Public Flagship Dashboard Page Builder') + '</h3>' +
+      '<p>' + escapeHtml(copy.intro || data.summary || '') + '</p>' +
+      '<p class="scsi-public-boundary">' + escapeHtml(copy.boundary_note || '') + '</p>';
+    out.appendChild(hero);
+
+    const grid = document.createElement('div');
+    grid.className = 'scsi-grid scsi-builder-safe-grid';
+    [
+      ['Raw analytics exposed', defaults.raw_analytics_exposed ? 'Review' : 'No'],
+      ['Private reports exposed', defaults.private_reports_exposed ? 'Review' : 'No'],
+      ['Admin diagnostics exposed', defaults.admin_diagnostics_exposed ? 'Review' : 'No'],
+      ['Live external calls required', defaults.live_external_calls_required ? 'Yes' : 'No'],
+      ['Public dashboards enabled', defaults.public_dashboards_enabled ? 'Yes' : 'Review']
+    ].forEach(function (item) {
+      const card = document.createElement('div');
+      card.className = 'scsi-stat scsi-public-polish-card';
+      card.innerHTML = '<strong>' + escapeHtml(item[1]) + '</strong><span>' + escapeHtml(item[0]) + '</span>';
+      grid.appendChild(card);
+    });
+    out.appendChild(grid);
+
+    const flagship = document.createElement('div');
+    flagship.className = 'scsi-page-row scsi-shortcode-row scsi-flagship-copy-row';
+    flagship.innerHTML = '<strong>Recommended public flagship shortcode</strong><br><code>' + escapeHtml(data.flagship_shortcode || '[sc_site_intelligence_public_flagship]') + '</code>' +
+      '<button type="button" class="scsi-copy-button" data-scsi-copy="' + escapeHtml(data.flagship_shortcode || '[sc_site_intelligence_public_flagship]') + '">Copy</button>';
+    out.appendChild(flagship);
+
+    const h = document.createElement('h3');
+    h.textContent = 'Page presets';
+    out.appendChild(h);
+    (data.page_presets || []).forEach(function (preset) {
+      const row = document.createElement('div');
+      row.className = 'scsi-page-row scsi-public-preset-row';
+      row.innerHTML = '<strong>' + escapeHtml(preset.name || preset.id) + '</strong><br>' +
+        statusBadge(preset.status || 'ready') + '<span class="scsi-badge scsi-badge-soft">' + escapeHtml(preset.visibility || '') + '</span>' +
+        '<small>' + escapeHtml(preset.description || '') + '</small>' +
+        '<code>' + escapeHtml(preset.shortcode || '') + '</code>' +
+        '<button type="button" class="scsi-copy-button" data-scsi-copy="' + escapeHtml(preset.shortcode || '') + '">Copy</button>';
+      out.appendChild(row);
+    });
+
+    const s = document.createElement('h3');
+    s.textContent = 'Flagship section order';
+    out.appendChild(s);
+    (data.layout_sections || []).forEach(function (section) {
+      const row = document.createElement('div');
+      row.className = 'scsi-page-row scsi-public-section-row';
+      row.innerHTML = '<strong>' + formatNumber(section.order || 0) + '. ' + escapeHtml(section.title || '') + '</strong><br>' +
+        statusBadge(section.status || 'ready') + '<span class="scsi-badge scsi-badge-soft">' + escapeHtml(section.visibility || '') + '</span>' +
+        '<code>' + escapeHtml(section.shortcode || '') + '</code>' +
+        '<small>' + escapeHtml(section.purpose || '') + '</small>';
+      out.appendChild(row);
+    });
+
+    const list = document.createElement('ul');
+    list.className = 'scsi-list scsi-release-checklist';
+    (data.release_checklist || []).forEach(function (item) { const li = document.createElement('li'); li.textContent = item; list.appendChild(li); });
+    if ((data.release_checklist || []).length) {
+      const c = document.createElement('h3');
+      c.textContent = 'Release checklist';
+      out.appendChild(c);
+      out.appendChild(list);
+    }
+  }
+
+  function renderPublicShortcodeBundles(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    muted.textContent = data.summary || 'Copy-ready public dashboard bundles.';
+    out.innerHTML = '';
+    (data.bundles || []).forEach(function (bundle) {
+      const row = document.createElement('div');
+      row.className = 'scsi-page-row scsi-shortcode-bundle-row';
+      const sections = (bundle.sections || []).map(function (item) { return '<span class="scsi-badge scsi-badge-soft">' + escapeHtml(item) + '</span>'; }).join('');
+      row.innerHTML = '<strong>' + escapeHtml(bundle.name || bundle.id) + '</strong><br>' +
+        '<span class="scsi-badge">' + escapeHtml(bundle.visibility || 'public') + '</span>' +
+        '<span class="scsi-badge scsi-badge-soft">' + escapeHtml(bundle.recommended_page_type || '') + '</span>' +
+        '<small>' + escapeHtml(bundle.notes || '') + '</small>' +
+        '<pre class="scsi-shortcode-pre">' + escapeHtml(bundle.shortcode || '') + '</pre>' +
+        '<button type="button" class="scsi-copy-button" data-scsi-copy="' + escapeHtml(bundle.shortcode || '') + '">Copy bundle</button>' +
+        '<div class="scsi-mini-badges">' + sections + '</div>';
+      out.appendChild(row);
+    });
   }
 
   function fetchDashboards() {
@@ -1931,6 +2104,17 @@
         .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load Energy Systems Data Intelligence.'); });
     });
 
+
+    document.querySelectorAll('[data-scsi-public-page-builder]').forEach(function (root) {
+      fetchJson(cfg.restBase + '/public-page-builder')
+        .then(function (data) { renderPublicPageBuilder(root, data); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public page builder.'); });
+    });
+    document.querySelectorAll('[data-scsi-public-shortcode-bundle]').forEach(function (root) {
+      fetchJson(cfg.restBase + '/public-page-builder-shortcodes')
+        .then(function (data) { renderPublicShortcodeBundles(root, data); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public shortcode bundles.'); });
+    });
     document.querySelectorAll('[data-scsi-public-landing]').forEach(function (root) {
       fetchJson(cfg.restBase + '/public-landing-page')
         .then(function (data) { renderPublicLanding(root, data); })

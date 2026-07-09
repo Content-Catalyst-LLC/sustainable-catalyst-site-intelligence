@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.10.0 — Public Flagship Dashboard Page Builder
+
+- Added public-safe page-builder endpoints.
+- Added flagship public dashboard shortcode.
+- Added copy-ready shortcode bundles and public page presets.
+- Added public release checklist and methodology-forward page guidance.
+- Added v0.10.0 tests for public-safe defaults, shortcodes, and admin catalog integration.
+
+
 ## v0.9.1 — WordPress Admin UX Polish and Diagnostic Stabilization
 
 - Added fast admin status endpoint.

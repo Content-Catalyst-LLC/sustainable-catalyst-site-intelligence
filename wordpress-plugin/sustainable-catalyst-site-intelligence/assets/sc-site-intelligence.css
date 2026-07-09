@@ -475,3 +475,103 @@
 .scsi-admin-control-card .scsi-output h3 {
   margin-top: 1.25rem;
 }
+
+
+/* v0.9.1 admin UX polish */
+.scsi-admin-panel-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:18px 0 24px;}
+.scsi-admin-panel{background:#fff;border:1px solid rgba(0,0,0,.12);border-radius:14px;padding:16px;box-shadow:0 6px 18px rgba(0,0,0,.04);}
+.scsi-admin-panel h2{margin-top:0;}
+.scsi-copy-button{border:1px solid rgba(0,0,0,.18);border-radius:999px;background:#fff;padding:3px 9px;font-size:12px;cursor:pointer;margin-left:6px;}
+.scsi-admin-control-card .scsi-page-row{position:relative;}
+.scsi-admin-control-card code{user-select:all;}
+
+
+/* v0.10.0 Public Flagship Dashboard Page Builder */
+.scsi-public-flagship {
+  border: 1px solid rgba(0,0,0,.08);
+  border-radius: 28px;
+  padding: clamp(24px, 4vw, 48px);
+  background: linear-gradient(180deg, #fff, #fbf8f4);
+  box-shadow: 0 22px 60px rgba(0,0,0,.06);
+  margin: 32px 0;
+}
+.scsi-flagship-hero,
+.scsi-public-builder-hero {
+  border-left: 5px solid #c40000;
+  padding: 22px 24px;
+  background: #fff;
+  border-radius: 20px;
+  margin-bottom: 24px;
+}
+.scsi-flagship-hero h2,
+.scsi-public-builder-hero h3 {
+  margin: 0 0 12px;
+  line-height: 1.08;
+}
+.scsi-flagship-lede,
+.scsi-public-builder-hero p {
+  font-size: 1.08rem;
+  max-width: 920px;
+}
+.scsi-public-boundary {
+  border: 1px solid rgba(196,0,0,.18);
+  border-radius: 14px;
+  background: rgba(196,0,0,.045);
+  padding: 12px 14px;
+  color: #3a2525;
+}
+.scsi-flagship-stack {
+  display: grid;
+  gap: 22px;
+}
+.scsi-flagship-stack .scsi-card {
+  margin: 0;
+}
+.scsi-flagship-cta-row {
+  margin-top: 18px;
+}
+.scsi-public-page-builder,
+.scsi-public-shortcode-bundle {
+  border-top: 4px solid #c40000;
+}
+.scsi-builder-safe-grid .scsi-stat strong {
+  font-size: 1.65rem;
+}
+.scsi-shortcode-pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: #111;
+  color: #fff;
+  padding: 14px 16px;
+  border-radius: 12px;
+  margin: 12px 0;
+  font-size: .9rem;
+}
+.scsi-copy-button {
+  border: 1px solid #c40000;
+  background: #fff;
+  color: #c40000;
+  border-radius: 999px;
+  padding: 7px 14px;
+  cursor: pointer;
+  font-weight: 700;
+  margin-top: 8px;
+}
+.scsi-copy-button:hover,
+.scsi-copy-button:focus {
+  background: #c40000;
+  color: #fff;
+}
+.scsi-mini-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.scsi-release-checklist li::marker {
+  color: #c40000;
+}
+@media (max-width: 760px) {
+  .scsi-public-flagship { padding: 20px; border-radius: 20px; }
+  .scsi-flagship-hero, .scsi-public-builder-hero { padding: 18px; }
+}

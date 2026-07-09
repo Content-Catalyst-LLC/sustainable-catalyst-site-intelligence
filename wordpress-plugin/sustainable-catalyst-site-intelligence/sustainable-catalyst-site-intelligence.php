@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 0.9.0
+ * Version: 0.10.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '0.9.0';
+    const VERSION = '0.10.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -42,6 +42,9 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_update_priorities', [$this, 'update_priorities_shortcode']);
         add_shortcode('sc_publishing_opportunities', [$this, 'publishing_opportunities_shortcode']);
         add_shortcode('sc_site_intelligence_public_landing', [$this, 'public_landing_shortcode']);
+        add_shortcode('sc_site_intelligence_public_flagship', [$this, 'public_flagship_shortcode']);
+        add_shortcode('sc_site_intelligence_public_page_builder', [$this, 'public_page_builder_shortcode']);
+        add_shortcode('sc_public_dashboard_shortcode_bundle', [$this, 'public_shortcode_bundle_shortcode']);
         add_shortcode('sc_public_site_intelligence', [$this, 'public_site_intelligence_shortcode']);
         add_shortcode('sc_public_knowledge_overview', [$this, 'public_knowledge_overview_shortcode']);
         add_shortcode('sc_public_climate_energy_summary', [$this, 'public_climate_energy_summary_shortcode']);
@@ -68,6 +71,8 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_site_intelligence_admin_overview', [$this, 'admin_overview_shortcode']);
         add_shortcode('sc_site_intelligence_shortcode_catalog', [$this, 'shortcode_catalog_shortcode']);
         add_shortcode('sc_site_intelligence_module_status', [$this, 'module_status_shortcode']);
+        add_shortcode('sc_site_intelligence_diagnostic_summary', [$this, 'diagnostic_summary_shortcode']);
+        add_shortcode('sc_site_intelligence_connection_check', [$this, 'connection_check_shortcode']);
     }
 
     public static function defaults() {
@@ -238,6 +243,21 @@ final class SC_Site_Intelligence_Plugin {
             'callback' => [$this, 'rest_public_landing_page'],
             'permission_callback' => '__return_true',
         ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-page-builder', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_page_builder'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-page-builder-shortcodes', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_page_builder_shortcodes'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-page-builder-readiness', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_page_builder_readiness'],
+            'permission_callback' => '__return_true',
+        ]);
         register_rest_route(self::REST_NAMESPACE, '/public-dashboard', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_dashboard'],
@@ -405,6 +425,26 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/admin-source-control', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_admin_source_control'],
+            'permission_callback' => function () { return current_user_can('manage_options'); },
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/admin-status', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_admin_status'],
+            'permission_callback' => function () { return current_user_can('manage_options'); },
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/admin-connection-check', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_admin_connection_check'],
+            'permission_callback' => function () { return current_user_can('manage_options'); },
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/admin-public-readiness-check', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_admin_public_readiness_check'],
+            'permission_callback' => function () { return current_user_can('manage_options'); },
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/admin-diagnostic-summary', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_admin_diagnostic_summary'],
             'permission_callback' => function () { return current_user_can('manage_options'); },
         ]);
         register_rest_route(self::REST_NAMESPACE, '/event', [
@@ -825,6 +865,31 @@ final class SC_Site_Intelligence_Plugin {
         return $result;
     }
 
+
+    public function rest_public_page_builder(WP_REST_Request $request) {
+        $result = $this->backend_request('public/page-builder');
+        if (is_wp_error($result)) {
+            return new WP_REST_Response(['ok' => false, 'message' => $result->get_error_message()], 502);
+        }
+        return rest_ensure_response($result);
+    }
+
+    public function rest_public_page_builder_shortcodes(WP_REST_Request $request) {
+        $result = $this->backend_request('public/page-builder/shortcodes');
+        if (is_wp_error($result)) {
+            return new WP_REST_Response(['ok' => false, 'message' => $result->get_error_message()], 502);
+        }
+        return rest_ensure_response($result);
+    }
+
+    public function rest_public_page_builder_readiness(WP_REST_Request $request) {
+        $result = $this->backend_request('public/page-builder/readiness');
+        if (is_wp_error($result)) {
+            return new WP_REST_Response(['ok' => false, 'message' => $result->get_error_message()], 502);
+        }
+        return rest_ensure_response($result);
+    }
+
     public function rest_public_dashboard(WP_REST_Request $request) {
         $query = $this->public_query_from_request($request);
         $endpoint = 'public/dashboard' . (!empty($query) ? '?' . http_build_query($query) : '');
@@ -991,7 +1056,7 @@ final class SC_Site_Intelligence_Plugin {
             'generated_at' => gmdate('c'),
             'mode' => 'public',
             'provider' => 'deterministic-local',
-            'model' => 'wordpress-fallback-v0.9.0',
+            'model' => 'wordpress-fallback-v0.10.0',
             'source_report' => [
                 'report_id' => 'public-dashboard',
                 'title' => 'Public Dashboard Readiness Report',
@@ -1129,6 +1194,23 @@ final class SC_Site_Intelligence_Plugin {
         return $this->proxy_admin_control('admin/source-control');
     }
 
+
+    public function rest_admin_status(WP_REST_Request $request) {
+        return $this->proxy_admin_control('admin/status');
+    }
+
+    public function rest_admin_connection_check(WP_REST_Request $request) {
+        return $this->proxy_admin_control('admin/connection-check');
+    }
+
+    public function rest_admin_public_readiness_check(WP_REST_Request $request) {
+        return $this->proxy_admin_control('admin/public-readiness-check');
+    }
+
+    public function rest_admin_diagnostic_summary(WP_REST_Request $request) {
+        return $this->proxy_admin_control('admin/diagnostic-summary');
+    }
+
     public function rest_event(WP_REST_Request $request) {
         $body = json_decode($request->get_body(), true);
         if (!is_array($body)) {
@@ -1151,7 +1233,12 @@ final class SC_Site_Intelligence_Plugin {
         ?>
         <div class="wrap scsi-admin-wrap">
             <h1>Sustainable Catalyst Site Intelligence</h1>
-            <p>Connect Sustainable Catalyst to the Site Intelligence backend and emit custom GA4/dataLayer events.</p>
+            <p>Connect Sustainable Catalyst to the Site Intelligence backend, review deployment health, and manage private/public dashboard placement.</p>
+            <div class="scsi-admin-panel-grid">
+                <div class="scsi-admin-panel"><h2>Connection</h2><p>Confirm the Render backend URL, API token, and current deployed version.</p><p><a class="button" href="<?php echo esc_url(rest_url(self::REST_NAMESPACE . '/admin-status')); ?>" target="_blank" rel="noopener">Open Admin Status</a></p></div>
+                <div class="scsi-admin-panel"><h2>Diagnostics</h2><p>Use the one-click diagnostic summary after each deploy.</p><p><a class="button" href="<?php echo esc_url(rest_url(self::REST_NAMESPACE . '/admin-diagnostic-summary')); ?>" target="_blank" rel="noopener">Open Diagnostic Summary</a></p></div>
+                <div class="scsi-admin-panel"><h2>Public / Private</h2><p>Keep raw analytics, reports, AI drafts, and admin diagnostics on private pages.</p><p><a class="button" href="<?php echo esc_url(rest_url(self::REST_NAMESPACE . '/admin-public-readiness-check')); ?>" target="_blank" rel="noopener">Open Public Readiness</a></p></div>
+            </div>
             <form method="post" action="options.php">
                 <?php settings_fields('sc_site_intelligence'); ?>
                 <table class="form-table" role="presentation">
@@ -1214,6 +1301,8 @@ final class SC_Site_Intelligence_Plugin {
             <p><code>[sc_site_intelligence_admin_overview]</code></p>
             <p><code>[sc_site_intelligence_shortcode_catalog]</code></p>
             <p><code>[sc_site_intelligence_module_status]</code></p>
+            <p><code>[sc_site_intelligence_diagnostic_summary]</code></p>
+            <p><code>[sc_site_intelligence_connection_check]</code></p>
             <h2>Diagnostics</h2>
             <p>After saving settings, open <a href="<?php echo esc_url(rest_url(self::REST_NAMESPACE . '/diagnostics/ga4')); ?>" target="_blank" rel="noopener">GA4 diagnostics</a> while logged in.</p>
         </div>
@@ -1699,6 +1788,81 @@ final class SC_Site_Intelligence_Plugin {
     }
 
 
+
+    public function public_flagship_shortcode($atts = []) {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') {
+            return '';
+        }
+        $atts = shortcode_atts([
+            'title' => 'Sustainable Catalyst Site Intelligence',
+            'subtitle' => 'A public-safe dashboard for knowledge architecture, public source signals, and platform transparency.',
+            'show_cta' => 'true',
+        ], $atts, 'sc_site_intelligence_public_flagship');
+        ob_start();
+        ?>
+        <section class="scsi-public-flagship" data-scsi-public-flagship>
+            <div class="scsi-flagship-hero">
+                <p class="scsi-eyebrow">Sustainable Catalyst Public Dashboard</p>
+                <h2><?php echo esc_html($atts['title']); ?></h2>
+                <p class="scsi-flagship-lede"><?php echo esc_html($atts['subtitle']); ?></p>
+                <p class="scsi-public-boundary">Educational and informational only. This page does not provide legal, financial, medical, engineering, climate-risk, ESG, compliance, assurance, or investment advice.</p>
+                <?php if ($atts['show_cta'] !== 'false') : ?>
+                <div class="scsi-public-cta-row scsi-flagship-cta-row">
+                    <a class="scsi-public-cta" href="https://sustainablecatalyst.com/research-library/" data-scsi-event="sc_library_nav">Explore the Research Library</a>
+                    <a class="scsi-public-cta" href="https://sustainablecatalyst.com/workbench/" data-scsi-event="sc_workbench_open">Open the Workbench</a>
+                    <a class="scsi-public-cta" href="https://github.com/Content-Catalyst-LLC" target="_blank" rel="noopener" data-scsi-event="sc_repository_click">View GitHub</a>
+                </div>
+                <?php endif; ?>
+            </div>
+            <div class="scsi-flagship-stack">
+                <?php
+                echo $this->public_landing_shortcode([]);
+                echo $this->public_site_intelligence_shortcode([]);
+                echo $this->public_knowledge_overview_shortcode([]);
+                echo $this->public_climate_energy_summary_shortcode([]);
+                echo $this->public_methodology_shortcode([]);
+                ?>
+            </div>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
+    public function public_page_builder_shortcode($atts = []) {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') {
+            return '';
+        }
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-public-page-builder" data-scsi-public-page-builder>
+            <p class="scsi-eyebrow">Public Dashboard Page Builder</p>
+            <h2>Public Flagship Dashboard Page Builder</h2>
+            <p class="scsi-muted">Loading public-safe page presets, release checklist, and placement guidance…</p>
+            <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
+    public function public_shortcode_bundle_shortcode($atts = []) {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') {
+            return '';
+        }
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-public-shortcode-bundle" data-scsi-public-shortcode-bundle>
+            <p class="scsi-eyebrow">Public Dashboard Shortcode Bundles</p>
+            <h2>Copy-Ready Public Dashboard Bundles</h2>
+            <p class="scsi-muted">Loading public-safe shortcode bundles…</p>
+            <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
     public function public_landing_shortcode($atts = []) {
         $options = self::options();
         if ($options['enable_dashboard'] !== '1') {
@@ -2091,6 +2255,14 @@ final class SC_Site_Intelligence_Plugin {
 
     public function module_status_shortcode($atts = []) {
         return $this->admin_control_shortcode('modules', 'Admin Control Plane', 'Module Status Matrix', 'Loading module status and visibility matrix…');
+    }
+
+    public function diagnostic_summary_shortcode($atts = []) {
+        return $this->admin_control_shortcode('diagnostic-summary', 'Admin Diagnostics', 'One-Click Diagnostic Summary', 'Loading backend, registry, source, module, shortcode, and visibility diagnostics…');
+    }
+
+    public function connection_check_shortcode($atts = []) {
+        return $this->admin_control_shortcode('connection-check', 'Admin Diagnostics', 'Connection Check', 'Loading backend, token, registry, source, and public-readiness checks…');
     }
 
 }

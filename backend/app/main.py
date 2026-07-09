@@ -28,6 +28,7 @@ from .indexing_intelligence import (
 )
 from .publishing_intelligence import publishing_intelligence, topic_momentum_report
 from .public_dashboard import build_public_dashboard, public_landing_page, public_methodology, public_readiness_report
+from .public_page_builder import public_page_builder, public_page_builder_readiness, public_shortcode_bundles
 from .report_generator import (
     bundle_manifest_report,
     bundle_report,
@@ -292,6 +293,33 @@ def public_status(settings: Settings = Depends(get_settings)):
 def public_dashboard_methodology():
     return public_methodology()
 
+
+
+
+@app.get("/public/page-builder")
+def public_page_builder_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return public_page_builder(settings)
+
+
+@app.get("/public/page-builder/shortcodes")
+def public_page_builder_shortcodes_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return public_shortcode_bundles()
+
+
+@app.get("/public/page-builder/readiness")
+def public_page_builder_readiness_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return public_page_builder_readiness(settings)
+
+
+@app.get("/intelligence/public-page-builder")
+def public_page_builder_private_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return public_page_builder(settings)
 
 @app.get("/public/dashboard")
 def public_dashboard(
