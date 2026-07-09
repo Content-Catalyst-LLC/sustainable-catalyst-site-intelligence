@@ -18,7 +18,7 @@
       client_time: new Date().toISOString(),
       metadata: {
         href: params && params.href ? params.href : '',
-        version: cfg.version || '1.1.0'
+        version: cfg.version || '1.1.1'
       }
     }, params || {});
 
@@ -49,6 +49,19 @@
     if (href.indexOf('/research-library') !== -1 || href.indexOf('/library') !== -1 || text.indexOf('research library') !== -1) return 'sc_library_nav';
     if (anchor.closest('[data-scsi-pathway], [aria-label*="article" i], .series-strip, .related, .toc, nav')) return 'sc_pathway_continue';
     return null;
+  }
+
+  function setupActivePageLinks() {
+    const current = normalizePath(window.location.pathname || '/');
+    document.querySelectorAll('.ccp-site-intelligence-public a[href], .ccp-platform-current a[href], .cch-home-current a[href], .scsi-public-nav-row a[href]').forEach(function (anchor) {
+      const href = anchor.getAttribute('href') || '';
+      if (!href || href.charAt(0) === '#') return;
+      const path = normalizePath(href);
+      if (path === current) {
+        anchor.classList.add('scsi-active-link');
+        anchor.setAttribute('aria-current', 'page');
+      }
+    });
   }
 
   function setupClickTracking() {
@@ -2134,6 +2147,77 @@
     });
   }
 
+
+  function normalizePath(path) {
+    try {
+      const url = path.indexOf('http') === 0 ? new URL(path) : new URL(path, window.location.origin);
+      let pathname = url.pathname || '/';
+      if (!pathname.endsWith('/')) pathname += '/';
+      return pathname;
+    } catch (e) {
+      return String(path || '').replace(/[#?].*$/, '').replace(/\/$/, '') + '/';
+    }
+  }
+
+  function renderPublicDashboardNavigation(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    const current = root.dataset.current || data.current_slug || '';
+    muted.textContent = data.summary || 'Public dashboard navigation.';
+    out.innerHTML = '';
+    const nav = document.createElement('div');
+    nav.className = 'scsi-public-nav-row';
+    (data.items || []).forEach(function (item) {
+      const a = document.createElement('a');
+      a.href = item.path || item.url || '#';
+      a.textContent = (item.label || item.slug || 'Dashboard') + ' →';
+      a.className = 'scsi-public-nav-link';
+      if (item.active || (current && item.slug === current)) a.className += ' scsi-active-link';
+      nav.appendChild(a);
+    });
+    out.appendChild(nav);
+  }
+
+  function renderPublicTopicPageTemplates(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    muted.textContent = data.summary || 'Copy-ready metadata, shortcode, and section guidance.';
+    out.innerHTML = '';
+    const grid = document.createElement('div');
+    grid.className = 'scsi-grid scsi-public-topic-grid';
+    (data.templates || []).forEach(function (item) {
+      const card = document.createElement('div');
+      card.className = 'scsi-stat scsi-public-topic-card scsi-template-card';
+      card.innerHTML = '<span class="scsi-public-label">' + escapeHtml(item.slug || '') + '</span>' +
+        '<strong>' + escapeHtml(item.title || '') + '</strong>' +
+        '<small><b>Path:</b> ' + escapeHtml(item.canonical_path || '') + '</small>' +
+        '<small><b>Excerpt:</b> ' + escapeHtml(item.excerpt || '') + '</small>' +
+        '<small><b>Meta:</b> ' + escapeHtml(item.meta_description || '') + '</small>' +
+        '<code>' + escapeHtml(item.shortcode || '') + '</code>';
+      grid.appendChild(card);
+    });
+    out.appendChild(grid);
+  }
+
+  function renderPublicTopicPageVisualQa(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    muted.textContent = (data.summary || 'Public topic page QA.') + ' · Score: ' + formatNumber(data.score || 0) + '%';
+    out.innerHTML = '';
+    (data.checks || []).forEach(function (check) {
+      const row = document.createElement('div');
+      row.className = 'scsi-page-row scsi-public-qa-row';
+      row.innerHTML = '<strong>' + escapeHtml(check.label || check.id || '') + '</strong><br>' +
+        statusBadge(check.status || 'review') +
+        '<small>' + escapeHtml(check.detail || '') + '</small>';
+      out.appendChild(row);
+    });
+    const notes = document.createElement('ul');
+    notes.className = 'scsi-list scsi-public-notes';
+    (data.review_notes || []).forEach(function (note) { const li = document.createElement('li'); li.textContent = note; notes.appendChild(li); });
+    out.appendChild(notes);
+  }
+
   function fetchDashboards() {
     if (!cfg.restBase) return;
     document.querySelectorAll('[data-scsi-admin-control]').forEach(function (root) {
@@ -2315,6 +2399,24 @@
         .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public source methodology.'); });
     });
 
+    document.querySelectorAll('[data-scsi-public-dashboard-navigation]').forEach(function (root) {
+      const current = root.dataset.current || '';
+      fetchJson(cfg.restBase + '/public-dashboard-navigation' + (current ? '?current=' + encodeURIComponent(current) : ''))
+        .then(function (data) { renderPublicDashboardNavigation(root, data); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public dashboard navigation.'); });
+    });
+    document.querySelectorAll('[data-scsi-public-topic-page-templates]').forEach(function (root) {
+      const slug = root.dataset.slug || '';
+      fetchJson(cfg.restBase + '/public-topic-page-templates' + (slug ? '?slug=' + encodeURIComponent(slug) : ''))
+        .then(function (data) { renderPublicTopicPageTemplates(root, data); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public topic page templates.'); });
+    });
+    document.querySelectorAll('[data-scsi-public-topic-page-visual-qa]').forEach(function (root) {
+      fetchJson(cfg.restBase + '/public-topic-page-visual-qa')
+        .then(function (data) { renderPublicTopicPageVisualQa(root, data); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public topic page visual QA.'); });
+    });
+
     document.querySelectorAll('[data-scsi-public-page-builder]').forEach(function (root) {
       fetchJson(cfg.restBase + '/public-page-builder')
         .then(function (data) { renderPublicPageBuilder(root, data); })
@@ -2362,11 +2464,16 @@
     });
   }
 
+  function init() {
+    setupActivePageLinks();
+    fetchDashboards();
+  }
+
   setupClickTracking();
   setupScrollTracking();
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', fetchDashboards);
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    fetchDashboards();
+    init();
   }
 })();

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.1.0
+ * Version: 1.1.1
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.1.0';
+    const VERSION = '1.1.1';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -51,6 +51,9 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_public_climate_energy_summary', [$this, 'public_climate_energy_summary_shortcode']);
         add_shortcode('sc_public_methodology', [$this, 'public_methodology_shortcode']);
         add_shortcode('sc_public_dashboard_directory', [$this, 'public_dashboard_directory_shortcode']);
+        add_shortcode('sc_public_dashboard_navigation', [$this, 'public_dashboard_navigation_shortcode']);
+        add_shortcode('sc_public_topic_page_templates', [$this, 'public_topic_page_templates_shortcode']);
+        add_shortcode('sc_public_topic_page_visual_qa', [$this, 'public_topic_page_visual_qa_shortcode']);
         add_shortcode('sc_public_climate_energy_dashboard', [$this, 'public_topic_dashboard_shortcode']);
         add_shortcode('sc_public_environmental_monitoring_dashboard', [$this, 'public_topic_dashboard_shortcode']);
         add_shortcode('sc_public_biodiversity_land_use_dashboard', [$this, 'public_topic_dashboard_shortcode']);
@@ -306,6 +309,21 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-source-methodology', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_source_methodology'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-dashboard-navigation', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_dashboard_navigation'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-topic-page-templates', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_topic_page_templates'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-topic-page-visual-qa', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_topic_page_visual_qa'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/public-readiness', [
@@ -1006,6 +1024,34 @@ final class SC_Site_Intelligence_Plugin {
         return rest_ensure_response($result);
     }
 
+    public function rest_public_dashboard_navigation(WP_REST_Request $request) {
+        $current = sanitize_key($request->get_param('current'));
+        $endpoint = 'public/navigation' . ($current ? '?current=' . rawurlencode($current) : '');
+        $result = $this->backend_request($endpoint);
+        if (is_wp_error($result)) {
+            return new WP_REST_Response(['ok' => false, 'message' => $result->get_error_message()], 502);
+        }
+        return rest_ensure_response($result);
+    }
+
+    public function rest_public_topic_page_templates(WP_REST_Request $request) {
+        $slug = sanitize_key($request->get_param('slug'));
+        $endpoint = 'public/page-templates' . ($slug ? '?slug=' . rawurlencode($slug) : '');
+        $result = $this->backend_request($endpoint);
+        if (is_wp_error($result)) {
+            return new WP_REST_Response(['ok' => false, 'message' => $result->get_error_message()], 502);
+        }
+        return rest_ensure_response($result);
+    }
+
+    public function rest_public_topic_page_visual_qa(WP_REST_Request $request) {
+        $result = $this->backend_request('public/topic-page-visual-qa');
+        if (is_wp_error($result)) {
+            return new WP_REST_Response(['ok' => false, 'message' => $result->get_error_message()], 502);
+        }
+        return rest_ensure_response($result);
+    }
+
     public function rest_public_readiness(WP_REST_Request $request) {
         $query = $this->public_query_from_request($request);
         $endpoint = 'intelligence/public-readiness' . (!empty($query) ? '?' . http_build_query($query) : '');
@@ -1134,7 +1180,7 @@ final class SC_Site_Intelligence_Plugin {
             'generated_at' => gmdate('c'),
             'mode' => 'public',
             'provider' => 'deterministic-local',
-            'model' => 'wordpress-fallback-v1.1.0',
+            'model' => 'wordpress-fallback-v1.1.1',
             'source_report' => [
                 'report_id' => 'public-dashboard',
                 'title' => 'Public Dashboard Readiness Report',
@@ -2067,6 +2113,66 @@ final class SC_Site_Intelligence_Plugin {
     }
 
 
+
+    public function public_dashboard_navigation_shortcode($atts = []) {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') {
+            return '';
+        }
+        $atts = shortcode_atts([
+            'current' => '',
+            'title' => 'Site Intelligence Public Dashboards',
+        ], $atts, 'sc_public_dashboard_navigation');
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-public-dashboard-navigation" data-scsi-public-dashboard-navigation data-current="<?php echo esc_attr(sanitize_key($atts['current'])); ?>">
+            <p class="scsi-eyebrow">Dashboard Navigation</p>
+            <h2><?php echo esc_html($atts['title']); ?></h2>
+            <p class="scsi-muted">Loading public dashboard navigation…</p>
+            <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
+    public function public_topic_page_templates_shortcode($atts = []) {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') {
+            return '';
+        }
+        $atts = shortcode_atts([
+            'slug' => '',
+            'title' => 'Public Topic Page Templates',
+        ], $atts, 'sc_public_topic_page_templates');
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-public-topic-page-templates" data-scsi-public-topic-page-templates data-slug="<?php echo esc_attr(sanitize_key($atts['slug'])); ?>">
+            <p class="scsi-eyebrow">Page Templates</p>
+            <h2><?php echo esc_html($atts['title']); ?></h2>
+            <p class="scsi-muted">Loading public topic page templates…</p>
+            <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
+    public function public_topic_page_visual_qa_shortcode($atts = []) {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') {
+            return '';
+        }
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-public-topic-page-visual-qa" data-scsi-public-topic-page-visual-qa>
+            <p class="scsi-eyebrow">Topic Page QA</p>
+            <h2>Site Intelligence Public Topic Page QA</h2>
+            <p class="scsi-muted">Loading public topic page QA…</p>
+            <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
     public function public_dashboard_directory_shortcode($atts = []) {
         $options = self::options();
         if ($options['enable_dashboard'] !== '1') {
@@ -2441,7 +2547,7 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function release_status_shortcode($atts = []) {
-        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.1.0 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
+        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.1.1 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
     }
 
 }

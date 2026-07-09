@@ -223,7 +223,7 @@ def public_dashboard_visual_qa(settings: Settings) -> Dict[str, Any]:
             "id": "mobile_spacing",
             "label": "Mobile spacing and card stacking are release-ready",
             "status": "pass",
-            "detail": "The v1.1.0 CSS preserves release-ready spacing, heading scale, CTA wrapping, and long shortcode wrapping for smaller screens.",
+            "detail": "The v1.1.1 CSS preserves release-ready spacing, heading scale, CTA wrapping, and long shortcode wrapping for smaller screens.",
             "recommendation": "Check the page at mobile width after WordPress caching is cleared.",
         },
         {

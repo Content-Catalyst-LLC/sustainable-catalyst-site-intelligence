@@ -30,7 +30,14 @@ from .publishing_intelligence import publishing_intelligence, topic_momentum_rep
 from .public_dashboard import build_public_dashboard, public_landing_page, public_methodology, public_readiness_report
 from .public_page_builder import public_dashboard_visual_qa, public_page_builder, public_page_builder_readiness, public_shortcode_bundles
 from .release import release_checklist, release_public_summary, release_status as build_release_status, smoke_test as release_smoke_test
-from .public_topic_dashboards import topic_dashboard_directory, public_topic_dashboard, public_source_methodology
+from .public_topic_dashboards import (
+    public_dashboard_navigation,
+    public_topic_dashboard,
+    public_source_methodology,
+    public_topic_page_templates,
+    topic_dashboard_directory,
+    topic_page_visual_qa,
+)
 from .report_generator import (
     bundle_manifest_report,
     bundle_report,
@@ -280,6 +287,30 @@ def public_topic_dashboard_directory_endpoint(settings: Settings = Depends(get_s
     return topic_dashboard_directory()
 
 
+@app.get("/public/navigation")
+def public_dashboard_navigation_endpoint(current: str = Query(""), settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return public_dashboard_navigation(current)
+
+
+@app.get("/public/page-templates")
+def public_topic_page_templates_endpoint(slug: str = Query(""), settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    try:
+        return public_topic_page_templates(slug or None)
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Unknown public Site Intelligence page template.")
+
+
+@app.get("/public/topic-page-visual-qa")
+def public_topic_page_visual_qa_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return topic_page_visual_qa()
+
+
 @app.get("/public/dashboards/climate-energy")
 def public_climate_energy_dashboard_endpoint(settings: Settings = Depends(get_settings)):
     if not settings.public_dashboards_enabled:
@@ -325,6 +356,16 @@ def public_source_methodology_endpoint(settings: Settings = Depends(get_settings
 @app.get("/intelligence/public-topic-dashboards")
 def intelligence_public_topic_dashboards(_: None = Depends(require_token)):
     return topic_dashboard_directory()
+
+
+@app.get("/intelligence/public-topic-page-templates")
+def intelligence_public_topic_page_templates(_: None = Depends(require_token)):
+    return public_topic_page_templates()
+
+
+@app.get("/intelligence/public-topic-page-visual-qa")
+def intelligence_public_topic_page_visual_qa(_: None = Depends(require_token)):
+    return topic_page_visual_qa()
 
 @app.get("/public/landing-page")
 def public_landing_page_endpoint(settings: Settings = Depends(get_settings)):

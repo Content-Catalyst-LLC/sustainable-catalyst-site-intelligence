@@ -1,6 +1,19 @@
 # Changelog
 
 
+## 1.1.1 — Public Topic Page Templates and Navigation Polish
+
+- Updated backend and WordPress plugin versions to 1.1.1.
+- Added canonical `/platform/site-intelligence/` page-path metadata for public topic dashboards.
+- Added public dashboard navigation endpoint `/public/navigation`.
+- Added public topic-page template endpoint `/public/page-templates`.
+- Added public topic-page visual QA endpoint `/public/topic-page-visual-qa`.
+- Added WordPress shortcodes `[sc_public_dashboard_navigation]`, `[sc_public_topic_page_templates]`, and `[sc_public_topic_page_visual_qa]`.
+- Added JavaScript active-link detection for Site Intelligence, Platform, and homepage links.
+- Added CSS helpers for active dashboard buttons and controlled nowrap text polish.
+- Updated admin shortcode/module catalogs to include public topic dashboard helpers.
+- Added v1.1.1 tests for navigation, page templates, metadata, and visual QA.
+
 ## 1.1.0 — Public Topic Dashboards and Source Pages
 
 - Added public dashboard directory endpoint `/public/dashboards`.

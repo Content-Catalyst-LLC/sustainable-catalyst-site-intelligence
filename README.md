@@ -1,9 +1,29 @@
 # Sustainable Catalyst Site Intelligence
 
-Version: 1.1.0
+Version: 1.1.1
 
 Site Intelligence is the Sustainable Catalyst analytics, registry, external-source, reporting, AI-brief, public-dashboard, admin-control, and public flagship dashboard platform.
 
+
+## v1.1.1 — Public Topic Page Templates and Navigation Polish
+
+This patch locks in the public topic-page system introduced in v1.1.0. It adds canonical `/platform/site-intelligence/` page paths, reusable public dashboard navigation, copy-ready page-template metadata, active-page link behavior, visual QA for topic pages, and nowrap helpers for cleaner homepage/platform text wrapping.
+
+New public shortcodes:
+
+```text
+[sc_public_dashboard_navigation]
+[sc_public_topic_page_templates]
+[sc_public_topic_page_visual_qa]
+```
+
+New public endpoints:
+
+```text
+/public/navigation
+/public/page-templates
+/public/topic-page-visual-qa
+```
 
 ## v1.1.0 — Public Topic Dashboards and Source Pages
 

@@ -658,7 +658,7 @@
 }
 
 /* =========================================================
-   v1.1.0 Public Shortcode Visual Alignment
+   v1.1.1 Public Shortcode Visual Alignment
    Aligns public dashboard shortcodes with current Sustainable Catalyst
    ccp/scmethod-style public-platform panels.
    ========================================================= */
@@ -1015,7 +1015,7 @@
 }
 
 /* =========================================================
-   PUBLIC TOPIC DASHBOARDS — v1.1.0
+   PUBLIC TOPIC DASHBOARDS — v1.1.1
    Topic pages and source-methodology modules.
    ========================================================= */
 
@@ -1170,5 +1170,103 @@
   .scsi-public-topic-pipeline,
   .scsi-public-topic-methodology {
     grid-template-columns: 1fr;
+  }
+}
+
+
+/* =========================================================
+   PUBLIC TOPIC PAGE POLISH — v1.1.1
+   Navigation active states, template helpers, and nowrap utilities.
+   ========================================================= */
+
+.cch-nowrap,
+.ccp-nowrap,
+.scsi-nowrap {
+  white-space: nowrap;
+}
+
+.scsi-public-dashboard-navigation,
+.scsi-public-topic-page-templates,
+.scsi-public-topic-page-visual-qa {
+  --scsi-public-black: #000000;
+  --scsi-public-red: #9b1111;
+  --scsi-public-white: #ffffff;
+  --scsi-public-cream: #f7f3ea;
+  --scsi-public-cream-soft: #fbfaf6;
+  --scsi-public-border: #d9d2c4;
+  --scsi-public-muted: #555555;
+  background: var(--scsi-public-white);
+  border: 1px solid var(--scsi-public-border);
+  border-top: 7px solid var(--scsi-public-black);
+  border-radius: 0;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.045);
+}
+
+.scsi-public-nav-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 18px 0 4px;
+}
+
+.scsi-public-nav-link,
+.ccp-site-intelligence-public .scsi-active-link,
+.ccp-platform-current .scsi-active-link,
+.cch-home-current .scsi-active-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 10px 15px;
+  border: 1px solid var(--scsi-public-black, #000000);
+  border-radius: 0;
+  background: var(--scsi-public-white, #ffffff);
+  color: var(--scsi-public-black, #000000);
+  font-size: 0.75rem;
+  font-weight: 850;
+  letter-spacing: 0.075em;
+  line-height: 1.1;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.scsi-public-nav-link:hover,
+.scsi-public-nav-link:focus-visible {
+  background: var(--scsi-public-black, #000000);
+  border-color: var(--scsi-public-black, #000000);
+  color: var(--scsi-public-white, #ffffff);
+}
+
+.scsi-public-nav-link.scsi-active-link,
+.ccp-site-intelligence-public .ccp-actions .scsi-active-link,
+.ccp-platform-current .ccp-actions .scsi-active-link,
+.cch-home-current .cch-actions .scsi-active-link {
+  background: var(--scsi-public-red, #9b1111) !important;
+  border-color: var(--scsi-public-red, #9b1111) !important;
+  color: var(--scsi-public-white, #ffffff) !important;
+}
+
+.scsi-template-card small b {
+  color: var(--scsi-public-black, #000000);
+  font-weight: 850;
+}
+
+.scsi-public-topic-page-visual-qa .scsi-public-qa-row {
+  border-left: 4px solid var(--scsi-public-red, #9b1111);
+}
+
+.ccp-site-intelligence-public .ccp-live-shell > .scsi-public-dashboard-navigation,
+.ccp-site-intelligence-public .ccp-live-shell > .scsi-public-topic-page-templates,
+.ccp-site-intelligence-public .ccp-live-shell > .scsi-public-topic-page-visual-qa {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+@media (max-width: 760px) {
+  .scsi-public-nav-link {
+    width: 100%;
   }
 }
