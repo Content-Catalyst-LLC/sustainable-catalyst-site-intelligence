@@ -18,7 +18,7 @@
       client_time: new Date().toISOString(),
       metadata: {
         href: params && params.href ? params.href : '',
-        version: cfg.version || '1.1.1'
+        version: cfg.version || '1.2.0'
       }
     }, params || {});
 
@@ -2218,6 +2218,103 @@
     out.appendChild(notes);
   }
 
+
+  function sourcePanelEndpoint(panel) {
+    const map = {
+      'api-sources': '/public-api-sources',
+      'source-health': '/public-source-health',
+      'development-indicators': '/public-development-indicators',
+      'research-metadata': '/public-research-metadata',
+      'publication-metadata': '/public-publication-metadata',
+      'repository-intelligence': '/public-repository-intelligence',
+      'indicator-overview': '/public-indicator-overview',
+      'sustainability-indicators': '/public-sustainability-indicators'
+    };
+    return map[panel] || '/public-api-sources';
+  }
+
+  function renderPublicSourcePanel(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    muted.textContent = (data.summary || 'Public source panel.') + ' · Status: ' + (data.public_status || data.version_scope || 'review');
+    out.innerHTML = '';
+
+    if (data.counts) {
+      const grid = document.createElement('div');
+      grid.className = 'scsi-grid scsi-public-source-health-grid';
+      Object.keys(data.counts).forEach(function (key) {
+        const card = document.createElement('div');
+        card.className = 'scsi-stat scsi-public-source-status-card';
+        card.innerHTML = '<span class="scsi-public-label">' + escapeHtml(key) + '</span>' +
+          '<strong>' + formatNumber(data.counts[key]) + '</strong>' +
+          '<small>' + escapeHtml((data.status_definitions || {})[key] || 'Source family count.') + '</small>';
+        grid.appendChild(card);
+      });
+      out.appendChild(grid);
+    }
+
+    const families = data.source_families || [];
+    if (families.length) {
+      const h = document.createElement('h3');
+      h.textContent = 'Source families';
+      out.appendChild(h);
+      families.forEach(function (item) {
+        const row = document.createElement('div');
+        row.className = 'scsi-page-row scsi-public-source-row';
+        const examples = (item.source_examples || []).join(', ');
+        row.innerHTML = '<strong>' + escapeHtml(item.label || item.slug || '') + '</strong><br>' +
+          statusBadge(item.status || 'planned') + '<span class="scsi-badge scsi-badge-soft">' + escapeHtml(item.source_mode || 'public_context') + '</span>' +
+          '<small><b>Sources:</b> ' + escapeHtml(examples) + '</small>' +
+          '<small><b>Public use:</b> ' + escapeHtml(item.public_use || '') + '</small>' +
+          '<small><b>Safe display:</b> ' + escapeHtml(item.safe_display || '') + '</small>';
+        out.appendChild(row);
+      });
+    }
+
+    const groups = data.indicator_groups || data.metadata_groups || data.repository_groups || [];
+    if (groups.length) {
+      const h = document.createElement('h3');
+      h.textContent = data.indicator_groups ? 'Indicator groups' : data.metadata_groups ? 'Metadata groups' : 'Repository groups';
+      out.appendChild(h);
+      groups.forEach(function (item) {
+        const row = document.createElement('div');
+        row.className = 'scsi-page-row scsi-public-source-row';
+        const examples = item.indicator_examples || item.metadata_examples || [];
+        row.innerHTML = '<strong>' + escapeHtml(item.group || '') + '</strong><br>' +
+          statusBadge(item.status || 'planned') + '<span class="scsi-badge scsi-badge-soft">' + escapeHtml((item.sources || []).join(', ')) + '</span>' +
+          '<small>' + escapeHtml((examples || []).join(', ')) + '</small>' +
+          '<small><b>Dashboard use:</b> ' + escapeHtml(item.dashboard_use || '') + '</small>';
+        out.appendChild(row);
+      });
+    }
+
+    const indicators = data.indicators || [];
+    if (indicators.length) {
+      const h = document.createElement('h3');
+      h.textContent = 'Public indicators';
+      out.appendChild(h);
+      indicators.forEach(function (item) {
+        const row = document.createElement('div');
+        row.className = 'scsi-page-row scsi-public-source-row';
+        row.innerHTML = '<strong>' + escapeHtml(item.label || '') + '</strong><br>' +
+          statusBadge(item.status || 'planned') + '<span class="scsi-badge scsi-badge-soft">' + escapeHtml(item.source_family || '') + '</span>' +
+          '<small>' + escapeHtml(item.public_note || '') + '</small>';
+        out.appendChild(row);
+      });
+    }
+
+    [['Methodology', data.methodology || []], ['Hidden from public pages', data.hidden || []], ['Review notes', data.review_notes || []]].forEach(function (group) {
+      if (!group[1].length) return;
+      const h = document.createElement('h3');
+      h.textContent = group[0];
+      out.appendChild(h);
+      const ul = document.createElement('ul');
+      ul.className = 'scsi-list scsi-public-notes';
+      group[1].forEach(function (item) { const li = document.createElement('li'); li.textContent = item; ul.appendChild(li); });
+      out.appendChild(ul);
+    });
+  }
+
   function fetchDashboards() {
     if (!cfg.restBase) return;
     document.querySelectorAll('[data-scsi-admin-control]').forEach(function (root) {
@@ -2415,6 +2512,13 @@
       fetchJson(cfg.restBase + '/public-topic-page-visual-qa')
         .then(function (data) { renderPublicTopicPageVisualQa(root, data); })
         .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public topic page visual QA.'); });
+    });
+
+    document.querySelectorAll('[data-scsi-public-source-panel]').forEach(function (root) {
+      const panel = root.dataset.sourcePanel || 'api-sources';
+      fetchJson(cfg.restBase + sourcePanelEndpoint(panel))
+        .then(function (data) { renderPublicSourcePanel(root, data); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public source panel.'); });
     });
 
     document.querySelectorAll('[data-scsi-public-page-builder]').forEach(function (root) {

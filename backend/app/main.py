@@ -38,6 +38,16 @@ from .public_topic_dashboards import (
     topic_dashboard_directory,
     topic_page_visual_qa,
 )
+from .public_api_sources import (
+    public_sources as build_public_sources,
+    public_source_health as build_public_source_health,
+    public_development_indicators as build_public_development_indicators,
+    public_research_metadata as build_public_research_metadata,
+    public_publication_metadata as build_public_publication_metadata,
+    public_repository_intelligence as build_public_repository_intelligence,
+    public_indicator_overview as build_public_indicator_overview,
+    public_sustainability_indicators as build_public_sustainability_indicators,
+)
 from .report_generator import (
     bundle_manifest_report,
     bundle_report,
@@ -311,6 +321,62 @@ def public_topic_page_visual_qa_endpoint(settings: Settings = Depends(get_settin
     return topic_page_visual_qa()
 
 
+@app.get("/public/sources")
+def public_sources_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_sources()
+
+
+@app.get("/public/sources/health")
+def public_source_health_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_source_health()
+
+
+@app.get("/public/sources/development-indicators")
+def public_development_indicators_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_development_indicators()
+
+
+@app.get("/public/sources/research-metadata")
+def public_research_metadata_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_research_metadata()
+
+
+@app.get("/public/sources/publications")
+def public_publication_metadata_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_publication_metadata()
+
+
+@app.get("/public/sources/repositories")
+def public_repository_intelligence_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_repository_intelligence()
+
+
+@app.get("/public/indicators/overview")
+def public_indicator_overview_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_indicator_overview()
+
+
+@app.get("/public/indicators/sustainability")
+def public_sustainability_indicators_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_sustainability_indicators()
+
+
 @app.get("/public/dashboards/climate-energy")
 def public_climate_energy_dashboard_endpoint(settings: Settings = Depends(get_settings)):
     if not settings.public_dashboards_enabled:
@@ -366,6 +432,16 @@ def intelligence_public_topic_page_templates(_: None = Depends(require_token)):
 @app.get("/intelligence/public-topic-page-visual-qa")
 def intelligence_public_topic_page_visual_qa(_: None = Depends(require_token)):
     return topic_page_visual_qa()
+
+
+@app.get("/intelligence/public-api-sources")
+def intelligence_public_api_sources(_: None = Depends(require_token)):
+    return build_public_sources()
+
+
+@app.get("/intelligence/public-source-health")
+def intelligence_public_source_health(_: None = Depends(require_token)):
+    return build_public_source_health()
 
 @app.get("/public/landing-page")
 def public_landing_page_endpoint(settings: Settings = Depends(get_settings)):

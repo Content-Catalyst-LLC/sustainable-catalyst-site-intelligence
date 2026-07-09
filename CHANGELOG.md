@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.0 — Public API Source Expansion and Live Indicator Layer
+
+- Updated backend and WordPress plugin versions to 1.2.0.
+- Added public API source expansion payloads for source families, source health, development indicators, research metadata, publication metadata, repository intelligence, public indicator overview, and sustainability indicator context.
+- Added public endpoints for `/public/sources`, `/public/sources/health`, `/public/sources/development-indicators`, `/public/sources/research-metadata`, `/public/sources/publications`, `/public/sources/repositories`, `/public/indicators/overview`, and `/public/indicators/sustainability`.
+- Added WordPress shortcodes for `[sc_public_api_sources]`, `[sc_public_source_health]`, `[sc_public_development_indicators]`, `[sc_public_research_metadata]`, `[sc_public_publication_metadata]`, `[sc_public_repository_intelligence]`, `[sc_public_indicator_overview]`, and `[sc_public_sustainability_indicators]`.
+- Added JavaScript rendering for public source panels and source-health/indicator labels.
+- Added CSS polish for public API source panels.
+- Added v1.2.0 backend tests for public-safe source payloads and endpoints.
+
 
 ## 1.1.1 — Public Topic Page Templates and Navigation Polish
 

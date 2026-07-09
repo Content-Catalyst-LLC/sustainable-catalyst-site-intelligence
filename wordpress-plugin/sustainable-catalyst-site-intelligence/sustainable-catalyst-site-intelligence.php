@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.1.1
+ * Version: 1.2.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.1.1';
+    const VERSION = '1.2.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -54,6 +54,14 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_public_dashboard_navigation', [$this, 'public_dashboard_navigation_shortcode']);
         add_shortcode('sc_public_topic_page_templates', [$this, 'public_topic_page_templates_shortcode']);
         add_shortcode('sc_public_topic_page_visual_qa', [$this, 'public_topic_page_visual_qa_shortcode']);
+        add_shortcode('sc_public_api_sources', [$this, 'public_api_sources_shortcode']);
+        add_shortcode('sc_public_source_health', [$this, 'public_source_panel_shortcode']);
+        add_shortcode('sc_public_development_indicators', [$this, 'public_source_panel_shortcode']);
+        add_shortcode('sc_public_research_metadata', [$this, 'public_source_panel_shortcode']);
+        add_shortcode('sc_public_publication_metadata', [$this, 'public_source_panel_shortcode']);
+        add_shortcode('sc_public_repository_intelligence', [$this, 'public_source_panel_shortcode']);
+        add_shortcode('sc_public_indicator_overview', [$this, 'public_source_panel_shortcode']);
+        add_shortcode('sc_public_sustainability_indicators', [$this, 'public_source_panel_shortcode']);
         add_shortcode('sc_public_climate_energy_dashboard', [$this, 'public_topic_dashboard_shortcode']);
         add_shortcode('sc_public_environmental_monitoring_dashboard', [$this, 'public_topic_dashboard_shortcode']);
         add_shortcode('sc_public_biodiversity_land_use_dashboard', [$this, 'public_topic_dashboard_shortcode']);
@@ -324,6 +332,46 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-topic-page-visual-qa', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_topic_page_visual_qa'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-api-sources', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_api_sources'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-source-health', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_source_health'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-development-indicators', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_development_indicators'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-research-metadata', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_research_metadata'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-publication-metadata', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_publication_metadata'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-repository-intelligence', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_repository_intelligence'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-indicator-overview', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_indicator_overview'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-sustainability-indicators', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_sustainability_indicators'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/public-readiness', [
@@ -1052,6 +1100,37 @@ final class SC_Site_Intelligence_Plugin {
         return rest_ensure_response($result);
     }
 
+    private function public_source_endpoint_map($key) {
+        $map = [
+            'api_sources' => 'public/sources',
+            'source_health' => 'public/sources/health',
+            'development_indicators' => 'public/sources/development-indicators',
+            'research_metadata' => 'public/sources/research-metadata',
+            'publication_metadata' => 'public/sources/publications',
+            'repository_intelligence' => 'public/sources/repositories',
+            'indicator_overview' => 'public/indicators/overview',
+            'sustainability_indicators' => 'public/indicators/sustainability',
+        ];
+        return isset($map[$key]) ? $map[$key] : 'public/sources';
+    }
+
+    private function rest_public_source_panel($key) {
+        $result = $this->backend_request($this->public_source_endpoint_map($key));
+        if (is_wp_error($result)) {
+            return new WP_REST_Response(['ok' => false, 'message' => $result->get_error_message()], 502);
+        }
+        return rest_ensure_response($result);
+    }
+
+    public function rest_public_api_sources(WP_REST_Request $request) { return $this->rest_public_source_panel('api_sources'); }
+    public function rest_public_source_health(WP_REST_Request $request) { return $this->rest_public_source_panel('source_health'); }
+    public function rest_public_development_indicators(WP_REST_Request $request) { return $this->rest_public_source_panel('development_indicators'); }
+    public function rest_public_research_metadata(WP_REST_Request $request) { return $this->rest_public_source_panel('research_metadata'); }
+    public function rest_public_publication_metadata(WP_REST_Request $request) { return $this->rest_public_source_panel('publication_metadata'); }
+    public function rest_public_repository_intelligence(WP_REST_Request $request) { return $this->rest_public_source_panel('repository_intelligence'); }
+    public function rest_public_indicator_overview(WP_REST_Request $request) { return $this->rest_public_source_panel('indicator_overview'); }
+    public function rest_public_sustainability_indicators(WP_REST_Request $request) { return $this->rest_public_source_panel('sustainability_indicators'); }
+
     public function rest_public_readiness(WP_REST_Request $request) {
         $query = $this->public_query_from_request($request);
         $endpoint = 'intelligence/public-readiness' . (!empty($query) ? '?' . http_build_query($query) : '');
@@ -1180,7 +1259,7 @@ final class SC_Site_Intelligence_Plugin {
             'generated_at' => gmdate('c'),
             'mode' => 'public',
             'provider' => 'deterministic-local',
-            'model' => 'wordpress-fallback-v1.1.1',
+            'model' => 'wordpress-fallback-v1.2.0',
             'source_report' => [
                 'report_id' => 'public-dashboard',
                 'title' => 'Public Dashboard Readiness Report',
@@ -2243,6 +2322,54 @@ final class SC_Site_Intelligence_Plugin {
         return ob_get_clean();
     }
 
+    public function public_api_sources_shortcode($atts = []) {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') {
+            return '';
+        }
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-public-api-sources" data-scsi-public-source-panel data-source-panel="api-sources">
+            <p class="scsi-eyebrow">Public API Sources</p>
+            <h2>Public API Source Expansion</h2>
+            <p class="scsi-muted">Loading public API source families…</p>
+            <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
+    private function public_source_panel_from_shortcode_tag($tag) {
+        $map = [
+            'sc_public_source_health' => ['source-health', 'Public Source Health', 'Source-health labels for live, cached, fallback, and planned source families.'],
+            'sc_public_development_indicators' => ['development-indicators', 'Development Indicators', 'World Bank, OECD, and UN/SDG indicator context for public dashboards.'],
+            'sc_public_research_metadata' => ['research-metadata', 'Research Metadata', 'OpenAlex and Crossref research metadata context for public source discovery.'],
+            'sc_public_publication_metadata' => ['publication-metadata', 'Publication Metadata', 'Publication and DOI metadata context for public bibliography/source panels.'],
+            'sc_public_repository_intelligence' => ['repository-intelligence', 'Repository Intelligence', 'GitHub repository intelligence for public code-infrastructure visibility.'],
+            'sc_public_indicator_overview' => ['indicator-overview', 'Indicator Overview', 'Public indicator overview across live, cached, fallback, and planned source families.'],
+            'sc_public_sustainability_indicators' => ['sustainability-indicators', 'Sustainability Indicators', 'Sustainability indicator context across environment, development, research, and repository layers.'],
+        ];
+        return isset($map[$tag]) ? $map[$tag] : ['source-health', 'Public Source Health', 'Loading public source panel…'];
+    }
+
+    public function public_source_panel_shortcode($atts = [], $content = null, $tag = '') {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') {
+            return '';
+        }
+        $panel = $this->public_source_panel_from_shortcode_tag($tag);
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-public-source-panel" data-scsi-public-source-panel data-source-panel="<?php echo esc_attr($panel[0]); ?>">
+            <p class="scsi-eyebrow">Public Source Layer</p>
+            <h2><?php echo esc_html($panel[1]); ?></h2>
+            <p class="scsi-muted"><?php echo esc_html($panel[2]); ?></p>
+            <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
     public function public_dashboard_readiness_shortcode($atts = []) {
         $options = self::options();
         if ($options['enable_dashboard'] !== '1') {
@@ -2547,7 +2674,7 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function release_status_shortcode($atts = []) {
-        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.1.1 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
+        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.2.0 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
     }
 
 }

@@ -1,6 +1,6 @@
-# Public Topic Page Templates and Navigation — v1.1.1
+# Public Topic Page Templates and Navigation — v1.2.0
 
-Site Intelligence v1.1.1 polishes the public topic page system introduced in v1.1.0.
+Site Intelligence v1.2.0 polishes the public topic page system introduced in v1.1.0.
 It does not add a new data source layer. It locks in the public page structure,
 canonical `/platform/site-intelligence/` paths, navigation helpers, metadata guidance,
 and visual QA support for the public dashboard pages.

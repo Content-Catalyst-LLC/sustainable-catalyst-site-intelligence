@@ -1,6 +1,32 @@
 # Sustainable Catalyst Site Intelligence
 
-Version: 1.1.1
+Version: 1.2.0
+
+## v1.2.0 — Public API Source Expansion and Live Indicator Layer
+
+This release adds the first public API source expansion layer for Site Intelligence. It introduces public-safe source-health panels, development indicator context, research/publication metadata context, repository intelligence, and live/cached/fallback indicator labels. The new layer helps Site Intelligence move from a dashboard page system toward a broader public intelligence layer while keeping credentials, raw payloads, private analytics, admin diagnostics, and unreleased reports out of public pages.
+
+New public endpoints:
+
+- `/public/sources`
+- `/public/sources/health`
+- `/public/sources/development-indicators`
+- `/public/sources/research-metadata`
+- `/public/sources/publications`
+- `/public/sources/repositories`
+- `/public/indicators/overview`
+- `/public/indicators/sustainability`
+
+New public shortcodes:
+
+- `[sc_public_api_sources]`
+- `[sc_public_source_health]`
+- `[sc_public_development_indicators]`
+- `[sc_public_research_metadata]`
+- `[sc_public_publication_metadata]`
+- `[sc_public_repository_intelligence]`
+- `[sc_public_indicator_overview]`
+- `[sc_public_sustainability_indicators]`
 
 Site Intelligence is the Sustainable Catalyst analytics, registry, external-source, reporting, AI-brief, public-dashboard, admin-control, and public flagship dashboard platform.
 
