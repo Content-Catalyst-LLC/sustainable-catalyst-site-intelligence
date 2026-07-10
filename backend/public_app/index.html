@@ -108,6 +108,31 @@
       </section>
 
       <section id="routePanel" class="route-panel" hidden></section>
+      <section id="countryIntelligencePanel" class="country-live-panel" hidden>
+        <div class="country-live-head">
+          <div>
+            <p class="eyebrow">LIVE COUNTRY INTELLIGENCE</p>
+            <h2 id="liveCountryTitle">Country evidence</h2>
+            <p id="liveCountrySummary"></p>
+          </div>
+          <div id="countryDataState" class="evidence-state">Loading</div>
+        </div>
+        <div id="countryIndicatorGrid" class="country-indicator-grid"></div>
+        <div class="country-analysis-grid">
+          <article class="country-chart-panel">
+            <div class="panel-head">
+              <div><p class="eyebrow">TREND</p><h2 id="trendTitle">Population</h2></div>
+              <select id="trendSelect" aria-label="Select country trend"></select>
+            </div>
+            <div id="trendChart" class="trend-chart" role="img" aria-label="Country indicator trend"></div>
+          </article>
+          <article class="country-source-panel">
+            <p class="eyebrow">EVIDENCE NOTES</p>
+            <h2>Read the indicators carefully</h2>
+            <div id="countryEvidenceNotes"></div>
+          </article>
+        </div>
+      </section>
 
       <section class="method-note">
         <div>

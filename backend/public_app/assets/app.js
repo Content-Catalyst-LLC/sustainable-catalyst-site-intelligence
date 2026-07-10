@@ -76,14 +76,60 @@
       sources:["PROVENANCE","Sources and methods","Review the public sources, imagery services, and interpretive limits behind this workspace."]
     }[route]||[];
   }
+
+  const formatCountryValue=(value,format,unit)=>{
+    if(value===null||value===undefined)return "Unavailable";
+    if(format==="compact")return new Intl.NumberFormat(undefined,{notation:"compact",maximumFractionDigits:1}).format(value);
+    if(format==="currency")return new Intl.NumberFormat(undefined,{style:"currency",currency:"USD",maximumFractionDigits:0}).format(value);
+    if(format==="percent")return `${Number(value).toFixed(1)}%`;
+    return Number(value).toLocaleString(undefined,{maximumFractionDigits:1});
+  };
+  function renderTrend(trend){
+    const chart=qs("#trendChart");const series=trend?.series||[];
+    if(!series.length){chart.innerHTML='<div class="loading-block">A live multi-year trend is not available for this indicator.</div>';return}
+    const values=series.map(x=>Number(x.value));const min=Math.min(...values),max=Math.max(...values),spread=Math.max(max-min,Math.abs(max)*.08,1);
+    chart.innerHTML=series.map(x=>{
+      const height=12+((Number(x.value)-min)/spread)*82;
+      return `<div class="trend-column"><span class="trend-value">${escapeHtml(formatCountryValue(x.value,trend.format,trend.unit))}</span><span class="trend-bar" style="height:${Math.max(5,Math.min(96,height))}%"></span><span class="trend-year">${escapeHtml(x.year)}</span></div>`;
+    }).join("");
+  }
+  async function loadLiveCountry(code){
+    const panel=qs("#countryIntelligencePanel");panel.hidden=false;
+    qs("#countryIndicatorGrid").innerHTML='<div class="skeleton-stack"><span></span><span></span><span></span></div>';
+    try{
+      const [profile,trends]=await Promise.all([api(`/public/country/${code}`),api(`/public/country/${code}/trends`)]);
+      qs("#liveCountryTitle").textContent=`${profile.country.name} intelligence`;
+      qs("#liveCountrySummary").textContent=profile.summary;
+      const stateLabel=profile.data_state==="live"?"Live public indicators":profile.data_state==="reference-snapshot"?"Reference snapshot":"Source unavailable";
+      qs("#countryDataState").textContent=stateLabel;
+      qs("#countryDataState").classList.toggle("reference",profile.data_state!=="live");
+      qs("#countryIndicatorGrid").innerHTML=(profile.highlights||[]).map(item=>`<article class="country-indicator"><span class="country-indicator-label">${escapeHtml(item.label)}</span><strong class="country-indicator-value">${escapeHtml(formatCountryValue(item.value,item.format,item.unit))}</strong><div class="country-indicator-meta">${escapeHtml(item.unit)} · ${escapeHtml(item.year)}</div><span class="country-indicator-source">${escapeHtml(item.source)} · ${escapeHtml(item.data_state)}</span></article>`).join("")||'<div class="loading-block">Validated country indicators are unavailable.</div>';
+      const options=(trends.trends||[]);
+      qs("#trendSelect").innerHTML=options.map((item,i)=>`<option value="${escapeHtml(item.key)}">${escapeHtml(item.label)}</option>`).join("");
+      if(options.length){qs("#trendTitle").textContent=options[0].label;renderTrend(options[0])}
+      qs("#trendSelect").onchange=e=>{const item=options.find(x=>x.key===e.target.value);if(item){qs("#trendTitle").textContent=item.label;renderTrend(item)}};
+      qs("#countryEvidenceNotes").innerHTML=[
+        "Reporting years differ by indicator and remain visible.",
+        "The latest non-null public observation is used; missing values are not imputed.",
+        "Reference snapshots are explicitly labeled when the live source cannot be reached.",
+        "Indicators describe conditions but do not establish causes, rankings, or legal conclusions."
+      ].map(x=>`<div class="evidence-note">${escapeHtml(x)}</div>`).join("");
+    }catch{
+      qs("#countryIndicatorGrid").innerHTML='<div class="loading-block">Live country intelligence is temporarily unavailable.</div>';
+      qs("#countryDataState").textContent="Unavailable";qs("#countryDataState").classList.add("reference");
+    }
+  }
+
   async function setRoute(route){
     qs("#main").classList.remove("route-enter");void qs("#main").offsetWidth;qs("#main").classList.add("route-enter");
     state.route=route;
     qsa(".nav-item").forEach(b=>b.classList.toggle("active",b.dataset.route===route));
     const [e,t,d]=routeMeta(route);qs("#viewEyebrow").textContent=e;qs("#viewTitle").textContent=t;qs("#viewDescription").textContent=d;
     const panel=qs("#routePanel");
-    if(route==="overview"){panel.hidden=true;return}
+    if(route==="overview"){panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;return}
+    qs("#countryIntelligencePanel").hidden=route!=="country";
     panel.hidden=false;panel.innerHTML=`<div class="loading-block">Loading ${escapeHtml(route)} view…</div>`;
+    if(route==="country"){await loadLiveCountry(state.country)}
     if(route==="events"){
       const rows=(state.events?.features||[]).slice(0,30);
       panel.innerHTML=`<p class="eyebrow">PUBLIC EVENT RECORDS</p><h2>Latest mapped events</h2><div class="event-list">${rows.map(f=>{const p=f.properties||{};return `<div class="event-row"><span class="event-marker"></span><div><div class="event-title">${escapeHtml(p.title||"Event")}</div><div class="event-meta">${escapeHtml(p.category||"Event")} · ${escapeHtml(p.source||"Source")}</div></div><div class="event-time">${cleanDate(p.observed_at)}</div></div>`}).join("")}</div>`;
@@ -102,7 +148,7 @@
     qsa(".layer-tab").forEach(b=>b.addEventListener("click",()=>setImagery(b.dataset.layer)));
     qsa(".nav-item").forEach(b=>b.addEventListener("click",()=>{history.replaceState(null,"",`?country=${encodeURIComponent(state.country)}&view=${encodeURIComponent(b.dataset.route)}`);setRoute(b.dataset.route)}));
     qsa("[data-route-link]").forEach(b=>b.addEventListener("click",()=>setRoute(b.dataset.routeLink)));
-    qs("#countrySelect").addEventListener("change",async e=>{await loadCountry(e.target.value);history.replaceState(null,"",`?country=${encodeURIComponent(e.target.value)}&view=${encodeURIComponent(state.route)}`);if(state.route==="country")setRoute("country")});
+    qs("#countrySelect").addEventListener("change",async e=>{await loadCountry(e.target.value);history.replaceState(null,"",`?country=${encodeURIComponent(e.target.value)}&view=${encodeURIComponent(state.route)}`);if(state.route==="country"){await loadLiveCountry(e.target.value);setRoute("country")}});
     qs("#dateSelect").addEventListener("change",()=>setImagery(qs(".layer-tab.active").dataset.layer));
     qs("#eventsToggle").addEventListener("change",e=>e.target.checked?state.markers.addTo(state.map):state.map.removeLayer(state.markers));
     qs("#heatToggle").addEventListener("change",e=>toast(e.target.checked?"Density layer enabled for supported records":"Density layer hidden"));

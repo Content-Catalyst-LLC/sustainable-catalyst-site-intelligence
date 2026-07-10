@@ -153,6 +153,12 @@ from .human_development_intelligence import (
     methodology as build_human_development_methodology,
     export_manifest as build_human_development_export,
 )
+from .live_country_intelligence import (
+    country_profile as build_live_country_profile,
+    country_indicators as build_live_country_indicators,
+    country_trends as build_live_country_trends,
+    country_brief as build_live_country_brief,
+)
 from .geospatial_intelligence import (
     overview as build_geospatial_overview,
     layer_manifest as build_geospatial_layers,
@@ -717,6 +723,35 @@ def public_cross_domain_dashboard_export(dashboard_id: str, country: str = ""):
         raise HTTPException(status_code=404, detail=result)
     return result
 
+
+
+@app.get("/public/country/{country_code}")
+def public_live_country_profile(country_code: str):
+    try:
+        return build_live_country_profile(country_code)
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Unsupported country code.")
+
+@app.get("/public/country/{country_code}/indicators")
+def public_live_country_indicators(country_code: str):
+    try:
+        return build_live_country_indicators(country_code)
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Unsupported country code.")
+
+@app.get("/public/country/{country_code}/trends")
+def public_live_country_trends(country_code: str):
+    try:
+        return build_live_country_trends(country_code)
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Unsupported country code.")
+
+@app.get("/public/country/{country_code}/brief")
+def public_live_country_brief(country_code: str):
+    try:
+        return build_live_country_brief(country_code)
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Unsupported country code.")
 
 @app.get("/public/country-intelligence/{country_code}")
 def public_country_intelligence(country_code: str):
@@ -2866,7 +2901,7 @@ def publishing_intelligence_report(
 
 
 
-# Site Intelligence v1.14.1 standalone public application.
+# Site Intelligence v1.15.0 standalone public application.
 from pathlib import Path as _Path
 PUBLIC_APP_DIR = _Path(__file__).resolve().parent.parent / "public_app"
 if PUBLIC_APP_DIR.exists():

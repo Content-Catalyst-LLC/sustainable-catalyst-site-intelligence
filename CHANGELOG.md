@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.15.0 — Live Country Intelligence
+
+- Added live World Bank country-indicator connectors.
+- Added country profile, indicator, trend, and briefing endpoints.
+- Added current values, reporting years, units, source identity, and explicit live/reference states.
+- Added multi-year country trend visualizations in the standalone app.
+- Added a finished country intelligence workspace with key metrics and evidence notes.
+- Added support for Kenya, Ghana, the United States, India, and Brazil.
+- Preserved missing-data, differing-reporting-period, and non-ranking boundaries.
+- Retained labeled reference snapshots when upstream public data is temporarily unavailable.
+
 ## 1.14.1 — Visual Foundation and Application Polish
 
 - Introduced an immersive dark visual system for the standalone public application.
