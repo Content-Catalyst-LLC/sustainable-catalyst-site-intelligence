@@ -240,5 +240,104 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="/app/assets/app.js"></script>
+
+  <!-- Sustainable Catalyst: suppress the persistent partial-feed notice.
+       Connector health, fallback behavior, and Sources status remain active. -->
+  <script id="sc-hide-partial-feed-notice">
+    (() => {
+      "use strict";
+
+      const headline = "Some public feeds are unavailable";
+      const detail = "The interface remains available with partial data.";
+
+      const normalize = (value) =>
+        String(value || "").replace(/\s+/g, " ").trim();
+
+      const containsNotice = (element) => {
+        const text = normalize(element.textContent);
+        return (
+          text.includes(headline) &&
+          text.includes(detail) &&
+          text.length <= 1200
+        );
+      };
+
+      const chooseNoticeRoot = (element) => {
+        let current = element;
+
+        while (
+          current.parentElement &&
+          current.parentElement !== document.body
+        ) {
+          const parent = current.parentElement;
+          const parentText = normalize(parent.textContent);
+
+          if (
+            !parentText.includes(headline) ||
+            !parentText.includes(detail) ||
+            parentText.length > 1200
+          ) {
+            break;
+          }
+
+          current = parent;
+        }
+
+        return current;
+      };
+
+      const suppressNotice = () => {
+        const selectors =
+          '[role="alert"], [role="status"], aside, section, div';
+
+        const matches = Array.from(
+          document.querySelectorAll(selectors)
+        )
+          .filter(containsNotice)
+          .sort(
+            (left, right) =>
+              normalize(left.textContent).length -
+              normalize(right.textContent).length
+          );
+
+        if (!matches.length) {
+          return;
+        }
+
+        const notice = chooseNoticeRoot(matches[0]);
+        notice.hidden = true;
+        notice.setAttribute("aria-hidden", "true");
+        notice.style.setProperty("display", "none", "important");
+      };
+
+      let queued = false;
+      const queueSuppression = () => {
+        if (queued) {
+          return;
+        }
+
+        queued = true;
+        window.requestAnimationFrame(() => {
+          queued = false;
+          suppressNotice();
+        });
+      };
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", suppressNotice, {
+          once: true
+        });
+      } else {
+        suppressNotice();
+      }
+
+      const observer = new MutationObserver(queueSuppression);
+      observer.observe(document.documentElement, {
+        childList: true,
+        subtree: true
+      });
+    })();
+  </script>
+
 </body>
 </html>
