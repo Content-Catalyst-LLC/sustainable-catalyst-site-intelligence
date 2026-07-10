@@ -273,3 +273,8 @@ Public source-aware observatory coverage now includes poverty, inequality, healt
 The human-security layer connects conflict-event sources, civilian-protection reporting, forced-displacement statistics, mobility assessments, infrastructure disruption, humanitarian-access records, and explicitly labeled modeled risk. It preserves source methodology, reference periods, geographic precision, confidence, revisions, and responsible-data limits.
 
 Public endpoints begin at `/public/human-security`. WordPress shortcodes include `[sc_conflict_human_security_monitor]`, `[sc_conflict_event_stream]`, `[sc_human_security_monitor]`, `[sc_forced_displacement_flows]`, `[sc_modeled_human_security_risk]`, `[sc_human_security_sources]`, `[sc_human_security_methodology]`, and `[sc_human_security_export]`.
+
+
+## v1.13.0 geospatial visualization
+
+Interactive mapping, NASA satellite imagery, live USGS/NASA event markers, heat maps, time controls, legends, accessible tables, and WordPress embeds.

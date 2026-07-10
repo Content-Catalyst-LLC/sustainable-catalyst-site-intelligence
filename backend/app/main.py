@@ -152,6 +152,17 @@ from .human_development_intelligence import (
     methodology as build_human_development_methodology,
     export_manifest as build_human_development_export,
 )
+from .geospatial_intelligence import (
+    overview as build_geospatial_overview,
+    layer_manifest as build_geospatial_layers,
+    live_events as build_geospatial_events,
+    heatmap as build_geospatial_heatmap,
+    satellite_manifest as build_geospatial_satellite,
+    timeline as build_geospatial_timeline,
+    accessibility_table as build_geospatial_accessibility,
+    diagnostics as build_geospatial_diagnostics,
+)
+
 from .public_source_pages import (
     public_source_page_directory as build_public_source_page_directory,
     public_source_navigation as build_public_source_navigation,
@@ -605,6 +616,41 @@ def public_humanitarian_export():
 
 
 
+
+
+
+
+@app.get("/public/geospatial")
+def public_geospatial_overview():
+    return build_geospatial_overview()
+
+@app.get("/public/geospatial/layers")
+def public_geospatial_layers():
+    return build_geospatial_layers()
+
+@app.get("/public/geospatial/events")
+def public_geospatial_events(category: str = "all"):
+    return build_geospatial_events(category)
+
+@app.get("/public/geospatial/heatmap")
+def public_geospatial_heatmap():
+    return build_geospatial_heatmap()
+
+@app.get("/public/geospatial/satellite")
+def public_geospatial_satellite(date: str = ""):
+    return build_geospatial_satellite(date)
+
+@app.get("/public/geospatial/timeline")
+def public_geospatial_timeline():
+    return build_geospatial_timeline()
+
+@app.get("/public/geospatial/accessibility")
+def public_geospatial_accessibility():
+    return build_geospatial_accessibility()
+
+@app.get("/public/geospatial/diagnostics")
+def public_geospatial_diagnostics():
+    return build_geospatial_diagnostics()
 
 
 @app.get("/public/dashboard-studio/launch-manifest")

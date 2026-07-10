@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.12.6
+ * Version: 1.13.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.12.6';
+    const VERSION = '1.13.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -125,6 +125,11 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_public_dashboard_launch_manifest', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_dashboard_launch_readiness', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_dashboard_studio_navigation', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_geospatial_intelligence_map', [$this, 'geospatial_map_shortcode']);
+        add_shortcode('sc_satellite_imagery_viewer', [$this, 'geospatial_map_shortcode']);
+        add_shortcode('sc_live_event_map', [$this, 'geospatial_map_shortcode']);
+        add_shortcode('sc_geospatial_accessible_table', [$this, 'geospatial_table_shortcode']);
+        add_shortcode('sc_geospatial_layer_directory', [$this, 'geospatial_layer_directory_shortcode']);
         add_shortcode('sc_public_cross_domain_dashboard_directory', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_intelligence_dashboard', [$this, 'cross_domain_dashboard_shortcode']);
         add_shortcode('sc_public_country_intelligence', [$this, 'country_intelligence_shortcode']);
@@ -586,6 +591,12 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-human-security-modeled-risk', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_human_security_modeled_risk'], 'permission_callback' => '__return_true']);
         register_rest_route(self::REST_NAMESPACE, '/public-human-security-methodology', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_human_security_methodology'], 'permission_callback' => '__return_true']);
         register_rest_route(self::REST_NAMESPACE, '/public-human-security-export', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_human_security_export'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-geospatial', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_geospatial'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-geospatial-layers', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_geospatial_layers'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-geospatial-events', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_geospatial_events'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-geospatial-heatmap', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_geospatial_heatmap'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-geospatial-satellite', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_geospatial_satellite'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-geospatial-accessibility', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_geospatial_accessibility'], 'permission_callback' => '__return_true']);
         register_rest_route(self::REST_NAMESPACE, '/public-cross-domain-dashboards', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_cross_domain_dashboards'], 'permission_callback' => '__return_true']);
         register_rest_route(self::REST_NAMESPACE, '/public-cross-domain-dashboard-manifest', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_cross_domain_dashboard_manifest'], 'permission_callback' => '__return_true']);
         register_rest_route(self::REST_NAMESPACE, '/public-dashboard-launch-manifest', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_dashboard_launch_manifest'], 'permission_callback' => '__return_true']);
@@ -846,7 +857,7 @@ final class SC_Site_Intelligence_Plugin {
             'headers' => [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
-                'User-Agent' => 'Sustainable-Catalyst-Site-Intelligence/1.12.6',
+                'User-Agent' => 'Sustainable-Catalyst-Site-Intelligence/1.13.0',
             ],
         ];
         if (!empty($options['api_token'])) {
@@ -978,6 +989,13 @@ final class SC_Site_Intelligence_Plugin {
     public function rest_public_human_security_modeled_risk() { return $this->backend_request('public/human-security/modeled-risk'); }
     public function rest_public_human_security_methodology() { return $this->backend_request('public/human-security/methodology'); }
     public function rest_public_human_security_export() { return $this->backend_request('public/human-security/export'); }
+    public function rest_public_geospatial() { return $this->backend_request('public/geospatial'); }
+    public function rest_public_geospatial_layers() { return $this->backend_request('public/geospatial/layers'); }
+    public function rest_public_geospatial_events(WP_REST_Request $request) { $category = sanitize_text_field($request->get_param('category')) ?: 'all'; return $this->backend_request('public/geospatial/events?category=' . rawurlencode($category)); }
+    public function rest_public_geospatial_heatmap() { return $this->backend_request('public/geospatial/heatmap'); }
+    public function rest_public_geospatial_satellite(WP_REST_Request $request) { $date = sanitize_text_field($request->get_param('date')); return $this->backend_request('public/geospatial/satellite' . ($date ? '?date=' . rawurlencode($date) : '')); }
+    public function rest_public_geospatial_accessibility() { return $this->backend_request('public/geospatial/accessibility'); }
+
     public function rest_public_cross_domain_dashboards() { return $this->backend_request('public/dashboard-studio'); }
     public function rest_public_cross_domain_dashboard_manifest() { return $this->backend_request('public/dashboard-studio/manifest'); }
     public function rest_public_dashboard_launch_manifest() { return $this->backend_request('public/dashboard-studio/launch-manifest'); }
@@ -3040,6 +3058,27 @@ final class SC_Site_Intelligence_Plugin {
             <div class="scsi-output" aria-live="polite"></div>
         </section>
         <?php return ob_get_clean();
+    }
+
+    public function geospatial_map_shortcode($atts = [], $content = null, $tag = '') {
+        $atts = shortcode_atts(['latitude' => '12', 'longitude' => '20', 'zoom' => '2', 'height' => '620', 'date' => gmdate('Y-m-d'), 'layer' => 'true-color'], $atts, $tag ?: 'sc_geospatial_intelligence_map');
+        if (self::options()['enable_dashboard'] !== '1') { return ''; }
+        ob_start(); ?>
+        <section class="scsi-card scsi-geospatial-app" data-scsi-geospatial-map data-latitude="<?php echo esc_attr($atts['latitude']); ?>" data-longitude="<?php echo esc_attr($atts['longitude']); ?>" data-zoom="<?php echo esc_attr($atts['zoom']); ?>" data-height="<?php echo esc_attr($atts['height']); ?>" data-date="<?php echo esc_attr($atts['date']); ?>" data-layer="<?php echo esc_attr($atts['layer']); ?>">
+            <div class="scsi-geo-header"><div><p class="scsi-eyebrow">Geospatial Intelligence</p><h2>Satellite Imagery and Live Event Map</h2><p class="scsi-muted">Loading satellite layers, event feeds, and map controls…</p></div><button type="button" class="scsi-public-action" data-scsi-geo-fullscreen>Fullscreen</button></div>
+            <div class="scsi-geo-toolbar" aria-label="Map controls"><label>Imagery <select data-scsi-geo-layer></select></label><label>Date <input type="date" value="<?php echo esc_attr($atts['date']); ?>" data-scsi-geo-date></label><label><input type="checkbox" checked data-scsi-geo-events> Events</label><label><input type="checkbox" data-scsi-geo-heat> Heat map</label><button type="button" class="scsi-public-action" data-scsi-geo-refresh>Refresh</button></div>
+            <div class="scsi-geo-map" style="height:<?php echo esc_attr(absint($atts['height'])); ?>px" role="application" aria-label="Interactive geospatial intelligence map"></div>
+            <div class="scsi-geo-legend" aria-live="polite"></div><div class="scsi-geo-status scsi-muted" aria-live="polite"></div>
+            <details class="scsi-geo-accessible"><summary>Accessible event table</summary><div class="scsi-geo-table"></div></details>
+        </section><?php return ob_get_clean();
+    }
+
+    public function geospatial_table_shortcode() {
+        return '<section class="scsi-card scsi-geospatial-table-panel" data-scsi-geospatial-table><p class="scsi-eyebrow">Accessible Geospatial Data</p><h2>Live Event Table</h2><p class="scsi-muted">Loading event records…</p><div class="scsi-output"></div></section>';
+    }
+
+    public function geospatial_layer_directory_shortcode() {
+        return '<section class="scsi-card scsi-geospatial-layer-directory" data-scsi-geospatial-layers><p class="scsi-eyebrow">Geospatial Layers</p><h2>Satellite and Map Layer Directory</h2><p class="scsi-muted">Loading public layer manifest…</p><div class="scsi-output"></div></section>';
     }
 
     public function cross_domain_dashboard_shortcode($atts = []) {

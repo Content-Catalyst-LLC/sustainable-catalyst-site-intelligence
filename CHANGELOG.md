@@ -1,6 +1,11 @@
 # Changelog
 
-## 1.12.6 — Public Interface Redesign and Renderer Simplification
+## 1.13.0
+
+- Added geospatial map engine, satellite imagery, live event GeoJSON, heat maps, time controls, legends, accessible tables, and public diagnostics.
+- Added WordPress geospatial shortcodes and public REST proxies.
+
+## 1.13.0 — Public Interface Redesign and Renderer Simplification
 
 - Replaces generic readiness-card output with dedicated public templates for country profiles, dashboards, comparisons, and directories.
 - Adds a compact country selector and responsive evidence-domain cards.

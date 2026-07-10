@@ -3511,10 +3511,60 @@
     });
   }
 
+
+  function loadLeaflet() {
+    if (window.L) return Promise.resolve(window.L);
+    return new Promise(function(resolve, reject) {
+      if (!document.querySelector('link[data-scsi-leaflet]')) {
+        var link=document.createElement('link'); link.rel='stylesheet'; link.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'; link.setAttribute('data-scsi-leaflet','1'); document.head.appendChild(link);
+      }
+      var existing=document.querySelector('script[data-scsi-leaflet]');
+      if (existing) { existing.addEventListener('load',function(){resolve(window.L);}); return; }
+      var script=document.createElement('script'); script.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'; script.async=true; script.setAttribute('data-scsi-leaflet','1'); script.onload=function(){resolve(window.L);}; script.onerror=reject; document.head.appendChild(script);
+    });
+  }
+
+  function geoTableHtml(features) {
+    var rows=(features||[]).slice(0,100).map(function(f){var p=f.properties||{}, c=(f.geometry||{}).coordinates||[]; return '<tr><td>'+escapeHtml(p.title||'Event')+'</td><td>'+escapeHtml(p.category||'')+'</td><td>'+escapeHtml(p.source||'')+'</td><td>'+escapeHtml(p.observed_at||'Not supplied')+'</td><td>'+escapeHtml(c[1])+'</td><td>'+escapeHtml(c[0])+'</td></tr>';}).join('');
+    return '<div class="scsi-table-wrap"><table class="scsi-geo-data-table"><thead><tr><th>Event</th><th>Category</th><th>Source</th><th>Observed</th><th>Latitude</th><th>Longitude</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+  }
+
+  function initGeospatialMap(root) {
+    var mapEl=root.querySelector('.scsi-geo-map'), status=root.querySelector('.scsi-geo-status'), legend=root.querySelector('.scsi-geo-legend');
+    Promise.all([loadLeaflet(), fetchJson(cfg.restBase+'/public-geospatial-layers'), fetchJson(cfg.restBase+'/public-geospatial-events'), fetchJson(cfg.restBase+'/public-geospatial-heatmap')]).then(function(values){
+      var L=values[0], manifest=values[1], events=values[2], heat=values[3];
+      var map=L.map(mapEl,{worldCopyJump:true}).setView([Number(root.dataset.latitude||12),Number(root.dataset.longitude||20)],Number(root.dataset.zoom||2));
+      var base=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(map);
+      var currentRaster=null, markerLayer=L.layerGroup().addTo(map), heatLayer=L.layerGroup();
+      var select=root.querySelector('[data-scsi-geo-layer]'), dateInput=root.querySelector('[data-scsi-geo-date]');
+      (manifest.satellite_layers||[]).forEach(function(layer){var option=document.createElement('option'); option.value=layer.id; option.textContent=layer.title; select.appendChild(option);});
+      select.value=root.dataset.layer||'true-color';
+      function drawRaster(){var id=select.value, selected=(manifest.satellite_layers||[]).find(function(x){return x.id===id;}); if(currentRaster){map.removeLayer(currentRaster);currentRaster=null;} if(!selected)return; var url=selected.tile_url.replace('{time}',dateInput.value||new Date().toISOString().slice(0,10)); currentRaster=L.tileLayer(url,{opacity:selected.default_opacity||0.7,maxZoom:9,attribution:selected.attribution||selected.source}).addTo(map); currentRaster.bringToBack(); legend.innerHTML='<strong>'+escapeHtml(selected.title)+'</strong><span>'+escapeHtml(selected.description||'')+'</span><small>'+escapeHtml(selected.source||'')+' · '+escapeHtml(dateInput.value||'latest')+'</small>';}
+      function drawEvents(){markerLayer.clearLayers(); (events.features||[]).forEach(function(f){var c=(f.geometry||{}).coordinates||[],p=f.properties||{}; if(c.length<2)return; var marker=L.circleMarker([c[1],c[0]],{radius:6,weight:1,fillOpacity:.78}); marker.bindPopup('<strong>'+escapeHtml(p.title||'Event')+'</strong><br>'+escapeHtml(p.category||'')+'<br><small>'+escapeHtml(p.source||'')+' · '+escapeHtml(p.observed_at||'date unavailable')+'</small>'); marker.addTo(markerLayer);});}
+      function drawHeat(){heatLayer.clearLayers(); (heat.points||[]).forEach(function(pt){L.circle([pt[0],pt[1]],{radius:Math.max(45000,pt[2]*160000),stroke:false,fillOpacity:.14}).addTo(heatLayer);});}
+      drawRaster(); drawEvents(); drawHeat();
+      select.addEventListener('change',drawRaster); dateInput.addEventListener('change',drawRaster);
+      root.querySelector('[data-scsi-geo-events]').addEventListener('change',function(){this.checked?map.addLayer(markerLayer):map.removeLayer(markerLayer);});
+      root.querySelector('[data-scsi-geo-heat]').addEventListener('change',function(){this.checked?map.addLayer(heatLayer):map.removeLayer(heatLayer);});
+      root.querySelector('[data-scsi-geo-refresh]').addEventListener('click',function(){window.location.reload();});
+      root.querySelector('[data-scsi-geo-fullscreen]').addEventListener('click',function(){if(root.requestFullscreen)root.requestFullscreen();});
+      root.querySelector('.scsi-geo-table').innerHTML=geoTableHtml(events.features||[]);
+      status.textContent=(events.data_state==='live'?'Live public events':'Demonstration fallback events')+' · '+(events.count||0)+' records · Generated '+(events.generated_at||'');
+      setTimeout(function(){map.invalidateSize();},250);
+    }).catch(function(err){showError(root,err&&err.message?err.message:'Unable to load geospatial map.');});
+  }
+
+  function initGeospatialExtras() {
+    document.querySelectorAll('[data-scsi-geospatial-map]').forEach(initGeospatialMap);
+    document.querySelectorAll('[data-scsi-geospatial-table]').forEach(function(root){fetchJson(cfg.restBase+'/public-geospatial-events').then(function(data){root.querySelector('.scsi-muted').textContent=(data.count||0)+' public event records'; root.querySelector('.scsi-output').innerHTML=geoTableHtml(data.features||[]);}).catch(function(err){showError(root,err.message);});});
+    document.querySelectorAll('[data-scsi-geospatial-layers]').forEach(function(root){fetchJson(cfg.restBase+'/public-geospatial-layers').then(function(data){root.querySelector('.scsi-muted').textContent='Satellite, event, heat, and boundary layers'; var out=root.querySelector('.scsi-output'); out.innerHTML='<div class="scsi-directory-grid">'+(data.satellite_layers||[]).concat(data.vector_layers||[]).map(function(x){return '<article class="scsi-directory-link"><strong>'+escapeHtml(x.title)+'</strong><span>'+escapeHtml(x.description||x.source||x.kind)+'</span><small>'+escapeHtml(x.source||'')+'</small></article>';}).join('')+'</div>';}).catch(function(err){showError(root,err.message);});});
+  }
+
   function init() {
     setupActivePageLinks();
     setupLaunchActions();
     fetchDashboards();
+    initGeospatialExtras();
   }
 
   setupClickTracking();
