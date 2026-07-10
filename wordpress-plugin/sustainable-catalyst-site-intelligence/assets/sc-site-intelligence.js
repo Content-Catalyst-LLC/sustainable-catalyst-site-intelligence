@@ -2726,8 +2726,52 @@
     root.classList.add('scsi-is-ready');
     const out = root.querySelector('.scsi-output');
     const muted = root.querySelector('.scsi-muted');
-    muted.textContent = (data.summary || 'Public connector panel.') + ' · Status: ' + (data.public_status || data.version_scope || 'review');
+    const origin = data.origin_state || data.data_state || data.public_status || data.version_scope || 'review';
+    muted.textContent = (data.summary || data.title || 'Source-aware public intelligence view.') + ' · Data state: ' + origin;
     out.innerHTML = '';
+
+    if (data.evidence_items || data.comparison_rows) {
+      if (data.country_name || data.countries) {
+        const heading = document.createElement('div');
+        heading.className = 'scsi-page-row scsi-public-summary-row';
+        heading.innerHTML = '<strong>' + escapeHtml(data.country_name || (data.countries || []).join(' compared with ')) + '</strong>' +
+          '<small>Generated: ' + escapeHtml(data.generated_at || 'not supplied') + '</small>';
+        out.appendChild(heading);
+      }
+      if (data.source_summary) {
+        const stats = document.createElement('div');
+        stats.className = 'scsi-grid scsi-public-connector-health-grid';
+        [['Domains', data.source_summary.domains], ['Registered sources', data.source_summary.registered_sources], ['Freshness', data.source_summary.freshness]].forEach(function (item) {
+          if (typeof item[1] === 'undefined') return;
+          const card = document.createElement('div'); card.className = 'scsi-stat scsi-public-connector-status-card';
+          card.innerHTML = '<span class="scsi-public-label">' + escapeHtml(item[0]) + '</span><strong>' + escapeHtml(item[1]) + '</strong>';
+          stats.appendChild(card);
+        });
+        if (stats.children.length) out.appendChild(stats);
+      }
+      (data.evidence_items || []).forEach(function (item) {
+        const row = document.createElement('div');
+        row.className = 'scsi-page-row scsi-public-evidence-row';
+        const sources = (item.sources || []).slice(0, 6).join(', ');
+        row.innerHTML = '<strong>' + escapeHtml(item.label || item.domain || 'Evidence domain') + '</strong>' +
+          '<small>' + escapeHtml(item.description || '') + '</small>' +
+          '<small><b>Data state:</b> ' + escapeHtml(item.data_state || 'source-dependent') + ' · <b>Freshness:</b> ' + escapeHtml(item.freshness || 'unknown') + '</small>' +
+          (sources ? '<small><b>Sources:</b> ' + escapeHtml(sources) + '</small>' : '') +
+          (item.value_status ? '<small>' + escapeHtml(item.value_status) + '</small>' : '');
+        out.appendChild(row);
+      });
+      (data.comparison_rows || []).forEach(function (item) {
+        const row = document.createElement('div'); row.className = 'scsi-page-row scsi-public-comparison-row';
+        const left = item.left || {}, right = item.right || {};
+        row.innerHTML = '<strong>' + escapeHtml(item.dimension || 'Comparison dimension') + '</strong>' +
+          '<small>' + escapeHtml(left.country || '') + ': ' + escapeHtml(left.value === null || typeof left.value === 'undefined' ? left.data_state || 'unavailable' : left.value) +
+          ' · ' + escapeHtml(right.country || '') + ': ' + escapeHtml(right.value === null || typeof right.value === 'undefined' ? right.data_state || 'unavailable' : right.value) + '</small>' +
+          '<small>' + escapeHtml(item.display_note || '') + '</small>';
+        out.appendChild(row);
+      });
+      (data.notes || data.governance || []).forEach(function (note) { const row=document.createElement('div'); row.className='scsi-page-row'; row.innerHTML='<small>'+escapeHtml(note)+'</small>'; out.appendChild(row); });
+      return;
+    }
 
     if (data.summary_cards || data.domains || data.comparison_dimensions) {
       const grid = document.createElement('div');
@@ -2736,20 +2780,11 @@
         const card = document.createElement('div');
         card.className = 'scsi-stat scsi-public-connector-status-card';
         card.innerHTML = '<span class="scsi-public-label">' + escapeHtml(item.domain || item.label || 'Domain') + '</span>' +
-          '<strong>' + escapeHtml(item.status || item.display_state || 'ready') + '</strong>' +
+          '<strong>' + escapeHtml(item.status || item.display_state || 'available') + '</strong>' +
           '<small><b>Freshness:</b> ' + escapeHtml(item.freshness || 'mixed') + '</small>';
         grid.appendChild(card);
       });
       if (grid.children.length) out.appendChild(grid);
-      if (data.countries) {
-        const row = document.createElement('div'); row.className = 'scsi-page-row';
-        row.innerHTML = '<strong>' + escapeHtml((data.countries || []).join(' compared with ')) + '</strong><small>' + escapeHtml(data.normalization_rule || '') + '</small>';
-        out.appendChild(row);
-      }
-      if (data.comparison_dimensions) {
-        const ul = document.createElement('ul'); ul.className = 'scsi-list scsi-public-notes';
-        data.comparison_dimensions.forEach(function (x) { const li=document.createElement('li'); li.textContent=x; ul.appendChild(li); }); out.appendChild(ul);
-      }
       (data.notes || data.governance || []).forEach(function (note) { const row=document.createElement('div'); row.className='scsi-page-row'; row.innerHTML='<small>'+escapeHtml(note)+'</small>'; out.appendChild(row); });
       return;
     }

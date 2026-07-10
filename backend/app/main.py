@@ -122,6 +122,7 @@ from .cross_domain_dashboard_studio import (
     dashboard_export as build_cross_domain_dashboard_export,
     country_intelligence as build_country_intelligence,
     cross_domain_comparison as build_cross_domain_comparison,
+    rendering_diagnostics as build_cross_domain_rendering_diagnostics,
 )
 from .conflict_human_security import (
     overview as build_human_security_overview,
@@ -681,6 +682,11 @@ def public_country_intelligence(country_code: str):
 @app.get("/public/cross-domain-comparison")
 def public_cross_domain_comparison(country: str = "", compare: str = ""):
     return build_cross_domain_comparison(country, compare)
+
+
+@app.get("/public/dashboard-studio/rendering-diagnostics")
+def public_cross_domain_rendering_diagnostics():
+    return build_cross_domain_rendering_diagnostics()
 
 
 @app.get("/public/human-security")

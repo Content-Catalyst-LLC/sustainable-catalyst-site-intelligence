@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.12.4
+ * Version: 1.12.5
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.12.4';
+    const VERSION = '1.12.5';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -596,6 +596,7 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-cross-domain-dashboard-export', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_cross_domain_dashboard_export'], 'permission_callback' => '__return_true']);
         register_rest_route(self::REST_NAMESPACE, '/public-country-intelligence', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_country_intelligence'], 'permission_callback' => '__return_true']);
         register_rest_route(self::REST_NAMESPACE, '/public-cross-domain-comparison', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_cross_domain_comparison'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-dashboard-rendering-diagnostics', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_dashboard_rendering_diagnostics'], 'permission_callback' => '__return_true']);
         register_rest_route(self::REST_NAMESPACE, '/public-indicator-chart-panel', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_indicator_chart_panel'],
@@ -845,7 +846,7 @@ final class SC_Site_Intelligence_Plugin {
             'headers' => [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
-                'User-Agent' => 'Sustainable-Catalyst-Site-Intelligence/1.12.4',
+                'User-Agent' => 'Sustainable-Catalyst-Site-Intelligence/1.12.5',
             ],
         ];
         if (!empty($options['api_token'])) {
@@ -985,16 +986,22 @@ final class SC_Site_Intelligence_Plugin {
     private function cross_domain_fallback($type, $country = 'KEN', $compare = 'GHA', $dashboard_id = 'climate-human-vulnerability') {
         $country = strtoupper($country ?: 'KEN');
         $compare = strtoupper($compare ?: 'GHA');
-        if ($type === 'dashboard') {
-            return ['ok'=>true,'version'=>self::VERSION,'dashboard_id'=>$dashboard_id,'summary'=>'Public Intelligence Dashboard is using the local WordPress fallback while the live service is unavailable.','data_state'=>'local-fallback','summary_cards'=>[
-                ['domain'=>'planetary-boundaries','status'=>'ready','freshness'=>'mixed'],['domain'=>'human-development','status'=>'ready','freshness'=>'mixed'],['domain'=>'humanitarian-intelligence','status'=>'ready','freshness'=>'mixed'],['domain'=>'human-security','status'=>'ready','freshness'=>'mixed']
-            ],'notes'=>['Live records will replace this fallback automatically when the backend responds.']];
-        }
-        if ($type === 'country') {
-            return ['ok'=>true,'version'=>self::VERSION,'country_code'=>$country,'profile_status'=>'local-fallback','summary'=>'Country Intelligence Profile is using the local WordPress fallback while the live service is unavailable.','domains'=>array_map(function($d){ return ['domain'=>$d,'status'=>'ready','freshness'=>'mixed']; }, ['sustainable-development','planetary-boundaries','human-development','humanitarian-intelligence','human-security','international-law']),'governance'=>['Country profiles are analytical summaries, not rankings.','Missing data is displayed rather than silently imputed.']];
-        }
-        return ['ok'=>true,'version'=>self::VERSION,'countries'=>[$country,$compare],'status'=>'local-fallback','summary'=>'Cross-Domain Comparison is using the local WordPress fallback while the live service is unavailable.','comparison_dimensions'=>['human-development','environmental-pressure','disaster-exposure','conflict-displacement','international-law-context','source-coverage'],'normalization_rule'=>'Display original units and definitions; do not combine unlike indicators into one score.'];
+        $domains = ['sustainable-development','planetary-boundaries','human-development','humanitarian-intelligence','human-security','international-law'];
+        $labels = [
+            'sustainable-development'=>'Sustainable development','planetary-boundaries'=>'Environmental pressure','human-development'=>'Human development',
+            'humanitarian-intelligence'=>'Humanitarian conditions','human-security'=>'Human security','international-law'=>'International law'
+        ];
+        $items = array_map(function($domain) use ($labels, $country) {
+            return ['domain'=>$domain,'label'=>$labels[$domain] ?? $domain,'description'=>'Source registry and methodology context remain available while the live connector is unavailable.','geography'=>$country,'source_count'=>0,'sources'=>[],'data_state'=>'wordpress-local-fallback','freshness'=>'unavailable','value_status'=>'No value displayed because a validated live record was not returned.'];
+        }, $domains);
+        $base = ['ok'=>true,'version'=>self::VERSION,'origin_state'=>'wordpress-local-fallback','data_state'=>'wordpress-local-fallback','generated_at'=>gmdate('c'),'notes'=>['This is a transparent local fallback, not live backend data.','No precise values are invented or silently imputed.']];
+        if ($type === 'dashboard') return array_merge($base,['dashboard_id'=>$dashboard_id,'title'=>'Public Intelligence Dashboard','summary'=>'Live dashboard data is temporarily unavailable. Source and methodology context remains visible.','evidence_items'=>array_slice($items,1,4),'source_summary'=>['registered_sources'=>0,'domains'=>4,'freshness'=>'unavailable','live_values_policy'=>'Only validated connector values are displayed.']]);
+        if ($type === 'country') return array_merge($base,['country_code'=>$country,'country_name'=>$country,'profile_status'=>'wordpress-local-fallback','summary'=>'Live country evidence is temporarily unavailable.','evidence_items'=>$items,'source_summary'=>['registered_sources'=>0,'domains'=>6,'freshness'=>'unavailable','missing_data_policy'=>'Missing values remain explicit.'],'governance'=>['Country profiles are not rankings.','Missing data is not silently imputed.']]);
+        $rows = array_map(function($dimension) use ($country,$compare) { return ['dimension'=>$dimension,'left'=>['country'=>$country,'value'=>null,'data_state'=>'unavailable'],'right'=>['country'=>$compare,'value'=>null,'data_state'=>'unavailable'],'display_note'=>'No validated connector value was returned.']; }, ['human-development','environmental-pressure','disaster-exposure','conflict-displacement','international-law-context','source-coverage']);
+        return array_merge($base,['countries'=>[$country,$compare],'status'=>'wordpress-local-fallback','summary'=>'Live comparison data is temporarily unavailable.','comparison_rows'=>$rows,'normalization_rule'=>'Display original units and definitions; do not combine unlike indicators into one score.']);
     }
+
+    public function rest_public_dashboard_rendering_diagnostics() { return $this->backend_request('public/dashboard-studio/rendering-diagnostics'); }
 
     public function rest_public_cross_domain_dashboard(WP_REST_Request $request) { $id = sanitize_title($request->get_param('id')) ?: 'climate-human-vulnerability'; $view = sanitize_key($request->get_param('view')) ?: 'data'; $country = strtoupper(sanitize_text_field($request->get_param('country'))); $region = sanitize_text_field($request->get_param('region')); $start = sanitize_text_field($request->get_param('start')); $end = sanitize_text_field($request->get_param('end')); $compare = strtoupper(sanitize_text_field($request->get_param('compare'))); $suffix = $view === 'brief' ? '/brief' : '/data'; $params = array_filter(['country'=>$country,'region'=>$region,'start'=>$start,'end'=>$end,'compare'=>$compare]); $result = $this->backend_request('public/dashboard-studio/' . rawurlencode($id) . $suffix . ($params ? '?' . http_build_query($params) : '')); return is_wp_error($result) ? $this->cross_domain_fallback('dashboard', $country, $compare, $id) : $result; }
     public function rest_public_cross_domain_dashboard_sources(WP_REST_Request $request) { $id = sanitize_title($request->get_param('id')); return $this->backend_request('public/dashboard-studio/' . rawurlencode($id ?: 'climate-human-vulnerability') . '/sources'); }
