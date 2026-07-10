@@ -18,7 +18,7 @@
       client_time: new Date().toISOString(),
       metadata: {
         href: params && params.href ? params.href : '',
-        version: cfg.version || '1.2.0'
+        version: cfg.version || '1.2.1'
       }
     }, params || {});
 
@@ -2315,6 +2315,103 @@
     });
   }
 
+
+
+  function renderPublicSourcePageDirectory(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    muted.textContent = (data.summary || 'Public source page directory.') + ' · ' + (data.version_scope || 'v1.2.1');
+    out.innerHTML = '';
+    const nav = document.createElement('div');
+    nav.className = 'scsi-public-nav-row scsi-public-source-nav-row';
+    (data.navigation || []).forEach(function (item) {
+      const a = document.createElement('a');
+      a.href = item.path || item.url || '#';
+      a.textContent = (item.label || item.slug || 'Source page') + ' →';
+      a.className = 'scsi-public-nav-link scsi-public-source-link';
+      nav.appendChild(a);
+    });
+    out.appendChild(nav);
+    const grid = document.createElement('div');
+    grid.className = 'scsi-grid scsi-public-source-page-grid';
+    (data.pages || []).forEach(function (item) {
+      const card = document.createElement('div');
+      card.className = 'scsi-stat scsi-public-source-page-card';
+      card.innerHTML = '<span class="scsi-public-label">' + escapeHtml(item.eyebrow || item.public_status || '') + '</span>' +
+        '<strong>' + escapeHtml(item.title || '') + '</strong>' +
+        '<small>' + escapeHtml(item.summary || item.excerpt || '') + '</small>' +
+        '<code>' + escapeHtml(item.shortcode || '') + '</code>' +
+        '<a class="scsi-mini-link" href="' + escapeHtml(item.canonical_path || '#') + '">Open page →</a>';
+      grid.appendChild(card);
+    });
+    out.appendChild(grid);
+    if ((data.review_notes || []).length) {
+      const ul = document.createElement('ul');
+      ul.className = 'scsi-list scsi-public-notes';
+      (data.review_notes || []).forEach(function (note) { const li = document.createElement('li'); li.textContent = note; ul.appendChild(li); });
+      out.appendChild(ul);
+    }
+  }
+
+  function renderPublicSourceNavigation(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    const current = data.current_slug || root.dataset.current || '';
+    muted.textContent = data.summary || 'Public source navigation.';
+    out.innerHTML = '';
+    const nav = document.createElement('div');
+    nav.className = 'scsi-public-nav-row scsi-public-source-nav-row';
+    (data.items || []).forEach(function (item) {
+      const a = document.createElement('a');
+      a.href = item.path || item.url || '#';
+      a.textContent = (item.label || item.slug || 'Source page') + ' →';
+      a.className = 'scsi-public-nav-link scsi-public-source-link';
+      if (item.active || (current && item.slug === current)) a.className += ' scsi-active-link';
+      nav.appendChild(a);
+    });
+    out.appendChild(nav);
+  }
+
+  function renderPublicSourcePageTemplates(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    muted.textContent = (data.summary || 'Copy-ready public source page templates.') + ' · ' + (data.version_scope || 'v1.2.1');
+    out.innerHTML = '';
+    const grid = document.createElement('div');
+    grid.className = 'scsi-grid scsi-public-source-page-grid';
+    (data.templates || []).forEach(function (item) {
+      const card = document.createElement('div');
+      card.className = 'scsi-stat scsi-public-source-page-card scsi-template-card';
+      card.innerHTML = '<span class="scsi-public-label">' + escapeHtml(item.slug || '') + '</span>' +
+        '<strong>' + escapeHtml(item.title || '') + '</strong>' +
+        '<small><b>Path:</b> ' + escapeHtml(item.canonical_path || '') + '</small>' +
+        '<small><b>Excerpt:</b> ' + escapeHtml(item.excerpt || '') + '</small>' +
+        '<small><b>Meta:</b> ' + escapeHtml(item.meta_description || '') + '</small>' +
+        '<code>' + escapeHtml(item.navigation_shortcode || '') + '</code>' +
+        '<code>' + escapeHtml(item.shortcode || '') + '</code>';
+      grid.appendChild(card);
+    });
+    out.appendChild(grid);
+  }
+
+  function renderPublicSourcePageVisualQa(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    muted.textContent = (data.summary || 'Public source page QA.') + ' · Score: ' + formatNumber(data.score || 0) + '%';
+    out.innerHTML = '';
+    (data.checks || []).forEach(function (check) {
+      const row = document.createElement('div');
+      row.className = 'scsi-page-row scsi-public-qa-row';
+      row.innerHTML = '<strong>' + escapeHtml(check.label || check.id || '') + '</strong><br>' +
+        statusBadge(check.status || 'review') +
+        '<small>' + escapeHtml(check.detail || '') + '</small>';
+      out.appendChild(row);
+    });
+    const notes = document.createElement('ul');
+    notes.className = 'scsi-list scsi-public-notes';
+    (data.review_notes || []).forEach(function (note) { const li = document.createElement('li'); li.textContent = note; notes.appendChild(li); });
+    out.appendChild(notes);
+  }
   function fetchDashboards() {
     if (!cfg.restBase) return;
     document.querySelectorAll('[data-scsi-admin-control]').forEach(function (root) {
@@ -2514,6 +2611,29 @@
         .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public topic page visual QA.'); });
     });
 
+
+    document.querySelectorAll('[data-scsi-public-source-page-directory]').forEach(function (root) {
+      fetchJson(cfg.restBase + '/public-source-pages')
+        .then(function (data) { renderPublicSourcePageDirectory(root, data); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public source page directory.'); });
+    });
+    document.querySelectorAll('[data-scsi-public-source-navigation]').forEach(function (root) {
+      const current = root.dataset.current || '';
+      fetchJson(cfg.restBase + '/public-source-navigation' + (current ? '?current=' + encodeURIComponent(current) : ''))
+        .then(function (data) { renderPublicSourceNavigation(root, data); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public source navigation.'); });
+    });
+    document.querySelectorAll('[data-scsi-public-source-page-templates]').forEach(function (root) {
+      const slug = root.dataset.slug || '';
+      fetchJson(cfg.restBase + '/public-source-page-templates' + (slug ? '?slug=' + encodeURIComponent(slug) : ''))
+        .then(function (data) { renderPublicSourcePageTemplates(root, data); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public source page templates.'); });
+    });
+    document.querySelectorAll('[data-scsi-public-source-page-visual-qa]').forEach(function (root) {
+      fetchJson(cfg.restBase + '/public-source-page-visual-qa')
+        .then(function (data) { renderPublicSourcePageVisualQa(root, data); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public source page visual QA.'); });
+    });
     document.querySelectorAll('[data-scsi-public-source-panel]').forEach(function (root) {
       const panel = root.dataset.sourcePanel || 'api-sources';
       fetchJson(cfg.restBase + sourcePanelEndpoint(panel))

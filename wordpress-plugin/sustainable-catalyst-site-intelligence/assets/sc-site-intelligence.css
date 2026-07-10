@@ -658,7 +658,7 @@
 }
 
 /* =========================================================
-   v1.2.0 Public Shortcode Visual Alignment
+   v1.2.1 Public Shortcode Visual Alignment
    Aligns public dashboard shortcodes with current Sustainable Catalyst
    ccp/scmethod-style public-platform panels.
    ========================================================= */
@@ -1015,7 +1015,7 @@
 }
 
 /* =========================================================
-   PUBLIC TOPIC DASHBOARDS — v1.2.0
+   PUBLIC TOPIC DASHBOARDS — v1.2.1
    Topic pages and source-methodology modules.
    ========================================================= */
 
@@ -1175,7 +1175,7 @@
 
 
 /* =========================================================
-   PUBLIC TOPIC PAGE POLISH — v1.2.0
+   PUBLIC TOPIC PAGE POLISH — v1.2.1
    Navigation active states, template helpers, and nowrap utilities.
    ========================================================= */
 
@@ -1272,7 +1272,7 @@
 }
 
 /* =========================================================
-   PUBLIC API SOURCE LAYER — v1.2.0
+   PUBLIC API SOURCE LAYER — v1.2.1
    Public-safe source health, API family, indicator, metadata,
    and repository intelligence panels.
    ========================================================= */
@@ -1317,4 +1317,75 @@
   border-right: 0;
   border-bottom: 0;
   box-shadow: none;
+}
+
+
+/* =========================================================
+   v1.2.1 Public Source Page Integration Polish
+   ========================================================= */
+.scsi-public-source-page-directory,
+.scsi-public-source-navigation,
+.scsi-public-source-page-templates,
+.scsi-public-source-page-visual-qa {
+  border-top: 4px solid #111111;
+}
+
+.scsi-public-source-page-grid {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.scsi-public-source-page-card {
+  border-radius: 0;
+  border: 1px solid rgba(17, 17, 17, 0.18);
+  background: #fffdf7;
+}
+
+.scsi-public-source-page-card code,
+.scsi-template-card code {
+  display: block;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  margin-top: 8px;
+}
+
+.scsi-public-source-nav-row {
+  gap: 10px;
+  align-items: stretch;
+}
+
+.scsi-public-source-link {
+  border-radius: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.78rem;
+  line-height: 1.2;
+}
+
+.scsi-public-source-link.scsi-active-link,
+.scsi-public-nav-link.scsi-active-link {
+  background: #9b1111;
+  color: #ffffff;
+  border-color: #9b1111;
+}
+
+.scsi-mini-link {
+  display: inline-flex;
+  margin-top: 10px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.cch-nowrap,
+.ccp-nowrap,
+.scsi-nowrap {
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .scsi-public-source-link {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
 }

@@ -1,32 +1,34 @@
 # Sustainable Catalyst Site Intelligence
 
-Version: 1.2.0
+Version: 1.2.1
 
-## v1.2.0 — Public API Source Expansion and Live Indicator Layer
+## v1.2.1 — Public Source Pages and Indicator Integration Polish
 
-This release adds the first public API source expansion layer for Site Intelligence. It introduces public-safe source-health panels, development indicator context, research/publication metadata context, repository intelligence, and live/cached/fallback indicator labels. The new layer helps Site Intelligence move from a dashboard page system toward a broader public intelligence layer while keeping credentials, raw payloads, private analytics, admin diagnostics, and unreleased reports out of public pages.
+This release turns the v1.2.0 public API/source layer into a cleaner public page system. It adds source-page templates, reusable active-page source navigation, public source-page visual QA, and CSS polish for source and indicator pages.
+
+Recommended public source pages:
+
+- `/platform/site-intelligence/sources/`
+- `/platform/site-intelligence/source-health/`
+- `/platform/site-intelligence/indicators/`
+- `/platform/site-intelligence/sustainability-indicators/`
+- `/platform/site-intelligence/research-metadata/`
+- `/platform/site-intelligence/publication-metadata/`
+- `/platform/site-intelligence/repository-intelligence/`
 
 New public endpoints:
 
-- `/public/sources`
-- `/public/sources/health`
-- `/public/sources/development-indicators`
-- `/public/sources/research-metadata`
-- `/public/sources/publications`
-- `/public/sources/repositories`
-- `/public/indicators/overview`
-- `/public/indicators/sustainability`
+- `/public/source-pages`
+- `/public/source-pages/navigation`
+- `/public/source-pages/templates`
+- `/public/source-pages/visual-qa`
 
 New public shortcodes:
 
-- `[sc_public_api_sources]`
-- `[sc_public_source_health]`
-- `[sc_public_development_indicators]`
-- `[sc_public_research_metadata]`
-- `[sc_public_publication_metadata]`
-- `[sc_public_repository_intelligence]`
-- `[sc_public_indicator_overview]`
-- `[sc_public_sustainability_indicators]`
+- `[sc_public_source_page_directory]`
+- `[sc_public_source_navigation]`
+- `[sc_public_source_page_templates]`
+- `[sc_public_source_page_visual_qa]`
 
 Site Intelligence is the Sustainable Catalyst analytics, registry, external-source, reporting, AI-brief, public-dashboard, admin-control, and public flagship dashboard platform.
 

@@ -48,6 +48,12 @@ from .public_api_sources import (
     public_indicator_overview as build_public_indicator_overview,
     public_sustainability_indicators as build_public_sustainability_indicators,
 )
+from .public_source_pages import (
+    public_source_page_directory as build_public_source_page_directory,
+    public_source_navigation as build_public_source_navigation,
+    public_source_page_templates as build_public_source_page_templates,
+    public_source_page_visual_qa as build_public_source_page_visual_qa,
+)
 from .report_generator import (
     bundle_manifest_report,
     bundle_report,
@@ -320,6 +326,37 @@ def public_topic_page_visual_qa_endpoint(settings: Settings = Depends(get_settin
         raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
     return topic_page_visual_qa()
 
+
+
+@app.get("/public/source-pages")
+def public_source_pages(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=404, detail="Public dashboards are disabled.")
+    return build_public_source_page_directory()
+
+
+@app.get("/public/source-pages/navigation")
+def public_source_page_navigation(current: str = Query(""), settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=404, detail="Public dashboards are disabled.")
+    return build_public_source_navigation(current)
+
+
+@app.get("/public/source-pages/templates")
+def public_source_page_templates(slug: str | None = Query(default=None), settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=404, detail="Public dashboards are disabled.")
+    try:
+        return build_public_source_page_templates(slug)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown public source page slug: {slug}") from exc
+
+
+@app.get("/public/source-pages/visual-qa")
+def public_source_page_visual_qa(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=404, detail="Public dashboards are disabled.")
+    return build_public_source_page_visual_qa()
 
 @app.get("/public/sources")
 def public_sources_endpoint(settings: Settings = Depends(get_settings)):

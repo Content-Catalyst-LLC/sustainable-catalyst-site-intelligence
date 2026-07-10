@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.2.0
+ * Version: 1.2.1
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.2.0';
+    const VERSION = '1.2.1';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -62,6 +62,10 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_public_repository_intelligence', [$this, 'public_source_panel_shortcode']);
         add_shortcode('sc_public_indicator_overview', [$this, 'public_source_panel_shortcode']);
         add_shortcode('sc_public_sustainability_indicators', [$this, 'public_source_panel_shortcode']);
+        add_shortcode('sc_public_source_page_directory', [$this, 'public_source_page_directory_shortcode']);
+        add_shortcode('sc_public_source_navigation', [$this, 'public_source_navigation_shortcode']);
+        add_shortcode('sc_public_source_page_templates', [$this, 'public_source_page_templates_shortcode']);
+        add_shortcode('sc_public_source_page_visual_qa', [$this, 'public_source_page_visual_qa_shortcode']);
         add_shortcode('sc_public_climate_energy_dashboard', [$this, 'public_topic_dashboard_shortcode']);
         add_shortcode('sc_public_environmental_monitoring_dashboard', [$this, 'public_topic_dashboard_shortcode']);
         add_shortcode('sc_public_biodiversity_land_use_dashboard', [$this, 'public_topic_dashboard_shortcode']);
@@ -372,6 +376,26 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-sustainability-indicators', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_sustainability_indicators'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-source-pages', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_source_pages'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-source-navigation', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_source_navigation'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-source-page-templates', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_source_page_templates'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-source-page-visual-qa', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_source_page_visual_qa'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/public-readiness', [
@@ -1259,7 +1283,7 @@ final class SC_Site_Intelligence_Plugin {
             'generated_at' => gmdate('c'),
             'mode' => 'public',
             'provider' => 'deterministic-local',
-            'model' => 'wordpress-fallback-v1.2.0',
+            'model' => 'wordpress-fallback-v1.2.1',
             'source_report' => [
                 'report_id' => 'public-dashboard',
                 'title' => 'Public Dashboard Readiness Report',
@@ -1501,6 +1525,11 @@ final class SC_Site_Intelligence_Plugin {
             <p><code>[sc_urban_resilience_intelligence]</code></p>
             <p><code>[sc_biodiversity_land_use_intelligence]</code></p>
             <p><code>[sc_energy_systems_intelligence]</code></p>
+            <h2>Public Source Pages</h2>
+            <p><code>[sc_public_source_page_directory]</code></p>
+            <p><code>[sc_public_source_navigation]</code></p>
+            <p><code>[sc_public_source_page_templates]</code></p>
+            <p><code>[sc_public_source_page_visual_qa]</code></p>
             <h2>AI-Assisted Briefs</h2>
             <p><code>[sc_ai_brief_status]</code></p>
             <p><code>[sc_ai_site_intelligence_brief]</code></p>
@@ -2674,7 +2703,7 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function release_status_shortcode($atts = []) {
-        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.2.0 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
+        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.2.1 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
     }
 
 }

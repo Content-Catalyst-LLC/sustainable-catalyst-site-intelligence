@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.2.1 — Public Source Pages and Indicator Integration Polish
+
+- Updated backend and WordPress plugin versions to 1.2.1.
+- Added public source-page directory, navigation, template, and visual-QA endpoints.
+- Added WordPress shortcodes for source page directory, source navigation, source page templates, and source page visual QA.
+- Added source-page CSS polish, active link styling, and nowrap helpers.
+- Added backend tests for public source pages and template payloads.
+- Added documentation for public source/indicator page setup.
+
 ## 1.2.0 — Public API Source Expansion and Live Indicator Layer
 
 - Updated backend and WordPress plugin versions to 1.2.0.
