@@ -71,6 +71,20 @@ from .public_source_briefs_exports import (
     public_dashboard_export as build_public_dashboard_export,
     public_dashboard_export_visual_qa as build_public_dashboard_export_visual_qa,
 )
+from .public_export_reliability import (
+    export_validation as build_export_validation,
+    download_states as build_export_download_states,
+    reliability as build_export_reliability,
+    brief_polish as build_brief_polish,
+    brief_fallbacks as build_brief_fallbacks,
+)
+from .sustainable_development_connectors import (
+    source_registry as build_sustainable_development_source_registry,
+    source_families as build_sustainable_development_source_families,
+    planetary_boundary_registry as build_planetary_boundary_registry,
+    connector_health as build_sustainable_development_connector_health,
+    methodology as build_sustainable_development_methodology,
+)
 from .public_source_pages import (
     public_source_page_directory as build_public_source_page_directory,
     public_source_navigation as build_public_source_navigation,
@@ -420,6 +434,53 @@ def public_connector_status_polish_endpoint(settings: Settings = Depends(get_set
     if not settings.public_dashboards_enabled:
         raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
     return build_public_connector_status_polish(settings)
+
+
+@app.get("/public/dashboard-exports/validation")
+def dashboard_export_validation_endpoint(): return build_export_validation()
+
+@app.get("/public/dashboard-exports/download-states")
+def dashboard_export_download_states_endpoint(): return build_export_download_states()
+
+@app.get("/public/dashboard-exports/reliability")
+def dashboard_export_reliability_endpoint(): return build_export_reliability()
+
+@app.get("/public/source-aware-briefs/polish")
+def source_aware_brief_polish_endpoint(): return build_brief_polish()
+
+@app.get("/public/source-aware-briefs/fallbacks")
+def source_aware_brief_fallbacks_endpoint(): return build_brief_fallbacks()
+
+
+@app.get("/public/sustainable-development/sources")
+def sustainable_development_source_registry_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled or not settings.sustainable_development_connectors_enabled:
+        raise HTTPException(status_code=403, detail="Sustainable development connectors are disabled.")
+    return build_sustainable_development_source_registry(settings)
+
+@app.get("/public/sustainable-development/families")
+def sustainable_development_source_families_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled or not settings.sustainable_development_connectors_enabled:
+        raise HTTPException(status_code=403, detail="Sustainable development connectors are disabled.")
+    return build_sustainable_development_source_families()
+
+@app.get("/public/sustainable-development/planetary-boundaries")
+def planetary_boundary_registry_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled or not settings.sustainable_development_connectors_enabled:
+        raise HTTPException(status_code=403, detail="Sustainable development connectors are disabled.")
+    return build_planetary_boundary_registry()
+
+@app.get("/public/sustainable-development/health")
+def sustainable_development_connector_health_endpoint(live: bool = Query(False), settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled or not settings.sustainable_development_connectors_enabled:
+        raise HTTPException(status_code=403, detail="Sustainable development connectors are disabled.")
+    return build_sustainable_development_connector_health(settings, live=bool(live and settings.sustainable_development_live_checks))
+
+@app.get("/public/sustainable-development/methodology")
+def sustainable_development_methodology_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled or not settings.sustainable_development_connectors_enabled:
+        raise HTTPException(status_code=403, detail="Sustainable development connectors are disabled.")
+    return build_sustainable_development_methodology()
 
 
 @app.get("/public/indicator-dashboards")

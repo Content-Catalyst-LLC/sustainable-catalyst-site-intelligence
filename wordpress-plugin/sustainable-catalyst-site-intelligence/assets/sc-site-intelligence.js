@@ -2604,7 +2604,12 @@
       'openalex': '/public-connector-detail?slug=openalex',
       'crossref': '/public-connector-detail?slug=crossref',
       'github': '/public-connector-detail?slug=github',
-      'environmental': '/public-connector-detail?slug=environmental'
+      'environmental': '/public-connector-detail?slug=environmental',
+      'sustainable-development-sources': '/public-sustainable-development-sources',
+      'sustainable-development-families': '/public-sustainable-development-families',
+      'planetary-boundaries': '/public-planetary-boundaries-registry',
+      'sustainable-development-health': '/public-sustainable-development-source-health',
+      'sustainable-development-methodology': '/public-sustainable-development-methodology'
     };
     return map[panel] || '/public-connector-status';
   }
@@ -2758,6 +2763,20 @@
           '<small>' + escapeHtml(item.public_use || '') + '</small>';
         out.appendChild(row);
       });
+    }
+
+    const families = data.families || [];
+    if (families.length) {
+      const h = document.createElement('h3'); h.textContent = 'Connector families'; out.appendChild(h);
+      families.forEach(function (item) { const row=document.createElement('div'); row.className='scsi-page-row'; row.innerHTML='<strong>'+escapeHtml(item.family||'')+'</strong><small><b>Sources:</b> '+escapeHtml((item.sources||[]).join(', '))+'</small>'; out.appendChild(row); });
+    }
+    const boundaries = data.boundaries || [];
+    if (boundaries.length) {
+      const h = document.createElement('h3'); h.textContent = 'Planetary boundaries'; out.appendChild(h);
+      boundaries.forEach(function (item) { const row=document.createElement('div'); row.className='scsi-page-row'; row.innerHTML='<strong>'+escapeHtml(item.label||item.boundary_id||'')+'</strong><br>'+statusBadge(item.assessment_status||'planned')+'<small><b>Control variables:</b> '+escapeHtml((item.control_variables||[]).join(', '))+'</small><small><b>Mapped sources:</b> '+escapeHtml((item.source_mappings||[]).join(', '))+'</small>'; out.appendChild(row); });
+    }
+    if (data.observation_schema) {
+      const row=document.createElement('div'); row.className='scsi-page-row'; row.innerHTML='<strong>Normalized observation schema</strong><small>'+escapeHtml(data.observation_schema.schema||'')+'</small><small><b>Required fields:</b> '+escapeHtml((data.observation_schema.required||[]).join(', '))+'</small>'; out.appendChild(row);
     }
 
     [['Methodology', data.methodology || []], ['Display guidance', data.display_guidance || []], ['Review notes', data.review_notes || []], ['Hidden from public pages', data.hidden || []]].forEach(function (group) {

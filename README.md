@@ -1,10 +1,10 @@
 # Sustainable Catalyst Site Intelligence
 
-Current version: v1.5.0 — Source-Aware Briefs and Dashboard Exports
+Current version: v1.6.0 — Sustainable Development Data Connectors and Public Source Registry
 
 # Sustainable Catalyst Site Intelligence
 
-Version: 1.5.0
+Version: 1.6.0
 
 ## v1.4.0 — Connector Reliability Patch and Public Status Polish
 
@@ -213,3 +213,8 @@ Adds public indicator dashboard endpoints, chart-ready JSON payloads, WordPress 
 Adds public source-aware brief payloads, dashboard export manifests, copy-ready Markdown export summaries, public source endpoint citations, and WordPress shortcodes for reviewed Site Intelligence handoff pages.
 
 New endpoints include `/public/source-aware-briefs`, `/public/dashboard-exports`, and `/public/dashboard-exports/visual-qa`.
+
+
+## v1.6.0 Sustainable Development Data Layer
+
+Initial public-source registry and connector contracts for NASA EONET, NASA POWER, the UN SDG database, World Bank development and poverty data, UNESCO education data, FAOSTAT, UN-Water SDG 6, and OECD SDMX. Includes a planetary-boundaries adapter registry, normalized observation schema, freshness classes, public health endpoints, and WordPress shortcodes.

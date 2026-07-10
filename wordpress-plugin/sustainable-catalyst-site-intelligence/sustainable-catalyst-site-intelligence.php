@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.5.0
+ * Version: 1.6.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.5.0';
+    const VERSION = '1.6.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -76,6 +76,11 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_public_crossref_connector', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_github_connector', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_environmental_connectors', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_public_sustainable_development_sources', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_public_sustainable_development_families', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_public_planetary_boundaries_registry', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_public_sustainable_development_source_health', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_public_sustainable_development_methodology', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_indicator_dashboard_directory', [$this, 'public_indicator_chart_panel_shortcode']);
         add_shortcode('sc_public_sustainability_indicator_dashboard', [$this, 'public_indicator_chart_panel_shortcode']);
         add_shortcode('sc_public_development_indicator_dashboard', [$this, 'public_indicator_chart_panel_shortcode']);
@@ -457,6 +462,21 @@ final class SC_Site_Intelligence_Plugin {
             'permission_callback' => '__return_true',
         ]);
 
+        register_rest_route(self::REST_NAMESPACE, '/public-sustainable-development-sources', [
+            'methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_sustainable_development_sources'], 'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-sustainable-development-families', [
+            'methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_sustainable_development_families'], 'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-planetary-boundaries-registry', [
+            'methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_planetary_boundaries_registry'], 'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-sustainable-development-source-health', [
+            'methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_sustainable_development_source_health'], 'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-sustainable-development-methodology', [
+            'methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_sustainable_development_methodology'], 'permission_callback' => '__return_true',
+        ]);
         register_rest_route(self::REST_NAMESPACE, '/public-indicator-chart-panel', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_indicator_chart_panel'],
@@ -720,6 +740,16 @@ final class SC_Site_Intelligence_Plugin {
         }
         return is_array($payload) ? $payload : ['ok' => true, 'raw' => $raw_body];
     }
+
+
+    public function rest_public_sustainable_development_sources() { return $this->backend_request('public/sustainable-development/sources'); }
+    public function rest_public_sustainable_development_families() { return $this->backend_request('public/sustainable-development/families'); }
+    public function rest_public_planetary_boundaries_registry() { return $this->backend_request('public/sustainable-development/planetary-boundaries'); }
+    public function rest_public_sustainable_development_source_health(WP_REST_Request $request) {
+        $live = $request->get_param('live') ? '?live=true' : '';
+        return $this->backend_request('public/sustainable-development/health' . $live);
+    }
+    public function rest_public_sustainable_development_methodology() { return $this->backend_request('public/sustainable-development/methodology'); }
 
     public function rest_dashboard(WP_REST_Request $request) {
         $query = [];
@@ -1461,7 +1491,7 @@ final class SC_Site_Intelligence_Plugin {
             'generated_at' => gmdate('c'),
             'mode' => 'public',
             'provider' => 'deterministic-local',
-            'model' => 'wordpress-fallback-v1.5.0',
+            'model' => 'wordpress-fallback-v1.6.0',
             'source_report' => [
                 'report_id' => 'public-dashboard',
                 'title' => 'Public Dashboard Readiness Report',
@@ -2598,6 +2628,11 @@ final class SC_Site_Intelligence_Plugin {
             'sc_public_crossref_connector' => ['crossref', 'Crossref Connector', 'Publication metadata source status, cache policy, and fallback notes.'],
             'sc_public_github_connector' => ['github', 'GitHub Connector', 'Repository intelligence source status, cache policy, and fallback notes.'],
             'sc_public_environmental_connectors' => ['environmental', 'Environmental Connectors', 'NASA, NOAA, EPA, EIA, USGS, GBIF, and Climate TRACE public source status.'],
+            'sc_public_sustainable_development_sources' => ['sustainable-development-sources', 'Sustainable Development Public Sources', 'Planetary boundaries, SDGs, poverty, education, food, water, climate, and human-development sources.'],
+            'sc_public_sustainable_development_families' => ['sustainable-development-families', 'Sustainable Development Connector Families', 'Connector coverage across environmental limits and human development.'],
+            'sc_public_planetary_boundaries_registry' => ['planetary-boundaries', 'Planetary Boundaries Adapter Registry', 'Nine-boundary definitions, control variables, source mappings, and assessment status.'],
+            'sc_public_sustainable_development_source_health' => ['sustainable-development-health', 'Sustainable Development Source Health', 'Freshness, cache, fallback, and public availability status.'],
+            'sc_public_sustainable_development_methodology' => ['sustainable-development-methodology', 'Sustainable Development Data Methodology', 'Observation schema, provenance, freshness, and derived-assessment boundaries.'],
         ];
         return isset($map[$tag]) ? $map[$tag] : ['connector-status', 'Public Connector Status', 'Loading public connector status…'];
     }
@@ -3015,7 +3050,7 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function release_status_shortcode($atts = []) {
-        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.5.0 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
+        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.6.0 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
     }
 
 }

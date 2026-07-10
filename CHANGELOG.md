@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.6.0 — Sustainable Development Data Connectors and Public Source Registry
+
+- Added a normalized sustainable-development source registry and observation schema.
+- Added NASA EONET and NASA POWER connector registrations.
+- Added UN SDG, World Bank Indicators/PIP, UNESCO UIS, FAOSTAT, UN-Water, and OECD source registrations.
+- Added planetary-boundaries definitions, control-variable mappings, and derived-assessment boundaries.
+- Added public source-family, source-health, methodology, and registry endpoints.
+- Added five WordPress public shortcodes and proxy endpoints.
+- Added freshness, cache, fallback, provenance, and public-safety labels.
+
+
 
 ## v1.5.0 — Source-Aware Briefs and Dashboard Exports
 
