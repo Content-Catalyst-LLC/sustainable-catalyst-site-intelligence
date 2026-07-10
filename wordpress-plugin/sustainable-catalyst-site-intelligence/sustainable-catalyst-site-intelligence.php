@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.10.0
+ * Version: 1.11.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.10.0';
+    const VERSION = '1.11.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -113,6 +113,14 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_international_law_monitor', [$this, 'international_law_monitor_shortcode']);
         add_shortcode('sc_international_law_methodology', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_international_law_export', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_conflict_human_security_monitor', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_human_security_sources', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_conflict_event_stream', [$this, 'human_security_event_stream_shortcode']);
+        add_shortcode('sc_human_security_monitor', [$this, 'human_security_monitor_shortcode']);
+        add_shortcode('sc_forced_displacement_flows', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_modeled_human_security_risk', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_human_security_methodology', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_human_security_export', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_indicator_dashboard_directory', [$this, 'public_indicator_chart_panel_shortcode']);
         add_shortcode('sc_public_sustainability_indicator_dashboard', [$this, 'public_indicator_chart_panel_shortcode']);
         add_shortcode('sc_public_development_indicator_dashboard', [$this, 'public_indicator_chart_panel_shortcode']);
@@ -560,6 +568,14 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-international-law-monitor', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_international_law_monitor'], 'permission_callback' => '__return_true']);
         register_rest_route(self::REST_NAMESPACE, '/public-international-law-methodology', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_international_law_methodology'], 'permission_callback' => '__return_true']);
         register_rest_route(self::REST_NAMESPACE, '/public-international-law-export', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_international_law_export'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-human-security', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_human_security'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-human-security-sources', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_human_security_sources'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-human-security-events', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_human_security_events'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-human-security-monitor', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_human_security_monitor'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-human-security-displacement', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_human_security_displacement'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-human-security-modeled-risk', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_human_security_modeled_risk'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-human-security-methodology', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_human_security_methodology'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-human-security-export', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_human_security_export'], 'permission_callback' => '__return_true']);
         register_rest_route(self::REST_NAMESPACE, '/public-indicator-chart-panel', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_indicator_chart_panel'],
@@ -879,6 +895,14 @@ final class SC_Site_Intelligence_Plugin {
     public function rest_public_international_law_monitor(WP_REST_Request $request) { $id = sanitize_title($request->get_param('id')); return $this->backend_request('public/international-law/monitors/' . rawurlencode($id ?: 'sanctions')); }
     public function rest_public_international_law_methodology() { return $this->backend_request('public/international-law/methodology'); }
     public function rest_public_international_law_export() { return $this->backend_request('public/international-law/export'); }
+    public function rest_public_human_security() { return $this->backend_request('public/human-security'); }
+    public function rest_public_human_security_sources() { return $this->backend_request('public/human-security/sources'); }
+    public function rest_public_human_security_events(WP_REST_Request $request) { $params = []; $record_type = sanitize_text_field($request->get_param('record_type')); $country = sanitize_text_field($request->get_param('country')); if ($record_type) { $params['record_type'] = $record_type; } if ($country) { $params['country'] = $country; } return $this->backend_request('public/human-security/events' . ($params ? '?' . http_build_query($params) : '')); }
+    public function rest_public_human_security_monitor(WP_REST_Request $request) { $id = sanitize_title($request->get_param('id')); return $this->backend_request('public/human-security/monitors/' . rawurlencode($id ?: 'conflict-events')); }
+    public function rest_public_human_security_displacement() { return $this->backend_request('public/human-security/displacement'); }
+    public function rest_public_human_security_modeled_risk() { return $this->backend_request('public/human-security/modeled-risk'); }
+    public function rest_public_human_security_methodology() { return $this->backend_request('public/human-security/methodology'); }
+    public function rest_public_human_security_export() { return $this->backend_request('public/human-security/export'); }
 
     public function rest_dashboard(WP_REST_Request $request) {
         $query = [];
@@ -2788,6 +2812,12 @@ final class SC_Site_Intelligence_Plugin {
             'sc_un_sanctions_monitor' => ['international-law-sanctions', 'UN Sanctions Monitor', 'Official consolidated-list changes, regimes, listings, amendments, and delistings.'],
             'sc_international_law_methodology' => ['international-law-methodology', 'International Law Methodology', 'Legal-event schema, procedural status, provenance, and human-review boundaries.'],
             'sc_international_law_export' => ['international-law-export', 'International Law Export', 'Public-safe sources, monitors, schemas, and methodology records.'],
+            'sc_conflict_human_security_monitor' => ['human-security', 'Conflict, Displacement, and Human Security', 'Conflict events, civilian protection, displacement, infrastructure disruption, humanitarian access, and modeled risk.'],
+            'sc_human_security_sources' => ['human-security-sources', 'Human Security Sources', 'ACLED, UCDP, UNHCR, IOM DTM, ReliefWeb, and HDX source registry.'],
+            'sc_forced_displacement_flows' => ['human-security-displacement', 'Forced Displacement and Mobility', 'Refugee, asylum, internal displacement, return, statelessness, and mobility context.'],
+            'sc_modeled_human_security_risk' => ['human-security-modeled-risk', 'Modeled Human Security Risk', 'Forecast metadata, confidence, horizons, model versions, and limitations.'],
+            'sc_human_security_methodology' => ['human-security-methodology', 'Human Security Methodology', 'Event, displacement, protection, infrastructure, forecast, and responsible-data rules.'],
+            'sc_human_security_export' => ['human-security-export', 'Human Security Export', 'Public-safe sources, monitors, schemas, and methodology records.'],
         ];
         return isset($map[$tag]) ? $map[$tag] : ['connector-status', 'Public Connector Status', 'Loading public connector status…'];
     }
@@ -2851,6 +2881,29 @@ final class SC_Site_Intelligence_Plugin {
             <p class="scsi-eyebrow">International Law and Global Governance</p>
             <h2><?php echo esc_html($title); ?></h2>
             <p class="scsi-muted">Loading source-aware official-record context…</p>
+            <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php return ob_get_clean();
+    }
+
+    public function human_security_monitor_shortcode($atts = []) {
+        $atts = shortcode_atts(['id' => 'conflict-events'], $atts, 'sc_human_security_monitor');
+        return $this->human_security_panel_markup('human-security-monitor', sanitize_title($atts['id']), '', '', 'Human Security Monitor');
+    }
+
+    public function human_security_event_stream_shortcode($atts = []) {
+        $atts = shortcode_atts(['record_type' => '', 'country' => ''], $atts, 'sc_conflict_event_stream');
+        return $this->human_security_panel_markup('human-security-events', '', sanitize_text_field($atts['record_type']), sanitize_text_field($atts['country']), 'Conflict and Human Security Event Stream');
+    }
+
+    private function human_security_panel_markup($panel, $monitor_id, $record_type, $country, $title) {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') { return ''; }
+        ob_start(); ?>
+        <section class="scsi-card scsi-public-connector-panel" data-scsi-public-connector-panel data-connector-panel="<?php echo esc_attr($panel); ?>" data-monitor-id="<?php echo esc_attr($monitor_id); ?>" data-record-type="<?php echo esc_attr($record_type); ?>" data-country="<?php echo esc_attr($country); ?>">
+            <p class="scsi-eyebrow">Conflict, Displacement, and Human Security</p>
+            <h2><?php echo esc_html($title); ?></h2>
+            <p class="scsi-muted">Loading source-aware conflict, protection, displacement, and humanitarian-access context…</p>
             <div class="scsi-output" aria-live="polite"></div>
         </section>
         <?php return ob_get_clean();
@@ -3274,7 +3327,7 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function release_status_shortcode($atts = []) {
-        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.10.0 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
+        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.11.0 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
     }
 
 }

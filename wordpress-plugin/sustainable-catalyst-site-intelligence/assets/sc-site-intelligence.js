@@ -2640,7 +2640,15 @@
       'international-law-events': '/public-international-law-events',
       'international-law-monitor': '/public-international-law-monitor',
       'international-law-methodology': '/public-international-law-methodology',
-      'international-law-export': '/public-international-law-export'
+      'international-law-export': '/public-international-law-export',
+      'human-security': '/public-human-security',
+      'human-security-sources': '/public-human-security-sources',
+      'human-security-events': '/public-human-security-events',
+      'human-security-monitor': '/public-human-security-monitor',
+      'human-security-displacement': '/public-human-security-displacement',
+      'human-security-modeled-risk': '/public-human-security-modeled-risk',
+      'human-security-methodology': '/public-human-security-methodology',
+      'human-security-export': '/public-human-security-export'
     };
     let endpoint = map[panel] || '/public-connector-status';
     const boundaryId = root && root.dataset ? (root.dataset.boundaryId || '') : '';
@@ -2653,6 +2661,15 @@
     var eventType = el.getAttribute('data-event-type') || '';
     var jurisdiction = el.getAttribute('data-jurisdiction') || '';
     if (monitorId && panel === 'international-law-monitor') endpoint += '?id=' + encodeURIComponent(monitorId);
+    if (monitorId && panel === 'human-security-monitor') endpoint += '?id=' + encodeURIComponent(monitorId);
+    if (panel === 'human-security-events') {
+      var humanParams = [];
+      var recordType = root.getAttribute('data-record-type') || '';
+      var humanCountry = root.getAttribute('data-country') || '';
+      if (recordType) humanParams.push('record_type=' + encodeURIComponent(recordType));
+      if (humanCountry) humanParams.push('country=' + encodeURIComponent(humanCountry));
+      if (humanParams.length) endpoint += '?' + humanParams.join('&');
+    }
     if (panel === 'international-law-events') {
       var query = [];
       if (eventType) query.push('event_type=' + encodeURIComponent(eventType));

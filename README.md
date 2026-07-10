@@ -4,11 +4,11 @@
 
 Adds source-aware public monitoring for sanctions, treaties, UN decisions, courts, human rights, EU law, and trade governance. The monitor preserves procedural status and authoritative-source links and does not provide legal advice or compliance determinations.
 
-Current version: v1.10.0 — Connector Reliability, Freshness and Schema Validation
+Current version: v1.11.0 — Conflict, Displacement and Human Security
 
 # Sustainable Catalyst Site Intelligence
 
-Version: 1.10.0
+Version: 1.11.0
 
 ## v1.4.0 — Connector Reliability Patch and Public Status Polish
 
@@ -224,12 +224,12 @@ New endpoints include `/public/source-aware-briefs`, `/public/dashboard-exports`
 Initial public-source registry and connector contracts for NASA EONET, NASA POWER, the UN SDG database, World Bank development and poverty data, UNESCO education data, FAOSTAT, UN-Water SDG 6, and OECD SDMX. Includes a planetary-boundaries adapter registry, normalized observation schema, freshness classes, public health endpoints, and WordPress shortcodes.
 
 
-## v1.10.0 Connector Reliability
+## v1.6.1 Connector Reliability
 
 Adds retry and exponential backoff, circuit breakers, rate-limit awareness, stale-while-revalidate cache states, last-known-good fallbacks, explicit freshness thresholds, connector response validation, and public reliability/schema/cache endpoints.
 
 
-## v1.10.0 Planetary Boundaries Observatory
+## v1.7.0 Planetary Boundaries Observatory
 
 Public endpoints:
 
@@ -252,11 +252,17 @@ WordPress shortcodes:
 - `[sc_planetary_boundary_export]`
 
 
-## v1.10.0 — Live Disaster, Displacement, and Humanitarian Intelligence
+## v1.8.0 — Live Disaster, Displacement, and Humanitarian Intelligence
 
 Adds source-aware GDACS, ReliefWeb, USGS earthquake, NASA EONET, and UNHCR integration contracts; a normalized humanitarian-event schema; crisis-map, report-stream, displacement-context, methodology, and export endpoints; and matching WordPress shortcodes. Live network retrieval remains governed by connector reliability, caching, source freshness, and last-known-good safeguards.
 
 
-## v1.10.0 — Human Development and Social Conditions
+## v1.9.0 — Human Development and Social Conditions
 
 Public source-aware observatory coverage now includes poverty, inequality, health, education, decent work, food security, and water and sanitation. The release adds domain detail, country profile, inequality-dimension, methodology, and export contracts while preserving source definitions, reference periods, revisions, and modeled-estimate labels.
+
+## v1.11.0 — Conflict, Displacement and Human Security
+
+The human-security layer connects conflict-event sources, civilian-protection reporting, forced-displacement statistics, mobility assessments, infrastructure disruption, humanitarian-access records, and explicitly labeled modeled risk. It preserves source methodology, reference periods, geographic precision, confidence, revisions, and responsible-data limits.
+
+Public endpoints begin at `/public/human-security`. WordPress shortcodes include `[sc_conflict_human_security_monitor]`, `[sc_conflict_event_stream]`, `[sc_human_security_monitor]`, `[sc_forced_displacement_flows]`, `[sc_modeled_human_security_risk]`, `[sc_human_security_sources]`, `[sc_human_security_methodology]`, and `[sc_human_security_export]`.

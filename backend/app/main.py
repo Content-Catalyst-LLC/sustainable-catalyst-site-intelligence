@@ -107,6 +107,16 @@ from .humanitarian_intelligence import (
     methodology as build_humanitarian_methodology,
     export_manifest as build_humanitarian_export,
 )
+from .conflict_human_security import (
+    overview as build_human_security_overview,
+    source_registry as build_human_security_source_registry,
+    monitor_detail as build_human_security_monitor_detail,
+    event_stream as build_human_security_events,
+    displacement_flows as build_human_security_displacement,
+    modeled_risk as build_human_security_modeled_risk,
+    methodology as build_human_security_methodology,
+    export_manifest as build_human_security_export,
+)
 from .international_law_governance import (
     source_registry as build_international_law_source_registry,
     overview as build_international_law_overview,
@@ -575,6 +585,42 @@ def public_humanitarian_methodology():
 def public_humanitarian_export():
     return build_humanitarian_export()
 
+
+
+@app.get("/public/human-security")
+def public_human_security():
+    return build_human_security_overview()
+
+@app.get("/public/human-security/sources")
+def public_human_security_sources():
+    return build_human_security_source_registry()
+
+@app.get("/public/human-security/events")
+def public_human_security_events(record_type: Optional[str] = Query(None), country: Optional[str] = Query(None)):
+    return build_human_security_events(record_type=record_type, country=country)
+
+@app.get("/public/human-security/displacement")
+def public_human_security_displacement():
+    return build_human_security_displacement()
+
+@app.get("/public/human-security/modeled-risk")
+def public_human_security_modeled_risk():
+    return build_human_security_modeled_risk()
+
+@app.get("/public/human-security/methodology")
+def public_human_security_methodology():
+    return build_human_security_methodology()
+
+@app.get("/public/human-security/export")
+def public_human_security_export():
+    return build_human_security_export()
+
+@app.get("/public/human-security/monitors/{monitor_id}")
+def public_human_security_monitor(monitor_id: str):
+    try:
+        return build_human_security_monitor_detail(monitor_id)
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Human-security monitor not found.")
 
 @app.get("/public/international-law")
 def public_international_law():
