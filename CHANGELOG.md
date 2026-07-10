@@ -1,13 +1,13 @@
 # Changelog
 
-## 1.12.5 — Live Data Rendering and Public Dashboard Repair
+## 1.12.6 — Public Interface Redesign and Renderer Simplification
 
-- Replaced generic readiness-card rendering for the three core Dashboard Studio modules with schema-specific evidence rendering.
-- Added explicit backend, cached, stale, and WordPress-local-fallback data-state labeling.
-- Added source summaries, evidence-domain records, country names, comparison rows, and transparent missing-value states.
-- Added `/public/dashboard-studio/rendering-diagnostics`.
-- Prohibited fabricated or silently imputed precise values when a connector does not return a validated record.
-- Added end-to-end regression coverage for dashboard, country, comparison, and diagnostics schemas.
+- Replaces generic readiness-card output with dedicated public templates for country profiles, dashboards, comparisons, and directories.
+- Adds a compact country selector and responsive evidence-domain cards.
+- Converts the dashboard directory to curated navigation rather than connector diagnostics.
+- Removes technical navigation duplication inside embedded public modules.
+- Adds responsive comparison tables and source chips.
+- Keeps unavailable values explicit and never fabricates or silently imputes data.
 
 # v1.12.4 — Dashboard Studio Route and Fallback Hotfix
 
@@ -16,7 +16,6 @@
 - Added deterministic WordPress fallbacks when the Render proxy is unavailable.
 - Added safe default country codes and consistent dashboard data routing.
 
-# Changelog
 
 ## 1.12.3 — Feed Reliability and Render Cold-Start Hotfix
 

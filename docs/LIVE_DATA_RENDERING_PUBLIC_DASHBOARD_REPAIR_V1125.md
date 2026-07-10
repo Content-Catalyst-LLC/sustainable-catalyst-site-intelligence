@@ -1,4 +1,4 @@
-# Site Intelligence v1.12.5 — Live Data Rendering and Public Dashboard Repair
+# Site Intelligence v1.12.6 — Live Data Rendering and Public Dashboard Repair
 
 This release repairs the public rendering path for Public Intelligence Dashboard, Country Intelligence, and Cross-Domain Comparison.
 

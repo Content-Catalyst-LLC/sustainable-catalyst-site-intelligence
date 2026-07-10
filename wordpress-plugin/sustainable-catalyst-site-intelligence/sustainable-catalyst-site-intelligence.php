@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.12.5
+ * Version: 1.12.6
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.12.5';
+    const VERSION = '1.12.6';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -846,7 +846,7 @@ final class SC_Site_Intelligence_Plugin {
             'headers' => [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
-                'User-Agent' => 'Sustainable-Catalyst-Site-Intelligence/1.12.5',
+                'User-Agent' => 'Sustainable-Catalyst-Site-Intelligence/1.12.6',
             ],
         ];
         if (!empty($options['api_token'])) {

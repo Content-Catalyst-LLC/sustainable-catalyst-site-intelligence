@@ -2720,6 +2720,130 @@
     return bits.join('');
   }
 
+
+  function publicStateLabel(data) {
+    const state = String(data.origin_state || data.data_state || '').toLowerCase();
+    if (state.indexOf('fallback') !== -1) return 'Local fallback';
+    if (state.indexOf('stale') !== -1) return 'Last-known-good data';
+    if (state.indexOf('cache') !== -1) return 'Cached public data';
+    if (state.indexOf('backend') !== -1 || state.indexOf('live') !== -1) return 'Connected public sources';
+    return 'Source-aware public view';
+  }
+
+  function sourceChips(sources) {
+    if (!sources || !sources.length) return '';
+    return '<div class="scsi-source-chips">' + sources.slice(0, 5).map(function (source) {
+      return '<span>' + escapeHtml(source) + '</span>';
+    }).join('') + '</div>';
+  }
+
+  function renderCountryPublic(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    const country = data.country_name || data.country_code || 'Selected country';
+    muted.textContent = publicStateLabel(data) + (data.generated_at ? ' · Updated ' + data.generated_at : '');
+    out.innerHTML = '';
+
+    const hero = document.createElement('div');
+    hero.className = 'scsi-country-public-hero';
+    hero.innerHTML = '<div><span class="scsi-public-label">Country profile</span><h3>' + escapeHtml(country) + '</h3>' +
+      '<p>' + escapeHtml(data.summary || 'Cross-domain public evidence and source context.') + '</p></div>' +
+      '<div class="scsi-country-code">' + escapeHtml(data.country_code || '') + '</div>';
+    out.appendChild(hero);
+
+    const controls = document.createElement('div');
+    controls.className = 'scsi-country-controls';
+    controls.innerHTML = '<label>Country<select data-scsi-country-select><option value="KEN">Kenya</option><option value="GHA">Ghana</option><option value="USA">United States</option></select></label>' +
+      '<button type="button" class="scsi-public-action" data-scsi-load-country>Load profile</button>';
+    const select = controls.querySelector('select');
+    if (select && data.country_code) select.value = data.country_code;
+    controls.querySelector('[data-scsi-load-country]').addEventListener('click', function () {
+      const code = select.value;
+      root.setAttribute('data-country', code);
+      root.classList.add('scsi-is-loading');
+      fetchJson(cfg.restBase + '/public-country-intelligence?country=' + encodeURIComponent(code))
+        .then(function (payload) { root.classList.remove('scsi-is-loading'); renderPublicConnectorPanel(root, payload); })
+        .catch(function (err) { root.classList.remove('scsi-is-loading'); showError(root, err && err.message ? err.message : 'Unable to load country profile.'); });
+    });
+    out.appendChild(controls);
+
+    const grid = document.createElement('div');
+    grid.className = 'scsi-public-domain-grid';
+    (data.evidence_items || data.domains || []).forEach(function (item) {
+      const card = document.createElement('article');
+      card.className = 'scsi-public-domain-card';
+      card.innerHTML = '<span class="scsi-public-label">' + escapeHtml(item.label || item.domain || 'Evidence domain') + '</span>' +
+        '<h4>' + escapeHtml(item.description || 'Public evidence and source context') + '</h4>' +
+        '<p class="scsi-domain-state">' + (item.value_status ? escapeHtml(item.value_status) : 'Validated values appear when available.') + '</p>' +
+        sourceChips(item.sources || []);
+      grid.appendChild(card);
+    });
+    out.appendChild(grid);
+
+    const note = document.createElement('div');
+    note.className = 'scsi-public-callout';
+    note.innerHTML = '<strong>Interpretation</strong><p>Country profiles are evidence summaries, not rankings. Missing values remain visible and are not silently imputed.</p>';
+    out.appendChild(note);
+  }
+
+  function renderDashboardPublic(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    muted.textContent = publicStateLabel(data) + (data.generated_at ? ' · Updated ' + data.generated_at : '');
+    out.innerHTML = '';
+    const intro = document.createElement('div');
+    intro.className = 'scsi-public-dashboard-intro';
+    intro.innerHTML = '<span class="scsi-public-label">Cross-domain dashboard</span><h3>' + escapeHtml(data.title || 'Public Intelligence Dashboard') + '</h3><p>' + escapeHtml(data.summary || '') + '</p>';
+    out.appendChild(intro);
+    const grid = document.createElement('div'); grid.className = 'scsi-public-domain-grid';
+    (data.evidence_items || []).forEach(function(item){
+      const card=document.createElement('article'); card.className='scsi-public-domain-card';
+      card.innerHTML='<span class="scsi-public-label">'+escapeHtml(item.label || item.domain)+'</span><h4>'+escapeHtml(item.description || '')+'</h4><p class="scsi-domain-state">'+escapeHtml(item.value_status || 'Validated values appear when available.')+'</p>'+sourceChips(item.sources || []);
+      grid.appendChild(card);
+    });
+    out.appendChild(grid);
+    const summary=data.source_summary || {};
+    const footer=document.createElement('div'); footer.className='scsi-public-summary-strip';
+    footer.innerHTML='<div><strong>'+escapeHtml(summary.domains || (data.evidence_items||[]).length)+'</strong><span>domains</span></div><div><strong>'+escapeHtml(summary.registered_sources || 0)+'</strong><span>registered sources</span></div><div><strong>'+escapeHtml(summary.freshness || 'source dependent')+'</strong><span>freshness</span></div>';
+    out.appendChild(footer);
+  }
+
+  function renderComparisonPublic(root, data) {
+    const out=root.querySelector('.scsi-output'); const muted=root.querySelector('.scsi-muted');
+    muted.textContent=publicStateLabel(data)+(data.generated_at?' · Updated '+data.generated_at:''); out.innerHTML='';
+    const countries=data.countries || [];
+    const intro=document.createElement('div'); intro.className='scsi-public-dashboard-intro';
+    intro.innerHTML='<span class="scsi-public-label">Country comparison</span><h3>'+escapeHtml((countries[0]||'Country A')+' and '+(countries[1]||'Country B'))+'</h3><p>'+escapeHtml(data.normalization_rule || data.summary || '')+'</p>';
+    out.appendChild(intro);
+    const table=document.createElement('div'); table.className='scsi-comparison-table';
+    table.innerHTML='<div class="scsi-comparison-head"><span>Dimension</span><span>'+escapeHtml(countries[0]||'Country A')+'</span><span>'+escapeHtml(countries[1]||'Country B')+'</span></div>';
+    (data.comparison_rows || []).forEach(function(row){
+      const left=row.left||{}, right=row.right||{}; const el=document.createElement('div'); el.className='scsi-comparison-line';
+      el.innerHTML='<strong>'+escapeHtml(String(row.dimension||'').replace(/-/g,' '))+'</strong><span>'+escapeHtml(left.value == null ? 'No validated value' : left.value)+'</span><span>'+escapeHtml(right.value == null ? 'No validated value' : right.value)+'</span>';
+      table.appendChild(el);
+    }); out.appendChild(table);
+  }
+
+  function renderCuratedDirectory(root, data) {
+    const out=root.querySelector('.scsi-output'); const muted=root.querySelector('.scsi-muted');
+    muted.textContent='Curated public navigation'; out.innerHTML='';
+    const groups=[
+      ['Flagship dashboards', [
+        ['Climate and Human Vulnerability','/platform/site-intelligence/dashboard-studio/climate-human-vulnerability/'],
+        ['Conflict and Human Development','/platform/site-intelligence/dashboard-studio/conflict-human-development/'],
+        ['International Law and Humanitarian Conditions','/platform/site-intelligence/dashboard-studio/international-law-humanitarian-conditions/']]],
+      ['Country tools', [['Country Intelligence','/platform/site-intelligence/country-intelligence/'],['Cross-Domain Comparison','/platform/site-intelligence/cross-domain-comparison/']]],
+      ['Observatories', [['Climate + Energy','/platform/site-intelligence/climate-energy/'],['Planetary Boundaries','/platform/site-intelligence/planetary-boundaries/'],['Humanitarian Intelligence','/platform/site-intelligence/humanitarian-intelligence/'],['Human Development','/platform/site-intelligence/human-development/'],['International Law + Governance','/platform/site-intelligence/international-law-global-governance/'],['Conflict + Displacement','/platform/site-intelligence/conflict-displacement-human-security/']]],
+      ['Methods', [['Source Methodology','/platform/site-intelligence/source-methodology/'],['Launch Readiness','/platform/site-intelligence/launch-readiness/']]]
+    ];
+    groups.forEach(function(group){
+      const section=document.createElement('section'); section.className='scsi-directory-group'; section.innerHTML='<h3>'+escapeHtml(group[0])+'</h3>';
+      const grid=document.createElement('div'); grid.className='scsi-directory-grid';
+      group[1].forEach(function(item){ const a=document.createElement('a'); a.href=item[1]; a.className='scsi-directory-link'; a.innerHTML='<strong>'+escapeHtml(item[0])+'</strong><span>Open view →</span>'; grid.appendChild(a); });
+      section.appendChild(grid); out.appendChild(section);
+    });
+  }
+
   function renderPublicConnectorPanel(root, data) {
     const loadingShell = root.querySelector('.scsi-loading-shell');
     if (loadingShell) loadingShell.hidden = true;
@@ -2729,6 +2853,12 @@
     const origin = data.origin_state || data.data_state || data.public_status || data.version_scope || 'review';
     muted.textContent = (data.summary || data.title || 'Source-aware public intelligence view.') + ' · Data state: ' + origin;
     out.innerHTML = '';
+
+    const publicPanel = root.dataset.connectorPanel || '';
+    if (publicPanel === 'country-intelligence') { renderCountryPublic(root, data); return; }
+    if (publicPanel === 'cross-domain-dashboard') { renderDashboardPublic(root, data); return; }
+    if (publicPanel === 'cross-domain-comparison') { renderComparisonPublic(root, data); return; }
+    if (publicPanel === 'cross-domain-dashboard-directory' || publicPanel === 'cross-domain-dashboard-studio') { renderCuratedDirectory(root, data); return; }
 
     if (data.evidence_items || data.comparison_rows) {
       if (data.country_name || data.countries) {

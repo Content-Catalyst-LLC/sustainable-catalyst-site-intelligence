@@ -1694,3 +1694,20 @@
   .scsi-public-dashboard-nav { display: none !important; }
   .scsi-launch-ready-panel { border: 0; box-shadow: none; }
 }
+
+
+/* v1.12.6 public interface redesign */
+.scsi-country-public-hero,.scsi-public-dashboard-intro{display:flex;justify-content:space-between;gap:1.5rem;align-items:flex-start;padding:1.35rem;border:1px solid #d8d1c5;background:#fff;margin-bottom:1rem}
+.scsi-country-public-hero h3,.scsi-public-dashboard-intro h3{font-size:clamp(1.55rem,3vw,2.25rem);margin:.2rem 0 .55rem;line-height:1.05}
+.scsi-country-code{font-size:1.4rem;font-weight:800;border:1px solid #111;padding:.55rem .7rem;letter-spacing:.08em}
+.scsi-country-controls{display:flex;gap:.75rem;align-items:end;flex-wrap:wrap;padding:1rem;background:#f6f1e8;border-left:3px solid #d71920;margin-bottom:1rem}
+.scsi-country-controls label{display:grid;gap:.35rem;font-weight:700}.scsi-country-controls select{min-width:220px;padding:.65rem;background:#fff;border:1px solid #111}
+.scsi-public-domain-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.8rem;margin:1rem 0}
+.scsi-public-domain-card{padding:1rem;border:1px solid #d8d1c5;background:#fff;min-width:0}.scsi-public-domain-card h4{font-size:1rem;line-height:1.35;margin:.35rem 0 .65rem}.scsi-domain-state{font-size:.87rem;color:#555}
+.scsi-source-chips{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.75rem}.scsi-source-chips span{font-size:.68rem;padding:.25rem .4rem;background:#f1ece4;border:1px solid #ddd3c4}
+.scsi-public-callout{padding:1rem;border-left:3px solid #d71920;background:#fbf7f0}.scsi-public-callout p{margin:.35rem 0 0}
+.scsi-public-summary-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:1rem}.scsi-public-summary-strip>div{padding:.8rem;border-top:2px solid #111;background:#f7f3ec}.scsi-public-summary-strip strong{display:block;font-size:1.25rem}.scsi-public-summary-strip span{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em}
+.scsi-comparison-table{border:1px solid #d8d1c5;background:#fff}.scsi-comparison-head,.scsi-comparison-line{display:grid;grid-template-columns:1.25fr 1fr 1fr;gap:.75rem;padding:.8rem;border-bottom:1px solid #e5ded2}.scsi-comparison-head{background:#111;color:#fff;font-size:.75rem;text-transform:uppercase;letter-spacing:.06em}.scsi-comparison-line strong{text-transform:capitalize}
+.scsi-directory-group{margin-bottom:1.2rem}.scsi-directory-group h3{font-size:1rem;text-transform:uppercase;letter-spacing:.08em;border-bottom:2px solid #111;padding-bottom:.45rem}.scsi-directory-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.65rem}.scsi-directory-link{display:flex;flex-direction:column;justify-content:space-between;min-height:95px;padding:.9rem;border:1px solid #d8d1c5;background:#fff;text-decoration:none;color:#111}.scsi-directory-link:hover{border-color:#d71920;transform:translateY(-1px)}.scsi-directory-link span{margin-top:.8rem;color:#b51218;font-size:.8rem;font-weight:700}
+.scsi-cross-domain-panel .scsi-public-dashboard-nav{display:none}.scsi-cross-domain-panel .scsi-muted{font-size:.8rem}.scsi-cross-domain-panel.scsi-is-loading{opacity:.65}
+@media(max-width:760px){.scsi-public-domain-grid,.scsi-directory-grid{grid-template-columns:1fr}.scsi-public-summary-strip{grid-template-columns:1fr}.scsi-comparison-head,.scsi-comparison-line{grid-template-columns:1fr}.scsi-comparison-head span:not(:first-child){display:none}.scsi-country-public-hero,.scsi-public-dashboard-intro{display:block}.scsi-country-code{display:inline-block;margin-top:.75rem}}

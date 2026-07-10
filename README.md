@@ -1,6 +1,4 @@
 
-
-**Current release:** v1.12.5 — Live Data Rendering and Public Dashboard Repair.
 ## v1.12.1 Cross-Domain Intelligence and Public Dashboard Studio
 
 The dashboard studio composes existing Site Intelligence domains into reusable public experiences rather than hard-coding every dashboard. It includes flagship climate-and-vulnerability, conflict-and-development, international-law-and-humanitarian, and country-intelligence configurations.
