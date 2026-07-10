@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.8.0
+ * Version: 1.9.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.8.0';
+    const VERSION = '1.9.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -99,6 +99,13 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_humanitarian_intelligence_sources', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_humanitarian_intelligence_methodology', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_humanitarian_intelligence_export', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_human_development_observatory', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_human_development_sources', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_human_development_domain', [$this, 'human_development_domain_shortcode']);
+        add_shortcode('sc_human_development_country_profile', [$this, 'human_development_country_profile_shortcode']);
+        add_shortcode('sc_human_development_inequalities', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_human_development_methodology', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_human_development_export', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_indicator_dashboard_directory', [$this, 'public_indicator_chart_panel_shortcode']);
         add_shortcode('sc_public_sustainability_indicator_dashboard', [$this, 'public_indicator_chart_panel_shortcode']);
         add_shortcode('sc_public_development_indicator_dashboard', [$this, 'public_indicator_chart_panel_shortcode']);
@@ -532,6 +539,13 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-humanitarian-intelligence-sources', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_humanitarian_sources'], 'permission_callback' => '__return_true']);
         register_rest_route(self::REST_NAMESPACE, '/public-humanitarian-intelligence-methodology', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_humanitarian_methodology'], 'permission_callback' => '__return_true']);
         register_rest_route(self::REST_NAMESPACE, '/public-humanitarian-intelligence-export', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_humanitarian_export'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-human-development', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_human_development'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-human-development-sources', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_human_development_sources'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-human-development-domain', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_human_development_domain'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-human-development-country-profile', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_human_development_country_profile'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-human-development-inequalities', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_human_development_inequalities'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-human-development-methodology', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_human_development_methodology'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-human-development-export', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_human_development_export'], 'permission_callback' => '__return_true']);
         register_rest_route(self::REST_NAMESPACE, '/public-indicator-chart-panel', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_indicator_chart_panel'],
@@ -837,6 +851,13 @@ final class SC_Site_Intelligence_Plugin {
     public function rest_public_humanitarian_sources() { return $this->backend_request('public/humanitarian-intelligence/sources'); }
     public function rest_public_humanitarian_methodology() { return $this->backend_request('public/humanitarian-intelligence/methodology'); }
     public function rest_public_humanitarian_export() { return $this->backend_request('public/humanitarian-intelligence/export'); }
+    public function rest_public_human_development() { return $this->backend_request('public/human-development'); }
+    public function rest_public_human_development_sources() { return $this->backend_request('public/human-development/sources'); }
+    public function rest_public_human_development_domain(WP_REST_Request $request) { $id = sanitize_title($request->get_param('id')); return $this->backend_request('public/human-development/domains/' . rawurlencode($id ?: 'poverty')); }
+    public function rest_public_human_development_country_profile(WP_REST_Request $request) { $country = sanitize_text_field($request->get_param('country')); return $this->backend_request('public/human-development/country-profile' . ($country ? '?country=' . rawurlencode($country) : '')); }
+    public function rest_public_human_development_inequalities() { return $this->backend_request('public/human-development/inequalities'); }
+    public function rest_public_human_development_methodology() { return $this->backend_request('public/human-development/methodology'); }
+    public function rest_public_human_development_export() { return $this->backend_request('public/human-development/export'); }
 
     public function rest_dashboard(WP_REST_Request $request) {
         $query = [];
@@ -2736,6 +2757,11 @@ final class SC_Site_Intelligence_Plugin {
             'sc_humanitarian_intelligence_sources' => ['humanitarian-sources', 'Humanitarian Intelligence Sources', 'Public source registry, freshness, attribution, and limitations.'],
             'sc_humanitarian_intelligence_methodology' => ['humanitarian-methodology', 'Humanitarian Intelligence Methodology', 'Normalized event schema and public safety boundaries.'],
             'sc_humanitarian_intelligence_export' => ['humanitarian-export', 'Humanitarian Intelligence Export', 'Public-safe source, category, schema, and layer records.'],
+            'sc_human_development_observatory' => ['human-development', 'Human Development and Social Conditions', 'Poverty, inequality, health, education, work, food security, water, sanitation, and source-aware context.'],
+            'sc_human_development_sources' => ['human-development-sources', 'Human Development Sources', 'Official source registry, freshness, coverage, methodology, and limitations.'],
+            'sc_human_development_inequalities' => ['human-development-inequalities', 'Inequality and Disaggregation', 'Sex, age, wealth, education, residence, disability, geography, and other available dimensions.'],
+            'sc_human_development_methodology' => ['human-development-methodology', 'Human Development Methodology', 'Reference periods, modeled estimates, revisions, comparability, and aggregation rules.'],
+            'sc_human_development_export' => ['human-development-export', 'Human Development Export', 'Public-safe source, domain, schema, and disaggregation records.'],
         ];
         return isset($map[$tag]) ? $map[$tag] : ['connector-status', 'Public Connector Status', 'Loading public connector status…'];
     }
@@ -2776,6 +2802,29 @@ final class SC_Site_Intelligence_Plugin {
             <p class="scsi-eyebrow">Planetary Boundaries Observatory</p>
             <h2><?php echo esc_html($title); ?></h2>
             <p class="scsi-muted">Loading source-aware boundary context…</p>
+            <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php return ob_get_clean();
+    }
+
+    public function human_development_domain_shortcode($atts = []) {
+        $atts = shortcode_atts(['id' => 'poverty'], $atts, 'sc_human_development_domain');
+        return $this->human_development_panel_markup('human-development-domain', sanitize_title($atts['id']), '', 'Human Development Domain');
+    }
+
+    public function human_development_country_profile_shortcode($atts = []) {
+        $atts = shortcode_atts(['country' => ''], $atts, 'sc_human_development_country_profile');
+        return $this->human_development_panel_markup('human-development-country-profile', '', sanitize_text_field($atts['country']), 'Human Development Country Profile');
+    }
+
+    private function human_development_panel_markup($panel, $domain_id, $country, $title) {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') { return ''; }
+        ob_start(); ?>
+        <section class="scsi-card scsi-public-connector-panel" data-scsi-public-connector-panel data-connector-panel="<?php echo esc_attr($panel); ?>" data-domain-id="<?php echo esc_attr($domain_id); ?>" data-country="<?php echo esc_attr($country); ?>">
+            <p class="scsi-eyebrow">Human Development and Social Conditions</p>
+            <h2><?php echo esc_html($title); ?></h2>
+            <p class="scsi-muted">Loading source-aware social-condition context…</p>
             <div class="scsi-output" aria-live="polite"></div>
         </section>
         <?php return ob_get_clean();
@@ -3176,7 +3225,7 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function release_status_shortcode($atts = []) {
-        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.8.0 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
+        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.9.0 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
     }
 
 }

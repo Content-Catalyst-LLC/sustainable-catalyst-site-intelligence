@@ -107,6 +107,15 @@ from .humanitarian_intelligence import (
     methodology as build_humanitarian_methodology,
     export_manifest as build_humanitarian_export,
 )
+from .human_development_intelligence import (
+    source_registry as build_human_development_source_registry,
+    overview as build_human_development_overview,
+    domain_detail as build_human_development_domain_detail,
+    country_profile as build_human_development_country_profile,
+    inequality_dimensions as build_human_development_inequality_dimensions,
+    methodology as build_human_development_methodology,
+    export_manifest as build_human_development_export,
+)
 from .public_source_pages import (
     public_source_page_directory as build_public_source_page_directory,
     public_source_navigation as build_public_source_navigation,
@@ -556,6 +565,38 @@ def public_humanitarian_methodology():
 @app.get("/public/humanitarian-intelligence/export")
 def public_humanitarian_export():
     return build_humanitarian_export()
+
+@app.get("/public/human-development")
+def public_human_development():
+    return build_human_development_overview()
+
+@app.get("/public/human-development/sources")
+def public_human_development_sources():
+    return build_human_development_source_registry()
+
+@app.get("/public/human-development/country-profile")
+def public_human_development_country_profile(country: Optional[str] = Query(None)):
+    return build_human_development_country_profile(country)
+
+@app.get("/public/human-development/inequalities")
+def public_human_development_inequalities():
+    return build_human_development_inequality_dimensions()
+
+@app.get("/public/human-development/methodology")
+def public_human_development_methodology():
+    return build_human_development_methodology()
+
+@app.get("/public/human-development/export")
+def public_human_development_export():
+    return build_human_development_export()
+
+@app.get("/public/human-development/domains/{domain_id}")
+def public_human_development_domain(domain_id: str):
+    try:
+        return build_human_development_domain_detail(domain_id)
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Human-development domain not found.")
+
 
 @app.get("/public/planetary-boundaries")
 def planetary_boundaries_overview_endpoint(settings: Settings = Depends(get_settings)):

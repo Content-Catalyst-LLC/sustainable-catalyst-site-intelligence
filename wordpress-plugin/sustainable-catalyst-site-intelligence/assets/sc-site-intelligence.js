@@ -2626,11 +2626,22 @@
       'displacement-context': '/public-displacement-context',
       'humanitarian-sources': '/public-humanitarian-intelligence-sources',
       'humanitarian-methodology': '/public-humanitarian-intelligence-methodology',
-      'humanitarian-export': '/public-humanitarian-intelligence-export'
+      'humanitarian-export': '/public-humanitarian-intelligence-export',
+      'human-development': '/public-human-development',
+      'human-development-sources': '/public-human-development-sources',
+      'human-development-domain': '/public-human-development-domain',
+      'human-development-country-profile': '/public-human-development-country-profile',
+      'human-development-inequalities': '/public-human-development-inequalities',
+      'human-development-methodology': '/public-human-development-methodology',
+      'human-development-export': '/public-human-development-export'
     };
     let endpoint = map[panel] || '/public-connector-status';
     const boundaryId = root && root.dataset ? (root.dataset.boundaryId || '') : '';
     if (boundaryId && (panel === 'planetary-boundary-detail' || panel === 'planetary-boundary-trend')) endpoint += '?id=' + encodeURIComponent(boundaryId);
+    const domainId = root && root.dataset ? (root.dataset.domainId || '') : '';
+    const country = root && root.dataset ? (root.dataset.country || '') : '';
+    if (domainId && panel === 'human-development-domain') endpoint += '?id=' + encodeURIComponent(domainId);
+    if (country && panel === 'human-development-country-profile') endpoint += '?country=' + encodeURIComponent(country);
     return endpoint;
   }
 
