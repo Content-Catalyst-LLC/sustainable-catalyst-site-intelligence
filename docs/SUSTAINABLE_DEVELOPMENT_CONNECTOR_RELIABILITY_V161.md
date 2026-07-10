@@ -1,4 +1,4 @@
-# Site Intelligence v1.6.1 Connector Reliability
+# Site Intelligence v1.7.0 Connector Reliability
 
 This release adds bounded retries, exponential backoff, circuit breakers, rate-limit metadata, response-schema checks, stale-while-revalidate cache behavior, last-known-good fallbacks, explicit freshness thresholds, and public-safe diagnostics for sustainable-development sources.
 

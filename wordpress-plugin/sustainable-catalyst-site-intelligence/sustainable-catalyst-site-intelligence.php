@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.6.1
+ * Version: 1.7.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.6.1';
+    const VERSION = '1.7.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -85,6 +85,13 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_public_sustainable_development_freshness', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_sustainable_development_schema_validation', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_sustainable_development_cache_status', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_planetary_boundaries_observatory', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_planetary_boundary_overview', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_planetary_boundary', [$this, 'planetary_boundary_shortcode']);
+        add_shortcode('sc_planetary_boundary_trend', [$this, 'planetary_boundary_trend_shortcode']);
+        add_shortcode('sc_planetary_boundary_sources', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_planetary_boundary_methodology', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_planetary_boundary_export', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_indicator_dashboard_directory', [$this, 'public_indicator_chart_panel_shortcode']);
         add_shortcode('sc_public_sustainability_indicator_dashboard', [$this, 'public_indicator_chart_panel_shortcode']);
         add_shortcode('sc_public_development_indicator_dashboard', [$this, 'public_indicator_chart_panel_shortcode']);
@@ -493,6 +500,24 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-sustainable-development-cache-status', [
             'methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_sustainable_development_cache_status'], 'permission_callback' => '__return_true',
         ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-planetary-boundaries-observatory', [
+            'methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_planetary_boundaries_observatory'], 'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-planetary-boundary', [
+            'methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_planetary_boundary'], 'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-planetary-boundary-trend', [
+            'methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_planetary_boundary_trend'], 'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-planetary-boundary-sources', [
+            'methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_planetary_boundary_sources'], 'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-planetary-boundary-methodology', [
+            'methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_planetary_boundary_methodology'], 'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-planetary-boundary-export', [
+            'methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_planetary_boundary_export'], 'permission_callback' => '__return_true',
+        ]);
         register_rest_route(self::REST_NAMESPACE, '/public-indicator-chart-panel', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_indicator_chart_panel'],
@@ -775,6 +800,22 @@ final class SC_Site_Intelligence_Plugin {
     public function rest_public_sustainable_development_freshness() { return $this->backend_request('public/sustainable-development/freshness'); }
     public function rest_public_sustainable_development_schema_validation() { return $this->backend_request('public/sustainable-development/schema-validation'); }
     public function rest_public_sustainable_development_cache_status() { return $this->backend_request('public/sustainable-development/cache'); }
+
+    public function rest_public_planetary_boundaries_observatory() { return $this->backend_request('public/planetary-boundaries'); }
+    public function rest_public_planetary_boundary(WP_REST_Request $request) {
+        $id = sanitize_title((string) $request->get_param('id'));
+        return $this->backend_request('public/planetary-boundaries/' . rawurlencode($id));
+    }
+    public function rest_public_planetary_boundary_trend(WP_REST_Request $request) {
+        $id = sanitize_title((string) $request->get_param('id'));
+        return $this->backend_request('public/planetary-boundaries/' . rawurlencode($id) . '/trend');
+    }
+    public function rest_public_planetary_boundary_sources(WP_REST_Request $request) {
+        $id = sanitize_title((string) $request->get_param('id'));
+        return $this->backend_request('public/planetary-boundaries/sources' . ($id ? '?boundary_id=' . rawurlencode($id) : ''));
+    }
+    public function rest_public_planetary_boundary_methodology() { return $this->backend_request('public/planetary-boundaries/methodology'); }
+    public function rest_public_planetary_boundary_export() { return $this->backend_request('public/planetary-boundaries/export'); }
 
     public function rest_dashboard(WP_REST_Request $request) {
         $query = [];
@@ -2662,6 +2703,11 @@ final class SC_Site_Intelligence_Plugin {
             'sc_public_sustainable_development_freshness' => ['sustainable-development-freshness', 'Data Freshness Policy', 'Fresh, aging, stale, and last-known-good thresholds by public source.'],
             'sc_public_sustainable_development_schema_validation' => ['sustainable-development-schema-validation', 'Schema Validation', 'Registry and normalized observation schema readiness.'],
             'sc_public_sustainable_development_cache_status' => ['sustainable-development-cache', 'Connector Cache Status', 'Fresh, stale-servable, expired, and empty cache states.'],
+            'sc_planetary_boundaries_observatory' => ['planetary-boundaries-observatory', 'Planetary Boundaries Observatory', 'Nine-boundary overview with scientific status, coverage, sources, and safe-operating-space context.'],
+            'sc_planetary_boundary_overview' => ['planetary-boundaries-observatory', 'Planetary Boundary Overview', 'Public overview of all nine planetary boundaries.'],
+            'sc_planetary_boundary_sources' => ['planetary-boundary-sources', 'Planetary Boundary Sources', 'Source registry and scientific references supporting the observatory.'],
+            'sc_planetary_boundary_methodology' => ['planetary-boundary-methodology', 'Planetary Boundaries Methodology', 'Scientific-status labels, coverage rules, provenance, and derived-assessment boundaries.'],
+            'sc_planetary_boundary_export' => ['planetary-boundary-export', 'Planetary Boundaries Export', 'Public-safe JSON and CSV-ready observatory records with source and methodology metadata.'],
         ];
         return isset($map[$tag]) ? $map[$tag] : ['connector-status', 'Public Connector Status', 'Loading public connector status…'];
     }
@@ -2682,6 +2728,29 @@ final class SC_Site_Intelligence_Plugin {
         </section>
         <?php
         return ob_get_clean();
+    }
+
+    public function planetary_boundary_shortcode($atts = []) {
+        $atts = shortcode_atts(['id' => 'climate-change'], $atts, 'sc_planetary_boundary');
+        return $this->planetary_boundary_panel_markup('planetary-boundary-detail', sanitize_title($atts['id']), 'Planetary Boundary Detail');
+    }
+
+    public function planetary_boundary_trend_shortcode($atts = []) {
+        $atts = shortcode_atts(['id' => 'climate-change'], $atts, 'sc_planetary_boundary_trend');
+        return $this->planetary_boundary_panel_markup('planetary-boundary-trend', sanitize_title($atts['id']), 'Planetary Boundary Trend');
+    }
+
+    private function planetary_boundary_panel_markup($panel, $boundary_id, $title) {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') { return ''; }
+        ob_start(); ?>
+        <section class="scsi-card scsi-public-connector-panel" data-scsi-public-connector-panel data-connector-panel="<?php echo esc_attr($panel); ?>" data-boundary-id="<?php echo esc_attr($boundary_id); ?>">
+            <p class="scsi-eyebrow">Planetary Boundaries Observatory</p>
+            <h2><?php echo esc_html($title); ?></h2>
+            <p class="scsi-muted">Loading source-aware boundary context…</p>
+            <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php return ob_get_clean();
     }
 
     private function public_indicator_chart_panel_from_shortcode_tag($tag) {
@@ -3079,7 +3148,7 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function release_status_shortcode($atts = []) {
-        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.6.1 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
+        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.7.0 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
     }
 
 }

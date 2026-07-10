@@ -1,10 +1,10 @@
 # Sustainable Catalyst Site Intelligence
 
-Current version: v1.6.1 — Connector Reliability, Freshness and Schema Validation
+Current version: v1.7.0 — Connector Reliability, Freshness and Schema Validation
 
 # Sustainable Catalyst Site Intelligence
 
-Version: 1.6.1
+Version: 1.7.0
 
 ## v1.4.0 — Connector Reliability Patch and Public Status Polish
 
@@ -220,6 +220,29 @@ New endpoints include `/public/source-aware-briefs`, `/public/dashboard-exports`
 Initial public-source registry and connector contracts for NASA EONET, NASA POWER, the UN SDG database, World Bank development and poverty data, UNESCO education data, FAOSTAT, UN-Water SDG 6, and OECD SDMX. Includes a planetary-boundaries adapter registry, normalized observation schema, freshness classes, public health endpoints, and WordPress shortcodes.
 
 
-## v1.6.1 Connector Reliability
+## v1.7.0 Connector Reliability
 
 Adds retry and exponential backoff, circuit breakers, rate-limit awareness, stale-while-revalidate cache states, last-known-good fallbacks, explicit freshness thresholds, connector response validation, and public reliability/schema/cache endpoints.
+
+
+## v1.7.0 Planetary Boundaries Observatory
+
+Public endpoints:
+
+- `/public/planetary-boundaries`
+- `/public/planetary-boundaries/overview`
+- `/public/planetary-boundaries/{boundary_id}`
+- `/public/planetary-boundaries/{boundary_id}/trend`
+- `/public/planetary-boundaries/{boundary_id}/sources`
+- `/public/planetary-boundaries/methodology`
+- `/public/planetary-boundaries/export`
+
+WordPress shortcodes:
+
+- `[sc_planetary_boundaries_observatory]`
+- `[sc_planetary_boundary_overview]`
+- `[sc_planetary_boundary id="climate-change"]`
+- `[sc_planetary_boundary_trend id="climate-change"]`
+- `[sc_planetary_boundary_sources]`
+- `[sc_planetary_boundary_methodology]`
+- `[sc_planetary_boundary_export]`

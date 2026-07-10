@@ -89,6 +89,14 @@ from .sustainable_development_connectors import (
     schema_validation_report as build_sustainable_development_schema_validation,
     connector_cache_status as build_sustainable_development_cache_status,
 )
+from .planetary_boundaries_observatory import (
+    overview as build_planetary_boundaries_overview,
+    boundary_detail as build_planetary_boundary_detail,
+    boundary_trend as build_planetary_boundary_trend,
+    boundary_sources as build_planetary_boundary_sources,
+    methodology as build_planetary_boundaries_methodology,
+    export_manifest as build_planetary_boundaries_export,
+)
 from .public_source_pages import (
     public_source_page_directory as build_public_source_page_directory,
     public_source_navigation as build_public_source_navigation,
@@ -509,6 +517,67 @@ def sustainable_development_cache_status_endpoint(settings: Settings = Depends(g
     if not settings.public_dashboards_enabled or not settings.sustainable_development_connectors_enabled:
         raise HTTPException(status_code=403, detail="Sustainable development connectors are disabled.")
     return build_sustainable_development_cache_status()
+
+
+@app.get("/public/planetary-boundaries")
+def planetary_boundaries_overview_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled or not settings.sustainable_development_connectors_enabled:
+        raise HTTPException(status_code=403, detail="Planetary Boundaries Observatory is disabled.")
+    return build_planetary_boundaries_overview()
+
+@app.get("/public/planetary-boundaries/overview")
+def planetary_boundaries_overview_alias_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled or not settings.sustainable_development_connectors_enabled:
+        raise HTTPException(status_code=403, detail="Planetary Boundaries Observatory is disabled.")
+    return build_planetary_boundaries_overview()
+
+@app.get("/public/planetary-boundaries/methodology")
+def planetary_boundaries_methodology_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled or not settings.sustainable_development_connectors_enabled:
+        raise HTTPException(status_code=403, detail="Planetary Boundaries Observatory is disabled.")
+    return build_planetary_boundaries_methodology()
+
+@app.get("/public/planetary-boundaries/sources")
+def planetary_boundaries_sources_endpoint(boundary_id: Optional[str] = Query(None), settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled or not settings.sustainable_development_connectors_enabled:
+        raise HTTPException(status_code=403, detail="Planetary Boundaries Observatory is disabled.")
+    try:
+        return build_planetary_boundary_sources(boundary_id)
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Planetary boundary not found.")
+
+@app.get("/public/planetary-boundaries/export")
+def planetary_boundaries_export_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled or not settings.sustainable_development_connectors_enabled:
+        raise HTTPException(status_code=403, detail="Planetary Boundaries Observatory is disabled.")
+    return build_planetary_boundaries_export()
+
+@app.get("/public/planetary-boundaries/{boundary_id}/trend")
+def planetary_boundary_trend_endpoint(boundary_id: str, settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled or not settings.sustainable_development_connectors_enabled:
+        raise HTTPException(status_code=403, detail="Planetary Boundaries Observatory is disabled.")
+    try:
+        return build_planetary_boundary_trend(boundary_id)
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Planetary boundary not found.")
+
+@app.get("/public/planetary-boundaries/{boundary_id}/sources")
+def planetary_boundary_sources_endpoint(boundary_id: str, settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled or not settings.sustainable_development_connectors_enabled:
+        raise HTTPException(status_code=403, detail="Planetary Boundaries Observatory is disabled.")
+    try:
+        return build_planetary_boundary_sources(boundary_id)
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Planetary boundary not found.")
+
+@app.get("/public/planetary-boundaries/{boundary_id}")
+def planetary_boundary_detail_endpoint(boundary_id: str, settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled or not settings.sustainable_development_connectors_enabled:
+        raise HTTPException(status_code=403, detail="Planetary Boundaries Observatory is disabled.")
+    try:
+        return build_planetary_boundary_detail(boundary_id)
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Planetary boundary not found.")
 
 
 @app.get("/public/indicator-dashboards")

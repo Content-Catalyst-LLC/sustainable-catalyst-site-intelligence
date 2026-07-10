@@ -2593,7 +2593,7 @@
     }
   }
 
-  function connectorPanelEndpoint(panel) {
+  function connectorPanelEndpoint(panel, root) {
     const map = {
       'connector-status': '/public-connector-status',
       'cache-status': '/public-cache-status',
@@ -2613,9 +2613,18 @@
       'sustainable-development-reliability': '/public-sustainable-development-connector-reliability',
       'sustainable-development-freshness': '/public-sustainable-development-freshness',
       'sustainable-development-schema-validation': '/public-sustainable-development-schema-validation',
-      'sustainable-development-cache': '/public-sustainable-development-cache-status'
+      'sustainable-development-cache': '/public-sustainable-development-cache-status',
+      'planetary-boundaries-observatory': '/public-planetary-boundaries-observatory',
+      'planetary-boundary-sources': '/public-planetary-boundary-sources',
+      'planetary-boundary-methodology': '/public-planetary-boundary-methodology',
+      'planetary-boundary-export': '/public-planetary-boundary-export',
+      'planetary-boundary-detail': '/public-planetary-boundary',
+      'planetary-boundary-trend': '/public-planetary-boundary-trend'
     };
-    return map[panel] || '/public-connector-status';
+    let endpoint = map[panel] || '/public-connector-status';
+    const boundaryId = root && root.dataset ? (root.dataset.boundaryId || '') : '';
+    if (boundaryId && (panel === 'planetary-boundary-detail' || panel === 'planetary-boundary-trend')) endpoint += '?id=' + encodeURIComponent(boundaryId);
+    return endpoint;
   }
 
   function renderConnectorRuntime(item) {
@@ -2774,10 +2783,30 @@
       const h = document.createElement('h3'); h.textContent = 'Connector families'; out.appendChild(h);
       families.forEach(function (item) { const row=document.createElement('div'); row.className='scsi-page-row'; row.innerHTML='<strong>'+escapeHtml(item.family||'')+'</strong><small><b>Sources:</b> '+escapeHtml((item.sources||[]).join(', '))+'</small>'; out.appendChild(row); });
     }
-    const boundaries = data.boundaries || [];
+    const boundaries = data.boundaries || (data.boundary ? [data.boundary] : []);
     if (boundaries.length) {
-      const h = document.createElement('h3'); h.textContent = 'Planetary boundaries'; out.appendChild(h);
-      boundaries.forEach(function (item) { const row=document.createElement('div'); row.className='scsi-page-row'; row.innerHTML='<strong>'+escapeHtml(item.label||item.boundary_id||'')+'</strong><br>'+statusBadge(item.assessment_status||'planned')+'<small><b>Control variables:</b> '+escapeHtml((item.control_variables||[]).join(', '))+'</small><small><b>Mapped sources:</b> '+escapeHtml((item.source_mappings||[]).join(', '))+'</small>'; out.appendChild(row); });
+      const h = document.createElement('h3'); h.textContent = data.boundary ? 'Boundary detail' : 'Planetary boundaries'; out.appendChild(h);
+      boundaries.forEach(function (item) {
+        const controls=(item.control_variables||[]).map(function(v){ return typeof v === 'string' ? v : (v.label || v.id || ''); });
+        const sources=(item.sources||[]).map(function(v){ return v.title || v.source_id || ''; });
+        const row=document.createElement('div'); row.className='scsi-page-row scsi-planetary-boundary-row';
+        row.innerHTML='<strong>'+escapeHtml(item.label||item.boundary_id||'')+'</strong><br>'+statusBadge(item.status||item.assessment_status||'planned')+
+          '<span class="scsi-badge scsi-badge-soft">'+escapeHtml(item.status_label||item.scientific_status_label||'')+'</span>'+
+          '<small>'+escapeHtml(item.summary||'')+'</small><small><b>Coverage:</b> '+escapeHtml(item.coverage||item.assessment_status||'')+'</small>'+
+          '<small><b>Control variables:</b> '+escapeHtml(controls.join(', '))+'</small><small><b>Sources:</b> '+escapeHtml((sources.length?sources:(item.source_mappings||[])).join(', '))+'</small>'+
+          '<small><b>SDGs:</b> '+escapeHtml((item.sdg_goals||[]).join(', '))+'</small>';
+        out.appendChild(row);
+      });
+    }
+    const milestones = data.milestones || [];
+    if (milestones.length) {
+      const h=document.createElement('h3'); h.textContent='Assessment milestones'; out.appendChild(h);
+      milestones.forEach(function(item){ const row=document.createElement('div'); row.className='scsi-page-row'; row.innerHTML='<strong>'+escapeHtml(String(item.year||''))+' · '+escapeHtml(item.label||'')+'</strong><small>'+escapeHtml(item.note||'')+'</small>'; out.appendChild(row); });
+    }
+    const references = data.references || [];
+    if (references.length) {
+      const h=document.createElement('h3'); h.textContent='Scientific references'; out.appendChild(h);
+      references.forEach(function(item){ const row=document.createElement('div'); row.className='scsi-page-row'; row.innerHTML='<strong>'+escapeHtml(item.title||'')+'</strong><small>'+escapeHtml(item.organization||'')+' · '+escapeHtml(item.role||'')+'</small>'; out.appendChild(row); });
     }
     if (data.observation_schema) {
       const row=document.createElement('div'); row.className='scsi-page-row'; row.innerHTML='<strong>Normalized observation schema</strong><small>'+escapeHtml(data.observation_schema.schema||'')+'</small><small><b>Required fields:</b> '+escapeHtml((data.observation_schema.required||[]).join(', '))+'</small>'; out.appendChild(row);
@@ -3121,7 +3150,7 @@
 
     document.querySelectorAll('[data-scsi-public-connector-panel]').forEach(function (root) {
       const panel = root.dataset.connectorPanel || 'connector-status';
-      fetchJson(cfg.restBase + connectorPanelEndpoint(panel))
+      fetchJson(cfg.restBase + connectorPanelEndpoint(panel, root))
         .then(function (data) { renderPublicConnectorPanel(root, data); })
         .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public connector panel.'); });
     });

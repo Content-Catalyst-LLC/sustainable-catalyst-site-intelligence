@@ -1,11 +1,19 @@
-## 1.6.1 — Connector Reliability, Freshness and Schema Validation
+## 1.7.0 — Planetary Boundaries Observatory
+
+- Added a nine-boundary public observatory with safe-operating-space reference categories.
+- Added boundary detail, assessment milestone, source, methodology, and export endpoints.
+- Added scientific-status, coverage, derivation, and source-freshness labels.
+- Added WordPress observatory, detail, trend, source, methodology, and export shortcodes.
+- Preserved the v1.6.1 connector reliability, cache, freshness, and schema-validation layer.
+
+## 1.7.0 — Connector Reliability, Freshness and Schema Validation
 
 - Added retries with bounded exponential backoff.
 - Added circuit breakers and rate-limit-aware status metadata.
 - Added stale-while-revalidate and last-known-good connector states.
 - Added source-specific response checks and normalized observation validation.
 - Added freshness thresholds, cache diagnostics, reliability endpoints, WordPress routes, and shortcodes.
-- Updated backend and WordPress versions to 1.6.1.
+- Updated backend and WordPress versions to 1.7.0.
 
 # Changelog
 
