@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.7.0
+ * Version: 1.8.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.7.0';
+    const VERSION = '1.8.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -92,6 +92,13 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_planetary_boundary_sources', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_planetary_boundary_methodology', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_planetary_boundary_export', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_humanitarian_intelligence_observatory', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_global_crisis_map', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_humanitarian_report_stream', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_displacement_context', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_humanitarian_intelligence_sources', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_humanitarian_intelligence_methodology', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_humanitarian_intelligence_export', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_indicator_dashboard_directory', [$this, 'public_indicator_chart_panel_shortcode']);
         add_shortcode('sc_public_sustainability_indicator_dashboard', [$this, 'public_indicator_chart_panel_shortcode']);
         add_shortcode('sc_public_development_indicator_dashboard', [$this, 'public_indicator_chart_panel_shortcode']);
@@ -518,6 +525,13 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-planetary-boundary-export', [
             'methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_planetary_boundary_export'], 'permission_callback' => '__return_true',
         ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-humanitarian-intelligence', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_humanitarian_intelligence'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-humanitarian-crisis-map', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_humanitarian_crisis_map'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-humanitarian-reports', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_humanitarian_reports'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-displacement-context', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_displacement_context'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-humanitarian-intelligence-sources', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_humanitarian_sources'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-humanitarian-intelligence-methodology', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_humanitarian_methodology'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-humanitarian-intelligence-export', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_humanitarian_export'], 'permission_callback' => '__return_true']);
         register_rest_route(self::REST_NAMESPACE, '/public-indicator-chart-panel', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_indicator_chart_panel'],
@@ -816,6 +830,13 @@ final class SC_Site_Intelligence_Plugin {
     }
     public function rest_public_planetary_boundary_methodology() { return $this->backend_request('public/planetary-boundaries/methodology'); }
     public function rest_public_planetary_boundary_export() { return $this->backend_request('public/planetary-boundaries/export'); }
+    public function rest_public_humanitarian_intelligence() { return $this->backend_request('public/humanitarian-intelligence'); }
+    public function rest_public_humanitarian_crisis_map() { return $this->backend_request('public/humanitarian-intelligence/crisis-map'); }
+    public function rest_public_humanitarian_reports() { return $this->backend_request('public/humanitarian-intelligence/reports'); }
+    public function rest_public_displacement_context() { return $this->backend_request('public/humanitarian-intelligence/displacement'); }
+    public function rest_public_humanitarian_sources() { return $this->backend_request('public/humanitarian-intelligence/sources'); }
+    public function rest_public_humanitarian_methodology() { return $this->backend_request('public/humanitarian-intelligence/methodology'); }
+    public function rest_public_humanitarian_export() { return $this->backend_request('public/humanitarian-intelligence/export'); }
 
     public function rest_dashboard(WP_REST_Request $request) {
         $query = [];
@@ -2708,6 +2729,13 @@ final class SC_Site_Intelligence_Plugin {
             'sc_planetary_boundary_sources' => ['planetary-boundary-sources', 'Planetary Boundary Sources', 'Source registry and scientific references supporting the observatory.'],
             'sc_planetary_boundary_methodology' => ['planetary-boundary-methodology', 'Planetary Boundaries Methodology', 'Scientific-status labels, coverage rules, provenance, and derived-assessment boundaries.'],
             'sc_planetary_boundary_export' => ['planetary-boundary-export', 'Planetary Boundaries Export', 'Public-safe JSON and CSV-ready observatory records with source and methodology metadata.'],
+            'sc_humanitarian_intelligence_observatory' => ['humanitarian-intelligence', 'Live Disaster, Displacement, and Humanitarian Intelligence', 'Source-aware links between physical hazards, humanitarian reporting, and displacement context.'],
+            'sc_global_crisis_map' => ['humanitarian-crisis-map', 'Global Crisis Map', 'Map-ready GDACS, USGS, NASA EONET, ReliefWeb, and UNHCR layers.'],
+            'sc_humanitarian_report_stream' => ['humanitarian-reports', 'Humanitarian Report Stream', 'ReliefWeb-ready reports, assessments, maps, and situation updates.'],
+            'sc_displacement_context' => ['displacement-context', 'Displacement Context', 'UNHCR population categories, reference periods, and humanitarian context.'],
+            'sc_humanitarian_intelligence_sources' => ['humanitarian-sources', 'Humanitarian Intelligence Sources', 'Public source registry, freshness, attribution, and limitations.'],
+            'sc_humanitarian_intelligence_methodology' => ['humanitarian-methodology', 'Humanitarian Intelligence Methodology', 'Normalized event schema and public safety boundaries.'],
+            'sc_humanitarian_intelligence_export' => ['humanitarian-export', 'Humanitarian Intelligence Export', 'Public-safe source, category, schema, and layer records.'],
         ];
         return isset($map[$tag]) ? $map[$tag] : ['connector-status', 'Public Connector Status', 'Loading public connector status…'];
     }
@@ -3148,7 +3176,7 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function release_status_shortcode($atts = []) {
-        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.7.0 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
+        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.8.0 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
     }
 
 }

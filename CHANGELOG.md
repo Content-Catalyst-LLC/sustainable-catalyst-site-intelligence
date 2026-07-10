@@ -1,4 +1,12 @@
-## 1.7.0 — Planetary Boundaries Observatory
+# Changelog
+
+## 1.8.0
+- Added Live Disaster, Displacement, and Humanitarian Intelligence.
+- Added GDACS, ReliefWeb, USGS, NASA EONET, and UNHCR source contracts.
+- Added crisis map, report stream, displacement context, source registry, methodology, and export endpoints.
+- Added matching WordPress shortcodes and public proxy routes.
+- Preserved connector reliability, freshness, schema validation, and last-known-good behavior.
+
 
 - Added a nine-boundary public observatory with safe-operating-space reference categories.
 - Added boundary detail, assessment milestone, source, methodology, and export endpoints.
@@ -6,14 +14,14 @@
 - Added WordPress observatory, detail, trend, source, methodology, and export shortcodes.
 - Preserved the v1.6.1 connector reliability, cache, freshness, and schema-validation layer.
 
-## 1.7.0 — Connector Reliability, Freshness and Schema Validation
+## 1.8.0 — Connector Reliability, Freshness and Schema Validation
 
 - Added retries with bounded exponential backoff.
 - Added circuit breakers and rate-limit-aware status metadata.
 - Added stale-while-revalidate and last-known-good connector states.
 - Added source-specific response checks and normalized observation validation.
 - Added freshness thresholds, cache diagnostics, reliability endpoints, WordPress routes, and shortcodes.
-- Updated backend and WordPress versions to 1.7.0.
+- Updated backend and WordPress versions to 1.8.0.
 
 # Changelog
 

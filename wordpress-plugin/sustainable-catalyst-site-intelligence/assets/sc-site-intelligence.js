@@ -2619,7 +2619,14 @@
       'planetary-boundary-methodology': '/public-planetary-boundary-methodology',
       'planetary-boundary-export': '/public-planetary-boundary-export',
       'planetary-boundary-detail': '/public-planetary-boundary',
-      'planetary-boundary-trend': '/public-planetary-boundary-trend'
+      'planetary-boundary-trend': '/public-planetary-boundary-trend',
+      'humanitarian-intelligence': '/public-humanitarian-intelligence',
+      'humanitarian-crisis-map': '/public-humanitarian-crisis-map',
+      'humanitarian-reports': '/public-humanitarian-reports',
+      'displacement-context': '/public-displacement-context',
+      'humanitarian-sources': '/public-humanitarian-intelligence-sources',
+      'humanitarian-methodology': '/public-humanitarian-intelligence-methodology',
+      'humanitarian-export': '/public-humanitarian-intelligence-export'
     };
     let endpoint = map[panel] || '/public-connector-status';
     const boundaryId = root && root.dataset ? (root.dataset.boundaryId || '') : '';

@@ -97,6 +97,16 @@ from .planetary_boundaries_observatory import (
     methodology as build_planetary_boundaries_methodology,
     export_manifest as build_planetary_boundaries_export,
 )
+
+from .humanitarian_intelligence import (
+    source_registry as build_humanitarian_source_registry,
+    overview as build_humanitarian_overview,
+    crisis_map as build_humanitarian_crisis_map,
+    displacement_context as build_displacement_context,
+    humanitarian_reports as build_humanitarian_reports,
+    methodology as build_humanitarian_methodology,
+    export_manifest as build_humanitarian_export,
+)
 from .public_source_pages import (
     public_source_page_directory as build_public_source_page_directory,
     public_source_navigation as build_public_source_navigation,
@@ -518,6 +528,34 @@ def sustainable_development_cache_status_endpoint(settings: Settings = Depends(g
         raise HTTPException(status_code=403, detail="Sustainable development connectors are disabled.")
     return build_sustainable_development_cache_status()
 
+
+@app.get("/public/humanitarian-intelligence")
+def public_humanitarian_intelligence():
+    return build_humanitarian_overview()
+
+@app.get("/public/humanitarian-intelligence/sources")
+def public_humanitarian_sources():
+    return build_humanitarian_source_registry()
+
+@app.get("/public/humanitarian-intelligence/crisis-map")
+def public_humanitarian_crisis_map():
+    return build_humanitarian_crisis_map()
+
+@app.get("/public/humanitarian-intelligence/displacement")
+def public_displacement_context():
+    return build_displacement_context()
+
+@app.get("/public/humanitarian-intelligence/reports")
+def public_humanitarian_reports():
+    return build_humanitarian_reports()
+
+@app.get("/public/humanitarian-intelligence/methodology")
+def public_humanitarian_methodology():
+    return build_humanitarian_methodology()
+
+@app.get("/public/humanitarian-intelligence/export")
+def public_humanitarian_export():
+    return build_humanitarian_export()
 
 @app.get("/public/planetary-boundaries")
 def planetary_boundaries_overview_endpoint(settings: Settings = Depends(get_settings)):

@@ -166,7 +166,7 @@ def overview() -> Dict[str, Any]:
     return {
         "ok": True,
         "generated_at": _now(),
-        "version_scope": "v1.7.0",
+        "version_scope": "v1.8.0",
         "schema": SCHEMA,
         "title": "Planetary Boundaries Observatory",
         "summary": "A source-aware public observatory connecting published planetary-boundary assessments to operational environmental and sustainable-development data sources.",
@@ -184,7 +184,7 @@ def boundary_detail(boundary_id: str) -> Dict[str, Any]:
     return {
         "ok": True,
         "generated_at": _now(),
-        "version_scope": "v1.7.0",
+        "version_scope": "v1.8.0",
         "schema": SCHEMA,
         "boundary": row,
         "display_guidance": [
@@ -201,7 +201,7 @@ def boundary_trend(boundary_id: str) -> Dict[str, Any]:
     return {
         "ok": True,
         "generated_at": _now(),
-        "version_scope": "v1.7.0",
+        "version_scope": "v1.8.0",
         "boundary_id": boundary_id,
         "title": f"{next(x['label'] for x in PLANETARY_BOUNDARIES if x['boundary_id'] == boundary_id)} — Assessment Milestones",
         "series_type": "scientific_assessment_milestones",
@@ -223,14 +223,14 @@ def boundary_sources(boundary_id: str | None = None) -> Dict[str, Any]:
                 if source_id not in seen:
                     seen.append(source_id)
         rows = _source_rows(seen)
-    return {"ok": True, "generated_at": _now(), "version_scope": "v1.7.0", "title": "Planetary Boundary Sources", "summary": "Operational data sources and scientific references supporting the observatory.", "boundary_id": boundary_id, "sources": rows, "connectors": [{**row, "label": row["title"], "status": "registered", "source_mode": row["official_status"], "family": "planetary-boundaries", "public_use": "Supports boundary control-variable context.", "safe_display": row["limitations"]} for row in rows], "references": REFERENCES}
+    return {"ok": True, "generated_at": _now(), "version_scope": "v1.8.0", "title": "Planetary Boundary Sources", "summary": "Operational data sources and scientific references supporting the observatory.", "boundary_id": boundary_id, "sources": rows, "connectors": [{**row, "label": row["title"], "status": "registered", "source_mode": row["official_status"], "family": "planetary-boundaries", "public_use": "Supports boundary control-variable context.", "safe_display": row["limitations"]} for row in rows], "references": REFERENCES}
 
 
 def methodology() -> Dict[str, Any]:
     return {
         "ok": True,
         "generated_at": _now(),
-        "version_scope": "v1.7.0",
+        "version_scope": "v1.8.0",
         "schema": SCHEMA,
         "title": "Planetary Boundaries Observatory Methodology",
         "scientific_status_labels": SCIENTIFIC_STATUS_LABELS,
@@ -255,7 +255,7 @@ def export_manifest() -> Dict[str, Any]:
     return {
         "ok": True,
         "generated_at": _now(),
-        "version_scope": "v1.7.0",
+        "version_scope": "v1.8.0",
         "schema": SCHEMA,
         "title": "Planetary Boundaries Observatory Export",
         "formats": ["json", "csv-ready"],

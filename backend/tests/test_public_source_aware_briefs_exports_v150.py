@@ -14,16 +14,16 @@ client = TestClient(app)
 
 
 def test_source_aware_brief_directory_is_public_safe():
-    data = public_source_aware_brief_directory(Settings(version="1.7.0"))
+    data = public_source_aware_brief_directory(Settings(version="1.8.0"))
     assert data["ok"] is True
-    assert data["version_scope"] == "v1.7.0"
+    assert data["version_scope"] == "v1.8.0"
     assert data["recommended_shortcode"] == "[sc_public_source_aware_brief_directory]"
     assert len(data["briefs"]) == 3
     assert "upstream response bodies" in data["hidden"]
 
 
 def test_source_aware_brief_has_citations_and_boundaries():
-    data = public_source_aware_brief("indicator", Settings(version="1.7.0"))
+    data = public_source_aware_brief("indicator", Settings(version="1.8.0"))
     assert data["ok"] is True
     assert data["recommended_shortcode"] == "[sc_public_indicator_source_brief]"
     assert data["source_citations"]
@@ -32,7 +32,7 @@ def test_source_aware_brief_has_citations_and_boundaries():
 
 
 def test_dashboard_export_manifest_and_bundle_payloads():
-    settings = Settings(version="1.7.0")
+    settings = Settings(version="1.8.0")
     manifest = public_dashboard_export_manifest(settings)
     export = public_dashboard_export("source-health", settings)
     assert manifest["recommended_shortcode"] == "[sc_public_dashboard_export_manifest]"
@@ -44,7 +44,7 @@ def test_dashboard_export_manifest_and_bundle_payloads():
 
 
 def test_dashboard_export_visual_qa():
-    data = public_dashboard_export_visual_qa(Settings(version="1.7.0"))
+    data = public_dashboard_export_visual_qa(Settings(version="1.8.0"))
     assert data["ok"] is True
     assert data["score"] == 100
     assert data["recommended_shortcode"] == "[sc_public_dashboard_export_visual_qa]"
