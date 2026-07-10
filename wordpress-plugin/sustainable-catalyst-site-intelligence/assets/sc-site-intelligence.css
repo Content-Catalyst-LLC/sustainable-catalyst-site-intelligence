@@ -1720,3 +1720,10 @@
 
 /* v1.14.1 standalone embed polish */
 .scsi-standalone-app iframe{box-shadow:0 24px 70px rgba(0,0,0,.18)}
+
+/* v1.15.2 public launch wrapper */
+.scsi-standalone-app{position:relative;min-height:620px;background:#05070a;border-radius:18px;overflow:hidden}
+.scsi-app-loading{position:absolute;inset:0;display:grid;place-items:center;color:#fff;background:linear-gradient(180deg,#080b10,#05070a);font-weight:800;z-index:2}
+.scsi-standalone-app.is-loaded .scsi-app-loading{display:none}
+.scsi-standalone-app iframe{transition:height .25s ease}
+@media(max-width:767px){.scsi-standalone-app{margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);border-radius:0}.scsi-standalone-app iframe{border-radius:0!important}}

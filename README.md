@@ -275,16 +275,16 @@ The human-security layer connects conflict-event sources, civilian-protection re
 Public endpoints begin at `/public/human-security`. WordPress shortcodes include `[sc_conflict_human_security_monitor]`, `[sc_conflict_event_stream]`, `[sc_human_security_monitor]`, `[sc_forced_displacement_flows]`, `[sc_modeled_human_security_risk]`, `[sc_human_security_sources]`, `[sc_human_security_methodology]`, and `[sc_human_security_export]`.
 
 
-## v1.15.1 standalone application
+## v1.15.2 standalone application
 
 The map-first public application is served at `/app/` and can be embedded in WordPress with `[sc_site_intelligence_app height="900"]`.
 
 
-## v1.15.1 visual system
+## v1.15.2 visual system
 
 The standalone application now uses the immersive production visual system, animated public-event markers, skeleton loading states, polished map controls, and shareable country/view state.
 
-## v1.15.1 live country intelligence
+## v1.15.2 live country intelligence
 
 Country routes now retrieve live World Bank indicators and multi-year trends:
 
@@ -296,7 +296,7 @@ Country routes now retrieve live World Bank indicators and multi-year trends:
 The standalone Country view renders values, units, years, sources, trends, and explicit live/reference states.
 
 
-## v1.15.1 Platform Core integration
+## v1.15.2 Platform Core integration
 
 Site Intelligence can now write live country evidence into Platform Core v2.5.0:
 
@@ -316,3 +316,10 @@ Public-safe endpoints:
 Administrative queue replay:
 
 - `POST /admin/platform-core/replay-queue`
+
+
+## v1.15.2 public beta hardening
+
+The standalone app now includes cold-start progress, retryable public feeds, partial-data notices, responsive WordPress embedding, mobile-safe presentation, and intentional loading, empty, and error states.
+
+Public launch status: `/public/launch-status`.

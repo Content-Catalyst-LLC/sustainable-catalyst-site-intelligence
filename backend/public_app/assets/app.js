@@ -1,6 +1,23 @@
 
 (() => {
   const API = window.SC_SITE_INTELLIGENCE_API || window.location.origin;
+
+  const boot={progress:10};
+  function setLaunch(message,progress,retry=false){
+    const m=qs("#launchMessage"),b=qs("#launchProgressBar"),r=qs("#launchRetry");
+    if(m)m.textContent=message;if(b){boot.progress=Math.max(boot.progress,progress||boot.progress);b.style.width=`${Math.min(100,boot.progress)}%`}if(r)r.hidden=!retry;
+  }
+  function showGlobalNotice(title,text){qs("#globalNoticeTitle").textContent=title;qs("#globalNoticeText").textContent=text;qs("#globalNotice").hidden=false}
+  function hideGlobalNotice(){qs("#globalNotice").hidden=true}
+  function finishLaunch(){qs("#app").classList.remove("app-loading");qs("#app").classList.add("app-ready");setLaunch("Site Intelligence is ready.",100);setTimeout(()=>qs("#launchScreen").classList.add("hidden"),320);reportHeight()}
+  async function apiWithRetry(path,attempts=3){let last;for(let i=0;i<attempts;i++){try{return await api(path)}catch(e){last=e;if(i<attempts-1)await new Promise(r=>setTimeout(r,700*(i+1)))}}throw last}
+  function reportHeight(){window.parent?.postMessage({type:"scsi-height",height:Math.max(document.body.scrollHeight,document.documentElement.scrollHeight)},"*")}
+  function publicErrorBlock(title,text,retryAction){
+    const id=`retry-${Math.random().toString(36).slice(2)}`;
+    setTimeout(()=>{const b=document.getElementById(id);if(b)b.addEventListener("click",retryAction)},0);
+    return `<div class="error-state"><div><strong>${escapeHtml(title)}</strong><span>${escapeHtml(text)}</span><br><button id="${id}" class="retry-button" type="button">Retry</button></div></div>`;
+  }
+
   const state = {map:null,base:null,imagery:null,markers:null,heat:null,layers:null,events:null,country:"KEN",route:"overview"};
   const names = {KEN:"Kenya",GHA:"Ghana",USA:"United States",IND:"India",BRA:"Brazil"};
   const qs = (s)=>document.querySelector(s), qsa=(s)=>[...document.querySelectorAll(s)];
@@ -19,7 +36,7 @@
     return L.divIcon({className:"scsi-map-marker",html:`<span class="marker-core ${quake?"quake":"natural"}"></span><span class="marker-ring ${quake?"quake":"natural"}"></span>`,iconSize:[22,22],iconAnchor:[11,11]});
   }
   async function loadLayers(){
-    state.layers=await api("/public/geospatial/layers");
+    state.layers=await apiWithRetry("/public/geospatial/layers",3);
     return state.layers;
   }
   async function setImagery(id){
@@ -36,7 +53,7 @@
     qsa(".layer-tab").forEach(b=>b.classList.toggle("active",b.dataset.layer===id));
   }
   async function loadEvents(){
-    const data=await api("/public/geospatial/events");
+    const data=await apiWithRetry("/public/geospatial/events",3);
     state.events=data;
     state.markers.clearLayers();
     data.features.forEach(f=>{
@@ -51,20 +68,20 @@
   }
   function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
   function renderEvents(features){
-    qs("#eventList").innerHTML=features.length?features.map(f=>{const p=f.properties||{};const quake=String(p.category).toLowerCase().includes("earthquake");return `<div class="event-row"><span class="event-marker ${quake?"quake":""}"></span><div><div class="event-title">${escapeHtml(p.title||"Public event")}</div><div class="event-meta">${escapeHtml(p.category||"Event")} · ${escapeHtml(p.source||"Source")}</div></div><div class="event-time">${cleanDate(p.observed_at)}</div></div>`}).join(""):`<div class="loading-block">No recent event records are available.</div>`;
+    qs("#eventList").innerHTML=features.length?features.map(f=>{const p=f.properties||{};const quake=String(p.category).toLowerCase().includes("earthquake");return `<div class="event-row"><span class="event-marker ${quake?"quake":""}"></span><div><div class="event-title">${escapeHtml(p.title||"Public event")}</div><div class="event-meta">${escapeHtml(p.category||"Event")} · ${escapeHtml(p.source||"Source")}</div></div><div class="event-time">${cleanDate(p.observed_at)}</div></div>`}).join(""):`<div class="empty-state"><div><strong>No recent public events</strong><span>The selected feeds returned no mapped records for this view.</span></div></div>`;
   }
   async function loadCountry(code){
     state.country=code;const name=names[code]||code;
     qs("#countryName").textContent=name;qs("#countryCode").textContent=code;qs("#countryPanelTitle").textContent=`${name} at a glance`;
     try{
-      const d=await api(`/public/country-intelligence/${code}`);
+      const d=await apiWithRetry(`/public/country-intelligence/${code}`,3);
       qs("#coverageCount").textContent=d.registered_source_count??d.source_count??"—";
       const domains=d.domain_summaries||d.domains||[];
       const normalized=Array.isArray(domains)?domains:Object.values(domains||{});
       qs("#countrySummary").innerHTML=normalized.slice(0,5).map(x=>`<div class="country-stat"><span>${escapeHtml(x.title||x.label||x.domain||"Evidence domain")}</span><strong>${escapeHtml(x.summary||x.description||x.data_state||"Source context available")}</strong></div>`).join("")||`<div class="loading-block">Country evidence structure is available; validated values appear as connectors return records.</div>`;
     }catch{
       qs("#coverageCount").textContent="—";
-      qs("#countrySummary").innerHTML=`<div class="loading-block">Country evidence is temporarily unavailable.</div>`;
+      qs("#countrySummary").innerHTML=publicErrorBlock("Country evidence unavailable","The public country service did not respond.",()=>loadCountry(code));showGlobalNotice("Country evidence is temporarily unavailable","The map and other public feeds remain available.");
     }
   }
   function routeMeta(route){
@@ -123,7 +140,7 @@
     const panel=qs("#countryIntelligencePanel");panel.hidden=false;
     qs("#countryIndicatorGrid").innerHTML='<div class="skeleton-stack"><span></span><span></span><span></span></div>';
     try{
-      const [profile,trends]=await Promise.all([api(`/public/country/${code}`),api(`/public/country/${code}/trends`)]);
+      const [profile,trends]=await Promise.all([apiWithRetry(`/public/country/${code}`,3),apiWithRetry(`/public/country/${code}/trends`,3)]);
       qs("#liveCountryTitle").textContent=`${profile.country.name} intelligence`;
       qs("#liveCountrySummary").textContent=profile.summary;
       const stateLabel=profile.data_state==="live"?"Live public indicators":profile.data_state==="reference-snapshot"?"Reference snapshot":"Source unavailable";
@@ -150,7 +167,7 @@
         "Indicators describe conditions but do not establish causes, rankings, or legal conclusions."
       ].map(x=>`<div class="evidence-note">${escapeHtml(x)}</div>`).join("");
     }catch{
-      qs("#countryIndicatorGrid").innerHTML='<div class="loading-block">Live country intelligence is temporarily unavailable.</div>';
+      qs("#countryIndicatorGrid").innerHTML=publicErrorBlock("Live country intelligence unavailable","The country indicator service may be waking up or temporarily unavailable.",()=>loadLiveCountry(code));showGlobalNotice("Country indicators are temporarily unavailable","Retry in a moment while the public service wakes up.");
       qs("#countryDataState").textContent="Unavailable";qs("#countryDataState").classList.add("reference");
     }
   }
@@ -178,8 +195,8 @@
       panel.innerHTML=`<p class="eyebrow">PUBLIC SOURCE LAYER</p><h2>Connected evidence services</h2><div class="source-list">${sources.map(s=>`<div class="source-chip">${escapeHtml(s)}</div>`).join("")}</div>`;
     }
   }
-  async function init(){
-    qs("#dateSelect").value=today();initMap();
+  async function init(){setLaunch("Preparing the map and public evidence services.",18);
+    qs("#dateSelect").value=today();initMap();setLaunch("Loading map layers.",34);
     qsa(".layer-tab").forEach(b=>b.addEventListener("click",()=>setImagery(b.dataset.layer)));
     qsa(".nav-item").forEach(b=>b.addEventListener("click",()=>{history.replaceState(null,"",`?country=${encodeURIComponent(state.country)}&view=${encodeURIComponent(b.dataset.route)}`);setRoute(b.dataset.route)}));
     qsa("[data-route-link]").forEach(b=>b.addEventListener("click",()=>setRoute(b.dataset.routeLink)));
@@ -188,9 +205,9 @@
     qs("#eventsToggle").addEventListener("change",e=>e.target.checked?state.markers.addTo(state.map):state.map.removeLayer(state.markers));
     qs("#heatToggle").addEventListener("change",e=>toast(e.target.checked?"Density layer enabled for supported records":"Density layer hidden"));
     qs("#fullscreenButton").addEventListener("click",()=>{const p=qs(".map-panel");if(document.fullscreenElement)document.exitFullscreen();else p.requestFullscreen?.()});
-    qs("#shareButton").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("View link copied")});qs("#closeEvidenceDrawer").addEventListener("click",closeEvidenceDrawer);qs("#evidenceBackdrop").addEventListener("click",closeEvidenceDrawer);document.addEventListener("keydown",e=>{if(e.key==="Escape")closeEvidenceDrawer()});
-    const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const initialView=params.get("view")||"overview";qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";try{await loadLayers();await setImagery("true-color");await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);await setRoute(initialView)}
-    catch(e){qs("#statusText").textContent="Some feeds unavailable";toast("The interface loaded, but one or more public feeds are unavailable.")}
+    qs("#shareButton").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("View link copied")});qs("#openNewButton").addEventListener("click",()=>window.open(location.href,"_blank","noopener"));qs("#dismissNotice").addEventListener("click",hideGlobalNotice);qs("#launchRetry").addEventListener("click",()=>location.reload());qs("#closeEvidenceDrawer").addEventListener("click",closeEvidenceDrawer);qs("#evidenceBackdrop").addEventListener("click",closeEvidenceDrawer);document.addEventListener("keydown",e=>{if(e.key==="Escape")closeEvidenceDrawer()});
+    const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const initialView=params.get("view")||"overview";qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";try{setLaunch("Loading satellite imagery.",50);await loadLayers();await setImagery("true-color");setLaunch("Connecting to live events and country evidence.",68);await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);setLaunch("Preparing the workspace.",88);await setRoute(initialView);finishLaunch()}
+    catch(e){qs("#statusText").textContent="Partial public data";showGlobalNotice("Some public feeds are unavailable","The interface is open with partial data. Retry after the service finishes waking up.");finishLaunch()}
   }
   document.addEventListener("DOMContentLoaded",init);
 })();
@@ -207,3 +224,5 @@ visualStyle.textContent=`
 @media(prefers-reduced-motion:reduce){.marker-ring{animation:none}}
 `;
 document.head.appendChild(visualStyle);
+
+window.addEventListener("load",reportHeight);window.addEventListener("resize",()=>setTimeout(reportHeight,120));new ResizeObserver(()=>reportHeight()).observe(document.body);

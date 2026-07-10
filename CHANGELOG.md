@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.15.2 — Public Launch Hardening and Experience Cleanup
+
+- Added a polished public-beta loading experience for Render cold starts.
+- Added retry logic for satellite layers, event feeds, country summaries, and live indicators.
+- Added launch progress, partial-data notices, retry actions, and intentional empty states.
+- Added responsive iframe height messaging between the standalone app and WordPress.
+- Added a full-app launch action and improved mobile embedding behavior.
+- Reduced public-facing technical language and strengthened launch copy.
+- Added public launch-status diagnostics.
+- Added resilient partial-data behavior so one unavailable source does not block the workspace.
+- Preserved Platform Core as an optional audit layer rather than a public-app dependency.
+- Added launch-ready WordPress loading treatment and mobile full-width presentation.
+
 ## 1.15.1 — Platform Core Integration and Evidence Lineage
 
 - Added a backend-only Platform Core v2.5.0 client.

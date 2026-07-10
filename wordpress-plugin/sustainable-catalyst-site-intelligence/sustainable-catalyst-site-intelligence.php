@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.15.1
+ * Version: 1.15.2
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.15.1';
+    const VERSION = '1.15.2';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -3079,11 +3079,14 @@ final class SC_Site_Intelligence_Plugin {
         $src = esc_url($backend . '/' . ltrim((string) $atts['path'], '/'));
         $title = esc_attr((string) $atts['title']);
 
+        $frame_id = 'scsi-app-' . wp_generate_uuid4();
         return sprintf(
-            '<div class="scsi-standalone-app"><iframe src="%1$s" title="%2$s" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#f7f5f0"></iframe></div>',
+            '<div class="scsi-standalone-app" data-scsi-responsive-app><div class="scsi-app-loading">Opening Site Intelligence…</div><iframe id="%4$s" src="%1$s" title="%2$s" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe><script>(function(){var frame=document.getElementById(%5$s);if(!frame)return;window.addEventListener(\'message\',function(e){if(!e.data||e.data.type!==\'scsi-height\')return;var h=Math.max(620,Math.min(1800,parseInt(e.data.height||0,10)+8));if(h)frame.style.height=h+\'px\';});})();</script></div>',
             $src,
             $title,
-            $height
+            $height,
+            esc_attr($frame_id),
+            wp_json_encode($frame_id)
         );
     }
 

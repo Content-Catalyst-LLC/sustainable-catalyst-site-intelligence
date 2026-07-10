@@ -12,7 +12,17 @@
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to intelligence workspace</a>
-  <div id="app" class="app-shell">
+  <div id="launchScreen" class="launch-screen" aria-live="polite">
+    <div class="launch-orbit" aria-hidden="true"></div>
+    <div class="launch-card">
+      <p class="eyebrow">SUSTAINABLE CATALYST</p>
+      <h1>Opening Site Intelligence</h1>
+      <p id="launchMessage">Connecting to public imagery, event, and country-evidence services.</p>
+      <div class="launch-progress" aria-hidden="true"><span id="launchProgressBar"></span></div>
+      <button id="launchRetry" class="ghost-button" type="button" hidden>Retry connection</button>
+    </div>
+  </div>
+  <div id="app" class="app-shell app-loading">
     <header class="topbar">
       <div class="brand">
         <span class="brand-mark" aria-hidden="true"></span>
@@ -34,7 +44,7 @@
         <label class="compact-field">Imagery date
           <input id="dateSelect" type="date">
         </label>
-        <button class="ghost-button" id="shareButton" type="button">Copy view</button>
+        <button class="ghost-button" id="shareButton" type="button">Copy view</button><button class="ghost-button" id="openNewButton" type="button">Open full app</button>
       </div>
     </header>
 
@@ -46,7 +56,7 @@
         <button class="nav-item" data-route="compare"><span>Compare</span><small>Two-country context</small></button>
         <button class="nav-item" data-route="sources"><span>Sources</span><small>Provenance and coverage</small></button>
       </nav>
-      <div class="sidebar-note">
+      <div class="sidebar-note"><span class="public-beta-badge">Public Beta</span>
         <strong>Public evidence, not automated judgment.</strong>
         <span>Dates, source definitions, and missing data remain visible.</span>
       </div>
@@ -59,7 +69,7 @@
         <div>
           <p class="eyebrow" id="viewEyebrow">LIVE INTELLIGENCE WORKSPACE</p>
           <h1 id="viewTitle">Climate and Human Vulnerability</h1>
-          <p id="viewDescription">Satellite context, natural events, environmental pressure, and country evidence in one navigable view.</p>
+          <p id="viewDescription">Explore satellite imagery, recent public events, and country evidence in one coherent workspace.</p>
         </div>
         <div class="status-pill"><span class="pulse"></span><span id="statusText">Loading public feeds</span></div>
       </section>
@@ -157,6 +167,10 @@
   </aside>
   <div id="evidenceBackdrop" class="evidence-backdrop" hidden></div>
 
+  <div id="globalNotice" class="global-notice" hidden>
+    <div><strong id="globalNoticeTitle">Some public feeds are unavailable</strong><span id="globalNoticeText">The interface remains available with partial data.</span></div>
+    <button id="dismissNotice" type="button" aria-label="Dismiss notice">Dismiss</button>
+  </div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="/app/assets/app.js"></script>

@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="SC_SI_", env_file=".env", extra="ignore")
 
     app_name: str = "Sustainable Catalyst Site Intelligence"
-    version: str = "1.15.1"
+    version: str = "1.15.2"
     environment: str = "development"
     demo_mode: bool = True
     api_token: str = "dev-token-change-me"
@@ -86,7 +86,7 @@ class Settings(BaseSettings):
     public_connector_live_checks: bool = True
 
 
-    # Platform Core v2.5.0 integration — Site Intelligence v1.15.1.
+    # Platform Core v2.5.0 integration — Site Intelligence v1.15.2.
     # Write credentials remain backend-only and must never be exposed through
     # WordPress, browser JavaScript, public diagnostics, or export payloads.
     platform_core_enabled: bool = False

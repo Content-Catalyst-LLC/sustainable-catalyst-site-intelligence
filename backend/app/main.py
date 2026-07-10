@@ -727,6 +727,27 @@ def public_cross_domain_dashboard_export(dashboard_id: str, country: str = ""):
 
 
 
+
+@app.get("/public/launch-status")
+def public_launch_status():
+    return {
+        "ok": True,
+        "version": "1.15.2",
+        "release_channel": "public-beta",
+        "standalone_app": "/app/",
+        "platform_core_optional": True,
+        "platform_core_required_for_public_app": False,
+        "launch_checks": {
+            "standalone_app": "ready",
+            "satellite_layers": "ready",
+            "public_events": "ready-with-fallback",
+            "country_intelligence": "ready-with-retry",
+            "responsive_embed": "ready",
+            "accessibility_states": "ready",
+            "platform_core": "optional",
+        },
+    }
+
 @app.get("/public/platform-core/status")
 def public_platform_core_status():
     """Public-safe integration status. Never returns API keys."""
@@ -772,7 +793,7 @@ def public_country_evidence_lineage(country_code: str):
         })
     return {
         "ok": True,
-        "version": "1.15.1",
+        "version": "1.15.2",
         "country": payload.get("country"),
         "platform_core": build_platform_core_status(),
         "items": items,
@@ -2955,7 +2976,7 @@ def publishing_intelligence_report(
 
 
 
-# Site Intelligence v1.15.1 standalone public application.
+# Site Intelligence v1.15.2 standalone public application.
 from pathlib import Path as _Path
 PUBLIC_APP_DIR = _Path(__file__).resolve().parent.parent / "public_app"
 if PUBLIC_APP_DIR.exists():
