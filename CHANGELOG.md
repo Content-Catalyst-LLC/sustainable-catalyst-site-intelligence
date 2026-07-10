@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.3.0 — Live API Connectors, Caching, and Public Source Status
+
+- Added public connector status endpoints for live/cached/fallback source readiness.
+- Added public cache and freshness summaries for connector panels.
+- Added connector detail endpoints for World Bank, OpenAlex, Crossref, GitHub, and Environmental connectors.
+- Added admin-safe connector diagnostics that do not expose secrets or raw payloads.
+- Added WordPress shortcodes for public connector status, cache status, freshness, and connector detail panels.
+
 ## 1.2.1 — Public Source Pages and Indicator Integration Polish
 
 - Updated backend and WordPress plugin versions to 1.2.1.

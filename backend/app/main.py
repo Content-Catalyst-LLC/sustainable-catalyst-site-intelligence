@@ -48,6 +48,14 @@ from .public_api_sources import (
     public_indicator_overview as build_public_indicator_overview,
     public_sustainability_indicators as build_public_sustainability_indicators,
 )
+from .public_live_connectors import (
+    public_connector_status as build_public_connector_status,
+    public_cache_status as build_public_cache_status,
+    public_source_freshness as build_public_source_freshness,
+    public_connector_detail as build_public_connector_detail,
+    public_environmental_connectors as build_public_environmental_connectors,
+    admin_connector_diagnostics as build_admin_connector_diagnostics,
+)
 from .public_source_pages import (
     public_source_page_directory as build_public_source_page_directory,
     public_source_navigation as build_public_source_navigation,
@@ -326,6 +334,67 @@ def public_topic_page_visual_qa_endpoint(settings: Settings = Depends(get_settin
         raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
     return topic_page_visual_qa()
 
+
+
+@app.get("/public/connectors/status")
+def public_connector_status_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_connector_status(settings)
+
+
+@app.get("/public/connectors/cache")
+def public_connector_cache_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_cache_status(settings)
+
+
+@app.get("/public/connectors/freshness")
+def public_connector_freshness_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_source_freshness(settings)
+
+
+@app.get("/public/connectors/world-bank")
+def public_world_bank_connector_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_connector_detail("world-bank", settings)
+
+
+@app.get("/public/connectors/openalex")
+def public_openalex_connector_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_connector_detail("openalex", settings)
+
+
+@app.get("/public/connectors/crossref")
+def public_crossref_connector_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_connector_detail("crossref", settings)
+
+
+@app.get("/public/connectors/github")
+def public_github_connector_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_connector_detail("github", settings)
+
+
+@app.get("/public/connectors/environmental")
+def public_environmental_connectors_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_environmental_connectors(settings)
+
+
+@app.get("/admin/connectors/diagnostics")
+def admin_connector_diagnostics_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return build_admin_connector_diagnostics(settings)
 
 
 @app.get("/public/source-pages")

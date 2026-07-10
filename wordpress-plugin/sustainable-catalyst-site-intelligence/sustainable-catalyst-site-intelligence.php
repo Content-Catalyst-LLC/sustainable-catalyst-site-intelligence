@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.2.1
+ * Version: 1.3.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.2.1';
+    const VERSION = '1.3.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -66,6 +66,14 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_public_source_navigation', [$this, 'public_source_navigation_shortcode']);
         add_shortcode('sc_public_source_page_templates', [$this, 'public_source_page_templates_shortcode']);
         add_shortcode('sc_public_source_page_visual_qa', [$this, 'public_source_page_visual_qa_shortcode']);
+        add_shortcode('sc_public_connector_status', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_public_cache_status', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_public_source_freshness', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_public_world_bank_connector', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_public_openalex_connector', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_public_crossref_connector', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_public_github_connector', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_public_environmental_connectors', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_climate_energy_dashboard', [$this, 'public_topic_dashboard_shortcode']);
         add_shortcode('sc_public_environmental_monitoring_dashboard', [$this, 'public_topic_dashboard_shortcode']);
         add_shortcode('sc_public_biodiversity_land_use_dashboard', [$this, 'public_topic_dashboard_shortcode']);
@@ -396,6 +404,27 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-source-page-visual-qa', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_source_page_visual_qa'],
+            'permission_callback' => '__return_true',
+        ]);
+
+        register_rest_route(self::REST_NAMESPACE, '/public-connector-status', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_connector_status'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-cache-status', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_cache_status'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-source-freshness', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_source_freshness'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-connector-detail', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_connector_detail'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/public-readiness', [
@@ -1155,6 +1184,41 @@ final class SC_Site_Intelligence_Plugin {
     public function rest_public_indicator_overview(WP_REST_Request $request) { return $this->rest_public_source_panel('indicator_overview'); }
     public function rest_public_sustainability_indicators(WP_REST_Request $request) { return $this->rest_public_source_panel('sustainability_indicators'); }
 
+    private function public_connector_endpoint_map($key) {
+        $map = [
+            'connector_status' => 'public/connectors/status',
+            'cache_status' => 'public/connectors/cache',
+            'source_freshness' => 'public/connectors/freshness',
+            'world_bank' => 'public/connectors/world-bank',
+            'openalex' => 'public/connectors/openalex',
+            'crossref' => 'public/connectors/crossref',
+            'github' => 'public/connectors/github',
+            'environmental' => 'public/connectors/environmental',
+        ];
+        return isset($map[$key]) ? $map[$key] : 'public/connectors/status';
+    }
+
+    private function rest_public_connector_panel($key) {
+        $result = $this->backend_request($this->public_connector_endpoint_map($key));
+        if (is_wp_error($result)) {
+            return new WP_REST_Response(['ok' => false, 'message' => $result->get_error_message()], 502);
+        }
+        return rest_ensure_response($result);
+    }
+
+    public function rest_public_connector_status(WP_REST_Request $request) { return $this->rest_public_connector_panel('connector_status'); }
+    public function rest_public_cache_status(WP_REST_Request $request) { return $this->rest_public_connector_panel('cache_status'); }
+    public function rest_public_source_freshness(WP_REST_Request $request) { return $this->rest_public_connector_panel('source_freshness'); }
+
+    public function rest_public_connector_detail(WP_REST_Request $request) {
+        $slug = sanitize_key($request->get_param('slug'));
+        $allowed = ['world-bank', 'openalex', 'crossref', 'github', 'environmental'];
+        if (!in_array($slug, $allowed, true)) {
+            return new WP_REST_Response(['ok' => false, 'message' => 'Unknown public connector slug.'], 400);
+        }
+        return $this->rest_public_connector_panel(str_replace('-', '_', $slug));
+    }
+
     public function rest_public_readiness(WP_REST_Request $request) {
         $query = $this->public_query_from_request($request);
         $endpoint = 'intelligence/public-readiness' . (!empty($query) ? '?' . http_build_query($query) : '');
@@ -1283,7 +1347,7 @@ final class SC_Site_Intelligence_Plugin {
             'generated_at' => gmdate('c'),
             'mode' => 'public',
             'provider' => 'deterministic-local',
-            'model' => 'wordpress-fallback-v1.2.1',
+            'model' => 'wordpress-fallback-v1.3.0',
             'source_report' => [
                 'report_id' => 'public-dashboard',
                 'title' => 'Public Dashboard Readiness Report',
@@ -1530,6 +1594,15 @@ final class SC_Site_Intelligence_Plugin {
             <p><code>[sc_public_source_navigation]</code></p>
             <p><code>[sc_public_source_page_templates]</code></p>
             <p><code>[sc_public_source_page_visual_qa]</code></p>
+            <h2>Public Connector Status</h2>
+            <p><code>[sc_public_connector_status]</code></p>
+            <p><code>[sc_public_cache_status]</code></p>
+            <p><code>[sc_public_source_freshness]</code></p>
+            <p><code>[sc_public_world_bank_connector]</code></p>
+            <p><code>[sc_public_openalex_connector]</code></p>
+            <p><code>[sc_public_crossref_connector]</code></p>
+            <p><code>[sc_public_github_connector]</code></p>
+            <p><code>[sc_public_environmental_connectors]</code></p>
             <h2>AI-Assisted Briefs</h2>
             <p><code>[sc_ai_brief_status]</code></p>
             <p><code>[sc_ai_site_intelligence_brief]</code></p>
@@ -2399,6 +2472,38 @@ final class SC_Site_Intelligence_Plugin {
         return ob_get_clean();
     }
 
+    private function public_connector_panel_from_shortcode_tag($tag) {
+        $map = [
+            'sc_public_connector_status' => ['connector-status', 'Public Connector Status', 'Live, cached, fallback, and planned connector readiness for public source panels.'],
+            'sc_public_cache_status' => ['cache-status', 'Public Cache Status', 'Cache TTL, stale-safe display, and public source refresh policy.'],
+            'sc_public_source_freshness' => ['source-freshness', 'Public Source Freshness', 'Freshness labels for public source families and connector panels.'],
+            'sc_public_world_bank_connector' => ['world-bank', 'World Bank Connector', 'Development indicator source status, cache policy, and fallback notes.'],
+            'sc_public_openalex_connector' => ['openalex', 'OpenAlex Connector', 'Research metadata source status, cache policy, and fallback notes.'],
+            'sc_public_crossref_connector' => ['crossref', 'Crossref Connector', 'Publication metadata source status, cache policy, and fallback notes.'],
+            'sc_public_github_connector' => ['github', 'GitHub Connector', 'Repository intelligence source status, cache policy, and fallback notes.'],
+            'sc_public_environmental_connectors' => ['environmental', 'Environmental Connectors', 'NASA, NOAA, EPA, EIA, USGS, GBIF, and Climate TRACE public source status.'],
+        ];
+        return isset($map[$tag]) ? $map[$tag] : ['connector-status', 'Public Connector Status', 'Loading public connector status…'];
+    }
+
+    public function public_connector_panel_shortcode($atts = [], $content = null, $tag = '') {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') {
+            return '';
+        }
+        $panel = $this->public_connector_panel_from_shortcode_tag($tag);
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-public-connector-panel" data-scsi-public-connector-panel data-connector-panel="<?php echo esc_attr($panel[0]); ?>">
+            <p class="scsi-eyebrow">Public Connector Layer</p>
+            <h2><?php echo esc_html($panel[1]); ?></h2>
+            <p class="scsi-muted"><?php echo esc_html($panel[2]); ?></p>
+            <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
     public function public_dashboard_readiness_shortcode($atts = []) {
         $options = self::options();
         if ($options['enable_dashboard'] !== '1') {
@@ -2703,7 +2808,7 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function release_status_shortcode($atts = []) {
-        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.2.1 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
+        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.3.0 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
     }
 
 }

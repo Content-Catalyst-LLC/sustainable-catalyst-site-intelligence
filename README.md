@@ -1,34 +1,37 @@
 # Sustainable Catalyst Site Intelligence
 
-Version: 1.2.1
+Version: 1.3.0
 
-## v1.2.1 — Public Source Pages and Indicator Integration Polish
+## v1.3.0 — Live API Connectors, Caching, and Public Source Status
 
-This release turns the v1.2.0 public API/source layer into a cleaner public page system. It adds source-page templates, reusable active-page source navigation, public source-page visual QA, and CSS polish for source and indicator pages.
+This release adds the public connector status layer for Site Intelligence. It exposes public-safe readiness labels, cache policy, freshness labels, and connector detail panels for World Bank, OpenAlex, Crossref, GitHub, and environmental source families. Public endpoints return curated status metadata and methodology notes, not credentials, raw upstream payloads, backend logs, or private analytics.
 
-Recommended public source pages:
+New public connector endpoints:
 
-- `/platform/site-intelligence/sources/`
-- `/platform/site-intelligence/source-health/`
-- `/platform/site-intelligence/indicators/`
-- `/platform/site-intelligence/sustainability-indicators/`
-- `/platform/site-intelligence/research-metadata/`
-- `/platform/site-intelligence/publication-metadata/`
-- `/platform/site-intelligence/repository-intelligence/`
+- `/public/connectors/status`
+- `/public/connectors/cache`
+- `/public/connectors/freshness`
+- `/public/connectors/world-bank`
+- `/public/connectors/openalex`
+- `/public/connectors/crossref`
+- `/public/connectors/github`
+- `/public/connectors/environmental`
 
-New public endpoints:
+New admin-safe endpoint:
 
-- `/public/source-pages`
-- `/public/source-pages/navigation`
-- `/public/source-pages/templates`
-- `/public/source-pages/visual-qa`
+- `/admin/connectors/diagnostics`
 
-New public shortcodes:
+New WordPress shortcodes:
 
-- `[sc_public_source_page_directory]`
-- `[sc_public_source_navigation]`
-- `[sc_public_source_page_templates]`
-- `[sc_public_source_page_visual_qa]`
+- `[sc_public_connector_status]`
+- `[sc_public_cache_status]`
+- `[sc_public_source_freshness]`
+- `[sc_public_world_bank_connector]`
+- `[sc_public_openalex_connector]`
+- `[sc_public_crossref_connector]`
+- `[sc_public_github_connector]`
+- `[sc_public_environmental_connectors]`
+
 
 Site Intelligence is the Sustainable Catalyst analytics, registry, external-source, reporting, AI-brief, public-dashboard, admin-control, and public flagship dashboard platform.
 
@@ -169,3 +172,8 @@ Expected version:
 ```
 
 Then install the v1.0.1 WordPress plugin ZIP and test the public flagship page logged out or in an incognito window.
+
+
+## v1.3.0 — Live API Connectors, Caching, and Public Source Status
+
+Adds public-safe connector status, cache policy, freshness, and connector detail panels for World Bank, OpenAlex, Crossref, GitHub, and environmental source families. Public endpoints expose readiness labels and methodology notes, not credentials or raw upstream payloads.

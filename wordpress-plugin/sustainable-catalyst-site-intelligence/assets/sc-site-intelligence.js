@@ -18,7 +18,7 @@
       client_time: new Date().toISOString(),
       metadata: {
         href: params && params.href ? params.href : '',
-        version: cfg.version || '1.2.1'
+        version: cfg.version || '1.3.0'
       }
     }, params || {});
 
@@ -2317,10 +2317,140 @@
 
 
 
+  function connectorPanelEndpoint(panel) {
+    const map = {
+      'connector-status': '/public-connector-status',
+      'cache-status': '/public-cache-status',
+      'source-freshness': '/public-source-freshness',
+      'world-bank': '/public-connector-detail?slug=world-bank',
+      'openalex': '/public-connector-detail?slug=openalex',
+      'crossref': '/public-connector-detail?slug=crossref',
+      'github': '/public-connector-detail?slug=github',
+      'environmental': '/public-connector-detail?slug=environmental'
+    };
+    return map[panel] || '/public-connector-status';
+  }
+
+  function renderConnectorRuntime(item) {
+    const runtime = item.runtime || {};
+    const bits = [];
+    if (runtime.display_mode) bits.push('<span class="scsi-badge scsi-badge-soft">' + escapeHtml(runtime.display_mode) + '</span>');
+    if (runtime.cache_ttl_seconds) bits.push('<small><b>Cache TTL:</b> ' + formatNumber(runtime.cache_ttl_seconds) + ' seconds</small>');
+    if (runtime.next_refresh_after) bits.push('<small><b>Next refresh after:</b> ' + escapeHtml(runtime.next_refresh_after) + '</small>');
+    if (item.freshness_window) bits.push('<small><b>Freshness:</b> ' + escapeHtml(item.freshness_window) + '</small>');
+    return bits.join('');
+  }
+
+  function renderPublicConnectorPanel(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    muted.textContent = (data.summary || 'Public connector panel.') + ' · Status: ' + (data.public_status || data.version_scope || 'review');
+    out.innerHTML = '';
+
+    if (typeof data.score !== 'undefined' || data.counts) {
+      const grid = document.createElement('div');
+      grid.className = 'scsi-grid scsi-public-connector-health-grid';
+      if (typeof data.score !== 'undefined') {
+        const score = document.createElement('div');
+        score.className = 'scsi-stat scsi-public-connector-status-card';
+        score.innerHTML = '<span class="scsi-public-label">Readiness</span><strong>' + formatNumber(data.score || 0) + '%</strong><small>Public-safe connector readiness score.</small>';
+        grid.appendChild(score);
+      }
+      Object.keys(data.counts || {}).forEach(function (key) {
+        const card = document.createElement('div');
+        card.className = 'scsi-stat scsi-public-connector-status-card';
+        card.innerHTML = '<span class="scsi-public-label">' + escapeHtml(key) + '</span>' +
+          '<strong>' + formatNumber(data.counts[key]) + '</strong>' +
+          '<small>' + escapeHtml((data.status_definitions || {})[key] || 'Connector count.') + '</small>';
+        grid.appendChild(card);
+      });
+      out.appendChild(grid);
+    }
+
+    const connectors = data.connectors || (data.connector ? [data.connector] : []);
+    if (connectors.length) {
+      const h = document.createElement('h3');
+      h.textContent = data.connector ? 'Connector detail' : 'Connector families';
+      out.appendChild(h);
+      connectors.forEach(function (item) {
+        const row = document.createElement('div');
+        row.className = 'scsi-page-row scsi-public-connector-row';
+        row.innerHTML = '<strong>' + escapeHtml(item.label || item.slug || '') + '</strong><br>' +
+          statusBadge(item.status || 'planned') + '<span class="scsi-badge scsi-badge-soft">' + escapeHtml(item.source_mode || item.family || 'public_connector') + '</span>' +
+          '<small><b>Family:</b> ' + escapeHtml(item.family || '') + '</small>' +
+          '<small><b>Public use:</b> ' + escapeHtml(item.public_use || '') + '</small>' +
+          '<small><b>Safe display:</b> ' + escapeHtml(item.safe_display || '') + '</small>' +
+          '<small><b>Fallback:</b> ' + escapeHtml(item.fallback_reason || '') + '</small>' +
+          renderConnectorRuntime(item);
+        out.appendChild(row);
+      });
+    }
+
+    const policies = data.policies || [];
+    if (policies.length) {
+      const h = document.createElement('h3');
+      h.textContent = 'Cache policies';
+      out.appendChild(h);
+      policies.forEach(function (item) {
+        const row = document.createElement('div');
+        row.className = 'scsi-page-row scsi-public-connector-row';
+        row.innerHTML = '<strong>' + escapeHtml(item.label || item.slug || '') + '</strong><br>' +
+          '<small><b>Display mode:</b> ' + escapeHtml(item.display_mode || '') + '</small>' +
+          '<small><b>Cache TTL:</b> ' + formatNumber(item.cache_ttl_seconds || 0) + ' seconds</small>' +
+          '<small><b>Stale TTL:</b> ' + formatNumber(item.stale_ttl_seconds || 0) + ' seconds</small>' +
+          '<small><b>Next refresh after:</b> ' + escapeHtml(item.next_refresh_after || '') + '</small>';
+        out.appendChild(row);
+      });
+    }
+
+    const freshness = data.freshness || [];
+    if (freshness.length) {
+      const h = document.createElement('h3');
+      h.textContent = 'Freshness labels';
+      out.appendChild(h);
+      freshness.forEach(function (item) {
+        const row = document.createElement('div');
+        row.className = 'scsi-page-row scsi-public-connector-row';
+        row.innerHTML = '<strong>' + escapeHtml(item.label || item.slug || '') + '</strong><br>' +
+          statusBadge(item.status || 'planned') +
+          '<small><b>Freshness:</b> ' + escapeHtml(item.freshness_window || '') + '</small>' +
+          '<small><b>Next refresh after:</b> ' + escapeHtml(item.next_refresh_after || '') + '</small>' +
+          '<small>' + escapeHtml(item.public_note || '') + '</small>';
+        out.appendChild(row);
+      });
+    }
+
+    const subconnectors = data.subconnectors || [];
+    if (subconnectors.length) {
+      const h = document.createElement('h3');
+      h.textContent = 'Environmental subconnectors';
+      out.appendChild(h);
+      subconnectors.forEach(function (item) {
+        const row = document.createElement('div');
+        row.className = 'scsi-page-row scsi-public-connector-row';
+        row.innerHTML = '<strong>' + escapeHtml(item.label || '') + '</strong><br>' +
+          statusBadge(item.status || 'planned') + '<span class="scsi-badge scsi-badge-soft">Credential: ' + escapeHtml(String(item.credential_required)) + '</span>' +
+          '<small>' + escapeHtml(item.public_use || '') + '</small>';
+        out.appendChild(row);
+      });
+    }
+
+    [['Methodology', data.methodology || []], ['Review notes', data.review_notes || []], ['Hidden from public pages', data.hidden || []]].forEach(function (group) {
+      if (!group[1].length) return;
+      const h = document.createElement('h3');
+      h.textContent = group[0];
+      out.appendChild(h);
+      const ul = document.createElement('ul');
+      ul.className = 'scsi-list scsi-public-notes';
+      group[1].forEach(function (item) { const li = document.createElement('li'); li.textContent = item; ul.appendChild(li); });
+      out.appendChild(ul);
+    });
+  }
+
   function renderPublicSourcePageDirectory(root, data) {
     const out = root.querySelector('.scsi-output');
     const muted = root.querySelector('.scsi-muted');
-    muted.textContent = (data.summary || 'Public source page directory.') + ' · ' + (data.version_scope || 'v1.2.1');
+    muted.textContent = (data.summary || 'Public source page directory.') + ' · ' + (data.version_scope || 'v1.3.0');
     out.innerHTML = '';
     const nav = document.createElement('div');
     nav.className = 'scsi-public-nav-row scsi-public-source-nav-row';
@@ -2375,7 +2505,7 @@
   function renderPublicSourcePageTemplates(root, data) {
     const out = root.querySelector('.scsi-output');
     const muted = root.querySelector('.scsi-muted');
-    muted.textContent = (data.summary || 'Copy-ready public source page templates.') + ' · ' + (data.version_scope || 'v1.2.1');
+    muted.textContent = (data.summary || 'Copy-ready public source page templates.') + ' · ' + (data.version_scope || 'v1.3.0');
     out.innerHTML = '';
     const grid = document.createElement('div');
     grid.className = 'scsi-grid scsi-public-source-page-grid';
@@ -2639,6 +2769,13 @@
       fetchJson(cfg.restBase + sourcePanelEndpoint(panel))
         .then(function (data) { renderPublicSourcePanel(root, data); })
         .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public source panel.'); });
+    });
+
+    document.querySelectorAll('[data-scsi-public-connector-panel]').forEach(function (root) {
+      const panel = root.dataset.connectorPanel || 'connector-status';
+      fetchJson(cfg.restBase + connectorPanelEndpoint(panel))
+        .then(function (data) { renderPublicConnectorPanel(root, data); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public connector panel.'); });
     });
 
     document.querySelectorAll('[data-scsi-public-page-builder]').forEach(function (root) {

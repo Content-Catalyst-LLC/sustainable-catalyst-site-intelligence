@@ -156,7 +156,7 @@ def public_source_page_directory() -> Dict[str, Any]:
         "generated_at": _now(),
         "title": "Public Source Page Directory",
         "summary": "Copy-ready public page directory for the Site Intelligence API source and indicator layer.",
-        "version_scope": "v1.2.1",
+        "version_scope": "v1.3.0",
         "base_path": PUBLIC_SOURCE_BASE_PATH,
         "pages": [SOURCE_PAGE_CONFIG[slug] | {"url": _absolute_url(SOURCE_PAGE_CONFIG[slug]["canonical_path"])} for slug in SOURCE_PAGE_ORDER],
         "navigation": _navigation(),
@@ -228,7 +228,7 @@ def public_source_page_templates(slug: str | None = None) -> Dict[str, Any]:
         "generated_at": _now(),
         "title": "Public Source Page Templates",
         "summary": "Copy-ready metadata, shortcode, navigation, and section guidance for Site Intelligence public source pages.",
-        "version_scope": "v1.2.1",
+        "version_scope": "v1.3.0",
         "templates": templates,
         "recommended_shortcode": "[sc_public_source_page_templates]",
     }
@@ -241,15 +241,15 @@ def public_source_page_visual_qa() -> Dict[str, Any]:
         {"id": "source_navigation", "label": "Reusable source navigation", "status": "pass", "detail": "Source pages can include [sc_public_source_navigation] with an active current page."},
         {"id": "public_safe_boundaries", "label": "Public-safe boundary language", "status": "pass", "detail": "Templates include public/private exclusions and professional-use limits."},
         {"id": "dashboard_integration", "label": "Dashboard system integration", "status": "pass", "detail": "Source pages link back to Site Intelligence, Dashboard Directory, Source Methodology, and Platform."},
-        {"id": "visual_wrapping", "label": "Navigation and button wrapping", "status": "pass", "detail": "v1.2.1 CSS adds compact source page grids, active links, and nowrap helpers for public navigation labels."},
+        {"id": "visual_wrapping", "label": "Navigation and button wrapping", "status": "pass", "detail": "v1.3.0 CSS adds compact source page grids, active links, and nowrap helpers for public navigation labels."},
     ]
     score = int(round(100 * sum(1 for item in checks if item["status"] == "pass") / max(1, len(checks))))
     return {
         "ok": True,
         "generated_at": _now(),
         "title": "Public Source Page Visual QA",
-        "summary": "Visual and integration QA for v1.2.1 public source and indicator pages.",
-        "version_scope": "v1.2.1",
+        "summary": "Visual and integration QA for v1.3.0 public source and indicator pages.",
+        "version_scope": "v1.3.0",
         "score": score,
         "checks": checks,
         "recommended_shortcode": "[sc_public_source_page_visual_qa]",
