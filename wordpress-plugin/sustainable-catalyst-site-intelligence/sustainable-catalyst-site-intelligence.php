@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.12.2
+ * Version: 1.12.4
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.12.2';
+    const VERSION = '1.12.4';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -819,13 +819,33 @@ final class SC_Site_Intelligence_Plugin {
         if (empty($options['backend_url'])) {
             return new WP_Error('scsi_no_backend', 'Site Intelligence backend URL is not configured.', ['status' => 400]);
         }
+
         $url = untrailingslashit($options['backend_url']) . '/' . ltrim($endpoint, '/');
+        $method = strtoupper($method);
+        $is_cacheable = ($method === 'GET' && is_null($body));
+        $cache_hash = md5($url);
+        $fresh_key = 'scsi_fresh_' . $cache_hash;
+        $stale_key = 'scsi_stale_' . $cache_hash;
+
+        if ($is_cacheable) {
+            $fresh = get_transient($fresh_key);
+            if (is_array($fresh)) {
+                $fresh['_scsi_delivery'] = [
+                    'mode' => 'cache',
+                    'freshness' => 'fresh',
+                ];
+                return $fresh;
+            }
+        }
+
         $args = [
             'method' => $method,
-            'timeout' => 12,
+            'timeout' => 45,
+            'redirection' => 3,
             'headers' => [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
+                'User-Agent' => 'Sustainable-Catalyst-Site-Intelligence/1.12.4',
             ],
         ];
         if (!empty($options['api_token'])) {
@@ -834,14 +854,38 @@ final class SC_Site_Intelligence_Plugin {
         if (!is_null($body)) {
             $args['body'] = wp_json_encode($body);
         }
+
         $response = wp_remote_request($url, $args);
         if (is_wp_error($response)) {
+            if ($is_cacheable) {
+                $stale = get_transient($stale_key);
+                if (is_array($stale)) {
+                    $stale['_scsi_delivery'] = [
+                        'mode' => 'stale_cache',
+                        'freshness' => 'stale',
+                        'reason' => sanitize_text_field($response->get_error_message()),
+                    ];
+                    return $stale;
+                }
+            }
             return $response;
         }
+
         $code = wp_remote_retrieve_response_code($response);
         $raw_body = wp_remote_retrieve_body($response);
         $payload = json_decode($raw_body, true);
         if ($code < 200 || $code >= 300) {
+            if ($is_cacheable) {
+                $stale = get_transient($stale_key);
+                if (is_array($stale)) {
+                    $stale['_scsi_delivery'] = [
+                        'mode' => 'stale_cache',
+                        'freshness' => 'stale',
+                        'reason' => 'Origin returned HTTP ' . intval($code),
+                    ];
+                    return $stale;
+                }
+            }
             $message = 'Site Intelligence backend returned an error.';
             if (is_array($payload) && isset($payload['detail'])) {
                 if (is_array($payload['detail']) && isset($payload['detail']['message'])) {
@@ -857,7 +901,17 @@ final class SC_Site_Intelligence_Plugin {
                 'payload' => is_array($payload) ? $payload : null,
             ]);
         }
-        return is_array($payload) ? $payload : ['ok' => true, 'raw' => $raw_body];
+
+        $result = is_array($payload) ? $payload : ['ok' => true, 'raw' => $raw_body];
+        if ($is_cacheable) {
+            set_transient($fresh_key, $result, 5 * MINUTE_IN_SECONDS);
+            set_transient($stale_key, $result, 6 * HOUR_IN_SECONDS);
+        }
+        $result['_scsi_delivery'] = [
+            'mode' => 'origin',
+            'freshness' => 'fresh',
+        ];
+        return $result;
     }
 
 
@@ -928,11 +982,25 @@ final class SC_Site_Intelligence_Plugin {
     public function rest_public_dashboard_launch_manifest() { return $this->backend_request('public/dashboard-studio/launch-manifest'); }
     public function rest_public_dashboard_launch_readiness() { return $this->backend_request('public/dashboard-studio/launch-readiness'); }
     public function rest_public_dashboard_studio_navigation() { return $this->backend_request('public/dashboard-studio/navigation'); }
-    public function rest_public_cross_domain_dashboard(WP_REST_Request $request) { $id = sanitize_title($request->get_param('id')); $view = sanitize_key($request->get_param('view')); $country = sanitize_text_field($request->get_param('country')); $region = sanitize_text_field($request->get_param('region')); $start = sanitize_text_field($request->get_param('start')); $end = sanitize_text_field($request->get_param('end')); $compare = sanitize_text_field($request->get_param('compare')); $suffix = $view === 'data' ? '/data' : ($view === 'brief' ? '/brief' : ''); $params = array_filter(['country'=>$country,'region'=>$region,'start'=>$start,'end'=>$end,'compare'=>$compare]); return $this->backend_request('public/dashboard-studio/' . rawurlencode($id ?: 'climate-human-vulnerability') . $suffix . ($params ? '?' . http_build_query($params) : '')); }
+    private function cross_domain_fallback($type, $country = 'KEN', $compare = 'GHA', $dashboard_id = 'climate-human-vulnerability') {
+        $country = strtoupper($country ?: 'KEN');
+        $compare = strtoupper($compare ?: 'GHA');
+        if ($type === 'dashboard') {
+            return ['ok'=>true,'version'=>self::VERSION,'dashboard_id'=>$dashboard_id,'summary'=>'Public Intelligence Dashboard is using the local WordPress fallback while the live service is unavailable.','data_state'=>'local-fallback','summary_cards'=>[
+                ['domain'=>'planetary-boundaries','status'=>'ready','freshness'=>'mixed'],['domain'=>'human-development','status'=>'ready','freshness'=>'mixed'],['domain'=>'humanitarian-intelligence','status'=>'ready','freshness'=>'mixed'],['domain'=>'human-security','status'=>'ready','freshness'=>'mixed']
+            ],'notes'=>['Live records will replace this fallback automatically when the backend responds.']];
+        }
+        if ($type === 'country') {
+            return ['ok'=>true,'version'=>self::VERSION,'country_code'=>$country,'profile_status'=>'local-fallback','summary'=>'Country Intelligence Profile is using the local WordPress fallback while the live service is unavailable.','domains'=>array_map(function($d){ return ['domain'=>$d,'status'=>'ready','freshness'=>'mixed']; }, ['sustainable-development','planetary-boundaries','human-development','humanitarian-intelligence','human-security','international-law']),'governance'=>['Country profiles are analytical summaries, not rankings.','Missing data is displayed rather than silently imputed.']];
+        }
+        return ['ok'=>true,'version'=>self::VERSION,'countries'=>[$country,$compare],'status'=>'local-fallback','summary'=>'Cross-Domain Comparison is using the local WordPress fallback while the live service is unavailable.','comparison_dimensions'=>['human-development','environmental-pressure','disaster-exposure','conflict-displacement','international-law-context','source-coverage'],'normalization_rule'=>'Display original units and definitions; do not combine unlike indicators into one score.'];
+    }
+
+    public function rest_public_cross_domain_dashboard(WP_REST_Request $request) { $id = sanitize_title($request->get_param('id')) ?: 'climate-human-vulnerability'; $view = sanitize_key($request->get_param('view')) ?: 'data'; $country = strtoupper(sanitize_text_field($request->get_param('country'))); $region = sanitize_text_field($request->get_param('region')); $start = sanitize_text_field($request->get_param('start')); $end = sanitize_text_field($request->get_param('end')); $compare = strtoupper(sanitize_text_field($request->get_param('compare'))); $suffix = $view === 'brief' ? '/brief' : '/data'; $params = array_filter(['country'=>$country,'region'=>$region,'start'=>$start,'end'=>$end,'compare'=>$compare]); $result = $this->backend_request('public/dashboard-studio/' . rawurlencode($id) . $suffix . ($params ? '?' . http_build_query($params) : '')); return is_wp_error($result) ? $this->cross_domain_fallback('dashboard', $country, $compare, $id) : $result; }
     public function rest_public_cross_domain_dashboard_sources(WP_REST_Request $request) { $id = sanitize_title($request->get_param('id')); return $this->backend_request('public/dashboard-studio/' . rawurlencode($id ?: 'climate-human-vulnerability') . '/sources'); }
     public function rest_public_cross_domain_dashboard_export(WP_REST_Request $request) { $id = sanitize_title($request->get_param('id')); $country = sanitize_text_field($request->get_param('country')); return $this->backend_request('public/dashboard-studio/' . rawurlencode($id ?: 'climate-human-vulnerability') . '/export' . ($country ? '?country=' . rawurlencode($country) : '')); }
-    public function rest_public_country_intelligence(WP_REST_Request $request) { $country = strtoupper(sanitize_text_field($request->get_param('country'))); return $this->backend_request('public/country-intelligence/' . rawurlencode($country ?: 'KEN')); }
-    public function rest_public_cross_domain_comparison(WP_REST_Request $request) { $country = strtoupper(sanitize_text_field($request->get_param('country'))); $compare = strtoupper(sanitize_text_field($request->get_param('compare'))); return $this->backend_request('public/cross-domain-comparison?' . http_build_query(['country'=>$country,'compare'=>$compare])); }
+    public function rest_public_country_intelligence(WP_REST_Request $request) { $country = strtoupper(sanitize_text_field($request->get_param('country'))) ?: 'KEN'; $result = $this->backend_request('public/country-intelligence/' . rawurlencode($country)); return is_wp_error($result) ? $this->cross_domain_fallback('country', $country) : $result; }
+    public function rest_public_cross_domain_comparison(WP_REST_Request $request) { $country = strtoupper(sanitize_text_field($request->get_param('country'))) ?: 'KEN'; $compare = strtoupper(sanitize_text_field($request->get_param('compare'))) ?: 'GHA'; $result = $this->backend_request('public/cross-domain-comparison?' . http_build_query(['country'=>$country,'compare'=>$compare])); return is_wp_error($result) ? $this->cross_domain_fallback('comparison', $country, $compare) : $result; }
 
     public function rest_dashboard(WP_REST_Request $request) {
         $query = [];

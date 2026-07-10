@@ -1,4 +1,22 @@
-## 1.12.2 — WordPress Feed Loading Hotfix
+# v1.12.4 — Dashboard Studio Route and Fallback Hotfix
+
+- Fixed Public Intelligence Dashboard, Country Intelligence Profile, and Cross-Domain Comparison delivery.
+- Added schema-specific frontend rendering for dashboard cards, country domains, and comparison dimensions.
+- Added deterministic WordPress fallbacks when the Render proxy is unavailable.
+- Added safe default country codes and consistent dashboard data routing.
+
+# Changelog
+
+## 1.12.3 — Feed Reliability and Render Cold-Start Hotfix
+
+- Increased WordPress-to-Render request timeout from 12 seconds to 45 seconds.
+- Added five-minute shared caching for successful public GET responses.
+- Added six-hour stale-response fallback when Render is waking, unavailable, or returns a temporary gateway error.
+- Added delivery metadata distinguishing origin, fresh-cache, and stale-cache responses.
+- Added a plugin-specific user agent and limited redirect handling for origin requests.
+- Preserved the v1.12.2 JavaScript and navigation-route fixes.
+
+## 1.12.3 — WordPress Feed Loading Hotfix
 
 - Fixed a JavaScript `ReferenceError` that stopped all connector-backed public panels before their REST requests were sent.
 - Corrected the Dashboard Studio navigation panel to use the registered WordPress REST route.

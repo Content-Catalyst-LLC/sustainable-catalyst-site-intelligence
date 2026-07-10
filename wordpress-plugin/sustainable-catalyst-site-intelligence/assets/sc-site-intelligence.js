@@ -2729,6 +2729,31 @@
     muted.textContent = (data.summary || 'Public connector panel.') + ' · Status: ' + (data.public_status || data.version_scope || 'review');
     out.innerHTML = '';
 
+    if (data.summary_cards || data.domains || data.comparison_dimensions) {
+      const grid = document.createElement('div');
+      grid.className = 'scsi-grid scsi-public-connector-health-grid';
+      (data.summary_cards || data.domains || []).forEach(function (item) {
+        const card = document.createElement('div');
+        card.className = 'scsi-stat scsi-public-connector-status-card';
+        card.innerHTML = '<span class="scsi-public-label">' + escapeHtml(item.domain || item.label || 'Domain') + '</span>' +
+          '<strong>' + escapeHtml(item.status || item.display_state || 'ready') + '</strong>' +
+          '<small><b>Freshness:</b> ' + escapeHtml(item.freshness || 'mixed') + '</small>';
+        grid.appendChild(card);
+      });
+      if (grid.children.length) out.appendChild(grid);
+      if (data.countries) {
+        const row = document.createElement('div'); row.className = 'scsi-page-row';
+        row.innerHTML = '<strong>' + escapeHtml((data.countries || []).join(' compared with ')) + '</strong><small>' + escapeHtml(data.normalization_rule || '') + '</small>';
+        out.appendChild(row);
+      }
+      if (data.comparison_dimensions) {
+        const ul = document.createElement('ul'); ul.className = 'scsi-list scsi-public-notes';
+        data.comparison_dimensions.forEach(function (x) { const li=document.createElement('li'); li.textContent=x; ul.appendChild(li); }); out.appendChild(ul);
+      }
+      (data.notes || data.governance || []).forEach(function (note) { const row=document.createElement('div'); row.className='scsi-page-row'; row.innerHTML='<small>'+escapeHtml(note)+'</small>'; out.appendChild(row); });
+      return;
+    }
+
     if (typeof data.score !== 'undefined' || data.counts) {
       const grid = document.createElement('div');
       grid.className = 'scsi-grid scsi-public-connector-health-grid';
