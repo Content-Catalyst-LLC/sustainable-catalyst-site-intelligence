@@ -1,4 +1,4 @@
-# Cross-Domain Intelligence and Public Dashboard Studio — v1.12.0
+# Cross-Domain Intelligence and Public Dashboard Studio — v1.12.1
 
 ## Purpose
 

@@ -1,6 +1,14 @@
+# v1.12.1 — Dashboard Reliability, Accessibility, and Mobile Polish
+
+- Added launch-ready public navigation and dashboard experience contracts.
+- Added loading, empty, stale, last-known-good, and unavailable states.
+- Added responsive, keyboard, screen-reader, share-state, and accessible-table polish.
+- Added public launch manifest, readiness, and navigation endpoints.
+- Preserved all v1.12.0 dashboard studio and domain intelligence capabilities.
+
 # Changelog
 
-## v1.12.0 — Cross-Domain Intelligence and Public Dashboard Studio
+## v1.12.1 — Cross-Domain Intelligence and Public Dashboard Studio
 
 - Added a configuration-driven public dashboard studio spanning planetary boundaries, sustainable development, human development, disasters, conflict, displacement, and international law.
 - Added four initial flagship dashboard definitions, country intelligence profiles, and cross-country comparison contracts.
@@ -47,7 +55,7 @@
 - Added stale-while-revalidate and last-known-good connector states.
 - Added source-specific response checks and normalized observation validation.
 - Added freshness thresholds, cache diagnostics, reliability endpoints, WordPress routes, and shortcodes.
-- Updated backend and WordPress versions to 1.12.0.
+- Updated backend and WordPress versions to 1.12.1.
 
 # Changelog
 

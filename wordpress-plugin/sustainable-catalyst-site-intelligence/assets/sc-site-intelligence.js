@@ -2650,6 +2650,9 @@
       'human-security-methodology': '/public-human-security-methodology',
       'human-security-export': '/public-human-security-export',
       'cross-domain-dashboard-studio': '/public-cross-domain-dashboards',
+      'dashboard-launch-manifest': '/public-dashboard-launch-manifest',
+      'dashboard-launch-readiness': '/public-dashboard-launch-readiness',
+      'dashboard-public-navigation': '/public-dashboard-navigation',
       'cross-domain-dashboard-directory': '/public-cross-domain-dashboards',
       'cross-domain-dashboard': '/public-cross-domain-dashboard',
       'cross-domain-dashboard-sources': '/public-cross-domain-dashboard-sources',
@@ -2718,6 +2721,9 @@
   }
 
   function renderPublicConnectorPanel(root, data) {
+    const loadingShell = root.querySelector('.scsi-loading-shell');
+    if (loadingShell) loadingShell.hidden = true;
+    root.classList.add('scsi-is-ready');
     const out = root.querySelector('.scsi-output');
     const muted = root.querySelector('.scsi-muted');
     muted.textContent = (data.summary || 'Public connector panel.') + ' · Status: ' + (data.public_status || data.version_scope || 'review');
@@ -3298,8 +3304,26 @@
     });
   }
 
+  function setupLaunchActions() {
+    document.querySelectorAll('[data-scsi-copy-view]').forEach(function (button) {
+      button.addEventListener('click', function () {
+        var url = window.location.href;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(function () {
+            button.textContent = 'Link copied';
+            window.setTimeout(function () { button.textContent = 'Copy view link'; }, 1800);
+          });
+        }
+      });
+    });
+    document.querySelectorAll('[data-scsi-print-view]').forEach(function (button) {
+      button.addEventListener('click', function () { window.print(); });
+    });
+  }
+
   function init() {
     setupActivePageLinks();
+    setupLaunchActions();
     fetchDashboards();
   }
 

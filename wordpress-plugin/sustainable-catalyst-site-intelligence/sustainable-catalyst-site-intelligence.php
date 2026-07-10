@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.12.0
+ * Version: 1.12.1
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.12.0';
+    const VERSION = '1.12.1';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -122,6 +122,9 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_human_security_methodology', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_human_security_export', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_dashboard_studio', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_public_dashboard_launch_manifest', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_public_dashboard_launch_readiness', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_public_dashboard_studio_navigation', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_cross_domain_dashboard_directory', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_intelligence_dashboard', [$this, 'cross_domain_dashboard_shortcode']);
         add_shortcode('sc_public_country_intelligence', [$this, 'country_intelligence_shortcode']);
@@ -585,6 +588,9 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-human-security-export', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_human_security_export'], 'permission_callback' => '__return_true']);
         register_rest_route(self::REST_NAMESPACE, '/public-cross-domain-dashboards', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_cross_domain_dashboards'], 'permission_callback' => '__return_true']);
         register_rest_route(self::REST_NAMESPACE, '/public-cross-domain-dashboard-manifest', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_cross_domain_dashboard_manifest'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-dashboard-launch-manifest', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_dashboard_launch_manifest'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-dashboard-launch-readiness', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_dashboard_launch_readiness'], 'permission_callback' => '__return_true']);
+        register_rest_route(self::REST_NAMESPACE, '/public-dashboard-studio-navigation', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_dashboard_studio_navigation'], 'permission_callback' => '__return_true']);
         register_rest_route(self::REST_NAMESPACE, '/public-cross-domain-dashboard', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_cross_domain_dashboard'], 'permission_callback' => '__return_true']);
         register_rest_route(self::REST_NAMESPACE, '/public-cross-domain-dashboard-sources', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_cross_domain_dashboard_sources'], 'permission_callback' => '__return_true']);
         register_rest_route(self::REST_NAMESPACE, '/public-cross-domain-dashboard-export', ['methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_cross_domain_dashboard_export'], 'permission_callback' => '__return_true']);
@@ -919,6 +925,9 @@ final class SC_Site_Intelligence_Plugin {
     public function rest_public_human_security_export() { return $this->backend_request('public/human-security/export'); }
     public function rest_public_cross_domain_dashboards() { return $this->backend_request('public/dashboard-studio'); }
     public function rest_public_cross_domain_dashboard_manifest() { return $this->backend_request('public/dashboard-studio/manifest'); }
+    public function rest_public_dashboard_launch_manifest() { return $this->backend_request('public/dashboard-studio/launch-manifest'); }
+    public function rest_public_dashboard_launch_readiness() { return $this->backend_request('public/dashboard-studio/launch-readiness'); }
+    public function rest_public_dashboard_studio_navigation() { return $this->backend_request('public/dashboard-studio/navigation'); }
     public function rest_public_cross_domain_dashboard(WP_REST_Request $request) { $id = sanitize_title($request->get_param('id')); $view = sanitize_key($request->get_param('view')); $country = sanitize_text_field($request->get_param('country')); $region = sanitize_text_field($request->get_param('region')); $start = sanitize_text_field($request->get_param('start')); $end = sanitize_text_field($request->get_param('end')); $compare = sanitize_text_field($request->get_param('compare')); $suffix = $view === 'data' ? '/data' : ($view === 'brief' ? '/brief' : ''); $params = array_filter(['country'=>$country,'region'=>$region,'start'=>$start,'end'=>$end,'compare'=>$compare]); return $this->backend_request('public/dashboard-studio/' . rawurlencode($id ?: 'climate-human-vulnerability') . $suffix . ($params ? '?' . http_build_query($params) : '')); }
     public function rest_public_cross_domain_dashboard_sources(WP_REST_Request $request) { $id = sanitize_title($request->get_param('id')); return $this->backend_request('public/dashboard-studio/' . rawurlencode($id ?: 'climate-human-vulnerability') . '/sources'); }
     public function rest_public_cross_domain_dashboard_export(WP_REST_Request $request) { $id = sanitize_title($request->get_param('id')); $country = sanitize_text_field($request->get_param('country')); return $this->backend_request('public/dashboard-studio/' . rawurlencode($id ?: 'climate-human-vulnerability') . '/export' . ($country ? '?country=' . rawurlencode($country) : '')); }
@@ -2840,6 +2849,9 @@ final class SC_Site_Intelligence_Plugin {
             'sc_human_security_methodology' => ['human-security-methodology', 'Human Security Methodology', 'Event, displacement, protection, infrastructure, forecast, and responsible-data rules.'],
             'sc_human_security_export' => ['human-security-export', 'Human Security Export', 'Public-safe sources, monitors, schemas, and methodology records.'],
             'sc_public_dashboard_studio' => ['cross-domain-dashboard-studio', 'Cross-Domain Intelligence and Public Dashboard Studio', 'Configuration-driven public dashboards, country profiles, comparisons, source panels, briefs, and exports.'],
+            'sc_public_dashboard_launch_manifest' => ['dashboard-launch-manifest', 'Public Dashboard Launch Manifest', 'Launch-ready navigation, interaction states, accessibility, source transparency, and export contracts.'],
+            'sc_public_dashboard_launch_readiness' => ['dashboard-launch-readiness', 'Public Dashboard Launch Readiness', 'Required and recommended checks for a polished production launch.'],
+            'sc_public_dashboard_studio_navigation' => ['dashboard-public-navigation', 'Public Dashboard Navigation', 'Public navigation across dashboards, country profiles, comparisons, sources, methodology, and exports.'],
             'sc_public_cross_domain_dashboard_directory' => ['cross-domain-dashboard-directory', 'Public Intelligence Dashboard Directory', 'Browse flagship cross-domain dashboards and country intelligence experiences.'],
         ];
         return isset($map[$tag]) ? $map[$tag] : ['connector-status', 'Public Connector Status', 'Loading public connector status…'];
@@ -2984,11 +2996,29 @@ final class SC_Site_Intelligence_Plugin {
         $options = self::options();
         if ($options['enable_dashboard'] !== '1') { return ''; }
         ob_start(); ?>
-        <section class="scsi-card scsi-public-connector-panel scsi-cross-domain-panel" data-scsi-public-connector-panel data-connector-panel="<?php echo esc_attr($panel); ?>" data-dashboard-id="<?php echo esc_attr($dashboard_id); ?>" data-country="<?php echo esc_attr($country); ?>" data-region="<?php echo esc_attr($region); ?>" data-compare="<?php echo esc_attr($compare); ?>" data-view="<?php echo esc_attr($view); ?>">
-            <p class="scsi-eyebrow">Cross-Domain Intelligence</p>
-            <h2><?php echo esc_html($title); ?></h2>
-            <p class="scsi-muted">Loading synchronized dashboard, source, freshness, brief, and accessible-table contracts…</p>
-            <div class="scsi-output" aria-live="polite"></div>
+        <section class="scsi-card scsi-public-connector-panel scsi-cross-domain-panel scsi-launch-ready-panel" data-scsi-public-connector-panel data-connector-panel="<?php echo esc_attr($panel); ?>" data-dashboard-id="<?php echo esc_attr($dashboard_id); ?>" data-country="<?php echo esc_attr($country); ?>" data-region="<?php echo esc_attr($region); ?>" data-compare="<?php echo esc_attr($compare); ?>" data-view="<?php echo esc_attr($view); ?>">
+            <div class="scsi-public-dashboard-header">
+                <div>
+                    <p class="scsi-eyebrow">Sustainable Catalyst Site Intelligence</p>
+                    <h2><?php echo esc_html($title); ?></h2>
+                    <p class="scsi-muted">Source-aware evidence across environmental limits, human development, humanitarian conditions, conflict, displacement, and international law.</p>
+                </div>
+                <div class="scsi-public-dashboard-actions" aria-label="Dashboard actions">
+                    <button type="button" class="scsi-public-action" data-scsi-copy-view>Copy view link</button>
+                    <button type="button" class="scsi-public-action" data-scsi-print-view>Print view</button>
+                </div>
+            </div>
+            <nav class="scsi-public-dashboard-nav" aria-label="Site Intelligence dashboard sections">
+                <a href="#dashboard-directory">Dashboards</a><a href="#country-intelligence">Country profiles</a><a href="#compare-places">Compare places</a><a href="#sources">Sources</a><a href="#methodology">Methodology</a>
+            </nav>
+            <div class="scsi-loading-shell" role="status" aria-live="polite">
+                <span class="scsi-skeleton scsi-skeleton-title"></span>
+                <span class="scsi-skeleton"></span>
+                <span class="scsi-skeleton"></span>
+                <span class="screen-reader-text">Loading current evidence.</span>
+            </div>
+            <div class="scsi-output" aria-live="polite" aria-atomic="false"></div>
+            <noscript><p class="scsi-public-state scsi-public-state-error">JavaScript is required for the interactive dashboard. Source and methodology endpoints remain available.</p></noscript>
         </section>
         <?php return ob_get_clean();
     }
@@ -3388,7 +3418,7 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function release_status_shortcode($atts = []) {
-        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.12.0 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
+        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.12.1 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
     }
 
 }

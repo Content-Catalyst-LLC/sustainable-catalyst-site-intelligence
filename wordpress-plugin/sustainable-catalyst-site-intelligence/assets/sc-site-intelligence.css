@@ -1594,7 +1594,7 @@
 
 /* v1.10.0 Public Shortcode Visual Alignment */
 
-/* v1.12.0 Cross-Domain Dashboard Studio */
+/* v1.12.1 Cross-Domain Dashboard Studio */
 .scsi-cross-domain-panel { container-type: inline-size; }
 .scsi-cross-domain-panel .scsi-output { display: grid; gap: 1rem; }
 .scsi-cross-domain-panel .scsi-grid { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
@@ -1603,4 +1603,94 @@
 @media (max-width: 680px) {
   .scsi-cross-domain-panel { padding: 1rem; }
   .scsi-cross-domain-panel .scsi-grid { grid-template-columns: 1fr; }
+}
+
+/* =========================================================
+   v1.12.1 Launch-ready public dashboard polish
+   ========================================================= */
+.scsi-launch-ready-panel {
+  --scsi-panel-bg: #fffdf7;
+  overflow: clip;
+  border-top: 5px solid #9b1111;
+  background: var(--scsi-panel-bg);
+}
+.scsi-public-dashboard-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid rgba(17,17,17,.16);
+}
+.scsi-public-dashboard-header h2 { margin-bottom: .45rem; }
+.scsi-public-dashboard-actions { display: flex; flex-wrap: wrap; gap: .55rem; }
+.scsi-public-action {
+  appearance: none;
+  border: 1px solid #171717;
+  background: #fff;
+  color: #171717;
+  min-height: 42px;
+  padding: .65rem .9rem;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+.scsi-public-action:hover { background: #171717; color: #fff; }
+.scsi-public-action:focus-visible,
+.scsi-public-dashboard-nav a:focus-visible {
+  outline: 3px solid #9b1111;
+  outline-offset: 3px;
+}
+.scsi-public-dashboard-nav {
+  display: flex;
+  gap: .5rem;
+  overflow-x: auto;
+  padding: .8rem 0;
+  scrollbar-width: thin;
+}
+.scsi-public-dashboard-nav a {
+  flex: 0 0 auto;
+  border: 1px solid rgba(17,17,17,.2);
+  background: #fff;
+  color: #171717;
+  padding: .55rem .75rem;
+  text-decoration: none;
+  font-size: .78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .045em;
+}
+.scsi-loading-shell { display: grid; gap: .7rem; padding: 1rem 0; }
+.scsi-skeleton {
+  display: block;
+  min-height: 16px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, rgba(0,0,0,.06), rgba(0,0,0,.12), rgba(0,0,0,.06));
+  background-size: 200% 100%;
+  animation: scsi-loading 1.35s ease-in-out infinite;
+}
+.scsi-skeleton-title { width: 48%; min-height: 28px; }
+.scsi-skeleton:nth-child(2) { width: 92%; }
+.scsi-skeleton:nth-child(3) { width: 72%; }
+@keyframes scsi-loading { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .scsi-skeleton { animation: none; } }
+.scsi-public-state { border-left: 4px solid #171717; background: #fff; padding: .85rem 1rem; }
+.scsi-public-state-stale { border-left-color: #9b6b00; }
+.scsi-public-state-error { border-left-color: #9b1111; }
+.scsi-cross-domain-panel table { width: 100%; border-collapse: collapse; }
+.scsi-cross-domain-panel th,
+.scsi-cross-domain-panel td { padding: .7rem; border-bottom: 1px solid rgba(17,17,17,.14); text-align: left; vertical-align: top; }
+.scsi-cross-domain-panel th { background: rgba(17,17,17,.045); }
+@media (max-width: 760px) {
+  .scsi-public-dashboard-header { display: grid; }
+  .scsi-public-dashboard-actions { width: 100%; }
+  .scsi-public-action { flex: 1 1 10rem; }
+  .scsi-launch-ready-panel { padding: 1rem; }
+  .scsi-cross-domain-panel .scsi-stat,
+  .scsi-cross-domain-panel .scsi-public-connector-status-card { min-height: auto; }
+}
+@media print {
+  .scsi-public-dashboard-actions,
+  .scsi-public-dashboard-nav { display: none !important; }
+  .scsi-launch-ready-panel { border: 0; box-shadow: none; }
 }

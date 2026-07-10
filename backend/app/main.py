@@ -107,6 +107,11 @@ from .humanitarian_intelligence import (
     methodology as build_humanitarian_methodology,
     export_manifest as build_humanitarian_export,
 )
+from .public_dashboard_launch_polish import (
+    launch_manifest as build_dashboard_launch_manifest,
+    launch_readiness as build_dashboard_launch_readiness,
+    public_navigation as build_dashboard_public_navigation,
+)
 from .cross_domain_dashboard_studio import (
     dashboard_directory as build_cross_domain_dashboard_directory,
     dashboard_manifest as build_cross_domain_dashboard_manifest,
@@ -599,6 +604,21 @@ def public_humanitarian_export():
 
 
 
+
+
+@app.get("/public/dashboard-studio/launch-manifest")
+def public_dashboard_launch_manifest():
+    return build_dashboard_launch_manifest()
+
+
+@app.get("/public/dashboard-studio/launch-readiness")
+def public_dashboard_launch_readiness():
+    return build_dashboard_launch_readiness()
+
+
+@app.get("/public/dashboard-studio/navigation")
+def public_dashboard_public_navigation():
+    return build_dashboard_public_navigation()
 
 @app.get("/public/dashboard-studio")
 def public_cross_domain_dashboards():

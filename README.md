@@ -1,5 +1,5 @@
 
-## v1.12.0 Cross-Domain Intelligence and Public Dashboard Studio
+## v1.12.1 Cross-Domain Intelligence and Public Dashboard Studio
 
 The dashboard studio composes existing Site Intelligence domains into reusable public experiences rather than hard-coding every dashboard. It includes flagship climate-and-vulnerability, conflict-and-development, international-law-and-humanitarian, and country-intelligence configurations.
 
@@ -11,11 +11,11 @@ Public endpoints begin at `/public/dashboard-studio`, with country profiles at `
 
 Adds source-aware public monitoring for sanctions, treaties, UN decisions, courts, human rights, EU law, and trade governance. The monitor preserves procedural status and authoritative-source links and does not provide legal advice or compliance determinations.
 
-Current version: v1.12.0 — Conflict, Displacement and Human Security
+Current version: v1.12.1 — Conflict, Displacement and Human Security
 
 # Sustainable Catalyst Site Intelligence
 
-Version: 1.12.0
+Version: 1.12.1
 
 ## v1.4.0 — Connector Reliability Patch and Public Status Polish
 
@@ -268,7 +268,7 @@ Adds source-aware GDACS, ReliefWeb, USGS earthquake, NASA EONET, and UNHCR integ
 
 Public source-aware observatory coverage now includes poverty, inequality, health, education, decent work, food security, and water and sanitation. The release adds domain detail, country profile, inequality-dimension, methodology, and export contracts while preserving source definitions, reference periods, revisions, and modeled-estimate labels.
 
-## v1.12.0 — Conflict, Displacement and Human Security
+## v1.12.1 — Conflict, Displacement and Human Security
 
 The human-security layer connects conflict-event sources, civilian-protection reporting, forced-displacement statistics, mobility assessments, infrastructure disruption, humanitarian-access records, and explicitly labeled modeled risk. It preserves source methodology, reference periods, geographic precision, confidence, revisions, and responsible-data limits.
 
