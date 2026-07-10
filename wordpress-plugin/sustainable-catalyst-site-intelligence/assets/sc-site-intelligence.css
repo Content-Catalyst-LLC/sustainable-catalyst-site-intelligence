@@ -1593,3 +1593,14 @@
 }
 
 /* v1.10.0 Public Shortcode Visual Alignment */
+
+/* v1.12.0 Cross-Domain Dashboard Studio */
+.scsi-cross-domain-panel { container-type: inline-size; }
+.scsi-cross-domain-panel .scsi-output { display: grid; gap: 1rem; }
+.scsi-cross-domain-panel .scsi-grid { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+.scsi-cross-domain-panel .scsi-stat,
+.scsi-cross-domain-panel .scsi-public-connector-status-card { min-height: 150px; }
+@media (max-width: 680px) {
+  .scsi-cross-domain-panel { padding: 1rem; }
+  .scsi-cross-domain-panel .scsi-grid { grid-template-columns: 1fr; }
+}

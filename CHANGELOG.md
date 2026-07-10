@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.12.0 — Cross-Domain Intelligence and Public Dashboard Studio
+
+- Added a configuration-driven public dashboard studio spanning planetary boundaries, sustainable development, human development, disasters, conflict, displacement, and international law.
+- Added four initial flagship dashboard definitions, country intelligence profiles, and cross-country comparison contracts.
+- Added source, data, brief, export, manifest, and accessible-table contracts.
+- Added WordPress shortcodes and public REST proxy routes for dashboard directories, dashboard views, country profiles, comparisons, sources, and exports.
+- Preserved existing topic-dashboard routes under their original URLs and placed the new studio under `/public/dashboard-studio`.
+- Added share-state parameters without collecting personal data and retained source-specific freshness, units, methodology, uncertainty, and legal-status labels.
+
 ## v1.11.0 — Conflict, Displacement and Human Security
 
 - Added ACLED, UCDP, UNHCR, IOM DTM, ReliefWeb, and HDX source registrations.
@@ -9,7 +18,7 @@
 - Added WordPress shortcodes and public REST proxy routes for conflict, displacement, and human-security dashboards.
 - Added responsible-data protections for sensitive geography, civilian status, fatality estimates, displacement statistics, and forecast interpretation.
 
-## 1.11.0 — Human Development and Social Conditions
+## v1.9.0 — Human Development and Social Conditions
 
 - Added source-aware registries for poverty, inequality, health, education, decent work, food security, and water and sanitation.
 - Added UN SDG, World Bank PIP, WHO, UNESCO UIS, ILOSTAT, FAOSTAT, and UN-Water source contracts.
@@ -17,7 +26,7 @@
 - Added WordPress shortcodes for the Human Development and Social Conditions observatory.
 - Preserved reference periods, modeled-estimate labels, methodological breaks, and disaggregation dimensions.
 
-## 1.11.0
+## v1.8.0 — Live Disaster, Displacement, and Humanitarian Intelligence
 - Added Live Disaster, Displacement, and Humanitarian Intelligence.
 - Added GDACS, ReliefWeb, USGS, NASA EONET, and UNHCR source contracts.
 - Added crisis map, report stream, displacement context, source registry, methodology, and export endpoints.
@@ -31,14 +40,14 @@
 - Added WordPress observatory, detail, trend, source, methodology, and export shortcodes.
 - Preserved the v1.6.1 connector reliability, cache, freshness, and schema-validation layer.
 
-## 1.11.0 — Connector Reliability, Freshness and Schema Validation
+## v1.6.1 — Connector Reliability, Freshness and Schema Validation
 
 - Added retries with bounded exponential backoff.
 - Added circuit breakers and rate-limit-aware status metadata.
 - Added stale-while-revalidate and last-known-good connector states.
 - Added source-specific response checks and normalized observation validation.
 - Added freshness thresholds, cache diagnostics, reliability endpoints, WordPress routes, and shortcodes.
-- Updated backend and WordPress versions to 1.11.0.
+- Updated backend and WordPress versions to 1.12.0.
 
 # Changelog
 

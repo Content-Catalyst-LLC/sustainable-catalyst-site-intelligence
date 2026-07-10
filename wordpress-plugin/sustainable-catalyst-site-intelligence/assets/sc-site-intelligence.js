@@ -2648,7 +2648,14 @@
       'human-security-displacement': '/public-human-security-displacement',
       'human-security-modeled-risk': '/public-human-security-modeled-risk',
       'human-security-methodology': '/public-human-security-methodology',
-      'human-security-export': '/public-human-security-export'
+      'human-security-export': '/public-human-security-export',
+      'cross-domain-dashboard-studio': '/public-cross-domain-dashboards',
+      'cross-domain-dashboard-directory': '/public-cross-domain-dashboards',
+      'cross-domain-dashboard': '/public-cross-domain-dashboard',
+      'cross-domain-dashboard-sources': '/public-cross-domain-dashboard-sources',
+      'cross-domain-dashboard-export': '/public-cross-domain-dashboard-export',
+      'country-intelligence': '/public-country-intelligence',
+      'cross-domain-comparison': '/public-cross-domain-comparison'
     };
     let endpoint = map[panel] || '/public-connector-status';
     const boundaryId = root && root.dataset ? (root.dataset.boundaryId || '') : '';
@@ -2669,6 +2676,20 @@
       if (recordType) humanParams.push('record_type=' + encodeURIComponent(recordType));
       if (humanCountry) humanParams.push('country=' + encodeURIComponent(humanCountry));
       if (humanParams.length) endpoint += '?' + humanParams.join('&');
+    }
+    if (panel.indexOf('cross-domain') === 0 || panel === 'country-intelligence') {
+      var crossParams = [];
+      var dashboardId = root.getAttribute('data-dashboard-id') || '';
+      var crossCountry = root.getAttribute('data-country') || '';
+      var crossRegion = root.getAttribute('data-region') || '';
+      var crossCompare = root.getAttribute('data-compare') || '';
+      var crossView = root.getAttribute('data-view') || '';
+      if (dashboardId) crossParams.push('id=' + encodeURIComponent(dashboardId));
+      if (crossCountry) crossParams.push('country=' + encodeURIComponent(crossCountry));
+      if (crossRegion) crossParams.push('region=' + encodeURIComponent(crossRegion));
+      if (crossCompare) crossParams.push('compare=' + encodeURIComponent(crossCompare));
+      if (crossView) crossParams.push('view=' + encodeURIComponent(crossView));
+      if (crossParams.length) endpoint += '?' + crossParams.join('&');
     }
     if (panel === 'international-law-events') {
       var query = [];

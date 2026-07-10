@@ -107,6 +107,17 @@ from .humanitarian_intelligence import (
     methodology as build_humanitarian_methodology,
     export_manifest as build_humanitarian_export,
 )
+from .cross_domain_dashboard_studio import (
+    dashboard_directory as build_cross_domain_dashboard_directory,
+    dashboard_manifest as build_cross_domain_dashboard_manifest,
+    get_dashboard as build_cross_domain_dashboard,
+    dashboard_data as build_cross_domain_dashboard_data,
+    dashboard_sources as build_cross_domain_dashboard_sources,
+    dashboard_brief as build_cross_domain_dashboard_brief,
+    dashboard_export as build_cross_domain_dashboard_export,
+    country_intelligence as build_country_intelligence,
+    cross_domain_comparison as build_cross_domain_comparison,
+)
 from .conflict_human_security import (
     overview as build_human_security_overview,
     source_registry as build_human_security_source_registry,
@@ -585,6 +596,71 @@ def public_humanitarian_methodology():
 def public_humanitarian_export():
     return build_humanitarian_export()
 
+
+
+
+
+@app.get("/public/dashboard-studio")
+def public_cross_domain_dashboards():
+    return build_cross_domain_dashboard_directory()
+
+
+@app.get("/public/dashboard-studio/manifest")
+def public_cross_domain_dashboard_manifest():
+    return build_cross_domain_dashboard_manifest()
+
+
+@app.get("/public/dashboard-studio/{dashboard_id}")
+def public_cross_domain_dashboard(dashboard_id: str):
+    result = build_cross_domain_dashboard(dashboard_id)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail=result)
+    return result
+
+
+@app.get("/public/dashboard-studio/{dashboard_id}/data")
+def public_cross_domain_dashboard_data(dashboard_id: str, country: str = "", region: str = "", start: str = "", end: str = "", compare: str = ""):
+    result = build_cross_domain_dashboard_data(dashboard_id, country, region, start, end, compare)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail=result)
+    return result
+
+
+@app.get("/public/dashboard-studio/{dashboard_id}/sources")
+def public_cross_domain_dashboard_sources(dashboard_id: str):
+    result = build_cross_domain_dashboard_sources(dashboard_id)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail=result)
+    return result
+
+
+@app.get("/public/dashboard-studio/{dashboard_id}/brief")
+def public_cross_domain_dashboard_brief(dashboard_id: str, country: str = ""):
+    result = build_cross_domain_dashboard_brief(dashboard_id, country)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail=result)
+    return result
+
+
+@app.get("/public/dashboard-studio/{dashboard_id}/export")
+def public_cross_domain_dashboard_export(dashboard_id: str, country: str = ""):
+    result = build_cross_domain_dashboard_export(dashboard_id, country)
+    if not result.get("ok"):
+        raise HTTPException(status_code=404, detail=result)
+    return result
+
+
+@app.get("/public/country-intelligence/{country_code}")
+def public_country_intelligence(country_code: str):
+    result = build_country_intelligence(country_code)
+    if not result.get("ok"):
+        raise HTTPException(status_code=422, detail=result)
+    return result
+
+
+@app.get("/public/cross-domain-comparison")
+def public_cross_domain_comparison(country: str = "", compare: str = ""):
+    return build_cross_domain_comparison(country, compare)
 
 
 @app.get("/public/human-security")
