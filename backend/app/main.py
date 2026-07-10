@@ -84,6 +84,10 @@ from .sustainable_development_connectors import (
     planetary_boundary_registry as build_planetary_boundary_registry,
     connector_health as build_sustainable_development_connector_health,
     methodology as build_sustainable_development_methodology,
+    connector_reliability as build_sustainable_development_connector_reliability,
+    freshness_policy as build_sustainable_development_freshness_policy,
+    schema_validation_report as build_sustainable_development_schema_validation,
+    connector_cache_status as build_sustainable_development_cache_status,
 )
 from .public_source_pages import (
     public_source_page_directory as build_public_source_page_directory,
@@ -481,6 +485,30 @@ def sustainable_development_methodology_endpoint(settings: Settings = Depends(ge
     if not settings.public_dashboards_enabled or not settings.sustainable_development_connectors_enabled:
         raise HTTPException(status_code=403, detail="Sustainable development connectors are disabled.")
     return build_sustainable_development_methodology()
+
+@app.get("/public/sustainable-development/reliability")
+def sustainable_development_connector_reliability_endpoint(live: bool = Query(False), force: bool = Query(False), settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled or not settings.sustainable_development_connectors_enabled:
+        raise HTTPException(status_code=403, detail="Sustainable development connectors are disabled.")
+    return build_sustainable_development_connector_reliability(settings, live=bool(live), force=bool(force))
+
+@app.get("/public/sustainable-development/freshness")
+def sustainable_development_freshness_policy_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled or not settings.sustainable_development_connectors_enabled:
+        raise HTTPException(status_code=403, detail="Sustainable development connectors are disabled.")
+    return build_sustainable_development_freshness_policy()
+
+@app.get("/public/sustainable-development/schema-validation")
+def sustainable_development_schema_validation_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled or not settings.sustainable_development_connectors_enabled:
+        raise HTTPException(status_code=403, detail="Sustainable development connectors are disabled.")
+    return build_sustainable_development_schema_validation()
+
+@app.get("/public/sustainable-development/cache")
+def sustainable_development_cache_status_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled or not settings.sustainable_development_connectors_enabled:
+        raise HTTPException(status_code=403, detail="Sustainable development connectors are disabled.")
+    return build_sustainable_development_cache_status()
 
 
 @app.get("/public/indicator-dashboards")

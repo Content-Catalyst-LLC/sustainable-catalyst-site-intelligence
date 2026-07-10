@@ -2609,7 +2609,11 @@
       'sustainable-development-families': '/public-sustainable-development-families',
       'planetary-boundaries': '/public-planetary-boundaries-registry',
       'sustainable-development-health': '/public-sustainable-development-source-health',
-      'sustainable-development-methodology': '/public-sustainable-development-methodology'
+      'sustainable-development-methodology': '/public-sustainable-development-methodology',
+      'sustainable-development-reliability': '/public-sustainable-development-connector-reliability',
+      'sustainable-development-freshness': '/public-sustainable-development-freshness',
+      'sustainable-development-schema-validation': '/public-sustainable-development-schema-validation',
+      'sustainable-development-cache': '/public-sustainable-development-cache-status'
     };
     return map[panel] || '/public-connector-status';
   }

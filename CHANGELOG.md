@@ -1,3 +1,12 @@
+## 1.6.1 — Connector Reliability, Freshness and Schema Validation
+
+- Added retries with bounded exponential backoff.
+- Added circuit breakers and rate-limit-aware status metadata.
+- Added stale-while-revalidate and last-known-good connector states.
+- Added source-specific response checks and normalized observation validation.
+- Added freshness thresholds, cache diagnostics, reliability endpoints, WordPress routes, and shortcodes.
+- Updated backend and WordPress versions to 1.6.1.
+
 # Changelog
 
 ## 1.6.0 — Sustainable Development Data Connectors and Public Source Registry

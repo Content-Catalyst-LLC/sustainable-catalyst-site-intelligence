@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="SC_SI_", env_file=".env", extra="ignore")
 
     app_name: str = "Sustainable Catalyst Site Intelligence"
-    version: str = "1.6.0"
+    version: str = "1.6.1"
     environment: str = "development"
     demo_mode: bool = True
     api_token: str = "dev-token-change-me"
@@ -75,7 +75,7 @@ class Settings(BaseSettings):
     census_base_url: str = "https://api.census.gov"
     gbif_base_url: str = "https://api.gbif.org"
 
-    # Public live connector layer retained through v1.6.0. These public-safe source panels
+    # Public live connector layer retained through v1.6.1. These public-safe source panels
     # expose readiness, cache, and freshness metadata without returning raw
     # upstream payloads or secrets.
     world_bank_base_url: str = "https://api.worldbank.org/v2"
@@ -86,10 +86,15 @@ class Settings(BaseSettings):
     public_connector_live_checks: bool = True
 
 
-    # Sustainable Development Data Connectors v1.6.0.
+    # Sustainable Development Data Connectors v1.6.1.
     sustainable_development_connectors_enabled: bool = True
     sustainable_development_live_checks: bool = False
     sustainable_development_cache_ttl_seconds: int = Field(default=21600, ge=300, le=604800)
+    sustainable_development_stale_ttl_seconds: int = Field(default=604800, ge=3600, le=2592000)
+    sustainable_development_retry_attempts: int = Field(default=3, ge=1, le=5)
+    sustainable_development_retry_backoff_seconds: float = Field(default=0.25, ge=0.0, le=5.0)
+    sustainable_development_circuit_breaker_failures: int = Field(default=3, ge=1, le=20)
+    sustainable_development_circuit_breaker_seconds: int = Field(default=300, ge=30, le=86400)
 
     # AI-Assisted Intelligence Briefs v0.8.2. Disabled by default; deterministic
     # fallback briefs remain available without external model calls.

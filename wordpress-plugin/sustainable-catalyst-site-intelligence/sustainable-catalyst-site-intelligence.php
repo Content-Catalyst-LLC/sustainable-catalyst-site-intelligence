@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.6.0
+ * Version: 1.6.1
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.6.0';
+    const VERSION = '1.6.1';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -81,6 +81,10 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_public_planetary_boundaries_registry', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_sustainable_development_source_health', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_sustainable_development_methodology', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_public_sustainable_development_connector_reliability', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_public_sustainable_development_freshness', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_public_sustainable_development_schema_validation', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_public_sustainable_development_cache_status', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_indicator_dashboard_directory', [$this, 'public_indicator_chart_panel_shortcode']);
         add_shortcode('sc_public_sustainability_indicator_dashboard', [$this, 'public_indicator_chart_panel_shortcode']);
         add_shortcode('sc_public_development_indicator_dashboard', [$this, 'public_indicator_chart_panel_shortcode']);
@@ -477,6 +481,18 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-sustainable-development-methodology', [
             'methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_sustainable_development_methodology'], 'permission_callback' => '__return_true',
         ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-sustainable-development-connector-reliability', [
+            'methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_sustainable_development_connector_reliability'], 'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-sustainable-development-freshness', [
+            'methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_sustainable_development_freshness'], 'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-sustainable-development-schema-validation', [
+            'methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_sustainable_development_schema_validation'], 'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-sustainable-development-cache-status', [
+            'methods' => WP_REST_Server::READABLE, 'callback' => [$this, 'rest_public_sustainable_development_cache_status'], 'permission_callback' => '__return_true',
+        ]);
         register_rest_route(self::REST_NAMESPACE, '/public-indicator-chart-panel', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_indicator_chart_panel'],
@@ -750,6 +766,15 @@ final class SC_Site_Intelligence_Plugin {
         return $this->backend_request('public/sustainable-development/health' . $live);
     }
     public function rest_public_sustainable_development_methodology() { return $this->backend_request('public/sustainable-development/methodology'); }
+    public function rest_public_sustainable_development_connector_reliability(WP_REST_Request $request) {
+        $query = [];
+        if ($request->get_param('live')) { $query['live'] = 'true'; }
+        if ($request->get_param('force')) { $query['force'] = 'true'; }
+        return $this->backend_request('public/sustainable-development/reliability' . (!empty($query) ? '?' . http_build_query($query) : ''));
+    }
+    public function rest_public_sustainable_development_freshness() { return $this->backend_request('public/sustainable-development/freshness'); }
+    public function rest_public_sustainable_development_schema_validation() { return $this->backend_request('public/sustainable-development/schema-validation'); }
+    public function rest_public_sustainable_development_cache_status() { return $this->backend_request('public/sustainable-development/cache'); }
 
     public function rest_dashboard(WP_REST_Request $request) {
         $query = [];
@@ -2633,6 +2658,10 @@ final class SC_Site_Intelligence_Plugin {
             'sc_public_planetary_boundaries_registry' => ['planetary-boundaries', 'Planetary Boundaries Adapter Registry', 'Nine-boundary definitions, control variables, source mappings, and assessment status.'],
             'sc_public_sustainable_development_source_health' => ['sustainable-development-health', 'Sustainable Development Source Health', 'Freshness, cache, fallback, and public availability status.'],
             'sc_public_sustainable_development_methodology' => ['sustainable-development-methodology', 'Sustainable Development Data Methodology', 'Observation schema, provenance, freshness, and derived-assessment boundaries.'],
+            'sc_public_sustainable_development_connector_reliability' => ['sustainable-development-reliability', 'Connector Reliability', 'Retry, circuit-breaker, schema, rate-limit, and last-known-good status.'],
+            'sc_public_sustainable_development_freshness' => ['sustainable-development-freshness', 'Data Freshness Policy', 'Fresh, aging, stale, and last-known-good thresholds by public source.'],
+            'sc_public_sustainable_development_schema_validation' => ['sustainable-development-schema-validation', 'Schema Validation', 'Registry and normalized observation schema readiness.'],
+            'sc_public_sustainable_development_cache_status' => ['sustainable-development-cache', 'Connector Cache Status', 'Fresh, stale-servable, expired, and empty cache states.'],
         ];
         return isset($map[$tag]) ? $map[$tag] : ['connector-status', 'Public Connector Status', 'Loading public connector status…'];
     }
@@ -3050,7 +3079,7 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function release_status_shortcode($atts = []) {
-        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.6.0 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
+        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.6.1 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
     }
 
 }

@@ -1,10 +1,10 @@
 # Sustainable Catalyst Site Intelligence
 
-Current version: v1.6.0 — Sustainable Development Data Connectors and Public Source Registry
+Current version: v1.6.1 — Connector Reliability, Freshness and Schema Validation
 
 # Sustainable Catalyst Site Intelligence
 
-Version: 1.6.0
+Version: 1.6.1
 
 ## v1.4.0 — Connector Reliability Patch and Public Status Polish
 
@@ -218,3 +218,8 @@ New endpoints include `/public/source-aware-briefs`, `/public/dashboard-exports`
 ## v1.6.0 Sustainable Development Data Layer
 
 Initial public-source registry and connector contracts for NASA EONET, NASA POWER, the UN SDG database, World Bank development and poverty data, UNESCO education data, FAOSTAT, UN-Water SDG 6, and OECD SDMX. Includes a planetary-boundaries adapter registry, normalized observation schema, freshness classes, public health endpoints, and WordPress shortcodes.
+
+
+## v1.6.1 Connector Reliability
+
+Adds retry and exponential backoff, circuit breakers, rate-limit awareness, stale-while-revalidate cache states, last-known-good fallbacks, explicit freshness thresholds, connector response validation, and public reliability/schema/cache endpoints.
