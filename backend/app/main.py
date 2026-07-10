@@ -159,6 +159,10 @@ from .live_country_intelligence import (
     country_indicators as build_live_country_indicators,
     country_trends as build_live_country_trends,
     country_brief as build_live_country_brief,
+    country_catalog as build_country_catalog,
+    search_countries as build_country_search,
+    country_regions as build_country_regions,
+    global_country_overview as build_global_country_overview,
 )
 from .unified_live_events import (
     unified_events as build_unified_events,
@@ -851,7 +855,7 @@ def public_cross_domain_dashboard_export(dashboard_id: str, country: str = ""):
 def public_launch_status():
     return {
         "ok": True,
-        "version": "1.17.0",
+        "version": "1.18.0",
         "release_channel": "public-beta",
         "standalone_app": "/app/",
         "platform_core_optional": True,
@@ -861,7 +865,7 @@ def public_launch_status():
             "satellite_layers": "ready",
             "earth_observation_studio": "flagship-visual-beta",
             "public_events": "unified-live-event-intelligence",
-            "country_intelligence": "ready-with-retry",
+            "country_intelligence": "global-searchable-live-intelligence",
             "responsive_embed": "ready",
             "accessibility_states": "ready",
             "platform_core": "optional",
@@ -913,11 +917,39 @@ def public_country_evidence_lineage(country_code: str):
         })
     return {
         "ok": True,
-        "version": "1.17.0",
+        "version": "1.18.0",
         "country": payload.get("country"),
         "platform_core": build_platform_core_status(),
         "items": items,
     }
+
+
+
+@app.get("/public/countries")
+def public_country_catalog(force_refresh: bool = Query(default=False)):
+    return build_country_catalog(force_refresh=force_refresh)
+
+
+@app.get("/public/countries/search")
+def public_country_search(
+    q: str = Query(default=""),
+    region: str = Query(default=""),
+    limit: int = Query(default=50, ge=1, le=300),
+):
+    return build_country_search(query=q, region=region, limit=limit)
+
+
+@app.get("/public/countries/regions")
+def public_country_regions():
+    return build_country_regions()
+
+
+@app.get("/public/country/{country_code}/overview")
+def public_global_country_overview(country_code: str):
+    try:
+        return build_global_country_overview(country_code)
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Unsupported country code.")
 
 
 @app.get("/public/country/{country_code}")
@@ -3096,7 +3128,7 @@ def publishing_intelligence_report(
 
 
 
-# Site Intelligence v1.17.0 standalone public application.
+# Site Intelligence v1.18.0 standalone public application.
 from pathlib import Path as _Path
 PUBLIC_APP_DIR = _Path(__file__).resolve().parent.parent / "public_app"
 if PUBLIC_APP_DIR.exists():

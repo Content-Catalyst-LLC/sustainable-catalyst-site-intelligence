@@ -349,3 +349,32 @@ body.earth-print-mode .app-shell{display:block}body.earth-print-mode .workspace{
 .event-popup-title{font-weight:900;margin-bottom:5px}.event-popup-meta{font-size:10px;color:#9ba5b0;line-height:1.5}
 @media(max-width:1100px){.event-filter-deck{grid-template-columns:1fr 1fr 1fr}.event-studio-layout{grid-template-columns:1fr}.event-summary-grid{grid-template-columns:1fr 1fr}.event-explorer-list{max-height:460px}}
 @media(max-width:760px){.event-studio{padding:15px;border-radius:18px}.event-studio-head{display:block}.event-studio-actions{justify-content:flex-start;margin-top:14px}.event-filter-deck{position:sticky;top:70px;z-index:820;grid-template-columns:1fr 1fr;padding:12px;background:rgba(7,11,16,.95);border:1px solid rgba(255,255,255,.08);border-radius:14px;backdrop-filter:blur(18px)}.event-filter-deck label:first-child{grid-column:1/-1}.event-filter-deck button{grid-column:1/-1}.event-explorer-map{height:54vh;min-height:400px}.event-summary-grid{grid-template-columns:1fr}}
+
+/* v1.18.0 — Global Country Intelligence */
+.global-country-explorer{margin-top:16px;padding:22px;border:1px solid rgba(255,255,255,.1);border-radius:24px;background:linear-gradient(145deg,rgba(12,18,26,.96),rgba(5,9,14,.98));box-shadow:0 30px 90px rgba(0,0,0,.38);color:#fff}
+.global-country-explorer[hidden]{display:none}
+.global-country-head{display:flex;justify-content:space-between;gap:24px;padding-bottom:18px;border-bottom:1px solid rgba(255,255,255,.09)}
+.global-country-head h2{font-family:Spartan,Montserrat,sans-serif;font-size:31px;letter-spacing:-.04em;margin-bottom:8px}
+.global-country-head p:last-child{max-width:760px;color:#9da8b5;line-height:1.6;margin:0}
+.global-country-actions{display:flex;gap:8px;flex-wrap:wrap}
+.country-search-deck{display:grid;grid-template-columns:1.6fr 1fr auto;gap:10px;align-items:end;padding:16px 0}
+.country-search-deck label{display:flex;flex-direction:column;gap:6px;color:#8995a2;font-size:9px;font-weight:900;letter-spacing:.11em;text-transform:uppercase}
+.country-search-deck input,.country-search-deck select{height:41px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:#101721;color:#fff;padding:0 11px}
+.country-search-results{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:16px}
+.country-search-result{padding:12px;border:1px solid rgba(255,255,255,.08);border-radius:11px;background:rgba(255,255,255,.03);cursor:pointer;transition:.18s}
+.country-search-result:hover,.country-search-result:focus-visible{background:rgba(67,214,255,.07);border-color:rgba(67,214,255,.22);outline:none}
+.country-search-result strong{display:block;font-size:12px}.country-search-result span{display:block;margin-top:4px;color:#7f8b97;font-size:9px}
+.country-hero-grid{display:grid;grid-template-columns:.65fr 1.35fr;gap:12px;margin-bottom:14px}
+.country-identity-panel,.country-map-panel{border:1px solid rgba(255,255,255,.09);border-radius:18px;background:rgba(255,255,255,.025);overflow:hidden}
+.country-identity-panel{display:flex;align-items:center;gap:18px;padding:25px}
+.country-identity-code{display:grid;place-items:center;width:86px;height:86px;border-radius:20px;background:linear-gradient(145deg,#172231,#0c121a);border:1px solid rgba(255,255,255,.1);font-family:Spartan,Montserrat,sans-serif;font-size:25px;font-weight:900;color:#6fe2ff}
+.country-identity-panel h2{font-family:Spartan,Montserrat,sans-serif;font-size:30px;letter-spacing:-.04em;margin-bottom:8px}
+.country-identity-panel p:last-child{color:#8d98a5;font-size:12px;margin:0}
+.country-overview-map{height:280px;background:#090d12}
+.country-global-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:14px}
+.country-events-panel{padding:19px;border:1px solid rgba(255,255,255,.09);border-radius:16px;background:rgba(255,255,255,.025)}
+.country-global-footer{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.country-global-footer article{padding:17px;border:1px solid rgba(255,255,255,.08);border-radius:14px;background:rgba(255,255,255,.02)}
+.country-global-footer p:last-child{color:#8f9aa7;font-size:12px;line-height:1.65;margin:0}
+@media(max-width:1050px){.country-search-results{grid-template-columns:repeat(3,1fr)}.country-hero-grid,.country-global-grid{grid-template-columns:1fr}}
+@media(max-width:760px){.global-country-explorer{padding:15px;border-radius:18px}.global-country-head{display:block}.global-country-actions{margin-top:14px}.country-search-deck{position:sticky;top:70px;z-index:820;grid-template-columns:1fr;padding:12px;background:rgba(7,11,16,.95);border:1px solid rgba(255,255,255,.08);border-radius:14px;backdrop-filter:blur(18px)}.country-search-results{grid-template-columns:1fr 1fr}.country-identity-panel{padding:18px}.country-identity-code{width:68px;height:68px;font-size:20px}.country-global-footer{grid-template-columns:1fr}}

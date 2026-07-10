@@ -8,7 +8,7 @@ from typing import Any
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
-VERSION = "1.17.0"
+VERSION = "1.18.0"
 
 COUNTRIES: dict[str, dict[str, Any]] = {
     "KEN": {"name": "Kenya", "iso2": "KE", "region": "Sub-Saharan Africa", "capital": "Nairobi", "latitude": 0.0236, "longitude": 37.9062},
@@ -17,6 +17,128 @@ COUNTRIES: dict[str, dict[str, Any]] = {
     "IND": {"name": "India", "iso2": "IN", "region": "South Asia", "capital": "New Delhi", "latitude": 20.5937, "longitude": 78.9629},
     "BRA": {"name": "Brazil", "iso2": "BR", "region": "Latin America and the Caribbean", "capital": "Brasília", "latitude": -14.2350, "longitude": -51.9253},
 }
+
+_COUNTRY_CATALOG_CACHE: dict[str, dict[str, Any]] | None = None
+_COUNTRY_CATALOG_FETCHED_AT: str | None = None
+
+# Fallback coverage used only when the live World Bank country catalog is
+# temporarily unavailable. The live catalog normally provides global coverage.
+FALLBACK_COUNTRY_CATALOG: dict[str, dict[str, Any]] = {
+    "ARG": {"name": "Argentina", "iso2": "AR", "region": "Latin America & Caribbean", "capital": "Buenos Aires", "latitude": -38.4161, "longitude": -63.6167},
+    "AUS": {"name": "Australia", "iso2": "AU", "region": "East Asia & Pacific", "capital": "Canberra", "latitude": -25.2744, "longitude": 133.7751},
+    "CAN": {"name": "Canada", "iso2": "CA", "region": "North America", "capital": "Ottawa", "latitude": 56.1304, "longitude": -106.3468},
+    "CHN": {"name": "China", "iso2": "CN", "region": "East Asia & Pacific", "capital": "Beijing", "latitude": 35.8617, "longitude": 104.1954},
+    "DEU": {"name": "Germany", "iso2": "DE", "region": "Europe & Central Asia", "capital": "Berlin", "latitude": 51.1657, "longitude": 10.4515},
+    "EGY": {"name": "Egypt, Arab Rep.", "iso2": "EG", "region": "Middle East, North Africa, Afghanistan & Pakistan", "capital": "Cairo", "latitude": 26.8206, "longitude": 30.8025},
+    "ESP": {"name": "Spain", "iso2": "ES", "region": "Europe & Central Asia", "capital": "Madrid", "latitude": 40.4637, "longitude": -3.7492},
+    "ETH": {"name": "Ethiopia", "iso2": "ET", "region": "Sub-Saharan Africa", "capital": "Addis Ababa", "latitude": 9.1450, "longitude": 40.4897},
+    "FRA": {"name": "France", "iso2": "FR", "region": "Europe & Central Asia", "capital": "Paris", "latitude": 46.2276, "longitude": 2.2137},
+    "GBR": {"name": "United Kingdom", "iso2": "GB", "region": "Europe & Central Asia", "capital": "London", "latitude": 55.3781, "longitude": -3.4360},
+    "IDN": {"name": "Indonesia", "iso2": "ID", "region": "East Asia & Pacific", "capital": "Jakarta", "latitude": -0.7893, "longitude": 113.9213},
+    "JPN": {"name": "Japan", "iso2": "JP", "region": "East Asia & Pacific", "capital": "Tokyo", "latitude": 36.2048, "longitude": 138.2529},
+    "MEX": {"name": "Mexico", "iso2": "MX", "region": "Latin America & Caribbean", "capital": "Mexico City", "latitude": 23.6345, "longitude": -102.5528},
+    "NGA": {"name": "Nigeria", "iso2": "NG", "region": "Sub-Saharan Africa", "capital": "Abuja", "latitude": 9.0820, "longitude": 8.6753},
+    "PAK": {"name": "Pakistan", "iso2": "PK", "region": "South Asia", "capital": "Islamabad", "latitude": 30.3753, "longitude": 69.3451},
+    "RUS": {"name": "Russian Federation", "iso2": "RU", "region": "Europe & Central Asia", "capital": "Moscow", "latitude": 61.5240, "longitude": 105.3188},
+    "SAU": {"name": "Saudi Arabia", "iso2": "SA", "region": "Middle East, North Africa, Afghanistan & Pakistan", "capital": "Riyadh", "latitude": 23.8859, "longitude": 45.0792},
+    "ZAF": {"name": "South Africa", "iso2": "ZA", "region": "Sub-Saharan Africa", "capital": "Pretoria", "latitude": -30.5595, "longitude": 22.9375},
+}
+
+def _catalog_from_world_bank() -> dict[str, dict[str, Any]]:
+    url = "https://api.worldbank.org/v2/country?format=json&per_page=400"
+    payload = _fetch_json(url, timeout=10)
+    if not isinstance(payload, list) or len(payload) < 2 or not isinstance(payload[1], list):
+        return {}
+    catalog: dict[str, dict[str, Any]] = {}
+    for row in payload[1]:
+        iso3 = str(row.get("id") or "").upper()
+        iso2 = str(row.get("iso2Code") or "").upper()
+        region = row.get("region") or {}
+        region_id = str(region.get("id") or "")
+        region_name = str(region.get("value") or "")
+        # Exclude aggregates and non-country groupings.
+        if len(iso3) != 3 or len(iso2) != 2 or region_id == "NA" or not region_name:
+            continue
+        longitude = row.get("longitude")
+        latitude = row.get("latitude")
+        try:
+            longitude = float(longitude) if longitude not in (None, "") else None
+            latitude = float(latitude) if latitude not in (None, "") else None
+        except (TypeError, ValueError):
+            longitude = None
+            latitude = None
+        catalog[iso3] = {
+            "name": row.get("name") or iso3,
+            "iso2": iso2,
+            "region": region_name,
+            "income_level": (row.get("incomeLevel") or {}).get("value"),
+            "lending_type": (row.get("lendingType") or {}).get("value"),
+            "capital": row.get("capitalCity") or None,
+            "longitude": longitude,
+            "latitude": latitude,
+            "source": "World Bank Country API",
+        }
+    return catalog
+
+def country_catalog(force_refresh: bool = False) -> dict[str, Any]:
+    global _COUNTRY_CATALOG_CACHE, _COUNTRY_CATALOG_FETCHED_AT
+    if _COUNTRY_CATALOG_CACHE is None or force_refresh:
+        try:
+            live = _catalog_from_world_bank()
+        except Exception:
+            live = {}
+        merged = {**FALLBACK_COUNTRY_CATALOG, **COUNTRIES, **live}
+        _COUNTRY_CATALOG_CACHE = merged
+        _COUNTRY_CATALOG_FETCHED_AT = _now()
+    return {
+        "ok": True,
+        "version": VERSION,
+        "generated_at": _now(),
+        "catalog_fetched_at": _COUNTRY_CATALOG_FETCHED_AT,
+        "data_state": "live" if len(_COUNTRY_CATALOG_CACHE or {}) > len(COUNTRIES) + len(FALLBACK_COUNTRY_CATALOG) else "fallback-catalog",
+        "country_count": len(_COUNTRY_CATALOG_CACHE or {}),
+        "countries": [
+            {"code": code, **metadata}
+            for code, metadata in sorted((_COUNTRY_CATALOG_CACHE or {}).items(), key=lambda item: item[1].get("name", item[0]))
+        ],
+    }
+
+def search_countries(query: str = "", region: str = "", limit: int = 50) -> dict[str, Any]:
+    payload = country_catalog()
+    q = query.strip().lower()
+    region_filter = region.strip().lower()
+    results = []
+    for item in payload["countries"]:
+        if q and q not in item["name"].lower() and q not in item["code"].lower() and q not in item.get("iso2", "").lower():
+            continue
+        if region_filter and region_filter not in str(item.get("region") or "").lower():
+            continue
+        results.append(item)
+    results = results[:max(1, min(int(limit), 300))]
+    return {
+        "ok": True,
+        "version": VERSION,
+        "generated_at": _now(),
+        "data_state": payload["data_state"],
+        "query": query,
+        "region": region,
+        "count": len(results),
+        "countries": results,
+    }
+
+def country_regions() -> dict[str, Any]:
+    payload = country_catalog()
+    counts: dict[str, int] = {}
+    for item in payload["countries"]:
+        name = str(item.get("region") or "Unclassified")
+        counts[name] = counts.get(name, 0) + 1
+    return {
+        "ok": True,
+        "version": VERSION,
+        "generated_at": _now(),
+        "regions": [{"name": name, "country_count": count} for name, count in sorted(counts.items())],
+    }
+
 
 INDICATORS: list[dict[str, str]] = [
     {"id": "SP.POP.TOTL", "key": "population", "label": "Population", "unit": "people", "format": "compact", "domain": "Population"},
@@ -50,15 +172,19 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 def _fetch_json(url: str, timeout: int = 9) -> Any:
-    request = Request(url, headers={"User-Agent": "Sustainable-Catalyst-Site-Intelligence/1.17.0"})
+    request = Request(url, headers={"User-Agent": "Sustainable-Catalyst-Site-Intelligence/1.18.0"})
     with urlopen(request, timeout=timeout) as response:
         return json.loads(response.read().decode("utf-8"))
 
 def _country(code: str) -> tuple[str, dict[str, Any]]:
     normalized = (code or "").strip().upper()
-    if normalized not in COUNTRIES:
+    catalog = country_catalog()["countries"]
+    match = next((item for item in catalog if item["code"] == normalized), None)
+    if not match:
         raise ValueError("unsupported_country")
-    return normalized, COUNTRIES[normalized]
+    metadata = dict(match)
+    metadata.pop("code", None)
+    return normalized, metadata
 
 def _world_bank_series(iso2: str, indicator_id: str, per_page: int = 30) -> list[dict[str, Any]]:
     url = f"https://api.worldbank.org/v2/country/{iso2}/indicator/{indicator_id}?{urlencode({'format':'json','per_page':per_page})}"
@@ -84,7 +210,7 @@ def _world_bank_series(iso2: str, indicator_id: str, per_page: int = 30) -> list
     records.sort(key=lambda item: item["year"])
     return records
 
-@lru_cache(maxsize=64)
+@lru_cache(maxsize=512)
 def _live_indicator_bundle(code: str) -> tuple[dict[str, Any], ...]:
     _, country = _country(code)
     results = []
@@ -276,4 +402,32 @@ def country_brief(code: str) -> dict[str, Any]:
         "evidence_lines": paragraphs,
         "data_state": profile["data_state"],
         "boundary": "This brief organizes public evidence for orientation and research. Verify important findings against the linked source.",
+    }
+
+
+def global_country_overview(code: str) -> dict[str, Any]:
+    profile = country_profile(code)
+    country = profile["country"]
+    return {
+        "ok": True,
+        "version": VERSION,
+        "generated_at": profile["generated_at"],
+        "country": country,
+        "data_state": profile["data_state"],
+        "headline": f"{country['name']} — Global Country Intelligence",
+        "summary": profile["summary"],
+        "map": {
+            "latitude": country.get("latitude"),
+            "longitude": country.get("longitude"),
+            "default_zoom": 5 if country.get("latitude") is not None and country.get("longitude") is not None else 2,
+        },
+        "highlights": profile["highlights"],
+        "routes": {
+            "indicators": f"/public/country/{country['code']}/indicators",
+            "trends": f"/public/country/{country['code']}/trends",
+            "events": f"/public/events?country_code={country['code']}",
+            "brief": f"/public/country/{country['code']}/brief",
+            "lineage": f"/public/country/{country['code']}/evidence-lineage",
+        },
+        "boundaries": profile["interpretation"],
     }

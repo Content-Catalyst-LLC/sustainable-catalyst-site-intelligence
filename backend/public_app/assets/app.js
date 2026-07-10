@@ -304,6 +304,87 @@
   }
   function closeEventStudio(){qs("#eventStudio").hidden=true;stopEventTimeline();closeEventDrawer()}
 
+
+  const globalCountryState={catalog:[],regions:[],overviewMap:null,overviewBase:null,events:[],trends:[],activeCode:"KEN"};
+
+  async function loadCountryCatalog(){
+    if(globalCountryState.catalog.length)return;
+    const [catalog,regions]=await Promise.all([
+      apiWithRetry("/public/countries",3),
+      apiWithRetry("/public/countries/regions",3)
+    ]);
+    globalCountryState.catalog=catalog.countries||[];
+    globalCountryState.regions=regions.regions||[];
+    qs("#countrySelect").innerHTML=globalCountryState.catalog.map(item=>`<option value="${escapeHtml(item.code)}">${escapeHtml(item.name)}</option>`).join("");
+    qs("#countryRegionFilter").innerHTML='<option value="">All regions</option>'+globalCountryState.regions.map(item=>`<option value="${escapeHtml(item.name)}">${escapeHtml(item.name)} (${item.country_count})</option>`).join("");
+  }
+  function initCountryOverviewMap(){
+    if(globalCountryState.overviewMap)return;
+    globalCountryState.overviewMap=L.map("countryOverviewMap",{zoomControl:true,attributionControl:true}).setView([0,20],2);
+    globalCountryState.overviewBase=L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{attribution:"© OpenStreetMap contributors © CARTO",maxZoom:19}).addTo(globalCountryState.overviewMap);
+  }
+  function renderGlobalTrend(trend){
+    const chart=qs("#globalTrendChart"),series=trend?.series||[];
+    if(!series.length){chart.innerHTML='<div class="empty-state"><div><strong>Trend unavailable</strong><span>No live multi-year series was returned for this indicator.</span></div></div>';return}
+    const values=series.map(x=>Number(x.value)),min=Math.min(...values),max=Math.max(...values),spread=Math.max(max-min,Math.abs(max)*.08,1);
+    chart.innerHTML=series.map(x=>{const height=12+((Number(x.value)-min)/spread)*82;return `<div class="trend-column"><span class="trend-value">${escapeHtml(formatCountryValue(x.value,trend.format,trend.unit))}</span><span class="trend-bar" style="height:${Math.max(5,Math.min(96,height))}%"></span><span class="trend-year">${escapeHtml(x.year)}</span></div>`}).join("");
+  }
+  function renderCountrySearchResults(items){
+    const box=qs("#countrySearchResults");box.hidden=!items.length;
+    box.innerHTML=items.map(item=>`<div class="country-search-result" tabindex="0" role="button" data-country-result="${escapeHtml(item.code)}"><strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(item.code)} · ${escapeHtml(item.region||"Region unavailable")}</span></div>`).join("");
+    qsa("[data-country-result]").forEach(card=>{
+      const activate=()=>selectGlobalCountry(card.dataset.countryResult,true);
+      card.addEventListener("click",activate);card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();activate()}});
+    });
+  }
+  async function searchGlobalCountries(){
+    const q=qs("#countrySearchInput").value.trim(),region=qs("#countryRegionFilter").value;
+    const params=new URLSearchParams({q,region,limit:"80"});
+    const payload=await apiWithRetry(`/public/countries/search?${params.toString()}`,3);
+    renderCountrySearchResults(payload.countries||[]);
+  }
+  async function loadCountryEvents(code){
+    try{
+      const payload=await apiWithRetry(`/public/events?country_code=${encodeURIComponent(code)}&days=30&limit=20`,3);
+      globalCountryState.events=payload.events||[];
+      qs("#countryEventsList").innerHTML=globalCountryState.events.length?globalCountryState.events.slice(0,8).map(event=>`<div class="event-row"><span class="event-marker"></span><div><div class="event-title">${escapeHtml(event.title)}</div><div class="event-meta">${escapeHtml(event.category_label)} · ${escapeHtml(event.source_name)}</div></div><div class="event-time">${cleanDate(event.observed_at)}</div></div>`).join(""):'<div class="empty-state"><div><strong>No country-linked events</strong><span>The connected public feeds returned no directly linked records for this country.</span></div></div>';
+    }catch{
+      qs("#countryEventsList").innerHTML='<div class="error-state"><div><strong>Country events unavailable</strong><span>The event service did not respond.</span></div></div>';
+    }
+  }
+  async function selectGlobalCountry(code,pushState=true){
+    globalCountryState.activeCode=code;qs("#countrySelect").value=code;
+    const [overview,trends]=await Promise.all([
+      apiWithRetry(`/public/country/${encodeURIComponent(code)}/overview`,3),
+      apiWithRetry(`/public/country/${encodeURIComponent(code)}/trends`,3)
+    ]);
+    const country=overview.country;
+    qs("#globalCountryTitle").textContent=overview.headline;
+    qs("#globalCountryIntro").textContent=overview.summary;
+    qs("#countryIdentityCode").textContent=country.code;
+    qs("#countryIdentityRegion").textContent=(country.region||"Region unavailable").toUpperCase();
+    qs("#countryIdentityName").textContent=country.name;
+    qs("#countryIdentityMeta").textContent=`Capital: ${country.capital||"Unavailable"}${country.income_level?` · ${country.income_level}`:""}`;
+    qs("#globalCountryMetrics").innerHTML=(overview.highlights||[]).map(item=>`<article class="country-indicator"><span class="country-indicator-label">${escapeHtml(item.label)}</span><strong class="country-indicator-value">${escapeHtml(formatCountryValue(item.value,item.format,item.unit))}</strong><div class="country-indicator-meta">${escapeHtml(item.unit)} · ${escapeHtml(item.year)}</div><span class="country-indicator-source">${escapeHtml(item.source)} · ${escapeHtml(item.data_state)}</span></article>`).join("");
+    globalCountryState.trends=trends.trends||[];
+    qs("#globalTrendSelect").innerHTML=globalCountryState.trends.map(item=>`<option value="${escapeHtml(item.key)}">${escapeHtml(item.label)}</option>`).join("");
+    if(globalCountryState.trends.length){qs("#globalTrendTitle").textContent=globalCountryState.trends[0].label;renderGlobalTrend(globalCountryState.trends[0])}
+    initCountryOverviewMap();
+    const lat=country.latitude,lng=country.longitude;
+    if(lat!=null&&lng!=null){globalCountryState.overviewMap.setView([lat,lng],overview.map?.default_zoom||5);L.circleMarker([lat,lng],{radius:8,color:"#fff",weight:1,fillColor:"#43d6ff",fillOpacity:.9}).addTo(globalCountryState.overviewMap).bindPopup(`<strong>${escapeHtml(country.name)}</strong><br>${escapeHtml(country.capital||"Capital unavailable")}`)}
+    else{globalCountryState.overviewMap.setView([0,20],2)}
+    await loadCountryEvents(code);
+    qs("#countrySearchResults").hidden=true;
+    if(pushState){const params=new URLSearchParams(location.search);params.set("view","country");params.set("country",code);history.replaceState(null,"",`?${params.toString()}`)}
+    setTimeout(()=>{globalCountryState.overviewMap.invalidateSize();reportHeight()},80);
+  }
+  async function openGlobalCountryExplorer(){
+    qs("#globalCountryExplorer").hidden=false;await loadCountryCatalog();
+    const params=new URLSearchParams(location.search);const code=params.get("country")||state.country||"KEN";
+    await selectGlobalCountry(code,false);
+  }
+  function closeGlobalCountryExplorer(){qs("#globalCountryExplorer").hidden=true}
+
   const earthState={mapA:null,mapB:null,baseA:null,baseB:null,layerA:null,layerB:null,layers:[],frames:[],frameIndex:0,timer:null,activeLayer:"true-color",opacity:.72};
 
   function earthDate(daysAgo){const d=new Date();d.setUTCDate(d.getUTCDate()-daysAgo);return d.toISOString().slice(0,10)}
@@ -479,7 +560,7 @@
     closeEarthStudio();closeEventStudio();
     qs("#countryIntelligencePanel").hidden=route!=="country";
     panel.hidden=false;panel.innerHTML=`<div class="loading-block">Loading ${escapeHtml(route)} view…</div>`;
-    if(route==="country"){await loadLiveCountry(state.country)}
+    if(route==="country-legacy"){await loadLiveCountry(state.country)}
     if(route==="events-legacy"){
       const rows=(state.events?.features||[]).slice(0,30);
       panel.innerHTML=`<p class="eyebrow">PUBLIC EVENT RECORDS</p><h2>Latest mapped events</h2><div class="event-list">${rows.map(f=>{const p=f.properties||{};return `<div class="event-row"><span class="event-marker"></span><div><div class="event-title">${escapeHtml(p.title||"Event")}</div><div class="event-meta">${escapeHtml(p.category||"Event")} · ${escapeHtml(p.source||"Source")}</div></div><div class="event-time">${cleanDate(p.observed_at)}</div></div>`}).join("")}</div>`;
@@ -498,12 +579,19 @@
     qsa(".layer-tab").forEach(b=>b.addEventListener("click",()=>setImagery(b.dataset.layer)));
     qsa(".nav-item").forEach(b=>b.addEventListener("click",()=>{history.replaceState(null,"",`?country=${encodeURIComponent(state.country)}&view=${encodeURIComponent(b.dataset.route)}`);setRoute(b.dataset.route)}));
     qsa("[data-route-link]").forEach(b=>b.addEventListener("click",()=>setRoute(b.dataset.routeLink)));
-    qs("#countrySelect").addEventListener("change",async e=>{await loadCountry(e.target.value);history.replaceState(null,"",`?country=${encodeURIComponent(e.target.value)}&view=${encodeURIComponent(state.route)}`);if(state.route==="country"){await loadLiveCountry(e.target.value);setRoute("country")}});
+    qs("#countrySelect").addEventListener("change",async e=>{state.country=e.target.value;if(state.route==="country"){await selectGlobalCountry(e.target.value,true)}else{await loadCountry(e.target.value);history.replaceState(null,"",`?country=${encodeURIComponent(e.target.value)}&view=${encodeURIComponent(state.route)}`)}});
     qs("#dateSelect").addEventListener("change",()=>setImagery(qs(".layer-tab.active").dataset.layer));
     qs("#eventsToggle").addEventListener("change",e=>e.target.checked?state.markers.addTo(state.map):state.map.removeLayer(state.markers));
     qs("#heatToggle").addEventListener("change",e=>toast(e.target.checked?"Density layer enabled for supported records":"Density layer hidden"));
     qs("#fullscreenButton").addEventListener("click",()=>{const p=qs(".map-panel");if(document.fullscreenElement)document.exitFullscreen();else p.requestFullscreen?.()});
-    qs("#shareButton").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("View link copied")});qs("#openNewButton").addEventListener("click",()=>window.open(location.href,"_blank","noopener"));qs("#dismissNotice").addEventListener("click",hideGlobalNotice);qs("#launchRetry").addEventListener("click",()=>location.reload());qs("#eventApply").addEventListener("click",()=>applyEventFilters(true));
+    qs("#shareButton").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("View link copied")});qs("#openNewButton").addEventListener("click",()=>window.open(location.href,"_blank","noopener"));qs("#dismissNotice").addEventListener("click",hideGlobalNotice);qs("#launchRetry").addEventListener("click",()=>location.reload());qs("#countrySearchButton").addEventListener("click",searchGlobalCountries);
+    qs("#countrySearchInput").addEventListener("keydown",e=>{if(e.key==="Enter")searchGlobalCountries()});
+    qs("#countryRegionFilter").addEventListener("change",searchGlobalCountries);
+    qs("#globalTrendSelect").addEventListener("change",e=>{const item=globalCountryState.trends.find(x=>x.key===e.target.value);if(item){qs("#globalTrendTitle").textContent=item.label;renderGlobalTrend(item)}});
+    qs("#countryShare").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("Country view link copied")});
+    qs("#countryOpenEarth").addEventListener("click",()=>setRoute("earth"));
+    qs("#countryOpenEvents").addEventListener("click",()=>{qs("#eventCountry").value=globalCountryState.activeCode;setRoute("events")});
+    qs("#eventApply").addEventListener("click",()=>applyEventFilters(true));
     qs("#eventReset").addEventListener("click",async()=>{qs("#eventDays").value="14";qs("#eventCategory").value="";qs("#eventSource").value="";qs("#eventCountry").value="";await applyEventFilters(true)});
     qs("#eventShare").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("Event view link copied")});
     qs("#eventTimelinePlay").addEventListener("click",toggleEventTimeline);

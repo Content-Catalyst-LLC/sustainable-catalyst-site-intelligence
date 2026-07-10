@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.17.0
+ * Version: 1.18.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.17.0';
+    const VERSION = '1.18.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -128,6 +128,7 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_site_intelligence_app', [$this, 'standalone_app_shortcode']);
         add_shortcode('sc_earth_observation_studio', [$this, 'earth_observation_studio_shortcode']);
         add_shortcode('sc_live_event_intelligence', [$this, 'live_event_intelligence_shortcode']);
+        add_shortcode('sc_global_country_intelligence', [$this, 'global_country_intelligence_shortcode']);
         add_shortcode('sc_geospatial_intelligence_map', [$this, 'geospatial_map_shortcode']);
         add_shortcode('sc_satellite_imagery_viewer', [$this, 'geospatial_map_shortcode']);
         add_shortcode('sc_live_event_map', [$this, 'geospatial_map_shortcode']);
@@ -3065,6 +3066,36 @@ final class SC_Site_Intelligence_Plugin {
 
 
 
+
+
+    public function global_country_intelligence_shortcode($atts = []) {
+        $atts = shortcode_atts([
+            'height' => '1100',
+            'title' => 'Sustainable Catalyst Global Country Intelligence',
+            'country' => 'KEN',
+        ], $atts, 'sc_global_country_intelligence');
+
+        $options = self::options();
+        $backend = rtrim((string) ($options['backend_url'] ?? ''), '/');
+        if (!$backend) {
+            return '<div class="scsi-app-error">Configure the Site Intelligence backend URL before embedding Global Country Intelligence.</div>';
+        }
+
+        $height = max(760, min(1800, absint($atts['height'])));
+        $country = strtoupper(preg_replace('/[^A-Za-z]/', '', (string) $atts['country']));
+        if (strlen($country) !== 3) {
+            $country = 'KEN';
+        }
+        $src = esc_url($backend . '/app/?view=country&country=' . rawurlencode($country));
+        $title = esc_attr((string) $atts['title']);
+
+        return sprintf(
+            '<div class="scsi-standalone-app scsi-global-country-embed"><div class="scsi-app-loading">Opening Global Country Intelligence…</div><iframe src="%1$s" title="%2$s" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
+            $src,
+            $title,
+            $height
+        );
+    }
 
     public function live_event_intelligence_shortcode($atts = []) {
         $atts = shortcode_atts([

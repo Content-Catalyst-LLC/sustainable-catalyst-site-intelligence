@@ -8,7 +8,7 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 import json
 
-VERSION = "1.17.0"
+VERSION = "1.18.0"
 
 CATEGORY_ORDER = [
     "earthquake",

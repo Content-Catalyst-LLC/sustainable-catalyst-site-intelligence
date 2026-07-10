@@ -33,13 +33,7 @@
       </div>
       <div class="topbar-controls">
         <label class="compact-field">Country
-          <select id="countrySelect" aria-label="Select country">
-            <option value="KEN">Kenya</option>
-            <option value="GHA">Ghana</option>
-            <option value="USA">United States</option>
-            <option value="IND">India</option>
-            <option value="BRA">Brazil</option>
-          </select>
+          <select id="countrySelect" aria-label="Select country"><option value="KEN">Kenya</option></select>
         </label>
         <label class="compact-field">Imagery date
           <input id="dateSelect" type="date">
@@ -282,6 +276,78 @@
       </section>
 
       <section id="routePanel" class="route-panel" hidden></section>
+
+      <section id="globalCountryExplorer" class="global-country-explorer" hidden>
+        <div class="global-country-head">
+          <div>
+            <p class="eyebrow">GLOBAL COUNTRY INTELLIGENCE</p>
+            <h2 id="globalCountryTitle">Search the world</h2>
+            <p id="globalCountryIntro">Select a country to combine live indicators, trends, satellite context, and recent public events.</p>
+          </div>
+          <div class="global-country-actions">
+            <button id="countryShare" class="ghost-button" type="button">Copy country view</button>
+            <button id="countryOpenEarth" class="ghost-button" type="button">Open Earth view</button>
+          </div>
+        </div>
+
+        <div class="country-search-deck">
+          <label>Search countries
+            <input id="countrySearchInput" type="search" placeholder="Country name or ISO code" autocomplete="off">
+          </label>
+          <label>Region
+            <select id="countryRegionFilter"><option value="">All regions</option></select>
+          </label>
+          <button id="countrySearchButton" class="earth-primary-button" type="button">Search</button>
+        </div>
+
+        <div id="countrySearchResults" class="country-search-results" hidden></div>
+
+        <div class="country-hero-grid">
+          <article class="country-identity-panel">
+            <div class="country-identity-code" id="countryIdentityCode">KEN</div>
+            <div>
+              <p class="eyebrow" id="countryIdentityRegion">SUB-SAHARAN AFRICA</p>
+              <h2 id="countryIdentityName">Kenya</h2>
+              <p id="countryIdentityMeta">Capital: Nairobi</p>
+            </div>
+          </article>
+          <article class="country-map-panel">
+            <div id="countryOverviewMap" class="country-overview-map" aria-label="Country location map"></div>
+          </article>
+        </div>
+
+        <div id="globalCountryMetrics" class="country-indicator-grid"></div>
+
+        <div class="country-global-grid">
+          <article class="country-chart-panel">
+            <div class="panel-head">
+              <div><p class="eyebrow">MULTI-YEAR TREND</p><h2 id="globalTrendTitle">Population</h2></div>
+              <select id="globalTrendSelect" aria-label="Select country trend"></select>
+            </div>
+            <div id="globalTrendChart" class="trend-chart"></div>
+          </article>
+
+          <article class="country-events-panel">
+            <div class="panel-head">
+              <div><p class="eyebrow">RECENT PUBLIC EVENTS</p><h2 id="countryEventsTitle">Country-linked records</h2></div>
+              <button id="countryOpenEvents" class="text-button" type="button">Open event explorer</button>
+            </div>
+            <div id="countryEventsList" class="event-list"></div>
+          </article>
+        </div>
+
+        <div class="country-global-footer">
+          <article>
+            <p class="eyebrow">SOURCE COVERAGE</p>
+            <p>World Bank indicators are combined with public event records and satellite context. Reporting years remain visible and missing observations are not silently imputed.</p>
+          </article>
+          <article>
+            <p class="eyebrow">INTERPRETATION</p>
+            <p>Country profiles organize public evidence for research and orientation. They do not create rankings, determine causality, or replace professional analysis.</p>
+          </article>
+        </div>
+      </section>
+
       <section id="countryIntelligencePanel" class="country-live-panel" hidden>
         <div class="country-live-head">
           <div>

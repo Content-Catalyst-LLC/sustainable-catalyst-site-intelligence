@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.18.0 — Global Country Intelligence
+
+- Expanded country intelligence from five hard-coded countries to dynamic global World Bank country coverage.
+- Added searchable country catalog, ISO code search, and regional filtering.
+- Added country metadata for region, income level, capital, and geographic center.
+- Added a redesigned global country explorer in the standalone application.
+- Added country fly-to map, live indicator cards, multi-year trends, and country-linked public events.
+- Added shareable country URL state and direct transitions to Earth Observation and Live Event Intelligence.
+- Added public country catalog, search, region, and overview endpoints.
+- Added a WordPress shortcode for Global Country Intelligence.
+- Preserved reporting-year visibility, missing-data transparency, and non-ranking boundaries.
+
 ## 1.17.0 — Unified Live Event Intelligence
 
 - Added a dedicated unified live-event explorer to the standalone application.
