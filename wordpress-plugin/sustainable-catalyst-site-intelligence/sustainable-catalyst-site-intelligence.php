@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.13.0
+ * Version: 1.14.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.13.0';
+    const VERSION = '1.14.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -125,6 +125,7 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_public_dashboard_launch_manifest', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_dashboard_launch_readiness', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_dashboard_studio_navigation', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_site_intelligence_app', [$this, 'standalone_app_shortcode']);
         add_shortcode('sc_geospatial_intelligence_map', [$this, 'geospatial_map_shortcode']);
         add_shortcode('sc_satellite_imagery_viewer', [$this, 'geospatial_map_shortcode']);
         add_shortcode('sc_live_event_map', [$this, 'geospatial_map_shortcode']);
@@ -857,7 +858,7 @@ final class SC_Site_Intelligence_Plugin {
             'headers' => [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
-                'User-Agent' => 'Sustainable-Catalyst-Site-Intelligence/1.13.0',
+                'User-Agent' => 'Sustainable-Catalyst-Site-Intelligence/1.14.0',
             ],
         ];
         if (!empty($options['api_token'])) {
@@ -3058,6 +3059,32 @@ final class SC_Site_Intelligence_Plugin {
             <div class="scsi-output" aria-live="polite"></div>
         </section>
         <?php return ob_get_clean();
+    }
+
+
+    public function standalone_app_shortcode($atts = []) {
+        $options = self::options();
+        $atts = shortcode_atts([
+            'height' => '900',
+            'title' => 'Site Intelligence application',
+            'path' => '/app/',
+        ], $atts, 'sc_site_intelligence_app');
+
+        $backend = rtrim((string) ($options['backend_url'] ?? ''), '/');
+        if (!$backend) {
+            return '<div class="scsi-app-error">Configure the Site Intelligence backend URL before embedding the standalone application.</div>';
+        }
+
+        $height = max(620, min(1400, absint($atts['height'])));
+        $src = esc_url($backend . '/' . ltrim((string) $atts['path'], '/'));
+        $title = esc_attr((string) $atts['title']);
+
+        return sprintf(
+            '<div class="scsi-standalone-app"><iframe src="%1$s" title="%2$s" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#f7f5f0"></iframe></div>',
+            $src,
+            $title,
+            $height
+        );
     }
 
     public function geospatial_map_shortcode($atts = [], $content = null, $tag = '') {

@@ -1,4 +1,4 @@
-# Site Intelligence v1.13.0 — Public Interface Redesign and Renderer Simplification
+# Site Intelligence v1.14.0 — Public Interface Redesign and Renderer Simplification
 
 This release replaces generic connector diagnostics in the primary public views with dedicated templates for Country Intelligence, Public Intelligence Dashboards, Cross-Domain Comparison, and the Dashboard Directory.
 

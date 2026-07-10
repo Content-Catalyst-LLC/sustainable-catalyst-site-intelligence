@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#111111">
+  <title>Site Intelligence | Sustainable Catalyst</title>
+  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="/app/assets/app.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to intelligence workspace</a>
+  <div id="app" class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <div>
+          <div class="brand-kicker">Sustainable Catalyst</div>
+          <div class="brand-name">Site Intelligence</div>
+        </div>
+      </div>
+      <div class="topbar-controls">
+        <label class="compact-field">Country
+          <select id="countrySelect" aria-label="Select country">
+            <option value="KEN">Kenya</option>
+            <option value="GHA">Ghana</option>
+            <option value="USA">United States</option>
+            <option value="IND">India</option>
+            <option value="BRA">Brazil</option>
+          </select>
+        </label>
+        <label class="compact-field">Imagery date
+          <input id="dateSelect" type="date">
+        </label>
+        <button class="ghost-button" id="shareButton" type="button">Copy view</button>
+      </div>
+    </header>
+
+    <aside class="sidebar" aria-label="Site Intelligence sections">
+      <nav>
+        <button class="nav-item active" data-route="overview"><span>Overview</span><small>Live map and signals</small></button>
+        <button class="nav-item" data-route="country"><span>Country</span><small>Place-based evidence</small></button>
+        <button class="nav-item" data-route="events"><span>Events</span><small>Recent public records</small></button>
+        <button class="nav-item" data-route="compare"><span>Compare</span><small>Two-country context</small></button>
+        <button class="nav-item" data-route="sources"><span>Sources</span><small>Provenance and coverage</small></button>
+      </nav>
+      <div class="sidebar-note">
+        <strong>Public evidence, not automated judgment.</strong>
+        <span>Dates, source definitions, and missing data remain visible.</span>
+      </div>
+    </aside>
+
+    <main id="main" class="workspace" tabindex="-1">
+      <section class="workspace-head">
+        <div>
+          <p class="eyebrow" id="viewEyebrow">LIVE INTELLIGENCE WORKSPACE</p>
+          <h1 id="viewTitle">Climate and Human Vulnerability</h1>
+          <p id="viewDescription">Satellite context, natural events, environmental pressure, and country evidence in one navigable view.</p>
+        </div>
+        <div class="status-pill"><span class="pulse"></span><span id="statusText">Loading public feeds</span></div>
+      </section>
+
+      <section class="map-panel" aria-label="Interactive intelligence map">
+        <div class="map-toolbar">
+          <div class="layer-tabs" role="group" aria-label="Map layer">
+            <button class="layer-tab active" data-layer="true-color">True color</button>
+            <button class="layer-tab" data-layer="land-surface-temperature">Surface heat</button>
+            <button class="layer-tab" data-layer="fires-thermal-anomalies">Fire signals</button>
+            <button class="layer-tab" data-layer="vegetation-index">Vegetation</button>
+          </div>
+          <div class="map-actions">
+            <label class="toggle"><input id="eventsToggle" type="checkbox" checked><span>Events</span></label>
+            <label class="toggle"><input id="heatToggle" type="checkbox"><span>Density</span></label>
+            <button id="fullscreenButton" class="icon-button" type="button">Fullscreen</button>
+          </div>
+        </div>
+        <div id="map"></div>
+        <div class="map-legend">
+          <span><i class="legend-dot earthquake"></i>Earthquake</span>
+          <span><i class="legend-dot natural"></i>Natural event</span>
+          <span class="legend-source" id="legendSource">NASA GIBS imagery · USGS and NASA event records</span>
+        </div>
+      </section>
+
+      <section class="metric-grid" aria-label="Key intelligence indicators">
+        <article class="metric-card"><span class="metric-label">Recent events</span><strong id="eventCount">—</strong><small>Mapped public records</small></article>
+        <article class="metric-card"><span class="metric-label">Imagery layer</span><strong id="layerName">True color</strong><small id="layerDate">Selected date</small></article>
+        <article class="metric-card"><span class="metric-label">Country</span><strong id="countryName">Kenya</strong><small id="countryCode">KEN</small></article>
+        <article class="metric-card"><span class="metric-label">Evidence coverage</span><strong id="coverageCount">—</strong><small>Registered public sources</small></article>
+      </section>
+
+      <section class="content-grid">
+        <article class="panel signal-panel">
+          <div class="panel-head"><div><p class="eyebrow">SIGNAL STREAM</p><h2>Recent events</h2></div><button class="text-button" data-route-link="events">View all</button></div>
+          <div id="eventList" class="event-list" aria-live="polite"></div>
+        </article>
+
+        <article class="panel country-panel">
+          <div class="panel-head"><div><p class="eyebrow">COUNTRY CONTEXT</p><h2 id="countryPanelTitle">Kenya at a glance</h2></div><button class="text-button" data-route-link="country">Open profile</button></div>
+          <div id="countrySummary" class="country-summary"></div>
+        </article>
+      </section>
+
+      <section id="routePanel" class="route-panel" hidden></section>
+
+      <section class="method-note">
+        <div>
+          <p class="eyebrow">READING THE VIEW</p>
+          <h2>Source-aware by design</h2>
+        </div>
+        <p>Satellite imagery may be composited, delayed, cloud-obscured, or unavailable for a selected date. Event points are public source records, not emergency instructions. Density visualization shows concentration, not severity or causality.</p>
+      </section>
+    </main>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="/app/assets/app.js"></script>
+</body>
+</html>

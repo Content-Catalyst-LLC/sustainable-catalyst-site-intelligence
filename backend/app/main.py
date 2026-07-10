@@ -5,7 +5,8 @@ from typing import Any, Optional
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import PlainTextResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import PlainTextResponse, FileResponse
 
 from .config import Settings, get_settings
 from .ga4_client import GA4Client, get_ga4_client
@@ -2863,3 +2864,16 @@ def publishing_intelligence_report(
 ):
     return publishing_content_strategy(start_date, end_date, prior_start_date, prior_end_date, limit, ga4, settings, registry, _)
 
+
+
+# Site Intelligence v1.14.0 standalone public application.
+from pathlib import Path as _Path
+PUBLIC_APP_DIR = _Path(__file__).resolve().parent.parent / "public_app"
+if PUBLIC_APP_DIR.exists():
+    app.mount("/app/assets", StaticFiles(directory=str(PUBLIC_APP_DIR / "assets")), name="site-intelligence-app-assets")
+
+    @app.get("/app", include_in_schema=False)
+    @app.get("/app/", include_in_schema=False)
+    @app.get("/app/{route:path}", include_in_schema=False)
+    def standalone_public_app(route: str = ""):
+        return FileResponse(str(PUBLIC_APP_DIR / "index.html"))

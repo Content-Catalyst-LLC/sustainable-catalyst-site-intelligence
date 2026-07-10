@@ -1,11 +1,16 @@
 # Changelog
 
-## 1.13.0
+## 1.14.0 — Standalone Public Intelligence App and Visual System
 
-- Added geospatial map engine, satellite imagery, live event GeoJSON, heat maps, time controls, legends, accessible tables, and public diagnostics.
-- Added WordPress geospatial shortcodes and public REST proxies.
+- Added a dedicated map-first public application at `/app/`.
+- Added responsive top navigation, side navigation, map canvas, layer controls, legends, fullscreen mode, country selection, event stream, source view, and comparison view.
+- Added satellite imagery switching for true color, surface heat, fire signals, and vegetation.
+- Added live USGS and NASA EONET event rendering.
+- Added a WordPress iframe embed shortcode: `[sc_site_intelligence_app]`.
+- Removed backend diagnostics from the primary visual hierarchy.
+- Preserved explicit missing-data, provenance, and responsible-use boundaries.
 
-## 1.13.0 — Public Interface Redesign and Renderer Simplification
+## 1.12.6 — Public Interface Redesign and Renderer Simplification
 
 - Replaces generic readiness-card output with dedicated public templates for country profiles, dashboards, comparisons, and directories.
 - Adds a compact country selector and responsive evidence-domain cards.
