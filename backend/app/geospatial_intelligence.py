@@ -6,7 +6,7 @@ import json
 from typing import Any
 from urllib.request import Request, urlopen
 
-VERSION = "1.15.0"
+VERSION = "1.15.1"
 
 
 def _now() -> str:
@@ -15,7 +15,7 @@ def _now() -> str:
 
 def _fetch_json(url: str, timeout: int = 8) -> dict[str, Any]:
     try:
-        request = Request(url, headers={"User-Agent": "Sustainable-Catalyst-Site-Intelligence/1.15.0"})
+        request = Request(url, headers={"User-Agent": "Sustainable-Catalyst-Site-Intelligence/1.15.1"})
         with urlopen(request, timeout=timeout) as response:
             return json.loads(response.read().decode("utf-8"))
     except Exception:

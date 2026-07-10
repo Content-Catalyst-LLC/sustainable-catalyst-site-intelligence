@@ -77,6 +77,32 @@
     }[route]||[];
   }
 
+
+  let countryLineage = new Map();
+  function openEvidenceDrawer(item){
+    const drawer=qs("#evidenceDrawer"),backdrop=qs("#evidenceBackdrop");
+    qs("#evidenceDrawerTitle").textContent=item.label||"Indicator evidence";
+    const field=(label,value)=>`<div class="evidence-field"><span class="evidence-field-label">${escapeHtml(label)}</span><div class="evidence-field-value">${value||"Unavailable"}</div></div>`;
+    const state=item.platform_core_state||"not-recorded";
+    const verification=item.verification_url?`<a class="evidence-link" href="${escapeHtml(item.verification_url)}" target="_blank" rel="noopener">Inspect evidence record ↗</a>`:"Not yet published to Platform Core.";
+    qs("#evidenceDrawerBody").innerHTML=[
+      field("Displayed value",`${escapeHtml(formatCountryValue(item.value,item.format,item.unit))} · ${escapeHtml(item.unit||"")} · ${escapeHtml(item.year||item.reporting_year||"Year unavailable")}`),
+      field("Source",`${escapeHtml(item.source||"Source unavailable")}${item.source_url?`<br><a class="evidence-link" href="${escapeHtml(item.source_url)}" target="_blank" rel="noopener">Open original source ↗</a>`:""}`),
+      field("Platform Core state",`<span class="evidence-integrity"><span class="lineage-dot ${escapeHtml(state)}"></span>${escapeHtml(state)}</span>`),
+      field("Evidence ID",escapeHtml(item.evidence_id||"Pending or integration disabled")),
+      field("Source snapshot ID",escapeHtml(item.source_snapshot_id||"Pending or integration disabled")),
+      field("Provenance activity",escapeHtml(item.provenance_activity_id||"Pending or integration disabled")),
+      field("Transformation","Null observations removed; reporting years preserved; records sorted chronologically; latest valid observation selected; no imputation."),
+      field("Verification",verification),
+      field("Known limits","Reporting periods differ by indicator. Public indicators describe conditions but do not establish causality, rankings, eligibility, liability, or professional advice.")
+    ].join("");
+    backdrop.hidden=false;drawer.classList.add("open");drawer.setAttribute("aria-hidden","false");qs("#closeEvidenceDrawer").focus();
+  }
+  function closeEvidenceDrawer(){
+    const drawer=qs("#evidenceDrawer"),backdrop=qs("#evidenceBackdrop");
+    drawer.classList.remove("open");drawer.setAttribute("aria-hidden","true");backdrop.hidden=true;
+  }
+
   const formatCountryValue=(value,format,unit)=>{
     if(value===null||value===undefined)return "Unavailable";
     if(format==="compact")return new Intl.NumberFormat(undefined,{notation:"compact",maximumFractionDigits:1}).format(value);
@@ -103,7 +129,16 @@
       const stateLabel=profile.data_state==="live"?"Live public indicators":profile.data_state==="reference-snapshot"?"Reference snapshot":"Source unavailable";
       qs("#countryDataState").textContent=stateLabel;
       qs("#countryDataState").classList.toggle("reference",profile.data_state!=="live");
-      qs("#countryIndicatorGrid").innerHTML=(profile.highlights||[]).map(item=>`<article class="country-indicator"><span class="country-indicator-label">${escapeHtml(item.label)}</span><strong class="country-indicator-value">${escapeHtml(formatCountryValue(item.value,item.format,item.unit))}</strong><div class="country-indicator-meta">${escapeHtml(item.unit)} · ${escapeHtml(item.year)}</div><span class="country-indicator-source">${escapeHtml(item.source)} · ${escapeHtml(item.data_state)}</span></article>`).join("")||'<div class="loading-block">Validated country indicators are unavailable.</div>';
+      countryLineage=new Map((profile.highlights||[]).map(item=>[item.key,item]));
+      qs("#countryIndicatorGrid").innerHTML=(profile.highlights||[]).map(item=>{
+        const lineage=item.lineage||{},state=lineage.platform_core_state||"not-recorded";
+        return `<article class="country-indicator" tabindex="0" role="button" data-evidence-key="${escapeHtml(item.key)}" aria-label="Inspect evidence for ${escapeHtml(item.label)}"><span class="country-indicator-label">${escapeHtml(item.label)}</span><strong class="country-indicator-value">${escapeHtml(formatCountryValue(item.value,item.format,item.unit))}</strong><div class="country-indicator-meta">${escapeHtml(item.unit)} · ${escapeHtml(item.year)}</div><span class="country-indicator-source">${escapeHtml(item.source)} · ${escapeHtml(item.data_state)}</span><span class="country-indicator-lineage"><i class="lineage-dot ${escapeHtml(state)}"></i>${escapeHtml(state==="recorded"||state==="existing"?"Evidence recorded":state==="queued"?"Evidence queued":"Evidence details")}</span></article>`;
+      }).join("")||'<div class="loading-block">Validated country indicators are unavailable.</div>';
+      qsa("[data-evidence-key]").forEach(card=>{
+        const activate=()=>openEvidenceDrawer(countryLineage.get(card.dataset.evidenceKey)||{});
+        card.addEventListener("click",activate);
+        card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();activate()}});
+      });
       const options=(trends.trends||[]);
       qs("#trendSelect").innerHTML=options.map((item,i)=>`<option value="${escapeHtml(item.key)}">${escapeHtml(item.label)}</option>`).join("");
       if(options.length){qs("#trendTitle").textContent=options[0].label;renderTrend(options[0])}
@@ -153,7 +188,7 @@
     qs("#eventsToggle").addEventListener("change",e=>e.target.checked?state.markers.addTo(state.map):state.map.removeLayer(state.markers));
     qs("#heatToggle").addEventListener("change",e=>toast(e.target.checked?"Density layer enabled for supported records":"Density layer hidden"));
     qs("#fullscreenButton").addEventListener("click",()=>{const p=qs(".map-panel");if(document.fullscreenElement)document.exitFullscreen();else p.requestFullscreen?.()});
-    qs("#shareButton").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("View link copied")});
+    qs("#shareButton").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("View link copied")});qs("#closeEvidenceDrawer").addEventListener("click",closeEvidenceDrawer);qs("#evidenceBackdrop").addEventListener("click",closeEvidenceDrawer);document.addEventListener("keydown",e=>{if(e.key==="Escape")closeEvidenceDrawer()});
     const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const initialView=params.get("view")||"overview";qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";try{await loadLayers();await setImagery("true-color");await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);await setRoute(initialView)}
     catch(e){qs("#statusText").textContent="Some feeds unavailable";toast("The interface loaded, but one or more public feeds are unavailable.")}
   }

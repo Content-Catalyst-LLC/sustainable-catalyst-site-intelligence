@@ -9,6 +9,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import PlainTextResponse, FileResponse
 
 from .config import Settings, get_settings
+from .platform_core_integration import PlatformCoreClient, platform_core_status as build_platform_core_status
 from .ga4_client import GA4Client, get_ga4_client
 from .metrics import build_page_metrics, dashboard_totals, hub_summary, mapping_coverage, unmapped_suggestions
 from .events import event_diagnostics, event_setup_recommendations, page_opportunities
@@ -723,6 +724,59 @@ def public_cross_domain_dashboard_export(dashboard_id: str, country: str = ""):
         raise HTTPException(status_code=404, detail=result)
     return result
 
+
+
+
+@app.get("/public/platform-core/status")
+def public_platform_core_status():
+    """Public-safe integration status. Never returns API keys."""
+    return build_platform_core_status()
+
+
+@app.post("/admin/platform-core/replay-queue")
+def replay_platform_core_queue(
+    limit: int = Query(default=100, ge=1, le=1000),
+    _: None = Depends(require_token),
+):
+    return PlatformCoreClient().replay_queue(limit=limit)
+
+
+@app.get("/public/country/{country_code}/evidence-lineage")
+def public_country_evidence_lineage(country_code: str):
+    try:
+        payload = build_live_country_indicators(country_code)
+    except ValueError:
+        raise HTTPException(status_code=404, detail="Unsupported country code.")
+    items = []
+    for indicator in payload.get("indicators", []):
+        latest = indicator.get("latest")
+        lineage = indicator.get("lineage") or {}
+        if not latest:
+            continue
+        items.append({
+            "indicator_id": indicator.get("id"),
+            "indicator_key": indicator.get("key"),
+            "label": indicator.get("label"),
+            "value": latest.get("value"),
+            "unit": indicator.get("unit"),
+            "reporting_year": latest.get("year"),
+            "source": indicator.get("source"),
+            "source_url": indicator.get("source_url"),
+            "data_state": indicator.get("data_state"),
+            "evidence_id": lineage.get("evidence_id"),
+            "source_snapshot_id": lineage.get("source_snapshot_id"),
+            "provenance_activity_id": lineage.get("provenance_activity_id"),
+            "verification_url": lineage.get("verification_url"),
+            "platform_core_state": lineage.get("platform_core_state", "not-recorded"),
+            "methodology": "Latest non-null observation; reporting year and unit preserved; no imputation.",
+        })
+    return {
+        "ok": True,
+        "version": "1.15.1",
+        "country": payload.get("country"),
+        "platform_core": build_platform_core_status(),
+        "items": items,
+    }
 
 
 @app.get("/public/country/{country_code}")
@@ -2901,7 +2955,7 @@ def publishing_intelligence_report(
 
 
 
-# Site Intelligence v1.15.0 standalone public application.
+# Site Intelligence v1.15.1 standalone public application.
 from pathlib import Path as _Path
 PUBLIC_APP_DIR = _Path(__file__).resolve().parent.parent / "public_app"
 if PUBLIC_APP_DIR.exists():

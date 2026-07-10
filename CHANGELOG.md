@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.15.1 — Platform Core Integration and Evidence Lineage
+
+- Added a backend-only Platform Core v2.5.0 client.
+- Added source snapshot creation for live World Bank responses.
+- Added provenance activities and used/generated provenance links.
+- Added stable evidence records for validated country indicators.
+- Added deterministic IDs for idempotent retries and conflict-safe replay.
+- Added a JSONL retry queue for temporary Platform Core outages.
+- Added public-safe Platform Core integration status.
+- Added country evidence-lineage endpoint.
+- Added an accessible evidence and provenance drawer to the standalone app.
+- Kept Platform Core write keys out of WordPress, JavaScript, public diagnostics, and exports.
+- Preserved explicit live/reference states and non-imputation boundaries.
+
 ## 1.15.0 — Live Country Intelligence
 
 - Added live World Bank country-indicator connectors.

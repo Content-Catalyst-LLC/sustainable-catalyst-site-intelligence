@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="SC_SI_", env_file=".env", extra="ignore")
 
     app_name: str = "Sustainable Catalyst Site Intelligence"
-    version: str = "1.15.0"
+    version: str = "1.15.1"
     environment: str = "development"
     demo_mode: bool = True
     api_token: str = "dev-token-change-me"
@@ -84,6 +84,18 @@ class Settings(BaseSettings):
     github_api_base_url: str = "https://api.github.com"
     github_org: str = "Content-Catalyst-LLC"
     public_connector_live_checks: bool = True
+
+
+    # Platform Core v2.5.0 integration — Site Intelligence v1.15.1.
+    # Write credentials remain backend-only and must never be exposed through
+    # WordPress, browser JavaScript, public diagnostics, or export payloads.
+    platform_core_enabled: bool = False
+    platform_core_url: str = ""
+    platform_core_write_api_key: str = ""
+    platform_core_public_api_key: str = ""
+    platform_core_timeout_seconds: int = Field(default=5, ge=1, le=30)
+    platform_core_queue_path: str = "backend/data/platform_core_queue.jsonl"
+    platform_core_public_evidence_url: str = ""
 
 
     # Sustainable Development Data Connectors v1.14.1.

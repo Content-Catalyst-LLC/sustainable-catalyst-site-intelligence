@@ -3,11 +3,12 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from functools import lru_cache
 import json
+from .platform_core_integration import PlatformCoreClient, utc_now
 from typing import Any
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
-VERSION = "1.15.0"
+VERSION = "1.15.1"
 
 COUNTRIES: dict[str, dict[str, Any]] = {
     "KEN": {"name": "Kenya", "iso2": "KE", "region": "Sub-Saharan Africa", "capital": "Nairobi", "latitude": 0.0236, "longitude": 37.9062},
@@ -28,6 +29,8 @@ INDICATORS: list[dict[str, str]] = [
     {"id": "SI.POV.GINI", "key": "gini", "label": "Gini index", "unit": "index", "format": "decimal", "domain": "Inequality"},
 ]
 
+_RAW_SOURCE_PAYLOADS: dict[tuple[str, str], dict[str, Any]] = {}
+
 FALLBACKS: dict[str, dict[str, Any]] = {
     "KEN": {
         "population": (55100586, 2023), "life_expectancy": (66.7, 2022),
@@ -47,7 +50,7 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 def _fetch_json(url: str, timeout: int = 9) -> Any:
-    request = Request(url, headers={"User-Agent": "Sustainable-Catalyst-Site-Intelligence/1.15.0"})
+    request = Request(url, headers={"User-Agent": "Sustainable-Catalyst-Site-Intelligence/1.15.1"})
     with urlopen(request, timeout=timeout) as response:
         return json.loads(response.read().decode("utf-8"))
 
@@ -60,6 +63,7 @@ def _country(code: str) -> tuple[str, dict[str, Any]]:
 def _world_bank_series(iso2: str, indicator_id: str, per_page: int = 30) -> list[dict[str, Any]]:
     url = f"https://api.worldbank.org/v2/country/{iso2}/indicator/{indicator_id}?{urlencode({'format':'json','per_page':per_page})}"
     payload = _fetch_json(url)
+    _RAW_SOURCE_PAYLOADS[(iso2, indicator_id)] = {"payload": payload, "retrieved_at": utc_now(), "canonical_url": url}
     if not isinstance(payload, list) or len(payload) < 2 or not isinstance(payload[1], list):
         return []
     records = []
@@ -100,6 +104,48 @@ def _live_indicator_bundle(code: str) -> tuple[dict[str, Any], ...]:
         })
     return tuple(results)
 
+
+def _attach_platform_core_lineage(
+    code: str,
+    country: dict[str, Any],
+    definition: dict[str, str],
+    record: dict[str, Any],
+) -> dict[str, Any]:
+    latest = record.get("latest")
+    if not latest or record.get("data_state") != "live":
+        record["lineage"] = {
+            "platform_core_enabled": PlatformCoreClient().settings.enabled,
+            "platform_core_state": "not-recorded",
+            "reason": "Only live validated connector records are written to Platform Core.",
+        }
+        return record
+
+    raw = _RAW_SOURCE_PAYLOADS.get((country["iso2"], definition["id"]))
+    if not raw:
+        record["lineage"] = {
+            "platform_core_enabled": PlatformCoreClient().settings.enabled,
+            "platform_core_state": "not-recorded",
+            "reason": "Raw source response was unavailable for snapshotting.",
+        }
+        return record
+
+    client = PlatformCoreClient()
+    record["lineage"] = client.record_indicator_lineage(
+        country_code=code,
+        country_name=country["name"],
+        indicator_id=definition["id"],
+        indicator_key=definition["key"],
+        indicator_label=definition["label"],
+        canonical_url=raw["canonical_url"],
+        retrieved_at=raw["retrieved_at"],
+        raw_payload=raw["payload"],
+        latest=latest,
+        series=record.get("series") or [],
+        source_name=record.get("source") or "World Bank Open Data",
+    )
+    return record
+
+
 def _fallback_indicator(code: str, definition: dict[str, str]) -> dict[str, Any] | None:
     pair = FALLBACKS.get(code, {}).get(definition["key"])
     if not pair:
@@ -122,9 +168,15 @@ def country_indicators(code: str) -> dict[str, Any]:
     for definition, record in zip(INDICATORS, live):
         if record.get("latest"):
             live_count += 1
-            merged.append(record)
+            merged.append(_attach_platform_core_lineage(normalized, country, definition, record))
         else:
-            merged.append(_fallback_indicator(normalized, definition) or record)
+            fallback = _fallback_indicator(normalized, definition) or record
+            fallback["lineage"] = {
+                "platform_core_enabled": PlatformCoreClient().settings.enabled,
+                "platform_core_state": "not-recorded",
+                "reason": "Reference snapshots are not published as live evidence.",
+            }
+            merged.append(fallback)
     available = [item for item in merged if item.get("latest")]
     state = "live" if live_count else ("reference-snapshot" if available else "unavailable")
     return {
@@ -178,7 +230,7 @@ def country_profile(code: str) -> dict[str, Any]:
             highlights.append({
                 "key": item["key"], "label": item["label"], "value": item["latest"]["value"],
                 "year": item["latest"]["year"], "unit": item["unit"], "format": item["format"],
-                "source": item["source"], "data_state": item["data_state"],
+                "source": item["source"], "data_state": item["data_state"], "lineage": item.get("lineage", {}),
             })
     return {
         "ok": True,
