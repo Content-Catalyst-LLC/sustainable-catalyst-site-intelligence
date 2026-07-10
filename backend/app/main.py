@@ -107,6 +107,15 @@ from .humanitarian_intelligence import (
     methodology as build_humanitarian_methodology,
     export_manifest as build_humanitarian_export,
 )
+from .international_law_governance import (
+    source_registry as build_international_law_source_registry,
+    overview as build_international_law_overview,
+    monitor_detail as build_international_law_monitor_detail,
+    sanctions_monitor as build_international_law_sanctions_monitor,
+    legal_events as build_international_law_events,
+    methodology as build_international_law_methodology,
+    export_manifest as build_international_law_export,
+)
 from .human_development_intelligence import (
     source_registry as build_human_development_source_registry,
     overview as build_human_development_overview,
@@ -565,6 +574,38 @@ def public_humanitarian_methodology():
 @app.get("/public/humanitarian-intelligence/export")
 def public_humanitarian_export():
     return build_humanitarian_export()
+
+
+@app.get("/public/international-law")
+def public_international_law():
+    return build_international_law_overview()
+
+@app.get("/public/international-law/sources")
+def public_international_law_sources():
+    return build_international_law_source_registry()
+
+@app.get("/public/international-law/sanctions")
+def public_international_law_sanctions():
+    return build_international_law_sanctions_monitor()
+
+@app.get("/public/international-law/events")
+def public_international_law_events(event_type: Optional[str] = Query(None), jurisdiction: Optional[str] = Query(None)):
+    return build_international_law_events(event_type=event_type, jurisdiction=jurisdiction)
+
+@app.get("/public/international-law/methodology")
+def public_international_law_methodology():
+    return build_international_law_methodology()
+
+@app.get("/public/international-law/export")
+def public_international_law_export():
+    return build_international_law_export()
+
+@app.get("/public/international-law/monitors/{monitor_id}")
+def public_international_law_monitor(monitor_id: str):
+    try:
+        return build_international_law_monitor_detail(monitor_id)
+    except KeyError:
+        raise HTTPException(status_code=404, detail="International-law monitor not found.")
 
 @app.get("/public/human-development")
 def public_human_development():

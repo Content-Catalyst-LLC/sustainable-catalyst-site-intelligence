@@ -2,7 +2,7 @@ from app.humanitarian_intelligence import overview, source_registry, crisis_map,
 
 def test_humanitarian_registry():
     data=source_registry()
-    assert data["version_scope"] == "v1.9.0"
+    assert data["version_scope"] == "v1.10.0"
     assert data["counts"]["sources"] == 5
     assert {x["source_id"] for x in data["connectors"]} == {"gdacs","reliefweb","usgs-earthquakes","nasa-eonet","unhcr-refugee-statistics"}
 

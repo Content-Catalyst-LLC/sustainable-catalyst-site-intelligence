@@ -61,16 +61,16 @@ def _public_source(item: Dict[str, Any]) -> Dict[str, Any]:
 
 def source_registry(settings: Settings) -> Dict[str, Any]:
     connectors=[_public_source(x) for x in SOURCE_REGISTRY]
-    return {"ok":True,"generated_at":_now(),"version_scope":"v1.9.0","title":"Sustainable Development Public Source Registry","summary":"Public-source registry for planetary boundaries, SDGs, poverty, education, food, water, climate, and human development.","counts":{"sources":len(connectors),"families":len(set(x["family"] for x in connectors)),"no_key_required":sum(not x["requires_key"] for x in connectors)},"connectors":connectors,"freshness_definitions":FRESHNESS_CLASSES,"methodology":["Official, observational, modeled, research, and derived records remain explicitly distinguished.","A current observation does not automatically constitute an official planetary-boundary assessment.","Every public value should retain source, geography, period, unit, freshness, and caveat metadata."],"observation_schema":OBSERVATION_SCHEMA}
+    return {"ok":True,"generated_at":_now(),"version_scope":"v1.10.0","title":"Sustainable Development Public Source Registry","summary":"Public-source registry for planetary boundaries, SDGs, poverty, education, food, water, climate, and human development.","counts":{"sources":len(connectors),"families":len(set(x["family"] for x in connectors)),"no_key_required":sum(not x["requires_key"] for x in connectors)},"connectors":connectors,"freshness_definitions":FRESHNESS_CLASSES,"methodology":["Official, observational, modeled, research, and derived records remain explicitly distinguished.","A current observation does not automatically constitute an official planetary-boundary assessment.","Every public value should retain source, geography, period, unit, freshness, and caveat metadata."],"observation_schema":OBSERVATION_SCHEMA}
 
 def source_families() -> Dict[str, Any]:
     groups={}
     for item in SOURCE_REGISTRY:
         groups.setdefault(item["family"],[]).append(item["source_id"])
-    return {"ok":True,"generated_at":_now(),"version_scope":"v1.9.0","title":"Sustainable Development Connector Families","summary":"Connector coverage across environmental limits and human development.","families":[{"family":k,"source_count":len(v),"sources":v} for k,v in sorted(groups.items())]}
+    return {"ok":True,"generated_at":_now(),"version_scope":"v1.10.0","title":"Sustainable Development Connector Families","summary":"Connector coverage across environmental limits and human development.","families":[{"family":k,"source_count":len(v),"sources":v} for k,v in sorted(groups.items())]}
 
 def planetary_boundary_registry() -> Dict[str, Any]:
-    return {"ok":True,"generated_at":_now(),"version_scope":"v1.9.0","title":"Planetary Boundaries Adapter Registry","summary":"Boundary definitions and source mappings for future derived, methodology-forward assessments.","boundaries":PLANETARY_BOUNDARIES,"counts":{"boundaries":len(PLANETARY_BOUNDARIES),"adapter_ready":sum(x["assessment_status"]=="derived_adapter_ready" for x in PLANETARY_BOUNDARIES)},"methodology":["Threshold definitions must be sourced from peer-reviewed planetary-boundary research.","Site Intelligence assessments must be labeled derived unless directly reproduced from an official assessment.","Underlying indicators and assessment conclusions are separate records."]}
+    return {"ok":True,"generated_at":_now(),"version_scope":"v1.10.0","title":"Planetary Boundaries Adapter Registry","summary":"Boundary definitions and source mappings for future derived, methodology-forward assessments.","boundaries":PLANETARY_BOUNDARIES,"counts":{"boundaries":len(PLANETARY_BOUNDARIES),"adapter_ready":sum(x["assessment_status"]=="derived_adapter_ready" for x in PLANETARY_BOUNDARIES)},"methodology":["Threshold definitions must be sourced from peer-reviewed planetary-boundary research.","Site Intelligence assessments must be labeled derived unless directly reproduced from an official assessment.","Underlying indicators and assessment conclusions are separate records."]}
 
 def connector_health(settings: Settings, live: bool=False) -> Dict[str, Any]:
     rows=[]
@@ -92,12 +92,12 @@ def connector_health(settings: Settings, live: bool=False) -> Dict[str, Any]:
             latency_ms=round((time.perf_counter()-started)*1000,1)
         rows.append({"source_id":item["source_id"],"label":item["title"],"status":status,"freshness_class":item["freshness_class"],"cache_ttl_seconds":item["cache_ttl_seconds"],"latency_ms":latency_ms,"detail":detail})
     counts={k:sum(r["status"]==k for r in rows) for k in {r["status"] for r in rows}}
-    return {"ok":True,"generated_at":_now(),"version_scope":"v1.9.0","title":"Sustainable Development Connector Health","summary":"Public-safe source health, freshness, cache, and fallback status.","public_status":"live_checks" if live else "registry_only","counts":counts,"connectors":rows,"display_guidance":["Never hide a dashboard solely because a source is temporarily unavailable.","Show last-known-good timestamps and stale labels.","Do not call periodic statistical data real time."]}
+    return {"ok":True,"generated_at":_now(),"version_scope":"v1.10.0","title":"Sustainable Development Connector Health","summary":"Public-safe source health, freshness, cache, and fallback status.","public_status":"live_checks" if live else "registry_only","counts":counts,"connectors":rows,"display_guidance":["Never hide a dashboard solely because a source is temporarily unavailable.","Show last-known-good timestamps and stale labels.","Do not call periodic statistical data real time."]}
 
 def methodology() -> Dict[str, Any]:
-    return {"ok":True,"generated_at":_now(),"version_scope":"v1.9.0","title":"Sustainable Development Data Methodology","summary":"Normalization, provenance, freshness, and planetary-boundary assessment rules.","observation_schema":OBSERVATION_SCHEMA,"freshness_definitions":FRESHNESS_CLASSES,"methodology":["Preserve upstream series identifiers and revisions.","Normalize units only when conversion is deterministic and documented.","Retain disaggregation dimensions rather than flattening them into a single national value.","Separate observed, reported, modeled, forecast, and derived records.","Use explicit last-known-good and unavailable states.","Treat public dashboards as educational evidence infrastructure, not professional advice."],"hidden":["API credentials","raw exception traces","private analytics","unreviewed derived claims"]}
+    return {"ok":True,"generated_at":_now(),"version_scope":"v1.10.0","title":"Sustainable Development Data Methodology","summary":"Normalization, provenance, freshness, and planetary-boundary assessment rules.","observation_schema":OBSERVATION_SCHEMA,"freshness_definitions":FRESHNESS_CLASSES,"methodology":["Preserve upstream series identifiers and revisions.","Normalize units only when conversion is deterministic and documented.","Retain disaggregation dimensions rather than flattening them into a single national value.","Separate observed, reported, modeled, forecast, and derived records.","Use explicit last-known-good and unavailable states.","Treat public dashboards as educational evidence infrastructure, not professional advice."],"hidden":["API credentials","raw exception traces","private analytics","unreviewed derived claims"]}
 
-# v1.9.0 connector reliability, freshness, and schema-validation layer.
+# v1.10.0 connector reliability, freshness, and schema-validation layer.
 import json
 import threading
 import time
@@ -269,7 +269,7 @@ def _probe_connector(item: Dict[str, Any], settings: Settings, *, force: bool = 
     started = time.perf_counter()
     for attempt in range(1, attempts + 1):
         try:
-            req = Request(item["base_url"] + item["health_path"], headers={"User-Agent": "SustainableCatalystSiteIntelligence/1.9.0", "Accept": "application/json,text/csv,*/*"})
+            req = Request(item["base_url"] + item["health_path"], headers={"User-Agent": "SustainableCatalystSiteIntelligence/1.10.0", "Accept": "application/json,text/csv,*/*"})
             with urlopen(req, timeout=settings.external_request_timeout_seconds) as resp:
                 body = resp.read(262144)
                 validation = _validate_upstream_payload(source_id, resp.headers.get("Content-Type", ""), body)
@@ -331,14 +331,14 @@ def connector_reliability(settings: Settings, *, live: bool = False, force: bool
         row.update({"freshness_class": item["freshness_class"], "cache_ttl_seconds": item["cache_ttl_seconds"], "stale_ttl_seconds": int(getattr(settings, "sustainable_development_stale_ttl_seconds", 604800))})
         rows.append(row)
     statuses = {status: sum(1 for row in rows if row["status"] == status) for status in CONNECTOR_RESPONSE_SCHEMA["statuses"]}
-    return {"ok": True, "generated_at": _now(), "version_scope": "v1.9.0", "title": "Sustainable Development Connector Reliability", "summary": "Retry, circuit-breaker, schema-validation, freshness, cache, rate-limit, and last-known-good status.", "live_checks": enabled, "counts": statuses, "connectors": rows, "response_schema": CONNECTOR_RESPONSE_SCHEMA}
+    return {"ok": True, "generated_at": _now(), "version_scope": "v1.10.0", "title": "Sustainable Development Connector Reliability", "summary": "Retry, circuit-breaker, schema-validation, freshness, cache, rate-limit, and last-known-good status.", "live_checks": enabled, "counts": statuses, "connectors": rows, "response_schema": CONNECTOR_RESPONSE_SCHEMA}
 
 
 def freshness_policy() -> Dict[str, Any]:
     rows = []
     for item in SOURCE_REGISTRY:
         rows.append({"source_id": item["source_id"], "label": item["title"], "freshness_class": item["freshness_class"], "fresh_seconds": FRESHNESS_THRESHOLDS_SECONDS[item["freshness_class"]], "aging_seconds": FRESHNESS_THRESHOLDS_SECONDS[item["freshness_class"]] * 2, "cache_ttl_seconds": item["cache_ttl_seconds"]})
-    return {"ok": True, "generated_at": _now(), "version_scope": "v1.9.0", "title": "Sustainable Development Freshness Policy", "classes": FRESHNESS_CLASSES, "thresholds": rows, "public_labels": ["fresh", "aging", "stale", "last_known_good", "unknown", "temporarily_unavailable"]}
+    return {"ok": True, "generated_at": _now(), "version_scope": "v1.10.0", "title": "Sustainable Development Freshness Policy", "classes": FRESHNESS_CLASSES, "thresholds": rows, "public_labels": ["fresh", "aging", "stale", "last_known_good", "unknown", "temporarily_unavailable"]}
 
 
 def schema_validation_report() -> Dict[str, Any]:
@@ -347,7 +347,7 @@ def schema_validation_report() -> Dict[str, Any]:
     for item in SOURCE_REGISTRY:
         missing = [field for field in ("source_id", "title", "organization", "family", "base_url", "access_type", "freshness_class", "cache_ttl_seconds", "limitations") if field not in item or item[field] in (None, "")]
         source_checks.append({"source_id": item["source_id"], "valid": not missing, "missing": missing})
-    return {"ok": all(x["valid"] for x in source_checks), "generated_at": _now(), "version_scope": "v1.9.0", "title": "Connector and Observation Schema Validation", "registry_schema": {"valid": all(x["valid"] for x in source_checks), "sources": source_checks}, "observation_schema": OBSERVATION_SCHEMA, "connector_response_schema": CONNECTOR_RESPONSE_SCHEMA, "sample_validation": validate_observation(sample)}
+    return {"ok": all(x["valid"] for x in source_checks), "generated_at": _now(), "version_scope": "v1.10.0", "title": "Connector and Observation Schema Validation", "registry_schema": {"valid": all(x["valid"] for x in source_checks), "sources": source_checks}, "observation_schema": OBSERVATION_SCHEMA, "connector_response_schema": CONNECTOR_RESPONSE_SCHEMA, "sample_validation": validate_observation(sample)}
 
 
 def connector_cache_status() -> Dict[str, Any]:
@@ -364,4 +364,4 @@ def connector_cache_status() -> Dict[str, Any]:
         stale_expires = datetime.fromisoformat(cached["stale_expires_at"])
         state = "fresh" if now <= expires else "stale_servable" if now <= stale_expires else "expired"
         rows.append({"source_id": item["source_id"], "state": state, "stored_at": cached["stored_at"], "expires_at": cached["expires_at"], "stale_expires_at": cached["stale_expires_at"]})
-    return {"ok": True, "generated_at": _now(), "version_scope": "v1.9.0", "title": "Sustainable Development Connector Cache", "connectors": rows, "counts": {state: sum(1 for row in rows if row["state"] == state) for state in ("fresh", "stale_servable", "expired", "empty")}}
+    return {"ok": True, "generated_at": _now(), "version_scope": "v1.10.0", "title": "Sustainable Development Connector Cache", "connectors": rows, "counts": {state: sum(1 for row in rows if row["state"] == state) for state in ("fresh", "stale_servable", "expired", "empty")}}

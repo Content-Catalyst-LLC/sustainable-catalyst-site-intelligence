@@ -2633,7 +2633,14 @@
       'human-development-country-profile': '/public-human-development-country-profile',
       'human-development-inequalities': '/public-human-development-inequalities',
       'human-development-methodology': '/public-human-development-methodology',
-      'human-development-export': '/public-human-development-export'
+      'human-development-export': '/public-human-development-export',
+      'international-law': '/public-international-law',
+      'international-law-sources': '/public-international-law-sources',
+      'international-law-sanctions': '/public-international-law-sanctions',
+      'international-law-events': '/public-international-law-events',
+      'international-law-monitor': '/public-international-law-monitor',
+      'international-law-methodology': '/public-international-law-methodology',
+      'international-law-export': '/public-international-law-export'
     };
     let endpoint = map[panel] || '/public-connector-status';
     const boundaryId = root && root.dataset ? (root.dataset.boundaryId || '') : '';
@@ -2642,6 +2649,16 @@
     const country = root && root.dataset ? (root.dataset.country || '') : '';
     if (domainId && panel === 'human-development-domain') endpoint += '?id=' + encodeURIComponent(domainId);
     if (country && panel === 'human-development-country-profile') endpoint += '?country=' + encodeURIComponent(country);
+    var monitorId = el.getAttribute('data-monitor-id') || '';
+    var eventType = el.getAttribute('data-event-type') || '';
+    var jurisdiction = el.getAttribute('data-jurisdiction') || '';
+    if (monitorId && panel === 'international-law-monitor') endpoint += '?id=' + encodeURIComponent(monitorId);
+    if (panel === 'international-law-events') {
+      var query = [];
+      if (eventType) query.push('event_type=' + encodeURIComponent(eventType));
+      if (jurisdiction) query.push('jurisdiction=' + encodeURIComponent(jurisdiction));
+      if (query.length) endpoint += '?' + query.join('&');
+    }
     return endpoint;
   }
 

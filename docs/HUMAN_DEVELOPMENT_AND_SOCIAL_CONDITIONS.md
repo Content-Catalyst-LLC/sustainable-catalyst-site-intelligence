@@ -1,4 +1,4 @@
-# Human Development and Social Conditions — v1.9.0
+# Human Development and Social Conditions — v1.10.0
 
 This release adds a source-aware public observatory for poverty, inequality, health, education, decent work, food security, and water and sanitation.
 

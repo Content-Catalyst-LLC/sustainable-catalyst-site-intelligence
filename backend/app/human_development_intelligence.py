@@ -141,7 +141,7 @@ def source_registry() -> Dict[str, Any]:
     return {
         "ok": True,
         "generated_at": _now(),
-        "version_scope": "v1.9.0",
+        "version_scope": "v1.10.0",
         "schema": SCHEMA,
         "title": "Human Development and Social Conditions Source Registry",
         "summary": "Official and public sources for poverty, inequality, health, education, work, food security, and water and sanitation.",
@@ -154,7 +154,7 @@ def overview() -> Dict[str, Any]:
     return {
         "ok": True,
         "generated_at": _now(),
-        "version_scope": "v1.9.0",
+        "version_scope": "v1.10.0",
         "schema": SCHEMA,
         "title": "Human Development and Social Conditions",
         "summary": "A source-aware public observatory for material wellbeing, opportunity, health, learning, work, food security, water, sanitation, and inequality.",
@@ -179,7 +179,7 @@ def domain_detail(domain_id: str) -> Dict[str, Any]:
     return {
         "ok": True,
         "generated_at": _now(),
-        "version_scope": "v1.9.0",
+        "version_scope": "v1.10.0",
         "schema": SCHEMA,
         "domain": domain,
         "sources": [item for item in SOURCES if item["source_id"] in source_ids],
@@ -193,7 +193,7 @@ def country_profile(country_code: Optional[str] = None) -> Dict[str, Any]:
     return {
         "ok": True,
         "generated_at": _now(),
-        "version_scope": "v1.9.0",
+        "version_scope": "v1.10.0",
         "schema": SCHEMA,
         "title": "Human Development Country Profile",
         "country_code": (country_code or "").upper() or None,
@@ -208,7 +208,7 @@ def inequality_dimensions() -> Dict[str, Any]:
     return {
         "ok": True,
         "generated_at": _now(),
-        "version_scope": "v1.9.0",
+        "version_scope": "v1.10.0",
         "schema": SCHEMA,
         "title": "Disaggregation and Inequality Dimensions",
         "dimensions": ["sex", "age", "wealth_quintile", "education", "urban_rural", "subnational_area", "disability", "migration_status", "employment_status"],
@@ -220,7 +220,7 @@ def methodology() -> Dict[str, Any]:
     return {
         "ok": True,
         "generated_at": _now(),
-        "version_scope": "v1.9.0",
+        "version_scope": "v1.10.0",
         "schema": SCHEMA,
         "title": "Human Development and Social Conditions Methodology",
         "normalized_observation_schema": NORMALIZED_OBSERVATION_SCHEMA,
@@ -238,7 +238,7 @@ def export_manifest() -> Dict[str, Any]:
     return {
         "ok": True,
         "generated_at": _now(),
-        "version_scope": "v1.9.0",
+        "version_scope": "v1.10.0",
         "schema": SCHEMA,
         "title": "Human Development and Social Conditions Export Manifest",
         "formats": ["json", "csv-ready"],

@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.9.0 — Human Development and Social Conditions
+## 1.10.0 — Human Development and Social Conditions
 
 - Added source-aware registries for poverty, inequality, health, education, decent work, food security, and water and sanitation.
 - Added UN SDG, World Bank PIP, WHO, UNESCO UIS, ILOSTAT, FAOSTAT, and UN-Water source contracts.
@@ -8,7 +8,7 @@
 - Added WordPress shortcodes for the Human Development and Social Conditions observatory.
 - Preserved reference periods, modeled-estimate labels, methodological breaks, and disaggregation dimensions.
 
-## 1.9.0
+## 1.10.0
 - Added Live Disaster, Displacement, and Humanitarian Intelligence.
 - Added GDACS, ReliefWeb, USGS, NASA EONET, and UNHCR source contracts.
 - Added crisis map, report stream, displacement context, source registry, methodology, and export endpoints.
@@ -22,14 +22,14 @@
 - Added WordPress observatory, detail, trend, source, methodology, and export shortcodes.
 - Preserved the v1.6.1 connector reliability, cache, freshness, and schema-validation layer.
 
-## 1.9.0 — Connector Reliability, Freshness and Schema Validation
+## 1.10.0 — Connector Reliability, Freshness and Schema Validation
 
 - Added retries with bounded exponential backoff.
 - Added circuit breakers and rate-limit-aware status metadata.
 - Added stale-while-revalidate and last-known-good connector states.
 - Added source-specific response checks and normalized observation validation.
 - Added freshness thresholds, cache diagnostics, reliability endpoints, WordPress routes, and shortcodes.
-- Updated backend and WordPress versions to 1.9.0.
+- Updated backend and WordPress versions to 1.10.0.
 
 # Changelog
 

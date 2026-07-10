@@ -36,7 +36,7 @@ def _now() -> str:
 
 def source_registry() -> Dict[str, Any]:
     return {
-        "ok": True, "generated_at": _now(), "version_scope": "v1.9.0", "schema": SCHEMA,
+        "ok": True, "generated_at": _now(), "version_scope": "v1.10.0", "schema": SCHEMA,
         "title": "Live Disaster, Displacement, and Humanitarian Source Registry",
         "summary": "Public-source registry for hazards, humanitarian reporting, earthquakes, natural events, and official displacement statistics.",
         "counts": {"sources": len(SOURCES), "no_key_required": sum(not x["requires_key"] for x in SOURCES)},
@@ -46,7 +46,7 @@ def source_registry() -> Dict[str, Any]:
 
 def overview() -> Dict[str, Any]:
     return {
-        "ok": True, "generated_at": _now(), "version_scope": "v1.9.0", "schema": SCHEMA,
+        "ok": True, "generated_at": _now(), "version_scope": "v1.10.0", "schema": SCHEMA,
         "title": "Live Disaster, Displacement, and Humanitarian Intelligence",
         "summary": "A source-aware public observatory linking physical hazards, humanitarian reporting, and displacement context without presenting itself as an emergency-warning or legal-determination service.",
         "sources": SOURCES, "categories": EVENT_CATEGORIES,
@@ -63,7 +63,7 @@ def overview() -> Dict[str, Any]:
 
 def crisis_map() -> Dict[str, Any]:
     return {
-        "ok": True, "generated_at": _now(), "version_scope": "v1.9.0", "schema": SCHEMA,
+        "ok": True, "generated_at": _now(), "version_scope": "v1.10.0", "schema": SCHEMA,
         "title": "Global Crisis Map",
         "summary": "Map-ready source contracts for current hazards and humanitarian context.",
         "layers": [
@@ -81,7 +81,7 @@ def crisis_map() -> Dict[str, Any]:
 
 def displacement_context() -> Dict[str, Any]:
     return {
-        "ok": True, "generated_at": _now(), "version_scope": "v1.9.0", "schema": SCHEMA,
+        "ok": True, "generated_at": _now(), "version_scope": "v1.10.0", "schema": SCHEMA,
         "title": "Displacement Context",
         "summary": "Official periodic forced-displacement context linked to current humanitarian situations.",
         "population_categories": ["refugees","asylum_seekers","internally_displaced","stateless_people","returned_refugees","returned_idps","resettled_refugees"],
@@ -92,7 +92,7 @@ def displacement_context() -> Dict[str, Any]:
 
 def humanitarian_reports() -> Dict[str, Any]:
     return {
-        "ok": True, "generated_at": _now(), "version_scope": "v1.9.0", "schema": SCHEMA,
+        "ok": True, "generated_at": _now(), "version_scope": "v1.10.0", "schema": SCHEMA,
         "title": "Humanitarian Report Stream",
         "summary": "Curated report and situation-update layer designed for ReliefWeb integration.",
         "source": next(x for x in SOURCES if x["source_id"] == "reliefweb"),
@@ -103,7 +103,7 @@ def humanitarian_reports() -> Dict[str, Any]:
 
 def methodology() -> Dict[str, Any]:
     return {
-        "ok": True, "generated_at": _now(), "version_scope": "v1.9.0", "schema": SCHEMA,
+        "ok": True, "generated_at": _now(), "version_scope": "v1.10.0", "schema": SCHEMA,
         "title": "Disaster and Humanitarian Intelligence Methodology",
         "normalized_event_schema": NORMALIZED_EVENT_SCHEMA,
         "source_roles": {x["source_id"]: x["role"] for x in SOURCES},
@@ -119,7 +119,7 @@ def methodology() -> Dict[str, Any]:
 
 def export_manifest() -> Dict[str, Any]:
     return {
-        "ok": True, "generated_at": _now(), "version_scope": "v1.9.0", "schema": SCHEMA,
+        "ok": True, "generated_at": _now(), "version_scope": "v1.10.0", "schema": SCHEMA,
         "title": "Humanitarian Intelligence Export Manifest",
         "formats": ["json","csv-ready"],
         "datasets": ["source_registry","event_categories","crisis_map_layers","displacement_context","humanitarian_report_contract"],
