@@ -2652,7 +2652,7 @@
       'cross-domain-dashboard-studio': '/public-cross-domain-dashboards',
       'dashboard-launch-manifest': '/public-dashboard-launch-manifest',
       'dashboard-launch-readiness': '/public-dashboard-launch-readiness',
-      'dashboard-public-navigation': '/public-dashboard-navigation',
+      'dashboard-public-navigation': '/public-dashboard-studio-navigation',
       'cross-domain-dashboard-directory': '/public-cross-domain-dashboards',
       'cross-domain-dashboard': '/public-cross-domain-dashboard',
       'cross-domain-dashboard-sources': '/public-cross-domain-dashboard-sources',
@@ -2667,9 +2667,9 @@
     const country = root && root.dataset ? (root.dataset.country || '') : '';
     if (domainId && panel === 'human-development-domain') endpoint += '?id=' + encodeURIComponent(domainId);
     if (country && panel === 'human-development-country-profile') endpoint += '?country=' + encodeURIComponent(country);
-    var monitorId = el.getAttribute('data-monitor-id') || '';
-    var eventType = el.getAttribute('data-event-type') || '';
-    var jurisdiction = el.getAttribute('data-jurisdiction') || '';
+    var monitorId = root && root.getAttribute ? (root.getAttribute('data-monitor-id') || '') : '';
+    var eventType = root && root.getAttribute ? (root.getAttribute('data-event-type') || '') : '';
+    var jurisdiction = root && root.getAttribute ? (root.getAttribute('data-jurisdiction') || '') : '';
     if (monitorId && panel === 'international-law-monitor') endpoint += '?id=' + encodeURIComponent(monitorId);
     if (monitorId && panel === 'human-security-monitor') endpoint += '?id=' + encodeURIComponent(monitorId);
     if (panel === 'human-security-events') {

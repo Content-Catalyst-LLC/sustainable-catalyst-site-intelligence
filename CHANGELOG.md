@@ -1,3 +1,9 @@
+## 1.12.2 — WordPress Feed Loading Hotfix
+
+- Fixed a JavaScript `ReferenceError` that stopped all connector-backed public panels before their REST requests were sent.
+- Corrected the Dashboard Studio navigation panel to use the registered WordPress REST route.
+- Bumped the WordPress plugin asset version so cached v1.12.1 JavaScript is invalidated after upgrade.
+
 # v1.12.1 — Dashboard Reliability, Accessibility, and Mobile Polish
 
 - Added launch-ready public navigation and dashboard experience contracts.
