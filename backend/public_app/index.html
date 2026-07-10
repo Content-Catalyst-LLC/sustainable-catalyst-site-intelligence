@@ -51,6 +51,7 @@
     <aside class="sidebar" aria-label="Site Intelligence sections">
       <nav>
         <button class="nav-item active" data-route="overview"><span>Overview</span><small>Live map and signals</small></button>
+        <button class="nav-item" data-route="earth"><span>Earth</span><small>Satellite comparison</small></button>
         <button class="nav-item" data-route="country"><span>Country</span><small>Place-based evidence</small></button>
         <button class="nav-item" data-route="events"><span>Events</span><small>Recent public records</small></button>
         <button class="nav-item" data-route="compare"><span>Compare</span><small>Two-country context</small></button>
@@ -117,6 +118,70 @@
         </article>
       </section>
 
+
+      <section id="earthStudio" class="earth-studio" hidden>
+        <div class="earth-studio-head">
+          <div>
+            <p class="eyebrow">EARTH OBSERVATION STUDIO</p>
+            <h2>Compare the planet through time</h2>
+            <p>Explore satellite-derived environmental layers, align two dates, adjust opacity, play a recent timeline, and inspect source metadata.</p>
+          </div>
+          <div class="earth-studio-actions">
+            <button id="earthShare" class="ghost-button" type="button">Copy Earth view</button>
+            <button id="earthExport" class="ghost-button" type="button">Download PNG</button>
+            <button id="earthPrint" class="ghost-button" type="button">Print view</button>
+          </div>
+        </div>
+
+        <div class="earth-control-deck">
+          <label>Layer
+            <select id="earthLayerSelect" aria-label="Select Earth observation layer"></select>
+          </label>
+          <label>Before
+            <input id="earthDateA" type="date">
+          </label>
+          <label>After
+            <input id="earthDateB" type="date">
+          </label>
+          <label>Opacity
+            <input id="earthOpacity" type="range" min="10" max="100" value="72">
+          </label>
+          <button id="earthApply" class="earth-primary-button" type="button">Apply comparison</button>
+        </div>
+
+        <div id="earthCapture" class="earth-capture">
+          <div class="earth-compare-stage">
+            <div id="earthMapA" class="earth-map earth-map-a" aria-label="Before satellite imagery map"></div>
+            <div id="earthMapBWrap" class="earth-map-b-wrap">
+              <div id="earthMapB" class="earth-map earth-map-b" aria-label="After satellite imagery map"></div>
+            </div>
+            <div id="earthSwipeLine" class="earth-swipe-line" aria-hidden="true"></div>
+            <input id="earthSwipe" class="earth-swipe" type="range" min="0" max="100" value="50" aria-label="Adjust before and after comparison divider">
+            <div class="earth-date-badge earth-date-left"><span>BEFORE</span><strong id="earthBadgeA">—</strong></div>
+            <div class="earth-date-badge earth-date-right"><span>AFTER</span><strong id="earthBadgeB">—</strong></div>
+          </div>
+          <div class="earth-timeline">
+            <button id="earthPlay" class="icon-button" type="button">Play</button>
+            <input id="earthTimelineRange" type="range" min="0" max="13" value="13" aria-label="Earth observation timeline">
+            <span id="earthTimelineDate">—</span>
+          </div>
+        </div>
+
+        <div class="earth-information-grid">
+          <article class="earth-metadata-panel">
+            <p class="eyebrow">LAYER METADATA</p>
+            <h2 id="earthMetaTitle">Satellite layer</h2>
+            <div id="earthMetadata"></div>
+          </article>
+          <article class="earth-method-panel">
+            <p class="eyebrow">INTERPRETATION</p>
+            <h2>What the comparison can and cannot show</h2>
+            <p id="earthBoundary">Apparent visual change may reflect clouds, compositing, seasonal effects, product latency, sensor conditions, or real-world change.</p>
+            <button id="earthDownloadManifest" class="text-button" type="button">Download view manifest →</button>
+          </article>
+        </div>
+      </section>
+
       <section id="routePanel" class="route-panel" hidden></section>
       <section id="countryIntelligencePanel" class="country-live-panel" hidden>
         <div class="country-live-head">
@@ -173,6 +238,7 @@
   </div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="/app/assets/app.js"></script>
 </body>
 </html>

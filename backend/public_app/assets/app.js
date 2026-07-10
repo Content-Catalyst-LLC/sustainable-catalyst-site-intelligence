@@ -87,6 +87,7 @@
   function routeMeta(route){
     return {
       overview:["LIVE INTELLIGENCE WORKSPACE","Climate and Human Vulnerability","Satellite context, natural events, environmental pressure, and country evidence in one navigable view."],
+      earth:["EARTH OBSERVATION STUDIO","Compare the planet through time","Explore satellite-derived imagery, environmental layers, date comparison, timeline playback, and exportable visual views."],
       country:["COUNTRY INTELLIGENCE",`${names[state.country]||state.country} evidence profile`,"Environmental, development, humanitarian, security, and legal context for one selected country."],
       events:["LIVE EVENT STREAM","Recent public event records","Natural hazards and Earth-system events collected from public feeds and displayed with source context."],
       compare:["CROSS-DOMAIN COMPARISON","Compare country contexts","Align available evidence without flattening dates, units, definitions, or missing-data states."],
@@ -119,6 +120,109 @@
     const drawer=qs("#evidenceDrawer"),backdrop=qs("#evidenceBackdrop");
     drawer.classList.remove("open");drawer.setAttribute("aria-hidden","true");backdrop.hidden=true;
   }
+
+
+  const earthState={mapA:null,mapB:null,baseA:null,baseB:null,layerA:null,layerB:null,layers:[],frames:[],frameIndex:0,timer:null,activeLayer:"true-color",opacity:.72};
+
+  function earthDate(daysAgo){const d=new Date();d.setUTCDate(d.getUTCDate()-daysAgo);return d.toISOString().slice(0,10)}
+  function earthLayer(id){return earthState.layers.find(x=>x.id===id)||earthState.layers[0]}
+  function syncEarthMaps(source,target){if(!source||!target)return;const c=source.getCenter(),z=source.getZoom();target.setView(c,z,{animate:false})}
+  function initEarthMaps(){
+    if(earthState.mapA)return;
+    earthState.mapA=L.map("earthMapA",{zoomControl:true,worldCopyJump:true}).setView([12,20],2);
+    earthState.mapB=L.map("earthMapB",{zoomControl:false,worldCopyJump:true,attributionControl:false}).setView([12,20],2);
+    earthState.baseA=L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{attribution:"© OpenStreetMap contributors © CARTO",maxZoom:19,crossOrigin:true}).addTo(earthState.mapA);
+    earthState.baseB=L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{maxZoom:19,crossOrigin:true}).addTo(earthState.mapB);
+    let syncing=false;
+    const sync=(a,b)=>{if(syncing)return;syncing=true;syncEarthMaps(a,b);syncing=false};
+    earthState.mapA.on("move zoom",()=>sync(earthState.mapA,earthState.mapB));
+    earthState.mapB.on("move zoom",()=>sync(earthState.mapB,earthState.mapA));
+  }
+  async function loadEarthLayers(){
+    const payload=await apiWithRetry("/public/earth-observation/layers",3);
+    earthState.layers=payload.layers||[];
+    qs("#earthLayerSelect").innerHTML=earthState.layers.map(x=>`<option value="${escapeHtml(x.id)}">${escapeHtml(x.title)}</option>`).join("");
+  }
+  function setEarthClip(value){
+    const v=Math.max(0,Math.min(100,Number(value)));
+    qs("#earthMapBWrap").style.clipPath=`inset(0 0 0 ${v}%)`;
+    qs("#earthSwipeLine").style.left=`${v}%`;
+  }
+  function addEarthTile(map,existing,layer,dateValue){
+    if(existing)map.removeLayer(existing);
+    const url=layer.tile_url.replace("{time}",dateValue);
+    return L.tileLayer(url,{opacity:earthState.opacity,attribution:layer.attribution||layer.source,maxZoom:9,crossOrigin:true,errorTileUrl:""}).addTo(map);
+  }
+  function renderEarthMetadata(layer){
+    const rows=[
+      ["Source",layer.source],["Observation type",layer.observation_type],["Temporal resolution",layer.temporal_resolution],
+      ["Spatial resolution",layer.spatial_resolution],["Availability",layer.status],["Attribution",layer.attribution],
+      ["Description",layer.description],["Known limits",layer.limits]
+    ];
+    qs("#earthMetaTitle").textContent=layer.title;
+    qs("#earthMetadata").innerHTML=`<div class="earth-meta-grid">${rows.map(([a,b])=>`<div class="earth-meta-item"><span>${escapeHtml(a)}</span><strong>${escapeHtml(b||"Source dependent")}</strong></div>`).join("")}</div>`;
+  }
+  async function applyEarthComparison(pushState=true){
+    initEarthMaps();
+    const layer=earthLayer(qs("#earthLayerSelect").value);
+    const dateA=qs("#earthDateA").value, dateB=qs("#earthDateB").value;
+    earthState.activeLayer=layer.id;earthState.opacity=Number(qs("#earthOpacity").value)/100;
+    earthState.layerA=addEarthTile(earthState.mapA,earthState.layerA,layer,dateA);
+    earthState.layerB=addEarthTile(earthState.mapB,earthState.layerB,layer,dateB);
+    earthState.layerA.bringToFront();earthState.layerB.bringToFront();
+    qs("#earthBadgeA").textContent=dateA;qs("#earthBadgeB").textContent=dateB;
+    renderEarthMetadata(layer);
+    const compare=await apiWithRetry(`/public/earth-observation/compare?layer=${encodeURIComponent(layer.id)}&date_a=${encodeURIComponent(dateA)}&date_b=${encodeURIComponent(dateB)}`,2);
+    qs("#earthBoundary").textContent=compare.comparison_boundary;
+    if(pushState){
+      const params=new URLSearchParams(location.search);params.set("view","earth");params.set("earthLayer",layer.id);params.set("dateA",dateA);params.set("dateB",dateB);params.set("opacity",String(Math.round(earthState.opacity*100)));history.replaceState(null,"",`?${params.toString()}`);
+    }
+    setTimeout(()=>{earthState.mapA.invalidateSize();earthState.mapB.invalidateSize();reportHeight()},80);
+  }
+  async function loadEarthTimeline(){
+    const payload=await apiWithRetry(`/public/earth-observation/timeline?layer=${encodeURIComponent(earthState.activeLayer)}&end_date=${encodeURIComponent(qs("#earthDateB").value)}&days=14`,2);
+    earthState.frames=payload.frames||[];earthState.frameIndex=Math.max(0,earthState.frames.length-1);
+    qs("#earthTimelineRange").max=String(Math.max(0,earthState.frames.length-1));qs("#earthTimelineRange").value=String(earthState.frameIndex);
+    updateEarthFrame();
+  }
+  function updateEarthFrame(){
+    const frame=earthState.frames[earthState.frameIndex];if(!frame)return;
+    qs("#earthTimelineDate").textContent=frame.date;qs("#earthDateB").value=frame.date;
+    const layer=earthLayer(earthState.activeLayer);earthState.layerB=addEarthTile(earthState.mapB,earthState.layerB,layer,frame.date);qs("#earthBadgeB").textContent=frame.date;
+  }
+  function toggleEarthPlayback(){
+    if(earthState.timer){clearInterval(earthState.timer);earthState.timer=null;qs("#earthPlay").textContent="Play";return}
+    if(!earthState.frames.length)return;
+    qs("#earthPlay").textContent="Pause";
+    earthState.timer=setInterval(()=>{earthState.frameIndex=(earthState.frameIndex+1)%earthState.frames.length;qs("#earthTimelineRange").value=String(earthState.frameIndex);updateEarthFrame()},1000);
+  }
+  function earthManifestUrl(){
+    const center=earthState.mapA?.getCenter()||{lat:12,lng:20};const zoom=earthState.mapA?.getZoom()||2;
+    return `${API}/public/earth-observation/export-manifest?layer=${encodeURIComponent(earthState.activeLayer)}&date_a=${encodeURIComponent(qs("#earthDateA").value)}&date_b=${encodeURIComponent(qs("#earthDateB").value)}&latitude=${center.lat}&longitude=${center.lng}&zoom=${zoom}&opacity=${earthState.opacity}`;
+  }
+  async function downloadEarthManifest(){
+    const data=await apiWithRetry(earthManifestUrl().replace(API,""),2);const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+    const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`site-intelligence-earth-${earthState.activeLayer}-${qs("#earthDateB").value}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  }
+  async function exportEarthPNG(){
+    if(typeof html2canvas!=="function"){toast("PNG export library is unavailable.");return}
+    toast("Preparing Earth view image…");
+    try{
+      const canvas=await html2canvas(qs("#earthCapture"),{backgroundColor:"#05080c",useCORS:true,allowTaint:false,scale:1.5,logging:false});
+      const a=document.createElement("a");a.href=canvas.toDataURL("image/png");a.download=`site-intelligence-earth-${earthState.activeLayer}-${qs("#earthDateB").value}.png`;a.click();
+    }catch{showGlobalNotice("PNG export could not include all imagery","Some external map tiles restrict browser capture. Use Print view or download the view manifest instead.")}
+  }
+  async function openEarthStudio(){
+    qs("#earthStudio").hidden=false;
+    if(!earthState.layers.length)await loadEarthLayers();
+    const params=new URLSearchParams(location.search);
+    qs("#earthLayerSelect").value=params.get("earthLayer")||"true-color";
+    qs("#earthDateA").value=params.get("dateA")||earthDate(8);qs("#earthDateB").value=params.get("dateB")||earthDate(1);
+    qs("#earthOpacity").value=params.get("opacity")||"72";
+    setEarthClip(qs("#earthSwipe").value);
+    await applyEarthComparison(false);await loadEarthTimeline();
+  }
+  function closeEarthStudio(){qs("#earthStudio").hidden=true;if(earthState.timer){clearInterval(earthState.timer);earthState.timer=null;qs("#earthPlay").textContent="Play"}}
 
   const formatCountryValue=(value,format,unit)=>{
     if(value===null||value===undefined)return "Unavailable";
@@ -178,7 +282,9 @@
     qsa(".nav-item").forEach(b=>b.classList.toggle("active",b.dataset.route===route));
     const [e,t,d]=routeMeta(route);qs("#viewEyebrow").textContent=e;qs("#viewTitle").textContent=t;qs("#viewDescription").textContent=d;
     const panel=qs("#routePanel");
-    if(route==="overview"){panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;return}
+    if(route==="overview"){panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();return}
+    if(route==="earth"){panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;await openEarthStudio();return}
+    closeEarthStudio();
     qs("#countryIntelligencePanel").hidden=route!=="country";
     panel.hidden=false;panel.innerHTML=`<div class="loading-block">Loading ${escapeHtml(route)} view…</div>`;
     if(route==="country"){await loadLiveCountry(state.country)}
@@ -205,7 +311,16 @@
     qs("#eventsToggle").addEventListener("change",e=>e.target.checked?state.markers.addTo(state.map):state.map.removeLayer(state.markers));
     qs("#heatToggle").addEventListener("change",e=>toast(e.target.checked?"Density layer enabled for supported records":"Density layer hidden"));
     qs("#fullscreenButton").addEventListener("click",()=>{const p=qs(".map-panel");if(document.fullscreenElement)document.exitFullscreen();else p.requestFullscreen?.()});
-    qs("#shareButton").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("View link copied")});qs("#openNewButton").addEventListener("click",()=>window.open(location.href,"_blank","noopener"));qs("#dismissNotice").addEventListener("click",hideGlobalNotice);qs("#launchRetry").addEventListener("click",()=>location.reload());qs("#closeEvidenceDrawer").addEventListener("click",closeEvidenceDrawer);qs("#evidenceBackdrop").addEventListener("click",closeEvidenceDrawer);document.addEventListener("keydown",e=>{if(e.key==="Escape")closeEvidenceDrawer()});
+    qs("#shareButton").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("View link copied")});qs("#openNewButton").addEventListener("click",()=>window.open(location.href,"_blank","noopener"));qs("#dismissNotice").addEventListener("click",hideGlobalNotice);qs("#launchRetry").addEventListener("click",()=>location.reload());qs("#earthSwipe").addEventListener("input",e=>setEarthClip(e.target.value));
+    qs("#earthApply").addEventListener("click",async()=>{await applyEarthComparison(true);await loadEarthTimeline()});
+    qs("#earthOpacity").addEventListener("input",e=>{earthState.opacity=Number(e.target.value)/100;if(earthState.layerA)earthState.layerA.setOpacity(earthState.opacity);if(earthState.layerB)earthState.layerB.setOpacity(earthState.opacity)});
+    qs("#earthPlay").addEventListener("click",toggleEarthPlayback);
+    qs("#earthTimelineRange").addEventListener("input",e=>{earthState.frameIndex=Number(e.target.value);updateEarthFrame()});
+    qs("#earthShare").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("Earth view link copied")});
+    qs("#earthExport").addEventListener("click",exportEarthPNG);
+    qs("#earthPrint").addEventListener("click",()=>{document.body.classList.add("earth-print-mode");window.print();setTimeout(()=>document.body.classList.remove("earth-print-mode"),300)});
+    qs("#earthDownloadManifest").addEventListener("click",downloadEarthManifest);
+    qs("#closeEvidenceDrawer").addEventListener("click",closeEvidenceDrawer);qs("#evidenceBackdrop").addEventListener("click",closeEvidenceDrawer);document.addEventListener("keydown",e=>{if(e.key==="Escape")closeEvidenceDrawer()});
     const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const initialView=params.get("view")||"overview";qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";try{setLaunch("Loading satellite imagery.",50);await loadLayers();await setImagery("true-color");setLaunch("Connecting to live events and country evidence.",68);await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);setLaunch("Preparing the workspace.",88);await setRoute(initialView);finishLaunch()}
     catch(e){qs("#statusText").textContent="Partial public data";showGlobalNotice("Some public feeds are unavailable","The interface is open with partial data. Retry after the service finishes waking up.");finishLaunch()}
   }

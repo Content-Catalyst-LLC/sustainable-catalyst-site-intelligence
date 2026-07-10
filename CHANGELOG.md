@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.16.0 — Earth Observation Studio
+
+- Added a dedicated Earth Observation Studio view to the standalone application.
+- Added before-and-after satellite imagery comparison with a draggable swipe divider.
+- Added independent before and after dates, layer opacity, synchronized maps, fullscreen-compatible presentation, and shareable URL state.
+- Added timeline playback across recent imagery dates.
+- Added true color, land-surface temperature, fire signals, vegetation, precipitation, snow cover, nighttime lights, and atmospheric aerosol layers.
+- Added layer metadata for source, attribution, temporal resolution, spatial resolution, observation type, availability, description, and known limits.
+- Added browser PNG snapshot attempt, print view, and downloadable JSON view manifest.
+- Added Earth Observation public API endpoints and a WordPress Earth Studio shortcode.
+- Preserved source-aware interpretation warnings and explicit imagery limitations.
+
 ## 1.15.2 — Public Launch Hardening and Experience Cleanup
 
 - Added a polished public-beta loading experience for Render cold starts.

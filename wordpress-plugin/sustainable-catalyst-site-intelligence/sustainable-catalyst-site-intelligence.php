@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.15.2
+ * Version: 1.16.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.15.2';
+    const VERSION = '1.16.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -126,6 +126,7 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_public_dashboard_launch_readiness', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_dashboard_studio_navigation', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_site_intelligence_app', [$this, 'standalone_app_shortcode']);
+        add_shortcode('sc_earth_observation_studio', [$this, 'earth_observation_studio_shortcode']);
         add_shortcode('sc_geospatial_intelligence_map', [$this, 'geospatial_map_shortcode']);
         add_shortcode('sc_satellite_imagery_viewer', [$this, 'geospatial_map_shortcode']);
         add_shortcode('sc_live_event_map', [$this, 'geospatial_map_shortcode']);
@@ -3061,6 +3062,31 @@ final class SC_Site_Intelligence_Plugin {
         <?php return ob_get_clean();
     }
 
+
+
+    public function earth_observation_studio_shortcode($atts = []) {
+        $atts = shortcode_atts([
+            'height' => '1000',
+            'title' => 'Sustainable Catalyst Earth Observation Studio',
+        ], $atts, 'sc_earth_observation_studio');
+
+        $options = self::options();
+        $backend = rtrim((string) ($options['backend_url'] ?? ''), '/');
+        if (!$backend) {
+            return '<div class="scsi-app-error">Configure the Site Intelligence backend URL before embedding Earth Observation Studio.</div>';
+        }
+
+        $height = max(700, min(1600, absint($atts['height'])));
+        $src = esc_url($backend . '/app/?view=earth');
+        $title = esc_attr((string) $atts['title']);
+
+        return sprintf(
+            '<div class="scsi-standalone-app scsi-earth-studio-embed"><div class="scsi-app-loading">Opening Earth Observation Studio…</div><iframe src="%1$s" title="%2$s" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
+            $src,
+            $title,
+            $height
+        );
+    }
 
     public function standalone_app_shortcode($atts = []) {
         $options = self::options();

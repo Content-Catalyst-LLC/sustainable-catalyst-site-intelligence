@@ -256,3 +256,42 @@ body{
 .error-state strong,.empty-state strong{display:block;color:#fff;margin-bottom:7px}.retry-button{margin-top:12px;border:1px solid rgba(255,255,255,.16);border-radius:9px;background:rgba(255,255,255,.05);color:#fff;padding:8px 11px;font-weight:800}
 @media(max-width:760px){.launch-card{padding:25px 21px}.topbar-controls #openNewButton{display:none}.global-notice{top:76px}}
 @media(prefers-reduced-motion:reduce){.launch-screen{transition:none}}
+
+/* v1.16.0 — Earth Observation Studio */
+.earth-studio{margin-top:16px;padding:22px;border:1px solid rgba(255,255,255,.1);border-radius:24px;background:linear-gradient(145deg,rgba(12,18,26,.96),rgba(5,9,14,.98));box-shadow:0 30px 90px rgba(0,0,0,.38);color:#fff}
+.earth-studio[hidden]{display:none}
+.earth-studio-head{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.09)}
+.earth-studio-head h2{font-family:Spartan,Montserrat,sans-serif;font-size:31px;letter-spacing:-.04em;margin-bottom:8px}
+.earth-studio-head p:last-child{max-width:760px;color:#9da8b5;line-height:1.6;margin:0}
+.earth-studio-actions{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+.earth-control-deck{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr auto;gap:10px;align-items:end;padding:16px 0}
+.earth-control-deck label{display:flex;flex-direction:column;gap:6px;color:#8995a2;font-size:9px;font-weight:900;letter-spacing:.11em;text-transform:uppercase}
+.earth-control-deck select,.earth-control-deck input[type=date]{height:41px;padding:0 11px;border:1px solid rgba(255,255,255,.12);border-radius:10px;background:#101721;color:#fff}
+.earth-control-deck input[type=range]{accent-color:#43d6ff}
+.earth-primary-button{height:41px;border:0;border-radius:10px;padding:0 18px;background:linear-gradient(135deg,#ff2a2f,#bb1117);color:#fff;font-weight:900;box-shadow:0 10px 28px rgba(255,42,47,.22)}
+.earth-capture{border:1px solid rgba(255,255,255,.1);border-radius:18px;overflow:hidden;background:#05080c}
+.earth-compare-stage{position:relative;height:min(66vh,690px);min-height:480px;overflow:hidden}
+.earth-map{position:absolute;inset:0;background:#0b1016}
+.earth-map-b-wrap{position:absolute;inset:0;overflow:hidden;clip-path:inset(0 0 0 50%);z-index:420;pointer-events:none}
+.earth-map-b{pointer-events:auto}
+.earth-swipe{position:absolute;z-index:700;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
+.earth-swipe-line{position:absolute;z-index:650;top:0;bottom:0;left:50%;width:2px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.45),0 0 24px rgba(255,255,255,.5);pointer-events:none}
+.earth-swipe-line:after{content:"↔";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);display:grid;place-items:center;width:42px;height:42px;border-radius:50%;background:#fff;color:#111;font-weight:900;box-shadow:0 8px 25px rgba(0,0,0,.4)}
+.earth-date-badge{position:absolute;z-index:660;top:18px;display:grid;gap:3px;padding:10px 12px;border:1px solid rgba(255,255,255,.15);border-radius:11px;background:rgba(5,8,12,.72);backdrop-filter:blur(12px);pointer-events:none}
+.earth-date-badge span{font-size:8px;letter-spacing:.14em;color:#6fe2ff;font-weight:900}.earth-date-badge strong{font-size:11px}
+.earth-date-left{left:18px}.earth-date-right{right:18px}
+.earth-timeline{display:grid;grid-template-columns:auto 1fr 100px;gap:12px;align-items:center;padding:12px 14px;background:#0b1017;border-top:1px solid rgba(255,255,255,.08)}
+.earth-timeline input{accent-color:#43d6ff}.earth-timeline span{font-size:11px;color:#cbd4dd;text-align:right}
+.earth-information-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:13px;margin-top:14px}
+.earth-metadata-panel,.earth-method-panel{padding:20px;border:1px solid rgba(255,255,255,.09);border-radius:16px;background:rgba(255,255,255,.025)}
+.earth-metadata-panel h2,.earth-method-panel h2{font-size:19px;margin-bottom:13px}
+.earth-meta-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.earth-meta-item{padding:11px;border:1px solid rgba(255,255,255,.07);border-radius:10px;background:rgba(255,255,255,.025)}
+.earth-meta-item span{display:block;margin-bottom:5px;color:#7e8996;font-size:8px;text-transform:uppercase;letter-spacing:.11em;font-weight:900}
+.earth-meta-item strong{font-size:11px;line-height:1.45}
+.earth-method-panel p{color:#929daa;line-height:1.65;font-size:12px}
+body.earth-print-mode .topbar,body.earth-print-mode .sidebar,body.earth-print-mode .workspace-head,body.earth-print-mode .map-panel,body.earth-print-mode .metric-grid,body.earth-print-mode .content-grid,body.earth-print-mode .method-note{display:none!important}
+body.earth-print-mode .app-shell{display:block}body.earth-print-mode .workspace{max-width:none;padding:0}body.earth-print-mode .earth-studio{box-shadow:none;border:0}
+@media(max-width:1050px){.earth-control-deck{grid-template-columns:1fr 1fr 1fr}.earth-primary-button{grid-column:span 1}.earth-information-grid{grid-template-columns:1fr}}
+@media(max-width:760px){.earth-studio{padding:15px;border-radius:18px}.earth-studio-head{display:block}.earth-studio-actions{justify-content:flex-start;margin-top:15px}.earth-control-deck{grid-template-columns:1fr 1fr}.earth-control-deck label:first-child{grid-column:1/-1}.earth-primary-button{grid-column:1/-1}.earth-compare-stage{height:58vh;min-height:430px}.earth-timeline{grid-template-columns:auto 1fr}.earth-timeline span{grid-column:1/-1;text-align:center}.earth-meta-grid{grid-template-columns:1fr}}
+@media print{body.earth-print-mode{background:#fff}.earth-studio{color:#111;background:#fff}.earth-metadata-panel,.earth-method-panel{background:#fff;color:#111;border-color:#ddd}.earth-studio-head p:last-child,.earth-method-panel p{color:#444}.earth-studio-actions,.earth-control-deck,.earth-timeline{display:none}}

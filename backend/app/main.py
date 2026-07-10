@@ -160,6 +160,14 @@ from .live_country_intelligence import (
     country_trends as build_live_country_trends,
     country_brief as build_live_country_brief,
 )
+from .earth_observation_studio import (
+    overview as build_earth_observation_overview,
+    layers as build_earth_observation_layers,
+    comparison as build_earth_observation_comparison,
+    timeline as build_earth_observation_timeline,
+    presets as build_earth_observation_presets,
+    export_manifest as build_earth_observation_export_manifest,
+)
 from .geospatial_intelligence import (
     overview as build_geospatial_overview,
     layer_manifest as build_geospatial_layers,
@@ -628,6 +636,53 @@ def public_humanitarian_export():
 
 
 
+
+@app.get("/public/earth-observation")
+def public_earth_observation_overview():
+    return build_earth_observation_overview()
+
+
+@app.get("/public/earth-observation/layers")
+def public_earth_observation_layers():
+    return build_earth_observation_layers()
+
+
+@app.get("/public/earth-observation/compare")
+def public_earth_observation_compare(
+    layer: str = Query(default="true-color"),
+    date_a: str = Query(default=""),
+    date_b: str = Query(default=""),
+):
+    return build_earth_observation_comparison(layer, date_a, date_b)
+
+
+@app.get("/public/earth-observation/timeline")
+def public_earth_observation_timeline(
+    layer: str = Query(default="true-color"),
+    end_date: str = Query(default=""),
+    days: int = Query(default=14, ge=2, le=31),
+):
+    return build_earth_observation_timeline(layer, end_date, days)
+
+
+@app.get("/public/earth-observation/presets")
+def public_earth_observation_presets():
+    return build_earth_observation_presets()
+
+
+@app.get("/public/earth-observation/export-manifest")
+def public_earth_observation_export_manifest(
+    layer: str = Query(default="true-color"),
+    date_a: str = Query(default=""),
+    date_b: str = Query(default=""),
+    latitude: float = Query(default=12.0, ge=-90, le=90),
+    longitude: float = Query(default=20.0, ge=-180, le=180),
+    zoom: int = Query(default=2, ge=1, le=12),
+    opacity: float = Query(default=0.72, ge=0.1, le=1.0),
+):
+    return build_earth_observation_export_manifest(layer, date_a, date_b, latitude, longitude, zoom, opacity)
+
+
 @app.get("/public/geospatial")
 def public_geospatial_overview():
     return build_geospatial_overview()
@@ -732,7 +787,7 @@ def public_cross_domain_dashboard_export(dashboard_id: str, country: str = ""):
 def public_launch_status():
     return {
         "ok": True,
-        "version": "1.15.2",
+        "version": "1.16.0",
         "release_channel": "public-beta",
         "standalone_app": "/app/",
         "platform_core_optional": True,
@@ -740,6 +795,7 @@ def public_launch_status():
         "launch_checks": {
             "standalone_app": "ready",
             "satellite_layers": "ready",
+            "earth_observation_studio": "flagship-visual-beta",
             "public_events": "ready-with-fallback",
             "country_intelligence": "ready-with-retry",
             "responsive_embed": "ready",
@@ -793,7 +849,7 @@ def public_country_evidence_lineage(country_code: str):
         })
     return {
         "ok": True,
-        "version": "1.15.2",
+        "version": "1.16.0",
         "country": payload.get("country"),
         "platform_core": build_platform_core_status(),
         "items": items,
@@ -2976,7 +3032,7 @@ def publishing_intelligence_report(
 
 
 
-# Site Intelligence v1.15.2 standalone public application.
+# Site Intelligence v1.16.0 standalone public application.
 from pathlib import Path as _Path
 PUBLIC_APP_DIR = _Path(__file__).resolve().parent.parent / "public_app"
 if PUBLIC_APP_DIR.exists():
