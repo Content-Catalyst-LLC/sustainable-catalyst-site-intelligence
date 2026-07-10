@@ -1,6 +1,26 @@
 # Sustainable Catalyst Site Intelligence
 
-Version: 1.3.0
+Version: 1.3.1
+
+## v1.3.1 — Connector Reliability Patch and Public Status Polish
+
+This patch improves the v1.3.0 connector layer with clearer public reliability labels, status cards, cache-state labels, freshness-state labels, and recovery guidance. It is intended to make public source-health pages easier to read while keeping credentials, raw upstream payloads, backend logs, and private diagnostics hidden.
+
+New public connector endpoints:
+
+- `/public/connectors/reliability`
+- `/public/connectors/status-polish`
+
+New WordPress shortcodes:
+
+- `[sc_public_connector_reliability]`
+- `[sc_public_connector_status_polish]`
+
+Recommended placement:
+
+- Use `[sc_public_connector_status]` and `[sc_public_connector_reliability]` on `/platform/site-intelligence/source-health/`.
+- Use `[sc_public_cache_status]`, `[sc_public_source_freshness]`, and `[sc_public_connector_status_polish]` on source methodology or source-status review pages.
+- Use connector-specific shortcodes only on focused source pages or expandable detail sections.
 
 ## v1.3.0 — Live API Connectors, Caching, and Public Source Status
 

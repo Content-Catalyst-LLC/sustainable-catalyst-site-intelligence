@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="SC_SI_", env_file=".env", extra="ignore")
 
     app_name: str = "Sustainable Catalyst Site Intelligence"
-    version: str = "1.3.0"
+    version: str = "1.3.1"
     environment: str = "development"
     demo_mode: bool = True
     api_token: str = "dev-token-change-me"
@@ -75,7 +75,7 @@ class Settings(BaseSettings):
     census_base_url: str = "https://api.census.gov"
     gbif_base_url: str = "https://api.gbif.org"
 
-    # Public live connector layer v1.3.0. These public-safe source panels
+    # Public live connector layer v1.3.1. These public-safe source panels
     # expose readiness, cache, and freshness metadata without returning raw
     # upstream payloads or secrets.
     world_bank_base_url: str = "https://api.worldbank.org/v2"

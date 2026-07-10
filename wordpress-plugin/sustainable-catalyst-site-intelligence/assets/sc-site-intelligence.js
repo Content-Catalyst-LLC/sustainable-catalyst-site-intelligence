@@ -18,7 +18,7 @@
       client_time: new Date().toISOString(),
       metadata: {
         href: params && params.href ? params.href : '',
-        version: cfg.version || '1.3.0'
+        version: cfg.version || '1.3.1'
       }
     }, params || {});
 
@@ -2322,6 +2322,8 @@
       'connector-status': '/public-connector-status',
       'cache-status': '/public-cache-status',
       'source-freshness': '/public-source-freshness',
+      'connector-reliability': '/public-connector-reliability',
+      'connector-status-polish': '/public-connector-status-polish',
       'world-bank': '/public-connector-detail?slug=world-bank',
       'openalex': '/public-connector-detail?slug=openalex',
       'crossref': '/public-connector-detail?slug=crossref',
@@ -2333,11 +2335,18 @@
 
   function renderConnectorRuntime(item) {
     const runtime = item.runtime || {};
+    const reliability = item.reliability || {};
     const bits = [];
+    if (runtime.status_label) bits.push('<span class="scsi-badge scsi-badge-soft">' + escapeHtml(runtime.status_label) + '</span>');
+    if (runtime.reliability_level) bits.push('<span class="scsi-badge scsi-badge-' + escapeHtml(runtime.reliability_level) + '">' + escapeHtml(runtime.reliability_level) + '</span>');
     if (runtime.display_mode) bits.push('<span class="scsi-badge scsi-badge-soft">' + escapeHtml(runtime.display_mode) + '</span>');
+    if (runtime.cache_state) bits.push('<small><b>Cache state:</b> ' + escapeHtml(runtime.cache_state) + '</small>');
+    if (runtime.freshness_state) bits.push('<small><b>Freshness state:</b> ' + escapeHtml(runtime.freshness_state) + '</small>');
     if (runtime.cache_ttl_seconds) bits.push('<small><b>Cache TTL:</b> ' + formatNumber(runtime.cache_ttl_seconds) + ' seconds</small>');
     if (runtime.next_refresh_after) bits.push('<small><b>Next refresh after:</b> ' + escapeHtml(runtime.next_refresh_after) + '</small>');
     if (item.freshness_window) bits.push('<small><b>Freshness:</b> ' + escapeHtml(item.freshness_window) + '</small>');
+    if (reliability.public_message) bits.push('<small><b>Public status:</b> ' + escapeHtml(reliability.public_message) + '</small>');
+    if (runtime.recovery_action) bits.push('<small><b>Display guidance:</b> ' + escapeHtml(runtime.recovery_action) + '</small>');
     return bits.join('');
   }
 
@@ -2365,6 +2374,41 @@
         grid.appendChild(card);
       });
       out.appendChild(grid);
+    }
+
+    if (data.reliability_counts) {
+      const hRel = document.createElement('h3');
+      hRel.textContent = 'Reliability labels';
+      out.appendChild(hRel);
+      const relGrid = document.createElement('div');
+      relGrid.className = 'scsi-grid scsi-public-connector-health-grid scsi-public-reliability-grid';
+      Object.keys(data.reliability_counts || {}).forEach(function (key) {
+        const card = document.createElement('div');
+        card.className = 'scsi-stat scsi-public-connector-status-card';
+        card.innerHTML = '<span class="scsi-public-label">' + escapeHtml(key) + '</span>' +
+          '<strong>' + formatNumber(data.reliability_counts[key]) + '</strong>' +
+          '<small>' + escapeHtml((data.reliability_definitions || {})[key] || 'Public reliability count.') + '</small>';
+        relGrid.appendChild(card);
+      });
+      out.appendChild(relGrid);
+    }
+
+    const statusCards = data.status_cards || [];
+    if (statusCards.length) {
+      const hCards = document.createElement('h3');
+      hCards.textContent = 'Public status cards';
+      out.appendChild(hCards);
+      statusCards.forEach(function (item) {
+        const row = document.createElement('div');
+        row.className = 'scsi-page-row scsi-public-connector-row scsi-public-status-card-row';
+        row.innerHTML = '<strong>' + escapeHtml(item.label || item.slug || '') + '</strong><br>' +
+          statusBadge(item.status || 'planned') + '<span class="scsi-badge scsi-badge-' + escapeHtml(item.reliability_level || 'planned') + '">' + escapeHtml(item.reliability_level || 'planned') + '</span>' +
+          '<small><b>Display mode:</b> ' + escapeHtml(item.display_mode || '') + '</small>' +
+          '<small><b>Cache state:</b> ' + escapeHtml(item.cache_state || '') + '</small>' +
+          '<small><b>Freshness state:</b> ' + escapeHtml(item.freshness_state || '') + '</small>' +
+          '<small><b>Recovery action:</b> ' + escapeHtml(item.recovery_action || '') + '</small>';
+        out.appendChild(row);
+      });
     }
 
     const connectors = data.connectors || (data.connector ? [data.connector] : []);
@@ -2396,9 +2440,12 @@
         row.className = 'scsi-page-row scsi-public-connector-row';
         row.innerHTML = '<strong>' + escapeHtml(item.label || item.slug || '') + '</strong><br>' +
           '<small><b>Display mode:</b> ' + escapeHtml(item.display_mode || '') + '</small>' +
+          '<small><b>Reliability:</b> ' + escapeHtml(item.reliability_level || '') + '</small>' +
+          '<small><b>Cache state:</b> ' + escapeHtml(item.cache_state || '') + '</small>' +
           '<small><b>Cache TTL:</b> ' + formatNumber(item.cache_ttl_seconds || 0) + ' seconds</small>' +
           '<small><b>Stale TTL:</b> ' + formatNumber(item.stale_ttl_seconds || 0) + ' seconds</small>' +
-          '<small><b>Next refresh after:</b> ' + escapeHtml(item.next_refresh_after || '') + '</small>';
+          '<small><b>Next refresh after:</b> ' + escapeHtml(item.next_refresh_after || '') + '</small>' +
+          '<small><b>Recovery action:</b> ' + escapeHtml(item.recovery_action || '') + '</small>';
         out.appendChild(row);
       });
     }
@@ -2414,6 +2461,8 @@
         row.innerHTML = '<strong>' + escapeHtml(item.label || item.slug || '') + '</strong><br>' +
           statusBadge(item.status || 'planned') +
           '<small><b>Freshness:</b> ' + escapeHtml(item.freshness_window || '') + '</small>' +
+          '<small><b>Reliability:</b> ' + escapeHtml(item.reliability_level || '') + '</small>' +
+          '<small><b>Freshness state:</b> ' + escapeHtml(item.freshness_state || '') + '</small>' +
           '<small><b>Next refresh after:</b> ' + escapeHtml(item.next_refresh_after || '') + '</small>' +
           '<small>' + escapeHtml(item.public_note || '') + '</small>';
         out.appendChild(row);
@@ -2435,7 +2484,7 @@
       });
     }
 
-    [['Methodology', data.methodology || []], ['Review notes', data.review_notes || []], ['Hidden from public pages', data.hidden || []]].forEach(function (group) {
+    [['Methodology', data.methodology || []], ['Display guidance', data.display_guidance || []], ['Review notes', data.review_notes || []], ['Hidden from public pages', data.hidden || []]].forEach(function (group) {
       if (!group[1].length) return;
       const h = document.createElement('h3');
       h.textContent = group[0];
@@ -2450,7 +2499,7 @@
   function renderPublicSourcePageDirectory(root, data) {
     const out = root.querySelector('.scsi-output');
     const muted = root.querySelector('.scsi-muted');
-    muted.textContent = (data.summary || 'Public source page directory.') + ' · ' + (data.version_scope || 'v1.3.0');
+    muted.textContent = (data.summary || 'Public source page directory.') + ' · ' + (data.version_scope || 'v1.3.1');
     out.innerHTML = '';
     const nav = document.createElement('div');
     nav.className = 'scsi-public-nav-row scsi-public-source-nav-row';
@@ -2505,7 +2554,7 @@
   function renderPublicSourcePageTemplates(root, data) {
     const out = root.querySelector('.scsi-output');
     const muted = root.querySelector('.scsi-muted');
-    muted.textContent = (data.summary || 'Copy-ready public source page templates.') + ' · ' + (data.version_scope || 'v1.3.0');
+    muted.textContent = (data.summary || 'Copy-ready public source page templates.') + ' · ' + (data.version_scope || 'v1.3.1');
     out.innerHTML = '';
     const grid = document.createElement('div');
     grid.className = 'scsi-grid scsi-public-source-page-grid';

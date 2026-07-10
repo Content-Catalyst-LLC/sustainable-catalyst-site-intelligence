@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.3.1 — Connector Reliability Patch and Public Status Polish
+
+- Updated backend and WordPress plugin versions to 1.3.1.
+- Added connector reliability scoring and reliability-count payloads for public connector panels.
+- Added public status-card payloads with display mode, cache state, freshness state, and recovery guidance.
+- Added public endpoints `/public/connectors/reliability` and `/public/connectors/status-polish`.
+- Added WordPress shortcodes `[sc_public_connector_reliability]` and `[sc_public_connector_status_polish]`.
+- Added JavaScript and CSS polish for reliability labels, status cards, cache-state labels, freshness-state labels, and recovery actions.
+- Added admin-safe recovery queue metadata without exposing secrets, raw upstream payloads, or private diagnostics.
+- Added backend tests for v1.3.1 reliability, status polish, and public endpoint behavior.
+
 ## v1.3.0 — Live API Connectors, Caching, and Public Source Status
 
 - Added public connector status endpoints for live/cached/fallback source readiness.

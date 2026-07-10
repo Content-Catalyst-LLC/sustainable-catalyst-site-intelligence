@@ -12,6 +12,13 @@ PUBLIC_CONNECTOR_STATUS = {
     "planned": "Connector is documented for public methodology and future live integration.",
 }
 
+PUBLIC_RELIABILITY_LEVELS = {
+    "healthy": "Public panel can show a stable live-or-cached summary with clear source labels.",
+    "degraded": "Public panel should remain visible but display cache, delay, or limited-coverage caveats.",
+    "fallback_safe": "Public panel should prefer fallback summaries and methodology notes over live claims.",
+    "planned": "Public panel is documented but should not imply live source availability yet.",
+}
+
 CONNECTORS: List[Dict[str, Any]] = [
     {
         "slug": "world-bank",
@@ -110,24 +117,100 @@ def _iso(dt: datetime) -> str:
     return dt.isoformat()
 
 
+def _status_label(status: str) -> str:
+    return {
+        "live_ready": "Live-ready",
+        "cached_ready": "Cache-ready",
+        "fallback_ready": "Fallback-ready",
+        "planned": "Planned",
+    }.get(status, "Review")
+
+
+def _reliability_for(connector: Dict[str, Any], settings: Settings) -> Dict[str, Any]:
+    status = connector.get("status", "planned")
+    cache_enabled = bool(settings.external_cache_enabled)
+    live_enabled = bool(settings.external_live and settings.public_connector_live_checks)
+
+    if status == "planned":
+        level = "planned"
+        display_mode = "methodology_only"
+        cache_state = "not_applicable"
+        freshness_state = "planned"
+        recovery_action = "Keep this source documented as planned until connector behavior is tested and public copy is reviewed."
+    elif status == "fallback_ready":
+        level = "fallback_safe"
+        display_mode = "fallback_summary"
+        cache_state = "fallback_only"
+        freshness_state = "fallback_window"
+        recovery_action = "Show fallback summaries and methodology notes; do not imply live status."
+    elif status == "cached_ready" and cache_enabled:
+        level = "healthy"
+        display_mode = "cached_or_fallback"
+        cache_state = "cache_enabled"
+        freshness_state = "cache_window"
+        recovery_action = "Display cached public summaries with source labels and fallback notes."
+    elif status == "live_ready" and live_enabled and cache_enabled:
+        level = "healthy"
+        display_mode = "live_or_cached"
+        cache_state = "cache_enabled"
+        freshness_state = "live_check_window"
+        recovery_action = "Display live-or-cached summaries; keep raw payloads and diagnostics hidden."
+    elif status == "live_ready" and cache_enabled:
+        level = "fallback_safe"
+        display_mode = "cached_or_fallback"
+        cache_state = "cache_enabled_live_checks_off"
+        freshness_state = "cache_window"
+        recovery_action = "Live checks are disabled; display cached or fallback summaries until live checks are intentionally enabled."
+    else:
+        level = "degraded"
+        display_mode = "fallback_summary"
+        cache_state = "cache_disabled"
+        freshness_state = "uncertain"
+        recovery_action = "Enable cache-safe display or fallback summaries before promoting this connector on public pages."
+
+    public_message = {
+        "healthy": "Public-safe display is ready with source labels, cache/freshness context, and fallback boundaries.",
+        "degraded": "Public display should stay conservative and emphasize limits until cache/live behavior is reviewed.",
+        "fallback_safe": "Public display should prefer fallback summaries and methodology notes over live-data claims.",
+        "planned": "Public display should describe the source as planned or methodological only.",
+    }[level]
+
+    return {
+        "level": level,
+        "status_label": _status_label(status),
+        "display_mode": display_mode,
+        "cache_state": cache_state,
+        "freshness_state": freshness_state,
+        "public_message": public_message,
+        "recovery_action": recovery_action,
+        "public_safe": True,
+    }
+
+
 def _with_runtime(connector: Dict[str, Any], settings: Settings) -> Dict[str, Any]:
     now = _now_dt()
     ttl = int(connector.get("cache_ttl_seconds", settings.external_cache_ttl_seconds))
-    # Public status is a conservative readiness label; it is not a raw upstream diagnostic.
     runtime_status = connector.get("status", "planned")
-    live_possible = bool(settings.external_live) and runtime_status in {"live_ready", "cached_ready"}
+    reliability = _reliability_for(connector, settings)
+    live_possible = reliability["display_mode"] == "live_or_cached"
     return {
         **connector,
+        "reliability": reliability,
         "runtime": {
             "public_status": runtime_status,
-            "live_checks_enabled": bool(settings.external_live),
+            "status_label": reliability["status_label"],
+            "reliability_level": reliability["level"],
+            "live_checks_enabled": bool(settings.external_live and settings.public_connector_live_checks),
             "cache_enabled": bool(settings.external_cache_enabled),
             "live_possible": live_possible,
             "last_checked_at": _iso(now),
             "cache_ttl_seconds": ttl,
             "stale_ttl_seconds": settings.external_stale_ttl_seconds,
             "next_refresh_after": _iso(now + timedelta(seconds=ttl)),
-            "display_mode": "live_or_cached" if live_possible and settings.external_cache_enabled else "fallback_summary",
+            "display_mode": reliability["display_mode"],
+            "cache_state": reliability["cache_state"],
+            "freshness_state": reliability["freshness_state"],
+            "recovery_action": reliability["recovery_action"],
             "public_safe": True,
         },
     }
@@ -145,6 +228,38 @@ def _counts(connectors: List[Dict[str, Any]]) -> Dict[str, int]:
     return counts
 
 
+def _reliability_counts(connectors: List[Dict[str, Any]]) -> Dict[str, int]:
+    counts: Dict[str, int] = {"healthy": 0, "degraded": 0, "fallback_safe": 0, "planned": 0}
+    for item in connectors:
+        level = item.get("reliability", {}).get("level", "planned")
+        counts[level] = counts.get(level, 0) + 1
+    return counts
+
+
+def _reliability_score(connectors: List[Dict[str, Any]]) -> int:
+    weights = {"healthy": 1.0, "fallback_safe": 0.7, "degraded": 0.35, "planned": 0.15}
+    total = max(len(connectors), 1)
+    score = sum(weights.get(item.get("reliability", {}).get("level", "planned"), 0.15) for item in connectors)
+    return int(round((score / total) * 100))
+
+
+def _status_cards(connectors: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    return [
+        {
+            "label": item["label"],
+            "slug": item["slug"],
+            "status": item["status"],
+            "status_label": item["runtime"]["status_label"],
+            "reliability_level": item["runtime"]["reliability_level"],
+            "display_mode": item["runtime"]["display_mode"],
+            "cache_state": item["runtime"]["cache_state"],
+            "freshness_state": item["runtime"]["freshness_state"],
+            "recovery_action": item["runtime"]["recovery_action"],
+        }
+        for item in connectors
+    ]
+
+
 def public_connector_status(settings: Settings) -> Dict[str, Any]:
     connectors = _connectors_with_runtime(settings)
     counts = _counts(connectors)
@@ -155,12 +270,16 @@ def public_connector_status(settings: Settings) -> Dict[str, Any]:
         "generated_at": _iso(_now_dt()),
         "title": "Public Connector Status",
         "summary": "Public-safe live/cached/fallback status for Site Intelligence API connector families.",
-        "version_scope": "v1.3.0",
+        "version_scope": f"v{settings.version}",
         "public_status": "public_candidate",
         "score": int(round((ready_count / total) * 100)),
+        "reliability_score": _reliability_score(connectors),
         "counts": counts,
+        "reliability_counts": _reliability_counts(connectors),
+        "status_cards": _status_cards(connectors),
         "connectors": connectors,
         "status_definitions": PUBLIC_CONNECTOR_STATUS,
+        "reliability_definitions": PUBLIC_RELIABILITY_LEVELS,
         "recommended_shortcode": "[sc_public_connector_status]",
         "review_notes": [
             "Status labels are public readiness summaries, not raw uptime guarantees.",
@@ -182,6 +301,9 @@ def public_cache_status(settings: Settings) -> Dict[str, Any]:
             "last_checked_at": item["runtime"]["last_checked_at"],
             "next_refresh_after": item["runtime"]["next_refresh_after"],
             "display_mode": item["runtime"]["display_mode"],
+            "cache_state": item["runtime"]["cache_state"],
+            "reliability_level": item["runtime"]["reliability_level"],
+            "recovery_action": item["runtime"]["recovery_action"],
         }
         for item in connectors
     ]
@@ -190,6 +312,7 @@ def public_cache_status(settings: Settings) -> Dict[str, Any]:
         "generated_at": _iso(now),
         "title": "Public Cache Status",
         "summary": "Cache and stale-safe display policy for public Site Intelligence connector panels.",
+        "version_scope": f"v{settings.version}",
         "public_status": "public_candidate",
         "cache_enabled": settings.external_cache_enabled,
         "default_cache_ttl_seconds": settings.external_cache_ttl_seconds,
@@ -213,6 +336,8 @@ def public_source_freshness(settings: Settings) -> Dict[str, Any]:
             "slug": item["slug"],
             "freshness_window": item["freshness_window"],
             "status": item["status"],
+            "reliability_level": item["runtime"]["reliability_level"],
+            "freshness_state": item["runtime"]["freshness_state"],
             "last_checked_at": item["runtime"]["last_checked_at"],
             "next_refresh_after": item["runtime"]["next_refresh_after"],
             "public_note": "Freshness is a public display label, not a certified real-time data-quality statement.",
@@ -222,12 +347,70 @@ def public_source_freshness(settings: Settings) -> Dict[str, Any]:
         "generated_at": _iso(_now_dt()),
         "title": "Public Source Freshness",
         "summary": "Public freshness labels for live, cached, fallback, and planned source families.",
+        "version_scope": f"v{settings.version}",
         "public_status": "public_candidate",
         "freshness": freshness,
         "recommended_shortcode": "[sc_public_source_freshness]",
         "review_notes": [
             "Display source freshness as an interpretive label, not as a guarantee of completeness.",
             "Some upstream datasets update intermittently or have source-specific delay patterns.",
+        ],
+    }
+
+
+def public_connector_reliability(settings: Settings) -> Dict[str, Any]:
+    connectors = _connectors_with_runtime(settings)
+    return {
+        "ok": True,
+        "generated_at": _iso(_now_dt()),
+        "title": "Connector Reliability Summary",
+        "summary": "Public-safe reliability summary for live, cached, degraded, fallback-safe, and planned connector display.",
+        "version_scope": f"v{settings.version}",
+        "public_status": "public_candidate",
+        "score": _reliability_score(connectors),
+        "reliability_counts": _reliability_counts(connectors),
+        "status_cards": _status_cards(connectors),
+        "connectors": connectors,
+        "reliability_definitions": PUBLIC_RELIABILITY_LEVELS,
+        "recommended_shortcode": "[sc_public_connector_reliability]",
+        "review_notes": [
+            "A healthy public panel can still be cached, delayed, or fallback-aware.",
+            "Degraded public panels should stay visible only with clear limits and recovery guidance.",
+            "Reliability labels are editorial/public-display guidance, not third-party uptime certification.",
+        ],
+    }
+
+
+def public_connector_status_polish(settings: Settings) -> Dict[str, Any]:
+    connectors = _connectors_with_runtime(settings)
+    return {
+        "ok": True,
+        "generated_at": _iso(_now_dt()),
+        "title": "Public Source Status Polish",
+        "summary": "Display guidance for public connector status panels, reliability labels, fallback language, and source-page placement.",
+        "version_scope": f"v{settings.version}",
+        "public_status": "public_candidate",
+        "score": _reliability_score(connectors),
+        "status_cards": _status_cards(connectors),
+        "recommended_shortcode": "[sc_public_connector_status_polish]",
+        "methodology": [
+            "Use compact status cards before detailed connector rows on public source pages.",
+            "Always pair live/cached/fallback labels with source-methodology boundaries.",
+            "Prefer human-readable display modes such as live-or-cached, cached-or-fallback, fallback summary, and methodology only.",
+            "Never surface credentials, raw payloads, stack traces, backend logs, rate-limit details, or private admin diagnostics in public pages.",
+        ],
+        "display_guidance": [
+            "Place [sc_public_connector_status] on /platform/site-intelligence/source-health/.",
+            "Place [sc_public_connector_reliability] below the source-health summary when showing operational readiness.",
+            "Place [sc_public_cache_status] and [sc_public_source_freshness] on source methodology or status pages.",
+            "Use connector-specific shortcodes only on focused source pages or expandable sections.",
+        ],
+        "hidden": [
+            "API key values",
+            "raw upstream payloads",
+            "request/response headers",
+            "backend logs",
+            "private analytics and diagnostics",
         ],
     }
 
@@ -241,13 +424,15 @@ def public_connector_detail(slug: str, settings: Settings) -> Dict[str, Any]:
         "ok": True,
         "generated_at": _iso(_now_dt()),
         "title": f"{connector['label']} Connector",
-        "summary": f"Public-safe connector status, cache policy, freshness, fallback behavior, and methodology notes for {connector['label']}.",
+        "summary": f"Public-safe connector status, cache policy, freshness, fallback behavior, reliability label, and methodology notes for {connector['label']}.",
+        "version_scope": f"v{settings.version}",
         "public_status": connector["status"],
         "connector": connector,
+        "status_cards": _status_cards([connector]),
         "recommended_shortcode": f"[sc_public_{slug.replace('-', '_')}_connector]" if slug != "environmental" else "[sc_public_environmental_connectors]",
         "methodology": [
             "Use connector output as public source context, not professional advice or certification.",
-            "Expose status labels, freshness labels, fallback reasons, and safe-display notes rather than raw payloads.",
+            "Expose status labels, freshness labels, fallback reasons, reliability guidance, and safe-display notes rather than raw payloads.",
             "Review all claims before using connector-derived summaries in formal publications or decision-critical settings.",
         ],
     }
@@ -274,7 +459,7 @@ def admin_connector_diagnostics(settings: Settings) -> Dict[str, Any]:
         "generated_at": _iso(_now_dt()),
         "title": "Admin Connector Diagnostics",
         "summary": "Admin-safe connector configuration and public-readiness diagnostics. Secrets and raw payloads are intentionally excluded.",
-        "version_scope": "v1.3.0",
+        "version_scope": f"v{settings.version}",
         "environment": settings.environment,
         "external_live": settings.external_live,
         "external_cache_enabled": settings.external_cache_enabled,
@@ -282,6 +467,13 @@ def admin_connector_diagnostics(settings: Settings) -> Dict[str, Any]:
         "external_stale_ttl_seconds": settings.external_stale_ttl_seconds,
         "optional_credentials": optional_credentials,
         "connectors": connectors,
+        "reliability_counts": _reliability_counts(connectors),
+        "reliability_score": _reliability_score(connectors),
+        "recovery_queue": [
+            {"label": item["label"], "action": item["runtime"]["recovery_action"]}
+            for item in connectors
+            if item["runtime"]["reliability_level"] in {"degraded", "fallback_safe", "planned"}
+        ],
         "hidden": [
             "API key values",
             "service account JSON",

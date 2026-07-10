@@ -54,6 +54,8 @@ from .public_live_connectors import (
     public_source_freshness as build_public_source_freshness,
     public_connector_detail as build_public_connector_detail,
     public_environmental_connectors as build_public_environmental_connectors,
+    public_connector_reliability as build_public_connector_reliability,
+    public_connector_status_polish as build_public_connector_status_polish,
     admin_connector_diagnostics as build_admin_connector_diagnostics,
 )
 from .public_source_pages import (
@@ -391,6 +393,20 @@ def public_environmental_connectors_endpoint(settings: Settings = Depends(get_se
         raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
     return build_public_environmental_connectors(settings)
 
+
+
+@app.get("/public/connectors/reliability")
+def public_connector_reliability_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_connector_reliability(settings)
+
+
+@app.get("/public/connectors/status-polish")
+def public_connector_status_polish_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_connector_status_polish(settings)
 
 @app.get("/admin/connectors/diagnostics")
 def admin_connector_diagnostics_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):

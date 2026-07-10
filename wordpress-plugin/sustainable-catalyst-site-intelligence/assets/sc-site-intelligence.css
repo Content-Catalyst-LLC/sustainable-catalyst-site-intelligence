@@ -658,7 +658,7 @@
 }
 
 /* =========================================================
-   v1.3.0 Public Shortcode Visual Alignment
+   v1.3.1 Public Shortcode Visual Alignment
    Aligns public dashboard shortcodes with current Sustainable Catalyst
    ccp/scmethod-style public-platform panels.
    ========================================================= */
@@ -1391,7 +1391,7 @@
 }
 
 /* =========================================================
-   v1.3.0 Public Connector Status Layer
+   v1.3.1 Public Connector Status Layer
    Live/cached/fallback source status, cache policy, and
    freshness panels for public-safe Site Intelligence pages.
    ========================================================= */
@@ -1431,4 +1431,35 @@
   border-right: 0;
   border-bottom: 0;
   box-shadow: none;
+}
+
+/* =========================================================
+   v1.3.1 Connector Reliability Patch + Public Status Polish
+   Adds clearer reliability, cache-state, freshness-state, and
+   recovery-action presentation for public connector panels.
+   ========================================================= */
+.scsi-public-reliability-grid .scsi-public-connector-status-card strong {
+  font-size: clamp(1.25rem, 2vw, 1.9rem);
+}
+
+.scsi-public-status-card-row {
+  border-left: 3px solid var(--scsi-public-red, #9b1111);
+}
+
+.scsi-badge-healthy,
+.scsi-badge-fallback_safe,
+.scsi-badge-degraded,
+.scsi-badge-planned {
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  background: #ffffff;
+  color: #171717;
+}
+
+.scsi-public-connector-row small:last-child {
+  margin-bottom: 0;
+}
+
+.ccp-site-intelligence-public .scsi-public-status-card-row,
+.ccp-site-intelligence-public .scsi-public-connector-row {
+  background: rgba(255, 255, 255, 0.72);
 }
