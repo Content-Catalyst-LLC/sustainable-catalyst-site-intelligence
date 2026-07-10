@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.4.0
+ * Version: 1.5.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.4.0';
+    const VERSION = '1.5.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -84,6 +84,15 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_public_repository_chart_dashboard', [$this, 'public_indicator_chart_panel_shortcode']);
         add_shortcode('sc_public_indicator_chart_gallery', [$this, 'public_indicator_chart_panel_shortcode']);
         add_shortcode('sc_public_indicator_chart_visual_qa', [$this, 'public_indicator_chart_panel_shortcode']);
+        add_shortcode('sc_public_source_aware_brief_directory', [$this, 'public_source_aware_brief_panel_shortcode']);
+        add_shortcode('sc_public_site_intelligence_source_brief', [$this, 'public_source_aware_brief_panel_shortcode']);
+        add_shortcode('sc_public_indicator_source_brief', [$this, 'public_source_aware_brief_panel_shortcode']);
+        add_shortcode('sc_public_source_health_brief', [$this, 'public_source_aware_brief_panel_shortcode']);
+        add_shortcode('sc_public_dashboard_export_manifest', [$this, 'public_dashboard_export_panel_shortcode']);
+        add_shortcode('sc_public_site_intelligence_export', [$this, 'public_dashboard_export_panel_shortcode']);
+        add_shortcode('sc_public_indicator_dashboard_export', [$this, 'public_dashboard_export_panel_shortcode']);
+        add_shortcode('sc_public_source_health_export', [$this, 'public_dashboard_export_panel_shortcode']);
+        add_shortcode('sc_public_dashboard_export_visual_qa', [$this, 'public_dashboard_export_panel_shortcode']);
         add_shortcode('sc_public_climate_energy_dashboard', [$this, 'public_topic_dashboard_shortcode']);
         add_shortcode('sc_public_environmental_monitoring_dashboard', [$this, 'public_topic_dashboard_shortcode']);
         add_shortcode('sc_public_biodiversity_land_use_dashboard', [$this, 'public_topic_dashboard_shortcode']);
@@ -451,6 +460,17 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-indicator-chart-panel', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_indicator_chart_panel'],
+            'permission_callback' => '__return_true',
+        ]);
+
+        register_rest_route(self::REST_NAMESPACE, '/public-source-aware-brief-panel', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_source_aware_brief_panel'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-dashboard-export-panel', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_dashboard_export_panel'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/public-readiness', [
@@ -1273,6 +1293,46 @@ final class SC_Site_Intelligence_Plugin {
         return rest_ensure_response($result);
     }
 
+
+    private function public_source_aware_brief_endpoint_map($key) {
+        $map = [
+            'directory' => 'public/source-aware-briefs',
+            'site_intelligence' => 'public/source-aware-briefs/site-intelligence',
+            'indicator' => 'public/source-aware-briefs/indicator',
+            'source_health' => 'public/source-aware-briefs/source-health',
+        ];
+        return isset($map[$key]) ? $map[$key] : 'public/source-aware-briefs';
+    }
+
+    public function rest_public_source_aware_brief_panel(WP_REST_Request $request) {
+        $panel = sanitize_key($request->get_param('panel'));
+        $result = $this->backend_request($this->public_source_aware_brief_endpoint_map(str_replace('-', '_', $panel)));
+        if (is_wp_error($result)) {
+            return new WP_REST_Response(['ok' => false, 'message' => $result->get_error_message()], 502);
+        }
+        return rest_ensure_response($result);
+    }
+
+    private function public_dashboard_export_endpoint_map($key) {
+        $map = [
+            'manifest' => 'public/dashboard-exports/manifest',
+            'site_intelligence' => 'public/dashboard-exports/site-intelligence',
+            'indicator' => 'public/dashboard-exports/indicator',
+            'source_health' => 'public/dashboard-exports/source-health',
+            'visual_qa' => 'public/dashboard-exports/visual-qa',
+        ];
+        return isset($map[$key]) ? $map[$key] : 'public/dashboard-exports/manifest';
+    }
+
+    public function rest_public_dashboard_export_panel(WP_REST_Request $request) {
+        $panel = sanitize_key($request->get_param('panel'));
+        $result = $this->backend_request($this->public_dashboard_export_endpoint_map(str_replace('-', '_', $panel)));
+        if (is_wp_error($result)) {
+            return new WP_REST_Response(['ok' => false, 'message' => $result->get_error_message()], 502);
+        }
+        return rest_ensure_response($result);
+    }
+
     public function rest_public_readiness(WP_REST_Request $request) {
         $query = $this->public_query_from_request($request);
         $endpoint = 'intelligence/public-readiness' . (!empty($query) ? '?' . http_build_query($query) : '');
@@ -1401,7 +1461,7 @@ final class SC_Site_Intelligence_Plugin {
             'generated_at' => gmdate('c'),
             'mode' => 'public',
             'provider' => 'deterministic-local',
-            'model' => 'wordpress-fallback-v1.4.0',
+            'model' => 'wordpress-fallback-v1.5.0',
             'source_report' => [
                 'report_id' => 'public-dashboard',
                 'title' => 'Public Dashboard Readiness Report',
@@ -2592,6 +2652,65 @@ final class SC_Site_Intelligence_Plugin {
         return ob_get_clean();
     }
 
+
+
+    private function public_source_aware_brief_panel_from_shortcode_tag($tag) {
+        $map = [
+            'sc_public_source_aware_brief_directory' => ['directory', 'Source-Aware Brief Directory', 'Public-safe brief directory for Site Intelligence source context.'],
+            'sc_public_site_intelligence_source_brief' => ['site-intelligence', 'Site Intelligence Source-Aware Brief', 'Dashboard, source, connector, and indicator context in one reviewed brief.'],
+            'sc_public_indicator_source_brief' => ['indicator', 'Indicator Dashboard Source Brief', 'Source-aware interpretation for public indicator dashboards and charts.'],
+            'sc_public_source_health_brief' => ['source-health', 'Source Health Brief', 'Connector reliability, cache/fallback status, freshness, and disclosure notes.'],
+        ];
+        return isset($map[$tag]) ? $map[$tag] : ['directory', 'Source-Aware Brief Directory', 'Loading public source-aware briefs…'];
+    }
+
+    public function public_source_aware_brief_panel_shortcode($atts = [], $content = null, $tag = '') {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') {
+            return '';
+        }
+        $panel = $this->public_source_aware_brief_panel_from_shortcode_tag($tag);
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-public-source-aware-brief-panel" data-scsi-public-source-aware-brief-panel data-source-brief-panel="<?php echo esc_attr($panel[0]); ?>">
+            <p class="scsi-eyebrow">Public Source-Aware Briefs</p>
+            <h2><?php echo esc_html($panel[1]); ?></h2>
+            <p class="scsi-muted"><?php echo esc_html($panel[2]); ?></p>
+            <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
+    private function public_dashboard_export_panel_from_shortcode_tag($tag) {
+        $map = [
+            'sc_public_dashboard_export_manifest' => ['manifest', 'Public Dashboard Export Manifest', 'Export-ready public dashboard/source/brief bundle directory.'],
+            'sc_public_site_intelligence_export' => ['site-intelligence', 'Site Intelligence Public Export', 'Copy-ready public export for the full Site Intelligence layer.'],
+            'sc_public_indicator_dashboard_export' => ['indicator', 'Indicator Dashboard Export', 'Copy-ready export for indicator dashboards, chart summaries, and source citations.'],
+            'sc_public_source_health_export' => ['source-health', 'Source Health Export', 'Copy-ready export for source health, freshness, and connector reliability.'],
+            'sc_public_dashboard_export_visual_qa' => ['visual-qa', 'Dashboard Export Visual QA', 'Visual QA for export cards, public citations, and Markdown copies.'],
+        ];
+        return isset($map[$tag]) ? $map[$tag] : ['manifest', 'Public Dashboard Export Manifest', 'Loading public dashboard exports…'];
+    }
+
+    public function public_dashboard_export_panel_shortcode($atts = [], $content = null, $tag = '') {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') {
+            return '';
+        }
+        $panel = $this->public_dashboard_export_panel_from_shortcode_tag($tag);
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-public-dashboard-export-panel" data-scsi-public-dashboard-export-panel data-dashboard-export-panel="<?php echo esc_attr($panel[0]); ?>">
+            <p class="scsi-eyebrow">Public Dashboard Exports</p>
+            <h2><?php echo esc_html($panel[1]); ?></h2>
+            <p class="scsi-muted"><?php echo esc_html($panel[2]); ?></p>
+            <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
     public function public_dashboard_readiness_shortcode($atts = []) {
         $options = self::options();
         if ($options['enable_dashboard'] !== '1') {
@@ -2896,7 +3015,7 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function release_status_shortcode($atts = []) {
-        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.4.0 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
+        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.5.0 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
     }
 
 }

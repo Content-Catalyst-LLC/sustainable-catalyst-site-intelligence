@@ -1,10 +1,10 @@
 # Sustainable Catalyst Site Intelligence
 
-Current version: v1.4.0 — Public Indicator Dashboards and Chart Layer
+Current version: v1.5.0 — Source-Aware Briefs and Dashboard Exports
 
 # Sustainable Catalyst Site Intelligence
 
-Version: 1.4.0
+Version: 1.5.0
 
 ## v1.4.0 — Connector Reliability Patch and Public Status Polish
 
@@ -206,3 +206,10 @@ Adds public-safe connector status, cache policy, freshness, and connector detail
 ## v1.4.0 — Public Indicator Dashboards and Chart Layer
 
 Adds public indicator dashboard endpoints, chart-ready JSON payloads, WordPress chart shortcodes, and visual QA for sustainability, development, source-health, research metadata, and repository intelligence dashboards.
+
+
+## v1.5.0 — Source-Aware Briefs and Dashboard Exports
+
+Adds public source-aware brief payloads, dashboard export manifests, copy-ready Markdown export summaries, public source endpoint citations, and WordPress shortcodes for reviewed Site Intelligence handoff pages.
+
+New endpoints include `/public/source-aware-briefs`, `/public/dashboard-exports`, and `/public/dashboard-exports/visual-qa`.

@@ -64,6 +64,13 @@ from .public_indicator_charts import (
     public_indicator_chart_gallery as build_public_indicator_chart_gallery,
     public_indicator_chart_visual_qa as build_public_indicator_chart_visual_qa,
 )
+from .public_source_briefs_exports import (
+    public_source_aware_brief_directory as build_public_source_aware_brief_directory,
+    public_source_aware_brief as build_public_source_aware_brief,
+    public_dashboard_export_manifest as build_public_dashboard_export_manifest,
+    public_dashboard_export as build_public_dashboard_export,
+    public_dashboard_export_visual_qa as build_public_dashboard_export_visual_qa,
+)
 from .public_source_pages import (
     public_source_page_directory as build_public_source_page_directory,
     public_source_navigation as build_public_source_navigation,
@@ -469,6 +476,77 @@ def public_indicator_chart_visual_qa_endpoint(settings: Settings = Depends(get_s
     if not settings.public_dashboards_enabled:
         raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
     return build_public_indicator_chart_visual_qa(settings)
+
+
+
+@app.get("/public/source-aware-briefs")
+def public_source_aware_brief_directory_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_source_aware_brief_directory(settings)
+
+
+@app.get("/public/source-aware-briefs/site-intelligence")
+def public_site_intelligence_source_aware_brief_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_source_aware_brief("site-intelligence", settings)
+
+
+@app.get("/public/source-aware-briefs/indicator")
+def public_indicator_source_aware_brief_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_source_aware_brief("indicator", settings)
+
+
+@app.get("/public/source-aware-briefs/source-health")
+def public_source_health_source_aware_brief_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_source_aware_brief("source-health", settings)
+
+
+@app.get("/public/dashboard-exports")
+def public_dashboard_export_manifest_alias_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_dashboard_export_manifest(settings)
+
+
+@app.get("/public/dashboard-exports/manifest")
+def public_dashboard_export_manifest_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_dashboard_export_manifest(settings)
+
+
+@app.get("/public/dashboard-exports/site-intelligence")
+def public_site_intelligence_dashboard_export_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_dashboard_export("site-intelligence", settings)
+
+
+@app.get("/public/dashboard-exports/indicator")
+def public_indicator_dashboard_export_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_dashboard_export("indicator", settings)
+
+
+@app.get("/public/dashboard-exports/source-health")
+def public_source_health_dashboard_export_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_dashboard_export("source-health", settings)
+
+
+@app.get("/public/dashboard-exports/visual-qa")
+def public_dashboard_export_visual_qa_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_dashboard_export_visual_qa(settings)
 
 @app.get("/admin/connectors/diagnostics")
 def admin_connector_diagnostics_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):

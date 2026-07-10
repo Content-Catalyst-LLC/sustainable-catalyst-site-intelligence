@@ -17,7 +17,7 @@ client = TestClient(app)
 def test_public_api_source_payload_is_public_safe():
     data = public_sources()
     assert data["ok"] is True
-    assert data["version_scope"] == "v1.4.0"
+    assert data["version_scope"] == "v1.5.0"
     assert any("World Bank" in item["source_examples"] for item in data["source_families"])
     assert any("OpenAlex" in item["source_examples"] for item in data["source_families"])
     assert any("GitHub repositories" in item["source_examples"] for item in data["source_families"])

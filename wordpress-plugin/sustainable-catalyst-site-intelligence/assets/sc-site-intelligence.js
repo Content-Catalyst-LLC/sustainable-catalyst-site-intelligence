@@ -18,7 +18,7 @@
       client_time: new Date().toISOString(),
       metadata: {
         href: params && params.href ? params.href : '',
-        version: cfg.version || '1.4.0'
+        version: cfg.version || '1.5.0'
       }
     }, params || {});
 
@@ -2425,6 +2425,174 @@
   }
 
 
+
+
+  function sourceAwareBriefPanelEndpoint(panel) {
+    const map = {
+      'directory': '/public-source-aware-brief-panel?panel=directory',
+      'site-intelligence': '/public-source-aware-brief-panel?panel=site-intelligence',
+      'indicator': '/public-source-aware-brief-panel?panel=indicator',
+      'source-health': '/public-source-aware-brief-panel?panel=source-health'
+    };
+    return map[panel] || '/public-source-aware-brief-panel?panel=directory';
+  }
+
+  function dashboardExportPanelEndpoint(panel) {
+    const map = {
+      'manifest': '/public-dashboard-export-panel?panel=manifest',
+      'site-intelligence': '/public-dashboard-export-panel?panel=site-intelligence',
+      'indicator': '/public-dashboard-export-panel?panel=indicator',
+      'source-health': '/public-dashboard-export-panel?panel=source-health',
+      'visual-qa': '/public-dashboard-export-panel?panel=visual-qa'
+    };
+    return map[panel] || '/public-dashboard-export-panel?panel=manifest';
+  }
+
+  function renderPublicSourceAwareBriefPanel(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    muted.textContent = (data.summary || 'Public source-aware brief.') + ' · Status: ' + (data.public_status || 'review');
+    out.innerHTML = '';
+
+    const briefs = data.briefs || [];
+    if (briefs.length) {
+      const grid = document.createElement('div');
+      grid.className = 'scsi-grid scsi-public-brief-grid';
+      briefs.forEach(function (item) {
+        const card = document.createElement('div');
+        card.className = 'scsi-page-row scsi-public-brief-card';
+        card.innerHTML = '<strong>' + escapeHtml(item.title || item.slug || '') + '</strong><br>' +
+          '<span class="scsi-badge scsi-badge-soft">' + escapeHtml(item.recommended_shortcode || '') + '</span>' +
+          '<small>' + escapeHtml(item.summary || '') + '</small>' +
+          '<small><b>Path:</b> ' + escapeHtml(item.brief_path || '') + '</small>';
+        grid.appendChild(card);
+      });
+      out.appendChild(grid);
+    }
+
+    const findings = data.key_findings || [];
+    if (findings.length) {
+      const h = document.createElement('h3');
+      h.textContent = 'Key findings';
+      out.appendChild(h);
+      const ul = document.createElement('ul');
+      ul.className = 'scsi-list scsi-public-notes';
+      findings.forEach(function (item) { const li = document.createElement('li'); li.textContent = item; ul.appendChild(li); });
+      out.appendChild(ul);
+    }
+
+    const actions = data.recommended_actions || [];
+    if (actions.length) {
+      const h = document.createElement('h3');
+      h.textContent = 'Recommended actions';
+      out.appendChild(h);
+      const ul = document.createElement('ul');
+      ul.className = 'scsi-list scsi-public-notes';
+      actions.forEach(function (item) { const li = document.createElement('li'); li.textContent = item; ul.appendChild(li); });
+      out.appendChild(ul);
+    }
+
+    const citations = data.source_citations || [];
+    if (citations.length) {
+      const h = document.createElement('h3');
+      h.textContent = 'Public source endpoints';
+      out.appendChild(h);
+      citations.forEach(function (item) {
+        const row = document.createElement('div');
+        row.className = 'scsi-page-row scsi-public-source-citation-row';
+        row.innerHTML = '<strong>' + escapeHtml(item.title || '') + '</strong><br>' +
+          '<code>' + escapeHtml(item.endpoint || '') + '</code>' +
+          '<small>' + escapeHtml(item.note || '') + '</small>';
+        out.appendChild(row);
+      });
+    }
+
+    [['Citation policy', data.citation_policy || []], ['Hidden from public pages', data.hidden || []]].forEach(function (group) {
+      if (!group[1].length) return;
+      const h = document.createElement('h3');
+      h.textContent = group[0];
+      out.appendChild(h);
+      const ul = document.createElement('ul');
+      ul.className = 'scsi-list scsi-public-notes';
+      group[1].forEach(function (item) { const li = document.createElement('li'); li.textContent = item; ul.appendChild(li); });
+      out.appendChild(ul);
+    });
+  }
+
+  function renderPublicDashboardExportPanel(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    muted.textContent = (data.summary || 'Public dashboard export.') + ' · Status: ' + (data.public_status || 'review');
+    out.innerHTML = '';
+
+    const exports = data.exports || [];
+    if (exports.length) {
+      const grid = document.createElement('div');
+      grid.className = 'scsi-grid scsi-public-export-grid';
+      exports.forEach(function (item) {
+        const card = document.createElement('div');
+        card.className = 'scsi-page-row scsi-public-export-card';
+        card.innerHTML = '<strong>' + escapeHtml(item.title || item.slug || '') + '</strong><br>' +
+          '<span class="scsi-badge scsi-badge-soft">' + escapeHtml(item.recommended_shortcode || '') + '</span>' +
+          '<small>' + escapeHtml(item.summary || '') + '</small>' +
+          '<small><b>Endpoint:</b> ' + escapeHtml(item.endpoint || '') + '</small>';
+        grid.appendChild(card);
+      });
+      out.appendChild(grid);
+    }
+
+    const bundle = data.export_bundle || {};
+    if (bundle.json) {
+      const h = document.createElement('h3');
+      h.textContent = 'Export summary';
+      out.appendChild(h);
+      const box = document.createElement('div');
+      box.className = 'scsi-page-row scsi-public-export-summary';
+      const findings = (bundle.json.key_findings || []).slice(0, 4).map(function (item) { return '<li>' + escapeHtml(item) + '</li>'; }).join('');
+      box.innerHTML = '<strong>' + escapeHtml(bundle.json.title || data.title || '') + '</strong><p>' + escapeHtml(bundle.json.summary || '') + '</p><ul>' + findings + '</ul>';
+      out.appendChild(box);
+    }
+
+    if (bundle.markdown) {
+      const h = document.createElement('h3');
+      h.textContent = 'Copy-ready Markdown';
+      out.appendChild(h);
+      const pre = document.createElement('pre');
+      pre.className = 'scsi-public-export-markdown';
+      pre.textContent = bundle.markdown;
+      out.appendChild(pre);
+    }
+
+    const citations = data.source_citations || [];
+    if (citations.length) {
+      const h = document.createElement('h3');
+      h.textContent = 'Public source endpoints';
+      out.appendChild(h);
+      citations.forEach(function (item) {
+        const row = document.createElement('div');
+        row.className = 'scsi-page-row scsi-public-source-citation-row';
+        row.innerHTML = '<strong>' + escapeHtml(item.title || '') + '</strong><br>' +
+          '<code>' + escapeHtml(item.endpoint || '') + '</code>' +
+          '<small>' + escapeHtml(item.note || '') + '</small>';
+        out.appendChild(row);
+      });
+    }
+
+    const checks = data.checks || [];
+    if (checks.length) {
+      const h = document.createElement('h3');
+      h.textContent = 'Export QA checks';
+      out.appendChild(h);
+      checks.forEach(function (check) {
+        const row = document.createElement('div');
+        row.className = 'scsi-page-row scsi-public-qa-row';
+        row.innerHTML = '<strong>' + escapeHtml(check.label || check.id || '') + '</strong><br>' +
+          statusBadge(check.status || 'review') + '<small>' + escapeHtml(check.detail || '') + '</small>';
+        out.appendChild(row);
+      });
+    }
+  }
+
   function connectorPanelEndpoint(panel) {
     const map = {
       'connector-status': '/public-connector-status',
@@ -2607,7 +2775,7 @@
   function renderPublicSourcePageDirectory(root, data) {
     const out = root.querySelector('.scsi-output');
     const muted = root.querySelector('.scsi-muted');
-    muted.textContent = (data.summary || 'Public source page directory.') + ' · ' + (data.version_scope || 'v1.4.0');
+    muted.textContent = (data.summary || 'Public source page directory.') + ' · ' + (data.version_scope || 'v1.5.0');
     out.innerHTML = '';
     const nav = document.createElement('div');
     nav.className = 'scsi-public-nav-row scsi-public-source-nav-row';
@@ -2662,7 +2830,7 @@
   function renderPublicSourcePageTemplates(root, data) {
     const out = root.querySelector('.scsi-output');
     const muted = root.querySelector('.scsi-muted');
-    muted.textContent = (data.summary || 'Copy-ready public source page templates.') + ' · ' + (data.version_scope || 'v1.4.0');
+    muted.textContent = (data.summary || 'Copy-ready public source page templates.') + ' · ' + (data.version_scope || 'v1.5.0');
     out.innerHTML = '';
     const grid = document.createElement('div');
     grid.className = 'scsi-grid scsi-public-source-page-grid';
@@ -2940,6 +3108,22 @@
       fetchJson(cfg.restBase + indicatorChartPanelEndpoint(panel))
         .then(function (data) { renderPublicIndicatorChartPanel(root, data); })
         .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public indicator chart panel.'); });
+    });
+
+
+
+    document.querySelectorAll('[data-scsi-public-source-aware-brief-panel]').forEach(function (root) {
+      const panel = root.dataset.sourceBriefPanel || 'directory';
+      fetchJson(cfg.restBase + sourceAwareBriefPanelEndpoint(panel))
+        .then(function (data) { renderPublicSourceAwareBriefPanel(root, data); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public source-aware brief panel.'); });
+    });
+
+    document.querySelectorAll('[data-scsi-public-dashboard-export-panel]').forEach(function (root) {
+      const panel = root.dataset.dashboardExportPanel || 'manifest';
+      fetchJson(cfg.restBase + dashboardExportPanelEndpoint(panel))
+        .then(function (data) { renderPublicDashboardExportPanel(root, data); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public dashboard export panel.'); });
     });
 
     document.querySelectorAll('[data-scsi-public-page-builder]').forEach(function (root) {

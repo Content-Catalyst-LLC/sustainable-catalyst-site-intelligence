@@ -1,5 +1,15 @@
 # Changelog
 
+
+## v1.5.0 — Source-Aware Briefs and Dashboard Exports
+
+- Added public source-aware brief endpoints for Site Intelligence, indicator dashboards, and source health.
+- Added public dashboard export manifest and export bundle endpoints.
+- Added copy-ready Markdown and CSV-preview export payloads.
+- Added WordPress shortcodes for brief directories, source briefs, dashboard exports, and export visual QA.
+- Added public-safe source citation policy and private-field exclusions for export pages.
+
+
 ## v1.4.0 — Public Indicator Dashboards and Chart Layer
 
 - Added public indicator dashboard endpoints for sustainability, development, source health, research metadata, and repository intelligence.

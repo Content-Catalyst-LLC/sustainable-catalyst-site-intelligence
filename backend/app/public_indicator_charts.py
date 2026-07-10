@@ -185,7 +185,7 @@ def _dashboard(slug: str, settings: Settings) -> Dict[str, Any]:
     return {
         "ok": True,
         "generated_at": _now(),
-        "version_scope": "v1.4.0",
+        "version_scope": f"v{settings.version}",
         "public_status": "public_chart_ready",
         "slug": slug,
         **dashboard,
@@ -221,7 +221,7 @@ def public_indicator_dashboard_directory(settings: Settings) -> Dict[str, Any]:
     return {
         "ok": True,
         "generated_at": _now(),
-        "version_scope": "v1.4.0",
+        "version_scope": f"v{settings.version}",
         "title": "Public Indicator Dashboard Directory",
         "summary": "Chart-ready Site Intelligence dashboards for sustainability, development, source health, research metadata, and repository intelligence.",
         "public_status": "public_chart_ready",
@@ -247,7 +247,7 @@ def public_indicator_chart_gallery(settings: Settings) -> Dict[str, Any]:
     return {
         "ok": True,
         "generated_at": _now(),
-        "version_scope": "v1.4.0",
+        "version_scope": f"v{settings.version}",
         "title": "Public Indicator Chart Gallery",
         "summary": "Combined chart-ready gallery for the public Site Intelligence indicator layer.",
         "public_status": "public_chart_ready",
@@ -273,7 +273,7 @@ def public_indicator_chart_visual_qa(settings: Settings) -> Dict[str, Any]:
     return {
         "ok": True,
         "generated_at": _now(),
-        "version_scope": "v1.4.0",
+        "version_scope": f"v{settings.version}",
         "title": "Indicator Chart Visual QA",
         "summary": "Visual QA for public indicator dashboards, chart-ready payloads, and shortcode rendering.",
         "public_status": "public_chart_ready",

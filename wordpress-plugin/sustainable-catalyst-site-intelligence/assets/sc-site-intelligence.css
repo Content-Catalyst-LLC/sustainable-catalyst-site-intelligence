@@ -658,7 +658,7 @@
 }
 
 /* =========================================================
-   v1.4.0 Public Shortcode Visual Alignment
+   v1.5.0 Public Shortcode Visual Alignment
    Aligns public dashboard shortcodes with current Sustainable Catalyst
    ccp/scmethod-style public-platform panels.
    ========================================================= */
@@ -1391,7 +1391,7 @@
 }
 
 /* =========================================================
-   v1.4.0 Public Connector Status Layer
+   v1.5.0 Public Connector Status Layer
    Live/cached/fallback source status, cache policy, and
    freshness panels for public-safe Site Intelligence pages.
    ========================================================= */
@@ -1434,7 +1434,7 @@
 }
 
 /* =========================================================
-   v1.4.0 Connector Reliability Patch + Public Status Polish
+   v1.5.0 Connector Reliability Patch + Public Status Polish
    Adds clearer reliability, cache-state, freshness-state, and
    recovery-action presentation for public connector panels.
    ========================================================= */
@@ -1466,7 +1466,7 @@
 
 
 /* =========================================================
-   v1.4.0 Public Indicator Dashboard and Chart Layer
+   v1.5.0 Public Indicator Dashboard and Chart Layer
    ========================================================= */
 .scsi-public-indicator-chart-panel {
   border-top: 4px solid #111;
@@ -1531,4 +1531,52 @@
     grid-template-columns: 1fr;
     gap: .25rem;
   }
+}
+
+
+/* =========================================================
+   v1.5.0 Source-Aware Briefs and Dashboard Exports
+   ========================================================= */
+.scsi-public-source-aware-brief-panel,
+.scsi-public-dashboard-export-panel {
+  border-top: 4px solid #111;
+}
+.ccp-site-intelligence-public .scsi-public-source-aware-brief-panel,
+.ccp-site-intelligence-public .scsi-public-dashboard-export-panel {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+}
+.scsi-public-brief-card small,
+.scsi-public-export-card small,
+.scsi-public-source-citation-row small {
+  display: block;
+  margin-top: .35rem;
+}
+.scsi-public-source-citation-row code,
+.scsi-public-export-card code {
+  display: inline-block;
+  margin: .35rem 0;
+  padding: .18rem .35rem;
+  background: rgba(0, 0, 0, .06);
+  border: 1px solid rgba(0, 0, 0, .08);
+  font-size: .82rem;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.scsi-public-export-markdown {
+  max-height: 24rem;
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, .12);
+  border-left: 4px solid #9b1111;
+  padding: 1rem;
+  font-size: .86rem;
+  line-height: 1.55;
+}
+.scsi-public-export-summary ul {
+  margin-bottom: 0;
 }
