@@ -16,7 +16,7 @@
   }
   function markerIcon(category){
     const quake=String(category).toLowerCase().includes("earthquake");
-    return L.divIcon({className:"",html:`<span style="display:block;width:12px;height:12px;border-radius:50%;background:${quake?"#d71920":"#1d6f95"};border:2px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.45)"></span>`,iconSize:[12,12]});
+    return L.divIcon({className:"scsi-map-marker",html:`<span class="marker-core ${quake?"quake":"natural"}"></span><span class="marker-ring ${quake?"quake":"natural"}"></span>`,iconSize:[22,22],iconAnchor:[11,11]});
   }
   async function loadLayers(){
     state.layers=await api("/public/geospatial/layers");
@@ -32,7 +32,7 @@
     state.imagery.bringToBack();
     qs("#layerName").textContent=layer.title;
     qs("#layerDate").textContent=cleanDate(qs("#dateSelect").value);
-    qs("#legendSource").textContent=`${layer.source} imagery · USGS and NASA event records`;
+    qs("#legendSource").textContent=`${layer.source} imagery · USGS and NASA event records`;qs("#captionDetail").textContent=`${layer.title} · ${cleanDate(qs("#dateSelect").value)}`;
     qsa(".layer-tab").forEach(b=>b.classList.toggle("active",b.dataset.layer===id));
   }
   async function loadEvents(){
@@ -77,6 +77,7 @@
     }[route]||[];
   }
   async function setRoute(route){
+    qs("#main").classList.remove("route-enter");void qs("#main").offsetWidth;qs("#main").classList.add("route-enter");
     state.route=route;
     qsa(".nav-item").forEach(b=>b.classList.toggle("active",b.dataset.route===route));
     const [e,t,d]=routeMeta(route);qs("#viewEyebrow").textContent=e;qs("#viewTitle").textContent=t;qs("#viewDescription").textContent=d;
@@ -99,16 +100,29 @@
   async function init(){
     qs("#dateSelect").value=today();initMap();
     qsa(".layer-tab").forEach(b=>b.addEventListener("click",()=>setImagery(b.dataset.layer)));
-    qsa(".nav-item").forEach(b=>b.addEventListener("click",()=>setRoute(b.dataset.route)));
+    qsa(".nav-item").forEach(b=>b.addEventListener("click",()=>{history.replaceState(null,"",`?country=${encodeURIComponent(state.country)}&view=${encodeURIComponent(b.dataset.route)}`);setRoute(b.dataset.route)}));
     qsa("[data-route-link]").forEach(b=>b.addEventListener("click",()=>setRoute(b.dataset.routeLink)));
-    qs("#countrySelect").addEventListener("change",async e=>{await loadCountry(e.target.value);if(state.route==="country")setRoute("country")});
+    qs("#countrySelect").addEventListener("change",async e=>{await loadCountry(e.target.value);history.replaceState(null,"",`?country=${encodeURIComponent(e.target.value)}&view=${encodeURIComponent(state.route)}`);if(state.route==="country")setRoute("country")});
     qs("#dateSelect").addEventListener("change",()=>setImagery(qs(".layer-tab.active").dataset.layer));
     qs("#eventsToggle").addEventListener("change",e=>e.target.checked?state.markers.addTo(state.map):state.map.removeLayer(state.markers));
     qs("#heatToggle").addEventListener("change",e=>toast(e.target.checked?"Density layer enabled for supported records":"Density layer hidden"));
     qs("#fullscreenButton").addEventListener("click",()=>{const p=qs(".map-panel");if(document.fullscreenElement)document.exitFullscreen();else p.requestFullscreen?.()});
     qs("#shareButton").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("View link copied")});
-    try{await loadLayers();await setImagery("true-color");await Promise.all([loadEvents(),loadCountry("KEN")])}
+    const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const initialView=params.get("view")||"overview";qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";try{await loadLayers();await setImagery("true-color");await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);await setRoute(initialView)}
     catch(e){qs("#statusText").textContent="Some feeds unavailable";toast("The interface loaded, but one or more public feeds are unavailable.")}
   }
   document.addEventListener("DOMContentLoaded",init);
 })();
+
+const visualStyle=document.createElement("style");
+visualStyle.textContent=`
+.scsi-map-marker{position:relative}
+.marker-core{position:absolute;left:6px;top:6px;width:10px;height:10px;border-radius:50%;border:2px solid #fff;z-index:2;box-shadow:0 0 12px rgba(255,255,255,.4)}
+.marker-core.quake{background:#ff2a2f}.marker-core.natural{background:#43d6ff}
+.marker-ring{position:absolute;left:1px;top:1px;width:20px;height:20px;border-radius:50%;border:1px solid;animation:markerPulse 2.2s ease-out infinite}
+.marker-ring.quake{border-color:rgba(255,42,47,.7)}.marker-ring.natural{border-color:rgba(67,214,255,.7)}
+@keyframes markerPulse{0%{transform:scale(.5);opacity:.9}100%{transform:scale(1.45);opacity:0}}
+.route-enter{animation:routeFade .3s ease both}@keyframes routeFade{from{opacity:.55;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.marker-ring{animation:none}}
+`;
+document.head.appendChild(visualStyle);

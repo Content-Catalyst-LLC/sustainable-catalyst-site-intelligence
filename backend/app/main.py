@@ -2866,7 +2866,7 @@ def publishing_intelligence_report(
 
 
 
-# Site Intelligence v1.14.0 standalone public application.
+# Site Intelligence v1.14.1 standalone public application.
 from pathlib import Path as _Path
 PUBLIC_APP_DIR = _Path(__file__).resolve().parent.parent / "public_app"
 if PUBLIC_APP_DIR.exists():

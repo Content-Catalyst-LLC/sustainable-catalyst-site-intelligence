@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.14.1 — Visual Foundation and Application Polish
+
+- Introduced an immersive dark visual system for the standalone public application.
+- Added cinematic map framing, orbital visual treatment, glass panels, richer depth, and controlled accent lighting.
+- Added custom animated public-event markers and polished Leaflet controls.
+- Added skeleton loading states, route transitions, metric reveal motion, and refined hover behavior.
+- Improved map captions, source legends, responsive controls, and mobile presentation.
+- Added shareable country and application-view query state.
+- Added reduced-motion handling for accessibility.
+- Preserved all source, missing-data, and responsible-use boundaries.
+
 ## 1.14.0 — Standalone Public Intelligence App and Visual System
 
 - Added a dedicated map-first public application at `/app/`.

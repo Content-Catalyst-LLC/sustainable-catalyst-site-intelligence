@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#111111">
   <title>Site Intelligence | Sustainable Catalyst</title>
+  <meta name="description" content="A map-first public observatory for satellite imagery, live events, country context, and source-aware intelligence.">
   <link rel="preconnect" href="https://unpkg.com">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="/app/assets/app.css">
@@ -52,7 +53,9 @@
     </aside>
 
     <main id="main" class="workspace" tabindex="-1">
-      <section class="workspace-head">
+      <section class="workspace-head immersive-head">
+        <div class="orbital-glow" aria-hidden="true"></div>
+
         <div>
           <p class="eyebrow" id="viewEyebrow">LIVE INTELLIGENCE WORKSPACE</p>
           <h1 id="viewTitle">Climate and Human Vulnerability</h1>
@@ -61,7 +64,9 @@
         <div class="status-pill"><span class="pulse"></span><span id="statusText">Loading public feeds</span></div>
       </section>
 
-      <section class="map-panel" aria-label="Interactive intelligence map">
+      <section class="map-panel cinematic-map" aria-label="Interactive intelligence map">
+        <div class="map-vignette" aria-hidden="true"></div>
+        <div class="map-caption"><span class="caption-label">LIVE EARTH VIEW</span><span id="captionDetail">Global satellite context and public event records</span></div>
         <div class="map-toolbar">
           <div class="layer-tabs" role="group" aria-label="Map layer">
             <button class="layer-tab active" data-layer="true-color">True color</button>
@@ -83,7 +88,7 @@
         </div>
       </section>
 
-      <section class="metric-grid" aria-label="Key intelligence indicators">
+      <section class="metric-grid reveal-grid" aria-label="Key intelligence indicators">
         <article class="metric-card"><span class="metric-label">Recent events</span><strong id="eventCount">—</strong><small>Mapped public records</small></article>
         <article class="metric-card"><span class="metric-label">Imagery layer</span><strong id="layerName">True color</strong><small id="layerDate">Selected date</small></article>
         <article class="metric-card"><span class="metric-label">Country</span><strong id="countryName">Kenya</strong><small id="countryCode">KEN</small></article>
@@ -93,12 +98,12 @@
       <section class="content-grid">
         <article class="panel signal-panel">
           <div class="panel-head"><div><p class="eyebrow">SIGNAL STREAM</p><h2>Recent events</h2></div><button class="text-button" data-route-link="events">View all</button></div>
-          <div id="eventList" class="event-list" aria-live="polite"></div>
+          <div id="eventList" class="event-list" aria-live="polite"><div class="skeleton-stack"><span></span><span></span><span></span><span></span></div></div>
         </article>
 
         <article class="panel country-panel">
           <div class="panel-head"><div><p class="eyebrow">COUNTRY CONTEXT</p><h2 id="countryPanelTitle">Kenya at a glance</h2></div><button class="text-button" data-route-link="country">Open profile</button></div>
-          <div id="countrySummary" class="country-summary"></div>
+          <div id="countrySummary" class="country-summary"><div class="skeleton-stack compact"><span></span><span></span><span></span></div></div>
         </article>
       </section>
 
