@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.3.1
+ * Version: 1.4.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.3.1';
+    const VERSION = '1.4.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -76,6 +76,14 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_public_crossref_connector', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_github_connector', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_environmental_connectors', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_public_indicator_dashboard_directory', [$this, 'public_indicator_chart_panel_shortcode']);
+        add_shortcode('sc_public_sustainability_indicator_dashboard', [$this, 'public_indicator_chart_panel_shortcode']);
+        add_shortcode('sc_public_development_indicator_dashboard', [$this, 'public_indicator_chart_panel_shortcode']);
+        add_shortcode('sc_public_source_health_chart_dashboard', [$this, 'public_indicator_chart_panel_shortcode']);
+        add_shortcode('sc_public_research_metadata_chart_dashboard', [$this, 'public_indicator_chart_panel_shortcode']);
+        add_shortcode('sc_public_repository_chart_dashboard', [$this, 'public_indicator_chart_panel_shortcode']);
+        add_shortcode('sc_public_indicator_chart_gallery', [$this, 'public_indicator_chart_panel_shortcode']);
+        add_shortcode('sc_public_indicator_chart_visual_qa', [$this, 'public_indicator_chart_panel_shortcode']);
         add_shortcode('sc_public_climate_energy_dashboard', [$this, 'public_topic_dashboard_shortcode']);
         add_shortcode('sc_public_environmental_monitoring_dashboard', [$this, 'public_topic_dashboard_shortcode']);
         add_shortcode('sc_public_biodiversity_land_use_dashboard', [$this, 'public_topic_dashboard_shortcode']);
@@ -437,6 +445,12 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-connector-detail', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_connector_detail'],
+            'permission_callback' => '__return_true',
+        ]);
+
+        register_rest_route(self::REST_NAMESPACE, '/public-indicator-chart-panel', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_indicator_chart_panel'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/public-readiness', [
@@ -1235,6 +1249,30 @@ final class SC_Site_Intelligence_Plugin {
         return $this->rest_public_connector_panel(str_replace('-', '_', $slug));
     }
 
+
+    private function public_indicator_chart_endpoint_map($key) {
+        $map = [
+            'directory' => 'public/indicator-dashboards',
+            'sustainability' => 'public/indicator-dashboards/sustainability',
+            'development' => 'public/indicator-dashboards/development',
+            'source_health' => 'public/indicator-dashboards/source-health',
+            'research' => 'public/indicator-dashboards/research',
+            'repository' => 'public/indicator-dashboards/repository',
+            'gallery' => 'public/indicator-dashboards/charts',
+            'visual_qa' => 'public/indicator-dashboards/visual-qa',
+        ];
+        return isset($map[$key]) ? $map[$key] : 'public/indicator-dashboards';
+    }
+
+    public function rest_public_indicator_chart_panel(WP_REST_Request $request) {
+        $panel = sanitize_key($request->get_param('panel'));
+        $result = $this->backend_request($this->public_indicator_chart_endpoint_map(str_replace('-', '_', $panel)));
+        if (is_wp_error($result)) {
+            return new WP_REST_Response(['ok' => false, 'message' => $result->get_error_message()], 502);
+        }
+        return rest_ensure_response($result);
+    }
+
     public function rest_public_readiness(WP_REST_Request $request) {
         $query = $this->public_query_from_request($request);
         $endpoint = 'intelligence/public-readiness' . (!empty($query) ? '?' . http_build_query($query) : '');
@@ -1363,7 +1401,7 @@ final class SC_Site_Intelligence_Plugin {
             'generated_at' => gmdate('c'),
             'mode' => 'public',
             'provider' => 'deterministic-local',
-            'model' => 'wordpress-fallback-v1.3.1',
+            'model' => 'wordpress-fallback-v1.4.0',
             'source_report' => [
                 'report_id' => 'public-dashboard',
                 'title' => 'Public Dashboard Readiness Report',
@@ -2522,6 +2560,38 @@ final class SC_Site_Intelligence_Plugin {
         return ob_get_clean();
     }
 
+    private function public_indicator_chart_panel_from_shortcode_tag($tag) {
+        $map = [
+            'sc_public_indicator_dashboard_directory' => ['directory', 'Public Indicator Dashboard Directory', 'Chart-ready public indicator dashboards for Site Intelligence.'],
+            'sc_public_sustainability_indicator_dashboard' => ['sustainability', 'Sustainability Indicator Dashboard', 'Charts for sustainability indicators, source status, and connector reliability.'],
+            'sc_public_development_indicator_dashboard' => ['development', 'Development Indicator Dashboard', 'Charts for World Bank, OECD, and UN/SDG indicator context.'],
+            'sc_public_source_health_chart_dashboard' => ['source-health', 'Source Health Chart Dashboard', 'Charts for source family status, reliability, cache, and fallback readiness.'],
+            'sc_public_research_metadata_chart_dashboard' => ['research', 'Research Metadata Chart Dashboard', 'Charts for OpenAlex and Crossref metadata context.'],
+            'sc_public_repository_chart_dashboard' => ['repository', 'Repository Intelligence Chart Dashboard', 'Charts for GitHub repository intelligence and public code-infrastructure context.'],
+            'sc_public_indicator_chart_gallery' => ['gallery', 'Indicator Chart Gallery', 'Combined public chart gallery for indicator dashboard review.'],
+            'sc_public_indicator_chart_visual_qa' => ['visual-qa', 'Indicator Chart Visual QA', 'Visual QA for chart payloads, shortcodes, and public display.'],
+        ];
+        return isset($map[$tag]) ? $map[$tag] : ['directory', 'Public Indicator Dashboard Directory', 'Loading public indicator dashboards…'];
+    }
+
+    public function public_indicator_chart_panel_shortcode($atts = [], $content = null, $tag = '') {
+        $options = self::options();
+        if ($options['enable_dashboard'] !== '1') {
+            return '';
+        }
+        $panel = $this->public_indicator_chart_panel_from_shortcode_tag($tag);
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-public-indicator-chart-panel" data-scsi-public-indicator-chart-panel data-indicator-chart-panel="<?php echo esc_attr($panel[0]); ?>">
+            <p class="scsi-eyebrow">Public Indicator Chart Layer</p>
+            <h2><?php echo esc_html($panel[1]); ?></h2>
+            <p class="scsi-muted"><?php echo esc_html($panel[2]); ?></p>
+            <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
     public function public_dashboard_readiness_shortcode($atts = []) {
         $options = self::options();
         if ($options['enable_dashboard'] !== '1') {
@@ -2826,7 +2896,7 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function release_status_shortcode($atts = []) {
-        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.3.1 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
+        return $this->admin_control_shortcode('release-status', 'Public Flagship Release', 'Site Intelligence v1.4.0 Release Status', 'Loading release checklist, smoke-test guidance, public page metadata, and launch notes…');
     }
 
 }

@@ -159,7 +159,7 @@ def public_sources() -> Dict[str, Any]:
         "generated_at": _now(),
         "title": "Public API Source Expansion",
         "summary": "Public-safe source families for Site Intelligence API connectors, metadata layers, repository intelligence, and live/cached/fallback indicator summaries.",
-        "version_scope": "v1.3.1",
+        "version_scope": "v1.4.0",
         "public_status": "public_candidate",
         "source_families": SOURCE_FAMILIES,
         "status_definitions": PUBLIC_SOURCE_STATUS,

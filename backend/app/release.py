@@ -14,10 +14,10 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
     checks: List[Dict[str, Any]] = [
         {
             "id": "backend_version",
-            "label": "Backend version is v1.3.1",
-            "status": "pass" if settings.version == "1.3.1" else "review",
+            "label": "Backend version is v1.4.0",
+            "status": "pass" if settings.version == "1.4.0" else "review",
             "detail": f"Current backend version: {settings.version}.",
-            "action": "Confirm Render root endpoint returns version 1.3.1 after deployment.",
+            "action": "Confirm Render root endpoint returns version 1.4.0 after deployment.",
         },
         {
             "id": "public_defaults",
@@ -51,14 +51,14 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
             "id": "wordpress_install",
             "label": "WordPress plugin updated",
             "status": "manual_review",
-            "detail": "Install the v1.3.1 WordPress plugin ZIP after Render deploy completes.",
+            "detail": "Install the v1.4.0 WordPress plugin ZIP after Render deploy completes.",
             "action": "Upload the plugin ZIP, clear WordPress/Cloudflare cache, then test logged out.",
         },
         {
             "id": "seo_metadata",
             "label": "Public page SEO metadata prepared",
             "status": "pass",
-            "detail": "v1.3.1 includes recommended title, excerpt, and meta description for the flagship page.",
+            "detail": "v1.4.0 includes recommended title, excerpt, and meta description for the flagship page.",
             "action": "Add the metadata in WordPress SEO settings before promotion.",
         },
         {
@@ -66,7 +66,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
             "label": "Production smoke test available",
             "status": "pass",
             "detail": "The /release/smoke-test endpoint checks the release-critical endpoint map without calling slow live connectors.",
-            "action": "Run the smoke-test endpoint after deploying v1.3.1.",
+            "action": "Run the smoke-test endpoint after deploying v1.4.0.",
         },
     ]
     counts = {
@@ -80,7 +80,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         "ok": True,
         "generated_at": _now(),
         "version": settings.version,
-        "title": "Site Intelligence v1.3.1 Public Flagship Release Checklist",
+        "title": "Site Intelligence v1.4.0 Public Flagship Release Checklist",
         "summary": "Final launch checklist for the Sustainable Catalyst Site Intelligence public flagship dashboard.",
         "release_stage": "public_flagship_release",
         "status": "launch_ready_with_manual_review" if counts["fail"] == 0 else "needs_fix",
@@ -179,7 +179,7 @@ def smoke_test(settings: Settings) -> Dict[str, Any]:
         "wordpress_checks": [
             "Confirm [sc_site_intelligence_public_flagship] renders while logged out/incognito.",
             "Confirm [sc_site_intelligence_release_status] is visible only on private/admin review pages.",
-            "Clear WordPress cache and Cloudflare cache after installing the v1.3.1 plugin ZIP.",
+            "Clear WordPress cache and Cloudflare cache after installing the v1.4.0 plugin ZIP.",
         ],
     }
 
@@ -191,9 +191,9 @@ def release_status(settings: Settings) -> Dict[str, Any]:
         "ok": True,
         "generated_at": _now(),
         "version": settings.version,
-        "title": "Site Intelligence v1.3.1 Public Flagship Release Status",
+        "title": "Site Intelligence v1.4.0 Public Flagship Release Status",
         "summary": "Release-hardening status for the Sustainable Catalyst Site Intelligence public flagship dashboard.",
-        "release_stage": "v1.3.1_public_source_status_release",
+        "release_stage": "v1.4.0_public_source_status_release",
         "release_status": checklist["status"],
         "release_score": checklist["score"],
         "public_shortcode": "[sc_site_intelligence_public_flagship]",
@@ -205,8 +205,8 @@ def release_status(settings: Settings) -> Dict[str, Any]:
         "smoke_test_endpoint": "/release/smoke-test",
         "public_summary_endpoint": "/release/public-summary",
         "launch_notes": [
-            "Deploy the v1.3.1 backend to Render and confirm the root endpoint returns version 1.3.1.",
-            "Install the v1.3.1 WordPress plugin ZIP and place [sc_site_intelligence_public_flagship] on the public page.",
+            "Deploy the v1.4.0 backend to Render and confirm the root endpoint returns version 1.4.0.",
+            "Install the v1.4.0 WordPress plugin ZIP and place [sc_site_intelligence_public_flagship] on the public page.",
             "Keep report, AI, Search Console, GA4, and admin shortcodes private unless manually reviewed.",
             "Test the public page logged out before adding it to navigation or promoting it publicly.",
         ],

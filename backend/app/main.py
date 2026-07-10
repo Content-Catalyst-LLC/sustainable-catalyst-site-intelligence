@@ -58,6 +58,12 @@ from .public_live_connectors import (
     public_connector_status_polish as build_public_connector_status_polish,
     admin_connector_diagnostics as build_admin_connector_diagnostics,
 )
+from .public_indicator_charts import (
+    public_indicator_dashboard_directory as build_public_indicator_dashboard_directory,
+    public_indicator_dashboard as build_public_indicator_dashboard,
+    public_indicator_chart_gallery as build_public_indicator_chart_gallery,
+    public_indicator_chart_visual_qa as build_public_indicator_chart_visual_qa,
+)
 from .public_source_pages import (
     public_source_page_directory as build_public_source_page_directory,
     public_source_navigation as build_public_source_navigation,
@@ -407,6 +413,62 @@ def public_connector_status_polish_endpoint(settings: Settings = Depends(get_set
     if not settings.public_dashboards_enabled:
         raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
     return build_public_connector_status_polish(settings)
+
+
+@app.get("/public/indicator-dashboards")
+def public_indicator_dashboard_directory_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_indicator_dashboard_directory(settings)
+
+
+@app.get("/public/indicator-dashboards/sustainability")
+def public_sustainability_indicator_dashboard_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_indicator_dashboard("sustainability", settings)
+
+
+@app.get("/public/indicator-dashboards/development")
+def public_development_indicator_dashboard_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_indicator_dashboard("development", settings)
+
+
+@app.get("/public/indicator-dashboards/source-health")
+def public_source_health_chart_dashboard_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_indicator_dashboard("source-health", settings)
+
+
+@app.get("/public/indicator-dashboards/research")
+def public_research_metadata_chart_dashboard_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_indicator_dashboard("research", settings)
+
+
+@app.get("/public/indicator-dashboards/repository")
+def public_repository_chart_dashboard_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_indicator_dashboard("repository", settings)
+
+
+@app.get("/public/indicator-dashboards/charts")
+def public_indicator_chart_gallery_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_indicator_chart_gallery(settings)
+
+
+@app.get("/public/indicator-dashboards/visual-qa")
+def public_indicator_chart_visual_qa_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_public_indicator_chart_visual_qa(settings)
 
 @app.get("/admin/connectors/diagnostics")
 def admin_connector_diagnostics_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):

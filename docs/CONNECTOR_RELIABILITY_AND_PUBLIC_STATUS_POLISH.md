@@ -1,4 +1,4 @@
-# Site Intelligence v1.3.1 — Connector Reliability Patch and Public Status Polish
+# Site Intelligence v1.4.0 — Connector Reliability Patch and Public Status Polish
 
 This patch builds on the v1.3.0 live connector status layer by adding public-facing reliability labels, status-card payloads, cache-state labels, freshness-state labels, and recovery guidance.
 

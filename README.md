@@ -1,8 +1,12 @@
 # Sustainable Catalyst Site Intelligence
 
-Version: 1.3.1
+Current version: v1.4.0 — Public Indicator Dashboards and Chart Layer
 
-## v1.3.1 — Connector Reliability Patch and Public Status Polish
+# Sustainable Catalyst Site Intelligence
+
+Version: 1.4.0
+
+## v1.4.0 — Connector Reliability Patch and Public Status Polish
 
 This patch improves the v1.3.0 connector layer with clearer public reliability labels, status cards, cache-state labels, freshness-state labels, and recovery guidance. It is intended to make public source-health pages easier to read while keeping credentials, raw upstream payloads, backend logs, and private diagnostics hidden.
 
@@ -197,3 +201,8 @@ Then install the v1.0.1 WordPress plugin ZIP and test the public flagship page l
 ## v1.3.0 — Live API Connectors, Caching, and Public Source Status
 
 Adds public-safe connector status, cache policy, freshness, and connector detail panels for World Bank, OpenAlex, Crossref, GitHub, and environmental source families. Public endpoints expose readiness labels and methodology notes, not credentials or raw upstream payloads.
+
+
+## v1.4.0 — Public Indicator Dashboards and Chart Layer
+
+Adds public indicator dashboard endpoints, chart-ready JSON payloads, WordPress chart shortcodes, and visual QA for sustainability, development, source-health, research metadata, and repository intelligence dashboards.

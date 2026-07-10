@@ -18,7 +18,7 @@
       client_time: new Date().toISOString(),
       metadata: {
         href: params && params.href ? params.href : '',
-        version: cfg.version || '1.3.1'
+        version: cfg.version || '1.4.0'
       }
     }, params || {});
 
@@ -2317,6 +2317,114 @@
 
 
 
+  function indicatorChartPanelEndpoint(panel) {
+    const map = {
+      'directory': '/public-indicator-chart-panel?panel=directory',
+      'sustainability': '/public-indicator-chart-panel?panel=sustainability',
+      'development': '/public-indicator-chart-panel?panel=development',
+      'source-health': '/public-indicator-chart-panel?panel=source-health',
+      'research': '/public-indicator-chart-panel?panel=research',
+      'repository': '/public-indicator-chart-panel?panel=repository',
+      'gallery': '/public-indicator-chart-panel?panel=gallery',
+      'visual-qa': '/public-indicator-chart-panel?panel=visual-qa'
+    };
+    return map[panel] || '/public-indicator-chart-panel?panel=directory';
+  }
+
+  function renderSimpleChartSpec(spec) {
+    const card = document.createElement('div');
+    card.className = 'scsi-public-chart-card';
+    const title = ((spec.meta || {}).title || 'Public chart');
+    const desc = ((spec.meta || {}).description || 'Public-safe indicator chart.');
+    card.innerHTML = '<h3>' + escapeHtml(title) + '</h3><p>' + escapeHtml(desc) + '</p>';
+    const data = spec.data || [];
+    const series = (spec.series || [])[0] || {};
+    const valueKey = series.dataKey || spec.valueKey || 'value';
+    const xKey = spec.xKey || spec.nameKey || 'label';
+    const max = Math.max.apply(null, data.map(function (row) { return Number(row[valueKey] || 0); }).concat([1]));
+    const chart = document.createElement('div');
+    chart.className = 'scsi-public-chart-body scsi-public-chart-' + escapeHtml(spec.chartType || 'bar');
+    if ((spec.chartType || 'bar') === 'line') {
+      const points = data.map(function (row, index) {
+        const x = data.length <= 1 ? 0 : (index / (data.length - 1)) * 100;
+        const y = 100 - ((Number(row[valueKey] || 0) / max) * 90 + 5);
+        return x + ',' + y;
+      }).join(' ');
+      chart.innerHTML = '<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="' + escapeHtml(points) + '" fill="none" stroke="currentColor" stroke-width="3" vector-effect="non-scaling-stroke"></polyline></svg>';
+    } else {
+      data.forEach(function (row) {
+        const label = row[xKey] || row.name || row.status || row.connector || '';
+        const value = Number(row[valueKey] || 0);
+        const pct = Math.max(4, Math.round((value / max) * 100));
+        const line = document.createElement('div');
+        line.className = 'scsi-public-chart-bar-row';
+        line.innerHTML = '<span>' + escapeHtml(label) + '</span><div><i style="width:' + pct + '%"></i></div><strong>' + formatNumber(value) + (series.valueSuffix || '') + '</strong>';
+        chart.appendChild(line);
+      });
+    }
+    card.appendChild(chart);
+    return card;
+  }
+
+  function renderPublicIndicatorChartPanel(root, data) {
+    const out = root.querySelector('.scsi-output');
+    const muted = root.querySelector('.scsi-muted');
+    muted.textContent = (data.summary || 'Public indicator chart panel.') + ' · Status: ' + (data.public_status || data.version_scope || 'review');
+    out.innerHTML = '';
+
+    const dashboards = data.dashboards || [];
+    if (dashboards.length) {
+      const grid = document.createElement('div');
+      grid.className = 'scsi-grid scsi-public-indicator-dashboard-grid';
+      dashboards.forEach(function (item) {
+        const card = document.createElement('div');
+        card.className = 'scsi-page-row scsi-public-indicator-dashboard-card';
+        card.innerHTML = '<strong>' + escapeHtml(item.title || item.slug || '') + '</strong><br>' +
+          '<span class="scsi-badge scsi-badge-soft">' + formatNumber(item.chart_count || 0) + ' charts</span>' +
+          '<small>' + escapeHtml(item.summary || '') + '</small>' +
+          '<small><b>Shortcode:</b> ' + escapeHtml(item.recommended_shortcode || '') + '</small>';
+        grid.appendChild(card);
+      });
+      out.appendChild(grid);
+    }
+
+    const specs = data.chart_specs || [];
+    if (specs.length) {
+      const h = document.createElement('h3');
+      h.textContent = 'Chart-ready public indicators';
+      out.appendChild(h);
+      specs.forEach(function (spec) {
+        out.appendChild(renderSimpleChartSpec(spec));
+      });
+    }
+
+    const checks = data.checks || [];
+    if (checks.length) {
+      const h = document.createElement('h3');
+      h.textContent = 'Visual QA checks';
+      out.appendChild(h);
+      checks.forEach(function (check) {
+        const row = document.createElement('div');
+        row.className = 'scsi-page-row scsi-public-qa-row';
+        row.innerHTML = '<strong>' + escapeHtml(check.label || check.id || '') + '</strong><br>' +
+          statusBadge(check.status || 'review') + '<small>' + escapeHtml(check.detail || '') + '</small>';
+        out.appendChild(row);
+      });
+    }
+
+    [['Methodology', data.methodology || []], ['Hidden from public pages', data.hidden || []], ['Review notes', data.review_notes || []]].forEach(function (group) {
+      if (!group[1].length) return;
+      const h = document.createElement('h3');
+      h.textContent = group[0];
+      out.appendChild(h);
+      const ul = document.createElement('ul');
+      ul.className = 'scsi-list scsi-public-notes';
+      group[1].forEach(function (item) { const li = document.createElement('li'); li.textContent = item; ul.appendChild(li); });
+      out.appendChild(ul);
+    });
+  }
+
+
   function connectorPanelEndpoint(panel) {
     const map = {
       'connector-status': '/public-connector-status',
@@ -2499,7 +2607,7 @@
   function renderPublicSourcePageDirectory(root, data) {
     const out = root.querySelector('.scsi-output');
     const muted = root.querySelector('.scsi-muted');
-    muted.textContent = (data.summary || 'Public source page directory.') + ' · ' + (data.version_scope || 'v1.3.1');
+    muted.textContent = (data.summary || 'Public source page directory.') + ' · ' + (data.version_scope || 'v1.4.0');
     out.innerHTML = '';
     const nav = document.createElement('div');
     nav.className = 'scsi-public-nav-row scsi-public-source-nav-row';
@@ -2554,7 +2662,7 @@
   function renderPublicSourcePageTemplates(root, data) {
     const out = root.querySelector('.scsi-output');
     const muted = root.querySelector('.scsi-muted');
-    muted.textContent = (data.summary || 'Copy-ready public source page templates.') + ' · ' + (data.version_scope || 'v1.3.1');
+    muted.textContent = (data.summary || 'Copy-ready public source page templates.') + ' · ' + (data.version_scope || 'v1.4.0');
     out.innerHTML = '';
     const grid = document.createElement('div');
     grid.className = 'scsi-grid scsi-public-source-page-grid';
@@ -2825,6 +2933,13 @@
       fetchJson(cfg.restBase + connectorPanelEndpoint(panel))
         .then(function (data) { renderPublicConnectorPanel(root, data); })
         .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public connector panel.'); });
+    });
+
+    document.querySelectorAll('[data-scsi-public-indicator-chart-panel]').forEach(function (root) {
+      const panel = root.dataset.indicatorChartPanel || 'directory';
+      fetchJson(cfg.restBase + indicatorChartPanelEndpoint(panel))
+        .then(function (data) { renderPublicIndicatorChartPanel(root, data); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public indicator chart panel.'); });
     });
 
     document.querySelectorAll('[data-scsi-public-page-builder]').forEach(function (root) {

@@ -658,7 +658,7 @@
 }
 
 /* =========================================================
-   v1.3.1 Public Shortcode Visual Alignment
+   v1.4.0 Public Shortcode Visual Alignment
    Aligns public dashboard shortcodes with current Sustainable Catalyst
    ccp/scmethod-style public-platform panels.
    ========================================================= */
@@ -1391,7 +1391,7 @@
 }
 
 /* =========================================================
-   v1.3.1 Public Connector Status Layer
+   v1.4.0 Public Connector Status Layer
    Live/cached/fallback source status, cache policy, and
    freshness panels for public-safe Site Intelligence pages.
    ========================================================= */
@@ -1434,7 +1434,7 @@
 }
 
 /* =========================================================
-   v1.3.1 Connector Reliability Patch + Public Status Polish
+   v1.4.0 Connector Reliability Patch + Public Status Polish
    Adds clearer reliability, cache-state, freshness-state, and
    recovery-action presentation for public connector panels.
    ========================================================= */
@@ -1462,4 +1462,73 @@
 .ccp-site-intelligence-public .scsi-public-status-card-row,
 .ccp-site-intelligence-public .scsi-public-connector-row {
   background: rgba(255, 255, 255, 0.72);
+}
+
+
+/* =========================================================
+   v1.4.0 Public Indicator Dashboard and Chart Layer
+   ========================================================= */
+.scsi-public-indicator-chart-panel {
+  border-top: 4px solid #111;
+}
+.ccp-site-intelligence-public .scsi-public-indicator-chart-panel {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+}
+.scsi-public-indicator-dashboard-grid {
+  margin-top: 1rem;
+}
+.scsi-public-indicator-dashboard-card small {
+  display: block;
+  margin-top: .35rem;
+}
+.scsi-public-chart-card {
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #fff;
+  border: 1px solid rgba(0, 0, 0, .12);
+  border-top: 3px solid #9b1111;
+}
+.scsi-public-chart-card h3 {
+  margin: 0 0 .35rem;
+  font-size: 1.05rem;
+}
+.scsi-public-chart-card p {
+  margin: 0 0 .75rem;
+}
+.scsi-public-chart-bar-row {
+  display: grid;
+  grid-template-columns: minmax(8rem, 1.2fr) 3fr auto;
+  gap: .75rem;
+  align-items: center;
+  margin: .55rem 0;
+}
+.scsi-public-chart-bar-row span,
+.scsi-public-chart-bar-row strong {
+  font-size: .85rem;
+}
+.scsi-public-chart-bar-row div {
+  height: .7rem;
+  background: rgba(0, 0, 0, .08);
+  overflow: hidden;
+}
+.scsi-public-chart-bar-row i {
+  display: block;
+  height: 100%;
+  background: #9b1111;
+}
+.scsi-public-chart-line svg {
+  width: 100%;
+  height: 9rem;
+  color: #9b1111;
+  background: linear-gradient(to bottom, rgba(0,0,0,.06) 1px, transparent 1px);
+  background-size: 100% 25%;
+}
+@media (max-width: 680px) {
+  .scsi-public-chart-bar-row {
+    grid-template-columns: 1fr;
+    gap: .25rem;
+  }
 }
