@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.16.1 — Earth Observation Reliability and Interaction Polish
+
+- Added explicit broken-tile and imagery-unavailable states.
+- Added layer and date validation before comparison loading.
+- Added retry and reset controls.
+- Added safer timeline playback with pause-on-change behavior.
+- Restored swipe position in shareable URL state.
+- Improved mobile sticky controls and responsive action layout.
+- Improved keyboard focus, slider accessibility, and ARIA state.
+- Improved print and fullscreen presentation.
+- Added Earth Observation diagnostics endpoint.
+- Preserved browser-dependent PNG fallback to print and JSON manifest.
+
 ## 1.16.0 — Earth Observation Studio
 
 - Added a dedicated Earth Observation Studio view to the standalone application.

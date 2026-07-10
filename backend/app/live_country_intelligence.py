@@ -8,7 +8,7 @@ from typing import Any
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
-VERSION = "1.16.0"
+VERSION = "1.16.1"
 
 COUNTRIES: dict[str, dict[str, Any]] = {
     "KEN": {"name": "Kenya", "iso2": "KE", "region": "Sub-Saharan Africa", "capital": "Nairobi", "latitude": 0.0236, "longitude": 37.9062},
@@ -50,7 +50,7 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 def _fetch_json(url: str, timeout: int = 9) -> Any:
-    request = Request(url, headers={"User-Agent": "Sustainable-Catalyst-Site-Intelligence/1.16.0"})
+    request = Request(url, headers={"User-Agent": "Sustainable-Catalyst-Site-Intelligence/1.16.1"})
     with urlopen(request, timeout=timeout) as response:
         return json.loads(response.read().decode("utf-8"))
 

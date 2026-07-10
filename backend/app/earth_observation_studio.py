@@ -5,7 +5,7 @@ from typing import Any
 
 from .geospatial_intelligence import SATELLITE_LAYERS
 
-VERSION = "1.16.0"
+VERSION = "1.16.1"
 
 
 def _now() -> str:
@@ -234,4 +234,35 @@ def export_manifest(
         "observation_type": comparison_payload["layer"]["observation_type"],
         "limits": comparison_payload["layer"]["limits"],
         "comparison_boundary": comparison_payload["comparison_boundary"],
+    }
+
+
+def diagnostics() -> dict[str, Any]:
+    checks = []
+    for layer in EARTH_LAYERS:
+        checks.append({
+            "id": layer["id"],
+            "title": layer["title"],
+            "tile_template_present": "{time}" in layer["tile_url"],
+            "https": layer["tile_url"].startswith("https://"),
+            "attribution_present": bool(layer.get("attribution")),
+            "limits_present": bool(layer.get("limits")),
+            "status": layer.get("status", "unknown"),
+        })
+    return {
+        "ok": True,
+        "version": VERSION,
+        "generated_at": _now(),
+        "layer_count": len(checks),
+        "layers": checks,
+        "interaction_checks": {
+            "broken_tile_state": "ready",
+            "date_validation": "ready",
+            "timeline_playback": "ready-with-stop-controls",
+            "share_state_restore": "ready",
+            "mobile_controls": "ready",
+            "keyboard_controls": "ready",
+            "print_view": "ready",
+            "png_export": "browser-dependent",
+        },
     }

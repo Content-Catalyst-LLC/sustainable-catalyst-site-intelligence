@@ -295,3 +295,22 @@ body.earth-print-mode .app-shell{display:block}body.earth-print-mode .workspace{
 @media(max-width:1050px){.earth-control-deck{grid-template-columns:1fr 1fr 1fr}.earth-primary-button{grid-column:span 1}.earth-information-grid{grid-template-columns:1fr}}
 @media(max-width:760px){.earth-studio{padding:15px;border-radius:18px}.earth-studio-head{display:block}.earth-studio-actions{justify-content:flex-start;margin-top:15px}.earth-control-deck{grid-template-columns:1fr 1fr}.earth-control-deck label:first-child{grid-column:1/-1}.earth-primary-button{grid-column:1/-1}.earth-compare-stage{height:58vh;min-height:430px}.earth-timeline{grid-template-columns:auto 1fr}.earth-timeline span{grid-column:1/-1;text-align:center}.earth-meta-grid{grid-template-columns:1fr}}
 @media print{body.earth-print-mode{background:#fff}.earth-studio{color:#111;background:#fff}.earth-metadata-panel,.earth-method-panel{background:#fff;color:#111;border-color:#ddd}.earth-studio-head p:last-child,.earth-method-panel p{color:#444}.earth-studio-actions,.earth-control-deck,.earth-timeline{display:none}}
+
+/* v1.16.1 — Earth Observation reliability and interaction polish */
+.earth-status{display:flex;align-items:center;gap:8px;margin:4px 0 12px;color:#9ca8b5;font-size:10px;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
+.earth-status-dot{width:8px;height:8px;border-radius:50%;background:#f5b942;box-shadow:0 0 0 4px rgba(245,185,66,.12)}
+.earth-status.ready .earth-status-dot{background:#35c47c;box-shadow:0 0 0 4px rgba(53,196,124,.12)}
+.earth-status.error .earth-status-dot{background:#ff2a2f;box-shadow:0 0 0 4px rgba(255,42,47,.12)}
+.earth-unavailable{margin:12px 0;padding:16px;border:1px solid rgba(255,42,47,.22);border-radius:14px;background:rgba(255,42,47,.06);color:#d9e0e8}
+.earth-unavailable strong{display:block;color:#fff;margin-bottom:6px}.earth-unavailable span{display:block;color:#aeb8c3;font-size:12px;line-height:1.55}
+.earth-frame-state{font-size:9px;color:#7f8b97;text-align:right}.earth-control-deck .ghost-button{height:41px}
+.earth-capture{position:relative}.earth-capture.is-loading:after{content:"Loading imagery…";position:absolute;z-index:900;inset:0;display:grid;place-items:center;background:rgba(5,8,12,.42);color:#fff;font-weight:800;letter-spacing:.04em;backdrop-filter:blur(2px)}
+.earth-map.is-dimmed .leaflet-tile-pane{opacity:.55}.earth-map .leaflet-tile-pane{transition:opacity .22s ease}
+.earth-swipe:focus-visible{opacity:.001;outline:3px solid #43d6ff;outline-offset:-3px}
+.earth-primary-button:focus-visible,.earth-control-deck .ghost-button:focus-visible,.earth-studio-actions button:focus-visible,.earth-timeline button:focus-visible{outline:2px solid #43d6ff;outline-offset:3px}
+@media(max-width:760px){
+  .earth-studio-actions{display:grid;grid-template-columns:1fr 1fr;width:100%}.earth-studio-actions button{width:100%}
+  .earth-control-deck{position:sticky;top:70px;z-index:820;padding:12px;background:rgba(7,11,16,.94);border:1px solid rgba(255,255,255,.08);border-radius:14px;backdrop-filter:blur(18px)}
+  .earth-control-deck select,.earth-control-deck input[type=date]{width:100%;min-width:0}.earth-frame-state{grid-column:1/-1;text-align:center}
+}
+@media print{.earth-status,.earth-unavailable,.earth-studio-actions,.earth-control-deck,.earth-timeline,.earth-swipe,.earth-swipe-line{display:none!important}.earth-capture{border:1px solid #bbb}.earth-compare-stage{height:720px;min-height:720px}}

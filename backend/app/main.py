@@ -167,6 +167,7 @@ from .earth_observation_studio import (
     timeline as build_earth_observation_timeline,
     presets as build_earth_observation_presets,
     export_manifest as build_earth_observation_export_manifest,
+    diagnostics as build_earth_observation_diagnostics,
 )
 from .geospatial_intelligence import (
     overview as build_geospatial_overview,
@@ -670,6 +671,12 @@ def public_earth_observation_presets():
     return build_earth_observation_presets()
 
 
+
+@app.get("/public/earth-observation/diagnostics")
+def public_earth_observation_diagnostics():
+    return build_earth_observation_diagnostics()
+
+
 @app.get("/public/earth-observation/export-manifest")
 def public_earth_observation_export_manifest(
     layer: str = Query(default="true-color"),
@@ -787,7 +794,7 @@ def public_cross_domain_dashboard_export(dashboard_id: str, country: str = ""):
 def public_launch_status():
     return {
         "ok": True,
-        "version": "1.16.0",
+        "version": "1.16.1",
         "release_channel": "public-beta",
         "standalone_app": "/app/",
         "platform_core_optional": True,
@@ -849,7 +856,7 @@ def public_country_evidence_lineage(country_code: str):
         })
     return {
         "ok": True,
-        "version": "1.16.0",
+        "version": "1.16.1",
         "country": payload.get("country"),
         "platform_core": build_platform_core_status(),
         "items": items,
@@ -3032,7 +3039,7 @@ def publishing_intelligence_report(
 
 
 
-# Site Intelligence v1.16.0 standalone public application.
+# Site Intelligence v1.16.1 standalone public application.
 from pathlib import Path as _Path
 PUBLIC_APP_DIR = _Path(__file__).resolve().parent.parent / "public_app"
 if PUBLIC_APP_DIR.exists():

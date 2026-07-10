@@ -146,28 +146,28 @@
           <label>Opacity
             <input id="earthOpacity" type="range" min="10" max="100" value="72">
           </label>
-          <button id="earthApply" class="earth-primary-button" type="button">Apply comparison</button>
+          <button id="earthApply" class="earth-primary-button" type="button">Apply comparison</button><button id="earthReset" class="ghost-button" type="button">Reset</button>
         </div>
 
-        <div id="earthCapture" class="earth-capture">
+        <div id="earthStatus" class="earth-status" role="status" aria-live="polite"><span class="earth-status-dot"></span><span>Preparing imagery</span></div><div id="earthCapture" class="earth-capture">
           <div class="earth-compare-stage">
             <div id="earthMapA" class="earth-map earth-map-a" aria-label="Before satellite imagery map"></div>
             <div id="earthMapBWrap" class="earth-map-b-wrap">
               <div id="earthMapB" class="earth-map earth-map-b" aria-label="After satellite imagery map"></div>
             </div>
             <div id="earthSwipeLine" class="earth-swipe-line" aria-hidden="true"></div>
-            <input id="earthSwipe" class="earth-swipe" type="range" min="0" max="100" value="50" aria-label="Adjust before and after comparison divider">
+            <input id="earthSwipe" class="earth-swipe" type="range" min="0" max="100" value="50" aria-label="Adjust before and after comparison divider" aria-valuetext="50 percent">
             <div class="earth-date-badge earth-date-left"><span>BEFORE</span><strong id="earthBadgeA">—</strong></div>
             <div class="earth-date-badge earth-date-right"><span>AFTER</span><strong id="earthBadgeB">—</strong></div>
           </div>
           <div class="earth-timeline">
-            <button id="earthPlay" class="icon-button" type="button">Play</button>
+            <button id="earthPlay" class="icon-button" type="button" aria-pressed="false">Play</button>
             <input id="earthTimelineRange" type="range" min="0" max="13" value="13" aria-label="Earth observation timeline">
-            <span id="earthTimelineDate">—</span>
+            <span id="earthTimelineDate">—</span><span id="earthFrameState" class="earth-frame-state">Frame ready</span>
           </div>
         </div>
 
-        <div class="earth-information-grid">
+        <div id="earthUnavailable" class="earth-unavailable" hidden><strong>Imagery unavailable for this selection</strong><span>Try another date, layer, or zoom level. The source may not publish imagery for every date.</span><button id="earthUnavailableRetry" class="retry-button" type="button">Retry imagery</button></div><div class="earth-information-grid">
           <article class="earth-metadata-panel">
             <p class="eyebrow">LAYER METADATA</p>
             <h2 id="earthMetaTitle">Satellite layer</h2>
