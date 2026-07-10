@@ -19,4 +19,4 @@ def test_standalone_assets_exist():
 def test_root_reports_v1140():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json()["version"] == "1.16.1"
+    assert response.json()["version"] == "1.17.0"

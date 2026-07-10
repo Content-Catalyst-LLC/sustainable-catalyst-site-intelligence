@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.16.1
+ * Version: 1.17.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.16.1';
+    const VERSION = '1.17.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -127,6 +127,7 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_public_dashboard_studio_navigation', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_site_intelligence_app', [$this, 'standalone_app_shortcode']);
         add_shortcode('sc_earth_observation_studio', [$this, 'earth_observation_studio_shortcode']);
+        add_shortcode('sc_live_event_intelligence', [$this, 'live_event_intelligence_shortcode']);
         add_shortcode('sc_geospatial_intelligence_map', [$this, 'geospatial_map_shortcode']);
         add_shortcode('sc_satellite_imagery_viewer', [$this, 'geospatial_map_shortcode']);
         add_shortcode('sc_live_event_map', [$this, 'geospatial_map_shortcode']);
@@ -3063,6 +3064,31 @@ final class SC_Site_Intelligence_Plugin {
     }
 
 
+
+
+    public function live_event_intelligence_shortcode($atts = []) {
+        $atts = shortcode_atts([
+            'height' => '1000',
+            'title' => 'Sustainable Catalyst Live Event Intelligence',
+        ], $atts, 'sc_live_event_intelligence');
+
+        $options = self::options();
+        $backend = rtrim((string) ($options['backend_url'] ?? ''), '/');
+        if (!$backend) {
+            return '<div class="scsi-app-error">Configure the Site Intelligence backend URL before embedding Live Event Intelligence.</div>';
+        }
+
+        $height = max(700, min(1600, absint($atts['height'])));
+        $src = esc_url($backend . '/app/?view=events');
+        $title = esc_attr((string) $atts['title']);
+
+        return sprintf(
+            '<div class="scsi-standalone-app scsi-live-events-embed"><div class="scsi-app-loading">Opening Live Event Intelligence…</div><iframe src="%1$s" title="%2$s" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
+            $src,
+            $title,
+            $height
+        );
+    }
 
     public function earth_observation_studio_shortcode($atts = []) {
         $atts = shortcode_atts([

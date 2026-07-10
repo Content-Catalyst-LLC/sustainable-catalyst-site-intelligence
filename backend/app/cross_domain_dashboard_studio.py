@@ -66,7 +66,7 @@ def _now() -> str:
 def dashboard_directory() -> dict[str, Any]:
     return {
         "ok": True,
-        "version": "1.16.1",
+        "version": "1.17.0",
         "schema_version": SCHEMA_VERSION,
         "generated_at": _now(),
         "dashboards": deepcopy(DASHBOARDS),
@@ -87,7 +87,7 @@ def dashboard_directory() -> dict[str, Any]:
 def dashboard_manifest() -> dict[str, Any]:
     return {
         "ok": True,
-        "version": "1.16.1",
+        "version": "1.17.0",
         "schema_version": SCHEMA_VERSION,
         "generated_at": _now(),
         "component_types": sorted({c for d in DASHBOARDS for c in d["components"]}),
@@ -105,7 +105,7 @@ def get_dashboard(dashboard_id: str) -> dict[str, Any]:
         return {"ok": False, "error": "dashboard_not_found", "dashboard_id": dashboard_id}
     item.update({
         "ok": True,
-        "version": "1.16.1",
+        "version": "1.17.0",
         "schema_version": SCHEMA_VERSION,
         "generated_at": _now(),
         "source_count": len({s for domain in item["domains"] for s in DOMAIN_SOURCES.get(domain, [])}),
@@ -164,7 +164,7 @@ def dashboard_data(dashboard_id: str, country: str = "", region: str = "", start
     evidence = _evidence_items(dashboard["domains"], country)
     return {
         "ok": True,
-        "version": "1.16.1",
+        "version": "1.17.0",
         "schema_version": SCHEMA_VERSION,
         "generated_at": _now(),
         "dashboard_id": dashboard_id,
@@ -209,7 +209,7 @@ def dashboard_sources(dashboard_id: str) -> dict[str, Any]:
         for source in DOMAIN_SOURCES.get(domain, []):
             sources.append({"domain": domain, "source": source, "freshness": "source-dependent", "health": "registry-ready"})
     unique = {(x["domain"], x["source"]): x for x in sources}
-    return {"ok": True, "version": "1.16.1", "dashboard_id": dashboard_id, "generated_at": _now(), "sources": list(unique.values())}
+    return {"ok": True, "version": "1.17.0", "dashboard_id": dashboard_id, "generated_at": _now(), "sources": list(unique.values())}
 
 
 def dashboard_brief(dashboard_id: str, country: str = "") -> dict[str, Any]:
@@ -219,7 +219,7 @@ def dashboard_brief(dashboard_id: str, country: str = "") -> dict[str, Any]:
     place = country.upper() if country else "the selected geography"
     return {
         "ok": True,
-        "version": "1.16.1",
+        "version": "1.17.0",
         "dashboard_id": dashboard_id,
         "generated_at": _now(),
         "title": f"{dashboard['title']} — Source-Aware Brief",
@@ -236,7 +236,7 @@ def dashboard_brief(dashboard_id: str, country: str = "") -> dict[str, Any]:
 def dashboard_export(dashboard_id: str, country: str = "") -> dict[str, Any]:
     return {
         "ok": True,
-        "version": "1.16.1",
+        "version": "1.17.0",
         "schema_version": SCHEMA_VERSION,
         "generated_at": _now(),
         "dashboard": get_dashboard(dashboard_id),
@@ -256,7 +256,7 @@ def country_intelligence(country_code: str) -> dict[str, Any]:
     evidence = _evidence_items(domains, code)
     return {
         "ok": True,
-        "version": "1.16.1",
+        "version": "1.17.0",
         "schema_version": SCHEMA_VERSION,
         "generated_at": _now(),
         "country_code": code,
@@ -296,7 +296,7 @@ def cross_domain_comparison(country: str = "", compare: str = "") -> dict[str, A
         })
     return {
         "ok": bool(left and right),
-        "version": "1.16.1",
+        "version": "1.17.0",
         "generated_at": _now(),
         "countries": [left, right],
         "status": "source-aware-public-snapshot" if left and right else "country-and-compare-required",
@@ -317,7 +317,7 @@ def cross_domain_comparison(country: str = "", compare: str = "") -> dict[str, A
 def rendering_diagnostics() -> dict[str, Any]:
     return {
         "ok": True,
-        "version": "1.16.1",
+        "version": "1.17.0",
         "generated_at": _now(),
         "checks": [
             {"id": "dashboard-data-schema", "status": "pass", "required_fields": ["evidence_items", "source_summary", "data_state", "origin_state"]},

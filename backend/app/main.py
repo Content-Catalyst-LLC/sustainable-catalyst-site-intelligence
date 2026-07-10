@@ -160,6 +160,14 @@ from .live_country_intelligence import (
     country_trends as build_live_country_trends,
     country_brief as build_live_country_brief,
 )
+from .unified_live_events import (
+    unified_events as build_unified_events,
+    categories_summary as build_event_categories,
+    sources_summary as build_event_sources,
+    event_detail as build_event_detail,
+    timeline as build_event_timeline,
+    summary as build_event_summary,
+)
 from .earth_observation_studio import (
     overview as build_earth_observation_overview,
     layers as build_earth_observation_layers,
@@ -638,6 +646,55 @@ def public_humanitarian_export():
 
 
 
+
+@app.get("/public/events")
+def public_unified_events(
+    days: int = Query(default=14, ge=1, le=90),
+    limit: int = Query(default=300, ge=1, le=1000),
+    category: list[str] = Query(default=[]),
+    source: list[str] = Query(default=[]),
+    country_code: str | None = Query(default=None),
+):
+    return build_unified_events(
+        days=days,
+        limit=limit,
+        categories=category,
+        sources=source,
+        country_code=country_code,
+    )
+
+
+@app.get("/public/events/categories")
+def public_event_categories(days: int = Query(default=14, ge=1, le=90)):
+    return build_event_categories(days=days)
+
+
+@app.get("/public/events/sources")
+def public_event_sources(days: int = Query(default=14, ge=1, le=90)):
+    return build_event_sources(days=days)
+
+
+@app.get("/public/events/timeline")
+def public_event_timeline(
+    days: int = Query(default=14, ge=1, le=90),
+    interval_hours: int = Query(default=24, ge=1, le=168),
+):
+    return build_event_timeline(days=days, interval_hours=interval_hours)
+
+
+@app.get("/public/events/summary")
+def public_event_summary(days: int = Query(default=14, ge=1, le=90)):
+    return build_event_summary(days=days)
+
+
+@app.get("/public/events/{event_id}")
+def public_event_detail(event_id: str):
+    payload = build_event_detail(event_id)
+    if payload is None:
+        raise HTTPException(status_code=404, detail="Event record not found.")
+    return payload
+
+
 @app.get("/public/earth-observation")
 def public_earth_observation_overview():
     return build_earth_observation_overview()
@@ -794,7 +851,7 @@ def public_cross_domain_dashboard_export(dashboard_id: str, country: str = ""):
 def public_launch_status():
     return {
         "ok": True,
-        "version": "1.16.1",
+        "version": "1.17.0",
         "release_channel": "public-beta",
         "standalone_app": "/app/",
         "platform_core_optional": True,
@@ -803,7 +860,7 @@ def public_launch_status():
             "standalone_app": "ready",
             "satellite_layers": "ready",
             "earth_observation_studio": "flagship-visual-beta",
-            "public_events": "ready-with-fallback",
+            "public_events": "unified-live-event-intelligence",
             "country_intelligence": "ready-with-retry",
             "responsive_embed": "ready",
             "accessibility_states": "ready",
@@ -856,7 +913,7 @@ def public_country_evidence_lineage(country_code: str):
         })
     return {
         "ok": True,
-        "version": "1.16.1",
+        "version": "1.17.0",
         "country": payload.get("country"),
         "platform_core": build_platform_core_status(),
         "items": items,
@@ -3039,7 +3096,7 @@ def publishing_intelligence_report(
 
 
 
-# Site Intelligence v1.16.1 standalone public application.
+# Site Intelligence v1.17.0 standalone public application.
 from pathlib import Path as _Path
 PUBLIC_APP_DIR = _Path(__file__).resolve().parent.parent / "public_app"
 if PUBLIC_APP_DIR.exists():

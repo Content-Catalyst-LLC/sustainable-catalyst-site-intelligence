@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.17.0 — Unified Live Event Intelligence
+
+- Added a dedicated unified live-event explorer to the standalone application.
+- Added live USGS earthquake, NASA EONET natural-event, and ReliefWeb humanitarian-report connectors.
+- Added normalized event categories, stable event IDs, source identity, timestamps, location, severity, record type, and data state.
+- Added category, source, date-range, and country filters.
+- Added synchronized event map and event list.
+- Added event detail drawer with source links and interpretation boundaries.
+- Added event timeline playback.
+- Added category, source, and country summaries.
+- Added public event, category, source, timeline, summary, and detail endpoints.
+- Added a WordPress shortcode for the event explorer.
+- Preserved explicit fallback labeling and avoided presenting public records as operational alerts.
+
 ## 1.16.1 — Earth Observation Reliability and Interaction Polish
 
 - Added explicit broken-tile and imagery-unavailable states.

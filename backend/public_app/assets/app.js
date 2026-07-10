@@ -89,7 +89,7 @@
       overview:["LIVE INTELLIGENCE WORKSPACE","Climate and Human Vulnerability","Satellite context, natural events, environmental pressure, and country evidence in one navigable view."],
       earth:["EARTH OBSERVATION STUDIO","Compare the planet through time","Explore satellite-derived imagery, environmental layers, date comparison, timeline playback, and exportable visual views."],
       country:["COUNTRY INTELLIGENCE",`${names[state.country]||state.country} evidence profile`,"Environmental, development, humanitarian, security, and legal context for one selected country."],
-      events:["LIVE EVENT STREAM","Recent public event records","Natural hazards and Earth-system events collected from public feeds and displayed with source context."],
+      events:["UNIFIED LIVE EVENT INTELLIGENCE","Explore public events across sources","Natural hazards, humanitarian reporting, and country-linked event context in one source-aware workspace."],
       compare:["CROSS-DOMAIN COMPARISON","Compare country contexts","Align available evidence without flattening dates, units, definitions, or missing-data states."],
       sources:["PROVENANCE","Sources and methods","Review the public sources, imagery services, and interpretive limits behind this workspace."]
     }[route]||[];
@@ -157,6 +157,152 @@
       setTimeout(()=>finish(loaded||errors<4),6500);
     });
   }
+
+
+  const eventState={map:null,base:null,markers:null,markerIndex:new Map(),events:[],timeline:[],timelineIndex:0,timer:null,selected:null};
+
+  function eventMarkerColor(category){
+    return {earthquake:"#ff2a2f",wildfire:"#ff8b3d",storm:"#43d6ff",flood:"#2f8cff",volcano:"#b76cff","extreme-heat":"#ffb14a",drought:"#c9a85c",humanitarian:"#f5b942",displacement:"#d27cff",conflict:"#ff5f68"}[category]||"#718091";
+  }
+  function setEventStudioStatus(message,state="loading"){
+    const el=qs("#eventStudioStatus");if(!el)return;el.classList.remove("ready","error");
+    if(state==="ready")el.classList.add("ready");if(state==="error")el.classList.add("error");
+    el.querySelector("span:last-child").textContent=message;
+  }
+  function initEventExplorerMap(){
+    if(eventState.map)return;
+    eventState.map=L.map("eventExplorerMap",{zoomControl:true,worldCopyJump:true}).setView([12,20],2);
+    eventState.base=L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{attribution:"© OpenStreetMap contributors © CARTO",maxZoom:19}).addTo(eventState.map);
+    eventState.markers=L.layerGroup().addTo(eventState.map);
+  }
+  function eventQuery(){
+    const params=new URLSearchParams();
+    params.set("days",qs("#eventDays").value||"14");
+    params.set("limit","500");
+    if(qs("#eventCategory").value)params.append("category",qs("#eventCategory").value);
+    if(qs("#eventSource").value)params.append("source",qs("#eventSource").value);
+    const country=qs("#eventCountry").value.trim().toUpperCase();
+    if(country)params.set("country_code",country);
+    return params;
+  }
+  async function loadEventFilters(){
+    const [categories,sources]=await Promise.all([
+      apiWithRetry("/public/events/categories?days=14",3),
+      apiWithRetry("/public/events/sources?days=14",3)
+    ]);
+    qs("#eventCategory").innerHTML='<option value="">All categories</option>'+categories.categories.map(x=>`<option value="${escapeHtml(x.id)}">${escapeHtml(x.label)} (${x.count})</option>`).join("");
+    qs("#eventSource").innerHTML='<option value="">All sources</option>'+sources.sources.map(x=>`<option value="${escapeHtml(x.id)}">${escapeHtml(x.name)} (${x.count})</option>`).join("");
+  }
+  function renderEventMarkers(events){
+    eventState.markers.clearLayers();eventState.markerIndex.clear();
+    const bounds=[];
+    events.filter(x=>Array.isArray(x.coordinates)&&x.coordinates.length>=2).forEach(event=>{
+      const marker=L.circleMarker([event.coordinates[1],event.coordinates[0]],{
+        radius:event.severity==="critical"?10:event.severity==="high"?8:6,
+        color:"#fff",weight:1,fillColor:eventMarkerColor(event.category),fillOpacity:.9
+      }).bindPopup(`<div class="event-popup-title">${escapeHtml(event.title)}</div><div class="event-popup-meta">${escapeHtml(event.category_label)} · ${escapeHtml(event.source_name)}<br>${cleanDate(event.observed_at)}</div>`);
+      marker.on("click",()=>selectEvent(event.id,true));
+      marker.addTo(eventState.markers);eventState.markerIndex.set(event.id,marker);bounds.push([event.coordinates[1],event.coordinates[0]]);
+    });
+    qs("#eventMappedCount").textContent=`${bounds.length} mapped records`;
+    if(bounds.length>1)eventState.map.fitBounds(bounds,{padding:[35,35],maxZoom:5});
+    else if(bounds.length===1)eventState.map.setView(bounds[0],6);
+  }
+  function renderEventList(events){
+    qs("#eventExplorerList").innerHTML=events.length?events.map(event=>`<article class="event-card" tabindex="0" data-event-id="${escapeHtml(event.id)}"><span class="event-card-marker ${escapeHtml(event.category)}"></span><div><div class="event-card-title">${escapeHtml(event.title)}</div><div class="event-card-meta">${escapeHtml(event.category_label)} · ${cleanDate(event.observed_at)}${event.country_code?` · ${escapeHtml(event.country_code)}`:""}</div><div class="event-card-source">${escapeHtml(event.source_name)} · ${escapeHtml(event.data_state)}</div></div></article>`).join(""):'<div class="empty-state"><div><strong>No matching event records</strong><span>Change the filters or broaden the date range.</span></div></div>';
+    qsa("[data-event-id]").forEach(card=>{
+      const activate=()=>selectEvent(card.dataset.eventId,true);
+      card.addEventListener("click",activate);
+      card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();activate()}});
+    });
+  }
+  function selectEvent(eventId,openDrawer=false){
+    const event=eventState.events.find(x=>x.id===eventId);if(!event)return;
+    eventState.selected=eventId;
+    qsa("[data-event-id]").forEach(card=>card.classList.toggle("selected",card.dataset.eventId===eventId));
+    const marker=eventState.markerIndex.get(eventId);
+    if(marker&&event.coordinates){eventState.map.flyTo([event.coordinates[1],event.coordinates[0]],Math.max(eventState.map.getZoom(),6),{duration:.7});marker.openPopup()}
+    if(openDrawer)openEventDrawer(event);
+  }
+  function openEventDrawer(event){
+    const drawer=qs("#eventDetailDrawer"),backdrop=qs("#eventDetailBackdrop");
+    qs("#eventDetailTitle").textContent=event.title;
+    const field=(label,value)=>`<div class="evidence-field"><span class="evidence-field-label">${escapeHtml(label)}</span><div class="evidence-field-value">${value||"Unavailable"}</div></div>`;
+    qs("#eventDetailBody").innerHTML=[
+      field("Category",escapeHtml(event.category_label)),
+      field("Observed",escapeHtml(cleanDate(event.observed_at))),
+      field("Source",`${escapeHtml(event.source_name)}${event.source_url?`<br><a class="evidence-link" href="${escapeHtml(event.source_url)}" target="_blank" rel="noopener">Open source record ↗</a>`:""}`),
+      field("Location",event.coordinates?`${event.coordinates[1].toFixed(4)}, ${event.coordinates[0].toFixed(4)}`:"Not geocoded"),
+      field("Country context",escapeHtml(event.country_code||"Not assigned")),
+      field("Severity or magnitude",escapeHtml(event.magnitude!=null?`${event.magnitude} · ${event.severity}`:event.severity)),
+      field("Record type",escapeHtml(event.record_type)),
+      field("Summary",escapeHtml(event.summary||"No summary provided.")),
+      field("Interpretation","Public source record for orientation and research. Not an operational alert or professional recommendation.")
+    ].join("");
+    backdrop.hidden=false;drawer.classList.add("open");drawer.setAttribute("aria-hidden","false");qs("#closeEventDrawer").focus();
+  }
+  function closeEventDrawer(){qs("#eventDetailDrawer").classList.remove("open");qs("#eventDetailDrawer").setAttribute("aria-hidden","true");qs("#eventDetailBackdrop").hidden=true}
+  function renderEventSummaries(summary){
+    qs("#eventCategorySummary").innerHTML=`<div class="event-summary-list">${(summary.top_categories||[]).map(x=>`<div class="event-summary-row"><span>${escapeHtml(x.label)}</span><strong>${x.count}</strong></div>`).join("")}</div>`;
+    qs("#eventSourceSummary").innerHTML=`<div class="event-summary-list">${(summary.top_sources||[]).map(x=>`<div class="event-summary-row"><span>${escapeHtml(x.name)}</span><strong>${x.count}</strong></div>`).join("")}</div>`;
+    qs("#eventBoundary").textContent=summary.boundary;
+  }
+  async function loadEventTimeline(){
+    const days=qs("#eventDays").value||"14";
+    const payload=await apiWithRetry(`/public/events/timeline?days=${encodeURIComponent(days)}&interval_hours=24`,3);
+    eventState.timeline=payload.buckets||[];eventState.timelineIndex=Math.max(0,eventState.timeline.length-1);
+    qs("#eventTimelineRange").max=String(Math.max(0,eventState.timeline.length-1));qs("#eventTimelineRange").value=String(eventState.timelineIndex);renderEventTimelineFrame();
+  }
+  function renderEventTimelineFrame(){
+    const bucket=eventState.timeline[eventState.timelineIndex];if(!bucket)return;
+    qs("#eventTimelineLabel").textContent=`${cleanDate(bucket.start)} · ${bucket.count} records`;
+    const ids=new Set(bucket.event_ids||[]);
+    qsa("[data-event-id]").forEach(card=>card.style.opacity=ids.size&& !ids.has(card.dataset.eventId)?".35":"1");
+    eventState.markerIndex.forEach((marker,id)=>marker.setStyle({fillOpacity:ids.size&&!ids.has(id)?.18:.9,opacity:ids.size&&!ids.has(id)?.25:1}));
+  }
+  function stopEventTimeline(){
+    if(eventState.timer){clearInterval(eventState.timer);eventState.timer=null}
+    qs("#eventTimelinePlay").textContent="Play";qs("#eventTimelinePlay").setAttribute("aria-pressed","false");
+  }
+  function toggleEventTimeline(){
+    if(eventState.timer){stopEventTimeline();return}
+    if(!eventState.timeline.length)return;
+    qs("#eventTimelinePlay").textContent="Pause";qs("#eventTimelinePlay").setAttribute("aria-pressed","true");
+    eventState.timer=setInterval(()=>{eventState.timelineIndex=(eventState.timelineIndex+1)%eventState.timeline.length;qs("#eventTimelineRange").value=String(eventState.timelineIndex);renderEventTimelineFrame()},1100);
+  }
+  async function applyEventFilters(pushState=true){
+    stopEventTimeline();setEventStudioStatus("Loading public event records","loading");
+    const query=eventQuery();
+    try{
+      const [payload,summary]=await Promise.all([
+        apiWithRetry(`/public/events?${query.toString()}`,3),
+        apiWithRetry(`/public/events/summary?days=${encodeURIComponent(qs("#eventDays").value||"14")}`,3)
+      ]);
+      eventState.events=payload.events||[];
+      renderEventMarkers(eventState.events);renderEventList(eventState.events);renderEventSummaries(summary);
+      qs("#eventTotalCount").textContent=String(payload.count||0);qs("#eventDataState").textContent=payload.data_state;setEventStudioStatus("Live event view ready","ready");
+      await loadEventTimeline();
+      if(pushState){
+        const params=new URLSearchParams(location.search);params.set("view","events");params.set("eventDays",qs("#eventDays").value);
+        if(qs("#eventCategory").value)params.set("eventCategory",qs("#eventCategory").value);else params.delete("eventCategory");
+        if(qs("#eventSource").value)params.set("eventSource",qs("#eventSource").value);else params.delete("eventSource");
+        if(qs("#eventCountry").value.trim())params.set("eventCountry",qs("#eventCountry").value.trim().toUpperCase());else params.delete("eventCountry");
+        history.replaceState(null,"",`?${params.toString()}`);
+      }
+    }catch{
+      setEventStudioStatus("Event services unavailable","error");
+      qs("#eventExplorerList").innerHTML=publicErrorBlock("Live event intelligence unavailable","The connected public event services may be waking up or temporarily unavailable.",()=>applyEventFilters(false));
+    }
+    setTimeout(()=>{eventState.map?.invalidateSize();reportHeight()},80);
+  }
+  async function openEventStudio(){
+    qs("#eventStudio").hidden=false;initEventExplorerMap();
+    if(!qs("#eventCategory").options.length||qs("#eventCategory").options.length===1)await loadEventFilters();
+    const params=new URLSearchParams(location.search);
+    qs("#eventDays").value=params.get("eventDays")||"14";qs("#eventCategory").value=params.get("eventCategory")||"";qs("#eventSource").value=params.get("eventSource")||"";qs("#eventCountry").value=params.get("eventCountry")||"";
+    await applyEventFilters(false);
+  }
+  function closeEventStudio(){qs("#eventStudio").hidden=true;stopEventTimeline();closeEventDrawer()}
 
   const earthState={mapA:null,mapB:null,baseA:null,baseB:null,layerA:null,layerB:null,layers:[],frames:[],frameIndex:0,timer:null,activeLayer:"true-color",opacity:.72};
 
@@ -328,12 +474,13 @@
     const [e,t,d]=routeMeta(route);qs("#viewEyebrow").textContent=e;qs("#viewTitle").textContent=t;qs("#viewDescription").textContent=d;
     const panel=qs("#routePanel");
     if(route==="overview"){panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();return}
-    if(route==="earth"){panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;await openEarthStudio();return}
-    closeEarthStudio();
+    if(route==="earth"){panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEventStudio();await openEarthStudio();return}
+    if(route==="events-legacy"){panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();await openEventStudio();return}
+    closeEarthStudio();closeEventStudio();
     qs("#countryIntelligencePanel").hidden=route!=="country";
     panel.hidden=false;panel.innerHTML=`<div class="loading-block">Loading ${escapeHtml(route)} view…</div>`;
     if(route==="country"){await loadLiveCountry(state.country)}
-    if(route==="events"){
+    if(route==="events-legacy"){
       const rows=(state.events?.features||[]).slice(0,30);
       panel.innerHTML=`<p class="eyebrow">PUBLIC EVENT RECORDS</p><h2>Latest mapped events</h2><div class="event-list">${rows.map(f=>{const p=f.properties||{};return `<div class="event-row"><span class="event-marker"></span><div><div class="event-title">${escapeHtml(p.title||"Event")}</div><div class="event-meta">${escapeHtml(p.category||"Event")} · ${escapeHtml(p.source||"Source")}</div></div><div class="event-time">${cleanDate(p.observed_at)}</div></div>`}).join("")}</div>`;
     }else if(route==="country"){
@@ -356,7 +503,14 @@
     qs("#eventsToggle").addEventListener("change",e=>e.target.checked?state.markers.addTo(state.map):state.map.removeLayer(state.markers));
     qs("#heatToggle").addEventListener("change",e=>toast(e.target.checked?"Density layer enabled for supported records":"Density layer hidden"));
     qs("#fullscreenButton").addEventListener("click",()=>{const p=qs(".map-panel");if(document.fullscreenElement)document.exitFullscreen();else p.requestFullscreen?.()});
-    qs("#shareButton").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("View link copied")});qs("#openNewButton").addEventListener("click",()=>window.open(location.href,"_blank","noopener"));qs("#dismissNotice").addEventListener("click",hideGlobalNotice);qs("#launchRetry").addEventListener("click",()=>location.reload());qs("#earthSwipe").addEventListener("input",e=>{setEarthClip(e.target.value);e.target.setAttribute("aria-valuetext",`${e.target.value} percent`)});
+    qs("#shareButton").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("View link copied")});qs("#openNewButton").addEventListener("click",()=>window.open(location.href,"_blank","noopener"));qs("#dismissNotice").addEventListener("click",hideGlobalNotice);qs("#launchRetry").addEventListener("click",()=>location.reload());qs("#eventApply").addEventListener("click",()=>applyEventFilters(true));
+    qs("#eventReset").addEventListener("click",async()=>{qs("#eventDays").value="14";qs("#eventCategory").value="";qs("#eventSource").value="";qs("#eventCountry").value="";await applyEventFilters(true)});
+    qs("#eventShare").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("Event view link copied")});
+    qs("#eventTimelinePlay").addEventListener("click",toggleEventTimeline);
+    qs("#eventTimelineRange").addEventListener("input",e=>{stopEventTimeline();eventState.timelineIndex=Number(e.target.value);renderEventTimelineFrame()});
+    qs("#closeEventDrawer").addEventListener("click",closeEventDrawer);
+    qs("#eventDetailBackdrop").addEventListener("click",closeEventDrawer);
+    qs("#earthSwipe").addEventListener("input",e=>{setEarthClip(e.target.value);e.target.setAttribute("aria-valuetext",`${e.target.value} percent`)});
     qs("#earthApply").addEventListener("click",async()=>{stopEarthPlayback();await applyEarthComparison(true);await loadEarthTimeline()});
     qs("#earthOpacity").addEventListener("input",e=>{stopEarthPlayback();earthState.opacity=Number(e.target.value)/100;if(earthState.layerA)earthState.layerA.setOpacity(earthState.opacity);if(earthState.layerB)earthState.layerB.setOpacity(earthState.opacity)});
     qs("#earthReset").addEventListener("click",async()=>{stopEarthPlayback();qs("#earthLayerSelect").value="true-color";qs("#earthDateA").value=earthDate(8);qs("#earthDateB").value=earthDate(1);qs("#earthOpacity").value="72";qs("#earthSwipe").value="50";setEarthClip(50);await applyEarthComparison(true);await loadEarthTimeline()});
