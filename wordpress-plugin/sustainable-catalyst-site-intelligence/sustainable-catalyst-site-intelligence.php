@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.24.0
+ * Version: 1.25.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,13 +13,14 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.24.0';
+    const VERSION = '1.25.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
     const BUILD_INFO_MATCH_TTL = 21600;
     const BUILD_INFO_MISMATCH_TTL = 45;
     const BUILD_INFO_ERROR_TTL = 30;
+    const LEGACY_SHORTCODE_REMOVAL_TARGET = '2.0.0';
 
     public function __construct() {
         add_action('admin_menu', [$this, 'admin_menu']);
@@ -134,6 +135,7 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_public_dashboard_launch_readiness', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_dashboard_studio_navigation', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_site_intelligence_app', [$this, 'standalone_app_shortcode']);
+        add_shortcode('sc_site_intelligence_launch', [$this, 'site_intelligence_launch_shortcode']);
         add_shortcode('sc_earth_observation_studio', [$this, 'earth_observation_studio_shortcode']);
         add_shortcode('sc_live_event_intelligence', [$this, 'live_event_intelligence_shortcode']);
         add_shortcode('sc_global_country_intelligence', [$this, 'global_country_intelligence_shortcode']);
@@ -3688,6 +3690,30 @@ final class SC_Site_Intelligence_Plugin {
 
         return sprintf(
             '<div class="scsi-standalone-app scsi-earth-studio-embed"><div class="scsi-app-loading">Opening Earth Observation Studio…</div><iframe src="%1$s" title="%2$s" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen; clipboard-write" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
+            $src,
+            $title,
+            $height
+        );
+    }
+
+    public function site_intelligence_launch_shortcode($atts = []) {
+        $atts = shortcode_atts([
+            'height' => '1200',
+            'title' => 'Sustainable Catalyst Site Intelligence Public Launch and Portfolio',
+        ], $atts, 'sc_site_intelligence_launch');
+
+        $options = self::options();
+        $backend = rtrim((string) ($options['backend_url'] ?? ''), '/');
+        if (!$backend) {
+            return '<div class="scsi-app-error">Configure the Site Intelligence backend URL before embedding the public launch and portfolio view.</div>';
+        }
+
+        $height = max(800, min(1900, absint($atts['height'])));
+        $src = esc_url($backend . '/app/?view=launch');
+        $title = esc_attr((string) $atts['title']);
+
+        return sprintf(
+            '<div class="scsi-standalone-app scsi-site-intelligence-launch-embed"><div class="scsi-app-loading">Opening the Site Intelligence public launch…</div><iframe src="%1$s" title="%2$s" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen; clipboard-write" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
             $src,
             $title,
             $height

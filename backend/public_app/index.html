@@ -5,8 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="dark light">
   <meta name="theme-color" content="#111111">
-  <title>Site Intelligence | Sustainable Catalyst</title>
-  <meta name="description" content="A map-first public observatory for satellite imagery, live events, country context, and source-aware intelligence.">
+  <title>Sustainable Catalyst Site Intelligence | Public-Interest Observatory</title>
+  <meta name="description" content="A public-interest observatory for Earth observation, country indicators, live events, thematic dashboards, comparative research, and source-aware briefs.">
+  <meta property="og:title" content="Sustainable Catalyst Site Intelligence">
+  <meta property="og:description" content="Public evidence, Earth observation, country intelligence, live events, and source-aware research paths.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://unpkg.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="dns-prefetch" href="//gibs.earthdata.nasa.gov">
@@ -52,6 +56,7 @@
 
     <aside id="siteNavigation" class="sidebar" aria-label="Site Intelligence sections">
       <nav id="primaryNavigation" aria-label="Research workspaces">
+        <button class="nav-item" type="button" data-route="launch"><span>Launch</span><small>Product and portfolio</small></button>
         <button class="nav-item active" type="button" data-route="overview" aria-current="page"><span>Overview</span><small>Live map and signals</small></button>
         <button class="nav-item" type="button" data-route="earth"><span>Earth</span><small>Satellite comparison</small></button>
         <button class="nav-item" type="button" data-route="country"><span>Country</span><small>Place-based evidence</small></button>
@@ -62,7 +67,7 @@
         <button class="nav-item" type="button" data-route="sources"><span>Sources</span><small>Provenance and coverage</small></button>
         <button class="nav-item" type="button" data-route="saved"><span>Saved</span><small>Local research paths</small></button>
       </nav>
-      <div class="sidebar-note"><span class="public-beta-badge">Public Beta</span>
+      <div class="sidebar-note"><span class="public-beta-badge public-release-badge">Public Release</span>
         <strong>Public evidence, not automated judgment.</strong>
         <span>Dates, source definitions, and missing data remain visible.</span>
       </div>
@@ -125,6 +130,82 @@
       </section>
 
 
+
+      <section id="publicLaunchPortfolio" class="public-launch-portfolio" hidden aria-busy="false">
+        <div class="launch-portfolio-hero">
+          <div>
+            <p class="eyebrow">PUBLIC LAUNCH · OPEN-SOURCE PORTFOLIO</p>
+            <h2>Public evidence becomes navigable research infrastructure</h2>
+            <p>Sustainable Catalyst Site Intelligence is a public-interest observatory for satellite imagery, global country indicators, natural hazards, humanitarian reporting, and source-aware comparative research.</p>
+            <div class="launch-portfolio-actions">
+              <button class="earth-primary-button" type="button" data-route-link="overview">Open Site Intelligence</button>
+              <button class="ghost-button" type="button" data-route-link="earth">Explore Earth Observation</button>
+              <a class="ghost-button launch-link-button" href="https://github.com/Content-Catalyst-LLC/sustainable-catalyst-site-intelligence" target="_blank" rel="noopener">View GitHub repository ↗</a>
+            </div>
+          </div>
+          <div class="launch-release-card" aria-label="Public release status">
+            <span>PUBLIC RELEASE</span>
+            <strong id="launchPortfolioVersion">v1.25.0</strong>
+            <small>Source-aware observatory · MIT licensed</small>
+          </div>
+        </div>
+
+        <div class="launch-proof-grid" aria-label="Portfolio summary">
+          <article><span>Research workspaces</span><strong id="launchWorkspaceCount">9</strong><small>One coherent public application</small></article>
+          <article><span>Evidence model</span><strong>Source-aware</strong><small>Dates, units, states, and limits visible</small></article>
+          <article><span>Persistence</span><strong>Browser-local</strong><small>No hosted user-profile requirement</small></article>
+          <article><span>Platform Core</span><strong>Optional</strong><small>Public reading remains independent</small></article>
+        </div>
+
+        <div class="launch-section-head">
+          <div><p class="eyebrow">PRODUCT AREAS</p><h2>Explore the public observatory</h2></div>
+          <p>Each workspace preserves source identity and public research context rather than reducing evidence to an unexplained score.</p>
+        </div>
+        <div class="launch-feature-grid">
+          <article><span>01</span><h3>Earth Observation</h3><p>Compare satellite-derived environmental layers across dates and preserve imagery source limits.</p><button type="button" class="text-button" data-route-link="earth">Open Earth Studio</button></article>
+          <article><span>02</span><h3>Live Events</h3><p>Explore natural hazards and humanitarian records with source, time, category, and coverage context.</p><button type="button" class="text-button" data-route-link="events">Open event intelligence</button></article>
+          <article><span>03</span><h3>Country Intelligence</h3><p>Connect global indicators, trends, reporting years, recent events, and satellite context.</p><button type="button" class="text-button" data-route-link="country">Open country intelligence</button></article>
+          <article><span>04</span><h3>Comparative Intelligence</h3><p>Align two-country evidence without flattening definitions, units, dates, or missing values.</p><button type="button" class="text-button" data-route-link="compare">Open comparison</button></article>
+          <article><span>05</span><h3>Thematic Dashboards</h3><p>Study climate, development, human security, and infrastructure through focused public views.</p><button type="button" class="text-button" data-route-link="thematic">Open thematic dashboards</button></article>
+          <article><span>06</span><h3>Briefs and Exports</h3><p>Generate deterministic briefs, evidence manifests, tables, and print-ready public records.</p><button type="button" class="text-button" data-route-link="briefing">Open briefing studio</button></article>
+          <article><span>07</span><h3>Sources and Methods</h3><p>Inspect source coverage, delivery state, methodology, transformations, and known limits.</p><button type="button" class="text-button" data-route-link="sources">Review sources</button></article>
+          <article><span>08</span><h3>Saved Research Paths</h3><p>Preserve and exchange public interface state without an account or hosted profile database.</p><button type="button" class="text-button" data-route-link="saved">Open saved views</button></article>
+        </div>
+
+        <div class="launch-architecture-grid">
+          <article>
+            <p class="eyebrow">HOW IT WORKS</p>
+            <h2>From public source to reviewable output</h2>
+            <ol class="launch-process-list">
+              <li><strong>Discover</strong><span>Select a geography, event, layer, dashboard, or source.</span></li>
+              <li><strong>Inspect</strong><span>Review values, dates, units, delivery state, and provenance.</span></li>
+              <li><strong>Compare</strong><span>Align context while keeping incompatibilities and gaps visible.</span></li>
+              <li><strong>Document</strong><span>Save the research path or generate a source-aware brief and export.</span></li>
+            </ol>
+          </article>
+          <article>
+            <p class="eyebrow">TECHNICAL ARCHITECTURE</p>
+            <h2>Open, modular, and deployable</h2>
+            <div class="launch-stack-list"><span>WordPress public embedding</span><span>Python and FastAPI backend</span><span>Public API connectors</span><span>Leaflet mapping and Earth imagery</span><span>Browser-local saved views</span><span>Optional Platform Core provenance</span></div>
+          </article>
+        </div>
+
+        <div class="launch-trust-panel">
+          <div><p class="eyebrow">RESPONSIBLE USE</p><h2>Public evidence, not automated judgment</h2></div>
+          <p>Site Intelligence supports public research, source discovery, comparative orientation, and evidence brief preparation. It is not an emergency-response system and does not replace legal, financial, medical, engineering, compliance, or other professional analysis.</p>
+          <button type="button" class="ghost-button" data-route-link="sources">Read sources and methodology</button>
+        </div>
+
+        <div class="launch-materials-panel">
+          <div><p class="eyebrow">PORTFOLIO RELEASE</p><h2>Launch materials and reproducible project record</h2></div>
+          <p id="launchPortfolioStatus" role="status" aria-live="polite">Loading the public launch profile…</p>
+          <div class="launch-material-actions">
+            <a class="ghost-button" href="/public/launch-profile/portfolio?format=markdown">Download portfolio Markdown</a>
+            <a class="ghost-button" href="/public/launch-profile/portfolio?format=json">Open portfolio JSON</a>
+            <a class="ghost-button" href="/public/launch-profile/materials">Open launch materials JSON</a>
+          </div>
+        </div>
+      </section>
 
       <section id="eventStudio" class="event-studio" hidden>
         <div class="event-studio-head">

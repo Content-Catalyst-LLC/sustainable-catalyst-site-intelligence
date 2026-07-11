@@ -48,7 +48,7 @@
   }
 
   const state = {map:null,base:null,imagery:null,markers:null,heat:null,layers:null,events:null,country:"KEN",route:"overview"};
-  const APP_VERSION="1.24.0";
+  const APP_VERSION="1.25.0";
   const SAVED_VIEW_SCHEMA="sc-saved-view/1.0";
   const SAVED_VIEW_STORAGE_KEY="sc_site_intelligence_saved_views_v1";
   const SAVED_VIEW_LIMIT=50;
@@ -146,6 +146,7 @@
   }
   function routeMeta(route){
     return {
+      launch:["PUBLIC LAUNCH AND PORTFOLIO","Site Intelligence","Explore the public product, technical architecture, responsible-use boundaries, and launch materials."],
       overview:["LIVE INTELLIGENCE WORKSPACE","Climate and Human Vulnerability","Satellite context, natural events, environmental pressure, and country evidence in one navigable view."],
       earth:["EARTH OBSERVATION STUDIO","Compare the planet through time","Explore satellite-derived imagery, environmental layers, date comparison, timeline playback, and exportable visual views."],
       country:["COUNTRY INTELLIGENCE",`${names[state.country]||state.country} evidence profile`,"Environmental, development, humanitarian, security, and legal context for one selected country."],
@@ -1278,6 +1279,13 @@
   }
   async function openSavedViews(){qs("#savedViewsStudio").hidden=false;qs("#saveViewButton").disabled=true;loadSavedViewsStorage();renderSavedViews()}
   function closeSavedViews(){const panel=qs("#savedViewsStudio");if(panel)panel.hidden=true;const button=qs("#saveViewButton");if(button)button.disabled=false}
+  async function openPublicLaunchPortfolio(){
+    const panel=qs("#publicLaunchPortfolio");if(!panel)return;panel.hidden=false;panel.setAttribute("aria-busy","true");document.body.classList.add("portfolio-route");qs("#saveViewButton").disabled=true;
+    try{const payload=await apiWithRetry("/public/launch-profile",2);qs("#launchPortfolioVersion").textContent=`v${payload.application_version||APP_VERSION}`;qs("#launchWorkspaceCount").textContent=String((payload.workspaces||[]).length||9);qs("#launchPortfolioStatus").textContent=`Public launch profile loaded · ${(payload.workspaces||[]).length||9} research workspaces · ${payload.release_status||"public-release"}.`}
+    catch{qs("#launchPortfolioStatus").textContent="The static portfolio is available. The optional launch-profile endpoint could not be refreshed."}
+    finally{panel.setAttribute("aria-busy","false");reportHeight()}
+  }
+  function closePublicLaunchPortfolio(){const panel=qs("#publicLaunchPortfolio");if(panel)panel.hidden=true;document.body.classList.remove("portfolio-route");const button=qs("#saveViewButton");if(button)button.disabled=false}
 
   async function setRoute(route){
     qs("#main").classList.remove("route-enter");void qs("#main").offsetWidth;qs("#main").classList.add("route-enter");
@@ -1285,7 +1293,11 @@
     updateActiveNavigation(route);setMobileNavigation(false);
     const [e,t,d]=routeMeta(route);qs("#viewEyebrow").textContent=e;qs("#viewTitle").textContent=t;qs("#viewDescription").textContent=d;
     const panel=qs("#routePanel");
+    if(route!=="launch")closePublicLaunchPortfolio();
 
+    if(route==="launch"){
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();await openPublicLaunchPortfolio();return;
+    }
     if(route==="overview"){
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();return;
     }
@@ -1327,7 +1339,7 @@
     qsa(".nav-item").forEach(b=>b.addEventListener("click",()=>{history.replaceState(null,"",`?country=${encodeURIComponent(state.country)}&view=${encodeURIComponent(b.dataset.route)}`);setRoute(b.dataset.route)}));
     qs("#mobileNavToggle")?.addEventListener("click",()=>setMobileNavigation(!document.body.classList.contains("mobile-nav-open")));
     qs("#mobileNavBackdrop")?.addEventListener("click",()=>setMobileNavigation(false,{restoreFocus:true}));
-    qsa("[data-route-link]").forEach(b=>b.addEventListener("click",()=>setRoute(b.dataset.routeLink)));
+    qsa("[data-route-link]").forEach(b=>b.addEventListener("click",()=>{const route=b.dataset.routeLink;history.replaceState(null,"",`?country=${encodeURIComponent(state.country)}&view=${encodeURIComponent(route)}`);setRoute(route)}));
     qs("#countrySelect").addEventListener("change",async e=>{state.country=e.target.value;if(state.route==="country"){await selectGlobalCountry(e.target.value,true)}else if(state.route==="thematic"){qs("#thematicCountry").value=e.target.value;await loadThematicDashboard(true)}else{await loadCountry(e.target.value);history.replaceState(null,"",`?country=${encodeURIComponent(e.target.value)}&view=${encodeURIComponent(state.route)}`)}});
     qs("#dateSelect").addEventListener("change",()=>setImagery(qs(".layer-tab.active").dataset.layer));
     qs("#eventsToggle").addEventListener("change",e=>e.target.checked?state.markers.addTo(state.map):state.map.removeLayer(state.markers));
@@ -1403,7 +1415,7 @@
     qs("#savedCreate").addEventListener("click",openSaveViewDialog);qs("#savedImport").addEventListener("click",()=>qs("#savedImportFile").click());qs("#savedImportFile").addEventListener("change",event=>{const file=event.target.files?.[0];importSavedViewFile(file);event.target.value=""});qs("#savedExportAll").addEventListener("click",()=>downloadSavedJson({schema:"sc-saved-view-collection/1.0",application_version:APP_VERSION,exported_at:savedIso(),views:savedViewsState.items},"site-intelligence-saved-views.json"));qs("#savedClearAll").addEventListener("click",()=>{if(!savedViewsState.items.length)return;if(confirm("Delete all locally saved Site Intelligence views from this browser?")){savedViewsState.items=[];try{persistSavedViews();renderSavedViews();toast("Local saved views cleared")}catch{}}});qs("#saveViewCancel").addEventListener("click",()=>qs("#saveViewDialog").close());qs("#saveViewForm").addEventListener("submit",event=>{event.preventDefault();if(saveCurrentManifest(qs("#saveViewName").value))qs("#saveViewDialog").close()});
     qs("#closeEvidenceDrawer").addEventListener("click",closeEvidenceDrawer);qs("#evidenceBackdrop").addEventListener("click",closeEvidenceDrawer);document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeEvidenceDrawer();setMobileNavigation(false,{restoreFocus:true})}});
     window.matchMedia("(max-width: 760px)").addEventListener?.("change",event=>{if(!event.matches)setMobileNavigation(false)});
-    const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const requestedView=params.get("view")||"overview";const initialView=[...Object.keys(savedViewDefinitions),"saved"].includes(requestedView)?requestedView:"overview";const invalidRequestedView=requestedView!==initialView;qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";if(params.get("imageryDate"))qs("#dateSelect").value=params.get("imageryDate");try{setLaunch("Loading satellite imagery.",50);await loadLayers();await setImagery(params.get("imageryLayer")||"true-color");setLaunch("Connecting to live events and country evidence.",68);await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);setLaunch("Preparing the workspace.",88);await setRoute(initialView);applySharedControlState(initialView,params);finishLaunch();if(invalidRequestedView)toast("The requested view is unavailable; Overview was opened instead.")}
+    const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const requestedView=params.get("view")||"overview";const initialView=[...Object.keys(savedViewDefinitions),"saved","launch"].includes(requestedView)?requestedView:"overview";const invalidRequestedView=requestedView!==initialView;qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";if(params.get("imageryDate"))qs("#dateSelect").value=params.get("imageryDate");try{setLaunch("Loading satellite imagery.",50);await loadLayers();await setImagery(params.get("imageryLayer")||"true-color");setLaunch("Connecting to live events and country evidence.",68);await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);setLaunch("Preparing the workspace.",88);await setRoute(initialView);applySharedControlState(initialView,params);finishLaunch();if(invalidRequestedView)toast("The requested view is unavailable; Overview was opened instead.")}
     catch(e){qs("#statusText").textContent="Partial public data";toast("Some optional public data is temporarily unavailable.");finishLaunch()}
   }
   document.addEventListener("DOMContentLoaded",init);

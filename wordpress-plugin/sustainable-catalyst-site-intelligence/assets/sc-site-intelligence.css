@@ -1745,3 +1745,7 @@
 @media(max-width:760px){.scsi-standalone-app{margin-inline:calc(50% - 50vw);width:100vw}.scsi-standalone-app iframe{border-radius:0!important;min-height:760px}}
 @media(prefers-reduced-motion:reduce){.scsi-standalone-app *{transition-duration:.001ms!important;animation-duration:.001ms!important}}
 @media(forced-colors:active){.scsi-standalone-app iframe{border:1px solid CanvasText!important}}
+
+/* v1.25.0 — public launch portfolio embed */
+.scsi-site-intelligence-launch-embed{max-width:1600px;margin-inline:auto}
+@media(max-width:760px){.scsi-site-intelligence-launch-embed{width:100vw;margin-left:calc(50% - 50vw);border-radius:0}}

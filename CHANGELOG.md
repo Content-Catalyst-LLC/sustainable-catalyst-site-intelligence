@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.25.0 — Public Launch and Portfolio Release
+
+- Added a dedicated public launch and portfolio route at `/app/?view=launch`.
+- Added a public product directory for Earth observation, events, country intelligence, comparison, thematic dashboards, briefing, sources, and saved research paths.
+- Added public launch profile, checklist, materials, diagnostics, and portfolio endpoints.
+- Added downloadable JSON and Markdown portfolio records.
+- Added public positioning, technical architecture, research workflow, and responsible-use panels.
+- Added Open Graph, social description, and Twitter-card metadata to the standalone application.
+- Added `[sc_site_intelligence_launch]` while retaining `[sc_site_intelligence_app]` as the primary flagship embed.
+- Added a v2.0.0 removal target for legacy country, comparison, and geospatial preview shortcodes.
+- Added homepage, Platform page, LinkedIn, GitHub, social-preview, and demo-sequence launch copy.
+- Preserved Platform Core as optional and added no account system, telemetry vendor, paid database, Redis service, or additional Render service.
+
 ## 1.24.0 — Accessibility, Performance, and Mobile Release
 
 - Added public experience profile, checklist, and diagnostics endpoints with explicit first-party performance budgets.

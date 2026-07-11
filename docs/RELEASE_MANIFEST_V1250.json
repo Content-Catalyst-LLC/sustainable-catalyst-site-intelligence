@@ -1,0 +1,32 @@
+{
+  "release": "1.25.0",
+  "name": "Public Launch and Portfolio Release",
+  "application_version": "1.25.0",
+  "api_schema_version": "1.25",
+  "launch_profile_schema": "sc-site-intelligence-launch/1.0",
+  "portfolio_schema": "sc-site-intelligence-portfolio/1.0",
+  "public_route": "/app/?view=launch",
+  "public_endpoints": [
+    "/public/launch-profile",
+    "/public/launch-profile/checklist",
+    "/public/launch-profile/materials",
+    "/public/launch-profile/diagnostics",
+    "/public/launch-profile/portfolio"
+  ],
+  "release_capabilities": [
+    "public launch and portfolio route",
+    "product-area directory",
+    "public launch profile and checklist",
+    "launch materials registry",
+    "JSON and Markdown portfolio record",
+    "responsible-use and architecture panels",
+    "WordPress launch shortcode",
+    "legacy shortcode deprecation schedule",
+    "Open Graph and social metadata"
+  ],
+  "primary_wordpress_shortcode": "[sc_site_intelligence_app height=\"1000\"]",
+  "launch_wordpress_shortcode": "[sc_site_intelligence_launch height=\"1200\"]",
+  "manual_launch_assets_required": true,
+  "platform_core_optional": true,
+  "paid_infrastructure_added": false
+}

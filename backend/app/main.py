@@ -225,6 +225,14 @@ from .experience_quality import (
     experience_checklist as build_experience_checklist,
     experience_diagnostics as build_experience_diagnostics,
 )
+from .public_launch_portfolio import (
+    launch_profile as build_launch_profile,
+    launch_checklist as build_launch_checklist,
+    launch_materials as build_launch_materials,
+    launch_diagnostics as build_launch_diagnostics,
+    portfolio_manifest as build_portfolio_manifest,
+    portfolio_markdown as build_portfolio_markdown,
+)
 from .earth_observation_studio import (
     overview as build_earth_observation_overview,
     layers as build_earth_observation_layers,
@@ -319,7 +327,7 @@ async def public_experience_headers(request, call_next):
         response.headers.setdefault("Cache-Control", "public, max-age=300, stale-while-revalidate=86400")
     elif path == "/app" or path.startswith("/app/"):
         response.headers.setdefault("Cache-Control", "no-cache")
-    elif path.startswith("/public/experience-profile"):
+    elif path.startswith("/public/experience-profile") or path.startswith("/public/launch-profile"):
         response.headers.setdefault("Cache-Control", "public, max-age=300")
     return response
 
@@ -2003,6 +2011,40 @@ def public_experience_checklist():
 @app.get("/public/experience-profile/diagnostics")
 def public_experience_diagnostics():
     return build_experience_diagnostics()
+
+
+@app.get("/public/launch-profile")
+def public_launch_profile():
+    return build_launch_profile()
+
+
+@app.get("/public/launch-profile/checklist")
+def public_launch_checklist():
+    return build_launch_checklist()
+
+
+@app.get("/public/launch-profile/materials")
+def public_launch_materials():
+    return build_launch_materials()
+
+
+@app.get("/public/launch-profile/diagnostics")
+def public_launch_diagnostics():
+    return build_launch_diagnostics()
+
+
+@app.get("/public/launch-profile/portfolio")
+def public_launch_portfolio(format: str = Query("json")):
+    normalized = str(format).strip().lower()
+    if normalized == "json":
+        return build_portfolio_manifest()
+    if normalized in {"md", "markdown"}:
+        return PlainTextResponse(
+            build_portfolio_markdown(),
+            media_type="text/markdown; charset=utf-8",
+            headers={"Content-Disposition": 'attachment; filename="site-intelligence-portfolio.md"'},
+        )
+    raise HTTPException(status_code=422, detail="Supported portfolio formats are json and markdown.")
 
 
 @app.get("/public/page-builder")

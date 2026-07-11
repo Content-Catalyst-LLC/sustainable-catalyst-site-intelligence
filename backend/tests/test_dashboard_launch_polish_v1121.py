@@ -7,7 +7,7 @@ client = TestClient(app)
 
 def test_launch_manifest():
     data = client.get("/public/dashboard-studio/launch-manifest").json()
-    assert data["version"] == "1.24.0"
+    assert data["version"] == "1.25.0"
     assert data["release_status"] == "launch-ready"
     assert len(data["navigation"]) >= 6
     assert "stale" in data["public_states"]

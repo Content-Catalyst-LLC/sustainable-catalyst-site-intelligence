@@ -141,7 +141,7 @@ def experience_diagnostics() -> dict[str, Any]:
         "mobile_drawer_logic": "setMobileNavigation" in js,
         "reduced_motion_logic": "prefers-reduced-motion: reduce" in js,
         "throttled_height_reporting": "requestAnimationFrame" in js and "heightFrame" in js,
-        "wordpress_version": "Version: 1.24.0" in php and "const VERSION = '1.24.0';" in php,
+        "wordpress_version": "Version: 1.25.0" in php and "const VERSION = '1.25.0';" in php,
         "wordpress_lazy_iframe": 'loading="lazy"' in php,
         "wordpress_clipboard_permission": 'allow="fullscreen; clipboard-write"' in php,
         "wordpress_message_origin_check": "e.origin!==expectedOrigin" in php,

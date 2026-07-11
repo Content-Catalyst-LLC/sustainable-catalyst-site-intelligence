@@ -1,12 +1,13 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v1.24.0 — Accessibility, Performance, and Mobile Release
+**Current release:** v1.25.0 — Public Launch and Portfolio Release
 
 Sustainable Catalyst Site Intelligence is a public-interest observatory for Earth observation, global country indicators, natural hazards, humanitarian reporting, source-aware dashboards, and comparative research.
 
 ## Public application
 
 - Standalone app: `https://sustainable-catalyst-site-intelligence.onrender.com/app/`
+- Public launch and portfolio: `/app/?view=launch`
 - Earth Observation: `/app/?view=earth`
 - Live Events: `/app/?view=events`
 - Global Country Intelligence: `/app/?view=country&country=KEN`
@@ -16,6 +17,41 @@ Sustainable Catalyst Site Intelligence is a public-interest observatory for Eart
 - Source and Methodology Studio: `/app/?view=sources`
 - Saved Views and Shareable Research Paths: `/app/?view=saved`
 - Primary WordPress embed: `[sc_site_intelligence_app height="1000"]`
+
+## v1.25.0 release focus
+
+v1.25.0 presents Site Intelligence as a coherent public product and portfolio release. It adds a dedicated launch route, product-area directory, public launch profile, portfolio export, launch-material registry, responsible-use presentation, Open Graph metadata, a WordPress launch embed, and a published deprecation schedule for legacy preview shortcodes.
+
+### Public launch route
+
+```text
+/app/?view=launch
+```
+
+### Public launch endpoints
+
+- `GET /public/launch-profile`
+- `GET /public/launch-profile/checklist`
+- `GET /public/launch-profile/materials`
+- `GET /public/launch-profile/diagnostics`
+- `GET /public/launch-profile/portfolio?format=json`
+- `GET /public/launch-profile/portfolio?format=markdown`
+
+### WordPress
+
+The flagship public page should use one primary application embed:
+
+```text
+[sc_site_intelligence_app height="1000"]
+```
+
+The dedicated launch and portfolio presentation uses:
+
+```text
+[sc_site_intelligence_launch height="1200"]
+```
+
+Legacy country, comparison, and map preview shortcodes remain compatible in v1.x and are scheduled for removal or redesign in v2.0.0.
 
 ## v1.24.0 release focus
 
