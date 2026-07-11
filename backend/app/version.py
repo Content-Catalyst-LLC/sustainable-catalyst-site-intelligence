@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-APP_VERSION = "1.19.0"
+APP_VERSION = "1.19.1"
 API_SCHEMA_VERSION = "1.19"
-RELEASE_NAME = "Comparative Intelligence and Briefing Studio"
+RELEASE_NAME = "Comparison Reliability Patch"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

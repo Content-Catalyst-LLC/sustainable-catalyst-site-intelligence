@@ -302,10 +302,13 @@
           <button id="compareApply" class="earth-primary-button" type="button">Compare</button>
           <button id="compareReset" class="ghost-button" type="button">Reset</button>
         </div>
+        <div id="compareValidation" class="compare-validation" role="status" aria-live="polite" hidden></div>
 
         <div class="compare-summary-grid">
           <article><span>Indicators</span><strong id="compareIndicatorCount">—</strong><small>Available comparison rows</small></article>
-          <article><span>Aligned</span><strong id="compareAlignedCount">—</strong><small>Matching ID, unit, and year</small></article>
+          <article><span>Aligned</span><strong id="compareAlignedCount">—</strong><small>Matching ID, source, unit, and year</small></article>
+          <article><span>Conflicts</span><strong id="compareConflictCount">—</strong><small>Year, source, unit, or definition cautions</small></article>
+          <article><span>Chartable trends</span><strong id="compareTrendCount">—</strong><small>Synchronized series with shared years</small></article>
           <article><span id="compareEventLabelA">Primary events</span><strong id="compareEventCountA">—</strong><small>Available public records</small></article>
           <article><span id="compareEventLabelB">Comparison events</span><strong id="compareEventCountB">—</strong><small>Available public records</small></article>
         </div>
@@ -321,6 +324,7 @@
         <div id="compareTableView" class="compare-view-panel">
           <div class="compare-table-shell">
             <table class="compare-table">
+              <caption class="screen-reader-text">Source-aware country indicator comparison</caption>
               <thead><tr><th>Indicator</th><th id="compareTableHeadA">Primary</th><th id="compareTableHeadB">Comparison</th><th>Compatibility</th></tr></thead>
               <tbody id="compareTableBody"><tr><td colspan="4">Select two countries to begin.</td></tr></tbody>
             </table>
@@ -334,7 +338,7 @@
             </label>
           </div>
           <article class="compare-chart-panel">
-            <div class="panel-head"><div><p class="eyebrow">SYNCHRONIZED TREND</p><h2 id="compareTrendTitle">Indicator trend</h2></div><div class="compare-legend"><span class="primary">Primary</span><span class="secondary">Comparison</span></div></div>
+            <div class="panel-head"><div><p class="eyebrow">SYNCHRONIZED TREND</p><h2 id="compareTrendTitle">Indicator trend</h2></div><div class="compare-legend"><span id="compareLegendPrimary" class="primary">Primary</span><span id="compareLegendSecondary" class="secondary">Comparison</span></div></div>
             <div id="compareTrendChart" class="compare-trend-chart" role="img" aria-label="Country comparison trend chart"></div>
             <div id="compareTrendTable" class="compare-trend-table"></div>
           </article>
@@ -342,7 +346,7 @@
 
         <div id="compareMapView" class="compare-view-panel" hidden>
           <div class="compare-map-grid">
-            <article><p class="eyebrow">GEOGRAPHIC CONTEXT</p><h2 id="compareMapTitle">Two-country context</h2><p>Map position supports orientation only. Displayed boundaries and labels are not legal or cadastral determinations.</p></article>
+            <article><p class="eyebrow">GEOGRAPHIC CONTEXT</p><h2 id="compareMapTitle">Two-country context</h2><p>Map position supports orientation only. Displayed boundaries and labels are not legal or cadastral determinations.</p><p id="compareMapNote" class="compare-map-note">Country reference points will be validated when the comparison loads.</p></article>
             <div id="compareMap" class="compare-map" aria-label="Map showing both comparison countries"></div>
           </div>
         </div>

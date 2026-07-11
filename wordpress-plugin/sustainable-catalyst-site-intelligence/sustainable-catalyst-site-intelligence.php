@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.19.0
+ * Version: 1.19.1
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.19.0';
+    const VERSION = '1.19.1';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -3123,6 +3123,8 @@ final class SC_Site_Intelligence_Plugin {
             'title' => 'Sustainable Catalyst Comparative Intelligence and Briefing Studio',
             'country' => 'KEN',
             'compare' => 'GHA',
+            'view' => 'table',
+            'indicator' => '',
         ], $atts, 'sc_comparative_intelligence');
 
         $options = self::options();
@@ -3132,11 +3134,35 @@ final class SC_Site_Intelligence_Plugin {
         }
 
         $height = max(820, min(1800, absint($atts['height'])));
-        $country = strtoupper(preg_replace('/[^A-Za-z]/', '', (string) $atts['country']));
-        $compare = strtoupper(preg_replace('/[^A-Za-z]/', '', (string) $atts['compare']));
-        if (strlen($country) !== 3) { $country = 'KEN'; }
-        if (strlen($compare) !== 3 || $compare === $country) { $compare = $country === 'GHA' ? 'KEN' : 'GHA'; }
-        $src = esc_url($backend . '/app/?view=compare&country=' . rawurlencode($country) . '&compare=' . rawurlencode($compare));
+        $country_input = strtoupper(trim((string) $atts['country']));
+        $compare_input = strtoupper(trim((string) $atts['compare']));
+        $country = preg_match('/^[A-Z]{3}$/', $country_input) ? $country_input : 'KEN';
+        $compare = preg_match('/^[A-Z]{3}$/', $compare_input) ? $compare_input : 'GHA';
+        if ($compare === $country) {
+            $compare = $country === 'GHA' ? 'KEN' : 'GHA';
+        }
+
+        $allowed_views = ['table', 'chart', 'map', 'brief', 'export'];
+        $view = sanitize_key((string) $atts['view']);
+        if (!in_array($view, $allowed_views, true)) {
+            $view = 'table';
+        }
+
+        $indicator = sanitize_text_field((string) $atts['indicator']);
+        if (!preg_match('/^[A-Za-z0-9._-]{1,64}$/', $indicator)) {
+            $indicator = '';
+        }
+
+        $query = [
+            'view' => 'compare',
+            'country' => $country,
+            'compare' => $compare,
+            'compareView' => $view,
+        ];
+        if ($indicator !== '') {
+            $query['indicator'] = $indicator;
+        }
+        $src = esc_url($backend . '/app/?' . http_build_query($query, '', '&', PHP_QUERY_RFC3986));
         $title = esc_attr((string) $atts['title']);
 
         return sprintf(

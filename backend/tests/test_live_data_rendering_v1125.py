@@ -4,7 +4,7 @@ from app.cross_domain_dashboard_studio import dashboard_data, country_intelligen
 def test_dashboard_payload_has_renderable_evidence():
     data = dashboard_data('climate-human-vulnerability', country='KEN')
     assert data['ok'] is True
-    assert data['version'] == '1.19.0'
+    assert data['version'] == '1.19.1'
     assert data['rendering_state'] == 'source-aware-public-snapshot'
     assert data['evidence_items']
     assert data['source_summary']['registered_sources'] > 0

@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.19.1 — Comparison Reliability Patch
+
+- Added strict country-pair validation and explicit duplicate-country handling.
+- Added distinct aligned, reporting-year, source, unit, definition, state, partial, and unavailable compatibility states.
+- Stopped mathematical difference calculations when reporting years do not match.
+- Added normalized unit and source-family compatibility checks while retaining live-versus-reference World Bank attribution.
+- Reused one country-pair retrieval for indicators, trends, and embedded briefs to reduce duplicate connector requests and inconsistent snapshots.
+- Isolated optional event failures so indicator comparison, trends, briefing, and exports remain available.
+- Added chartability rules, shared-year checks, explicit gap years, aligned series, and accessible year-by-year trend tables.
+- Added public-safe `/public/compare/diagnostics` compatibility diagnostics.
+- Added source-complete JSON, CSV, and HTML exports with warning fields, data states, source IDs, source URLs, safe response headers, and indicator filtering.
+- Added share-state restoration for active view, indicator filter, and trend selection.
+- Added mobile card rendering for comparison tables and corrected print rendering for comparison briefs.
+- Added local pair-validation and panel-level empty/error states.
+- Extended `[sc_comparative_intelligence]` with `view` and `indicator` attributes and stricter shortcode input validation.
+- Updated backend, WordPress plugin, release metadata, documentation, and tests to v1.19.1.
+- Preserved Platform Core as optional and added no paid infrastructure dependency.
+
 ## 1.19.0 — Comparative Intelligence and Briefing Studio
 
 - Replaced the standalone app comparison placeholder with a complete two-country Comparative Intelligence workspace.

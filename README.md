@@ -1,6 +1,6 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v1.19.0 — Comparative Intelligence and Briefing Studio
+**Current release:** v1.19.1 — Comparison Reliability Patch
 
 Sustainable Catalyst Site Intelligence is a public-interest observatory for Earth observation, global country indicators, natural hazards, humanitarian reporting, source-aware dashboards, and comparative research.
 
@@ -12,6 +12,51 @@ Sustainable Catalyst Site Intelligence is a public-interest observatory for Eart
 - Global Country Intelligence: `/app/?view=country&country=KEN`
 - Comparative Intelligence: `/app/?view=compare&country=KEN&compare=GHA`
 - Primary WordPress embed: `[sc_site_intelligence_app height="1000"]`
+
+## v1.19.1 release focus
+
+v1.19.1 hardens Comparative Intelligence for mismatched years, missing values, source conflicts, unit conflicts, chart gaps, mobile use, printing, sharing, and export reliability.
+
+### Reliability contract
+
+- Strict ISO2/ISO3 pair validation; punctuation is not silently removed.
+- Duplicate countries return an explicit validation state.
+- Indicator definition, normalized unit, source family, and data state must align before records are display-comparable.
+- Mathematical differences are calculated only when reporting years also match.
+- Year, source, unit, definition, state, partial-coverage, and unavailable conditions have distinct compatibility states.
+- Optional event-source failures remain local and cannot block indicator comparison or briefing.
+
+### Trend and interface reliability
+
+- Synchronized trend charts require compatible definitions, units, source families, and at least one shared reporting year.
+- Missing years appear as explicit chart gaps and in an accessible year-by-year table.
+- Comparison table rows become readable mobile cards instead of forcing nested horizontal scrolling.
+- Share URLs retain country pair, active view, indicator filter, and trend selection.
+- Print mode now reliably exposes the comparison brief.
+- Invalid pairs and unavailable panels use local, actionable states.
+
+### Export and source reliability
+
+- CSV exports include indicator IDs, both source IDs, source URLs, reporting years, units, data states, compatibility, differences, and warnings.
+- CSV output uses UTF-8 BOM, RFC-style line endings, and spreadsheet-formula safeguards.
+- HTML exports include source links, methodological cautions, version, and print-visible URLs.
+- JSON exports include an export manifest and schema version.
+- Export responses use `no-store` and `nosniff` headers.
+- Indicator-filtered brief and export generation is supported.
+
+### New diagnostics
+
+- `/public/compare/diagnostics`
+
+The endpoint reports compatibility counts, calculation-eligible rows, chartable trends, and public-safe issue summaries.
+
+### WordPress
+
+The specialized shortcode now supports an initial view and optional indicator filter:
+
+```text
+[sc_comparative_intelligence country="KEN" compare="GHA" view="brief" indicator="SP.POP.TOTL" height="1100"]
+```
 
 ## v1.19.0 release focus
 
@@ -81,13 +126,14 @@ Exports preserve values, units, reporting years, compatibility states, calculate
 - `/public/compare/events`
 - `/public/compare/brief`
 - `/public/compare/export`
+- `/public/compare/diagnostics`
 
 ### WordPress
 
 New specialized embed:
 
 ```text
-[sc_comparative_intelligence country="KEN" compare="GHA" height="1100"]
+[sc_comparative_intelligence country="KEN" compare="GHA" view="table" height="1100"]
 ```
 
 The primary public embed remains:
@@ -207,7 +253,7 @@ Diagnostics do not expose API keys, stack traces, raw retry queues, or private c
 
 ## WordPress shortcodes
 
-- `[sc_comparative_intelligence country="KEN" compare="GHA" height="1100"]`
+- `[sc_comparative_intelligence country="KEN" compare="GHA" view="table" height="1100"]`
 
 Primary product:
 
@@ -250,10 +296,10 @@ node --check public_app/assets/app.js
 php -l ../wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php
 ```
 
-Expected test result for v1.19.0:
+Expected test result for v1.19.1:
 
 ```text
-206 passed
+215 passed
 ```
 
 ## Render deployment
