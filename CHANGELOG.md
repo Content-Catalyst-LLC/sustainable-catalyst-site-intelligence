@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.21.0 — Thematic Intelligence Dashboards
+
+- Added four first-class public-beta dashboards: Climate and Environment, Human Development, Human Security, and Infrastructure and Connectivity.
+- Added the standalone `/app/?view=thematic` workspace with dashboard, country, event-window, layer, trend, share, print, briefing, and export controls.
+- Added map, indicator-card, trend-chart, accessible trend-table, public-event, source, methodology, missing-data, and interpretation-limit panels.
+- Added `/public/thematic-dashboards` and dashboard-specific data, indicator, trend, event, brief, export, and diagnostics endpoints.
+- Added JSON, UTF-8 CSV, and print-ready HTML dashboard exports with source identity, units, reporting years, data states, missing-data records, and responsible-use boundaries.
+- Added request cancellation and stale-response protection for country and dashboard switching.
+- Kept optional event-source failures local so available indicators, trends, Earth layers, briefs, and exports remain usable.
+- Connected thematic briefing handoffs to the v1.20.0 canonical investigation-manifest system.
+- Added `[sc_thematic_intelligence dashboard="climate-environment" country="KEN" height="1150"]`.
+- Preserved explicit source, date, unit, modeled/observed state, and no-composite-score boundaries.
+- Preserved Platform Core as optional and added no paid database, Redis service, proprietary map service, or additional Render service.
+
+
 ## 1.20.1 — Backend Compatibility Check and Admin Cache Reliability Patch
 
 - Isolated pytest caches, Python bytecode, country last-known-good data, and optional Platform Core queue files outside the release tree during validation.

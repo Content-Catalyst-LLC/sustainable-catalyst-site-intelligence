@@ -1,0 +1,31 @@
+{
+  "release": "1.21.0",
+  "name": "Thematic Intelligence Dashboards",
+  "schema_version": "1.21",
+  "dashboard_schema": "sc-thematic-dashboard/1.0",
+  "dashboards": [
+    "climate-environment",
+    "human-development",
+    "human-security",
+    "infrastructure"
+  ],
+  "maturity": "Public beta",
+  "routes": [
+    "/public/thematic-dashboards",
+    "/public/thematic-dashboard/{dashboard_id}",
+    "/public/thematic-dashboard/{dashboard_id}/indicators",
+    "/public/thematic-dashboard/{dashboard_id}/trends",
+    "/public/thematic-dashboard/{dashboard_id}/events",
+    "/public/thematic-dashboard/{dashboard_id}/brief",
+    "/public/thematic-dashboard/{dashboard_id}/export",
+    "/public/thematic-dashboard/{dashboard_id}/diagnostics"
+  ],
+  "exports": [
+    "json",
+    "csv",
+    "html"
+  ],
+  "wordpress_shortcode": "[sc_thematic_intelligence dashboard=\"climate-environment\" country=\"KEN\" height=\"1150\"]",
+  "platform_core": "optional",
+  "paid_dependencies_added": false
+}

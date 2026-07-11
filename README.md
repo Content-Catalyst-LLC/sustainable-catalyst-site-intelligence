@@ -1,6 +1,6 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v1.20.1 — Backend Compatibility Check and Admin Cache Reliability Patch
+**Current release:** v1.21.0 — Thematic Intelligence Dashboards
 
 Sustainable Catalyst Site Intelligence is a public-interest observatory for Earth observation, global country indicators, natural hazards, humanitarian reporting, source-aware dashboards, and comparative research.
 
@@ -11,8 +11,39 @@ Sustainable Catalyst Site Intelligence is a public-interest observatory for Eart
 - Live Events: `/app/?view=events`
 - Global Country Intelligence: `/app/?view=country&country=KEN`
 - Comparative Intelligence: `/app/?view=compare&country=KEN&compare=GHA`
+- Thematic Intelligence: `/app/?view=thematic&dashboard=climate-environment&country=KEN`
 - Public Briefing Studio: `/app/?view=briefing&briefType=country&country=KEN`
 - Primary WordPress embed: `[sc_site_intelligence_app height="1000"]`
+
+## v1.21.0 release focus
+
+v1.21.0 adds four first-class, source-aware thematic public-beta dashboards to the standalone Site Intelligence application. Each dashboard combines a selected-country map, public indicators, historical trends, recent event context, Earth-observation layers, source records, methodology, interpretation limits, briefing handoff, and JSON/CSV/HTML exports.
+
+### Public thematic routes
+
+- `/app/?view=thematic&dashboard=climate-environment&country=KEN`
+- `/app/?view=thematic&dashboard=human-development&country=KEN`
+- `/app/?view=thematic&dashboard=human-security&country=KEN`
+- `/app/?view=thematic&dashboard=infrastructure&country=KEN`
+
+### Public endpoints
+
+- `/public/thematic-dashboards`
+- `/public/thematic-dashboard/{dashboard_id}`
+- `/public/thematic-dashboard/{dashboard_id}/indicators`
+- `/public/thematic-dashboard/{dashboard_id}/trends`
+- `/public/thematic-dashboard/{dashboard_id}/events`
+- `/public/thematic-dashboard/{dashboard_id}/brief`
+- `/public/thematic-dashboard/{dashboard_id}/export`
+- `/public/thematic-dashboard/{dashboard_id}/diagnostics`
+
+### WordPress
+
+```text
+[sc_thematic_intelligence dashboard="climate-environment" country="KEN" height="1150"]
+```
+
+The dashboards do not create proprietary composite scores. Missing values and optional event failures remain local, source dates and units remain visible, trend gaps are not silently interpolated, and Platform Core remains optional.
 
 ## v1.20.1 release focus
 

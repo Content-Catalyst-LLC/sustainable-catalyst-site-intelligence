@@ -191,6 +191,17 @@ from .public_briefing_export_studio import (
     briefing_export as build_public_brief_export,
     briefing_diagnostics as build_briefing_diagnostics,
 )
+from .thematic_intelligence_dashboards import (
+    dashboard_directory as build_thematic_dashboard_directory,
+    build_dashboard as build_thematic_dashboard,
+    dashboard_indicators as build_thematic_dashboard_indicators,
+    dashboard_trends as build_thematic_dashboard_trends,
+    dashboard_events as build_thematic_dashboard_events,
+    dashboard_brief as build_thematic_dashboard_brief,
+    dashboard_export as build_thematic_dashboard_export,
+    dashboard_diagnostics as build_thematic_dashboard_diagnostics,
+    ThematicDashboardError,
+)
 from .earth_observation_studio import (
     overview as build_earth_observation_overview,
     layers as build_earth_observation_layers,
@@ -1264,6 +1275,105 @@ def public_briefing_studio_export(
 @app.get("/public/briefing-studio/diagnostics")
 def public_briefing_studio_diagnostics():
     return build_briefing_diagnostics()
+
+
+@app.get("/public/thematic-dashboards")
+def public_thematic_dashboard_directory():
+    return build_thematic_dashboard_directory()
+
+
+@app.get("/public/thematic-dashboard/{dashboard_id}")
+def public_thematic_dashboard(
+    dashboard_id: str,
+    country: str = Query("KEN"),
+    days: int = Query(30, ge=1, le=90),
+    include_events: bool = Query(True),
+):
+    try:
+        return build_thematic_dashboard(dashboard_id, country, days=days, include_events=include_events)
+    except ThematicDashboardError as exc:
+        detail = str(exc)
+        status = 404 if detail in {"unknown_dashboard", "unsupported_country"} else 422
+        raise HTTPException(status_code=status, detail=detail)
+
+
+@app.get("/public/thematic-dashboard/{dashboard_id}/indicators")
+def public_thematic_dashboard_indicators(dashboard_id: str, country: str = Query("KEN")):
+    try:
+        return build_thematic_dashboard_indicators(dashboard_id, country)
+    except ThematicDashboardError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+
+
+@app.get("/public/thematic-dashboard/{dashboard_id}/trends")
+def public_thematic_dashboard_trends(dashboard_id: str, country: str = Query("KEN")):
+    try:
+        return build_thematic_dashboard_trends(dashboard_id, country)
+    except ThematicDashboardError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+
+
+@app.get("/public/thematic-dashboard/{dashboard_id}/events")
+def public_thematic_dashboard_events(
+    dashboard_id: str,
+    country: str = Query("KEN"),
+    days: int = Query(30, ge=1, le=90),
+    limit: int = Query(40, ge=1, le=100),
+):
+    try:
+        return build_thematic_dashboard_events(dashboard_id, country, days=days, limit=limit)
+    except ThematicDashboardError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+
+
+@app.get("/public/thematic-dashboard/{dashboard_id}/brief")
+def public_thematic_dashboard_brief(
+    dashboard_id: str,
+    country: str = Query("KEN"),
+    days: int = Query(30, ge=1, le=90),
+):
+    try:
+        return build_thematic_dashboard_brief(dashboard_id, country, days=days)
+    except ThematicDashboardError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
+
+
+@app.get("/public/thematic-dashboard/{dashboard_id}/export")
+def public_thematic_dashboard_export(
+    dashboard_id: str,
+    country: str = Query("KEN"),
+    days: int = Query(30, ge=1, le=90),
+    format: str = Query("json"),
+):
+    try:
+        body, media_type, filename = build_thematic_dashboard_export(
+            dashboard_id, country, days=days, export_format=format
+        )
+    except ThematicDashboardError as exc:
+        detail = str(exc)
+        status = 422 if detail == "unsupported_export_format" else 404
+        raise HTTPException(status_code=status, detail=detail)
+    return Response(
+        content=body,
+        media_type=media_type,
+        headers={
+            "Content-Disposition": f'attachment; filename="{filename}"',
+            "Cache-Control": "no-store",
+            "X-Content-Type-Options": "nosniff",
+        },
+    )
+
+
+@app.get("/public/thematic-dashboard/{dashboard_id}/diagnostics")
+def public_thematic_dashboard_diagnostics(
+    dashboard_id: str,
+    country: str = Query("KEN"),
+    days: int = Query(30, ge=1, le=90),
+):
+    try:
+        return build_thematic_dashboard_diagnostics(dashboard_id, country, days=days)
+    except ThematicDashboardError as exc:
+        raise HTTPException(status_code=404, detail=str(exc))
 
 
 @app.get("/public/dashboard-studio/rendering-diagnostics")

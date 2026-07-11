@@ -10,7 +10,7 @@ import re
 from typing import Any, Iterable
 
 from .comparative_intelligence import compare_countries
-from .cross_domain_dashboard_studio import dashboard_export
+from .thematic_intelligence_dashboards import build_dashboard as dashboard_export
 from .earth_observation_studio import export_manifest as earth_export_manifest
 from .live_country_intelligence import country_indicators, country_profile, country_trends
 from .unified_live_events import event_detail, unified_events
@@ -661,14 +661,92 @@ def _thematic_bundle(
     start: str | None,
     end: str | None,
 ) -> dict[str, Any]:
-    clean_dashboard = _clean_identifier(dashboard_id, "climate-human-vulnerability") or "climate-human-vulnerability"
-    country_code = _clean_code(country) if country else ""
+    clean_dashboard = _clean_identifier(dashboard_id, "climate-environment") or "climate-environment"
+    country_code = _clean_code(country) if country else "KEN"
     compare_code = _clean_code(compare) if compare else ""
     start_date = _clean_date(start)
     end_date = _clean_date(end)
     if start_date and end_date and start_date > end_date:
         raise BriefingError("invalid_date_range")
-    payload = dashboard_export(clean_dashboard, country=country_code)
+
+    try:
+        payload = dashboard_export(clean_dashboard, country=country_code)
+    except ValueError as exc:
+        raise BriefingError("dashboard_not_found") from exc
+
+    # v1.21.0 first-class thematic payload.
+    if isinstance(payload, dict) and "indicators" in payload:
+        if not payload.get("ok"):
+            raise BriefingError("dashboard_not_found")
+        dashboard = payload.get("dashboard") or {}
+        country_record = payload.get("country") or {"code": country_code, "name": country_code}
+        indicators = list(payload.get("indicators") or [])
+        trends = list(payload.get("trends") or [])
+        events = list((payload.get("events") or {}).get("records") or [])
+        layers = list(payload.get("earth_layers") or [])
+        source_records = _dedupe_sources([
+            {
+                "record_type": ",".join(item.get("record_types") or []),
+                "source": item.get("name"),
+                "source_url": item.get("url"),
+                "data_state": ",".join(item.get("data_states") or []),
+            }
+            for item in payload.get("sources") or []
+        ])
+        evidence_states = [item.get("data_state") for item in indicators]
+        evidence_states.extend(item.get("data_state") for item in events)
+        evidence_states.extend(item.get("data_state") for item in layers)
+        filters = {
+            "dashboard_id": clean_dashboard,
+            "country": country_record.get("code") or country_code,
+            "compare": compare_code or None,
+            "start": start_date or None,
+            "end": end_date or None,
+        }
+        return _base_bundle(
+            "thematic",
+            title=f"{country_record.get('name') or country_record.get('code')} — {dashboard.get('title')} Brief",
+            summary=dashboard.get("summary") or "Source-aware thematic public intelligence brief.",
+            scope={
+                "dashboard_id": clean_dashboard,
+                "indicator_count": len(indicators),
+                "trend_count": len(trends),
+                "event_count": len(events),
+                "layer_count": len(layers),
+                "registered_source_count": len(source_records),
+            },
+            state={"view_type": "thematic", **filters},
+            geography={
+                "country": country_record.get("code") or country_code,
+                "country_name": country_record.get("name"),
+                "compare": compare_code or None,
+                "region": country_record.get("region"),
+            },
+            selected_dates={"start": start_date or None, "end": end_date or None},
+            filters=filters,
+            evidence={
+                "indicators": indicators,
+                "trends": trends,
+                "events": events,
+                "layers": layers,
+                "thematic_items": [],
+            },
+            source_records=source_records,
+            data_states=_state_summary(evidence_states),
+            missing_data=list(payload.get("missing_data") or []),
+            sections=[
+                {"heading": "Dashboard scope", "text": dashboard.get("summary")},
+                {"heading": "Latest public indicators", "item_count": len(indicators), "record_type": "indicators"},
+                {"heading": "Historical trends", "item_count": len(trends), "record_type": "trends"},
+                {"heading": "Recent public events", "item_count": len(events), "record_type": "events"},
+                {"heading": "Earth-observation context", "item_count": len(layers), "record_type": "layers"},
+                {"heading": "Data gaps", "item_count": len(payload.get("missing_data") or []), "record_type": "missing_data"},
+            ],
+            methodology_notes=list(payload.get("methodology") or []),
+            interpretation_limits=list(payload.get("interpretation_limits") or []),
+        )
+
+    # Compatibility for pre-v1.21.0 dashboard fixtures and callers.
     if not payload.get("dashboard", {}).get("ok"):
         raise BriefingError("dashboard_not_found")
     data = payload.get("data") or {}
@@ -773,7 +851,7 @@ def build_brief(
     longitude: float = 20.0,
     zoom: int = 2,
     opacity: float = 0.72,
-    dashboard_id: str = "climate-human-vulnerability",
+    dashboard_id: str = "climate-environment",
     start: str | None = None,
     end: str | None = None,
     indicator: str | None = None,

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.20.1
+ * Version: 1.21.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.20.1';
+    const VERSION = '1.21.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -139,6 +139,7 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_global_country_intelligence', [$this, 'global_country_intelligence_shortcode']);
         add_shortcode('sc_comparative_intelligence', [$this, 'comparative_intelligence_shortcode']);
         add_shortcode('sc_public_briefing_studio', [$this, 'public_briefing_studio_shortcode']);
+        add_shortcode('sc_thematic_intelligence', [$this, 'thematic_intelligence_shortcode']);
         add_shortcode('sc_geospatial_intelligence_map', [$this, 'geospatial_map_shortcode']);
         add_shortcode('sc_satellite_imagery_viewer', [$this, 'geospatial_map_shortcode']);
         add_shortcode('sc_live_event_map', [$this, 'geospatial_map_shortcode']);
@@ -3339,6 +3340,58 @@ final class SC_Site_Intelligence_Plugin {
 
 
 
+    public function thematic_intelligence_shortcode($atts = []) {
+        $atts = shortcode_atts([
+            'height' => '1150',
+            'title' => 'Sustainable Catalyst Thematic Intelligence Dashboards',
+            'dashboard' => 'climate-environment',
+            'country' => 'KEN',
+            'days' => '30',
+        ], $atts, 'sc_thematic_intelligence');
+
+        $options = self::options();
+        $backend = rtrim((string) ($options['backend_url'] ?? ''), '/');
+        if (!$backend) {
+            return '<div class="scsi-app-error">Configure the Site Intelligence backend URL before embedding Thematic Intelligence.</div>';
+        }
+
+        $allowed_dashboards = [
+            'climate-environment',
+            'human-development',
+            'human-security',
+            'infrastructure',
+        ];
+        $dashboard = sanitize_title((string) $atts['dashboard']);
+        if (!in_array($dashboard, $allowed_dashboards, true)) {
+            $dashboard = 'climate-environment';
+        }
+
+        $country_input = strtoupper(trim((string) $atts['country']));
+        $country = preg_match('/^[A-Z]{3}$/', $country_input) ? $country_input : 'KEN';
+        $days = max(1, min(90, absint($atts['days'])));
+        if ($days === 0) {
+            $days = 30;
+        }
+        $height = max(850, min(1900, absint($atts['height'])));
+
+        $query = [
+            'view' => 'thematic',
+            'dashboard' => $dashboard,
+            'country' => $country,
+            'thematicDays' => $days,
+        ];
+        $src = esc_url($backend . '/app/?' . http_build_query($query, '', '&', PHP_QUERY_RFC3986));
+        $title = esc_attr((string) $atts['title']);
+
+        return sprintf(
+            '<div class="scsi-standalone-app scsi-thematic-intelligence-embed"><div class="scsi-app-loading">Opening Thematic Intelligence…</div><iframe src="%1$s" title="%2$s" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
+            $src,
+            $title,
+            $height
+        );
+    }
+
+
     public function public_briefing_studio_shortcode($atts = []) {
         $atts = shortcode_atts([
             'height' => '1150',
@@ -3348,7 +3401,7 @@ final class SC_Site_Intelligence_Plugin {
             'compare' => 'GHA',
             'days' => '14',
             'event_id' => '',
-            'dashboard_id' => 'climate-human-vulnerability',
+            'dashboard_id' => 'climate-environment',
             'layer_id' => 'true-color',
             'date_a' => '',
             'date_b' => '',

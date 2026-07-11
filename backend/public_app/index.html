@@ -49,6 +49,7 @@
         <button class="nav-item" data-route="country"><span>Country</span><small>Place-based evidence</small></button>
         <button class="nav-item" data-route="events"><span>Events</span><small>Live event intelligence</small></button>
         <button class="nav-item" data-route="compare"><span>Compare</span><small>Two-country context</small></button>
+        <button class="nav-item" data-route="thematic"><span>Themes</span><small>Focused intelligence</small></button>
         <button class="nav-item" data-route="briefing"><span>Briefing</span><small>Briefs and exports</small></button>
         <button class="nav-item" data-route="sources"><span>Sources</span><small>Provenance and coverage</small></button>
       </nav>
@@ -277,6 +278,100 @@
       </section>
 
 
+      <section id="thematicStudio" class="thematic-studio" hidden aria-busy="false">
+        <div class="thematic-studio-head">
+          <div>
+            <p class="eyebrow">THEMATIC INTELLIGENCE DASHBOARDS</p>
+            <h2 id="thematicStudioTitle">Climate and Environment</h2>
+            <p id="thematicStudioIntro">Connect country indicators, trends, Earth-observation layers, public events, source records, and methodology in one focused view.</p>
+          </div>
+          <div class="thematic-studio-actions">
+            <button id="thematicShare" class="ghost-button" type="button">Copy dashboard view</button>
+            <button id="thematicPrint" class="ghost-button" type="button">Print dashboard</button>
+          </div>
+        </div>
+
+        <div class="thematic-control-deck">
+          <label>Dashboard
+            <select id="thematicDashboard"></select>
+          </label>
+          <label>Country
+            <select id="thematicCountry"></select>
+          </label>
+          <label>Event window
+            <select id="thematicDays">
+              <option value="7">7 days</option>
+              <option value="14">14 days</option>
+              <option value="30" selected>30 days</option>
+              <option value="90">90 days</option>
+            </select>
+          </label>
+          <label>Map layer
+            <select id="thematicLayer"></select>
+          </label>
+          <button id="thematicApply" class="earth-primary-button" type="button">Load dashboard</button>
+          <button id="thematicReset" class="ghost-button" type="button">Reset</button>
+        </div>
+
+        <div id="thematicStatus" class="thematic-status" role="status" aria-live="polite">Preparing thematic intelligence.</div>
+
+        <div class="thematic-summary-grid">
+          <article><span>Indicators</span><strong id="thematicIndicatorMetric">—</strong><small>Available latest values</small></article>
+          <article><span>Trend series</span><strong id="thematicTrendMetric">—</strong><small>Chartable public records</small></article>
+          <article><span>Recent events</span><strong id="thematicEventMetric">—</strong><small>Country-linked context</small></article>
+          <article><span>Earth layers</span><strong id="thematicLayerMetric">—</strong><small>Registered map context</small></article>
+          <article><span>Sources</span><strong id="thematicSourceMetric">—</strong><small>Linked public providers</small></article>
+          <article><span>Data gaps</span><strong id="thematicGapMetric">—</strong><small>Explicit unavailable records</small></article>
+        </div>
+
+        <div class="thematic-map-grid">
+          <article class="thematic-map-panel">
+            <div class="panel-head"><div><p class="eyebrow">GEOGRAPHIC CONTEXT</p><h3 id="thematicMapTitle">Country and event map</h3></div><span id="thematicMaturity" class="public-beta-badge">Public beta</span></div>
+            <div id="thematicMap" class="thematic-map" aria-label="Thematic intelligence map"></div>
+            <p id="thematicMapNote" class="thematic-note">Mapped observations retain their source and interpretation limits.</p>
+          </article>
+          <article class="thematic-layer-panel">
+            <div class="panel-head"><div><p class="eyebrow">EARTH OBSERVATION</p><h3>Available visual layers</h3></div></div>
+            <div id="thematicLayerList" class="thematic-layer-list"></div>
+          </article>
+        </div>
+
+        <article class="thematic-indicator-panel">
+          <div class="panel-head"><div><p class="eyebrow">INDICATOR CARDS</p><h3 id="thematicIndicatorTitle">Latest public indicators</h3></div></div>
+          <div id="thematicIndicatorGrid" class="thematic-indicator-grid"><div class="loading-block">Loading indicator cards…</div></div>
+        </article>
+
+        <div class="thematic-analysis-grid">
+          <article class="thematic-trend-panel">
+            <div class="panel-head"><div><p class="eyebrow">TIME SERIES</p><h3 id="thematicTrendTitle">Trend coverage</h3></div><label>Indicator <select id="thematicTrendSelect"></select></label></div>
+            <div id="thematicTrendChart" class="thematic-trend-chart"></div>
+            <div id="thematicTrendTable" class="thematic-trend-table"></div>
+          </article>
+          <article class="thematic-events-panel">
+            <div class="panel-head"><div><p class="eyebrow">PUBLIC EVENT CONTEXT</p><h3>Recent country-linked records</h3></div></div>
+            <div id="thematicEventList" class="thematic-event-list"></div>
+          </article>
+        </div>
+
+        <div class="thematic-evidence-grid">
+          <article>
+            <div class="panel-head"><div><p class="eyebrow">SOURCES</p><h3>Provenance and delivery state</h3></div></div>
+            <div id="thematicSourceList" class="thematic-source-list"></div>
+          </article>
+          <article>
+            <div class="panel-head"><div><p class="eyebrow">METHODS AND LIMITS</p><h3>Responsible interpretation</h3></div></div>
+            <div id="thematicMethodology" class="thematic-methodology"></div>
+          </article>
+        </div>
+
+        <div class="thematic-export-grid">
+          <article><p class="eyebrow">JSON</p><h3>Evidence manifest</h3><p>Dashboard state, indicators, trends, events, layers, sources, and gaps.</p><button class="ghost-button" type="button" data-thematic-export="json">Download JSON</button></article>
+          <article><p class="eyebrow">CSV</p><h3>Evidence table</h3><p>Flattened source-aware indicator, event, and Earth-layer records.</p><button class="ghost-button" type="button" data-thematic-export="csv">Download CSV</button></article>
+          <article><p class="eyebrow">HTML</p><h3>Print-ready dashboard</h3><p>Portable public document with visible source URLs and boundaries.</p><button class="ghost-button" type="button" data-thematic-export="html">Download HTML</button></article>
+          <article><p class="eyebrow">BRIEFING</p><h3>Continue to a brief</h3><p>Open the briefing studio with this dashboard and country selected.</p><button id="thematicOpenBrief" class="ghost-button" type="button">Open briefing</button></article>
+        </div>
+      </section>
+
       <section id="briefingStudio" class="briefing-studio" hidden aria-busy="false">
         <div class="briefing-studio-head">
           <div>
@@ -319,10 +414,10 @@
           </label>
           <label class="brief-field" data-brief-field="thematic">Thematic dashboard
             <select id="briefingDashboard">
-              <option value="climate-human-vulnerability">Climate and Human Vulnerability</option>
-              <option value="conflict-human-development">Conflict and Human Development</option>
-              <option value="law-humanitarian-conditions">International Law and Humanitarian Conditions</option>
-              <option value="country-intelligence">Country Intelligence Profile</option>
+              <option value="climate-environment">Climate and Environment</option>
+              <option value="human-development">Human Development</option>
+              <option value="human-security">Human Security</option>
+              <option value="infrastructure">Infrastructure and Connectivity</option>
             </select>
           </label>
           <label class="brief-field" data-brief-field="earth">Earth layer
