@@ -6,7 +6,7 @@ from typing import Any, Optional
 from fastapi import Depends, FastAPI, Header, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import PlainTextResponse, FileResponse
+from fastapi.responses import PlainTextResponse, FileResponse, Response
 
 from .config import Settings, get_settings
 from .version import APP_VERSION
@@ -175,6 +175,14 @@ from .unified_live_events import (
     event_detail as build_event_detail,
     timeline as build_event_timeline,
     summary as build_event_summary,
+)
+from .comparative_intelligence import (
+    compare_countries as build_comparative_intelligence,
+    compare_indicators as build_comparative_indicators,
+    compare_trends as build_comparative_trends,
+    compare_events as build_comparative_events,
+    comparison_brief as build_comparison_brief,
+    comparison_export as build_comparison_export,
 )
 from .earth_observation_studio import (
     overview as build_earth_observation_overview,
@@ -1017,6 +1025,69 @@ def public_country_intelligence(country_code: str):
 @app.get("/public/cross-domain-comparison")
 def public_cross_domain_comparison(country: str = "", compare: str = ""):
     return build_cross_domain_comparison(country, compare)
+
+
+@app.get("/public/compare")
+def public_comparative_intelligence(country: str = Query("KEN"), compare: str = Query("GHA"), include_events: bool = Query(True)):
+    try:
+        return build_comparative_intelligence(country, compare, include_events=include_events)
+    except ValueError as exc:
+        detail = str(exc)
+        status = 422 if detail == "duplicate_country" else 404
+        raise HTTPException(status_code=status, detail=detail)
+
+
+@app.get("/public/compare/indicators")
+def public_comparative_indicators(country: str = Query("KEN"), compare: str = Query("GHA")):
+    try:
+        return build_comparative_indicators(country, compare)
+    except ValueError as exc:
+        detail = str(exc)
+        status = 422 if detail == "duplicate_country" else 404
+        raise HTTPException(status_code=status, detail=detail)
+
+
+@app.get("/public/compare/trends")
+def public_comparative_trends(country: str = Query("KEN"), compare: str = Query("GHA")):
+    try:
+        return build_comparative_trends(country, compare)
+    except ValueError as exc:
+        detail = str(exc)
+        status = 422 if detail == "duplicate_country" else 404
+        raise HTTPException(status_code=status, detail=detail)
+
+
+@app.get("/public/compare/events")
+def public_comparative_events(country: str = Query("KEN"), compare: str = Query("GHA"), days: int = Query(30, ge=1, le=90), limit: int = Query(20, ge=1, le=100)):
+    try:
+        return build_comparative_events(country, compare, days=days, limit=limit)
+    except ValueError as exc:
+        detail = str(exc)
+        status = 422 if detail == "duplicate_country" else 404
+        raise HTTPException(status_code=status, detail=detail)
+
+
+@app.get("/public/compare/brief")
+def public_comparison_brief(country: str = Query("KEN"), compare: str = Query("GHA")):
+    try:
+        return build_comparison_brief(country, compare)
+    except ValueError as exc:
+        detail = str(exc)
+        status = 422 if detail == "duplicate_country" else 404
+        raise HTTPException(status_code=status, detail=detail)
+
+
+@app.get("/public/compare/export")
+def public_comparison_export(country: str = Query("KEN"), compare: str = Query("GHA"), format: str = Query("json")):
+    try:
+        body, media_type, filename = build_comparison_export(country, compare, export_format=format)
+    except ValueError as exc:
+        detail = str(exc)
+        if detail == "unsupported_export_format":
+            raise HTTPException(status_code=422, detail=detail)
+        status = 422 if detail == "duplicate_country" else 404
+        raise HTTPException(status_code=status, detail=detail)
+    return Response(content=body, media_type=media_type, headers={"Content-Disposition": f'attachment; filename="{filename}"'})
 
 
 @app.get("/public/dashboard-studio/rendering-diagnostics")

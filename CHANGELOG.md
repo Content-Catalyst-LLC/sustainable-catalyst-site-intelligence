@@ -1,6 +1,25 @@
 # Changelog
 
+## 1.19.0 — Comparative Intelligence and Briefing Studio
+
+- Replaced the standalone app comparison placeholder with a complete two-country Comparative Intelligence workspace.
+- Added table, synchronized trend chart, map, brief, and export views.
+- Added normalized global country selectors, swap, reset, share, print, and indicator filtering controls.
+- Added explicit compatibility rules for indicator IDs, units, definitions, reporting years, and data states.
+- Added mathematical differences only for compatible records; mismatched years remain visible and labeled.
+- Preserved explicit missing-value language and prohibited unexplained composite scores and rankings.
+- Added `/public/compare`, `/public/compare/indicators`, `/public/compare/trends`, `/public/compare/events`, `/public/compare/brief`, and `/public/compare/export`.
+- Added JSON, CSV, and print-ready HTML comparison exports.
+- Added source-aware comparison briefs with country summaries, indicators, trends, events, caveats, sources, and timestamps.
+- Added request cancellation, stale-response rejection, duplicate-country prevention, and local retry states.
+- Parallelized independent World Bank indicator requests and added short-lived negative caching for unavailable optional event feeds to prevent repeated timeout cascades.
+- Added `[sc_comparative_intelligence country="KEN" compare="GHA" height="1100"]`.
+- Updated backend, WordPress plugin, release metadata, documentation, and tests to v1.19.0.
+- Preserved Platform Core as optional and added no paid service dependency.
+
 ## 1.18.3 — Global Country Reliability, Data Coverage, and Release Integrity
+
+- Fixed the release validator so a normal repository-root `.git` directory is allowed while nested repositories and generated artifacts remain forbidden.
 
 - Added a canonical release-version module and aligned backend, plugin, launch status, release status, and documentation on v1.18.3.
 - Added `/public/build-info` with backend version, API schema version, expected plugin version, Git commit, and build timestamp.

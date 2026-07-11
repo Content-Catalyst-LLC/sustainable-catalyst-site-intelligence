@@ -399,7 +399,7 @@ def unified_events(
     if cached and isinstance(cached.value, dict):
         records = list(cached.value.get("records") or [])
         source_states = dict(cached.value.get("source_states") or {})
-        delivery_state = "cached"
+        delivery_state = str(cached.value.get("delivery_state") or "cached")
     else:
         for source_id, loader in [
             ("usgs", lambda: _usgs_events(days=min(normalized_days, 30), limit=fetch_limit)),
@@ -414,8 +414,8 @@ def unified_events(
                 source_states[source_id] = "unavailable"
         records = _deduplicate(records)
         if records:
-            country_cache.set(cache_key, {"records": records, "source_states": source_states})
             delivery_state = "live" if all(value == "live" for value in source_states.values()) else "partial-live"
+            country_cache.set(cache_key, {"records": records, "source_states": source_states, "delivery_state": delivery_state})
         else:
             stale = country_cache.get(cache_key, fresh_seconds=0, stale_seconds=86400, allow_stale=True)
             if stale and isinstance(stale.value, dict):
@@ -424,6 +424,10 @@ def unified_events(
                 delivery_state = "stale"
             else:
                 delivery_state = "unavailable"
+                # Retain a short-lived negative result so multiple panels or a
+                # comparison + brief request do not repeatedly call the same
+                # unavailable optional feeds during one public session.
+                country_cache.set(cache_key, {"records": [], "source_states": source_states, "delivery_state": delivery_state})
 
     base_record_count = len(records)
     records = _deduplicate(records)

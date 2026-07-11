@@ -1,6 +1,6 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v1.18.3 — Global Country Reliability, Data Coverage, and Release Integrity
+**Current release:** v1.19.0 — Comparative Intelligence and Briefing Studio
 
 Sustainable Catalyst Site Intelligence is a public-interest observatory for Earth observation, global country indicators, natural hazards, humanitarian reporting, source-aware dashboards, and comparative research.
 
@@ -10,122 +10,104 @@ Sustainable Catalyst Site Intelligence is a public-interest observatory for Eart
 - Earth Observation: `/app/?view=earth`
 - Live Events: `/app/?view=events`
 - Global Country Intelligence: `/app/?view=country&country=KEN`
+- Comparative Intelligence: `/app/?view=compare&country=KEN&compare=GHA`
 - Primary WordPress embed: `[sc_site_intelligence_app height="1000"]`
 
-## v1.18.3 release focus
+## v1.19.0 release focus
 
-v1.18.3 stabilizes the global country layer before Comparative Intelligence is built.
+v1.19.0 replaces the legacy comparison placeholder with a first-class Comparative Intelligence and Briefing Studio in the standalone application.
 
-### Release integrity
+### Comparative workspace
 
-- One canonical backend version in `backend/app/version.py`
-- Public-safe `/public/build-info` compatibility endpoint
-- Matching backend and WordPress plugin version: `1.18.3`
-- WordPress administrator warning when plugin and backend versions differ
-- Updated release status, launch status, README, CHANGELOG, and documentation
-- 199 backend tests passing
+- Two-country selector using the normalized global country catalog
+- Swap, reset, share, and print controls
+- Shareable URL state using `country` and `compare`
+- Table, chart, map, brief, and export views
+- Request cancellation and stale-response protection
+- Local loading and failure states
+- Duplicate-country prevention
 
-### Country catalog reliability
+### Methodological comparison contract
 
-- Public display-name normalization without altering source records
-- Source names retained as `source_name`
-- Alternate names retained for search
-- Whitespace-normalized regions
-- ISO2, ISO3, display-name, source-name, and alias search
-- Explicit country-or-territory classification
-- Graceful frontend fallback to Kenya for an unsupported URL country code
+The comparison layer calculates a difference only when:
 
-Examples:
+- indicator IDs match
+- units match
+- both countries have explicitly labeled values
+- definitions are aligned
 
-- `Egypt, Arab Rep.` → `Egypt`
-- `Korea, Rep.` → `South Korea`
-- `Korea, Dem. People's Rep.` → `North Korea`
-- `Russian Federation` → `Russia`
-- `Congo, Dem. Rep.` → `Democratic Republic of the Congo`
+Reporting years remain visible. A year mismatch is labeled rather than silently normalized. Missing values remain explicit as:
 
-### Indicator reliability
+> No validated public value is currently available.
 
-Each indicator retains:
+The product does not create an unexplained composite score or national ranking.
 
-- indicator ID
-- value
-- unit
-- reporting year
-- source name
-- source URL
-- retrieved time
-- data state
-- stale state
-- Platform Core lineage state where enabled
+### Comparative charts and map
 
-Data states include:
+- Grouped latest-value presentation in the table
+- Synchronized multi-year trend charts
+- Common-year counts
+- Two-country geographic orientation map
+- Accessible tabular information alongside charts
+- Clear primary and comparison color keys
 
-- `live`
-- `partial-live`
-- `cached`
-- `stale`
-- `reference-snapshot`
-- `unavailable`
+### Comparative briefing
 
-Zero remains a valid value and is never treated as missing.
+The public brief includes:
 
-### Zero-cost caching
+1. comparison scope
+2. country summaries
+3. latest available indicators
+4. trend series
+5. recent public event counts
+6. methodological caveats
+7. source list
+8. generated timestamp
+9. responsible-use boundary
 
-Country catalog and World Bank series use:
+### Exports
 
-1. process-memory caching
-2. atomic JSON last-known-good caching
-3. explicit retrieval time
-4. explicit stale state
-5. bounded in-process memoization
+- JSON evidence manifest
+- CSV indicator table
+- print-ready HTML brief
 
-Default cache file:
+Exports preserve values, units, reporting years, compatibility states, calculated differences, source names, source URLs, application version, and methodological boundaries.
 
-`backend/data/country_last_known_good.json`
+### Public endpoints
 
-The JSON cache is a best-effort runtime cache on Render's ephemeral filesystem. It improves resilience across ordinary process restarts but is not guaranteed to survive a new deploy or infrastructure replacement. No Redis, paid database, or second Render service is required.
+- `/public/compare`
+- `/public/compare/indicators`
+- `/public/compare/trends`
+- `/public/compare/events`
+- `/public/compare/brief`
+- `/public/compare/export`
 
-Optional override:
+### WordPress
 
-```env
-SC_SI_COUNTRY_CACHE_PATH=/path/to/country_last_known_good.json
+New specialized embed:
+
+```text
+[sc_comparative_intelligence country="KEN" compare="GHA" height="1100"]
 ```
 
-### Race-safe browser behavior
+The primary public embed remains:
 
-The standalone country experience now includes:
-
-- `AbortController` cancellation for superseded requests
-- request-sequence validation
-- 12-second request timeout
-- retry behavior that does not retry aborted requests
-- 320 ms country-search debounce
-- stale chart and card clearing before a new country loads
-- one country map marker at a time
-- local retry controls
-- no blank screen for unsupported country codes
-
-### Country-event matching evidence
-
-Country-linked event records now retain:
-
-```json
-{
-  "country_code": "KEN",
-  "country_match_method": "source-country-field",
-  "country_match_confidence": 0.99,
-  "country_match_evidence": "Kenya"
-}
+```text
+[sc_site_intelligence_app height="1000"]
 ```
 
-Matching can use:
+### v1.18.3 reliability foundation retained
 
-- source country fields
-- country names and aliases in titles
-- a limited coordinate bounding-box match for priority countries
-- explicit demonstration-fixture labeling for fallback records
+v1.19.0 retains:
 
-A matched event should not be interpreted more strongly than its retained method and confidence allow.
+- normalized global country names and aliases
+- explicit live, cached, stale, reference-snapshot, and unavailable states
+- process-memory and JSON last-known-good caching
+- abortable country requests
+- country diagnostics
+- retained country-event match method and confidence
+- optional Platform Core integration
+- no additional paid infrastructure
 
 ## Public diagnostics
 
@@ -169,6 +151,16 @@ Returns:
 Diagnostics do not expose API keys, stack traces, raw retry queues, or private configuration.
 
 ## Principal public endpoints
+
+### Comparative Intelligence
+
+- `GET /public/compare?country=KEN&compare=GHA`
+- `GET /public/compare/indicators?country=KEN&compare=GHA`
+- `GET /public/compare/trends?country=KEN&compare=GHA`
+- `GET /public/compare/events?country=KEN&compare=GHA`
+- `GET /public/compare/brief?country=KEN&compare=GHA`
+- `GET /public/compare/export?country=KEN&compare=GHA&format=json|csv|html`
+
 
 ### Release and health
 
@@ -215,6 +207,8 @@ Diagnostics do not expose API keys, stack traces, raw retry queues, or private c
 
 ## WordPress shortcodes
 
+- `[sc_comparative_intelligence country="KEN" compare="GHA" height="1100"]`
+
 Primary product:
 
 ```text
@@ -227,6 +221,7 @@ Specialized standalone views:
 [sc_earth_observation_studio height="1000"]
 [sc_live_event_intelligence height="1000"]
 [sc_global_country_intelligence country="KEN" height="1100"]
+[sc_comparative_intelligence country="KEN" compare="GHA" height="1100"]
 ```
 
 Legacy compatibility views remain available, but the long-term direction is one main standalone app embed rather than a long stack of demonstration shortcodes.
@@ -255,10 +250,10 @@ node --check public_app/assets/app.js
 php -l ../wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php
 ```
 
-Expected test result for v1.18.3:
+Expected test result for v1.19.0:
 
 ```text
-199 passed
+206 passed
 ```
 
 ## Render deployment

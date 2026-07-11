@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from functools import lru_cache
 import json
@@ -329,8 +330,18 @@ def _live_indicator_bundle(code: str) -> tuple[dict[str, Any], ...]:
     normalized, country = _country(code)
     results = []
     diagnostics = {"indicator_timings_ms": {}, "cache_states": {}, "requested_at": _now()}
-    for definition in INDICATORS:
+
+    def load_definition(definition: dict[str, str]) -> tuple[dict[str, str], list[dict[str, Any]], dict[str, Any]]:
         series, cache_meta = _indicator_series(country["iso2"], definition["id"])
+        return definition, series, cache_meta
+
+    # Indicator requests are independent. Parallel loading prevents a slow or
+    # unavailable upstream API from multiplying the timeout across all eight
+    # public indicators while preserving per-indicator cache and source state.
+    with ThreadPoolExecutor(max_workers=min(8, len(INDICATORS))) as executor:
+        loaded = list(executor.map(load_definition, INDICATORS))
+
+    for definition, series, cache_meta in loaded:
         latest = series[-1] if series else None
         diagnostics["indicator_timings_ms"][definition["id"]] = cache_meta["timing_ms"]
         diagnostics["cache_states"][definition["id"]] = cache_meta["state"]

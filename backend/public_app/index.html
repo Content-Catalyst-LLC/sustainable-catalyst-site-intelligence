@@ -275,6 +275,99 @@
         </div>
       </section>
 
+      <section id="compareStudio" class="compare-studio" hidden aria-busy="false">
+        <div class="compare-studio-head">
+          <div>
+            <p class="eyebrow">COMPARATIVE INTELLIGENCE AND BRIEFING STUDIO</p>
+            <h2 id="compareStudioTitle">Compare country contexts</h2>
+            <p id="compareStudioIntro">Align public indicators, reporting years, trends, events, and source states without flattening methodological differences.</p>
+          </div>
+          <div class="compare-studio-actions">
+            <button id="compareSwap" class="ghost-button" type="button">Swap countries</button>
+            <button id="compareShare" class="ghost-button" type="button">Copy comparison view</button>
+            <button id="comparePrint" class="ghost-button" type="button">Print brief</button>
+          </div>
+        </div>
+
+        <div class="compare-control-deck">
+          <label>Primary country
+            <select id="compareCountryA" aria-label="Select primary country"></select>
+          </label>
+          <label>Comparison country
+            <select id="compareCountryB" aria-label="Select comparison country"></select>
+          </label>
+          <label>Indicator
+            <select id="compareIndicatorFilter" aria-label="Filter comparison indicators"><option value="">All indicators</option></select>
+          </label>
+          <button id="compareApply" class="earth-primary-button" type="button">Compare</button>
+          <button id="compareReset" class="ghost-button" type="button">Reset</button>
+        </div>
+
+        <div class="compare-summary-grid">
+          <article><span>Indicators</span><strong id="compareIndicatorCount">—</strong><small>Available comparison rows</small></article>
+          <article><span>Aligned</span><strong id="compareAlignedCount">—</strong><small>Matching ID, unit, and year</small></article>
+          <article><span id="compareEventLabelA">Primary events</span><strong id="compareEventCountA">—</strong><small>Available public records</small></article>
+          <article><span id="compareEventLabelB">Comparison events</span><strong id="compareEventCountB">—</strong><small>Available public records</small></article>
+        </div>
+
+        <div class="compare-view-tabs" role="tablist" aria-label="Comparison views">
+          <button class="compare-tab active" type="button" role="tab" aria-selected="true" data-compare-view="table">Table</button>
+          <button class="compare-tab" type="button" role="tab" aria-selected="false" data-compare-view="chart">Charts</button>
+          <button class="compare-tab" type="button" role="tab" aria-selected="false" data-compare-view="map">Map</button>
+          <button class="compare-tab" type="button" role="tab" aria-selected="false" data-compare-view="brief">Brief</button>
+          <button class="compare-tab" type="button" role="tab" aria-selected="false" data-compare-view="export">Export</button>
+        </div>
+
+        <div id="compareTableView" class="compare-view-panel">
+          <div class="compare-table-shell">
+            <table class="compare-table">
+              <thead><tr><th>Indicator</th><th id="compareTableHeadA">Primary</th><th id="compareTableHeadB">Comparison</th><th>Compatibility</th></tr></thead>
+              <tbody id="compareTableBody"><tr><td colspan="4">Select two countries to begin.</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div id="compareChartView" class="compare-view-panel" hidden>
+          <div class="compare-chart-toolbar">
+            <label>Trend
+              <select id="compareTrendSelect" aria-label="Select comparison trend"></select>
+            </label>
+          </div>
+          <article class="compare-chart-panel">
+            <div class="panel-head"><div><p class="eyebrow">SYNCHRONIZED TREND</p><h2 id="compareTrendTitle">Indicator trend</h2></div><div class="compare-legend"><span class="primary">Primary</span><span class="secondary">Comparison</span></div></div>
+            <div id="compareTrendChart" class="compare-trend-chart" role="img" aria-label="Country comparison trend chart"></div>
+            <div id="compareTrendTable" class="compare-trend-table"></div>
+          </article>
+        </div>
+
+        <div id="compareMapView" class="compare-view-panel" hidden>
+          <div class="compare-map-grid">
+            <article><p class="eyebrow">GEOGRAPHIC CONTEXT</p><h2 id="compareMapTitle">Two-country context</h2><p>Map position supports orientation only. Displayed boundaries and labels are not legal or cadastral determinations.</p></article>
+            <div id="compareMap" class="compare-map" aria-label="Map showing both comparison countries"></div>
+          </div>
+        </div>
+
+        <div id="compareBriefView" class="compare-view-panel" hidden>
+          <article class="compare-brief-panel">
+            <div class="panel-head"><div><p class="eyebrow">PUBLIC COMPARISON BRIEF</p><h2 id="compareBriefTitle">Comparison brief</h2></div><span id="compareBriefGenerated" class="compare-generated"></span></div>
+            <div id="compareBriefBody" class="compare-brief-body"></div>
+          </article>
+        </div>
+
+        <div id="compareExportView" class="compare-view-panel" hidden>
+          <div class="compare-export-grid">
+            <article><p class="eyebrow">JSON</p><h3>Evidence manifest</h3><p>Structured comparison, sources, dates, data states, and methodological cautions.</p><button class="ghost-button" type="button" data-compare-export="json">Download JSON</button></article>
+            <article><p class="eyebrow">CSV</p><h3>Indicator table</h3><p>Latest available values, reporting years, compatibility state, and calculated differences.</p><button class="ghost-button" type="button" data-compare-export="csv">Download CSV</button></article>
+            <article><p class="eyebrow">HTML</p><h3>Print-ready brief</h3><p>A portable source-aware comparison view suitable for browser printing.</p><button class="ghost-button" type="button" data-compare-export="html">Download HTML</button></article>
+          </div>
+        </div>
+
+        <div id="compareMethodology" class="compare-methodology">
+          <strong>Comparison boundary</strong>
+          <p>Indicator IDs, units, reporting years, sources, and delivery states remain visible. No proprietary composite score or unexplained country ranking is produced.</p>
+        </div>
+      </section>
+
       <section id="routePanel" class="route-panel" hidden></section>
 
       <section id="globalCountryExplorer" class="global-country-explorer" hidden>

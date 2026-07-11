@@ -18,11 +18,17 @@ say "Validating required release files"
 for required in README.md CHANGELOG.md LICENSE backend wordpress-plugin docs; do
   [[ -e "$ROOT_DIR/$required" ]] || fail "Missing required path: $required"
 done
+for required in   backend/app/comparative_intelligence.py   backend/tests/test_comparative_intelligence_v1190.py   docs/COMPARATIVE_INTELLIGENCE_BRIEFING_STUDIO_V1190.md   docs/RELEASE_MANIFEST_V1190.json; do
+  [[ -f "$ROOT_DIR/$required" ]] || fail "Missing v1.19.0 release file: $required"
+done
 
 say "Checking canonical release markers"
-grep -q 'APP_VERSION = "1.18.3"' "$BACKEND_DIR/app/version.py" || fail "Backend version marker is missing."
-grep -q 'Version: 1.18.3' "$PLUGIN_FILE" || fail "WordPress plugin header version is missing."
-grep -q "const VERSION = '1.18.3';" "$PLUGIN_FILE" || fail "WordPress plugin constant is missing."
+grep -q 'APP_VERSION = "1.19.0"' "$BACKEND_DIR/app/version.py" || fail "Backend version marker is missing."
+grep -q 'Version: 1.19.0' "$PLUGIN_FILE" || fail "WordPress plugin header version is missing."
+grep -q "const VERSION = '1.19.0';" "$PLUGIN_FILE" || fail "WordPress plugin constant is missing."
+grep -q 'id="compareStudio"' "$BACKEND_DIR/public_app/index.html" || fail "Comparative Intelligence app view is missing."
+grep -q '@app.get("/public/compare")' "$BACKEND_DIR/app/main.py" || fail "Comparative Intelligence endpoint is missing."
+grep -q "sc_comparative_intelligence" "$PLUGIN_FILE" || fail "Comparative Intelligence shortcode is missing."
 
 say "Running Python tests"
 TEMP_COUNTRY_CACHE="$(mktemp)"
@@ -57,9 +63,9 @@ find "$ROOT_DIR" -type d \( -name __pycache__ -o -name .pytest_cache \) -prune -
 rm -f "$BACKEND_DIR/data/country_last_known_good.json" "$BACKEND_DIR/data/country_last_known_good.json.tmp"
 
 say "Checking forbidden release artifacts"
-# The root .git directory is expected in a normal checked-out repository.
-# Nested repositories and generated dependency/cache directories remain
-# forbidden release artifacts.
+# A root .git directory is expected when this validator runs inside a normal
+# working clone. Nested .git directories and generated dependency/cache
+# directories remain forbidden release artifacts.
 FORBIDDEN_DIRS="$(
   find "$ROOT_DIR" \
     -path "$ROOT_DIR/.git" -prune -o \

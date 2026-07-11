@@ -88,7 +88,7 @@ class Settings(BaseSettings):
     public_connector_live_checks: bool = True
 
 
-    # Platform Core v2.5.0 integration — optional in Site Intelligence v1.18.3.
+    # Platform Core v2.5.0 integration — optional in Site Intelligence v1.19.0.
     # Write credentials remain backend-only and must never be exposed through
     # WordPress, browser JavaScript, public diagnostics, or export payloads.
     platform_core_enabled: bool = False

@@ -458,6 +458,108 @@
   }
   function closeGlobalCountryExplorer(){qs("#globalCountryExplorer").hidden=true;if(globalCountryState.selectionController)globalCountryState.selectionController.abort()}
 
+  const compareState={data:null,brief:null,controller:null,sequence:0,activeView:"table",map:null,base:null,markers:null,rows:[],trends:[]};
+
+  async function prepareCompareSelectors(){
+    await loadCountryCatalog();
+    const options=globalCountryState.catalog.map(item=>`<option value="${escapeHtml(item.code)}">${escapeHtml(item.name)}</option>`).join("");
+    if(!qs("#compareCountryA").options.length)qs("#compareCountryA").innerHTML=options;
+    if(!qs("#compareCountryB").options.length)qs("#compareCountryB").innerHTML=options;
+  }
+  function compareCountryName(code){return globalCountryState.catalog.find(item=>item.code===code)?.name||names[code]||code}
+  function setCompareLoading(a,b){
+    qs("#compareStudio").setAttribute("aria-busy","true");
+    qs("#compareStudioTitle").textContent=`Loading ${compareCountryName(a)} and ${compareCountryName(b)}`;
+    qs("#compareStudioIntro").textContent="Retrieving aligned indicators, trends, public events, and methodological metadata.";
+    qs("#compareTableBody").innerHTML='<tr><td colspan="4"><div class="loading-block">Loading comparative intelligence…</div></td></tr>';
+    qs("#compareTrendChart").innerHTML='<div class="loading-block">Loading synchronized trends…</div>';
+    qs("#compareBriefBody").innerHTML='<div class="loading-block">Preparing source-aware comparison brief…</div>';
+    ["compareIndicatorCount","compareAlignedCount","compareEventCountA","compareEventCountB"].forEach(id=>qs(`#${id}`).textContent="—");
+  }
+  function compareValueMarkup(record,format){
+    if(!record)return '<div class="compare-value"><strong>Unavailable</strong><span>No validated public value is currently available.</span></div>';
+    const source=record.source_url?`<a href="${escapeHtml(record.source_url)}" target="_blank" rel="noopener">${escapeHtml(record.source||"Source")} ↗</a>`:escapeHtml(record.source||"Source unavailable");
+    return `<div class="compare-value"><strong>${escapeHtml(formatCountryValue(record.value,format,record.unit))}</strong><span>${escapeHtml(record.unit||"")} · ${escapeHtml(record.year||"Year unavailable")}</span><span>${source} · ${escapeHtml(record.data_state||"unknown")}</span></div>`;
+  }
+  function renderCompareRows(){
+    const filter=qs("#compareIndicatorFilter").value;
+    const rows=(compareState.rows||[]).filter(row=>!filter||row.id===filter);
+    qs("#compareTableBody").innerHTML=rows.length?rows.map(row=>{
+      const warnings=(row.warnings||[]).map(item=>`<span class="compare-warning">${escapeHtml(item)}</span>`).join("");
+      const difference=row.absolute_difference==null?"":`<span class="compare-warning">Difference: ${escapeHtml(formatCountryValue(row.absolute_difference,row.format,row.unit))}${row.percent_difference==null?"":` · ${escapeHtml(row.percent_difference.toFixed(1))}%`}</span>`;
+      return `<tr><td><div class="compare-indicator-name"><strong>${escapeHtml(row.label)}</strong><span>${escapeHtml(row.id)} · ${escapeHtml(row.domain||"Public indicator")}</span></div></td><td>${compareValueMarkup(row.primary,row.format)}</td><td>${compareValueMarkup(row.comparison,row.format)}</td><td><span class="compare-compatibility ${escapeHtml(row.compatibility)}">${escapeHtml(row.compatibility.replaceAll("-"," "))}</span>${difference}${warnings}</td></tr>`;
+    }).join(""):'<tr><td colspan="4">No indicators match the selected filter.</td></tr>';
+  }
+  function renderCompareTrend(trend){
+    const chart=qs("#compareTrendChart"),table=qs("#compareTrendTable");
+    if(!trend){chart.innerHTML='<div class="empty-state"><div><strong>Trend unavailable</strong><span>No shared indicator trend is available for this comparison.</span></div></div>';table.innerHTML="";return}
+    qs("#compareTrendTitle").textContent=trend.label;
+    const left=new Map((trend.primary_series||[]).map(item=>[Number(item.year),Number(item.value)]));
+    const right=new Map((trend.comparison_series||[]).map(item=>[Number(item.year),Number(item.value)]));
+    const years=[...new Set([...left.keys(),...right.keys()])].filter(Number.isFinite).sort((a,b)=>a-b);
+    const values=[...left.values(),...right.values()].filter(Number.isFinite);
+    if(!years.length||!values.length){chart.innerHTML='<div class="empty-state"><div><strong>Trend unavailable</strong><span>No validated multi-year series was returned.</span></div></div>';table.innerHTML="";return}
+    const min=Math.min(...values),max=Math.max(...values),spread=Math.max(max-min,Math.abs(max)*.08,1);
+    const height=value=>value==null?0:Math.max(4,Math.min(100,8+((value-min)/spread)*88));
+    chart.innerHTML=years.map(year=>`<div class="compare-trend-year">${left.has(year)?`<span class="compare-trend-bar primary" style="height:${height(left.get(year))}%" title="${escapeHtml(compareCountryName(compareState.data.scope.primary_country.code))}: ${escapeHtml(formatCountryValue(left.get(year),trend.format,trend.unit))}"></span>`:""}${right.has(year)?`<span class="compare-trend-bar secondary" style="height:${height(right.get(year))}%" title="${escapeHtml(compareCountryName(compareState.data.scope.comparison_country.code))}: ${escapeHtml(formatCountryValue(right.get(year),trend.format,trend.unit))}"></span>`:""}<small>${year}</small></div>`).join("");
+    table.innerHTML=`Common reporting years: ${escapeHtml(trend.common_year_count||0)}. ${escapeHtml(trend.comparison_note||"")}`;
+  }
+  function initCompareMap(){
+    if(compareState.map)return;
+    compareState.map=L.map("compareMap",{zoomControl:true,worldCopyJump:true}).setView([10,20],2);
+    compareState.base=L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{attribution:"© OpenStreetMap contributors © CARTO",maxZoom:19}).addTo(compareState.map);
+    compareState.markers=L.layerGroup().addTo(compareState.map);
+  }
+  function renderCompareMap(){
+    initCompareMap();compareState.markers.clearLayers();
+    const countries=[compareState.data?.scope?.primary_country,compareState.data?.scope?.comparison_country].filter(Boolean);
+    const points=[];
+    countries.forEach((country,index)=>{const lat=Number(country.latitude),lng=Number(country.longitude);if(!Number.isFinite(lat)||!Number.isFinite(lng))return;points.push([lat,lng]);L.circleMarker([lat,lng],{radius:9,color:"#fff",weight:1,fillColor:index===0?"#43d6ff":"#ff8b5c",fillOpacity:.9}).addTo(compareState.markers).bindPopup(`<strong>${escapeHtml(country.name)}</strong><br>${escapeHtml(country.capital||"Capital unavailable")}`)});
+    if(points.length===2)compareState.map.fitBounds(points,{padding:[55,55],maxZoom:5});else if(points.length===1)compareState.map.setView(points[0],4);else compareState.map.setView([10,20],2);
+    qs("#compareMapTitle").textContent=countries.map(item=>item.name).join(" and ")||"Two-country context";
+    setTimeout(()=>compareState.map.invalidateSize(),80);
+  }
+  function renderCompareBrief(){
+    const brief=compareState.brief;if(!brief)return;
+    qs("#compareBriefTitle").textContent=brief.title;qs("#compareBriefGenerated").textContent=`Generated ${cleanDate(brief.generated_at)}`;
+    const evidence=(brief.latest_available_indicators||[]).slice(0,12).map(item=>{const a=item.primary,b=item.comparison;return `<div><strong>${escapeHtml(item.indicator)}</strong><span>${a?`${escapeHtml(formatCountryValue(a.value,a.format,a.unit))} (${escapeHtml(a.year)})`:"Unavailable"} · ${b?`${escapeHtml(formatCountryValue(b.value,b.format,b.unit))} (${escapeHtml(b.year)})`:"Unavailable"}<br>${escapeHtml(item.compatibility)}</span></div>`}).join("");
+    const caveats=(brief.methodological_caveats||[]).slice(0,12).map(item=>`<li>${escapeHtml(item)}</li>`).join("");
+    const sources=(brief.source_list||[]).map(item=>`<li>${item.url?`<a href="${escapeHtml(item.url)}" target="_blank" rel="noopener">${escapeHtml(item.name)} ↗</a>`:escapeHtml(item.name)}</li>`).join("");
+    qs("#compareBriefBody").innerHTML=`<section class="compare-brief-section"><h3>Comparison scope</h3><p>${escapeHtml(brief.comparison_scope.primary_country.name)} and ${escapeHtml(brief.comparison_scope.comparison_country.name)} · ${escapeHtml(brief.comparison_scope.indicator_count)} registered indicators.</p></section><section class="compare-brief-section"><h3>Latest available indicators</h3><div class="compare-brief-evidence">${evidence||"No validated public values are currently available."}</div></section><section class="compare-brief-section"><h3>Methodological caveats</h3><ul>${caveats}</ul></section><section class="compare-brief-section"><h3>Sources</h3><ul>${sources||"<li>Source records unavailable.</li>"}</ul></section><section class="compare-brief-section"><h3>Responsible-use boundary</h3><p>${escapeHtml(brief.boundary)}</p></section>`;
+  }
+  function renderComparison(){
+    const data=compareState.data,indicators=data.indicators||{},left=data.scope.primary_country,right=data.scope.comparison_country;
+    qs("#compareStudioTitle").textContent=data.title;qs("#compareStudioIntro").textContent=`Compare ${left.name} and ${right.name} with source, unit, reporting-year, and data-state differences kept visible.`;
+    qs("#compareTableHeadA").textContent=left.name;qs("#compareTableHeadB").textContent=right.name;
+    qs("#compareIndicatorCount").textContent=data.summary.available_indicator_count;qs("#compareAlignedCount").textContent=data.summary.aligned_indicator_count;
+    qs("#compareEventLabelA").textContent=`${left.name} events`;qs("#compareEventLabelB").textContent=`${right.name} events`;qs("#compareEventCountA").textContent=data.summary.primary_event_count;qs("#compareEventCountB").textContent=data.summary.comparison_event_count;
+    compareState.rows=indicators.rows||[];compareState.trends=data.trends?.trends||[];
+    qs("#compareIndicatorFilter").innerHTML='<option value="">All indicators</option>'+compareState.rows.map(row=>`<option value="${escapeHtml(row.id)}">${escapeHtml(row.label)}</option>`).join("");renderCompareRows();
+    qs("#compareTrendSelect").innerHTML=compareState.trends.map(item=>`<option value="${escapeHtml(item.id)}">${escapeHtml(item.label)}</option>`).join("");renderCompareTrend(compareState.trends[0]||null);renderCompareMap();renderCompareBrief();
+    qs("#compareMethodology p").textContent=(data.boundaries||[]).join(" ");reportHeight();
+  }
+  async function loadComparison(pushState=true){
+    await prepareCompareSelectors();
+    let a=qs("#compareCountryA").value||state.country||"KEN",b=qs("#compareCountryB").value||"GHA";
+    if(a===b){b=a==="GHA"?"KEN":"GHA";qs("#compareCountryB").value=b;toast("Choose two different countries; comparison country was adjusted.")}
+    if(compareState.controller)compareState.controller.abort();const controller=new AbortController();compareState.controller=controller;const signal=controller.signal,sequence=++compareState.sequence;setCompareLoading(a,b);
+    try{
+      const query=new URLSearchParams({country:a,compare:b});
+      const data=await apiWithRetry(`/public/compare?${query.toString()}`,3,{signal,timeout:45000});
+      if(signal.aborted||sequence!==compareState.sequence)return;
+      const brief=await apiWithRetry(`/public/compare/brief?${query.toString()}`,2,{signal,timeout:30000});
+      if(signal.aborted||sequence!==compareState.sequence)return;compareState.data=data;compareState.brief=brief;state.country=a;renderComparison();
+      if(pushState){const params=new URLSearchParams(location.search);params.set("view","compare");params.set("country",a);params.set("compare",b);history.replaceState(null,"",`?${params.toString()}`)}
+    }catch(error){if(error?.name==="AbortError")return;qs("#compareTableBody").innerHTML=`<tr><td colspan="4">${publicErrorBlock("Comparison unavailable","The comparative intelligence service may be waking up or temporarily unavailable.",()=>loadComparison(false))}</td></tr>`;qs("#compareBriefBody").innerHTML='<div class="empty-state"><div><strong>Brief unavailable</strong><span>Retry the comparison to generate a source-aware brief.</span></div></div>'}
+    finally{if(sequence===compareState.sequence)qs("#compareStudio").setAttribute("aria-busy","false")}
+  }
+  async function openCompareStudio(){
+    qs("#compareStudio").hidden=false;await prepareCompareSelectors();const params=new URLSearchParams(location.search);const a=params.get("country")||state.country||"KEN";let b=params.get("compare")||"GHA";if(a===b)b=a==="GHA"?"KEN":"GHA";qs("#compareCountryA").value=globalCountryState.catalog.some(item=>item.code===a)?a:"KEN";qs("#compareCountryB").value=globalCountryState.catalog.some(item=>item.code===b)?b:"GHA";await loadComparison(false)
+  }
+  function closeCompareStudio(){qs("#compareStudio").hidden=true;if(compareState.controller)compareState.controller.abort()}
+  function setCompareView(view){compareState.activeView=view;qsa(".compare-tab").forEach(button=>{const active=button.dataset.compareView===view;button.classList.toggle("active",active);button.setAttribute("aria-selected",active?"true":"false")});["table","chart","map","brief","export"].forEach(name=>{qs(`#compare${name[0].toUpperCase()+name.slice(1)}View`).hidden=name!==view});if(view==="map")setTimeout(()=>compareState.map?.invalidateSize(),80);reportHeight()}
+  function downloadComparison(format){if(!compareState.data)return;const a=compareState.data.scope.primary_country.code,b=compareState.data.scope.comparison_country.code;window.open(`${API}/public/compare/export?country=${encodeURIComponent(a)}&compare=${encodeURIComponent(b)}&format=${encodeURIComponent(format)}`,"_blank","noopener")}
+
   const earthState={mapA:null,mapB:null,baseA:null,baseB:null,layerA:null,layerB:null,layers:[],frames:[],frameIndex:0,timer:null,activeLayer:"true-color",opacity:.72};
 
   function earthDate(daysAgo){const d=new Date();d.setUTCDate(d.getUTCDate()-daysAgo);return d.toISOString().slice(0,10)}
@@ -629,19 +731,19 @@
     const panel=qs("#routePanel");
 
     if(route==="overview"){
-      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();return;
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();return;
     }
     if(route==="earth"){
-      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEventStudio();closeGlobalCountryExplorer();await openEarthStudio();return;
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();await openEarthStudio();return;
     }
     if(route==="events"){
-      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeGlobalCountryExplorer();await openEventStudio();return;
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeGlobalCountryExplorer();closeCompareStudio();await openEventStudio();return;
     }
     if(route==="country"){
-      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();await openGlobalCountryExplorer();return;
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();closeCompareStudio();await openGlobalCountryExplorer();return;
     }
 
-    closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();qs("#countryIntelligencePanel").hidden=true;
+    closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();qs("#countryIntelligencePanel").hidden=true;
     panel.hidden=false;panel.innerHTML=`<div class="loading-block">Loading ${escapeHtml(route)} view…</div>`;
     if(route==="country-legacy"){
       qs("#countryIntelligencePanel").hidden=false;panel.hidden=true;await loadLiveCountry(state.country);return;
@@ -650,8 +752,7 @@
       const rows=(state.events?.features||[]).slice(0,30);
       panel.innerHTML=`<p class="eyebrow">PUBLIC EVENT RECORDS</p><h2>Latest mapped events</h2><div class="event-list">${rows.map(f=>{const p=f.properties||{};return `<div class="event-row"><span class="event-marker"></span><div><div class="event-title">${escapeHtml(p.title||"Event")}</div><div class="event-meta">${escapeHtml(p.category||"Event")} · ${escapeHtml(p.source||"Source")}</div></div><div class="event-time">${cleanDate(p.observed_at)}</div></div>`}).join("")}</div>`;
     }else if(route==="compare"){
-      const other=state.country==="GHA"?"KEN":"GHA";
-      panel.innerHTML=`<p class="eyebrow">COMPARISON VIEW</p><h2>${escapeHtml(names[state.country]||state.country)} and ${escapeHtml(names[other])}</h2><div class="route-grid"><div class="route-card"><h3>Human development</h3><p>Validated connector values remain separate by country, year, unit, and source definition.</p></div><div class="route-card"><h3>Environmental pressure</h3><p>Satellite and indicator context can be aligned without creating a proprietary score.</p></div><div class="route-card"><h3>Humanitarian conditions</h3><p>Missing records remain explicit and do not imply the absence of real-world conditions.</p></div></div>`;
+      panel.hidden=true;await openCompareStudio();return;
     }else{
       const sources=["NASA GIBS","NASA EONET","USGS","World Bank","WHO","UNESCO","FAOSTAT","UN-Water","UNHCR","ReliefWeb","UCDP","ACLED"];
       panel.innerHTML=`<p class="eyebrow">PUBLIC SOURCE LAYER</p><h2>Connected evidence services</h2><div class="source-list">${sources.map(s=>`<div class="source-chip">${escapeHtml(s)}</div>`).join("")}</div>`;
@@ -696,6 +797,15 @@
     qs("#earthExport").addEventListener("click",exportEarthPNG);
     qs("#earthPrint").addEventListener("click",()=>{document.body.classList.add("earth-print-mode");window.print();setTimeout(()=>document.body.classList.remove("earth-print-mode"),300)});
     qs("#earthDownloadManifest").addEventListener("click",downloadEarthManifest);
+    qs("#compareApply").addEventListener("click",()=>loadComparison(true));
+    qs("#compareReset").addEventListener("click",()=>{qs("#compareCountryA").value="KEN";qs("#compareCountryB").value="GHA";qs("#compareIndicatorFilter").value="";loadComparison(true)});
+    qs("#compareSwap").addEventListener("click",()=>{const a=qs("#compareCountryA").value;qs("#compareCountryA").value=qs("#compareCountryB").value;qs("#compareCountryB").value=a;loadComparison(true)});
+    qs("#compareShare").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("Comparison view link copied")});
+    qs("#comparePrint").addEventListener("click",()=>{setCompareView("brief");setTimeout(()=>window.print(),80)});
+    qs("#compareIndicatorFilter").addEventListener("change",renderCompareRows);
+    qs("#compareTrendSelect").addEventListener("change",e=>renderCompareTrend(compareState.trends.find(item=>item.id===e.target.value)||null));
+    qsa(".compare-tab").forEach(button=>button.addEventListener("click",()=>setCompareView(button.dataset.compareView)));
+    qsa("[data-compare-export]").forEach(button=>button.addEventListener("click",()=>downloadComparison(button.dataset.compareExport)));
     qs("#closeEvidenceDrawer").addEventListener("click",closeEvidenceDrawer);qs("#evidenceBackdrop").addEventListener("click",closeEvidenceDrawer);document.addEventListener("keydown",e=>{if(e.key==="Escape")closeEvidenceDrawer()});
     const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const initialView=params.get("view")||"overview";qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";try{setLaunch("Loading satellite imagery.",50);await loadLayers();await setImagery("true-color");setLaunch("Connecting to live events and country evidence.",68);await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);setLaunch("Preparing the workspace.",88);await setRoute(initialView);finishLaunch()}
     catch(e){qs("#statusText").textContent="Partial public data";toast("Some optional public data is temporarily unavailable.");finishLaunch()}

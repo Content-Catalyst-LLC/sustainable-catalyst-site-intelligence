@@ -1,0 +1,20 @@
+{
+  "product": "Sustainable Catalyst Site Intelligence",
+  "version": "1.19.0",
+  "release_name": "Comparative Intelligence and Briefing Studio",
+  "api_schema_version": "1.19",
+  "expected_wordpress_plugin_version": "1.19.0",
+  "primary_route": "/app/?view=compare&country=KEN&compare=GHA",
+  "public_endpoints": [
+    "/public/compare",
+    "/public/compare/indicators",
+    "/public/compare/trends",
+    "/public/compare/events",
+    "/public/compare/brief",
+    "/public/compare/export"
+  ],
+  "exports": ["json", "csv", "html"],
+  "wordpress_shortcode": "[sc_comparative_intelligence country=\"KEN\" compare=\"GHA\" height=\"1100\"]",
+  "platform_core_required": false,
+  "paid_dependencies_added": false
+}

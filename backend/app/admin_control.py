@@ -64,6 +64,7 @@ def _shortcodes() -> List[Dict[str, Any]]:
         {"shortcode": "[sc_sitemap_coverage]", "category": "indexing", "visibility": "private", "endpoint": "/indexing/sitemap", "purpose": "Sitemap-to-registry coverage."},
         {"shortcode": "[sc_404_intelligence]", "category": "indexing", "visibility": "private", "endpoint": "/indexing/404s", "purpose": "404 and routing diagnostics."},
         {"shortcode": "[sc_site_intelligence_public_landing]", "category": "public", "visibility": "public", "endpoint": "/public/landing-page", "purpose": "Public Site Intelligence landing section."},
+        {"shortcode": "[sc_comparative_intelligence country=\"KEN\" compare=\"GHA\" height=\"1100\"]", "category": "public application", "visibility": "public", "endpoint": "/app/?view=compare&country=KEN&compare=GHA", "purpose": "Comparative Intelligence and Briefing Studio standalone embed."},
         {"shortcode": "[sc_site_intelligence_public_flagship]", "category": "public", "visibility": "public", "endpoint": "wordpress-local", "purpose": "Complete polished public dashboard page preset."},
         {"shortcode": "[sc_site_intelligence_public_page_builder]", "category": "public builder", "visibility": "private-review", "endpoint": "/public/page-builder", "purpose": "Public page-builder guidance, presets, and release checklist."},
         {"shortcode": "[sc_public_dashboard_shortcode_bundle]", "category": "public builder", "visibility": "private-review", "endpoint": "/public/page-builder/shortcodes", "purpose": "Copy-ready public dashboard shortcode bundles."},
