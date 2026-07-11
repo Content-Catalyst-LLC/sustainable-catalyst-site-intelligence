@@ -1727,3 +1727,12 @@
 .scsi-standalone-app.is-loaded .scsi-app-loading{display:none}
 .scsi-standalone-app iframe{transition:height .25s ease}
 @media(max-width:767px){.scsi-standalone-app{margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);border-radius:0}.scsi-standalone-app iframe{border-radius:0!important}}
+
+/* v1.18.2 — completed-request loader cleanup */
+.scsi-loading-shell[hidden],
+.scsi-public-connector-panel.scsi-is-ready > .scsi-loading-shell {
+  display: none !important;
+}
+.scsi-public-connector-panel[aria-busy="false"] > .scsi-loading-shell {
+  display: none !important;
+}

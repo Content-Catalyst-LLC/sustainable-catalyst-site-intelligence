@@ -2721,6 +2721,26 @@
   }
 
 
+
+  function setPublicConnectorLoading(root, isLoading) {
+    if (!root) return;
+    root.classList.toggle('scsi-is-loading', Boolean(isLoading));
+    root.setAttribute('aria-busy', isLoading ? 'true' : 'false');
+
+    if (!isLoading) {
+      const loadingShell = root.querySelector('.scsi-loading-shell');
+      if (loadingShell) {
+        loadingShell.hidden = true;
+        loadingShell.setAttribute('aria-hidden', 'true');
+        loadingShell.remove();
+      }
+    }
+  }
+
+  function finishPublicConnectorLoading(root) {
+    setPublicConnectorLoading(root, false);
+  }
+
   function publicStateLabel(data) {
     const state = String(data.origin_state || data.data_state || '').toLowerCase();
     if (state.indexOf('fallback') !== -1) return 'Local fallback';
@@ -2760,10 +2780,11 @@
     controls.querySelector('[data-scsi-load-country]').addEventListener('click', function () {
       const code = select.value;
       root.setAttribute('data-country', code);
-      root.classList.add('scsi-is-loading');
+      setPublicConnectorLoading(root, true);
       fetchJson(cfg.restBase + '/public-country-intelligence?country=' + encodeURIComponent(code))
-        .then(function (payload) { root.classList.remove('scsi-is-loading'); renderPublicConnectorPanel(root, payload); })
-        .catch(function (err) { root.classList.remove('scsi-is-loading'); showError(root, err && err.message ? err.message : 'Unable to load country profile.'); });
+        .then(function (payload) { renderPublicConnectorPanel(root, payload); })
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load country profile.'); })
+        .finally(function () { finishPublicConnectorLoading(root); });
     });
     out.appendChild(controls);
 
@@ -2819,7 +2840,7 @@
     table.innerHTML='<div class="scsi-comparison-head"><span>Dimension</span><span>'+escapeHtml(countries[0]||'Country A')+'</span><span>'+escapeHtml(countries[1]||'Country B')+'</span></div>';
     (data.comparison_rows || []).forEach(function(row){
       const left=row.left||{}, right=row.right||{}; const el=document.createElement('div'); el.className='scsi-comparison-line';
-      el.innerHTML='<strong>'+escapeHtml(String(row.dimension||'').replace(/-/g,' '))+'</strong><span>'+escapeHtml(left.value == null ? 'No validated value' : left.value)+'</span><span>'+escapeHtml(right.value == null ? 'No validated value' : right.value)+'</span>';
+      el.innerHTML='<strong>'+escapeHtml(String(row.dimension||'').replace(/-/g,' '))+'</strong><span>'+escapeHtml(left.value == null ? 'No validated public value is currently available.' : left.value)+'</span><span>'+escapeHtml(right.value == null ? 'No validated public value is currently available.' : right.value)+'</span>';
       table.appendChild(el);
     }); out.appendChild(table);
   }
@@ -2845,8 +2866,7 @@
   }
 
   function renderPublicConnectorPanel(root, data) {
-    const loadingShell = root.querySelector('.scsi-loading-shell');
-    if (loadingShell) loadingShell.hidden = true;
+    finishPublicConnectorLoading(root);
     root.classList.add('scsi-is-ready');
     const out = root.querySelector('.scsi-output');
     const muted = root.querySelector('.scsi-muted');
@@ -3419,9 +3439,11 @@
 
     document.querySelectorAll('[data-scsi-public-connector-panel]').forEach(function (root) {
       const panel = root.dataset.connectorPanel || 'connector-status';
+      setPublicConnectorLoading(root, true);
       fetchJson(cfg.restBase + connectorPanelEndpoint(panel, root))
         .then(function (data) { renderPublicConnectorPanel(root, data); })
-        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public connector panel.'); });
+        .catch(function (err) { showError(root, err && err.message ? err.message : 'Unable to load public connector panel.'); })
+        .finally(function () { finishPublicConnectorLoading(root); });
     });
 
     document.querySelectorAll('[data-scsi-public-indicator-chart-panel]').forEach(function (root) {

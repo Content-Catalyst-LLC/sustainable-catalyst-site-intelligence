@@ -13,7 +13,7 @@ client = TestClient(app)
 
 
 def test_indicator_dashboard_directory_has_chart_ready_pages():
-    data = public_indicator_dashboard_directory(Settings(version="1.18.1"))
+    data = public_indicator_dashboard_directory(Settings(version="1.18.2"))
     assert data["ok"] is True
     assert data["version_scope"] == "v1.18.0"
     assert data["recommended_shortcode"] == "[sc_public_indicator_dashboard_directory]"
@@ -22,7 +22,7 @@ def test_indicator_dashboard_directory_has_chart_ready_pages():
 
 
 def test_sustainability_dashboard_has_chart_specs_without_private_payloads():
-    data = public_indicator_dashboard("sustainability", Settings(version="1.18.1"))
+    data = public_indicator_dashboard("sustainability", Settings(version="1.18.2"))
     assert data["ok"] is True
     assert data["recommended_shortcode"] == "[sc_public_sustainability_indicator_dashboard]"
     assert data["chart_count"] >= 2
@@ -32,7 +32,7 @@ def test_sustainability_dashboard_has_chart_specs_without_private_payloads():
 
 
 def test_indicator_chart_gallery_and_visual_qa():
-    settings = Settings(version="1.18.1")
+    settings = Settings(version="1.18.2")
     gallery = public_indicator_chart_gallery(settings)
     qa = public_indicator_chart_visual_qa(settings)
     assert gallery["recommended_shortcode"] == "[sc_public_indicator_chart_gallery]"

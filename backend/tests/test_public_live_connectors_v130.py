@@ -12,7 +12,7 @@ from app.public_live_connectors import (
 
 
 def test_public_connector_status_payload():
-    data = public_connector_status(Settings(version="1.18.1"))
+    data = public_connector_status(Settings(version="1.18.2"))
     assert data["ok"] is True
     assert data["version_scope"] == "v1.18.0"
     assert data["counts"]["live_ready"] >= 4
@@ -21,7 +21,7 @@ def test_public_connector_status_payload():
 
 
 def test_public_cache_and_freshness_payloads_are_public_safe():
-    settings = Settings(version="1.18.1")
+    settings = Settings(version="1.18.2")
     cache = public_cache_status(settings)
     freshness = public_source_freshness(settings)
     assert cache["cache_enabled"] is True
@@ -32,17 +32,17 @@ def test_public_cache_and_freshness_payloads_are_public_safe():
 
 
 def test_public_connector_details_include_methodology_and_no_secrets():
-    detail = public_connector_detail("github", Settings(version="1.18.1"))
+    detail = public_connector_detail("github", Settings(version="1.18.2"))
     assert detail["ok"] is True
     assert detail["connector"]["slug"] == "github"
     assert detail["connector"]["requires_credentials"] is False
     assert "methodology" in detail
-    environmental = public_connector_detail("environmental", Settings(version="1.18.1"))
+    environmental = public_connector_detail("environmental", Settings(version="1.18.2"))
     assert len(environmental["subconnectors"]) >= 6
 
 
 def test_admin_connector_diagnostics_hides_values():
-    settings = Settings(version="1.18.1", eia_api_key="super_private_value", epa_aqs_email="a@example.com", epa_aqs_key="super_private_value")
+    settings = Settings(version="1.18.2", eia_api_key="super_private_value", epa_aqs_email="a@example.com", epa_aqs_key="super_private_value")
     data = admin_connector_diagnostics(settings)
     assert data["optional_credentials"]["eia_api_key_configured"] is True
     assert data["optional_credentials"]["epa_aqs_credentials_configured"] is True

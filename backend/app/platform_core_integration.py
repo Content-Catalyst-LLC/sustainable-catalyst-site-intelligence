@@ -11,7 +11,7 @@ from urllib.request import Request, urlopen
 import json
 import os
 
-VERSION = "1.18.1"
+VERSION = "1.18.2"
 ACTOR = "site-intelligence-v1.18.0"
 SOURCE_ENTITY_WORLD_BANK = "sc:source:world-bank-open-data"
 SOFTWARE_ENTITY = "sc:product:site-intelligence"

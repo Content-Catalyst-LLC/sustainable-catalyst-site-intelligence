@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.18.2 — WordPress Skeleton Loader Completion Patch
+
+- Fixed Country Intelligence Profile skeleton bars remaining after content rendered.
+- Fixed Cross-Domain Comparison skeleton bars remaining after fallback or completed requests.
+- Added shared loading-state helpers with `aria-busy` management.
+- Added `finally` cleanup for initial loads and country-profile reloads.
+- Removed completed loading-shell elements from the DOM.
+- Added CSS safeguards so hidden or completed loaders cannot remain visible.
+- Reworded missing comparison values as “No validated public value is currently available.”
+- Preserved explicit missing-data rows instead of disguising unavailable connector values.
+
 ## 1.18.1 — Public Feed Notice Removal
 
 - Removed the persistent global “Some public feeds are unavailable” banner.

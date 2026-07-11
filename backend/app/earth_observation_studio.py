@@ -5,7 +5,7 @@ from typing import Any
 
 from .geospatial_intelligence import SATELLITE_LAYERS
 
-VERSION = "1.18.1"
+VERSION = "1.18.2"
 
 
 def _now() -> str:

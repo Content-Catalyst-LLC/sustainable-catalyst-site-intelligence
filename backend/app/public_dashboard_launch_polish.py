@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any
 
-VERSION = "1.18.1"
+VERSION = "1.18.2"
 SCHEMA_VERSION = "sc-public-dashboard-launch-polish/1.0"
 
 
