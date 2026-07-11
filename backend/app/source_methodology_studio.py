@@ -391,6 +391,16 @@ METHODOLOGY_RECORDS: list[dict[str, Any]] = [
         "limitations": ["A partial view may not contain every source normally associated with the topic."],
         "source_ids": ["world-bank", "nasa-gibs", "usgs-earthquakes", "nasa-eonet", "reliefweb", "nasa-power", "platform-core"],
     },
+    {
+        "id": "saved-view-state",
+        "title": "Saved views and shareable research paths",
+        "summary": "Public interface configuration is stored locally as a validated, portable manifest and can be reconstructed from public URL parameters.",
+        "applies_to": ["overview", "earth", "country", "events", "compare", "thematic", "briefing", "sources", "saved"],
+        "rules": ["Use browser localStorage only.", "Store public interface parameters rather than evidence payloads.", "Reject sensitive-looking fields and unsupported routes.", "Validate imported manifests without server persistence.", "Keep shared URLs limited to public state."],
+        "implementation_refs": ["saved_views", "public_app.savedViewsState", "public_app.savedViewUrl"],
+        "limitations": ["Local browser storage does not synchronize across devices and is removed when the user clears site data."],
+        "source_ids": [],
+    },
 ]
 
 

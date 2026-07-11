@@ -126,7 +126,7 @@ def country_payload(code: str):
         ]
     return {
         "ok": True,
-        "version": "1.22.0",
+        "version": "1.23.0",
         "country": COUNTRIES[code],
         "data_state": "live",
         "indicators": rows,
@@ -136,7 +136,7 @@ def country_payload(code: str):
 def events(*, country_code: str, **_kwargs):
     return {
         "ok": True,
-        "version": "1.22.0",
+        "version": "1.23.0",
         "data_state": "live",
         "country_code": country_code,
         "count": 1,
@@ -225,7 +225,7 @@ def test_v1191_api_can_return_consistent_embedded_brief_and_diagnostics(monkeypa
     response = client.get("/public/compare?country=KEN&compare=GHA&include_brief=true")
     assert response.status_code == 200
     payload = response.json()
-    assert payload["version"] == "1.22.0"
+    assert payload["version"] == "1.23.0"
     assert payload["brief"]["generated_at"] == payload["generated_at"]
     diagnostics = client.get("/public/compare/diagnostics?country=KEN&compare=GHA")
     assert diagnostics.status_code == 200
@@ -280,6 +280,6 @@ def test_v1191_public_app_mobile_print_share_and_plugin_contract():
     assert 'data-label="${escapeHtml(leftName)}"' in js
     assert '#compareBriefView,#compareBriefView[hidden]{display:block!important}' in css
     assert '.compare-table td::before{content:attr(data-label)' in css
-    assert "Version: 1.22.0" in php
+    assert "Version: 1.23.0" in php
     assert "'view' => 'table'" in php
     assert "'indicator' => ''" in php

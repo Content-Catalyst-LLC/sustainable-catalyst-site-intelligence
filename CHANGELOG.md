@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.23.0 — Saved Views and Shareable Research Paths
+
+- Added a first-class standalone `/app/?view=saved` workspace for browser-local research paths.
+- Added Save view controls across the public application with accessible naming, local confirmation, and duplicate-name handling.
+- Added portable `sc-saved-view/1.0` manifests containing public interface state, application version, stable ID, view name, timestamps, and route-specific parameters.
+- Added browser-local storage under `sc_site_intelligence_saved_views_v1` with storage-unavailable and quota-failure handling.
+- Added reopen, copy-link, export, duplicate, delete, export-all, import, and clear-all workflows.
+- Added shareable research URLs for overview, Earth observation, country, event, comparison, thematic, briefing, and source-methodology views.
+- Added map viewport restoration plus route-specific state restoration for imagery, events, comparisons, trends, dashboards, briefs, and source filters.
+- Added `/public/saved-views/schema`, `/public/saved-views/validate`, `/public/saved-views/migrations`, and `/public/saved-views/diagnostics`.
+- Added structural validation without server persistence, including schema migration, sensitive-field rejection, manifest-size limits, invalid-country rejection, unsupported-view rejection, and state-key filtering.
+- Added legacy migration from `sc-saved-view/0.9` to `sc-saved-view/1.0`.
+- Added individual and collection JSON import/export with backend validation before local storage.
+- Added the saved-view methodology record to the public Source and Methodology Studio.
+- Added `[sc_saved_research_views height="1000"]` for a focused WordPress embed.
+- Updated backend, WordPress plugin, release metadata, documentation, and automated tests to v1.23.0.
+- Preserved Platform Core as optional and added no accounts, paid database, Redis service, hosted profile storage, or additional Render service.
+
 ## 1.22.0 — Source and Methodology Studio
 
 - Added a first-class standalone `/app/?view=sources` Source and Methodology Studio.

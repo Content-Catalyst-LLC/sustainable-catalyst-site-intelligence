@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-APP_VERSION = "1.22.0"
-API_SCHEMA_VERSION = "1.22"
-RELEASE_NAME = "Source and Methodology Studio"
+APP_VERSION = "1.23.0"
+API_SCHEMA_VERSION = "1.23"
+RELEASE_NAME = "Saved Views and Shareable Research Paths"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

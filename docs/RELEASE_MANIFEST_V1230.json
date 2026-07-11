@@ -1,0 +1,42 @@
+{
+  "release": "1.23.0",
+  "name": "Saved Views and Shareable Research Paths",
+  "schema_version": "sc-saved-view/1.0",
+  "collection_schema_version": "sc-saved-view-collection/1.0",
+  "storage_key": "sc_site_intelligence_saved_views_v1",
+  "storage": "browser-localStorage",
+  "standalone_route": "/app/?view=saved",
+  "public_endpoints": [
+    "/public/saved-views/schema",
+    "/public/saved-views/validate",
+    "/public/saved-views/migrations",
+    "/public/saved-views/diagnostics"
+  ],
+  "supported_views": [
+    "overview",
+    "earth",
+    "country",
+    "events",
+    "compare",
+    "thematic",
+    "briefing",
+    "sources"
+  ],
+  "supported_migrations": [
+    "sc-saved-view/0.9 -> sc-saved-view/1.0"
+  ],
+  "wordpress_shortcode": "[sc_saved_research_views height=\"1000\"]",
+  "server_persistence": false,
+  "accounts_required": false,
+  "cross_device_sync": false,
+  "platform_core": "optional",
+  "paid_infrastructure_added": false,
+  "security_boundary": {
+    "api_keys_stored": false,
+    "authentication_data_stored": false,
+    "private_notes_stored": false,
+    "private_urls_stored": false,
+    "diagnostics_stored": false,
+    "briefing_evidence_payloads_stored": false
+  }
+}

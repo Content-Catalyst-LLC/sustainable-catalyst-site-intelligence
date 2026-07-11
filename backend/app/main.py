@@ -213,6 +213,12 @@ from .source_methodology_studio import (
     studio_export as build_source_methodology_export,
     SourceMethodologyError,
 )
+from .saved_views import (
+    schema_manifest as build_saved_views_schema,
+    validate_manifest as validate_saved_view_manifest,
+    migrations_manifest as build_saved_views_migrations,
+    diagnostics as build_saved_views_diagnostics,
+)
 from .earth_observation_studio import (
     overview as build_earth_observation_overview,
     layers as build_earth_observation_layers,
@@ -1937,6 +1943,26 @@ def public_source_methodology_export(format: str = Query("json"), include_health
     )
 
 
+
+
+@app.get("/public/saved-views/schema")
+def public_saved_views_schema():
+    return build_saved_views_schema()
+
+
+@app.post("/public/saved-views/validate")
+def public_saved_views_validate(manifest: dict[str, Any]):
+    return validate_saved_view_manifest(manifest)
+
+
+@app.get("/public/saved-views/migrations")
+def public_saved_views_migrations():
+    return build_saved_views_migrations()
+
+
+@app.get("/public/saved-views/diagnostics")
+def public_saved_views_diagnostics():
+    return build_saved_views_diagnostics()
 
 
 @app.get("/public/page-builder")

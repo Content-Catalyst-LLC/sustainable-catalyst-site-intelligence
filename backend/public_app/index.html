@@ -38,7 +38,7 @@
         <label class="compact-field">Imagery date
           <input id="dateSelect" type="date">
         </label>
-        <button class="ghost-button" id="shareButton" type="button">Copy view</button><button class="ghost-button" id="openNewButton" type="button">Open full app</button>
+        <button class="ghost-button" id="saveViewButton" type="button">Save view</button><button class="ghost-button" id="shareButton" type="button">Copy view</button><button class="ghost-button" id="openNewButton" type="button">Open full app</button>
       </div>
     </header>
 
@@ -52,6 +52,7 @@
         <button class="nav-item" data-route="thematic"><span>Themes</span><small>Focused intelligence</small></button>
         <button class="nav-item" data-route="briefing"><span>Briefing</span><small>Briefs and exports</small></button>
         <button class="nav-item" data-route="sources"><span>Sources</span><small>Provenance and coverage</small></button>
+        <button class="nav-item" data-route="saved"><span>Saved</span><small>Local research paths</small></button>
       </nav>
       <div class="sidebar-note"><span class="public-beta-badge">Public Beta</span>
         <strong>Public evidence, not automated judgment.</strong>
@@ -478,6 +479,50 @@
         </div>
       </section>
 
+
+      <section id="savedViewsStudio" class="saved-views-studio" hidden aria-busy="false">
+        <div class="saved-views-head">
+          <div>
+            <p class="eyebrow">SAVED VIEWS AND SHAREABLE RESEARCH PATHS</p>
+            <h2>Preserve public investigation state in this browser</h2>
+            <p>Save, reopen, duplicate, export, import, and share Site Intelligence configurations without creating an account or sending them to a hosted profile service.</p>
+          </div>
+          <div class="saved-views-actions">
+            <button id="savedCreate" class="earth-primary-button" type="button">Save current view</button>
+            <button id="savedImport" class="ghost-button" type="button">Import JSON</button>
+            <button id="savedExportAll" class="ghost-button" type="button">Export all</button>
+            <button id="savedClearAll" class="ghost-button danger-button" type="button">Clear local views</button>
+            <input id="savedImportFile" type="file" accept="application/json,.json" hidden>
+          </div>
+        </div>
+
+        <div id="savedStorageStatus" class="saved-storage-status" role="status" aria-live="polite">Checking browser storage…</div>
+
+        <div class="saved-summary-grid">
+          <article><span>Saved locally</span><strong id="savedViewCount">0</strong><small>Current browser only</small></article>
+          <article><span>Portable schema</span><strong>1.0</strong><small>sc-saved-view/1.0</small></article>
+          <article><span>Server persistence</span><strong>None</strong><small>Validation only</small></article>
+          <article><span>Device sync</span><strong>Off</strong><small>Export to move views</small></article>
+        </div>
+
+        <article class="saved-privacy-panel">
+          <p class="eyebrow">LOCAL STORAGE AND PRIVACY</p>
+          <h3>Saved views remain in this browser</h3>
+          <p>Clearing browser storage removes them, and they are not synchronized across devices. Shared links contain public interface parameters only. API keys, authentication data, private notes, internal diagnostics, and briefing evidence records are not stored.</p>
+        </article>
+
+        <div id="savedViewsList" class="saved-views-list">
+          <div class="loading-block">Loading locally saved research paths…</div>
+        </div>
+
+        <article class="saved-import-panel">
+          <p class="eyebrow">PORTABLE MANIFESTS</p>
+          <h3>Import validation is structural and non-persistent</h3>
+          <p>Imported JSON is validated against the public schema before it is written to local browser storage. Unsupported routes, corrupt JSON, invalid country codes, sensitive-looking fields, and oversized manifests are rejected safely.</p>
+          <div id="savedImportResult" class="saved-import-result" role="status" aria-live="polite"></div>
+        </article>
+      </section>
+
       <section id="sourceStudio" class="source-studio" hidden aria-busy="false">
         <div class="source-studio-head">
           <div>
@@ -750,6 +795,22 @@
     </main>
   </div>
 
+
+
+  <dialog id="saveViewDialog" class="save-view-dialog" aria-labelledby="saveViewDialogTitle">
+    <form id="saveViewForm" method="dialog">
+      <p class="eyebrow">SAVE CURRENT VIEW</p>
+      <h2 id="saveViewDialogTitle">Name this research path</h2>
+      <p id="saveViewDialogSummary">The current public interface state will be stored in this browser.</p>
+      <label>View name
+        <input id="saveViewName" type="text" maxlength="120" required autocomplete="off" placeholder="Kenya climate investigation">
+      </label>
+      <div class="save-view-dialog-actions">
+        <button id="saveViewCancel" class="ghost-button" type="button">Cancel</button>
+        <button class="earth-primary-button" type="submit">Save locally</button>
+      </div>
+    </form>
+  </dialog>
 
   <aside id="evidenceDrawer" class="evidence-drawer" aria-hidden="true" aria-labelledby="evidenceDrawerTitle">
     <div class="evidence-drawer-head">

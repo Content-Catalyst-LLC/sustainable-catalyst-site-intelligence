@@ -31,6 +31,10 @@
   }
 
   const state = {map:null,base:null,imagery:null,markers:null,heat:null,layers:null,events:null,country:"KEN",route:"overview"};
+  const APP_VERSION="1.23.0";
+  const SAVED_VIEW_SCHEMA="sc-saved-view/1.0";
+  const SAVED_VIEW_STORAGE_KEY="sc_site_intelligence_saved_views_v1";
+  const SAVED_VIEW_LIMIT=50;
   const names = {KEN:"Kenya",GHA:"Ghana",USA:"United States",IND:"India",BRA:"Brazil"};
   const qs = (s)=>document.querySelector(s), qsa=(s)=>[...document.querySelectorAll(s)];
   const toast=(msg)=>{const el=qs("#toast");el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),1800)};
@@ -118,7 +122,8 @@
       compare:["CROSS-DOMAIN COMPARISON","Compare country contexts","Align available evidence without flattening dates, units, definitions, or missing-data states."],
       thematic:["THEMATIC INTELLIGENCE DASHBOARDS","Focused public intelligence","Explore climate and environment, human development, human security, and infrastructure through maps, indicators, trends, events, sources, and briefs."],
       briefing:["PUBLIC BRIEFING AND EXPORT STUDIO","Document public intelligence views","Generate source-aware country, comparison, event, Earth-observation, and thematic briefs with reproducible exports."],
-      sources:["PROVENANCE","Sources and methods","Review the public sources, imagery services, and interpretive limits behind this workspace."]
+      sources:["PROVENANCE","Sources and methods","Review the public sources, imagery services, and interpretive limits behind this workspace."],
+      saved:["LOCAL RESEARCH WORKSPACE","Saved views and research paths","Preserve, reopen, export, import, and share public investigation state without an account or hosted profile."]
     }[route]||[];
   }
 
@@ -1071,7 +1076,7 @@
       if(sourcesResult.status!=="fulfilled")throw sourcesResult.reason;
       sourceStudioState.data=sourcesResult.value;sourceStudioState.methods=methodsResult.status==="fulfilled"?methodsResult.value:{methods:[],total_registered:0};sourceStudioState.diagnostics=null;
       populateSourceFilters(sourceStudioState.data);renderMethodology(sourceStudioState.methods);qs("#sourceIssueMetric").textContent="…";
-      const requested=new URLSearchParams(location.search).get("source");const first=sourceStudioState.data.sources?.[0]?.id;sourceStudioState.activeSource=(sourceStudioState.data.sources||[]).some(item=>item.id===requested)?requested:first||null;renderSourceRegistry(sourceStudioState.data);renderSourceDetail((sourceStudioState.data.sources||[]).find(item=>item.id===sourceStudioState.activeSource));
+      const requested=new URLSearchParams(location.search).get("source");const first=sourceStudioState.data.sources?.[0]?.id;const requestedAvailable=(sourceStudioState.data.sources||[]).some(item=>item.id===requested);sourceStudioState.activeSource=requestedAvailable?requested:first||null;if(requested&&!requestedAvailable)toast("Requested source record is unavailable; showing an available source instead.");renderSourceRegistry(sourceStudioState.data);renderSourceDetail((sourceStudioState.data.sources||[]).find(item=>item.id===sourceStudioState.activeSource));
       qs("#sourceStatus").textContent=`${sourceStudioState.data.count} matching sources · ${sourceStudioState.methods.total_registered||0} documented methods · checking connector diagnostics…`;
       if(pushState)syncSourceUrl();reportHeight();void refreshSourceDiagnostics(sequence,controller);
     }catch(error){if(error?.name==="AbortError")return;qs("#sourceStatus").textContent="Source registry unavailable";qs("#sourceRegistryList").innerHTML=publicErrorBlock("Source registry unavailable","The public source and methodology service did not complete.",()=>loadSourceStudio(false))}
@@ -1085,6 +1090,161 @@
     const response=await fetch(`${API}/public/source-methodology/export?format=${encodeURIComponent(format)}&include_health=true`,{headers:{Accept:"*/*"}});if(!response.ok){toast("Source registry export unavailable");return}const blob=await response.blob();const disposition=response.headers.get("content-disposition")||"";const match=disposition.match(/filename="?([^";]+)"?/i);const link=document.createElement("a");link.href=URL.createObjectURL(blob);link.download=match?.[1]||`site-intelligence-sources.${format}`;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(link.href),5000);toast("Source registry export downloaded")
   }
 
+
+
+  const savedViewsState={items:[],storageAvailable:true,pendingManifest:null};
+  const savedViewDefinitions={
+    overview:{label:"Overview",keys:["country","imageryLayer","imageryDate","mapLat","mapLng","mapZoom"]},
+    earth:{label:"Earth Observation",keys:["earthLayer","dateA","dateB","opacity","swipe","mapLat","mapLng","mapZoom"]},
+    country:{label:"Country Intelligence",keys:["country","trend","mapLat","mapLng","mapZoom"]},
+    events:{label:"Live Event Intelligence",keys:["eventDays","eventCategory","eventSource","eventCountry","mapLat","mapLng","mapZoom"]},
+    compare:{label:"Comparative Intelligence",keys:["country","compare","compareView","indicator","trend","mapLat","mapLng","mapZoom"]},
+    thematic:{label:"Thematic Intelligence",keys:["dashboard","country","thematicDays","thematicLayer","thematicTrend","mapLat","mapLng","mapZoom"]},
+    briefing:{label:"Public Briefing Studio",keys:["briefType","type","country","compare","days","event_id","dashboard_id","layer_id","date_a","date_b","latitude","longitude","zoom","opacity"]},
+    sources:{label:"Source and Methodology Studio",keys:["source","domain","state","feature","query"]}
+  };
+  const sensitiveSavedKey=/(api[_-]?key|password|secret|token|authorization|cookie|session|private[_-]?url|stack[_-]?trace|environment|diagnostics)/i;
+  function savedViewId(){return `sv-${globalThis.crypto?.randomUUID?.()||`${Date.now()}-${Math.random().toString(36).slice(2)}`}`}
+  function savedIso(){return new Date().toISOString()}
+  function copyPublicText(value,message){
+    const fallback=()=>{const area=document.createElement("textarea");area.value=value;area.setAttribute("readonly","");area.style.position="fixed";area.style.opacity="0";document.body.appendChild(area);area.select();document.execCommand("copy");area.remove()};
+    return (navigator.clipboard?.writeText?navigator.clipboard.writeText(value).catch(fallback):Promise.resolve(fallback())).then(()=>toast(message));
+  }
+  function activeSavedMap(route){
+    if(route==="overview")return state.map;
+    if(route==="earth")return earthState.mapA;
+    if(route==="country")return globalCountryState.overviewMap;
+    if(route==="events")return eventState.map;
+    if(route==="compare")return compareState.map;
+    if(route==="thematic")return thematicState.map;
+    return null;
+  }
+  function addSavedViewport(route,viewState){
+    const map=activeSavedMap(route);if(!map?.getCenter)return viewState;
+    const center=map.getCenter(),zoom=map.getZoom();
+    if(Number.isFinite(center?.lat)&&Number.isFinite(center?.lng)){viewState.mapLat=String(Number(center.lat.toFixed(6)));viewState.mapLng=String(Number(center.lng.toFixed(6)));viewState.mapZoom=String(zoom)}
+    return viewState;
+  }
+  function currentSavedState(){
+    const route=state.route;if(!savedViewDefinitions[route])return null;
+    let values={};
+    if(route==="overview")values={country:state.country,imageryLayer:qs(".layer-tab.active")?.dataset.layer||"true-color",imageryDate:qs("#dateSelect").value};
+    if(route==="earth")values={earthLayer:qs("#earthLayerSelect").value,dateA:qs("#earthDateA").value,dateB:qs("#earthDateB").value,opacity:qs("#earthOpacity").value,swipe:qs("#earthSwipe").value};
+    if(route==="country")values={country:globalCountryState.activeCode||state.country,trend:qs("#globalTrendSelect").value};
+    if(route==="events")values={eventDays:qs("#eventDays").value,eventCategory:qs("#eventCategory").value,eventSource:qs("#eventSource").value,eventCountry:qs("#eventCountry").value.trim().toUpperCase()};
+    if(route==="compare")values={country:qs("#compareCountryA").value,compare:qs("#compareCountryB").value,compareView:compareState.activeView,indicator:qs("#compareIndicatorFilter").value,trend:qs("#compareTrendSelect").value};
+    if(route==="thematic")values={dashboard:qs("#thematicDashboard").value,country:qs("#thematicCountry").value,thematicDays:qs("#thematicDays").value,thematicLayer:qs("#thematicLayer").value,thematicTrend:qs("#thematicTrendSelect").value};
+    if(route==="briefing")values=Object.fromEntries(briefingParams().entries());
+    if(route==="sources")values={source:sourceStudioState.activeSource||"",domain:qs("#sourceDomain").value,state:qs("#sourceState").value,feature:qs("#sourceFeature").value,query:qs("#sourceSearch").value.trim()};
+    const allowed=new Set(savedViewDefinitions[route].keys);const clean={};
+    Object.entries(values).forEach(([key,value])=>{if(allowed.has(key)&&value!==null&&value!==undefined&&String(value)!==""&&!sensitiveSavedKey.test(key))clean[key]=String(value)});
+    return addSavedViewport(route,clean);
+  }
+  function suggestedSavedName(route,viewState){
+    const label=savedViewDefinitions[route]?.label||"Site Intelligence";
+    const country=viewState.country||viewState.eventCountry;
+    const focus=viewState.dashboard||viewState.source||viewState.earthLayer||viewState.briefType;
+    return [country,focus,label].filter(Boolean).join(" · ").replaceAll("-"," ");
+  }
+  function buildSavedManifest(name){
+    const view=state.route,stateValue=currentSavedState();if(!stateValue)return null;
+    const now=savedIso();return {schema:SAVED_VIEW_SCHEMA,application_version:APP_VERSION,id:savedViewId(),name:String(name||"").trim().slice(0,120),view,state:stateValue,created_at:now,updated_at:now};
+  }
+  function sanitizeLocalManifest(manifest){
+    if(!manifest||typeof manifest!=="object"||Array.isArray(manifest))return null;
+    if(manifest.schema!==SAVED_VIEW_SCHEMA||!savedViewDefinitions[manifest.view]||typeof manifest.state!=="object"||Array.isArray(manifest.state))return null;
+    if(!manifest.name||String(manifest.name).length>120)return null;
+    const allowed=new Set(savedViewDefinitions[manifest.view].keys),cleanState={};
+    for(const [key,value] of Object.entries(manifest.state)){if(sensitiveSavedKey.test(key))return null;if(allowed.has(key)&&["string","number"].includes(typeof value)&&String(value).length<=180)cleanState[key]=String(value)}
+    return {schema:SAVED_VIEW_SCHEMA,application_version:String(manifest.application_version||APP_VERSION).slice(0,32),id:/^[A-Za-z0-9._:-]{6,128}$/.test(String(manifest.id||""))?String(manifest.id):savedViewId(),name:String(manifest.name).trim().slice(0,120),view:manifest.view,state:cleanState,created_at:String(manifest.created_at||savedIso()),updated_at:String(manifest.updated_at||manifest.created_at||savedIso())};
+  }
+  function storageMessage(text,stateValue="ready"){
+    const el=qs("#savedStorageStatus");if(!el)return;el.className=`saved-storage-status ${stateValue}`;el.textContent=text;
+  }
+  function loadSavedViewsStorage(){
+    try{
+      const probe="__scsi_saved_view_probe__";localStorage.setItem(probe,"1");localStorage.removeItem(probe);
+      const parsed=JSON.parse(localStorage.getItem(SAVED_VIEW_STORAGE_KEY)||"[]");const records=Array.isArray(parsed)?parsed:[];let rejected=0;const ids=new Set();
+      savedViewsState.items=records.map(sanitizeLocalManifest).filter(item=>{if(!item){rejected+=1;return false}if(ids.has(item.id)){rejected+=1;return false}ids.add(item.id);return true}).slice(0,SAVED_VIEW_LIMIT);
+      savedViewsState.storageAvailable=true;storageMessage(`${savedViewsState.items.length} local view${savedViewsState.items.length===1?"":"s"} available in this browser${rejected?` · ${rejected} invalid record${rejected===1?"":"s"} ignored`:""}.`);
+    }catch(error){savedViewsState.items=[];savedViewsState.storageAvailable=false;storageMessage("Browser storage is unavailable. Shared links and JSON exports still work, but local saves are disabled.","error")}
+    return savedViewsState.items;
+  }
+  function persistSavedViews(){
+    if(!savedViewsState.storageAvailable)throw new Error("Browser storage is unavailable.");
+    try{localStorage.setItem(SAVED_VIEW_STORAGE_KEY,JSON.stringify(savedViewsState.items.slice(0,SAVED_VIEW_LIMIT)))}catch(error){storageMessage("The browser could not store this view. Storage may be disabled or full.","error");throw error}
+  }
+  function uniqueSavedName(name,excludeId=""){
+    const base=String(name||"Saved view").trim().slice(0,120)||"Saved view";const existing=new Set(savedViewsState.items.filter(item=>item.id!==excludeId).map(item=>item.name.toLowerCase()));if(!existing.has(base.toLowerCase()))return base;
+    let index=2;while(existing.has(`${base} (${index})`.toLowerCase()))index+=1;return `${base} (${index})`.slice(0,120);
+  }
+  function savedViewUrl(manifest){
+    const url=new URL(location.href);url.hash="";url.search="";url.searchParams.set("view",manifest.view);Object.entries(manifest.state||{}).forEach(([key,value])=>{if(savedViewDefinitions[manifest.view]?.keys.includes(key)&&!sensitiveSavedKey.test(key))url.searchParams.set(key,String(value))});return url.toString();
+  }
+  function savedStateSummary(manifest){
+    const labels=[];const values=manifest.state||{};
+    if(values.country)labels.push(values.country);if(values.compare)labels.push(`vs ${values.compare}`);if(values.dashboard)labels.push(values.dashboard.replaceAll("-"," "));if(values.source)labels.push(values.source.replaceAll("-"," "));if(values.earthLayer)labels.push(values.earthLayer.replaceAll("-"," "));if(values.eventDays)labels.push(`${values.eventDays} days`);return labels.join(" · ")||"Public view state";
+  }
+  function downloadSavedJson(payload,filename){const blob=new Blob([JSON.stringify(payload,null,2)+"\n"],{type:"application/json;charset=utf-8"});const link=document.createElement("a");link.href=URL.createObjectURL(blob);link.download=filename;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(link.href),3000)}
+  function renderSavedViews(){
+    const list=qs("#savedViewsList");if(!list)return;qs("#savedViewCount").textContent=String(savedViewsState.items.length);
+    if(!savedViewsState.items.length){list.innerHTML='<div class="empty-state"><div><strong>No locally saved views</strong><span>Open a public intelligence view and choose Save view. You can also import a validated JSON manifest.</span></div></div>';reportHeight();return}
+    list.innerHTML=savedViewsState.items.map(item=>`<article class="saved-view-card" data-saved-id="${escapeHtml(item.id)}"><div class="saved-view-card-head"><div><span>${escapeHtml(savedViewDefinitions[item.view]?.label||item.view)}</span><h3>${escapeHtml(item.name)}</h3></div><small>${escapeHtml(cleanDate(item.updated_at||item.created_at))}</small></div><p>${escapeHtml(savedStateSummary(item))}</p><code>${escapeHtml(new URL(savedViewUrl(item)).search)}</code><div class="saved-view-card-actions"><button class="earth-primary-button" type="button" data-saved-action="open">Open</button><button class="ghost-button" type="button" data-saved-action="copy">Copy link</button><button class="ghost-button" type="button" data-saved-action="export">Export</button><button class="ghost-button" type="button" data-saved-action="rename">Rename</button><button class="ghost-button" type="button" data-saved-action="duplicate">Duplicate</button><button class="ghost-button danger-button" type="button" data-saved-action="delete">Delete</button></div></article>`).join("");
+    qsa("[data-saved-id]").forEach(card=>card.addEventListener("click",event=>{const button=event.target.closest("[data-saved-action]");if(!button)return;const item=savedViewsState.items.find(record=>record.id===card.dataset.savedId);if(item)handleSavedAction(button.dataset.savedAction,item)}));reportHeight();
+  }
+  function handleSavedAction(action,item){
+    if(action==="open"){location.assign(savedViewUrl(item));return}
+    if(action==="copy"){copyPublicText(savedViewUrl(item),"Research path link copied");return}
+    if(action==="export"){downloadSavedJson(item,`site-intelligence-saved-view-${item.id}.json`);return}
+    if(action==="rename"){const proposed=prompt("Rename saved view",item.name);if(proposed&&proposed.trim()){item.name=uniqueSavedName(proposed,item.id);item.updated_at=savedIso();try{persistSavedViews();renderSavedViews();toast("Saved view renamed")}catch{}}return}
+    if(action==="duplicate"){const copy=JSON.parse(JSON.stringify(item));copy.id=savedViewId();copy.name=uniqueSavedName(`${item.name} copy`);copy.created_at=savedIso();copy.updated_at=copy.created_at;savedViewsState.items.unshift(copy);try{persistSavedViews();renderSavedViews();toast("Saved view duplicated")}catch{}return}
+    if(action==="delete"&&confirm(`Delete “${item.name}” from this browser?`)){savedViewsState.items=savedViewsState.items.filter(record=>record.id!==item.id);try{persistSavedViews();renderSavedViews();toast("Saved view deleted")}catch{}}
+  }
+  function saveCurrentManifest(name){
+    const manifest=buildSavedManifest(uniqueSavedName(name));if(!manifest){toast("Open a research view before saving");return false}
+    if(!manifest.name){toast("Enter a name for this view");return false}
+    savedViewsState.items.unshift(manifest);savedViewsState.items=savedViewsState.items.slice(0,SAVED_VIEW_LIMIT);
+    try{persistSavedViews();renderSavedViews();toast("View saved in this browser");return true}catch{savedViewsState.items=savedViewsState.items.filter(item=>item.id!==manifest.id);return false}
+  }
+  function openSaveViewDialog(){
+    if(!savedViewDefinitions[state.route]){toast("Open a public research view before saving");return}
+    const manifest=buildSavedManifest("Pending");const input=qs("#saveViewName");input.value=suggestedSavedName(manifest.view,manifest.state);qs("#saveViewDialogSummary").textContent=`${savedViewDefinitions[manifest.view].label} will be stored only in this browser.`;
+    const dialog=qs("#saveViewDialog");if(typeof dialog.showModal==="function"){dialog.showModal();setTimeout(()=>input.select(),30)}else{const name=prompt("Name this saved view",input.value);if(name)saveCurrentManifest(name)}
+  }
+  async function validateImportedSavedManifest(candidate){
+    const response=await fetch(`${API}/public/saved-views/validate`,{method:"POST",headers:{"Accept":"application/json","Content-Type":"application/json"},body:JSON.stringify(candidate)});
+    if(!response.ok)throw new Error(String(response.status));return await response.json();
+  }
+  async function importSavedViewFile(file){
+    const result=qs("#savedImportResult");if(!file)return;
+    if(file.size>524288){result.textContent="Import rejected: the file exceeds the 512 KB collection limit.";result.className="saved-import-result error";return}
+    let parsed;try{parsed=JSON.parse(await file.text())}catch{result.textContent="Import rejected: the file is not valid JSON.";result.className="saved-import-result error";return}
+    const collection=parsed?.schema==="sc-saved-view-collection/1.0"&&Array.isArray(parsed.views);const candidates=collection?parsed.views.slice(0,SAVED_VIEW_LIMIT):[parsed];
+    if(!candidates.length){result.textContent="Import rejected: the collection contains no saved views.";result.className="saved-import-result error";return}
+    let imported=0,migrated=0;const errors=[];
+    try{
+      for(const candidate of candidates){
+        const validation=await validateImportedSavedManifest(candidate);
+        if(!validation.valid||!validation.manifest){errors.push((validation.errors||["manifest validation failed"])[0]);continue}
+        const manifest=sanitizeLocalManifest(validation.manifest);if(!manifest){errors.push("Normalized manifest is unsupported by this application.");continue}
+        if(savedViewsState.items.some(item=>item.id===manifest.id))manifest.id=savedViewId();manifest.name=uniqueSavedName(manifest.name);manifest.updated_at=savedIso();savedViewsState.items.unshift(manifest);imported+=1;if(validation.migrated_from)migrated+=1;
+      }
+      if(!imported){result.textContent=`Import rejected: ${errors[0]||"no valid saved views were found."}`;result.className="saved-import-result error";return}
+      savedViewsState.items=savedViewsState.items.slice(0,SAVED_VIEW_LIMIT);persistSavedViews();renderSavedViews();result.textContent=`Imported ${imported} saved view${imported===1?"":"s"}${migrated?` · ${migrated} migrated to ${SAVED_VIEW_SCHEMA}`:""}${errors.length?` · ${errors.length} rejected`:""}.`;result.className="saved-import-result ready";toast(imported===1?"Saved view imported":"Saved views imported")
+    }catch(error){result.textContent="Import validation is temporarily unavailable. No unvalidated file was stored.";result.className="saved-import-result error"}
+  }
+  function applySharedViewport(route,params){
+    const lat=Number(params.get("mapLat")),lng=Number(params.get("mapLng")),zoom=Number(params.get("mapZoom"));if(!Number.isFinite(lat)||!Number.isFinite(lng)||!Number.isFinite(zoom)||Math.abs(lat)>90||Math.abs(lng)>180||zoom<0||zoom>20)return;
+    const map=activeSavedMap(route);map?.setView?.([lat,lng],zoom);if(route==="earth")earthState.mapB?.setView?.([lat,lng],zoom)
+  }
+  function applySharedControlState(route,params){
+    if(route==="country"&&params.get("trend")&&qs("#globalTrendSelect")?.querySelector(`option[value="${CSS.escape(params.get("trend"))}"]`)){qs("#globalTrendSelect").value=params.get("trend");const item=globalCountryState.trends.find(x=>x.key===params.get("trend"));if(item)renderGlobalTrend(item)}
+    if(route==="thematic"&&params.get("thematicTrend")&&qs("#thematicTrendSelect")?.querySelector(`option[value="${CSS.escape(params.get("thematicTrend"))}"]`)){qs("#thematicTrendSelect").value=params.get("thematicTrend");renderThematicTrend((thematicState.data?.trends||[]).find(item=>item.id===params.get("thematicTrend"))||null)}
+    applySharedViewport(route,params)
+  }
+  async function openSavedViews(){qs("#savedViewsStudio").hidden=false;qs("#saveViewButton").disabled=true;loadSavedViewsStorage();renderSavedViews()}
+  function closeSavedViews(){const panel=qs("#savedViewsStudio");if(panel)panel.hidden=true;const button=qs("#saveViewButton");if(button)button.disabled=false}
+
   async function setRoute(route){
     qs("#main").classList.remove("route-enter");void qs("#main").offsetWidth;qs("#main").classList.add("route-enter");
     state.route=route;
@@ -1093,19 +1253,19 @@
     const panel=qs("#routePanel");
 
     if(route==="overview"){
-      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();return;
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();return;
     }
     if(route==="earth"){
-      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();await openEarthStudio();return;
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();await openEarthStudio();return;
     }
     if(route==="events"){
-      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();await openEventStudio();return;
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();await openEventStudio();return;
     }
     if(route==="country"){
-      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();await openGlobalCountryExplorer();return;
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();await openGlobalCountryExplorer();return;
     }
 
-    closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();qs("#countryIntelligencePanel").hidden=true;
+    closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();qs("#countryIntelligencePanel").hidden=true;
     panel.hidden=false;panel.innerHTML=`<div class="loading-block">Loading ${escapeHtml(route)} view…</div>`;
     if(route==="country-legacy"){
       qs("#countryIntelligencePanel").hidden=false;panel.hidden=true;await loadLiveCountry(state.country);return;
@@ -1121,6 +1281,8 @@
       panel.hidden=true;await openBriefingStudio();return;
     }else if(route==="sources"){
       panel.hidden=true;await openSourceStudio();return;
+    }else if(route==="saved"){
+      panel.hidden=true;await openSavedViews();return;
     }else{
       panel.innerHTML=`<p class="eyebrow">PUBLIC WORKSPACE</p><h2>View unavailable</h2><p>The requested public workspace is not registered.</p>`;
     }
@@ -1135,7 +1297,7 @@
     qs("#eventsToggle").addEventListener("change",e=>e.target.checked?state.markers.addTo(state.map):state.map.removeLayer(state.markers));
     qs("#heatToggle").addEventListener("change",e=>toast(e.target.checked?"Density layer enabled for supported records":"Density layer hidden"));
     qs("#fullscreenButton").addEventListener("click",()=>{const p=qs(".map-panel");if(document.fullscreenElement)document.exitFullscreen();else p.requestFullscreen?.()});
-    qs("#shareButton").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("View link copied")});qs("#openNewButton").addEventListener("click",()=>window.open(location.href,"_blank","noopener"));qs("#launchRetry").addEventListener("click",()=>location.reload());qs("#countrySearchButton").addEventListener("click",searchGlobalCountries);
+    qs("#saveViewButton").addEventListener("click",openSaveViewDialog);qs("#shareButton").addEventListener("click",()=>copyPublicText(location.href,"View link copied"));qs("#openNewButton").addEventListener("click",()=>window.open(location.href,"_blank","noopener"));qs("#launchRetry").addEventListener("click",()=>location.reload());qs("#countrySearchButton").addEventListener("click",searchGlobalCountries);
     qs("#countrySearchInput").addEventListener("keydown",e=>{if(e.key==="Enter")searchGlobalCountries()});
     qs("#countrySearchInput").addEventListener("input",()=>{clearTimeout(globalCountryState.searchTimer);globalCountryState.searchTimer=setTimeout(searchGlobalCountries,320)});
     qs("#countryRegionFilter").addEventListener("change",searchGlobalCountries);
@@ -1202,8 +1364,9 @@
     qs("#sourceFeature").addEventListener("change",()=>loadSourceStudio(true));
     qs("#sourceShare").addEventListener("click",async()=>{syncSourceUrl();await navigator.clipboard.writeText(location.href);toast("Source view link copied")});
     qsa("[data-source-export]").forEach(button=>button.addEventListener("click",()=>downloadSourceRegistry(button.dataset.sourceExport)));
+    qs("#savedCreate").addEventListener("click",openSaveViewDialog);qs("#savedImport").addEventListener("click",()=>qs("#savedImportFile").click());qs("#savedImportFile").addEventListener("change",event=>{const file=event.target.files?.[0];importSavedViewFile(file);event.target.value=""});qs("#savedExportAll").addEventListener("click",()=>downloadSavedJson({schema:"sc-saved-view-collection/1.0",application_version:APP_VERSION,exported_at:savedIso(),views:savedViewsState.items},"site-intelligence-saved-views.json"));qs("#savedClearAll").addEventListener("click",()=>{if(!savedViewsState.items.length)return;if(confirm("Delete all locally saved Site Intelligence views from this browser?")){savedViewsState.items=[];try{persistSavedViews();renderSavedViews();toast("Local saved views cleared")}catch{}}});qs("#saveViewCancel").addEventListener("click",()=>qs("#saveViewDialog").close());qs("#saveViewForm").addEventListener("submit",event=>{event.preventDefault();if(saveCurrentManifest(qs("#saveViewName").value))qs("#saveViewDialog").close()});
     qs("#closeEvidenceDrawer").addEventListener("click",closeEvidenceDrawer);qs("#evidenceBackdrop").addEventListener("click",closeEvidenceDrawer);document.addEventListener("keydown",e=>{if(e.key==="Escape")closeEvidenceDrawer()});
-    const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const initialView=params.get("view")||"overview";qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";try{setLaunch("Loading satellite imagery.",50);await loadLayers();await setImagery("true-color");setLaunch("Connecting to live events and country evidence.",68);await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);setLaunch("Preparing the workspace.",88);await setRoute(initialView);finishLaunch()}
+    const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const requestedView=params.get("view")||"overview";const initialView=[...Object.keys(savedViewDefinitions),"saved"].includes(requestedView)?requestedView:"overview";const invalidRequestedView=requestedView!==initialView;qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";if(params.get("imageryDate"))qs("#dateSelect").value=params.get("imageryDate");try{setLaunch("Loading satellite imagery.",50);await loadLayers();await setImagery(params.get("imageryLayer")||"true-color");setLaunch("Connecting to live events and country evidence.",68);await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);setLaunch("Preparing the workspace.",88);await setRoute(initialView);applySharedControlState(initialView,params);finishLaunch();if(invalidRequestedView)toast("The requested view is unavailable; Overview was opened instead.")}
     catch(e){qs("#statusText").textContent="Partial public data";toast("Some optional public data is temporarily unavailable.");finishLaunch()}
   }
   document.addEventListener("DOMContentLoaded",init);

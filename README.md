@@ -1,6 +1,6 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v1.22.0 — Source and Methodology Studio
+**Current release:** v1.23.0 — Saved Views and Shareable Research Paths
 
 Sustainable Catalyst Site Intelligence is a public-interest observatory for Earth observation, global country indicators, natural hazards, humanitarian reporting, source-aware dashboards, and comparative research.
 
@@ -14,7 +14,80 @@ Sustainable Catalyst Site Intelligence is a public-interest observatory for Eart
 - Thematic Intelligence: `/app/?view=thematic&dashboard=climate-environment&country=KEN`
 - Public Briefing Studio: `/app/?view=briefing&briefType=country&country=KEN`
 - Source and Methodology Studio: `/app/?view=sources`
+- Saved Views and Shareable Research Paths: `/app/?view=saved`
 - Primary WordPress embed: `[sc_site_intelligence_app height="1000"]`
+
+## v1.23.0 release focus
+
+v1.23.0 adds browser-local saved views and portable research paths to the standalone Site Intelligence application. Users can preserve public interface state, reopen it later, exchange a shareable URL, and import or export a validated JSON manifest without creating an account or sending the view to hosted profile storage.
+
+### Saved Views route
+
+```text
+/app/?view=saved
+```
+
+### Portable schema
+
+```text
+sc-saved-view/1.0
+```
+
+A saved-view manifest records:
+
+- application and schema version
+- stable saved-view ID
+- user-provided view name
+- public route and route-specific state
+- country and comparison selections
+- map viewport where applicable
+- imagery layer, dates, opacity, and swipe position
+- event, thematic, briefing, source, and methodology filters
+- created and updated timestamps
+
+It does not store API keys, authentication data, private notes, internal diagnostics, environment variables, cookies, or briefing evidence payloads.
+
+### Browser-local storage
+
+```text
+sc_site_intelligence_saved_views_v1
+```
+
+Saved views remain in the current browser, do not synchronize across devices, and are removed when the user clears site data. The interface handles unavailable storage, quota errors, invalid local records, duplicate IDs, duplicate names, and clear-all operations without breaking the public application.
+
+### Public endpoints
+
+- `/public/saved-views/schema`
+- `/public/saved-views/validate`
+- `/public/saved-views/migrations`
+- `/public/saved-views/diagnostics`
+
+The validation endpoint checks structure only and never persists submitted manifests.
+
+### Import and export
+
+- individual saved-view JSON
+- portable saved-view collection JSON
+- migration from `sc-saved-view/0.9`
+- invalid JSON rejection
+- unsupported schema and route rejection
+- sensitive-field rejection
+- manifest-size limits
+- invalid country and state validation
+
+### WordPress
+
+```text
+[sc_saved_research_views height="1000"]
+```
+
+The full application remains the preferred primary embed:
+
+```text
+[sc_site_intelligence_app height="1000"]
+```
+
+No account system, hosted profile database, Redis service, paid persistence layer, or additional Render service is required.
 
 ## v1.22.0 release focus
 
