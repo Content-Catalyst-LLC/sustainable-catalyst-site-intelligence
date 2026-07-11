@@ -49,6 +49,7 @@
         <button class="nav-item" data-route="country"><span>Country</span><small>Place-based evidence</small></button>
         <button class="nav-item" data-route="events"><span>Events</span><small>Live event intelligence</small></button>
         <button class="nav-item" data-route="compare"><span>Compare</span><small>Two-country context</small></button>
+        <button class="nav-item" data-route="briefing"><span>Briefing</span><small>Briefs and exports</small></button>
         <button class="nav-item" data-route="sources"><span>Sources</span><small>Provenance and coverage</small></button>
       </nav>
       <div class="sidebar-note"><span class="public-beta-badge">Public Beta</span>
@@ -272,6 +273,113 @@
             <p id="earthBoundary">Apparent visual change may reflect clouds, compositing, seasonal effects, product latency, sensor conditions, or real-world change.</p>
             <button id="earthDownloadManifest" class="text-button" type="button">Download view manifest →</button>
           </article>
+        </div>
+      </section>
+
+
+      <section id="briefingStudio" class="briefing-studio" hidden aria-busy="false">
+        <div class="briefing-studio-head">
+          <div>
+            <p class="eyebrow">PUBLIC BRIEFING AND EXPORT STUDIO</p>
+            <h2 id="briefingStudioTitle">Document a public intelligence view</h2>
+            <p id="briefingStudioIntro">Generate deterministic, source-aware briefs for country, comparison, event, Earth-observation, and thematic investigations.</p>
+          </div>
+          <div class="briefing-studio-actions">
+            <button id="briefingShare" class="ghost-button" type="button">Copy brief view</button>
+            <button id="briefingPrint" class="ghost-button" type="button">Print brief</button>
+          </div>
+        </div>
+
+        <div class="briefing-control-deck">
+          <label>Brief type
+            <select id="briefingType">
+              <option value="country">Country brief</option>
+              <option value="comparison">Country comparison</option>
+              <option value="event">Event situation</option>
+              <option value="earth">Earth observation</option>
+              <option value="thematic">Thematic intelligence</option>
+            </select>
+          </label>
+          <label class="brief-field" data-brief-field="country comparison event thematic">Country
+            <select id="briefingCountry"></select>
+          </label>
+          <label class="brief-field" data-brief-field="comparison thematic">Compare
+            <select id="briefingCompare"></select>
+          </label>
+          <label class="brief-field" data-brief-field="country comparison event">Event window
+            <select id="briefingDays">
+              <option value="7">7 days</option>
+              <option value="14" selected>14 days</option>
+              <option value="30">30 days</option>
+              <option value="90">90 days</option>
+            </select>
+          </label>
+          <label class="brief-field" data-brief-field="event">Event ID
+            <input id="briefingEventId" type="text" placeholder="Optional source event ID">
+          </label>
+          <label class="brief-field" data-brief-field="thematic">Thematic dashboard
+            <select id="briefingDashboard">
+              <option value="climate-human-vulnerability">Climate and Human Vulnerability</option>
+              <option value="conflict-human-development">Conflict and Human Development</option>
+              <option value="law-humanitarian-conditions">International Law and Humanitarian Conditions</option>
+              <option value="country-intelligence">Country Intelligence Profile</option>
+            </select>
+          </label>
+          <label class="brief-field" data-brief-field="earth">Earth layer
+            <select id="briefingLayer">
+              <option value="true-color">True color</option>
+              <option value="land-surface-temperature">Land-surface temperature</option>
+              <option value="fires-thermal-anomalies">Thermal anomalies</option>
+              <option value="vegetation-index">Vegetation</option>
+              <option value="precipitation">Precipitation</option>
+              <option value="snow-cover">Snow cover</option>
+              <option value="nighttime-lights">Nighttime lights</option>
+              <option value="atmospheric-aerosols">Atmospheric aerosols</option>
+            </select>
+          </label>
+          <label class="brief-field" data-brief-field="earth">Before date
+            <input id="briefingDateA" type="date">
+          </label>
+          <label class="brief-field" data-brief-field="earth">After date
+            <input id="briefingDateB" type="date">
+          </label>
+          <button id="briefingApply" class="earth-primary-button" type="button">Generate brief</button>
+          <button id="briefingReset" class="ghost-button" type="button">Reset</button>
+        </div>
+
+        <div id="briefingStatus" class="briefing-status" role="status" aria-live="polite">Choose a brief type and generate a source-aware public record.</div>
+
+        <div class="briefing-summary-grid">
+          <article><span>Brief type</span><strong id="briefingTypeMetric">—</strong><small>Deterministic public brief</small></article>
+          <article><span>Evidence records</span><strong id="briefingRecordMetric">—</strong><small>Included in this view</small></article>
+          <article><span>Sources</span><strong id="briefingSourceMetric">—</strong><small>Linked source records</small></article>
+          <article><span>Data gaps</span><strong id="briefingGapMetric">—</strong><small>Explicit unavailable or conflicting records</small></article>
+        </div>
+
+        <article id="briefingCapture" class="briefing-capture">
+          <div class="briefing-document-head">
+            <div>
+              <p class="eyebrow">SUSTAINABLE CATALYST SITE INTELLIGENCE</p>
+              <h2 id="briefingDocumentTitle">Public Intelligence Brief</h2>
+              <p id="briefingDocumentSummary">Generate a brief to document the current research scope.</p>
+            </div>
+            <div id="briefingDocumentMeta" class="briefing-document-meta"></div>
+          </div>
+          <div id="briefingDocumentBody" class="briefing-document-body">
+            <div class="empty-state"><div><strong>No brief generated yet</strong><span>Select the research scope above and choose Generate brief.</span></div></div>
+          </div>
+          <div class="briefing-source-panel">
+            <div class="panel-head"><div><p class="eyebrow">SOURCE RECORDS</p><h2>Provenance and delivery state</h2></div></div>
+            <div id="briefingSourceList" class="briefing-source-list"><p>No source records loaded.</p></div>
+          </div>
+          <div id="briefingBoundary" class="briefing-boundary">Source identity, reporting dates, delivery states, missing data, and interpretation limits remain visible.</div>
+        </article>
+
+        <div class="briefing-export-grid">
+          <article><p class="eyebrow">JSON</p><h3>Evidence manifest</h3><p>Complete investigation state, records, sources, data gaps, and methodology.</p><button class="ghost-button" type="button" data-briefing-export="json">Download JSON</button></article>
+          <article><p class="eyebrow">CSV</p><h3>Evidence table</h3><p>Flattened evidence records with source, date, state, and geography fields.</p><button class="ghost-button" type="button" data-briefing-export="csv">Download CSV</button></article>
+          <article><p class="eyebrow">HTML</p><h3>Print-ready brief</h3><p>Portable source-aware document with print styling and visible source URLs.</p><button class="ghost-button" type="button" data-briefing-export="html">Download HTML</button></article>
+          <article><p class="eyebrow">PNG</p><h3>Rendered brief capture</h3><p>Browser-rendered visual capture of the current brief with visible attribution.</p><button class="ghost-button" type="button" data-briefing-export="png">Download PNG</button></article>
         </div>
       </section>
 

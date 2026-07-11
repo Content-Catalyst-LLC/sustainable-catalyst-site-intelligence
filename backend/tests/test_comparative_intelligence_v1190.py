@@ -67,7 +67,7 @@ def _country_payload(code: str):
         ]
     return {
         "ok": True,
-        "version": "1.19.1",
+        "version": "1.20.0",
         "country": COUNTRIES[code],
         "data_state": "live",
         "indicators": indicators,
@@ -78,7 +78,7 @@ def _trend_payload(code: str):
     payload = _country_payload(code)
     return {
         "ok": True,
-        "version": "1.19.1",
+        "version": "1.20.0",
         "country": payload["country"],
         "data_state": "live",
         "trends": [
@@ -100,7 +100,7 @@ def _events(*, country_code: str, **_kwargs):
     count = 2 if country_code == "KEN" else 1
     return {
         "ok": True,
-        "version": "1.19.1",
+        "version": "1.20.0",
         "data_state": "live",
         "count": count,
         "events": [
@@ -125,7 +125,7 @@ def _install_fixtures(monkeypatch):
 def test_v1190_indicator_comparison_keeps_years_units_and_missing_values(monkeypatch):
     _install_fixtures(monkeypatch)
     payload = comparison.compare_indicators("KEN", "GHA")
-    assert payload["version"] == "1.19.1"
+    assert payload["version"] == "1.20.0"
     assert payload["indicator_count"] == 3
     population = next(row for row in payload["rows"] if row["id"] == "SP.POP.TOTL")
     assert population["compatibility"] == "aligned"
@@ -153,7 +153,7 @@ def test_v1190_comparison_endpoint_returns_summary_trends_and_events(monkeypatch
     response = client.get("/public/compare?country=KEN&compare=GHA")
     assert response.status_code == 200
     payload = response.json()
-    assert payload["version"] == "1.19.1"
+    assert payload["version"] == "1.20.0"
     assert payload["summary"]["indicator_count"] == 3
     assert payload["summary"]["primary_event_count"] == 2
     assert payload["summary"]["comparison_event_count"] == 1
@@ -199,4 +199,4 @@ def test_v1190_public_app_and_wordpress_plugin_expose_comparison_studio():
     assert 'id="compareStudio"' in html
     assert "/public/compare?" in js
     assert "sc_comparative_intelligence" in php
-    assert "Version: 1.19.1" in php
+    assert "Version: 1.20.0" in php

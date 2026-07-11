@@ -185,6 +185,12 @@ from .comparative_intelligence import (
     comparison_export as build_comparison_export,
     comparison_diagnostics as build_comparison_diagnostics,
 )
+from .public_briefing_export_studio import (
+    briefing_directory as build_briefing_directory,
+    build_brief as build_public_brief,
+    briefing_export as build_public_brief_export,
+    briefing_diagnostics as build_briefing_diagnostics,
+)
 from .earth_observation_studio import (
     overview as build_earth_observation_overview,
     layers as build_earth_observation_layers,
@@ -1137,6 +1143,127 @@ def public_comparison_diagnostics(
         detail = str(exc)
         status = 422 if detail == "duplicate_country" else 404
         raise HTTPException(status_code=status, detail=detail)
+
+
+@app.get("/public/briefing-studio")
+def public_briefing_studio_directory():
+    return build_briefing_directory()
+
+
+@app.get("/public/briefing-studio/brief")
+def public_briefing_studio_brief(
+    brief_type: str = Query("country", alias="type"),
+    country: str = Query("KEN"),
+    compare: str = Query("GHA"),
+    event_id: Optional[str] = Query(None),
+    days: int = Query(14, ge=1, le=90),
+    category: Optional[str] = Query(None),
+    source: Optional[str] = Query(None),
+    layer_id: str = Query("true-color"),
+    date_a: str = Query(""),
+    date_b: str = Query(""),
+    latitude: float = Query(12.0, ge=-90.0, le=90.0),
+    longitude: float = Query(20.0, ge=-180.0, le=180.0),
+    zoom: int = Query(2, ge=1, le=12),
+    opacity: float = Query(0.72, ge=0.1, le=1.0),
+    dashboard_id: str = Query("climate-human-vulnerability"),
+    start: Optional[str] = Query(None),
+    end: Optional[str] = Query(None),
+    indicator: Optional[str] = Query(None),
+    include_events: bool = Query(True),
+):
+    try:
+        return build_public_brief(
+            brief_type,
+            country=country,
+            compare=compare,
+            event_id=event_id,
+            days=days,
+            category=category,
+            source=source,
+            layer_id=layer_id,
+            date_a=date_a,
+            date_b=date_b,
+            latitude=latitude,
+            longitude=longitude,
+            zoom=zoom,
+            opacity=opacity,
+            dashboard_id=dashboard_id,
+            start=start,
+            end=end,
+            indicator=indicator,
+            include_events=include_events,
+        )
+    except ValueError as exc:
+        detail = str(exc)
+        status = 404 if detail in {"unsupported_country", "event_not_found", "dashboard_not_found"} else 422
+        raise HTTPException(status_code=status, detail=detail)
+
+
+@app.get("/public/briefing-studio/export")
+def public_briefing_studio_export(
+    brief_type: str = Query("country", alias="type"),
+    format: str = Query("json"),
+    country: str = Query("KEN"),
+    compare: str = Query("GHA"),
+    event_id: Optional[str] = Query(None),
+    days: int = Query(14, ge=1, le=90),
+    category: Optional[str] = Query(None),
+    source: Optional[str] = Query(None),
+    layer_id: str = Query("true-color"),
+    date_a: str = Query(""),
+    date_b: str = Query(""),
+    latitude: float = Query(12.0, ge=-90.0, le=90.0),
+    longitude: float = Query(20.0, ge=-180.0, le=180.0),
+    zoom: int = Query(2, ge=1, le=12),
+    opacity: float = Query(0.72, ge=0.1, le=1.0),
+    dashboard_id: str = Query("climate-human-vulnerability"),
+    start: Optional[str] = Query(None),
+    end: Optional[str] = Query(None),
+    indicator: Optional[str] = Query(None),
+    include_events: bool = Query(True),
+):
+    try:
+        body, media_type, filename = build_public_brief_export(
+            brief_type,
+            export_format=format,
+            country=country,
+            compare=compare,
+            event_id=event_id,
+            days=days,
+            category=category,
+            source=source,
+            layer_id=layer_id,
+            date_a=date_a,
+            date_b=date_b,
+            latitude=latitude,
+            longitude=longitude,
+            zoom=zoom,
+            opacity=opacity,
+            dashboard_id=dashboard_id,
+            start=start,
+            end=end,
+            indicator=indicator,
+            include_events=include_events,
+        )
+    except ValueError as exc:
+        detail = str(exc)
+        status = 404 if detail in {"unsupported_country", "event_not_found", "dashboard_not_found"} else 422
+        raise HTTPException(status_code=status, detail=detail)
+    return Response(
+        content=body,
+        media_type=media_type,
+        headers={
+            "Content-Disposition": f'attachment; filename="{filename}"',
+            "Cache-Control": "no-store",
+            "X-Content-Type-Options": "nosniff",
+        },
+    )
+
+
+@app.get("/public/briefing-studio/diagnostics")
+def public_briefing_studio_diagnostics():
+    return build_briefing_diagnostics()
 
 
 @app.get("/public/dashboard-studio/rendering-diagnostics")

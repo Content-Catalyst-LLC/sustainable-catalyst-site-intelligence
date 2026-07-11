@@ -74,8 +74,8 @@ def launch_readiness() -> dict[str, Any]:
             for cid, label, status, detail in checks
         ],
         "production_actions": [
-            "Deploy the v1.19.1 backend and confirm the root endpoint reports version 1.19.1.",
-            "Install the v1.19.1 WordPress plugin and clear WordPress and Cloudflare caches.",
+            f"Deploy the v{VERSION} backend and confirm the root endpoint reports version {VERSION}.",
+            f"Install the v{VERSION} WordPress plugin and clear WordPress and Cloudflare caches.",
             "Review the four flagship dashboards on desktop, tablet, and mobile.",
             "Test keyboard navigation, visible focus, loading states, empty states, and exports.",
             "Capture final screenshots for the Site Intelligence landing page and release notes.",

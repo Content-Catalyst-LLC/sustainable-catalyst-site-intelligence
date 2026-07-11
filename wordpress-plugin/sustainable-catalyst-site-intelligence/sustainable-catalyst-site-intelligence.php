@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.19.1
+ * Version: 1.20.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.19.1';
+    const VERSION = '1.20.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
@@ -131,6 +131,7 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_live_event_intelligence', [$this, 'live_event_intelligence_shortcode']);
         add_shortcode('sc_global_country_intelligence', [$this, 'global_country_intelligence_shortcode']);
         add_shortcode('sc_comparative_intelligence', [$this, 'comparative_intelligence_shortcode']);
+        add_shortcode('sc_public_briefing_studio', [$this, 'public_briefing_studio_shortcode']);
         add_shortcode('sc_geospatial_intelligence_map', [$this, 'geospatial_map_shortcode']);
         add_shortcode('sc_satellite_imagery_viewer', [$this, 'geospatial_map_shortcode']);
         add_shortcode('sc_live_event_map', [$this, 'geospatial_map_shortcode']);
@@ -3115,6 +3116,90 @@ final class SC_Site_Intelligence_Plugin {
 
 
 
+
+
+    public function public_briefing_studio_shortcode($atts = []) {
+        $atts = shortcode_atts([
+            'height' => '1150',
+            'title' => 'Sustainable Catalyst Public Briefing and Export Studio',
+            'type' => 'country',
+            'country' => 'KEN',
+            'compare' => 'GHA',
+            'days' => '14',
+            'event_id' => '',
+            'dashboard_id' => 'climate-human-vulnerability',
+            'layer_id' => 'true-color',
+            'date_a' => '',
+            'date_b' => '',
+        ], $atts, 'sc_public_briefing_studio');
+
+        $options = self::options();
+        $backend = rtrim((string) ($options['backend_url'] ?? ''), '/');
+        if (!$backend) {
+            return '<div class="scsi-app-error">Configure the Site Intelligence backend URL before embedding the Public Briefing and Export Studio.</div>';
+        }
+
+        $height = max(860, min(1900, absint($atts['height'])));
+        $allowed_types = ['country', 'comparison', 'event', 'earth', 'thematic'];
+        $type = sanitize_key((string) $atts['type']);
+        if (!in_array($type, $allowed_types, true)) {
+            $type = 'country';
+        }
+
+        $country_input = strtoupper(trim((string) $atts['country']));
+        $compare_input = strtoupper(trim((string) $atts['compare']));
+        $country = preg_match('/^[A-Z]{3}$/', $country_input) ? $country_input : 'KEN';
+        $compare = preg_match('/^[A-Z]{3}$/', $compare_input) ? $compare_input : 'GHA';
+        if ($compare === $country) {
+            $compare = $country === 'GHA' ? 'KEN' : 'GHA';
+        }
+
+        $days = max(1, min(90, absint($atts['days'])));
+        if ($days === 0) {
+            $days = 14;
+        }
+
+        $query = [
+            'view' => 'briefing',
+            'briefType' => $type,
+            'type' => $type,
+            'country' => $country,
+            'compare' => $compare,
+            'days' => $days,
+        ];
+
+        $event_id = sanitize_text_field((string) $atts['event_id']);
+        if ($event_id !== '' && preg_match('/^[A-Za-z0-9._-]{1,96}$/', $event_id)) {
+            $query['event_id'] = $event_id;
+        }
+
+        $dashboard_id = sanitize_title((string) $atts['dashboard_id']);
+        if ($dashboard_id !== '') {
+            $query['dashboard_id'] = $dashboard_id;
+        }
+
+        $layer_id = sanitize_title((string) $atts['layer_id']);
+        if ($layer_id !== '') {
+            $query['layer_id'] = $layer_id;
+        }
+
+        foreach (['date_a', 'date_b'] as $date_key) {
+            $value = sanitize_text_field((string) $atts[$date_key]);
+            if ($value !== '' && preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
+                $query[$date_key] = $value;
+            }
+        }
+
+        $src = esc_url($backend . '/app/?' . http_build_query($query, '', '&', PHP_QUERY_RFC3986));
+        $title = esc_attr((string) $atts['title']);
+
+        return sprintf(
+            '<div class="scsi-standalone-app scsi-public-briefing-studio-embed"><div class="scsi-app-loading">Opening Public Briefing and Export Studio…</div><iframe src="%1$s" title="%2$s" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
+            $src,
+            $title,
+            $height
+        );
+    }
 
 
     public function comparative_intelligence_shortcode($atts = []) {

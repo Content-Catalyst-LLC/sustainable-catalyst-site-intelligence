@@ -1054,7 +1054,7 @@ def comparison_export(
             **brief,
             "export_manifest": {
                 "format": "json",
-                "schema_version": "1.19.1",
+                "schema_version": VERSION,
                 "application_version": VERSION,
                 "generated_at": brief["generated_at"],
                 "filename": f"{stem}.json",

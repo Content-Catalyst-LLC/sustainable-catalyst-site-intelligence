@@ -116,6 +116,7 @@
       country:["COUNTRY INTELLIGENCE",`${names[state.country]||state.country} evidence profile`,"Environmental, development, humanitarian, security, and legal context for one selected country."],
       events:["UNIFIED LIVE EVENT INTELLIGENCE","Explore public events across sources","Natural hazards, humanitarian reporting, and country-linked event context in one source-aware workspace."],
       compare:["CROSS-DOMAIN COMPARISON","Compare country contexts","Align available evidence without flattening dates, units, definitions, or missing-data states."],
+      briefing:["PUBLIC BRIEFING AND EXPORT STUDIO","Document public intelligence views","Generate source-aware country, comparison, event, Earth-observation, and thematic briefs with reproducible exports."],
       sources:["PROVENANCE","Sources and methods","Review the public sources, imagery services, and interpretive limits behind this workspace."]
     }[route]||[];
   }
@@ -780,6 +781,92 @@
     }
   }
 
+
+  const briefingState={data:null,controller:null,sequence:0,directory:null};
+  function briefingType(){return qs("#briefingType").value||"country"}
+  function updateBriefingFields(){
+    const type=briefingType();
+    qsa("[data-brief-field]").forEach(field=>{const allowed=String(field.dataset.briefField||"").split(/\s+/);field.hidden=!allowed.includes(type)});
+  }
+  function briefingDate(offset){const value=new Date();value.setUTCDate(value.getUTCDate()-offset);return value.toISOString().slice(0,10)}
+  async function prepareBriefingStudio(){
+    await loadCountryCatalog();
+    const options=globalCountryState.catalog.map(item=>`<option value="${escapeHtml(item.code)}">${escapeHtml(item.name)}</option>`).join("");
+    if(!qs("#briefingCountry").options.length)qs("#briefingCountry").innerHTML=options;
+    if(!qs("#briefingCompare").options.length)qs("#briefingCompare").innerHTML=options;
+    if(!briefingState.directory)briefingState.directory=await apiWithRetry("/public/briefing-studio",3);
+    if(!qs("#briefingDateA").value)qs("#briefingDateA").value=briefingDate(8);
+    if(!qs("#briefingDateB").value)qs("#briefingDateB").value=briefingDate(1);
+  }
+  function briefingParams(includeFormat){
+    const type=briefingType(),params=new URLSearchParams();
+    params.set("type",type);
+    if(includeFormat)params.set("format",includeFormat);
+    if(["country","comparison","event","thematic"].includes(type))params.set("country",qs("#briefingCountry").value||"KEN");
+    if(["comparison","thematic"].includes(type))params.set("compare",qs("#briefingCompare").value||"GHA");
+    if(["country","comparison","event"].includes(type))params.set("days",qs("#briefingDays").value||"14");
+    if(type==="event"&&qs("#briefingEventId").value.trim())params.set("event_id",qs("#briefingEventId").value.trim());
+    if(type==="thematic")params.set("dashboard_id",qs("#briefingDashboard").value||"climate-human-vulnerability");
+    if(type==="earth"){
+      params.set("layer_id",qs("#briefingLayer").value||"true-color");params.set("date_a",qs("#briefingDateA").value);params.set("date_b",qs("#briefingDateB").value);
+      const center=state.map?.getCenter?.();params.set("latitude",String(center?.lat??12));params.set("longitude",String(center?.lng??20));params.set("zoom",String(state.map?.getZoom?.()??2));params.set("opacity","0.72");
+    }
+    return params;
+  }
+  function syncBriefingUrl(){
+    const params=briefingParams();params.set("view","briefing");params.set("briefType",briefingType());
+    history.replaceState(null,"",`?${params.toString()}`);
+  }
+  function briefingEvidenceCount(data){
+    const evidence=data?.evidence||{};return ["indicators","trends","events","layers","thematic_items"].reduce((sum,key)=>sum+(Array.isArray(evidence[key])?evidence[key].length:0),0)
+  }
+  function briefingRecordMarkup(item,group){
+    const label=item.label||item.title||item.id||group.replaceAll("_"," ");
+    const value=item.value===0?"0":item.value??item.description??item.value_status??item.observation_type??"Source-aware record";
+    const meta=[item.country_name||item.country_code,item.reporting_year||item.observed_at,item.unit,item.data_state,item.compatibility].filter(Boolean).join(" · ");
+    const source=item.source_url?`<a href="${escapeHtml(item.source_url)}" target="_blank" rel="noopener">${escapeHtml(item.source||"Open source")} ↗</a>`:escapeHtml(item.source||"");
+    return `<article class="briefing-record"><span>${escapeHtml(group.replaceAll("_"," "))}</span><strong>${escapeHtml(label)}</strong><p>${escapeHtml(typeof value==="object"?JSON.stringify(value):String(value))}</p>${meta?`<small>${escapeHtml(meta)}</small>`:""}${source?`<small>${source}</small>`:""}</article>`;
+  }
+  function renderBriefing(data){
+    briefingState.data=data;
+    qs("#briefingStudioTitle").textContent=data.title;qs("#briefingStudioIntro").textContent=data.summary;
+    qs("#briefingDocumentTitle").textContent=data.title;qs("#briefingDocumentSummary").textContent=data.summary;
+    qs("#briefingTypeMetric").textContent=String(data.brief_type||"—").replaceAll("-"," ");
+    qs("#briefingRecordMetric").textContent=briefingEvidenceCount(data);qs("#briefingSourceMetric").textContent=(data.source_records||[]).length;qs("#briefingGapMetric").textContent=(data.missing_data||[]).length;
+    qs("#briefingDocumentMeta").innerHTML=`<strong>${escapeHtml(data.brief_id||"")}</strong><span>Generated ${escapeHtml(cleanDate(data.generated_at))}</span><span>Schema ${escapeHtml(data.schema_version||"")}</span><span>Methodology ${escapeHtml(data.methodology_version||"")}</span>`;
+    const sections=(data.sections||[]).map(item=>`<section class="briefing-section"><h3>${escapeHtml(item.heading||"Section")}</h3>${item.text?`<p>${escapeHtml(item.text)}</p>`:""}${item.item_count!=null?`<span>${escapeHtml(item.item_count)} record${Number(item.item_count)===1?"":"s"}</span>`:""}</section>`).join("");
+    const evidence=data.evidence||{};const records=[];["indicators","trends","events","layers","thematic_items"].forEach(group=>(evidence[group]||[]).slice(0,24).forEach(item=>records.push(briefingRecordMarkup(item,group))));
+    const gaps=(data.missing_data||[]).length?`<section class="briefing-section"><h3>Explicit data gaps</h3><ul>${data.missing_data.slice(0,18).map(item=>`<li>${escapeHtml(item.label||item.id||item.record_type||"Record")}: ${escapeHtml(item.reason||item.compatibility||"Unavailable or methodologically constrained")}</li>`).join("")}</ul></section>`:"";
+    const methods=`<section class="briefing-section"><h3>Methodology and interpretation limits</h3><ul>${[...(data.methodology_notes||[]),...(data.interpretation_limits||[])].map(item=>`<li>${escapeHtml(item)}</li>`).join("")}</ul></section>`;
+    qs("#briefingDocumentBody").innerHTML=`<div class="briefing-section-grid">${sections}</div>${records.length?`<div class="briefing-record-grid">${records.join("")}</div>`:'<div class="empty-state"><div><strong>No evidence records returned</strong><span>The brief still preserves the selected scope and data state.</span></div></div>'}${gaps}${methods}`;
+    qs("#briefingSourceList").innerHTML=(data.source_records||[]).length?(data.source_records||[]).map(item=>`<article><strong>${escapeHtml(item.name||"Source")}</strong><span>${escapeHtml((item.data_states||[]).join(" · ")||"state unavailable")}</span>${item.url?`<a href="${escapeHtml(item.url)}" target="_blank" rel="noopener">${escapeHtml(item.url)}</a>`:""}</article>`).join(""):'<p>No linked source record was returned for this brief.</p>';
+    qs("#briefingBoundary").textContent=data.responsible_use||"Verify consequential findings against cited authoritative sources.";
+    qs("#briefingStatus").textContent=`Brief generated · ${briefingEvidenceCount(data)} evidence records · ${(data.source_records||[]).length} sources`;
+    syncBriefingUrl();reportHeight();
+  }
+  async function loadBriefing(){
+    if(briefingState.controller)briefingState.controller.abort();const controller=new AbortController();briefingState.controller=controller;const sequence=++briefingState.sequence;
+    qs("#briefingStudio").setAttribute("aria-busy","true");qs("#briefingStatus").textContent="Generating deterministic source-aware brief…";qs("#briefingDocumentBody").innerHTML='<div class="loading-block">Collecting available public evidence, sources, data states, and interpretation limits…</div>';
+    try{const data=await apiWithRetry(`/public/briefing-studio/brief?${briefingParams().toString()}`,2,{signal:controller.signal,timeout:30000});if(controller.signal.aborted||sequence!==briefingState.sequence)return;renderBriefing(data)}
+    catch(error){if(error?.name==="AbortError")return;qs("#briefingStatus").textContent="Brief generation unavailable";qs("#briefingDocumentBody").innerHTML=publicErrorBlock("Brief unavailable","The selected public evidence services did not complete the brief.",loadBriefing)}
+    finally{if(sequence===briefingState.sequence)qs("#briefingStudio").setAttribute("aria-busy","false")}
+  }
+  async function downloadBriefing(format){
+    if(format==="png"){await downloadBriefingPng();return}
+    const url=`${API}/public/briefing-studio/export?${briefingParams(format).toString()}`;const response=await fetch(url,{headers:{Accept:"*/*"}});if(!response.ok){toast("Brief export unavailable");return}const blob=await response.blob();const disposition=response.headers.get("content-disposition")||"";const match=disposition.match(/filename="([^"]+)"/);const name=match?.[1]||`site-intelligence-brief.${format}`;const link=document.createElement("a");link.href=URL.createObjectURL(blob);link.download=name;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(link.href),5000)
+  }
+  async function downloadBriefingPng(){
+    if(!briefingState.data){toast("Generate a brief before capturing it");return}
+    if(typeof html2canvas!=="function"){toast("PNG capture is unavailable in this browser");return}
+    qs("#briefingStatus").textContent="Rendering PNG capture…";const canvas=await html2canvas(qs("#briefingCapture"),{backgroundColor:"#080c12",scale:Math.min(2,window.devicePixelRatio||1),useCORS:true});const link=document.createElement("a");link.download=`site-intelligence-${briefingState.data.brief_type}-${briefingState.data.brief_id}.png`;link.href=canvas.toDataURL("image/png");link.click();qs("#briefingStatus").textContent="PNG capture downloaded · verify linked sources in the evidence manifest."
+  }
+  async function openBriefingStudio(){
+    qs("#briefingStudio").hidden=false;await prepareBriefingStudio();const params=new URLSearchParams(location.search);const requested=params.get("briefType")||params.get("type");if(["country","comparison","event","earth","thematic"].includes(requested))qs("#briefingType").value=requested;
+    const codes=new Set(globalCountryState.catalog.map(item=>item.code));const country=params.get("country");const compare=params.get("compare");qs("#briefingCountry").value=codes.has(country)?country:(codes.has(state.country)?state.country:"KEN");qs("#briefingCompare").value=codes.has(compare)?compare:"GHA";
+    if(params.get("days"))qs("#briefingDays").value=params.get("days");if(params.get("dashboard_id"))qs("#briefingDashboard").value=params.get("dashboard_id");if(params.get("event_id"))qs("#briefingEventId").value=params.get("event_id");if(params.get("layer_id"))qs("#briefingLayer").value=params.get("layer_id");if(params.get("date_a"))qs("#briefingDateA").value=params.get("date_a");if(params.get("date_b"))qs("#briefingDateB").value=params.get("date_b");updateBriefingFields();await loadBriefing()
+  }
+  function closeBriefingStudio(){qs("#briefingStudio").hidden=true;if(briefingState.controller)briefingState.controller.abort()}
+
   async function setRoute(route){
     qs("#main").classList.remove("route-enter");void qs("#main").offsetWidth;qs("#main").classList.add("route-enter");
     state.route=route;
@@ -788,19 +875,19 @@
     const panel=qs("#routePanel");
 
     if(route==="overview"){
-      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();return;
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();closeBriefingStudio();return;
     }
     if(route==="earth"){
-      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();await openEarthStudio();return;
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();closeBriefingStudio();await openEarthStudio();return;
     }
     if(route==="events"){
-      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeGlobalCountryExplorer();closeCompareStudio();await openEventStudio();return;
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeGlobalCountryExplorer();closeCompareStudio();closeBriefingStudio();await openEventStudio();return;
     }
     if(route==="country"){
-      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();closeCompareStudio();await openGlobalCountryExplorer();return;
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();closeCompareStudio();closeBriefingStudio();await openGlobalCountryExplorer();return;
     }
 
-    closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();qs("#countryIntelligencePanel").hidden=true;
+    closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();closeBriefingStudio();qs("#countryIntelligencePanel").hidden=true;
     panel.hidden=false;panel.innerHTML=`<div class="loading-block">Loading ${escapeHtml(route)} view…</div>`;
     if(route==="country-legacy"){
       qs("#countryIntelligencePanel").hidden=false;panel.hidden=true;await loadLiveCountry(state.country);return;
@@ -810,6 +897,8 @@
       panel.innerHTML=`<p class="eyebrow">PUBLIC EVENT RECORDS</p><h2>Latest mapped events</h2><div class="event-list">${rows.map(f=>{const p=f.properties||{};return `<div class="event-row"><span class="event-marker"></span><div><div class="event-title">${escapeHtml(p.title||"Event")}</div><div class="event-meta">${escapeHtml(p.category||"Event")} · ${escapeHtml(p.source||"Source")}</div></div><div class="event-time">${cleanDate(p.observed_at)}</div></div>`}).join("")}</div>`;
     }else if(route==="compare"){
       panel.hidden=true;await openCompareStudio();return;
+    }else if(route==="briefing"){
+      panel.hidden=true;await openBriefingStudio();return;
     }else{
       const sources=["NASA GIBS","NASA EONET","USGS","World Bank","WHO","UNESCO","FAOSTAT","UN-Water","UNHCR","ReliefWeb","UCDP","ACLED"];
       panel.innerHTML=`<p class="eyebrow">PUBLIC SOURCE LAYER</p><h2>Connected evidence services</h2><div class="source-list">${sources.map(s=>`<div class="source-chip">${escapeHtml(s)}</div>`).join("")}</div>`;
@@ -865,6 +954,13 @@
     qs("#compareTrendSelect").addEventListener("change",e=>renderCompareTrend(compareState.trends.find(item=>item.id===e.target.value)||null,true));
     qsa(".compare-tab").forEach(button=>button.addEventListener("click",()=>setCompareView(button.dataset.compareView)));
     qsa("[data-compare-export]").forEach(button=>button.addEventListener("click",()=>downloadComparison(button.dataset.compareExport)));
+
+    qs("#briefingType").addEventListener("change",updateBriefingFields);
+    qs("#briefingApply").addEventListener("click",loadBriefing);
+    qs("#briefingReset").addEventListener("click",()=>{qs("#briefingType").value="country";qs("#briefingCountry").value="KEN";qs("#briefingCompare").value="GHA";qs("#briefingDays").value="14";qs("#briefingEventId").value="";qs("#briefingDashboard").value="climate-human-vulnerability";qs("#briefingLayer").value="true-color";qs("#briefingDateA").value=briefingDate(8);qs("#briefingDateB").value=briefingDate(1);updateBriefingFields();loadBriefing()});
+    qs("#briefingShare").addEventListener("click",async()=>{syncBriefingUrl();await navigator.clipboard.writeText(location.href);toast("Brief view link copied")});
+    qs("#briefingPrint").addEventListener("click",()=>{document.body.classList.add("briefing-print-mode");window.print();setTimeout(()=>document.body.classList.remove("briefing-print-mode"),300)});
+    qsa("[data-briefing-export]").forEach(button=>button.addEventListener("click",()=>downloadBriefing(button.dataset.briefingExport)));
     qs("#closeEvidenceDrawer").addEventListener("click",closeEvidenceDrawer);qs("#evidenceBackdrop").addEventListener("click",closeEvidenceDrawer);document.addEventListener("keydown",e=>{if(e.key==="Escape")closeEvidenceDrawer()});
     const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const initialView=params.get("view")||"overview";qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";try{setLaunch("Loading satellite imagery.",50);await loadLayers();await setImagery("true-color");setLaunch("Connecting to live events and country evidence.",68);await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);setLaunch("Preparing the workspace.",88);await setRoute(initialView);finishLaunch()}
     catch(e){qs("#statusText").textContent="Partial public data";toast("Some optional public data is temporarily unavailable.");finishLaunch()}

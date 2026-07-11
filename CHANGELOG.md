@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.20.0 — Public Briefing and Export Studio
+
+- Added a first-class standalone Public Briefing and Export Studio for country, comparison, event, Earth-observation, and thematic investigations.
+- Added a canonical `sc-public-briefing/1.0` investigation manifest with deterministic brief IDs, scope, state, geography, selected dates, evidence groups, source records, data states, missing-data records, methodology, interpretation limits, and provenance state.
+- Added `/public/briefing-studio`, `/public/briefing-studio/brief`, `/public/briefing-studio/export`, and `/public/briefing-studio/diagnostics`.
+- Added source-aware country, country-comparison, event-situation, Earth-observation, and thematic briefs without requiring Platform Core.
+- Added JSON evidence-manifest, CSV evidence-table, and print-ready HTML exports.
+- Added browser-rendered PNG capture with visible attribution; deferred PDF until the HTML export contract is stable.
+- Added export filenames, content-disposition headers, `no-store`, and `nosniff` response protections.
+- Added UTF-8 CSV output and spreadsheet-formula safeguards.
+- Added local event-source failure isolation so optional feed outages do not block briefing generation.
+- Added request cancellation, stale-response rejection, URL-restorable briefing state, source and data-gap summaries, and type-specific controls.
+- Added print styling with visible source URLs and a responsible-use boundary.
+- Added `[sc_public_briefing_studio type="country" country="KEN" height="1150"]`.
+- Updated backend, WordPress plugin, release metadata, documentation, and automated tests to v1.20.0.
+- Preserved Platform Core as optional and added no paid database, Redis service, proprietary map service, or additional Render service.
+
 ## 1.19.1 — Comparison Reliability Patch
 
 - Added strict country-pair validation and explicit duplicate-country handling.

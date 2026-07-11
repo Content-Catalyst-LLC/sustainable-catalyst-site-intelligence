@@ -1,6 +1,6 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v1.19.1 — Comparison Reliability Patch
+**Current release:** v1.20.0 — Public Briefing and Export Studio
 
 Sustainable Catalyst Site Intelligence is a public-interest observatory for Earth observation, global country indicators, natural hazards, humanitarian reporting, source-aware dashboards, and comparative research.
 
@@ -11,7 +11,68 @@ Sustainable Catalyst Site Intelligence is a public-interest observatory for Eart
 - Live Events: `/app/?view=events`
 - Global Country Intelligence: `/app/?view=country&country=KEN`
 - Comparative Intelligence: `/app/?view=compare&country=KEN&compare=GHA`
+- Public Briefing Studio: `/app/?view=briefing&briefType=country&country=KEN`
 - Primary WordPress embed: `[sc_site_intelligence_app height="1000"]`
+
+## v1.20.0 release focus
+
+v1.20.0 adds a unified deterministic Public Briefing and Export Studio across country, comparison, event, Earth-observation, and thematic investigations.
+
+### Canonical investigation manifest
+
+Every brief uses one source-aware schema containing:
+
+- stable deterministic brief ID
+- brief type and title
+- investigation scope and selected state
+- geography and date range
+- evidence groups and normalized records
+- source names, source IDs, and source URLs
+- live, cached, stale, fallback, modeled, and unavailable states
+- explicit missing-data and compatibility records
+- methodology version
+- interpretation limits and responsible-use boundary
+- optional provenance state without requiring Platform Core
+
+### Supported brief types
+
+- country brief
+- country-comparison brief
+- event-situation brief
+- Earth-observation brief
+- thematic dashboard brief
+
+### Public briefing route
+
+```text
+/app/?view=briefing&briefType=country&country=KEN
+```
+
+The studio provides type-specific controls, URL-restorable state, local request cancellation, evidence metrics, source lists, data-gap reporting, print mode, and downloadable exports.
+
+### Export contract
+
+- JSON evidence manifest
+- CSV evidence table with UTF-8 and spreadsheet-formula safeguards
+- print-ready HTML with visible source URLs
+- browser-rendered PNG capture with attribution visible in the captured brief
+
+PDF remains intentionally deferred until the print-ready HTML contract is stable.
+
+### Public endpoints
+
+- `/public/briefing-studio`
+- `/public/briefing-studio/brief`
+- `/public/briefing-studio/export`
+- `/public/briefing-studio/diagnostics`
+
+### WordPress
+
+```text
+[sc_public_briefing_studio type="country" country="KEN" height="1150"]
+```
+
+The standalone app remains the primary public product, and Platform Core remains optional.
 
 ## v1.19.1 release focus
 
@@ -198,6 +259,13 @@ Diagnostics do not expose API keys, stack traces, raw retry queues, or private c
 
 ## Principal public endpoints
 
+### Public Briefing and Export Studio
+
+- `GET /public/briefing-studio`
+- `GET /public/briefing-studio/brief?type=country&country=KEN`
+- `GET /public/briefing-studio/export?type=country&country=KEN&format=json|csv|html`
+- `GET /public/briefing-studio/diagnostics`
+
 ### Comparative Intelligence
 
 - `GET /public/compare?country=KEN&compare=GHA`
@@ -254,6 +322,7 @@ Diagnostics do not expose API keys, stack traces, raw retry queues, or private c
 ## WordPress shortcodes
 
 - `[sc_comparative_intelligence country="KEN" compare="GHA" view="table" height="1100"]`
+- `[sc_public_briefing_studio type="country" country="KEN" height="1150"]`
 
 Primary product:
 
@@ -268,6 +337,7 @@ Specialized standalone views:
 [sc_live_event_intelligence height="1000"]
 [sc_global_country_intelligence country="KEN" height="1100"]
 [sc_comparative_intelligence country="KEN" compare="GHA" height="1100"]
+[sc_public_briefing_studio type="country" country="KEN" height="1150"]
 ```
 
 Legacy compatibility views remain available, but the long-term direction is one main standalone app embed rather than a long stack of demonstration shortcodes.
@@ -296,10 +366,10 @@ node --check public_app/assets/app.js
 php -l ../wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php
 ```
 
-Expected test result for v1.19.1:
+Expected test result for v1.20.0:
 
 ```text
-215 passed
+224 passed
 ```
 
 ## Render deployment

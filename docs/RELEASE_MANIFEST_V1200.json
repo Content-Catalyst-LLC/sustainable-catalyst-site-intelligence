@@ -1,0 +1,47 @@
+{
+  "product": "Sustainable Catalyst Site Intelligence",
+  "version": "1.20.0",
+  "release_name": "Public Briefing and Export Studio",
+  "api_schema_version": "1.20",
+  "briefing_schema_version": "sc-public-briefing/1.0",
+  "methodology_version": "2026.07",
+  "expected_wordpress_plugin_version": "1.20.0",
+  "primary_route": "/app/?view=briefing",
+  "brief_types": [
+    "country",
+    "comparison",
+    "event",
+    "earth",
+    "thematic"
+  ],
+  "server_export_formats": [
+    "json",
+    "csv",
+    "html"
+  ],
+  "browser_export_formats": [
+    "png"
+  ],
+  "pdf_status": "deferred-until-print-html-stable",
+  "public_endpoints": [
+    "/public/briefing-studio",
+    "/public/briefing-studio/brief",
+    "/public/briefing-studio/export",
+    "/public/briefing-studio/diagnostics"
+  ],
+  "wordpress_shortcodes": [
+    "[sc_site_intelligence_app height=\"1000\"]",
+    "[sc_public_briefing_studio type=\"country\" country=\"KEN\" height=\"1150\"]"
+  ],
+  "platform_core_required": false,
+  "paid_infrastructure_added": false,
+  "release_gate": {
+    "python_tests": 224,
+    "python_compile": "required",
+    "javascript_syntax": "required",
+    "php_syntax": "required",
+    "archive_root_validation": "required",
+    "forbidden_artifact_scan": "required",
+    "private_key_scan": "required"
+  }
+}
