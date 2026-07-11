@@ -202,6 +202,17 @@ from .thematic_intelligence_dashboards import (
     dashboard_diagnostics as build_thematic_dashboard_diagnostics,
     ThematicDashboardError,
 )
+from .source_methodology_studio import (
+    source_directory as build_source_methodology_directory,
+    source_detail as build_source_detail,
+    source_status as build_source_status,
+    source_coverage as build_source_coverage,
+    methodology_directory as build_methodology_directory,
+    methodology_detail as build_methodology_detail,
+    studio_diagnostics as build_source_methodology_diagnostics,
+    studio_export as build_source_methodology_export,
+    SourceMethodologyError,
+)
 from .earth_observation_studio import (
     overview as build_earth_observation_overview,
     layers as build_earth_observation_layers,
@@ -1702,10 +1713,25 @@ def public_source_page_visual_qa(settings: Settings = Depends(get_settings)):
     return build_public_source_page_visual_qa()
 
 @app.get("/public/sources")
-def public_sources_endpoint(settings: Settings = Depends(get_settings)):
+def public_sources_endpoint(
+    domain: str = Query(""),
+    state: str = Query(""),
+    feature: str = Query(""),
+    query: str = Query(""),
+    country: str = Query(""),
+    include_health: bool = Query(False),
+    settings: Settings = Depends(get_settings),
+):
     if not settings.public_dashboards_enabled:
         raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
-    return build_public_sources()
+    return build_source_methodology_directory(
+        domain=domain,
+        state=state,
+        feature=feature,
+        query=query,
+        country=country,
+        include_health=include_health,
+    )
 
 
 @app.get("/public/sources/health")
@@ -1741,6 +1767,40 @@ def public_repository_intelligence_endpoint(settings: Settings = Depends(get_set
     if not settings.public_dashboards_enabled:
         raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
     return build_public_repository_intelligence()
+
+
+@app.get("/public/sources/{source_id}/status")
+def public_source_status_record(source_id: str, settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    try:
+        return build_source_status(source_id)
+    except SourceMethodologyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@app.get("/public/sources/{source_id}/coverage")
+def public_source_coverage_record(source_id: str, settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    try:
+        return build_source_coverage(source_id)
+    except SourceMethodologyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@app.get("/public/sources/{source_id}")
+def public_source_detail_record(
+    source_id: str,
+    include_health: bool = Query(False),
+    settings: Settings = Depends(get_settings),
+):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    try:
+        return build_source_detail(source_id, include_health=include_health)
+    except SourceMethodologyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
 
 
 @app.get("/public/indicators/overview")
@@ -1843,8 +1903,38 @@ def public_status(settings: Settings = Depends(get_settings)):
 
 
 @app.get("/public/methodology")
-def public_dashboard_methodology():
-    return public_methodology()
+def public_dashboard_methodology(feature: str = Query(""), query: str = Query("")):
+    return build_methodology_directory(feature=feature, query=query)
+
+
+@app.get("/public/methodology/{method_id}")
+def public_methodology_detail_record(method_id: str):
+    try:
+        return build_methodology_detail(method_id)
+    except SourceMethodologyError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@app.get("/public/source-methodology/diagnostics")
+def public_source_methodology_diagnostics():
+    return build_source_methodology_diagnostics()
+
+
+@app.get("/public/source-methodology/export")
+def public_source_methodology_export(format: str = Query("json"), include_health: bool = Query(True)):
+    try:
+        body, media_type, filename = build_source_methodology_export(format, include_health=include_health)
+    except SourceMethodologyError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    return Response(
+        content=body,
+        media_type=media_type,
+        headers={
+            "Content-Disposition": f'attachment; filename="{filename}"',
+            "Cache-Control": "no-store",
+            "X-Content-Type-Options": "nosniff",
+        },
+    )
 
 
 

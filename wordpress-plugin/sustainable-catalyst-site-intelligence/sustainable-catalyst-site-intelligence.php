@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.21.0
+ * Version: 1.22.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.21.0';
+    const VERSION = '1.22.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -140,6 +140,7 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_comparative_intelligence', [$this, 'comparative_intelligence_shortcode']);
         add_shortcode('sc_public_briefing_studio', [$this, 'public_briefing_studio_shortcode']);
         add_shortcode('sc_thematic_intelligence', [$this, 'thematic_intelligence_shortcode']);
+        add_shortcode('sc_source_methodology_studio', [$this, 'source_methodology_studio_shortcode']);
         add_shortcode('sc_geospatial_intelligence_map', [$this, 'geospatial_map_shortcode']);
         add_shortcode('sc_satellite_imagery_viewer', [$this, 'geospatial_map_shortcode']);
         add_shortcode('sc_live_event_map', [$this, 'geospatial_map_shortcode']);
@@ -3338,6 +3339,64 @@ final class SC_Site_Intelligence_Plugin {
 
 
 
+
+
+    public function source_methodology_studio_shortcode($atts = []) {
+        $atts = shortcode_atts([
+            'height' => '1100',
+            'title' => 'Sustainable Catalyst Source and Methodology Studio',
+            'source' => '',
+            'domain' => '',
+            'state' => '',
+            'feature' => '',
+            'query' => '',
+        ], $atts, 'sc_source_methodology_studio');
+
+        $options = self::options();
+        $backend = rtrim((string) ($options['backend_url'] ?? ''), '/');
+        if (!$backend) {
+            return '<div class="scsi-app-error">Configure the Site Intelligence backend URL before embedding the Source and Methodology Studio.</div>';
+        }
+
+        $height = max(820, min(1900, absint($atts['height'])));
+        $params = ['view' => 'sources'];
+
+        $source = sanitize_title((string) $atts['source']);
+        if ($source !== '') {
+            $params['source'] = $source;
+        }
+
+        $domain = sanitize_title((string) $atts['domain']);
+        if ($domain !== '') {
+            $params['domain'] = $domain;
+        }
+
+        $allowed_states = ['live', 'cached', 'stale', 'temporarily-unavailable', 'experimental', 'disabled'];
+        $state = sanitize_title((string) $atts['state']);
+        if (in_array($state, $allowed_states, true)) {
+            $params['state'] = $state;
+        }
+
+        $feature = sanitize_title((string) $atts['feature']);
+        if ($feature !== '') {
+            $params['feature'] = $feature;
+        }
+
+        $query = sanitize_text_field((string) $atts['query']);
+        if ($query !== '') {
+            $params['query'] = $query;
+        }
+
+        $src = esc_url($backend . '/app/?' . http_build_query($params, '', '&', PHP_QUERY_RFC3986));
+        $title = esc_attr((string) $atts['title']);
+
+        return sprintf(
+            '<div class="scsi-standalone-app scsi-source-methodology-embed"><div class="scsi-app-loading">Opening Source and Methodology Studio…</div><iframe src="%1$s" title="%2$s" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
+            $src,
+            $title,
+            $height
+        );
+    }
 
 
     public function thematic_intelligence_shortcode($atts = []) {

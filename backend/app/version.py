@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-APP_VERSION = "1.21.0"
-API_SCHEMA_VERSION = "1.21"
-RELEASE_NAME = "Thematic Intelligence Dashboards"
+APP_VERSION = "1.22.0"
+API_SCHEMA_VERSION = "1.22"
+RELEASE_NAME = "Source and Methodology Studio"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

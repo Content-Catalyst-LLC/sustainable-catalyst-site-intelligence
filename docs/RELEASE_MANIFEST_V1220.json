@@ -1,0 +1,46 @@
+{
+  "release": "1.22.0",
+  "name": "Source and Methodology Studio",
+  "schema_version": "sc-source-methodology/1.0",
+  "methodology_version": "2026.07",
+  "standalone_route": "/app/?view=sources",
+  "public_endpoints": [
+    "/public/sources",
+    "/public/sources/{source_id}",
+    "/public/sources/{source_id}/status",
+    "/public/sources/{source_id}/coverage",
+    "/public/methodology",
+    "/public/methodology/{method_id}",
+    "/public/source-methodology/diagnostics",
+    "/public/source-methodology/export"
+  ],
+  "source_ids": [
+    "world-bank",
+    "nasa-gibs",
+    "usgs-earthquakes",
+    "nasa-eonet",
+    "reliefweb",
+    "nasa-power",
+    "openstreetmap",
+    "platform-core"
+  ],
+  "public_states": [
+    "live",
+    "cached",
+    "stale",
+    "temporarily-unavailable",
+    "experimental",
+    "disabled"
+  ],
+  "export_formats": ["json", "csv"],
+  "wordpress_shortcode": "[sc_source_methodology_studio height=\"1100\"]",
+  "platform_core": "optional",
+  "paid_infrastructure_added": false,
+  "security_boundary": {
+    "api_keys_exposed": false,
+    "private_urls_exposed": false,
+    "stack_traces_exposed": false,
+    "environment_secrets_exposed": false,
+    "raw_retry_queues_exposed": false
+  }
+}

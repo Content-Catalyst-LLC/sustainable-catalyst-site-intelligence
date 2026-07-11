@@ -1,6 +1,6 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v1.21.0 — Thematic Intelligence Dashboards
+**Current release:** v1.22.0 — Source and Methodology Studio
 
 Sustainable Catalyst Site Intelligence is a public-interest observatory for Earth observation, global country indicators, natural hazards, humanitarian reporting, source-aware dashboards, and comparative research.
 
@@ -13,7 +13,96 @@ Sustainable Catalyst Site Intelligence is a public-interest observatory for Eart
 - Comparative Intelligence: `/app/?view=compare&country=KEN&compare=GHA`
 - Thematic Intelligence: `/app/?view=thematic&dashboard=climate-environment&country=KEN`
 - Public Briefing Studio: `/app/?view=briefing&briefType=country&country=KEN`
+- Source and Methodology Studio: `/app/?view=sources`
 - Primary WordPress embed: `[sc_site_intelligence_app height="1000"]`
+
+## v1.22.0 release focus
+
+v1.22.0 adds a first-class public Source and Methodology Studio to the standalone Site Intelligence application. The studio makes provenance, coverage, connector state, source usage, known limitations, and the system's evidence-handling rules visible without exposing private infrastructure.
+
+### Public source route
+
+```text
+/app/?view=sources
+```
+
+### Public source registry
+
+The registry includes complete public records for:
+
+- World Bank Open Data
+- NASA EOSDIS GIBS
+- USGS Earthquake Hazards Program
+- NASA EONET
+- ReliefWeb
+- NASA POWER
+- OpenStreetMap
+- optional Sustainable Catalyst Platform Core provenance integration
+
+Each source record includes publisher, authority, connector, domains, data types, update frequency, current public state, geographic and temporal coverage, license context, feature usage, official URL, and known limitations.
+
+### Public methodology registry
+
+The studio documents actual application behavior for:
+
+- latest valid indicator selection
+- missing-value handling
+- zero versus unavailable
+- delivery-state labeling
+- trend construction
+- reporting-year differences
+- indicator compatibility
+- country-name normalization
+- country-event matching
+- event deduplication
+- Earth-observation date validation
+- imagery interpretation
+- comparison calculations
+- deterministic brief generation
+- export generation
+- cache and stale-record behavior
+- optional-source failure isolation
+
+### Public endpoints
+
+- `/public/sources`
+- `/public/sources/{source_id}`
+- `/public/sources/{source_id}/status`
+- `/public/sources/{source_id}/coverage`
+- `/public/methodology`
+- `/public/methodology/{method_id}`
+- `/public/source-methodology/diagnostics`
+- `/public/source-methodology/export`
+
+### Public-safe connector states
+
+- Live
+- Cached
+- Stale
+- Temporarily unavailable
+- Experimental
+- Disabled
+
+The public studio never exposes API keys, private URLs, internal stack traces, secret environment variables, authentication state, or raw retry queues.
+
+### Exports
+
+- JSON source and methodology registry
+- UTF-8 CSV source registry with spreadsheet-formula safeguards
+
+### WordPress
+
+```text
+[sc_source_methodology_studio height="1100"]
+```
+
+Focused source example:
+
+```text
+[sc_source_methodology_studio source="world-bank" height="1000"]
+```
+
+The standalone app remains the primary public product, and Platform Core remains optional.
 
 ## v1.21.0 release focus
 

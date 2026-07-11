@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.22.0 — Source and Methodology Studio
+
+- Added a first-class standalone `/app/?view=sources` Source and Methodology Studio.
+- Added a searchable public source registry with domain, state, feature, and text filters.
+- Added complete public records for World Bank Open Data, NASA GIBS, USGS Earthquakes, NASA EONET, ReliefWeb, NASA POWER, OpenStreetMap, and optional Platform Core provenance integration.
+- Added source detail, status, and coverage endpoints with publisher, connector, update frequency, license context, geographic and temporal coverage, feature usage, official URLs, and known limitations.
+- Added a public methodology registry covering latest-value selection, missing values, zero handling, delivery states, trends, reporting-year differences, indicator compatibility, country normalization, country-event matching, event deduplication, Earth date validation, imagery interpretation, comparison calculations, briefing, exports, caching, and optional-source failures.
+- Added public-safe source states: Live, Cached, Stale, Temporarily unavailable, Experimental, and Disabled.
+- Added `/public/source-methodology/diagnostics` with source-reference validation and no-secret checks.
+- Added JSON and UTF-8 CSV source-registry exports with spreadsheet-formula safeguards and no-store/nosniff response headers.
+- Added shareable source, domain, state, feature, and search URL state.
+- Added source links from thematic and briefing panels into the Source and Methodology Studio.
+- Added `[sc_source_methodology_studio height="1100"]` with optional source, domain, state, feature, and query attributes.
+- Updated backend, WordPress plugin, release metadata, documentation, and automated tests to v1.22.0.
+- Preserved Platform Core as optional and added no paid database, Redis service, proprietary map service, or additional Render service.
+
 ## 1.21.0 — Thematic Intelligence Dashboards
 
 - Added four first-class public-beta dashboards: Climate and Environment, Human Development, Human Security, and Infrastructure and Connectivity.

@@ -999,6 +999,92 @@
   }
   function closeBriefingStudio(){qs("#briefingStudio").hidden=true;if(briefingState.controller)briefingState.controller.abort()}
 
+  const sourceStudioState={data:null,methods:null,diagnostics:null,controller:null,sequence:0,activeSource:null};
+  function sourceFilterParams(){
+    const params=new URLSearchParams();
+    const query=qs("#sourceSearch").value.trim(),domain=qs("#sourceDomain").value,stateValue=qs("#sourceState").value,feature=qs("#sourceFeature").value;
+    if(query)params.set("query",query);if(domain)params.set("domain",domain);if(stateValue)params.set("state",stateValue);if(feature)params.set("feature",feature);
+    params.set("include_health","false");return params;
+  }
+  function syncSourceUrl(){
+    const params=sourceFilterParams();params.delete("include_health");params.set("view","sources");
+    if(sourceStudioState.activeSource)params.set("source",sourceStudioState.activeSource);
+    history.replaceState(null,"",`?${params.toString()}`);
+  }
+  function sourceStateClass(value){return String(value||"temporarily-unavailable").replace(/[^a-z0-9-]+/g,"-")}
+  function populateSourceFilters(data){
+    const domain=qs("#sourceDomain"),feature=qs("#sourceFeature"),stateSelect=qs("#sourceState");
+    const selectedDomain=domain.value,selectedFeature=feature.value,selectedState=stateSelect.value;
+    domain.innerHTML='<option value="">All domains</option>'+((data.domains||[]).map(item=>`<option value="${escapeHtml(item)}">${escapeHtml(item.replaceAll("-"," "))}</option>`).join(""));
+    feature.innerHTML='<option value="">All features</option>'+((data.features||[]).map(item=>`<option value="${escapeHtml(item)}">${escapeHtml(item.replaceAll("-"," "))}</option>`).join(""));
+    stateSelect.innerHTML='<option value="">All states</option>'+Object.entries(data.states||{}).map(([id,item])=>`<option value="${escapeHtml(id)}">${escapeHtml(item.label||id)}</option>`).join("");
+    domain.value=selectedDomain;feature.value=selectedFeature;stateSelect.value=selectedState;
+  }
+  function renderSourceRegistry(data){
+    const records=data.sources||[];qs("#sourceCountMetric").textContent=data.total_registered??records.length;
+    const filters=[qs("#sourceSearch").value.trim(),qs("#sourceDomain").value,qs("#sourceState").value,qs("#sourceFeature").value].filter(Boolean).length;qs("#sourceFilterMetric").textContent=filters;
+    qs("#sourceRegistryList").innerHTML=records.length?records.map(item=>`<button class="source-record-card ${item.id===sourceStudioState.activeSource?"active":""}" type="button" data-source-record="${escapeHtml(item.id)}"><span class="source-record-state ${sourceStateClass(item.state)}">${escapeHtml(item.state_label||item.state)}</span><strong>${escapeHtml(item.name)}</strong><small>${escapeHtml(item.publisher)}</small><p>${escapeHtml(item.public_notes||item.connector)}</p><span>${escapeHtml((item.domains||[]).slice(0,3).join(" · "))}</span></button>`).join(""):'<div class="empty-state"><div><strong>No matching sources</strong><span>Change the search, domain, state, or feature filter.</span></div></div>';
+    qsa("[data-source-record]").forEach(button=>button.addEventListener("click",()=>selectSourceRecord(button.dataset.sourceRecord,true)));
+  }
+  function sourceMethodRecords(source){
+    const ids=new Set(source?.methodology_ids||[]);return (sourceStudioState.methods?.methods||[]).filter(item=>ids.has(item.id));
+  }
+  function renderSourceDetail(source){
+    if(!source){qs("#sourceDetailTitle").textContent="Choose a source";qs("#sourceDetailBody").innerHTML='<div class="empty-state"><div><strong>No source selected</strong><span>Select a source from the registry.</span></div></div>';return}
+    qs("#sourceDetailTitle").textContent=source.name;
+    const methods=sourceMethodRecords(source);
+    const fields=[
+      ["Publisher",source.publisher],["Public state",source.state_label||source.state],["Connector",source.connector],["Update frequency",source.update_frequency],["Geographic coverage",source.geographic_coverage],["Temporal coverage",source.temporal_coverage],["License",source.license]
+    ];
+    qs("#sourceDetailBody").innerHTML=`<div class="source-detail-meta">${fields.map(([label,value])=>`<div><span>${escapeHtml(label)}</span><strong>${escapeHtml(value||"Not documented")}</strong></div>`).join("")}</div><div class="source-detail-section"><h4>Data types</h4><div class="source-chip-list">${(source.data_types||[]).map(item=>`<span>${escapeHtml(item)}</span>`).join("")}</div></div><div class="source-detail-section"><h4>Features using this source</h4><div class="source-chip-list">${(source.features||[]).map(item=>`<span>${escapeHtml(item.replaceAll("-"," "))}</span>`).join("")}</div></div><div class="source-detail-section"><h4>Known limitations</h4><ul>${(source.known_limits||[]).map(item=>`<li>${escapeHtml(item)}</li>`).join("")}</ul></div><div class="source-detail-section"><h4>Related methodology</h4>${methods.length?`<ul>${methods.map(item=>`<li><button type="button" class="source-method-link" data-source-method="${escapeHtml(item.id)}">${escapeHtml(item.title)}</button></li>`).join("")}</ul>`:"<p>No linked method record.</p>"}</div><a class="source-official-link" href="${escapeHtml(source.official_url)}" target="_blank" rel="noopener">Open authoritative source ↗</a>`;
+    qsa("[data-source-method]").forEach(button=>button.addEventListener("click",()=>{document.getElementById(`method-${button.dataset.sourceMethod}`)?.scrollIntoView({behavior:"smooth",block:"center"})}));
+  }
+  function selectSourceRecord(sourceId,sync=false){
+    const source=(sourceStudioState.data?.sources||[]).find(item=>item.id===sourceId)||null;sourceStudioState.activeSource=source?.id||null;renderSourceRegistry(sourceStudioState.data||{sources:[]});renderSourceDetail(source);if(sync)syncSourceUrl();
+  }
+  function renderMethodology(data){
+    qs("#methodCountMetric").textContent=data.total_registered??(data.methods||[]).length;
+    qs("#methodologyRegistryList").innerHTML=(data.methods||[]).map(item=>`<details id="method-${escapeHtml(item.id)}" class="methodology-record"><summary><span>${escapeHtml(item.title)}</span><small>${escapeHtml((item.applies_to||[]).join(" · "))}</small></summary><p>${escapeHtml(item.summary)}</p><h4>Rules</h4><ul>${(item.rules||[]).map(rule=>`<li>${escapeHtml(rule)}</li>`).join("")}</ul><h4>Known limits</h4><ul>${(item.limitations||[]).map(rule=>`<li>${escapeHtml(rule)}</li>`).join("")}</ul><div class="source-chip-list">${(item.source_ids||[]).map(sourceId=>`<button type="button" data-method-source="${escapeHtml(sourceId)}">${escapeHtml(sourceId)}</button>`).join("")}</div></details>`).join("");
+    qsa("[data-method-source]").forEach(button=>button.addEventListener("click",()=>selectSourceRecord(button.dataset.methodSource,true)));
+  }
+  async function refreshSourceDiagnostics(sequence,controller){
+    try{
+      const data=await apiWithRetry("/public/source-methodology/diagnostics",1,{signal:controller.signal,timeout:30000});
+      if(controller.signal.aborted||sequence!==sourceStudioState.sequence)return;
+      sourceStudioState.diagnostics=data;qs("#sourceIssueMetric").textContent=data.issues?.length||0;
+      qs("#sourceStatus").textContent=`${sourceStudioState.data?.count||0} matching sources · ${sourceStudioState.methods?.total_registered||0} documented methods · ${data.issues?.length||0} diagnostic issues`;
+      reportHeight();
+    }catch(error){
+      if(error?.name==="AbortError")return;qs("#sourceIssueMetric").textContent="—";qs("#sourceStatus").textContent=`${sourceStudioState.data?.count||0} matching sources · ${sourceStudioState.methods?.total_registered||0} documented methods · connector diagnostics temporarily unavailable`;
+    }
+  }
+  async function loadSourceStudio(pushState=false){
+    if(sourceStudioState.controller)sourceStudioState.controller.abort();const controller=new AbortController();sourceStudioState.controller=controller;const sequence=++sourceStudioState.sequence;
+    qs("#sourceStudio").setAttribute("aria-busy","true");qs("#sourceStatus").textContent="Loading public source and methodology records…";qs("#sourceRegistryList").innerHTML='<div class="loading-block">Loading source records…</div>';
+    const params=sourceFilterParams();
+    try{
+      const [sourcesResult,methodsResult]=await Promise.allSettled([
+        apiWithRetry(`/public/sources?${params.toString()}`,2,{signal:controller.signal,timeout:18000}),
+        apiWithRetry("/public/methodology",2,{signal:controller.signal,timeout:12000})
+      ]);
+      if(controller.signal.aborted||sequence!==sourceStudioState.sequence)return;
+      if(sourcesResult.status!=="fulfilled")throw sourcesResult.reason;
+      sourceStudioState.data=sourcesResult.value;sourceStudioState.methods=methodsResult.status==="fulfilled"?methodsResult.value:{methods:[],total_registered:0};sourceStudioState.diagnostics=null;
+      populateSourceFilters(sourceStudioState.data);renderMethodology(sourceStudioState.methods);qs("#sourceIssueMetric").textContent="…";
+      const requested=new URLSearchParams(location.search).get("source");const first=sourceStudioState.data.sources?.[0]?.id;sourceStudioState.activeSource=(sourceStudioState.data.sources||[]).some(item=>item.id===requested)?requested:first||null;renderSourceRegistry(sourceStudioState.data);renderSourceDetail((sourceStudioState.data.sources||[]).find(item=>item.id===sourceStudioState.activeSource));
+      qs("#sourceStatus").textContent=`${sourceStudioState.data.count} matching sources · ${sourceStudioState.methods.total_registered||0} documented methods · checking connector diagnostics…`;
+      if(pushState)syncSourceUrl();reportHeight();void refreshSourceDiagnostics(sequence,controller);
+    }catch(error){if(error?.name==="AbortError")return;qs("#sourceStatus").textContent="Source registry unavailable";qs("#sourceRegistryList").innerHTML=publicErrorBlock("Source registry unavailable","The public source and methodology service did not complete.",()=>loadSourceStudio(false))}
+    finally{if(sequence===sourceStudioState.sequence)qs("#sourceStudio").setAttribute("aria-busy","false")}
+  }
+  async function openSourceStudio(){
+    qs("#sourceStudio").hidden=false;const params=new URLSearchParams(location.search);qs("#sourceSearch").value=params.get("query")||"";await loadSourceStudio(false);qs("#sourceDomain").value=params.get("domain")||"";qs("#sourceState").value=params.get("state")||"";qs("#sourceFeature").value=params.get("feature")||"";if(params.get("domain")||params.get("state")||params.get("feature"))await loadSourceStudio(false)
+  }
+  function closeSourceStudio(){qs("#sourceStudio").hidden=true;if(sourceStudioState.controller)sourceStudioState.controller.abort()}
+  async function downloadSourceRegistry(format){
+    const response=await fetch(`${API}/public/source-methodology/export?format=${encodeURIComponent(format)}&include_health=true`,{headers:{Accept:"*/*"}});if(!response.ok){toast("Source registry export unavailable");return}const blob=await response.blob();const disposition=response.headers.get("content-disposition")||"";const match=disposition.match(/filename="?([^";]+)"?/i);const link=document.createElement("a");link.href=URL.createObjectURL(blob);link.download=match?.[1]||`site-intelligence-sources.${format}`;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(link.href),5000);toast("Source registry export downloaded")
+  }
+
   async function setRoute(route){
     qs("#main").classList.remove("route-enter");void qs("#main").offsetWidth;qs("#main").classList.add("route-enter");
     state.route=route;
@@ -1007,19 +1093,19 @@
     const panel=qs("#routePanel");
 
     if(route==="overview"){
-      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();return;
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();return;
     }
     if(route==="earth"){
-      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();await openEarthStudio();return;
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();await openEarthStudio();return;
     }
     if(route==="events"){
-      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();await openEventStudio();return;
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();await openEventStudio();return;
     }
     if(route==="country"){
-      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();closeCompareStudio();closeThematicStudio();closeBriefingStudio();await openGlobalCountryExplorer();return;
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();await openGlobalCountryExplorer();return;
     }
 
-    closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();qs("#countryIntelligencePanel").hidden=true;
+    closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();qs("#countryIntelligencePanel").hidden=true;
     panel.hidden=false;panel.innerHTML=`<div class="loading-block">Loading ${escapeHtml(route)} view…</div>`;
     if(route==="country-legacy"){
       qs("#countryIntelligencePanel").hidden=false;panel.hidden=true;await loadLiveCountry(state.country);return;
@@ -1033,9 +1119,10 @@
       panel.hidden=true;await openThematicStudio();return;
     }else if(route==="briefing"){
       panel.hidden=true;await openBriefingStudio();return;
+    }else if(route==="sources"){
+      panel.hidden=true;await openSourceStudio();return;
     }else{
-      const sources=["NASA GIBS","NASA EONET","USGS","World Bank","WHO","UNESCO","FAOSTAT","UN-Water","UNHCR","ReliefWeb","UCDP","ACLED"];
-      panel.innerHTML=`<p class="eyebrow">PUBLIC SOURCE LAYER</p><h2>Connected evidence services</h2><div class="source-list">${sources.map(s=>`<div class="source-chip">${escapeHtml(s)}</div>`).join("")}</div>`;
+      panel.innerHTML=`<p class="eyebrow">PUBLIC WORKSPACE</p><h2>View unavailable</h2><p>The requested public workspace is not registered.</p>`;
     }
   }
   async function init(){setLaunch("Preparing the map and public evidence services.",18);
@@ -1107,6 +1194,14 @@
     qs("#briefingShare").addEventListener("click",async()=>{syncBriefingUrl();await navigator.clipboard.writeText(location.href);toast("Brief view link copied")});
     qs("#briefingPrint").addEventListener("click",()=>{document.body.classList.add("briefing-print-mode");window.print();setTimeout(()=>document.body.classList.remove("briefing-print-mode"),300)});
     qsa("[data-briefing-export]").forEach(button=>button.addEventListener("click",()=>downloadBriefing(button.dataset.briefingExport)));
+    qs("#sourceApply").addEventListener("click",()=>loadSourceStudio(true));
+    qs("#sourceReset").addEventListener("click",()=>{qs("#sourceSearch").value="";qs("#sourceDomain").value="";qs("#sourceState").value="";qs("#sourceFeature").value="";sourceStudioState.activeSource=null;loadSourceStudio(true)});
+    qs("#sourceSearch").addEventListener("keydown",event=>{if(event.key==="Enter")loadSourceStudio(true)});
+    qs("#sourceDomain").addEventListener("change",()=>loadSourceStudio(true));
+    qs("#sourceState").addEventListener("change",()=>loadSourceStudio(true));
+    qs("#sourceFeature").addEventListener("change",()=>loadSourceStudio(true));
+    qs("#sourceShare").addEventListener("click",async()=>{syncSourceUrl();await navigator.clipboard.writeText(location.href);toast("Source view link copied")});
+    qsa("[data-source-export]").forEach(button=>button.addEventListener("click",()=>downloadSourceRegistry(button.dataset.sourceExport)));
     qs("#closeEvidenceDrawer").addEventListener("click",closeEvidenceDrawer);qs("#evidenceBackdrop").addEventListener("click",closeEvidenceDrawer);document.addEventListener("keydown",e=>{if(e.key==="Escape")closeEvidenceDrawer()});
     const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const initialView=params.get("view")||"overview";qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";try{setLaunch("Loading satellite imagery.",50);await loadLayers();await setImagery("true-color");setLaunch("Connecting to live events and country evidence.",68);await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);setLaunch("Preparing the workspace.",88);await setRoute(initialView);finishLaunch()}
     catch(e){qs("#statusText").textContent="Partial public data";toast("Some optional public data is temporarily unavailable.");finishLaunch()}

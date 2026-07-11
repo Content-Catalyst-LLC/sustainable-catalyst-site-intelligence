@@ -355,7 +355,7 @@
 
         <div class="thematic-evidence-grid">
           <article>
-            <div class="panel-head"><div><p class="eyebrow">SOURCES</p><h3>Provenance and delivery state</h3></div></div>
+            <div class="panel-head"><div><p class="eyebrow">SOURCES</p><h3>Provenance and delivery state</h3></div><button class="text-button" type="button" data-route-link="sources">Open source studio</button></div>
             <div id="thematicSourceList" class="thematic-source-list"></div>
           </article>
           <article>
@@ -464,7 +464,7 @@
             <div class="empty-state"><div><strong>No brief generated yet</strong><span>Select the research scope above and choose Generate brief.</span></div></div>
           </div>
           <div class="briefing-source-panel">
-            <div class="panel-head"><div><p class="eyebrow">SOURCE RECORDS</p><h2>Provenance and delivery state</h2></div></div>
+            <div class="panel-head"><div><p class="eyebrow">SOURCE RECORDS</p><h2>Provenance and delivery state</h2></div><button class="text-button" type="button" data-route-link="sources">Open source studio</button></div>
             <div id="briefingSourceList" class="briefing-source-list"><p>No source records loaded.</p></div>
           </div>
           <div id="briefingBoundary" class="briefing-boundary">Source identity, reporting dates, delivery states, missing data, and interpretation limits remain visible.</div>
@@ -476,6 +476,72 @@
           <article><p class="eyebrow">HTML</p><h3>Print-ready brief</h3><p>Portable source-aware document with print styling and visible source URLs.</p><button class="ghost-button" type="button" data-briefing-export="html">Download HTML</button></article>
           <article><p class="eyebrow">PNG</p><h3>Rendered brief capture</h3><p>Browser-rendered visual capture of the current brief with visible attribution.</p><button class="ghost-button" type="button" data-briefing-export="png">Download PNG</button></article>
         </div>
+      </section>
+
+      <section id="sourceStudio" class="source-studio" hidden aria-busy="false">
+        <div class="source-studio-head">
+          <div>
+            <p class="eyebrow">SOURCE AND METHODOLOGY STUDIO</p>
+            <h2>Inspect provenance, coverage, delivery state, and methods</h2>
+            <p>Search the public source registry, inspect connector and coverage records, and review the rules used to select, compare, cache, map, brief, and export evidence.</p>
+          </div>
+          <div class="source-studio-actions">
+            <button id="sourceShare" class="ghost-button" type="button">Copy source view</button>
+            <button class="ghost-button" type="button" data-source-export="json">Download JSON</button>
+            <button class="ghost-button" type="button" data-source-export="csv">Download CSV</button>
+          </div>
+        </div>
+
+        <div class="source-filter-deck">
+          <label>Search
+            <input id="sourceSearch" type="search" placeholder="Source, publisher, connector, or domain">
+          </label>
+          <label>Domain
+            <select id="sourceDomain"><option value="">All domains</option></select>
+          </label>
+          <label>Status
+            <select id="sourceState"><option value="">All states</option></select>
+          </label>
+          <label>Feature
+            <select id="sourceFeature"><option value="">All features</option></select>
+          </label>
+          <button id="sourceApply" class="earth-primary-button" type="button">Apply filters</button>
+          <button id="sourceReset" class="ghost-button" type="button">Reset</button>
+        </div>
+
+        <div id="sourceStatus" class="source-status" role="status" aria-live="polite">Loading the public source registry…</div>
+
+        <div class="source-summary-grid">
+          <article><span>Registered sources</span><strong id="sourceCountMetric">—</strong><small>Public source records</small></article>
+          <article><span>Methodologies</span><strong id="methodCountMetric">—</strong><small>Documented system rules</small></article>
+          <article><span>Active filters</span><strong id="sourceFilterMetric">0</strong><small>Domain, state, feature, or search</small></article>
+          <article><span>Diagnostic issues</span><strong id="sourceIssueMetric">—</strong><small>Public-safe connector states</small></article>
+        </div>
+
+        <div class="source-studio-grid">
+          <article class="source-registry-panel">
+            <div class="panel-head"><div><p class="eyebrow">SOURCE REGISTRY</p><h3>Public evidence providers</h3></div></div>
+            <div id="sourceRegistryList" class="source-registry-list"><div class="loading-block">Loading source records…</div></div>
+          </article>
+
+          <article class="source-detail-panel">
+            <div class="panel-head"><div><p class="eyebrow">SOURCE DETAIL</p><h3 id="sourceDetailTitle">Choose a source</h3></div></div>
+            <div id="sourceDetailBody" class="source-detail-body">
+              <div class="empty-state"><div><strong>No source selected</strong><span>Select a source to inspect coverage, connector state, license, feature usage, and limitations.</span></div></div>
+            </div>
+          </article>
+        </div>
+
+        <article class="methodology-registry-panel">
+          <div class="panel-head"><div><p class="eyebrow">METHODOLOGY REGISTRY</p><h2>How Site Intelligence handles public evidence</h2></div></div>
+          <div id="methodologyRegistryList" class="methodology-registry-list"><div class="loading-block">Loading methodology records…</div></div>
+        </article>
+
+        <article class="source-boundary-panel">
+          <p class="eyebrow">PUBLIC-SAFE OPERATIONS</p>
+          <h3>Transparency without exposing private infrastructure</h3>
+          <p>Public records show source identity, coverage, delivery state, update context, feature usage, and known limitations. API keys, private URLs, internal stack traces, secret environment variables, authentication state, and raw retry queues remain excluded.</p>
+        </article>
       </section>
 
       <section id="compareStudio" class="compare-studio" hidden aria-busy="false">
