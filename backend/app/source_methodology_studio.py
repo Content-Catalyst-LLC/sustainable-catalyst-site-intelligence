@@ -15,7 +15,7 @@ from .version import APP_VERSION
 
 VERSION = APP_VERSION
 SCHEMA_VERSION = "sc-source-methodology/1.0"
-METHODOLOGY_VERSION = "2026.07"
+METHODOLOGY_VERSION = "2026.07.24"
 ALLOWED_EXPORT_FORMATS = ("json", "csv")
 
 PUBLIC_STATES = {
@@ -399,6 +399,15 @@ METHODOLOGY_RECORDS: list[dict[str, Any]] = [
         "rules": ["Use browser localStorage only.", "Store public interface parameters rather than evidence payloads.", "Reject sensitive-looking fields and unsupported routes.", "Validate imported manifests without server persistence.", "Keep shared URLs limited to public state."],
         "implementation_refs": ["saved_views", "public_app.savedViewsState", "public_app.savedViewUrl"],
         "limitations": ["Local browser storage does not synchronize across devices and is removed when the user clears site data."],
+        "source_ids": [],
+    },    {
+        "id": "accessible-responsive-delivery",
+        "title": "Accessible, responsive, and performance-aware delivery",
+        "summary": "The public application exposes keyboard navigation, reduced-motion handling, mobile route access, explicit performance budgets, and public-safe delivery diagnostics.",
+        "applies_to": ["all-public-views", "wordpress-embeds"],
+        "rules": ["Keep all public routes keyboard reachable.", "Respect reduced-motion preferences.", "Retain visible source and data-state text when layouts collapse.", "Load optional capture code only when requested.", "Use mobile navigation that exposes every route."],
+        "implementation_refs": ["experience_quality", "public_app.mobileNavigation", "public_app.ensureHtml2Canvas", "public_experience_headers"],
+        "limitations": ["Automated checks do not replace screen-reader, browser-zoom, real-device, or network-throttling review."],
         "source_ids": [],
     },
 ]

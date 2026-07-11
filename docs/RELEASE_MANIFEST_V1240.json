@@ -1,0 +1,30 @@
+{
+  "release": "1.24.0",
+  "name": "Accessibility, Performance, and Mobile Release",
+  "application_version": "1.24.0",
+  "api_schema_version": "1.24",
+  "profile_schema": "sc-experience-profile/1.0",
+  "public_endpoints": [
+    "/public/experience-profile",
+    "/public/experience-profile/checklist",
+    "/public/experience-profile/diagnostics"
+  ],
+  "release_capabilities": [
+    "keyboard and focus hardening",
+    "route announcements",
+    "mobile navigation drawer",
+    "reduced-motion behavior",
+    "forced-colors support",
+    "gzip response compression",
+    "explicit app and asset cache policy",
+    "lazy optional PNG capture dependency",
+    "first-party performance budgets",
+    "content visibility for below-fold workspaces",
+    "safe-area and dynamic viewport support",
+    "origin-checked WordPress height messages"
+  ],
+  "accessibility_target": "WCAG 2.2 Level AA target; not certified",
+  "manual_review_required": true,
+  "platform_core_optional": true,
+  "paid_infrastructure_added": false
+}

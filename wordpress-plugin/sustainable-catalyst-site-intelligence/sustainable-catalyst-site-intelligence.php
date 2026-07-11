@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.23.0
+ * Version: 1.24.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.23.0';
+    const VERSION = '1.24.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -3392,7 +3392,7 @@ final class SC_Site_Intelligence_Plugin {
         $title = esc_attr((string) $atts['title']);
 
         return sprintf(
-            '<div class="scsi-standalone-app scsi-source-methodology-embed"><div class="scsi-app-loading">Opening Source and Methodology Studio…</div><iframe src="%1$s" title="%2$s" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
+            '<div class="scsi-standalone-app scsi-source-methodology-embed"><div class="scsi-app-loading">Opening Source and Methodology Studio…</div><iframe src="%1$s" title="%2$s" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen; clipboard-write" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
             $src,
             $title,
             $height
@@ -3417,7 +3417,7 @@ final class SC_Site_Intelligence_Plugin {
         $title = esc_attr((string) $atts['title']);
 
         return sprintf(
-            '<div class="scsi-standalone-app scsi-saved-research-views-embed"><div class="scsi-app-loading">Opening Saved Views and Shareable Research Paths…</div><iframe src="%1$s" title="%2$s" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
+            '<div class="scsi-standalone-app scsi-saved-research-views-embed"><div class="scsi-app-loading">Opening Saved Views and Shareable Research Paths…</div><iframe src="%1$s" title="%2$s" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen; clipboard-write" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
             $src,
             $title,
             $height
@@ -3469,7 +3469,7 @@ final class SC_Site_Intelligence_Plugin {
         $title = esc_attr((string) $atts['title']);
 
         return sprintf(
-            '<div class="scsi-standalone-app scsi-thematic-intelligence-embed"><div class="scsi-app-loading">Opening Thematic Intelligence…</div><iframe src="%1$s" title="%2$s" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
+            '<div class="scsi-standalone-app scsi-thematic-intelligence-embed"><div class="scsi-app-loading">Opening Thematic Intelligence…</div><iframe src="%1$s" title="%2$s" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen; clipboard-write" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
             $src,
             $title,
             $height
@@ -3553,7 +3553,7 @@ final class SC_Site_Intelligence_Plugin {
         $title = esc_attr((string) $atts['title']);
 
         return sprintf(
-            '<div class="scsi-standalone-app scsi-public-briefing-studio-embed"><div class="scsi-app-loading">Opening Public Briefing and Export Studio…</div><iframe src="%1$s" title="%2$s" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
+            '<div class="scsi-standalone-app scsi-public-briefing-studio-embed"><div class="scsi-app-loading">Opening Public Briefing and Export Studio…</div><iframe src="%1$s" title="%2$s" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen; clipboard-write" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
             $src,
             $title,
             $height
@@ -3610,7 +3610,7 @@ final class SC_Site_Intelligence_Plugin {
         $title = esc_attr((string) $atts['title']);
 
         return sprintf(
-            '<div class="scsi-standalone-app scsi-comparative-intelligence-embed"><div class="scsi-app-loading">Opening Comparative Intelligence…</div><iframe src="%1$s" title="%2$s" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
+            '<div class="scsi-standalone-app scsi-comparative-intelligence-embed"><div class="scsi-app-loading">Opening Comparative Intelligence…</div><iframe src="%1$s" title="%2$s" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen; clipboard-write" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
             $src,
             $title,
             $height
@@ -3639,7 +3639,7 @@ final class SC_Site_Intelligence_Plugin {
         $title = esc_attr((string) $atts['title']);
 
         return sprintf(
-            '<div class="scsi-standalone-app scsi-global-country-embed"><div class="scsi-app-loading">Opening Global Country Intelligence…</div><iframe src="%1$s" title="%2$s" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
+            '<div class="scsi-standalone-app scsi-global-country-embed"><div class="scsi-app-loading">Opening Global Country Intelligence…</div><iframe src="%1$s" title="%2$s" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen; clipboard-write" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
             $src,
             $title,
             $height
@@ -3663,7 +3663,7 @@ final class SC_Site_Intelligence_Plugin {
         $title = esc_attr((string) $atts['title']);
 
         return sprintf(
-            '<div class="scsi-standalone-app scsi-live-events-embed"><div class="scsi-app-loading">Opening Live Event Intelligence…</div><iframe src="%1$s" title="%2$s" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
+            '<div class="scsi-standalone-app scsi-live-events-embed"><div class="scsi-app-loading">Opening Live Event Intelligence…</div><iframe src="%1$s" title="%2$s" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen; clipboard-write" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
             $src,
             $title,
             $height
@@ -3687,7 +3687,7 @@ final class SC_Site_Intelligence_Plugin {
         $title = esc_attr((string) $atts['title']);
 
         return sprintf(
-            '<div class="scsi-standalone-app scsi-earth-studio-embed"><div class="scsi-app-loading">Opening Earth Observation Studio…</div><iframe src="%1$s" title="%2$s" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
+            '<div class="scsi-standalone-app scsi-earth-studio-embed"><div class="scsi-app-loading">Opening Earth Observation Studio…</div><iframe src="%1$s" title="%2$s" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen; clipboard-write" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
             $src,
             $title,
             $height
@@ -3713,7 +3713,7 @@ final class SC_Site_Intelligence_Plugin {
 
         $frame_id = 'scsi-app-' . wp_generate_uuid4();
         return sprintf(
-            '<div class="scsi-standalone-app" data-scsi-responsive-app><div class="scsi-app-loading">Opening Site Intelligence…</div><iframe id="%4$s" src="%1$s" title="%2$s" loading="eager" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe><script>(function(){var frame=document.getElementById(%5$s);if(!frame)return;window.addEventListener(\'message\',function(e){if(!e.data||e.data.type!==\'scsi-height\')return;var h=Math.max(620,Math.min(1800,parseInt(e.data.height||0,10)+8));if(h)frame.style.height=h+\'px\';});})();</script></div>',
+            '<div class="scsi-standalone-app" data-scsi-responsive-app><div class="scsi-app-loading">Opening Site Intelligence…</div><iframe id="%4$s" src="%1$s" title="%2$s" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen; clipboard-write" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe><script>(function(){var frame=document.getElementById(%5$s);if(!frame)return;var expectedOrigin=new URL(frame.src,window.location.href).origin;window.addEventListener(\'message\',function(e){if(e.origin!==expectedOrigin||!e.data||e.data.type!==\'scsi-height\')return;var h=Math.max(620,Math.min(1800,parseInt(e.data.height||0,10)+8));if(h)frame.style.height=h+\'px\';});})();</script></div>',
             $src,
             $title,
             $height,

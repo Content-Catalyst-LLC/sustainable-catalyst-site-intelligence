@@ -5,6 +5,7 @@ from typing import Any, Optional
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import PlainTextResponse, FileResponse, Response
 
@@ -219,6 +220,11 @@ from .saved_views import (
     migrations_manifest as build_saved_views_migrations,
     diagnostics as build_saved_views_diagnostics,
 )
+from .experience_quality import (
+    experience_profile as build_experience_profile,
+    experience_checklist as build_experience_checklist,
+    experience_diagnostics as build_experience_diagnostics,
+)
 from .earth_observation_studio import (
     overview as build_earth_observation_overview,
     layers as build_earth_observation_layers,
@@ -297,6 +303,25 @@ app.add_middleware(
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
+app.add_middleware(GZipMiddleware, minimum_size=1024, compresslevel=6)
+
+
+@app.middleware("http")
+async def public_experience_headers(request, call_next):
+    response = await call_next(request)
+    response.headers.setdefault("X-Content-Type-Options", "nosniff")
+    response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+    response.headers.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
+    response.headers.setdefault("Vary", "Accept-Encoding")
+
+    path = request.url.path
+    if path.startswith("/app/assets/"):
+        response.headers.setdefault("Cache-Control", "public, max-age=300, stale-while-revalidate=86400")
+    elif path == "/app" or path.startswith("/app/"):
+        response.headers.setdefault("Cache-Control", "no-cache")
+    elif path.startswith("/public/experience-profile"):
+        response.headers.setdefault("Cache-Control", "public, max-age=300")
+    return response
 
 
 @app.get("/")
@@ -1963,6 +1988,21 @@ def public_saved_views_migrations():
 @app.get("/public/saved-views/diagnostics")
 def public_saved_views_diagnostics():
     return build_saved_views_diagnostics()
+
+
+@app.get("/public/experience-profile")
+def public_experience_profile():
+    return build_experience_profile()
+
+
+@app.get("/public/experience-profile/checklist")
+def public_experience_checklist():
+    return build_experience_checklist()
+
+
+@app.get("/public/experience-profile/diagnostics")
+def public_experience_diagnostics():
+    return build_experience_diagnostics()
 
 
 @app.get("/public/page-builder")

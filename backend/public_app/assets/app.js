@@ -23,7 +23,24 @@
     }
     throw last;
   }
-  function reportHeight(){window.parent?.postMessage({type:"scsi-height",height:Math.max(document.body.scrollHeight,document.documentElement.scrollHeight)},"*")}
+  let heightFrame=0;
+  function reportHeight(){
+    if(heightFrame)cancelAnimationFrame(heightFrame);
+    heightFrame=requestAnimationFrame(()=>{heightFrame=0;window.parent?.postMessage({type:"scsi-height",height:Math.max(document.body.scrollHeight,document.documentElement.scrollHeight)},"*")});
+  }
+  const reducedMotion=window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches===true;
+  let html2CanvasPromise=null;
+  function loadScriptOnce(src,globalName){
+    if(globalName&&typeof window[globalName]==="function")return Promise.resolve(window[globalName]);
+    const existing=document.querySelector(`script[data-scsi-src="${src}"]`);
+    if(existing)return new Promise((resolve,reject)=>{existing.addEventListener("load",()=>resolve(window[globalName]),{once:true});existing.addEventListener("error",reject,{once:true})});
+    return new Promise((resolve,reject)=>{const script=document.createElement("script");script.src=src;script.defer=true;script.dataset.scsiSrc=src;script.onload=()=>resolve(globalName?window[globalName]:true);script.onerror=()=>reject(new Error(`Unable to load ${src}`));document.head.appendChild(script)});
+  }
+  function ensureHtml2Canvas(){
+    if(typeof window.html2canvas==="function")return Promise.resolve(window.html2canvas);
+    if(!html2CanvasPromise)html2CanvasPromise=loadScriptOnce("https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js","html2canvas").catch(error=>{html2CanvasPromise=null;throw error});
+    return html2CanvasPromise;
+  }
   function publicErrorBlock(title,text,retryAction){
     const id=`retry-${Math.random().toString(36).slice(2)}`;
     setTimeout(()=>{const b=document.getElementById(id);if(b)b.addEventListener("click",retryAction)},0);
@@ -31,13 +48,27 @@
   }
 
   const state = {map:null,base:null,imagery:null,markers:null,heat:null,layers:null,events:null,country:"KEN",route:"overview"};
-  const APP_VERSION="1.23.0";
+  const APP_VERSION="1.24.0";
   const SAVED_VIEW_SCHEMA="sc-saved-view/1.0";
   const SAVED_VIEW_STORAGE_KEY="sc_site_intelligence_saved_views_v1";
   const SAVED_VIEW_LIMIT=50;
   const names = {KEN:"Kenya",GHA:"Ghana",USA:"United States",IND:"India",BRA:"Brazil"};
   const qs = (s)=>document.querySelector(s), qsa=(s)=>[...document.querySelectorAll(s)];
   const toast=(msg)=>{const el=qs("#toast");el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),1800)};
+  function setMobileNavigation(open,{restoreFocus=false}={}){
+    const toggle=qs("#mobileNavToggle"),backdrop=qs("#mobileNavBackdrop"),main=qs("#main");
+    const shouldOpen=Boolean(open)&&window.matchMedia("(max-width: 760px)").matches;
+    document.body.classList.toggle("mobile-nav-open",shouldOpen);
+    toggle?.setAttribute("aria-expanded",String(shouldOpen));
+    if(backdrop)backdrop.hidden=!shouldOpen;
+    if(main)main.inert=shouldOpen;
+    if(shouldOpen)requestAnimationFrame(()=>qs("#primaryNavigation .nav-item")?.focus());
+    else if(restoreFocus)toggle?.focus();
+  }
+  function updateActiveNavigation(route){
+    qsa(".nav-item").forEach(button=>{const active=button.dataset.route===route;button.classList.toggle("active",active);if(active)button.setAttribute("aria-current","page");else button.removeAttribute("aria-current")});
+    const announcement=qs("#routeAnnouncement");if(announcement)announcement.textContent=`${routeMeta(route)[1]} workspace opened`;
+  }
   const cleanDate=(v)=>{if(!v)return "Date unavailable";try{return new Date(v).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"})}catch{return v}};
   const api=async(path,{signal,timeout=12000}={})=>{
     const controller=new AbortController();
@@ -297,6 +328,7 @@
     qs("#eventTimelinePlay").textContent="Play";qs("#eventTimelinePlay").setAttribute("aria-pressed","false");
   }
   function toggleEventTimeline(){
+    if(reducedMotion){stopEventTimeline();toast("Timeline autoplay is disabled by your reduced-motion preference.");return}
     if(eventState.timer){stopEventTimeline();return}
     if(!eventState.timeline.length)return;
     qs("#eventTimelinePlay").textContent="Pause";qs("#eventTimelinePlay").setAttribute("aria-pressed","true");
@@ -702,6 +734,7 @@
     const layer=earthLayer(earthState.activeLayer);earthState.layerB=addEarthTile(earthState.mapB,earthState.layerB,layer,frame.date);qs("#earthBadgeB").textContent=frame.date;
   }
   function toggleEarthPlayback(){
+    if(reducedMotion){stopEarthPlayback();toast("Timeline autoplay is disabled by your reduced-motion preference.");return}
     if(earthState.timer){stopEarthPlayback();return}
     if(!earthState.frames.length)return;
     qs("#earthPlay").textContent="Pause";qs("#earthPlay").setAttribute("aria-pressed","true");
@@ -716,10 +749,11 @@
     const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`site-intelligence-earth-${earthState.activeLayer}-${qs("#earthDateB").value}.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
   }
   async function exportEarthPNG(){
-    if(typeof html2canvas!=="function"){toast("PNG export library is unavailable.");return}
-    toast("Preparing Earth view image…");
+    toast("Loading the optional PNG capture tool…");
     try{
-      const canvas=await html2canvas(qs("#earthCapture"),{backgroundColor:"#05080c",useCORS:true,allowTaint:false,scale:1.5,logging:false});
+      const capture=await ensureHtml2Canvas();
+      toast("Preparing Earth view image…");
+      const canvas=await capture(qs("#earthCapture"),{backgroundColor:"#05080c",useCORS:true,allowTaint:false,scale:1.5,logging:false});
       const a=document.createElement("a");a.href=canvas.toDataURL("image/png");a.download=`site-intelligence-earth-${earthState.activeLayer}-${qs("#earthDateB").value}.png`;a.click();
     }catch{toast("PNG export could not include all imagery. Use Print view or the JSON manifest.")}
   }
@@ -1248,7 +1282,7 @@
   async function setRoute(route){
     qs("#main").classList.remove("route-enter");void qs("#main").offsetWidth;qs("#main").classList.add("route-enter");
     state.route=route;
-    qsa(".nav-item").forEach(b=>b.classList.toggle("active",b.dataset.route===route));
+    updateActiveNavigation(route);setMobileNavigation(false);
     const [e,t,d]=routeMeta(route);qs("#viewEyebrow").textContent=e;qs("#viewTitle").textContent=t;qs("#viewDescription").textContent=d;
     const panel=qs("#routePanel");
 
@@ -1291,6 +1325,8 @@
     qs("#dateSelect").value=today();initMap();setLaunch("Loading map layers.",34);
     qsa(".layer-tab").forEach(b=>b.addEventListener("click",()=>setImagery(b.dataset.layer)));
     qsa(".nav-item").forEach(b=>b.addEventListener("click",()=>{history.replaceState(null,"",`?country=${encodeURIComponent(state.country)}&view=${encodeURIComponent(b.dataset.route)}`);setRoute(b.dataset.route)}));
+    qs("#mobileNavToggle")?.addEventListener("click",()=>setMobileNavigation(!document.body.classList.contains("mobile-nav-open")));
+    qs("#mobileNavBackdrop")?.addEventListener("click",()=>setMobileNavigation(false,{restoreFocus:true}));
     qsa("[data-route-link]").forEach(b=>b.addEventListener("click",()=>setRoute(b.dataset.routeLink)));
     qs("#countrySelect").addEventListener("change",async e=>{state.country=e.target.value;if(state.route==="country"){await selectGlobalCountry(e.target.value,true)}else if(state.route==="thematic"){qs("#thematicCountry").value=e.target.value;await loadThematicDashboard(true)}else{await loadCountry(e.target.value);history.replaceState(null,"",`?country=${encodeURIComponent(e.target.value)}&view=${encodeURIComponent(state.route)}`)}});
     qs("#dateSelect").addEventListener("change",()=>setImagery(qs(".layer-tab.active").dataset.layer));
@@ -1365,7 +1401,8 @@
     qs("#sourceShare").addEventListener("click",async()=>{syncSourceUrl();await navigator.clipboard.writeText(location.href);toast("Source view link copied")});
     qsa("[data-source-export]").forEach(button=>button.addEventListener("click",()=>downloadSourceRegistry(button.dataset.sourceExport)));
     qs("#savedCreate").addEventListener("click",openSaveViewDialog);qs("#savedImport").addEventListener("click",()=>qs("#savedImportFile").click());qs("#savedImportFile").addEventListener("change",event=>{const file=event.target.files?.[0];importSavedViewFile(file);event.target.value=""});qs("#savedExportAll").addEventListener("click",()=>downloadSavedJson({schema:"sc-saved-view-collection/1.0",application_version:APP_VERSION,exported_at:savedIso(),views:savedViewsState.items},"site-intelligence-saved-views.json"));qs("#savedClearAll").addEventListener("click",()=>{if(!savedViewsState.items.length)return;if(confirm("Delete all locally saved Site Intelligence views from this browser?")){savedViewsState.items=[];try{persistSavedViews();renderSavedViews();toast("Local saved views cleared")}catch{}}});qs("#saveViewCancel").addEventListener("click",()=>qs("#saveViewDialog").close());qs("#saveViewForm").addEventListener("submit",event=>{event.preventDefault();if(saveCurrentManifest(qs("#saveViewName").value))qs("#saveViewDialog").close()});
-    qs("#closeEvidenceDrawer").addEventListener("click",closeEvidenceDrawer);qs("#evidenceBackdrop").addEventListener("click",closeEvidenceDrawer);document.addEventListener("keydown",e=>{if(e.key==="Escape")closeEvidenceDrawer()});
+    qs("#closeEvidenceDrawer").addEventListener("click",closeEvidenceDrawer);qs("#evidenceBackdrop").addEventListener("click",closeEvidenceDrawer);document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeEvidenceDrawer();setMobileNavigation(false,{restoreFocus:true})}});
+    window.matchMedia("(max-width: 760px)").addEventListener?.("change",event=>{if(!event.matches)setMobileNavigation(false)});
     const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const requestedView=params.get("view")||"overview";const initialView=[...Object.keys(savedViewDefinitions),"saved"].includes(requestedView)?requestedView:"overview";const invalidRequestedView=requestedView!==initialView;qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";if(params.get("imageryDate"))qs("#dateSelect").value=params.get("imageryDate");try{setLaunch("Loading satellite imagery.",50);await loadLayers();await setImagery(params.get("imageryLayer")||"true-color");setLaunch("Connecting to live events and country evidence.",68);await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);setLaunch("Preparing the workspace.",88);await setRoute(initialView);applySharedControlState(initialView,params);finishLaunch();if(invalidRequestedView)toast("The requested view is unavailable; Overview was opened instead.")}
     catch(e){qs("#statusText").textContent="Partial public data";toast("Some optional public data is temporarily unavailable.");finishLaunch()}
   }
@@ -1385,4 +1422,4 @@ visualStyle.textContent=`
 `;
 document.head.appendChild(visualStyle);
 
-window.addEventListener("load",reportHeight);window.addEventListener("resize",()=>setTimeout(reportHeight,120));new ResizeObserver(()=>reportHeight()).observe(document.body);
+window.addEventListener("load",reportHeight,{once:true});window.addEventListener("resize",reportHeight,{passive:true});if("ResizeObserver" in window)new ResizeObserver(reportHeight).observe(document.body);

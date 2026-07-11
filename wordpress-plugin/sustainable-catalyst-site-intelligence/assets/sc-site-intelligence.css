@@ -1736,3 +1736,12 @@
 .scsi-public-connector-panel[aria-busy="false"] > .scsi-loading-shell {
   display: none !important;
 }
+
+
+/* v1.24.0 — accessible, responsive standalone embeds */
+.scsi-standalone-app{position:relative;content-visibility:auto;contain-intrinsic-size:1px 900px}
+.scsi-standalone-app iframe{max-width:100%;min-height:620px;color-scheme:dark}
+.scsi-standalone-app:focus-within{outline:3px solid #43d6ff;outline-offset:4px;border-radius:18px}
+@media(max-width:760px){.scsi-standalone-app{margin-inline:calc(50% - 50vw);width:100vw}.scsi-standalone-app iframe{border-radius:0!important;min-height:760px}}
+@media(prefers-reduced-motion:reduce){.scsi-standalone-app *{transition-duration:.001ms!important;animation-duration:.001ms!important}}
+@media(forced-colors:active){.scsi-standalone-app iframe{border:1px solid CanvasText!important}}

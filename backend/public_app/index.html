@@ -2,16 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="dark light">
   <meta name="theme-color" content="#111111">
   <title>Site Intelligence | Sustainable Catalyst</title>
   <meta name="description" content="A map-first public observatory for satellite imagery, live events, country context, and source-aware intelligence.">
-  <link rel="preconnect" href="https://unpkg.com">
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="//gibs.earthdata.nasa.gov">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="/app/assets/app.css">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to intelligence workspace</a>
+  <a class="skip-link skip-link-nav" href="#primaryNavigation">Skip to workspace navigation</a>
+  <div id="routeAnnouncement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
   <div id="launchScreen" class="launch-screen" aria-live="polite">
     <div class="launch-orbit" aria-hidden="true"></div>
     <div class="launch-card">
@@ -31,6 +36,9 @@
           <div class="brand-name">Site Intelligence</div>
         </div>
       </div>
+      <button id="mobileNavToggle" class="mobile-nav-toggle" type="button" aria-controls="siteNavigation" aria-expanded="false">
+        <span aria-hidden="true">☰</span><span>Menu</span>
+      </button>
       <div class="topbar-controls">
         <label class="compact-field">Country
           <select id="countrySelect" aria-label="Select country"><option value="KEN">Kenya</option></select>
@@ -42,23 +50,24 @@
       </div>
     </header>
 
-    <aside class="sidebar" aria-label="Site Intelligence sections">
-      <nav>
-        <button class="nav-item active" data-route="overview"><span>Overview</span><small>Live map and signals</small></button>
-        <button class="nav-item" data-route="earth"><span>Earth</span><small>Satellite comparison</small></button>
-        <button class="nav-item" data-route="country"><span>Country</span><small>Place-based evidence</small></button>
-        <button class="nav-item" data-route="events"><span>Events</span><small>Live event intelligence</small></button>
-        <button class="nav-item" data-route="compare"><span>Compare</span><small>Two-country context</small></button>
-        <button class="nav-item" data-route="thematic"><span>Themes</span><small>Focused intelligence</small></button>
-        <button class="nav-item" data-route="briefing"><span>Briefing</span><small>Briefs and exports</small></button>
-        <button class="nav-item" data-route="sources"><span>Sources</span><small>Provenance and coverage</small></button>
-        <button class="nav-item" data-route="saved"><span>Saved</span><small>Local research paths</small></button>
+    <aside id="siteNavigation" class="sidebar" aria-label="Site Intelligence sections">
+      <nav id="primaryNavigation" aria-label="Research workspaces">
+        <button class="nav-item active" type="button" data-route="overview" aria-current="page"><span>Overview</span><small>Live map and signals</small></button>
+        <button class="nav-item" type="button" data-route="earth"><span>Earth</span><small>Satellite comparison</small></button>
+        <button class="nav-item" type="button" data-route="country"><span>Country</span><small>Place-based evidence</small></button>
+        <button class="nav-item" type="button" data-route="events"><span>Events</span><small>Live event intelligence</small></button>
+        <button class="nav-item" type="button" data-route="compare"><span>Compare</span><small>Two-country context</small></button>
+        <button class="nav-item" type="button" data-route="thematic"><span>Themes</span><small>Focused intelligence</small></button>
+        <button class="nav-item" type="button" data-route="briefing"><span>Briefing</span><small>Briefs and exports</small></button>
+        <button class="nav-item" type="button" data-route="sources"><span>Sources</span><small>Provenance and coverage</small></button>
+        <button class="nav-item" type="button" data-route="saved"><span>Saved</span><small>Local research paths</small></button>
       </nav>
       <div class="sidebar-note"><span class="public-beta-badge">Public Beta</span>
         <strong>Public evidence, not automated judgment.</strong>
         <span>Dates, source definitions, and missing data remain visible.</span>
       </div>
     </aside>
+    <button id="mobileNavBackdrop" class="mobile-nav-backdrop" type="button" aria-label="Close workspace navigation" hidden></button>
 
     <main id="main" class="workspace" tabindex="-1">
       <section class="workspace-head immersive-head">
@@ -88,7 +97,7 @@
             <button id="fullscreenButton" class="icon-button" type="button">Fullscreen</button>
           </div>
         </div>
-        <div id="map"></div>
+        <div id="map" role="region" aria-label="Interactive public intelligence map" tabindex="0"></div>
         <div class="map-legend">
           <span><i class="legend-dot earthquake"></i>Earthquake</span>
           <span><i class="legend-dot natural"></i>Natural event</span>
@@ -824,8 +833,7 @@
   </aside>
   <div id="evidenceBackdrop" class="evidence-backdrop" hidden></div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script src="/app/assets/app.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  <script src="/app/assets/app.js" defer></script>
 </body>
 </html>

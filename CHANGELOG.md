@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.24.0 — Accessibility, Performance, and Mobile Release
+
+- Added public experience profile, checklist, and diagnostics endpoints with explicit first-party performance budgets.
+- Added GZip middleware, app-shell no-cache behavior, short asset caching with stale-while-revalidate, and public-safe delivery headers.
+- Replaced eager html2canvas loading with an on-demand PNG capture dependency.
+- Added a complete phone navigation drawer exposing every public research workspace.
+- Added route announcements, `aria-current`, visible focus hardening, Escape-close behavior, inert background content, and focus restoration.
+- Added reduced-motion CSS and disabled timeline autoplay when reduced motion is requested.
+- Added forced-colors support, safe-area padding, dynamic viewport units, 44px design touch targets, and compact-phone layouts.
+- Removed mobile sticky-filter stacking that could create nested scrolling traps.
+- Added below-fold `content-visibility` hints and requestAnimationFrame-throttled WordPress embed height messages.
+- Changed WordPress standalone embeds to lazy loading, allowed clipboard-write explicitly, and restricted responsive height messages to the configured backend origin.
+- Added the accessible-responsive-delivery methodology record and aligned backend, standalone app, WordPress plugin, documentation, and tests on v1.24.0.
+- Preserved Platform Core as optional and added no account system, telemetry vendor, paid database, Redis service, proprietary map service, or additional Render service.
+
 ## 1.23.0 — Saved Views and Shareable Research Paths
 
 - Added a first-class standalone `/app/?view=saved` workspace for browser-local research paths.

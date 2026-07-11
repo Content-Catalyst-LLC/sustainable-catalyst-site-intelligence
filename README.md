@@ -1,6 +1,6 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v1.23.0 — Saved Views and Shareable Research Paths
+**Current release:** v1.24.0 — Accessibility, Performance, and Mobile Release
 
 Sustainable Catalyst Site Intelligence is a public-interest observatory for Earth observation, global country indicators, natural hazards, humanitarian reporting, source-aware dashboards, and comparative research.
 
@@ -16,6 +16,18 @@ Sustainable Catalyst Site Intelligence is a public-interest observatory for Eart
 - Source and Methodology Studio: `/app/?view=sources`
 - Saved Views and Shareable Research Paths: `/app/?view=saved`
 - Primary WordPress embed: `[sc_site_intelligence_app height="1000"]`
+
+## v1.24.0 release focus
+
+v1.24.0 hardens Site Intelligence for keyboard use, reduced-motion preferences, mobile navigation, constrained networks, and responsive WordPress embedding. It adds public experience-profile diagnostics, response compression, explicit cache behavior, lazy optional PNG capture loading, first-party performance budgets, safe-area layouts, and a complete phone navigation drawer while preserving visible source and data-state context.
+
+Public experience endpoints:
+
+- `GET /public/experience-profile`
+- `GET /public/experience-profile/checklist`
+- `GET /public/experience-profile/diagnostics`
+
+The release targets WCAG 2.2 Level AA behavior but does not claim third-party certification. Manual screen-reader, browser-zoom, real-device, and network-throttling review remains required.
 
 ## v1.23.0 release focus
 
