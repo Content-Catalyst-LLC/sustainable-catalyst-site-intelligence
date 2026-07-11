@@ -16,7 +16,7 @@ def test_v091_admin_stabilization_endpoints():
         assert response.status_code == 200
         data = response.json()
         assert data["ok"] is True
-        assert data["version"] == "1.18.2"
+        assert data["version"] == "1.18.3"
 
 
 def test_v091_shortcode_catalog_includes_admin_diagnostics():

@@ -4,6 +4,8 @@ from typing import List
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from .version import APP_VERSION
+
 
 class Settings(BaseSettings):
     """Runtime configuration loaded from environment variables."""
@@ -11,7 +13,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_prefix="SC_SI_", env_file=".env", extra="ignore")
 
     app_name: str = "Sustainable Catalyst Site Intelligence"
-    version: str = "1.18.2"
+    version: str = APP_VERSION
     environment: str = "development"
     demo_mode: bool = True
     api_token: str = "dev-token-change-me"
@@ -86,7 +88,7 @@ class Settings(BaseSettings):
     public_connector_live_checks: bool = True
 
 
-    # Platform Core v2.5.0 integration — Site Intelligence v1.18.0.
+    # Platform Core v2.5.0 integration — optional in Site Intelligence v1.18.3.
     # Write credentials remain backend-only and must never be exposed through
     # WordPress, browser JavaScript, public diagnostics, or export payloads.
     platform_core_enabled: bool = False

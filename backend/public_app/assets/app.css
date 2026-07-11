@@ -376,3 +376,29 @@ body.earth-print-mode .app-shell{display:block}body.earth-print-mode .workspace{
 .country-global-footer p:last-child{color:#8f9aa7;font-size:12px;line-height:1.65;margin:0}
 @media(max-width:1050px){.country-search-results{grid-template-columns:repeat(3,1fr)}.country-hero-grid,.country-global-grid{grid-template-columns:1fr}}
 @media(max-width:760px){.global-country-explorer{padding:15px;border-radius:18px}.global-country-head{display:block}.global-country-actions{margin-top:14px}.country-search-deck{position:sticky;top:70px;z-index:820;grid-template-columns:1fr;padding:12px;background:rgba(7,11,16,.95);border:1px solid rgba(255,255,255,.08);border-radius:14px;backdrop-filter:blur(18px)}.country-search-results{grid-template-columns:1fr 1fr}.country-identity-panel{padding:18px}.country-identity-code{width:68px;height:68px;font-size:20px}.country-global-footer{grid-template-columns:1fr}}
+
+/* v1.18.3 — global country reliability states */
+.global-country-explorer[aria-busy="true"] .global-country-actions {
+  opacity: 0.62;
+  pointer-events: none;
+}
+
+.country-indicator-source a {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.country-indicator-source a:hover,
+.country-indicator-source a:focus-visible {
+  color: #ffffff;
+}
+
+.country-search-results .loading-block,
+.country-indicator-grid > .loading-block,
+.trend-chart > .loading-block,
+.event-list > .loading-block {
+  width: 100%;
+  min-height: 92px;
+}

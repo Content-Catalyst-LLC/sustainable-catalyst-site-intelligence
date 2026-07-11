@@ -1,362 +1,200 @@
-
-## v1.12.1 Cross-Domain Intelligence and Public Dashboard Studio
-
-The dashboard studio composes existing Site Intelligence domains into reusable public experiences rather than hard-coding every dashboard. It includes flagship climate-and-vulnerability, conflict-and-development, international-law-and-humanitarian, and country-intelligence configurations.
-
-Public endpoints begin at `/public/dashboard-studio`, with country profiles at `/public/country-intelligence/{country_code}` and comparisons at `/public/cross-domain-comparison`. WordPress includes directory, dashboard, country, comparison, source, and export shortcodes. Cross-domain views preserve original definitions, units, reference periods, freshness, uncertainty, and procedural status; they do not create a proprietary composite score or imply causality.
-
 # Sustainable Catalyst Site Intelligence
 
-## v1.10.0 — International Law and Global Governance Monitor
+**Current release:** v1.18.3 — Global Country Reliability, Data Coverage, and Release Integrity
 
-Adds source-aware public monitoring for sanctions, treaties, UN decisions, courts, human rights, EU law, and trade governance. The monitor preserves procedural status and authoritative-source links and does not provide legal advice or compliance determinations.
+Sustainable Catalyst Site Intelligence is a public-interest observatory for Earth observation, global country indicators, natural hazards, humanitarian reporting, source-aware dashboards, and comparative research.
 
-Current version: v1.12.1 — Conflict, Displacement and Human Security
+## Public application
 
-# Sustainable Catalyst Site Intelligence
+- Standalone app: `https://sustainable-catalyst-site-intelligence.onrender.com/app/`
+- Earth Observation: `/app/?view=earth`
+- Live Events: `/app/?view=events`
+- Global Country Intelligence: `/app/?view=country&country=KEN`
+- Primary WordPress embed: `[sc_site_intelligence_app height="1000"]`
 
-Version: 1.12.1
+## v1.18.3 release focus
 
-## v1.4.0 — Connector Reliability Patch and Public Status Polish
+v1.18.3 stabilizes the global country layer before Comparative Intelligence is built.
 
-This patch improves the v1.3.0 connector layer with clearer public reliability labels, status cards, cache-state labels, freshness-state labels, and recovery guidance. It is intended to make public source-health pages easier to read while keeping credentials, raw upstream payloads, backend logs, and private diagnostics hidden.
+### Release integrity
 
-New public connector endpoints:
+- One canonical backend version in `backend/app/version.py`
+- Public-safe `/public/build-info` compatibility endpoint
+- Matching backend and WordPress plugin version: `1.18.3`
+- WordPress administrator warning when plugin and backend versions differ
+- Updated release status, launch status, README, CHANGELOG, and documentation
+- 199 backend tests passing
 
-- `/public/connectors/reliability`
-- `/public/connectors/status-polish`
+### Country catalog reliability
 
-New WordPress shortcodes:
+- Public display-name normalization without altering source records
+- Source names retained as `source_name`
+- Alternate names retained for search
+- Whitespace-normalized regions
+- ISO2, ISO3, display-name, source-name, and alias search
+- Explicit country-or-territory classification
+- Graceful frontend fallback to Kenya for an unsupported URL country code
 
-- `[sc_public_connector_reliability]`
-- `[sc_public_connector_status_polish]`
+Examples:
 
-Recommended placement:
+- `Egypt, Arab Rep.` → `Egypt`
+- `Korea, Rep.` → `South Korea`
+- `Korea, Dem. People's Rep.` → `North Korea`
+- `Russian Federation` → `Russia`
+- `Congo, Dem. Rep.` → `Democratic Republic of the Congo`
 
-- Use `[sc_public_connector_status]` and `[sc_public_connector_reliability]` on `/platform/site-intelligence/source-health/`.
-- Use `[sc_public_cache_status]`, `[sc_public_source_freshness]`, and `[sc_public_connector_status_polish]` on source methodology or source-status review pages.
-- Use connector-specific shortcodes only on focused source pages or expandable detail sections.
+### Indicator reliability
 
-## v1.3.0 — Live API Connectors, Caching, and Public Source Status
+Each indicator retains:
 
-This release adds the public connector status layer for Site Intelligence. It exposes public-safe readiness labels, cache policy, freshness labels, and connector detail panels for World Bank, OpenAlex, Crossref, GitHub, and environmental source families. Public endpoints return curated status metadata and methodology notes, not credentials, raw upstream payloads, backend logs, or private analytics.
+- indicator ID
+- value
+- unit
+- reporting year
+- source name
+- source URL
+- retrieved time
+- data state
+- stale state
+- Platform Core lineage state where enabled
 
-New public connector endpoints:
+Data states include:
 
-- `/public/connectors/status`
-- `/public/connectors/cache`
-- `/public/connectors/freshness`
-- `/public/connectors/world-bank`
-- `/public/connectors/openalex`
-- `/public/connectors/crossref`
-- `/public/connectors/github`
-- `/public/connectors/environmental`
+- `live`
+- `partial-live`
+- `cached`
+- `stale`
+- `reference-snapshot`
+- `unavailable`
 
-New admin-safe endpoint:
+Zero remains a valid value and is never treated as missing.
 
-- `/admin/connectors/diagnostics`
+### Zero-cost caching
 
-New WordPress shortcodes:
+Country catalog and World Bank series use:
 
-- `[sc_public_connector_status]`
-- `[sc_public_cache_status]`
-- `[sc_public_source_freshness]`
-- `[sc_public_world_bank_connector]`
-- `[sc_public_openalex_connector]`
-- `[sc_public_crossref_connector]`
-- `[sc_public_github_connector]`
-- `[sc_public_environmental_connectors]`
+1. process-memory caching
+2. atomic JSON last-known-good caching
+3. explicit retrieval time
+4. explicit stale state
+5. bounded in-process memoization
 
+Default cache file:
 
-Site Intelligence is the Sustainable Catalyst analytics, registry, external-source, reporting, AI-brief, public-dashboard, admin-control, and public flagship dashboard platform.
+`backend/data/country_last_known_good.json`
 
+The JSON cache is a best-effort runtime cache on Render's ephemeral filesystem. It improves resilience across ordinary process restarts but is not guaranteed to survive a new deploy or infrastructure replacement. No Redis, paid database, or second Render service is required.
 
-## v1.1.1 — Public Topic Page Templates and Navigation Polish
+Optional override:
 
-This patch locks in the public topic-page system introduced in v1.1.0. It adds canonical `/platform/site-intelligence/` page paths, reusable public dashboard navigation, copy-ready page-template metadata, active-page link behavior, visual QA for topic pages, and nowrap helpers for cleaner homepage/platform text wrapping.
-
-New public shortcodes:
-
-```text
-[sc_public_dashboard_navigation]
-[sc_public_topic_page_templates]
-[sc_public_topic_page_visual_qa]
+```env
+SC_SI_COUNTRY_CACHE_PATH=/path/to/country_last_known_good.json
 ```
 
-New public endpoints:
+### Race-safe browser behavior
 
-```text
-/public/navigation
-/public/page-templates
-/public/topic-page-visual-qa
-```
+The standalone country experience now includes:
 
-## v1.1.0 — Public Topic Dashboards and Source Pages
+- `AbortController` cancellation for superseded requests
+- request-sequence validation
+- 12-second request timeout
+- retry behavior that does not retry aborted requests
+- 320 ms country-search debounce
+- stale chart and card clearing before a new country loads
+- one country map marker at a time
+- local retry controls
+- no blank screen for unsupported country codes
 
-This release expands Site Intelligence beyond one flagship public page into a small public topic-dashboard ecosystem. It adds public-safe topic dashboard endpoints, WordPress shortcodes, a dashboard directory, and a source-methodology page.
+### Country-event matching evidence
 
-New public shortcodes:
-
-```text
-[sc_public_dashboard_directory]
-[sc_public_climate_energy_dashboard]
-[sc_public_environmental_monitoring_dashboard]
-[sc_public_biodiversity_land_use_dashboard]
-[sc_public_knowledge_system_dashboard]
-[sc_public_search_discovery_dashboard]
-[sc_public_source_methodology]
-```
-
-New public endpoints:
-
-```text
-/public/dashboards
-/public/dashboards/climate-energy
-/public/dashboards/environmental-monitoring
-/public/dashboards/biodiversity-land-use
-/public/dashboards/knowledge-system
-/public/dashboards/search-discovery
-/public/source-methodology
-```
-
-## v1.0.1 — Public Shortcode Visual Alignment
-
-This patch aligns the public shortcode output with the current Sustainable Catalyst public-platform visual system. It updates the WordPress public dashboard module styling for the smaller public shortcodes used inside the custom Site Intelligence page shell.
-
-Public page shortcodes recommended for custom HTML:
-
-```text
-[sc_public_site_intelligence]
-[sc_public_knowledge_overview]
-[sc_public_climate_energy_summary]
-[sc_public_methodology]
-```
-
-Keep `[sc_site_intelligence_public_flagship]` for a standalone all-in-one page only; do not nest it inside a custom page shell.
-
-## v1.0.0 — Public Flagship Release
-
-This release hardens the public-facing Site Intelligence dashboard for launch. It focuses on final public/private boundaries, stable public defaults, smoke-test guidance, release metadata, and production documentation rather than adding another broad feature layer.
-
-### Public flagship shortcode
-
-Use this on the public page:
-
-```text
-[sc_site_intelligence_public_flagship]
-```
-
-The flagship shortcode renders the public-safe stack:
-
-- Public dashboard hero
-- Public Site Intelligence
-- Knowledge overview
-- Climate, energy, and external-source snapshot
-- Public methodology
-
-### New release endpoints
-
-Private/admin endpoints:
-
-- `/release/status`
-- `/release/checklist`
-- `/release/smoke-test`
-
-Public-safe endpoint:
-
-- `/release/public-summary`
-
-### New private/review shortcode
-
-Use this only on private/admin review pages:
-
-```text
-[sc_site_intelligence_release_status]
-```
-
-### Suggested public page metadata
-
-- Page title: `Site Intelligence`
-- SEO title: `Site Intelligence: Public Dashboard for Sustainable Catalyst Knowledge Infrastructure`
-- Meta description: `Explore Sustainable Catalyst Site Intelligence: a public-safe dashboard for knowledge architecture, platform tools, public data-source notes, and methodology boundaries.`
-
-### Public/private boundary
-
-Public pages should use only public-safe shortcodes unless a module has been manually reviewed. Keep the following private:
-
-- Raw GA4 dashboards
-- Search Console reports
-- Conversion diagnostics
-- Admin control panels
-- Reports and exports
-- AI-assisted internal briefs
-- Source diagnostics and operational queues
-
-### Deployment check
-
-After pushing and redeploying Render, confirm:
-
-```bash
-curl "https://sustainable-catalyst-site-intelligence.onrender.com/"
-```
-
-Expected version:
+Country-linked event records now retain:
 
 ```json
-"version":"1.0.1"
+{
+  "country_code": "KEN",
+  "country_match_method": "source-country-field",
+  "country_match_confidence": 0.99,
+  "country_match_evidence": "Kenya"
+}
 ```
 
-Then install the v1.0.1 WordPress plugin ZIP and test the public flagship page logged out or in an incognito window.
+Matching can use:
 
+- source country fields
+- country names and aliases in titles
+- a limited coordinate bounding-box match for priority countries
+- explicit demonstration-fixture labeling for fallback records
 
-## v1.3.0 — Live API Connectors, Caching, and Public Source Status
+A matched event should not be interpreted more strongly than its retained method and confidence allow.
 
-Adds public-safe connector status, cache policy, freshness, and connector detail panels for World Bank, OpenAlex, Crossref, GitHub, and environmental source families. Public endpoints expose readiness labels and methodology notes, not credentials or raw upstream payloads.
+## Public diagnostics
 
+### Build compatibility
 
-## v1.4.0 — Public Indicator Dashboards and Chart Layer
+`GET /public/build-info`
 
-Adds public indicator dashboard endpoints, chart-ready JSON payloads, WordPress chart shortcodes, and visual QA for sustainability, development, source-health, research metadata, and repository intelligence dashboards.
+Returns:
 
+- backend version
+- API schema version
+- expected WordPress plugin version
+- release name
+- Git commit when supplied by the host
+- build timestamp
+- Platform Core optional state
 
-## v1.5.0 — Source-Aware Briefs and Dashboard Exports
+### Country catalog diagnostics
 
-Adds public source-aware brief payloads, dashboard export manifests, copy-ready Markdown export summaries, public source endpoint citations, and WordPress shortcodes for reviewed Site Intelligence handoff pages.
+`GET /public/countries/diagnostics`
 
-New endpoints include `/public/source-aware-briefs`, `/public/dashboard-exports`, and `/public/dashboard-exports/visual-qa`.
+Returns public-safe catalog, coverage, timing, and cache information.
 
+### Country diagnostics
 
-## v1.6.0 Sustainable Development Data Layer
+`GET /public/country/{ISO3}/diagnostics`
 
-Initial public-source registry and connector contracts for NASA EONET, NASA POWER, the UN SDG database, World Bank development and poverty data, UNESCO education data, FAOSTAT, UN-Water SDG 6, and OECD SDMX. Includes a planetary-boundaries adapter registry, normalized observation schema, freshness classes, public health endpoints, and WordPress shortcodes.
+Returns:
 
+- metadata state
+- successful indicator count
+- live indicator count
+- missing indicator IDs
+- trend count
+- country-linked event count
+- cache state
+- stale state
+- connector timings
+- event timing
 
-## v1.6.1 Connector Reliability
+Diagnostics do not expose API keys, stack traces, raw retry queues, or private configuration.
 
-Adds retry and exponential backoff, circuit breakers, rate-limit awareness, stale-while-revalidate cache states, last-known-good fallbacks, explicit freshness thresholds, connector response validation, and public reliability/schema/cache endpoints.
+## Principal public endpoints
 
+### Release and health
 
-## v1.7.0 Planetary Boundaries Observatory
+- `/`
+- `/health`
+- `/public/build-info`
+- `/public/launch-status`
+- `/release/public-summary`
+- `/release/status`
+- `/release/smoke-test`
 
-Public endpoints:
+### Countries
 
-- `/public/planetary-boundaries`
-- `/public/planetary-boundaries/overview`
-- `/public/planetary-boundaries/{boundary_id}`
-- `/public/planetary-boundaries/{boundary_id}/trend`
-- `/public/planetary-boundaries/{boundary_id}/sources`
-- `/public/planetary-boundaries/methodology`
-- `/public/planetary-boundaries/export`
-
-WordPress shortcodes:
-
-- `[sc_planetary_boundaries_observatory]`
-- `[sc_planetary_boundary_overview]`
-- `[sc_planetary_boundary id="climate-change"]`
-- `[sc_planetary_boundary_trend id="climate-change"]`
-- `[sc_planetary_boundary_sources]`
-- `[sc_planetary_boundary_methodology]`
-- `[sc_planetary_boundary_export]`
-
-
-## v1.8.0 — Live Disaster, Displacement, and Humanitarian Intelligence
-
-Adds source-aware GDACS, ReliefWeb, USGS earthquake, NASA EONET, and UNHCR integration contracts; a normalized humanitarian-event schema; crisis-map, report-stream, displacement-context, methodology, and export endpoints; and matching WordPress shortcodes. Live network retrieval remains governed by connector reliability, caching, source freshness, and last-known-good safeguards.
-
-
-## v1.9.0 — Human Development and Social Conditions
-
-Public source-aware observatory coverage now includes poverty, inequality, health, education, decent work, food security, and water and sanitation. The release adds domain detail, country profile, inequality-dimension, methodology, and export contracts while preserving source definitions, reference periods, revisions, and modeled-estimate labels.
-
-## v1.12.1 — Conflict, Displacement and Human Security
-
-The human-security layer connects conflict-event sources, civilian-protection reporting, forced-displacement statistics, mobility assessments, infrastructure disruption, humanitarian-access records, and explicitly labeled modeled risk. It preserves source methodology, reference periods, geographic precision, confidence, revisions, and responsible-data limits.
-
-Public endpoints begin at `/public/human-security`. WordPress shortcodes include `[sc_conflict_human_security_monitor]`, `[sc_conflict_event_stream]`, `[sc_human_security_monitor]`, `[sc_forced_displacement_flows]`, `[sc_modeled_human_security_risk]`, `[sc_human_security_sources]`, `[sc_human_security_methodology]`, and `[sc_human_security_export]`.
-
-
-## v1.18.2 standalone application
-
-The map-first public application is served at `/app/` and can be embedded in WordPress with `[sc_site_intelligence_app height="900"]`.
-
-
-## v1.18.2 visual system
-
-The standalone application now uses the immersive production visual system, animated public-event markers, skeleton loading states, polished map controls, and shareable country/view state.
-
-## v1.18.2 live country intelligence
-
-Country routes now retrieve live World Bank indicators and multi-year trends:
-
+- `/public/countries`
+- `/public/countries/search`
+- `/public/countries/regions`
+- `/public/countries/diagnostics`
+- `/public/country/{ISO3}/overview`
 - `/public/country/{ISO3}`
 - `/public/country/{ISO3}/indicators`
 - `/public/country/{ISO3}/trends`
 - `/public/country/{ISO3}/brief`
-
-The standalone Country view renders values, units, years, sources, trends, and explicit live/reference states.
-
-
-## v1.18.2 Platform Core integration
-
-Site Intelligence can now write live country evidence into Platform Core v2.5.0:
-
-- source snapshots
-- provenance activities
-- provenance links
-- evidence records
-- retry-safe queued writes
-
-Configure the backend with `SC_SI_PLATFORM_CORE_*` environment variables. The browser and WordPress plugin never receive the write key.
-
-Public-safe endpoints:
-
-- `/public/platform-core/status`
 - `/public/country/{ISO3}/evidence-lineage`
+- `/public/country/{ISO3}/diagnostics`
 
-Administrative queue replay:
-
-- `POST /admin/platform-core/replay-queue`
-
-
-## v1.18.2 public beta hardening
-
-The standalone app now includes cold-start progress, retryable public feeds, partial-data notices, responsive WordPress embedding, mobile-safe presentation, and intentional loading, empty, and error states.
-
-Public launch status: `/public/launch-status`.
-
-
-## v1.18.2 Earth Observation Studio
-
-The standalone application now includes a dedicated Earth route:
-
-`/app/?view=earth`
-
-Public endpoints:
-
-- `/public/earth-observation`
-- `/public/earth-observation/layers`
-- `/public/earth-observation/compare`
-- `/public/earth-observation/timeline`
-- `/public/earth-observation/presets`
-- `/public/earth-observation/export-manifest`
-
-WordPress shortcode:
-
-`[sc_earth_observation_studio height="1000"]`
-
-
-## v1.18.2 reliability
-
-Earth Observation Studio now includes tile failure states, date validation, retry controls, safer playback, mobile controls, restored swipe state, and `/public/earth-observation/diagnostics`.
-
-
-## v1.18.2 Unified Live Event Intelligence
-
-Standalone app route:
-
-`/app/?view=events`
-
-Public endpoints:
+### Events
 
 - `/public/events`
 - `/public/events/categories`
@@ -365,38 +203,86 @@ Public endpoints:
 - `/public/events/summary`
 - `/public/events/{event_id}`
 
-WordPress shortcode:
+### Earth Observation
 
-`[sc_live_event_intelligence height="1000"]`
+- `/public/earth-observation`
+- `/public/earth-observation/layers`
+- `/public/earth-observation/compare`
+- `/public/earth-observation/timeline`
+- `/public/earth-observation/presets`
+- `/public/earth-observation/export-manifest`
+- `/public/earth-observation/diagnostics`
 
+## WordPress shortcodes
 
-## v1.18.2 Global Country Intelligence
+Primary product:
 
-Standalone route:
+```text
+[sc_site_intelligence_app height="1000"]
+```
 
-`/app/?view=country&country=KEN`
+Specialized standalone views:
 
-Public endpoints:
+```text
+[sc_earth_observation_studio height="1000"]
+[sc_live_event_intelligence height="1000"]
+[sc_global_country_intelligence country="KEN" height="1100"]
+```
 
-- `/public/countries`
-- `/public/countries/search`
-- `/public/countries/regions`
-- `/public/country/{ISO3}/overview`
-- `/public/country/{ISO3}`
-- `/public/country/{ISO3}/indicators`
-- `/public/country/{ISO3}/trends`
-- `/public/country/{ISO3}/brief`
+Legacy compatibility views remain available, but the long-term direction is one main standalone app embed rather than a long stack of demonstration shortcodes.
 
-WordPress shortcode:
+## Local development
 
-`[sc_global_country_intelligence country="KEN" height="1100"]`
+```bash
+cd backend
+python3 -m pip install -r requirements.txt
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8091
+```
 
+Open:
 
-## v1.18.2 notice removal
+- API: `http://127.0.0.1:8091/`
+- Docs: `http://127.0.0.1:8091/docs`
+- App: `http://127.0.0.1:8091/app/`
 
-The persistent global public-feed warning has been removed. Optional feed failures now appear only within the affected panel.
+## Validation
 
+```bash
+cd backend
+python3 -m pytest -q
+python3 -m compileall -q app
+node --check public_app/assets/app.js
+php -l ../wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php
+```
 
-## v1.18.2 WordPress loader patch
+Expected test result for v1.18.3:
 
-Public Country Intelligence and Cross-Domain Comparison shortcodes now remove their skeleton loaders in a `finally` path after success, fallback, or failure. Missing comparison values remain visible with clearer wording.
+```text
+199 passed
+```
+
+## Render deployment
+
+The repository includes `render.yaml` for the existing free Render service.
+
+Build command:
+
+```text
+pip install -r backend/requirements.txt
+```
+
+Start command:
+
+```text
+cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
+```
+
+Platform Core remains optional and disabled by default.
+
+## Responsible-use boundary
+
+Site Intelligence supports research, orientation, source review, public understanding, and documented comparison. It does not replace authoritative records, field investigation, professional environmental analysis, engineering review, legal advice, financial advice, medical advice, regulatory compliance review, emergency instructions, or safety-critical judgment.
+
+## License
+
+MIT. See `LICENSE`.

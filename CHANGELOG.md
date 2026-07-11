@@ -1,5 +1,24 @@
 # Changelog
 
+## 1.18.3 — Global Country Reliability, Data Coverage, and Release Integrity
+
+- Added a canonical release-version module and aligned backend, plugin, launch status, release status, and documentation on v1.18.3.
+- Added `/public/build-info` with backend version, API schema version, expected plugin version, Git commit, and build timestamp.
+- Added a WordPress administrator warning when the plugin and backend releases do not match.
+- Added public display-name normalization while retaining unmodified source names and aliases for search.
+- Added ISO2, ISO3, display-name, source-name, and alternate-name search coverage.
+- Added process-memory plus atomic JSON last-known-good caching for country catalog and World Bank indicator series.
+- Added explicit live, partial-live, cached, stale, reference-snapshot, and unavailable states.
+- Added source IDs, source URLs, retrieval timestamps, cache state, and stale flags to indicator payloads.
+- Added `/public/countries/diagnostics` and `/public/country/{ISO3}/diagnostics`.
+- Added retained country-match method, confidence, and evidence fields to public event records.
+- Added source-country, title-name, and limited coordinate-bounding-box matching.
+- Added abortable country requests, stale-response rejection, country-search debouncing, request timeouts, local retries, and invalid-code fallback in the standalone app.
+- Prevented duplicate country map markers and stale trend/chart content during rapid country switching.
+- Added source links to country indicator cards.
+- Preserved Platform Core as an optional integration and added no paid infrastructure dependency.
+- Expanded the automated suite to 199 passing tests.
+
 ## 1.18.2 — WordPress Skeleton Loader Completion Patch
 
 - Fixed Country Intelligence Profile skeleton bars remaining after content rendered.

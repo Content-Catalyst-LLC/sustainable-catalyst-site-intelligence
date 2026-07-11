@@ -8,7 +8,10 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 import json
 
-VERSION = "1.18.2"
+from .version import APP_VERSION
+from .country_cache import country_cache
+
+VERSION = APP_VERSION
 
 CATEGORY_ORDER = [
     "earthquake",
@@ -109,22 +112,62 @@ def _severity_from_magnitude(magnitude: float | None) -> str:
         return "moderate"
     return "low"
 
-def _country_hint(title: str, coordinates: list[float] | None = None) -> str | None:
-    text = title.lower()
-    matches = {
-        "kenya": "KEN",
-        "ghana": "GHA",
-        "india": "IND",
-        "brazil": "BRA",
-        "united states": "USA",
-        "california": "USA",
-        "alaska": "USA",
-        "hawaii": "USA",
-    }
-    for token, code in matches.items():
+def _country_name_index() -> list[tuple[str, str]]:
+    try:
+        from .live_country_intelligence import country_catalog
+        items = country_catalog().get("countries", [])
+    except Exception:
+        items = []
+    index: list[tuple[str, str]] = []
+    for item in items:
+        code = str(item.get("code") or "").upper()
+        names = [item.get("name"), item.get("source_name"), *(item.get("alternate_names") or [])]
+        for name in names:
+            token = str(name or "").strip().lower()
+            if code and len(token) >= 4:
+                index.append((token, code))
+    index.extend([
+        ("california", "USA"), ("alaska", "USA"), ("hawaii", "USA"),
+        ("dr congo", "COD"), ("drc", "COD"), ("south korea", "KOR"), ("north korea", "PRK"),
+    ])
+    return sorted(set(index), key=lambda item: len(item[0]), reverse=True)
+
+
+COUNTRY_BOUNDS = {
+    "KEN": (33.8, -4.8, 42.3, 5.5),
+    "GHA": (-3.3, 4.5, 1.3, 11.3),
+    "IND": (68.0, 6.0, 97.5, 37.5),
+    "BRA": (-74.0, -34.0, -34.0, 5.5),
+    "USA": (-171.0, 18.0, -66.0, 72.0),
+}
+
+
+def _country_match(title: str, coordinates: list[float] | None = None) -> dict[str, Any]:
+    text = (title or "").lower()
+    for token, code in _country_name_index():
         if token in text:
-            return code
-    return None
+            return {
+                "country_code": code,
+                "country_match_method": "title-country-name",
+                "country_match_confidence": 0.82,
+                "country_match_evidence": token,
+            }
+    if coordinates and len(coordinates) >= 2:
+        longitude, latitude = float(coordinates[0]), float(coordinates[1])
+        for code, (west, south, east, north) in COUNTRY_BOUNDS.items():
+            if west <= longitude <= east and south <= latitude <= north:
+                return {
+                    "country_code": code,
+                    "country_match_method": "coordinate-bounding-box",
+                    "country_match_confidence": 0.68,
+                    "country_match_evidence": f"{longitude:.3f},{latitude:.3f}",
+                }
+    return {
+        "country_code": None,
+        "country_match_method": "unmatched",
+        "country_match_confidence": 0.0,
+        "country_match_evidence": None,
+    }
 
 def _usgs_events(days: int = 7, limit: int = 200) -> list[dict[str, Any]]:
     end = datetime.now(timezone.utc)
@@ -168,7 +211,7 @@ def _usgs_events(days: int = 7, limit: int = 200) -> list[dict[str, Any]]:
             "magnitude": magnitude,
             "confidence": 0.99,
             "status": properties.get("status") or "reviewed",
-            "country_code": _country_hint(title, coordinates),
+            **_country_match(title, coordinates),
             "record_type": "observed-event",
             "data_state": "live",
             "metadata": {
@@ -217,7 +260,7 @@ def _eonet_events(days: int = 30, limit: int = 200) -> list[dict[str, Any]]:
             "magnitude": None,
             "confidence": 0.9,
             "status": "open",
-            "country_code": _country_hint(title, coordinates),
+            **_country_match(title, coordinates),
             "record_type": "reported-event",
             "data_state": "live",
             "metadata": {
@@ -270,6 +313,9 @@ def _reliefweb_reports(days: int = 14, limit: int = 80) -> list[dict[str, Any]]:
             "confidence": 0.85,
             "status": "published",
             "country_code": country_code,
+            "country_match_method": "source-country-field" if country_code else "unmatched",
+            "country_match_confidence": 0.99 if country_code else 0.0,
+            "country_match_evidence": countries[0].get("name") if countries and country_code else None,
             "record_type": "published-report",
             "data_state": "live",
             "metadata": {
@@ -308,6 +354,9 @@ def _fallback_events() -> list[dict[str, Any]]:
             "confidence": 0.0,
             "status": "demonstration",
             "country_code": country_code,
+            "country_match_method": "demonstration-fixture",
+            "country_match_confidence": 0.0,
+            "country_match_evidence": "Local fallback record",
             "record_type": "demonstration-record",
             "data_state": "fallback",
             "metadata": {"fabricated_for_demo": True},
@@ -336,21 +385,47 @@ def unified_events(
     categories: list[str] | None = None,
     sources: list[str] | None = None,
     country_code: str | None = None,
+    allow_fallback: bool = True,
 ) -> dict[str, Any]:
+    normalized_days = max(1, min(int(days), 90))
+    fetch_limit = max(300, min(int(limit), 1000))
+    cache_key = f"v{VERSION}:events:days:{normalized_days}"
+    cached = country_cache.get(cache_key, fresh_seconds=900, stale_seconds=86400, allow_stale=False)
+
     records: list[dict[str, Any]] = []
     source_states: dict[str, str] = {}
-    for source_id, loader in [
-        ("usgs", lambda: _usgs_events(days=min(days, 30), limit=limit)),
-        ("nasa-eonet", lambda: _eonet_events(days=max(days, 30), limit=limit)),
-        ("reliefweb", lambda: _reliefweb_reports(days=days, limit=min(limit, 120))),
-    ]:
-        try:
-            source_records = loader()
-            records.extend(source_records)
-            source_states[source_id] = "live"
-        except Exception:
-            source_states[source_id] = "unavailable"
+    delivery_state = "live"
 
+    if cached and isinstance(cached.value, dict):
+        records = list(cached.value.get("records") or [])
+        source_states = dict(cached.value.get("source_states") or {})
+        delivery_state = "cached"
+    else:
+        for source_id, loader in [
+            ("usgs", lambda: _usgs_events(days=min(normalized_days, 30), limit=fetch_limit)),
+            ("nasa-eonet", lambda: _eonet_events(days=max(normalized_days, 30), limit=fetch_limit)),
+            ("reliefweb", lambda: _reliefweb_reports(days=normalized_days, limit=min(fetch_limit, 120))),
+        ]:
+            try:
+                source_records = loader()
+                records.extend(source_records)
+                source_states[source_id] = "live"
+            except Exception:
+                source_states[source_id] = "unavailable"
+        records = _deduplicate(records)
+        if records:
+            country_cache.set(cache_key, {"records": records, "source_states": source_states})
+            delivery_state = "live" if all(value == "live" for value in source_states.values()) else "partial-live"
+        else:
+            stale = country_cache.get(cache_key, fresh_seconds=0, stale_seconds=86400, allow_stale=True)
+            if stale and isinstance(stale.value, dict):
+                records = list(stale.value.get("records") or [])
+                source_states = dict(stale.value.get("source_states") or source_states)
+                delivery_state = "stale"
+            else:
+                delivery_state = "unavailable"
+
+    base_record_count = len(records)
     records = _deduplicate(records)
     if categories:
         wanted = {item.strip().lower() for item in categories if item.strip()}
@@ -362,11 +437,16 @@ def unified_events(
         normalized_country = country_code.upper()
         records = [item for item in records if item.get("country_code") == normalized_country]
 
-    if not records:
+    # Demonstration fallback is reserved for an unfiltered event explorer when
+    # all live and stale source records are unavailable. Country-filtered views
+    # should show an honest empty state rather than a fabricated local match.
+    if not records and base_record_count == 0 and allow_fallback and not country_code and not categories and not sources:
         records = _fallback_events()
         overall_state = "fallback"
+    elif not records:
+        overall_state = delivery_state if delivery_state in {"live", "partial-live", "cached", "stale"} else "unavailable"
     else:
-        overall_state = "live" if all(value == "live" for value in source_states.values()) else "partial-live"
+        overall_state = delivery_state
 
     records = records[:max(1, min(limit, 1000))]
     return {
@@ -374,7 +454,10 @@ def unified_events(
         "version": VERSION,
         "generated_at": _now(),
         "data_state": overall_state,
+        "delivery_state": delivery_state,
+        "stale": delivery_state == "stale",
         "source_states": source_states,
+        "base_record_count": base_record_count,
         "count": len(records),
         "events": records,
         "geojson": {

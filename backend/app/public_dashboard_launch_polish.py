@@ -1,9 +1,10 @@
 from __future__ import annotations
 
+from .version import APP_VERSION
 from datetime import datetime, timezone
 from typing import Any
 
-VERSION = "1.18.2"
+VERSION = APP_VERSION
 SCHEMA_VERSION = "sc-public-dashboard-launch-polish/1.0"
 
 
@@ -73,8 +74,8 @@ def launch_readiness() -> dict[str, Any]:
             for cid, label, status, detail in checks
         ],
         "production_actions": [
-            "Deploy the v1.18.0 backend and confirm the root endpoint reports version 1.18.0.",
-            "Install the v1.18.0 WordPress plugin and clear WordPress and Cloudflare caches.",
+            "Deploy the v1.18.3 backend and confirm the root endpoint reports version 1.18.3.",
+            "Install the v1.18.3 WordPress plugin and clear WordPress and Cloudflare caches.",
             "Review the four flagship dashboards on desktop, tablet, and mobile.",
             "Test keyboard navigation, visible focus, loading states, empty states, and exports.",
             "Capture final screenshots for the Site Intelligence landing page and release notes.",

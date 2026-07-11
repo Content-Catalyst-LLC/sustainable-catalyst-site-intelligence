@@ -12,7 +12,17 @@
   }
   function hideGlobalNotice(){}
   function finishLaunch(){qs("#app").classList.remove("app-loading");qs("#app").classList.add("app-ready");setLaunch("Site Intelligence is ready.",100);setTimeout(()=>qs("#launchScreen").classList.add("hidden"),320);reportHeight()}
-  async function apiWithRetry(path,attempts=3){let last;for(let i=0;i<attempts;i++){try{return await api(path)}catch(e){last=e;if(i<attempts-1)await new Promise(r=>setTimeout(r,700*(i+1)))}}throw last}
+  async function apiWithRetry(path,attempts=3,options={}){
+    let last;
+    for(let i=0;i<attempts;i++){
+      try{return await api(path,options)}catch(e){
+        if(e?.name==="AbortError")throw e;
+        last=e;
+        if(i<attempts-1)await new Promise(r=>setTimeout(r,700*(i+1)));
+      }
+    }
+    throw last;
+  }
   function reportHeight(){window.parent?.postMessage({type:"scsi-height",height:Math.max(document.body.scrollHeight,document.documentElement.scrollHeight)},"*")}
   function publicErrorBlock(title,text,retryAction){
     const id=`retry-${Math.random().toString(36).slice(2)}`;
@@ -25,7 +35,20 @@
   const qs = (s)=>document.querySelector(s), qsa=(s)=>[...document.querySelectorAll(s)];
   const toast=(msg)=>{const el=qs("#toast");el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),1800)};
   const cleanDate=(v)=>{if(!v)return "Date unavailable";try{return new Date(v).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"})}catch{return v}};
-  const api=async(path)=>{const res=await fetch(API+path,{headers:{"Accept":"application/json"}});if(!res.ok)throw new Error(`${res.status}`);return res.json()};
+  const api=async(path,{signal,timeout=12000}={})=>{
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort("timeout"),timeout);
+    const abort=()=>controller.abort("superseded");
+    if(signal){if(signal.aborted)abort();else signal.addEventListener("abort",abort,{once:true})}
+    try{
+      const res=await fetch(API+path,{headers:{"Accept":"application/json"},signal:controller.signal});
+      if(!res.ok){const error=new Error(`${res.status}`);error.status=res.status;throw error}
+      return await res.json();
+    }finally{
+      clearTimeout(timer);
+      if(signal)signal.removeEventListener("abort",abort);
+    }
+  };
 
   function today(){const d=new Date();d.setUTCDate(d.getUTCDate()-1);return d.toISOString().slice(0,10)}
   function initMap(){
@@ -307,7 +330,7 @@
   function closeEventStudio(){qs("#eventStudio").hidden=true;stopEventTimeline();closeEventDrawer()}
 
 
-  const globalCountryState={catalog:[],regions:[],overviewMap:null,overviewBase:null,events:[],trends:[],activeCode:"KEN"};
+  const globalCountryState={catalog:[],regions:[],overviewMap:null,overviewBase:null,overviewMarker:null,events:[],trends:[],activeCode:"KEN",selectionController:null,searchController:null,requestSequence:0,searchTimer:null};
 
   async function loadCountryCatalog(){
     if(globalCountryState.catalog.length)return;
@@ -317,6 +340,7 @@
     ]);
     globalCountryState.catalog=catalog.countries||[];
     globalCountryState.regions=regions.regions||[];
+    globalCountryState.catalog.forEach(item=>{names[item.code]=item.name});
     qs("#countrySelect").innerHTML=globalCountryState.catalog.map(item=>`<option value="${escapeHtml(item.code)}">${escapeHtml(item.name)}</option>`).join("");
     qs("#countryRegionFilter").innerHTML='<option value="">All regions</option>'+globalCountryState.regions.map(item=>`<option value="${escapeHtml(item.name)}">${escapeHtml(item.name)} (${item.country_count})</option>`).join("");
   }
@@ -327,65 +351,112 @@
   }
   function renderGlobalTrend(trend){
     const chart=qs("#globalTrendChart"),series=trend?.series||[];
-    if(!series.length){chart.innerHTML='<div class="empty-state"><div><strong>Trend unavailable</strong><span>No live multi-year series was returned for this indicator.</span></div></div>';return}
+    if(!series.length){chart.innerHTML='<div class="empty-state"><div><strong>Trend unavailable</strong><span>No validated multi-year series was returned for this indicator.</span></div></div>';return}
     const values=series.map(x=>Number(x.value)),min=Math.min(...values),max=Math.max(...values),spread=Math.max(max-min,Math.abs(max)*.08,1);
     chart.innerHTML=series.map(x=>{const height=12+((Number(x.value)-min)/spread)*82;return `<div class="trend-column"><span class="trend-value">${escapeHtml(formatCountryValue(x.value,trend.format,trend.unit))}</span><span class="trend-bar" style="height:${Math.max(5,Math.min(96,height))}%"></span><span class="trend-year">${escapeHtml(x.year)}</span></div>`}).join("");
   }
   function renderCountrySearchResults(items){
     const box=qs("#countrySearchResults");box.hidden=!items.length;
-    box.innerHTML=items.map(item=>`<div class="country-search-result" tabindex="0" role="button" data-country-result="${escapeHtml(item.code)}"><strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(item.code)} · ${escapeHtml(item.region||"Region unavailable")}</span></div>`).join("");
+    box.innerHTML=items.length?items.map(item=>`<div class="country-search-result" tabindex="0" role="button" data-country-result="${escapeHtml(item.code)}"><strong>${escapeHtml(item.name)}</strong><span>${escapeHtml(item.code)} · ${escapeHtml(item.region||"Region unavailable")}</span></div>`).join(""):'<div class="empty-state"><div><strong>No matching country</strong><span>Try a country name, ISO2, ISO3, or alternate public name.</span></div></div>';
     qsa("[data-country-result]").forEach(card=>{
       const activate=()=>selectGlobalCountry(card.dataset.countryResult,true);
       card.addEventListener("click",activate);card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();activate()}});
     });
   }
   async function searchGlobalCountries(){
+    if(globalCountryState.searchController)globalCountryState.searchController.abort();
+    globalCountryState.searchController=new AbortController();
+    const signal=globalCountryState.searchController.signal;
     const q=qs("#countrySearchInput").value.trim(),region=qs("#countryRegionFilter").value;
     const params=new URLSearchParams({q,region,limit:"80"});
-    const payload=await apiWithRetry(`/public/countries/search?${params.toString()}`,3);
-    renderCountrySearchResults(payload.countries||[]);
-  }
-  async function loadCountryEvents(code){
+    const box=qs("#countrySearchResults");box.hidden=false;box.innerHTML='<div class="loading-block">Searching the country catalog…</div>';
     try{
-      const payload=await apiWithRetry(`/public/events?country_code=${encodeURIComponent(code)}&days=30&limit=20`,3);
-      globalCountryState.events=payload.events||[];
-      qs("#countryEventsList").innerHTML=globalCountryState.events.length?globalCountryState.events.slice(0,8).map(event=>`<div class="event-row"><span class="event-marker"></span><div><div class="event-title">${escapeHtml(event.title)}</div><div class="event-meta">${escapeHtml(event.category_label)} · ${escapeHtml(event.source_name)}</div></div><div class="event-time">${cleanDate(event.observed_at)}</div></div>`).join(""):'<div class="empty-state"><div><strong>No country-linked events</strong><span>The connected public feeds returned no directly linked records for this country.</span></div></div>';
-    }catch{
-      qs("#countryEventsList").innerHTML='<div class="error-state"><div><strong>Country events unavailable</strong><span>The event service did not respond.</span></div></div>';
+      const payload=await apiWithRetry(`/public/countries/search?${params.toString()}`,2,{signal});
+      if(signal.aborted)return;
+      renderCountrySearchResults(payload.countries||[]);
+    }catch(error){
+      if(error?.name==="AbortError")return;
+      box.innerHTML=publicErrorBlock("Country search unavailable","The catalog search did not respond.",searchGlobalCountries);
     }
   }
+  async function loadCountryEvents(code,signal,sequence){
+    try{
+      const payload=await apiWithRetry(`/public/events?country_code=${encodeURIComponent(code)}&days=30&limit=20`,2,{signal});
+      if(signal.aborted||sequence!==globalCountryState.requestSequence)return;
+      globalCountryState.events=payload.events||[];
+      qs("#countryEventsList").innerHTML=globalCountryState.events.length?globalCountryState.events.slice(0,8).map(event=>`<div class="event-row"><span class="event-marker"></span><div><div class="event-title">${escapeHtml(event.title)}</div><div class="event-meta">${escapeHtml(event.category_label)} · ${escapeHtml(event.source_name)}${event.country_match_method?` · ${escapeHtml(event.country_match_method)}`:""}</div></div><div class="event-time">${cleanDate(event.observed_at)}</div></div>`).join(""):'<div class="empty-state"><div><strong>No country-linked events</strong><span>The connected public feeds returned no records with a retained country-match basis.</span></div></div>';
+    }catch(error){
+      if(error?.name==="AbortError")return;
+      if(sequence===globalCountryState.requestSequence)qs("#countryEventsList").innerHTML=publicErrorBlock("Country events unavailable","The event service did not respond.",()=>selectGlobalCountry(code,false));
+    }
+  }
+  function setCountryLoading(code){
+    const country=globalCountryState.catalog.find(item=>item.code===code);
+    qs("#globalCountryExplorer").setAttribute("aria-busy","true");
+    qs("#globalCountryTitle").textContent=`Loading ${country?.name||code}`;
+    qs("#globalCountryIntro").textContent="Retrieving validated country indicators, trends, and linked public events.";
+    qs("#globalCountryMetrics").innerHTML='<div class="loading-block">Loading country indicators…</div>';
+    qs("#globalTrendSelect").innerHTML="";
+    qs("#globalTrendTitle").textContent="Loading trend";
+    qs("#globalTrendChart").innerHTML='<div class="loading-block">Loading multi-year series…</div>';
+    qs("#countryEventsList").innerHTML='<div class="loading-block">Loading country-linked events…</div>';
+  }
   async function selectGlobalCountry(code,pushState=true){
-    globalCountryState.activeCode=code;qs("#countrySelect").value=code;
-    const [overview,trends]=await Promise.all([
-      apiWithRetry(`/public/country/${encodeURIComponent(code)}/overview`,3),
-      apiWithRetry(`/public/country/${encodeURIComponent(code)}/trends`,3)
-    ]);
-    const country=overview.country;
-    qs("#globalCountryTitle").textContent=overview.headline;
-    qs("#globalCountryIntro").textContent=overview.summary;
-    qs("#countryIdentityCode").textContent=country.code;
-    qs("#countryIdentityRegion").textContent=(country.region||"Region unavailable").toUpperCase();
-    qs("#countryIdentityName").textContent=country.name;
-    qs("#countryIdentityMeta").textContent=`Capital: ${country.capital||"Unavailable"}${country.income_level?` · ${country.income_level}`:""}`;
-    qs("#globalCountryMetrics").innerHTML=(overview.highlights||[]).map(item=>`<article class="country-indicator"><span class="country-indicator-label">${escapeHtml(item.label)}</span><strong class="country-indicator-value">${escapeHtml(formatCountryValue(item.value,item.format,item.unit))}</strong><div class="country-indicator-meta">${escapeHtml(item.unit)} · ${escapeHtml(item.year)}</div><span class="country-indicator-source">${escapeHtml(item.source)} · ${escapeHtml(item.data_state)}</span></article>`).join("");
-    globalCountryState.trends=trends.trends||[];
-    qs("#globalTrendSelect").innerHTML=globalCountryState.trends.map(item=>`<option value="${escapeHtml(item.key)}">${escapeHtml(item.label)}</option>`).join("");
-    if(globalCountryState.trends.length){qs("#globalTrendTitle").textContent=globalCountryState.trends[0].label;renderGlobalTrend(globalCountryState.trends[0])}
-    initCountryOverviewMap();
-    const lat=country.latitude,lng=country.longitude;
-    if(lat!=null&&lng!=null){globalCountryState.overviewMap.setView([lat,lng],overview.map?.default_zoom||5);L.circleMarker([lat,lng],{radius:8,color:"#fff",weight:1,fillColor:"#43d6ff",fillOpacity:.9}).addTo(globalCountryState.overviewMap).bindPopup(`<strong>${escapeHtml(country.name)}</strong><br>${escapeHtml(country.capital||"Capital unavailable")}`)}
-    else{globalCountryState.overviewMap.setView([0,20],2)}
-    await loadCountryEvents(code);
-    qs("#countrySearchResults").hidden=true;
-    if(pushState){const params=new URLSearchParams(location.search);params.set("view","country");params.set("country",code);history.replaceState(null,"",`?${params.toString()}`)}
-    setTimeout(()=>{globalCountryState.overviewMap.invalidateSize();reportHeight()},80);
+    const requested=String(code||"").trim().toUpperCase();
+    const supported=globalCountryState.catalog.some(item=>item.code===requested);
+    const normalized=supported?requested:"KEN";
+    if(!supported)toast(`Unsupported country code ${requested||"(blank)"}; showing Kenya.`);
+    if(globalCountryState.selectionController)globalCountryState.selectionController.abort();
+    const controller=new AbortController();globalCountryState.selectionController=controller;
+    const signal=controller.signal,sequence=++globalCountryState.requestSequence;
+    globalCountryState.activeCode=normalized;state.country=normalized;qs("#countrySelect").value=normalized;setCountryLoading(normalized);
+    try{
+      const [overview,trends]=await Promise.all([
+        apiWithRetry(`/public/country/${encodeURIComponent(normalized)}/overview`,3,{signal}),
+        apiWithRetry(`/public/country/${encodeURIComponent(normalized)}/trends`,3,{signal})
+      ]);
+      if(signal.aborted||sequence!==globalCountryState.requestSequence)return;
+      const country=overview.country;
+      qs("#globalCountryTitle").textContent=overview.headline;
+      qs("#globalCountryIntro").textContent=overview.summary;
+      qs("#countryIdentityCode").textContent=country.code;
+      qs("#countryIdentityRegion").textContent=(country.region||"Region unavailable").toUpperCase();
+      qs("#countryIdentityName").textContent=country.name;
+      qs("#countryIdentityMeta").textContent=`Capital: ${country.capital||"Unavailable"}${country.income_level?` · ${country.income_level}`:""} · ${overview.data_state||"unknown state"}`;
+      const highlights=overview.highlights||[];
+      qs("#globalCountryMetrics").innerHTML=highlights.length?highlights.map(item=>`<article class="country-indicator"><span class="country-indicator-label">${escapeHtml(item.label)}</span><strong class="country-indicator-value">${escapeHtml(formatCountryValue(item.value,item.format,item.unit))}</strong><div class="country-indicator-meta">${escapeHtml(item.unit)} · ${escapeHtml(item.year)}</div><span class="country-indicator-source">${item.source_url?`<a href="${escapeHtml(item.source_url)}" target="_blank" rel="noopener">${escapeHtml(item.source)} ↗</a>`:escapeHtml(item.source)} · ${escapeHtml(item.data_state)}</span></article>`).join(""):'<div class="empty-state"><div><strong>No validated indicators</strong><span>No validated public value is currently available for this country.</span></div></div>';
+      globalCountryState.trends=trends.trends||[];
+      qs("#globalTrendSelect").innerHTML=globalCountryState.trends.map(item=>`<option value="${escapeHtml(item.key)}">${escapeHtml(item.label)}</option>`).join("");
+      if(globalCountryState.trends.length){qs("#globalTrendTitle").textContent=globalCountryState.trends[0].label;renderGlobalTrend(globalCountryState.trends[0])}else{qs("#globalTrendTitle").textContent="Trend unavailable";renderGlobalTrend(null)}
+      initCountryOverviewMap();
+      const lat=country.latitude,lng=country.longitude;
+      if(globalCountryState.overviewMarker){globalCountryState.overviewMap.removeLayer(globalCountryState.overviewMarker);globalCountryState.overviewMarker=null}
+      if(lat!=null&&lng!=null){globalCountryState.overviewMap.setView([lat,lng],overview.map?.default_zoom||5);globalCountryState.overviewMarker=L.circleMarker([lat,lng],{radius:8,color:"#fff",weight:1,fillColor:"#43d6ff",fillOpacity:.9}).addTo(globalCountryState.overviewMap).bindPopup(`<strong>${escapeHtml(country.name)}</strong><br>${escapeHtml(country.capital||"Capital unavailable")}`)}
+      else{globalCountryState.overviewMap.setView([0,20],2)}
+      await loadCountryEvents(normalized,signal,sequence);
+      if(signal.aborted||sequence!==globalCountryState.requestSequence)return;
+      qs("#countrySearchResults").hidden=true;
+      if(pushState||!supported){const params=new URLSearchParams(location.search);params.set("view","country");params.set("country",normalized);history.replaceState(null,"",`?${params.toString()}`)}
+      setTimeout(()=>{globalCountryState.overviewMap.invalidateSize();reportHeight()},80);
+    }catch(error){
+      if(error?.name==="AbortError")return;
+      if(sequence!==globalCountryState.requestSequence)return;
+      qs("#globalCountryMetrics").innerHTML=publicErrorBlock("Country intelligence unavailable","The country service may be waking up or temporarily unavailable.",()=>selectGlobalCountry(normalized,false));
+      qs("#globalTrendChart").innerHTML='<div class="empty-state"><div><strong>Trend unavailable</strong><span>Retry the country request to load a validated series.</span></div></div>';
+      qs("#countryEventsList").innerHTML='<div class="empty-state"><div><strong>Events unavailable</strong><span>Country indicator failure does not imply that no events exist.</span></div></div>';
+    }finally{
+      if(sequence===globalCountryState.requestSequence)qs("#globalCountryExplorer").setAttribute("aria-busy","false");
+    }
   }
   async function openGlobalCountryExplorer(){
-    qs("#globalCountryExplorer").hidden=false;await loadCountryCatalog();
+    qs("#globalCountryExplorer").hidden=false;
+    try{await loadCountryCatalog()}catch(error){
+      qs("#globalCountryMetrics").innerHTML=publicErrorBlock("Country catalog unavailable","The global catalog did not respond.",openGlobalCountryExplorer);return;
+    }
     const params=new URLSearchParams(location.search);const code=params.get("country")||state.country||"KEN";
     await selectGlobalCountry(code,false);
   }
-  function closeGlobalCountryExplorer(){qs("#globalCountryExplorer").hidden=true}
+  function closeGlobalCountryExplorer(){qs("#globalCountryExplorer").hidden=true;if(globalCountryState.selectionController)globalCountryState.selectionController.abort()}
 
   const earthState={mapA:null,mapB:null,baseA:null,baseB:null,layerA:null,layerB:null,layers:[],frames:[],frameIndex:0,timer:null,activeLayer:"true-color",opacity:.72};
 
@@ -556,18 +627,28 @@
     qsa(".nav-item").forEach(b=>b.classList.toggle("active",b.dataset.route===route));
     const [e,t,d]=routeMeta(route);qs("#viewEyebrow").textContent=e;qs("#viewTitle").textContent=t;qs("#viewDescription").textContent=d;
     const panel=qs("#routePanel");
-    if(route==="overview"){panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();return}
-    if(route==="earth"){panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEventStudio();await openEarthStudio();return}
-    if(route==="events-legacy"){panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();await openEventStudio();return}
-    closeEarthStudio();closeEventStudio();
-    qs("#countryIntelligencePanel").hidden=route!=="country";
+
+    if(route==="overview"){
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();return;
+    }
+    if(route==="earth"){
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEventStudio();closeGlobalCountryExplorer();await openEarthStudio();return;
+    }
+    if(route==="events"){
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeGlobalCountryExplorer();await openEventStudio();return;
+    }
+    if(route==="country"){
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();await openGlobalCountryExplorer();return;
+    }
+
+    closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();qs("#countryIntelligencePanel").hidden=true;
     panel.hidden=false;panel.innerHTML=`<div class="loading-block">Loading ${escapeHtml(route)} view…</div>`;
-    if(route==="country-legacy"){await loadLiveCountry(state.country)}
+    if(route==="country-legacy"){
+      qs("#countryIntelligencePanel").hidden=false;panel.hidden=true;await loadLiveCountry(state.country);return;
+    }
     if(route==="events-legacy"){
       const rows=(state.events?.features||[]).slice(0,30);
       panel.innerHTML=`<p class="eyebrow">PUBLIC EVENT RECORDS</p><h2>Latest mapped events</h2><div class="event-list">${rows.map(f=>{const p=f.properties||{};return `<div class="event-row"><span class="event-marker"></span><div><div class="event-title">${escapeHtml(p.title||"Event")}</div><div class="event-meta">${escapeHtml(p.category||"Event")} · ${escapeHtml(p.source||"Source")}</div></div><div class="event-time">${cleanDate(p.observed_at)}</div></div>`}).join("")}</div>`;
-    }else if(route==="country"){
-      panel.innerHTML=`<p class="eyebrow">COUNTRY PROFILE</p><h2>${escapeHtml(names[state.country]||state.country)}</h2><div class="route-grid"><div class="route-card"><h3>Environmental context</h3><p>Satellite imagery, environmental pressure, natural events, land, water, and climate context.</p></div><div class="route-card"><h3>Human development</h3><p>Health, education, poverty, food security, water, sanitation, and decent-work evidence.</p></div><div class="route-card"><h3>Human security</h3><p>Conflict, displacement, civilian protection, humanitarian access, and source-specific limits.</p></div></div>`;
     }else if(route==="compare"){
       const other=state.country==="GHA"?"KEN":"GHA";
       panel.innerHTML=`<p class="eyebrow">COMPARISON VIEW</p><h2>${escapeHtml(names[state.country]||state.country)} and ${escapeHtml(names[other])}</h2><div class="route-grid"><div class="route-card"><h3>Human development</h3><p>Validated connector values remain separate by country, year, unit, and source definition.</p></div><div class="route-card"><h3>Environmental pressure</h3><p>Satellite and indicator context can be aligned without creating a proprietary score.</p></div><div class="route-card"><h3>Humanitarian conditions</h3><p>Missing records remain explicit and do not imply the absence of real-world conditions.</p></div></div>`;
@@ -588,6 +669,7 @@
     qs("#fullscreenButton").addEventListener("click",()=>{const p=qs(".map-panel");if(document.fullscreenElement)document.exitFullscreen();else p.requestFullscreen?.()});
     qs("#shareButton").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("View link copied")});qs("#openNewButton").addEventListener("click",()=>window.open(location.href,"_blank","noopener"));qs("#launchRetry").addEventListener("click",()=>location.reload());qs("#countrySearchButton").addEventListener("click",searchGlobalCountries);
     qs("#countrySearchInput").addEventListener("keydown",e=>{if(e.key==="Enter")searchGlobalCountries()});
+    qs("#countrySearchInput").addEventListener("input",()=>{clearTimeout(globalCountryState.searchTimer);globalCountryState.searchTimer=setTimeout(searchGlobalCountries,320)});
     qs("#countryRegionFilter").addEventListener("change",searchGlobalCountries);
     qs("#globalTrendSelect").addEventListener("change",e=>{const item=globalCountryState.trends.find(x=>x.key===e.target.value);if(item){qs("#globalTrendTitle").textContent=item.label;renderGlobalTrend(item)}});
     qs("#countryShare").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("Country view link copied")});

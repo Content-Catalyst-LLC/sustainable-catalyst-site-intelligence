@@ -6,6 +6,6 @@ def test_public_interface_redesign_assets():
     css = (root / "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.css").read_text()
     assert "renderCountryPublic" in js
     assert "renderCuratedDirectory" in js
-    assert "No validated value" in js
+    assert "No validated public value is currently available." in js
     assert ".scsi-public-domain-grid" in css
     assert ".scsi-directory-grid" in css

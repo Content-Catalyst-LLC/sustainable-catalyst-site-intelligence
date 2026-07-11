@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from .version import APP_VERSION
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from hashlib import sha256
@@ -11,8 +12,8 @@ from urllib.request import Request, urlopen
 import json
 import os
 
-VERSION = "1.18.2"
-ACTOR = "site-intelligence-v1.18.0"
+VERSION = APP_VERSION
+ACTOR = f"site-intelligence-v{VERSION}"
 SOURCE_ENTITY_WORLD_BANK = "sc:source:world-bank-open-data"
 SOFTWARE_ENTITY = "sc:product:site-intelligence"
 

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.18.2
+ * Version: 1.18.3
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,12 +13,13 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.18.2';
+    const VERSION = '1.18.3';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
 
     public function __construct() {
         add_action('admin_menu', [$this, 'admin_menu']);
         add_action('admin_init', [$this, 'register_settings']);
+        add_action('admin_notices', [$this, 'backend_version_notice']);
         add_action('rest_api_init', [$this, 'register_rest_routes']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_assets']);
         add_shortcode('sc_site_intelligence_dashboard', [$this, 'dashboard_shortcode']);
@@ -201,6 +202,52 @@ final class SC_Site_Intelligence_Plugin {
 
     public static function options() {
         return wp_parse_args(get_option(self::OPTION_KEY, []), self::defaults());
+    }
+
+    public function backend_version_notice() {
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+        $options = self::options();
+        $backend = untrailingslashit((string) ($options['backend_url'] ?? ''));
+        if ($backend === '') {
+            return;
+        }
+
+        $cache_key = 'scsi_build_info_' . md5($backend);
+        $build_info = get_transient($cache_key);
+        if (!is_array($build_info)) {
+            $response = wp_remote_get($backend . '/public/build-info', [
+                'timeout' => 4,
+                'redirection' => 2,
+                'headers' => [
+                    'Accept' => 'application/json',
+                    'User-Agent' => 'Sustainable-Catalyst-Site-Intelligence/' . self::VERSION,
+                ],
+            ]);
+            if (is_wp_error($response)) {
+                return;
+            }
+            $code = wp_remote_retrieve_response_code($response);
+            $payload = json_decode(wp_remote_retrieve_body($response), true);
+            if ($code < 200 || $code >= 300 || !is_array($payload)) {
+                return;
+            }
+            $build_info = $payload;
+            set_transient($cache_key, $build_info, 10 * MINUTE_IN_SECONDS);
+        }
+
+        $backend_version = sanitize_text_field((string) ($build_info['backend_version'] ?? $build_info['version'] ?? ''));
+        $expected_plugin = sanitize_text_field((string) ($build_info['expected_wordpress_plugin_version'] ?? ''));
+        if ($backend_version === '') {
+            return;
+        }
+
+        if ($backend_version !== self::VERSION || ($expected_plugin !== '' && $expected_plugin !== self::VERSION)) {
+            echo '<div class="notice notice-warning"><p><strong>Site Intelligence version mismatch.</strong> ';
+            echo 'WordPress plugin: <code>' . esc_html(self::VERSION) . '</code>; backend: <code>' . esc_html($backend_version) . '</code>. ';
+            echo 'Install the matching plugin/backend release, then clear WordPress and Cloudflare caches.</p></div>';
+        }
     }
 
     public function admin_menu() {
@@ -861,7 +908,7 @@ final class SC_Site_Intelligence_Plugin {
             'headers' => [
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json',
-                'User-Agent' => 'Sustainable-Catalyst-Site-Intelligence/1.14.0',
+                'User-Agent' => 'Sustainable-Catalyst-Site-Intelligence/' . self::VERSION,
             ],
         ];
         if (!empty($options['api_token'])) {

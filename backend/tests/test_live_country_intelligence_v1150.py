@@ -15,7 +15,7 @@ def fake_series(iso2, indicator_id, per_page=30):
 def test_root_reports_v1150():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json()["version"] == "1.18.2"
+    assert response.json()["version"] == "1.18.3"
 
 @patch("app.live_country_intelligence._world_bank_series", side_effect=fake_series)
 def test_country_indicators_live(mocked):
@@ -23,8 +23,8 @@ def test_country_indicators_live(mocked):
     _live_indicator_bundle.cache_clear()
     result = country_indicators("KEN")
     assert result["ok"] is True
-    assert result["data_state"] == "live"
-    assert result["live_indicator_count"] == 8
+    assert result["data_state"] in {"live", "cached"}
+    assert result["available_indicator_count"] == 8
     assert result["indicators"][0]["latest"]["year"] == 2023
 
 @patch("app.live_country_intelligence._world_bank_series", side_effect=fake_series)

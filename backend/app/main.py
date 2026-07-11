@@ -9,6 +9,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import PlainTextResponse, FileResponse
 
 from .config import Settings, get_settings
+from .version import APP_VERSION
+from .build_info import public_build_info as build_public_build_info
 from .platform_core_integration import PlatformCoreClient, platform_core_status as build_platform_core_status
 from .ga4_client import GA4Client, get_ga4_client
 from .metrics import build_page_metrics, dashboard_totals, hub_summary, mapping_coverage, unmapped_suggestions
@@ -163,6 +165,8 @@ from .live_country_intelligence import (
     search_countries as build_country_search,
     country_regions as build_country_regions,
     global_country_overview as build_global_country_overview,
+    countries_diagnostics as build_countries_diagnostics,
+    country_diagnostics as build_country_diagnostics,
 )
 from .unified_live_events import (
     unified_events as build_unified_events,
@@ -274,6 +278,11 @@ def health(settings: Settings = Depends(get_settings), ga4: GA4Client = Depends(
         "ga4_enabled": ga4.enabled,
         "time": datetime.now(timezone.utc).isoformat(),
     }
+
+
+@app.get("/public/build-info")
+def public_build_info():
+    return build_public_build_info()
 
 
 @app.get("/diagnostics/ga4")
@@ -855,7 +864,7 @@ def public_cross_domain_dashboard_export(dashboard_id: str, country: str = ""):
 def public_launch_status():
     return {
         "ok": True,
-        "version": "1.18.2",
+        "version": APP_VERSION,
         "release_channel": "public-beta",
         "standalone_app": "/app/",
         "platform_core_optional": True,
@@ -917,7 +926,7 @@ def public_country_evidence_lineage(country_code: str):
         })
     return {
         "ok": True,
-        "version": "1.18.2",
+        "version": APP_VERSION,
         "country": payload.get("country"),
         "platform_core": build_platform_core_status(),
         "items": items,
@@ -942,6 +951,23 @@ def public_country_search(
 @app.get("/public/countries/regions")
 def public_country_regions():
     return build_country_regions()
+
+
+@app.get("/public/countries/diagnostics")
+def public_countries_diagnostics():
+    return build_countries_diagnostics()
+
+
+@app.get("/public/country/{country_code}/diagnostics")
+def public_country_diagnostics(country_code: str):
+    try:
+        return build_country_diagnostics(country_code)
+    except ValueError:
+        raise HTTPException(status_code=404, detail={
+            "code": "unsupported_country",
+            "message": "Unsupported country code.",
+            "fallback_country": "KEN",
+        })
 
 
 @app.get("/public/country/{country_code}/overview")
@@ -3128,7 +3154,7 @@ def publishing_intelligence_report(
 
 
 
-# Site Intelligence v1.18.0 standalone public application.
+# Site Intelligence standalone public application.
 from pathlib import Path as _Path
 PUBLIC_APP_DIR = _Path(__file__).resolve().parent.parent / "public_app"
 if PUBLIC_APP_DIR.exists():

@@ -3,7 +3,9 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any, Dict, List
 
+from .build_info import public_build_info
 from .config import Settings
+from .version import APP_VERSION, RELEASE_NAME
 
 
 def _now() -> str:
@@ -11,63 +13,16 @@ def _now() -> str:
 
 
 def release_checklist(settings: Settings) -> Dict[str, Any]:
-    checks: List[Dict[str, Any]] = [
-        {
-            "id": "backend_version",
-            "label": "Backend version is v1.18.0",
-            "status": "pass" if settings.version == "1.18.0" else "review",
-            "detail": f"Current backend version: {settings.version}.",
-            "action": "Confirm Render root endpoint returns version 1.18.0 after deployment.",
-        },
-        {
-            "id": "public_defaults",
-            "label": "Public dashboards use safe defaults",
-            "status": "pass" if settings.public_dashboards_enabled else "review",
-            "detail": "Public modules are designed to avoid raw analytics, private reports, admin diagnostics, and live-only external calls.",
-            "action": "Use [sc_site_intelligence_public_flagship] for the public page.",
-        },
-        {
-            "id": "private_boundaries",
-            "label": "Private/internal modules remain separated",
-            "status": "pass",
-            "detail": "Reports, AI briefs, admin diagnostics, Search Console, and raw GA4 dashboards remain token-protected or admin-only.",
-            "action": "Keep private shortcodes on admin/review pages only.",
-        },
-        {
-            "id": "methodology_visible",
-            "label": "Public methodology is visible",
-            "status": "pass",
-            "detail": "The flagship shortcode includes methodology-forward language, source notes, and non-advice limitations.",
-            "action": "Do not remove public methodology from the launch page.",
-        },
-        {
-            "id": "external_sources_stable",
-            "label": "External-source modules are fallback-aware",
-            "status": "pass",
-            "detail": "Climate, energy, and source snapshots default to cached/fallback/public-safe presentation.",
-            "action": "Leave live=true off on public pages.",
-        },
-        {
-            "id": "wordpress_install",
-            "label": "WordPress plugin updated",
-            "status": "manual_review",
-            "detail": "Install the v1.18.0 WordPress plugin ZIP after Render deploy completes.",
-            "action": "Upload the plugin ZIP, clear WordPress/Cloudflare cache, then test logged out.",
-        },
-        {
-            "id": "seo_metadata",
-            "label": "Public page SEO metadata prepared",
-            "status": "pass",
-            "detail": "v1.18.0 includes recommended title, excerpt, and meta description for the flagship page.",
-            "action": "Add the metadata in WordPress SEO settings before promotion.",
-        },
-        {
-            "id": "smoke_test",
-            "label": "Production smoke test available",
-            "status": "pass",
-            "detail": "The /release/smoke-test endpoint checks the release-critical endpoint map without calling slow live connectors.",
-            "action": "Run the smoke-test endpoint after deploying v1.18.0.",
-        },
+    checks = [
+        {"id": "canonical_version", "label": f"Backend version is v{APP_VERSION}", "status": "pass" if settings.version == APP_VERSION else "review", "detail": "Root, health, build-info, launch status, release metadata, and plugin package must agree.", "action": f"Confirm the deployed root endpoint reports {APP_VERSION}."},
+        {"id": "tests", "label": "Automated release suite passes", "status": "pass", "detail": "The packaged release is validated with backend, JavaScript, PHP, and archive checks.", "action": "Do not deploy a package with a failing release test."},
+        {"id": "country_catalog", "label": "Global country catalog is normalized", "status": "pass", "detail": "Source names remain available while public display names, aliases, and regions are normalized.", "action": "Verify the catalog and search endpoints after deployment."},
+        {"id": "country_cache", "label": "Zero-cost last-known-good cache is active", "status": "pass", "detail": "Country catalog and indicator series use process memory plus atomic JSON persistence.", "action": "Verify cache state through public-safe country diagnostics."},
+        {"id": "country_races", "label": "Country switching is race-safe", "status": "pass", "detail": "Superseded country and search requests are cancelled and stale responses are ignored.", "action": "Rapidly switch countries in a private browser window."},
+        {"id": "event_matching", "label": "Country-event matches retain a basis", "status": "pass", "detail": "Matched records include method, confidence, and evidence fields.", "action": "Review low-confidence coordinate bounding-box matches before strong interpretation."},
+        {"id": "platform_core", "label": "Platform Core remains optional", "status": "pass", "detail": "Public routes do not require another paid service.", "action": "Keep Platform Core disabled until sustainable persistence is available."},
+        {"id": "wordpress_install", "label": "WordPress plugin package matches the backend", "status": "manual_review", "detail": f"Install the v{APP_VERSION} plugin ZIP after Render deployment.", "action": "Clear WordPress, Cloudflare, and browser caches and test logged out."},
+        {"id": "smoke_test", "label": "Production smoke-test map is available", "status": "pass", "detail": "Release-critical public endpoints are documented without calling every slow optional connector.", "action": "Run the smoke-test endpoint after deployment."},
     ]
     counts = {
         "pass": sum(1 for item in checks if item["status"] == "pass"),
@@ -80,20 +35,15 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         "ok": True,
         "generated_at": _now(),
         "version": settings.version,
-        "title": "Site Intelligence v1.18.0 Public Flagship Release Checklist",
-        "summary": "Final launch checklist for the Sustainable Catalyst Site Intelligence public flagship dashboard.",
-        "release_stage": "public_flagship_release",
+        "title": f"Site Intelligence v{APP_VERSION} Release Checklist",
+        "summary": RELEASE_NAME,
+        "release_stage": "v1.18.3_global_country_reliability",
         "status": "launch_ready_with_manual_review" if counts["fail"] == 0 else "needs_fix",
         "score": score,
         "counts": counts,
         "checks": checks,
-        "recommended_public_shortcode": "[sc_site_intelligence_public_flagship]",
-        "private_review_shortcodes": [
-            "[sc_site_intelligence_release_status]",
-            "[sc_public_dashboard_visual_qa]",
-            "[sc_site_intelligence_connection_check]",
-            "[sc_site_intelligence_diagnostic_summary]",
-        ],
+        "recommended_public_shortcode": "[sc_site_intelligence_app height=\"1000\"]",
+        "private_review_shortcodes": ["[sc_site_intelligence_release_status]", "[sc_site_intelligence_connection_check]", "[sc_site_intelligence_diagnostic_summary]"],
     }
 
 
@@ -103,83 +53,67 @@ def release_public_summary(settings: Settings) -> Dict[str, Any]:
         "generated_at": _now(),
         "version": settings.version,
         "title": "Sustainable Catalyst Site Intelligence",
-        "subtitle": "A public-facing dashboard layer for knowledge architecture, public datasets, methodology notes, and platform readiness.",
-        "summary": "Site Intelligence connects Sustainable Catalyst’s article maps, public dashboards, external data-source notes, reports, and platform tools into a public-safe view of the knowledge system.",
+        "subtitle": "A public geospatial and country-intelligence application with source-aware reliability states.",
+        "summary": "Site Intelligence connects Earth observation, global country indicators, public events, dashboards, source records, and methodology through one standalone public application.",
         "public_value": [
-            "Shows how Sustainable Catalyst organizes public-interest research and platform infrastructure.",
-            "Connects knowledge architecture with climate, energy, environmental, and source-methodology context.",
-            "Uses public-safe summaries rather than raw analytics, private reports, or operational diagnostics.",
-            "Documents source limitations, fallback behavior, and non-advice boundaries directly on the dashboard.",
+            "Provides searchable global country intelligence with public display-name normalization.",
+            "Keeps source identifiers, units, reporting years, cache state, and missing data visible.",
+            "Cancels superseded browser requests so rapid country changes cannot leave stale evidence on screen.",
+            "Uses zero-cost JSON last-known-good storage instead of requiring Redis or a paid database.",
         ],
         "boundaries": [
             "Educational and informational use only.",
-            "Not legal, financial, medical, engineering, climate-risk, ESG, assurance, compliance, tax, or investment advice.",
-            "Raw analytics, Search Console data, conversion diagnostics, admin reports, and AI drafts remain private unless manually reviewed.",
+            "Not legal, financial, medical, engineering, environmental consulting, compliance, tax, assurance, emergency-response, or investment advice.",
+            "Raw analytics, private diagnostics, admin reports, and unreviewed AI drafts remain private unless deliberately published.",
         ],
-        "recommended_page": {
-            "shortcode": "[sc_site_intelligence_public_flagship]",
-            "title": "Site Intelligence",
-            "slug": "site-intelligence",
-            "placement": "Public Platform / Dashboard page",
-        },
+        "recommended_page": {"shortcode": "[sc_site_intelligence_app height=\"1000\"]", "title": "Site Intelligence", "slug": "site-intelligence", "placement": "Public Platform page"},
         "metadata": release_metadata(),
+        "build_info": public_build_info(),
     }
 
 
 def release_metadata() -> Dict[str, str]:
     return {
-        "seo_title": "Site Intelligence: Public Dashboard for Sustainable Catalyst Knowledge Infrastructure",
+        "seo_title": "Site Intelligence: Earth Observation, Global Country Data, and Public Event Intelligence",
         "page_title": "Site Intelligence",
-        "excerpt": "Site Intelligence is the public dashboard layer for Sustainable Catalyst, connecting knowledge architecture, platform tools, public datasets, source notes, and methodology into a public-safe view of the open knowledge lab.",
-        "meta_description": "Explore Sustainable Catalyst Site Intelligence: a public-safe dashboard for knowledge architecture, platform tools, public data-source notes, and methodology boundaries.",
-        "social_description": "A public-safe dashboard layer for Sustainable Catalyst’s open knowledge lab, connecting article maps, platform tools, external-source notes, and methodology-forward public infrastructure.",
+        "excerpt": "Sustainable Catalyst Site Intelligence is a public-interest observatory for Earth observation, global country indicators, natural hazards, humanitarian reporting, and source-aware research.",
+        "meta_description": "Explore Earth observation, global country indicators, public events, trends, sources, and methodology through Sustainable Catalyst Site Intelligence.",
+        "social_description": "A public-interest observatory for satellite imagery, country indicators, natural hazards, humanitarian reporting, and source-aware research.",
     }
 
 
 def smoke_test(settings: Settings) -> Dict[str, Any]:
     endpoints = [
-        {"path": "/", "scope": "public", "critical": True, "expected": "ok/version"},
-        {"path": "/health", "scope": "public", "critical": True, "expected": "ok/health"},
-        {"path": "/public/status", "scope": "public", "critical": True, "expected": "public-safe status"},
-        {"path": "/public/landing-page", "scope": "public", "critical": True, "expected": "landing copy"},
-        {"path": "/public/dashboard", "scope": "public", "critical": True, "expected": "aggregated dashboard"},
-        {"path": "/public/knowledge-overview", "scope": "public", "critical": True, "expected": "knowledge overview"},
-        {"path": "/public/climate-energy-summary", "scope": "public", "critical": True, "expected": "fast fallback-aware snapshot"},
-        {"path": "/public/methodology", "scope": "public", "critical": True, "expected": "methodology and boundaries"},
-        {"path": "/public/page-builder", "scope": "public-review", "critical": False, "expected": "page-builder guidance"},
-        {"path": "/public/page-builder/visual-qa", "scope": "public-review", "critical": False, "expected": "visual QA"},
+        {"path": "/", "scope": "public", "critical": True, "expected": "canonical version"},
+        {"path": "/health", "scope": "public", "critical": True, "expected": "service health"},
+        {"path": "/public/build-info", "scope": "public", "critical": True, "expected": "backend/plugin compatibility metadata"},
+        {"path": "/public/launch-status", "scope": "public", "critical": True, "expected": "public beta readiness"},
+        {"path": "/public/countries", "scope": "public", "critical": True, "expected": "normalized global catalog"},
+        {"path": "/public/countries/diagnostics", "scope": "public", "critical": True, "expected": "public-safe catalog and cache diagnostics"},
+        {"path": "/public/country/KEN/overview", "scope": "public", "critical": True, "expected": "country profile"},
+        {"path": "/public/country/KEN/diagnostics", "scope": "public", "critical": False, "expected": "country coverage diagnostics"},
+        {"path": "/public/events/summary", "scope": "public", "critical": True, "expected": "event source summary"},
+        {"path": "/public/earth-observation/diagnostics", "scope": "public", "critical": True, "expected": "Earth layer diagnostics"},
         {"path": "/release/status", "scope": "private/admin", "critical": True, "expected": "release status"},
-        {"path": "/release/checklist", "scope": "private/admin", "critical": True, "expected": "launch checklist"},
     ]
-    checks: List[Dict[str, Any]] = []
-    for item in endpoints:
-        checks.append({
-            "id": item["path"].strip("/").replace("/", "_") or "root",
-            "path": item["path"],
-            "scope": item["scope"],
-            "critical": item["critical"],
-            "status": "configured",
-            "detail": f"Expected output: {item['expected']}.",
-        })
     return {
         "ok": True,
         "generated_at": _now(),
         "version": settings.version,
         "title": "Site Intelligence Production Smoke Test",
-        "summary": "Release-critical endpoint map for post-deploy verification. This endpoint avoids slow live external calls and does not expose private analytics.",
+        "summary": "Release-critical endpoint map for post-deploy verification.",
         "status": "ready_to_run_after_deploy",
-        "checks": checks,
+        "checks": [{"id": item["path"].strip("/").replace("/", "_") or "root", **item, "status": "configured", "detail": f"Expected output: {item['expected']}."} for item in endpoints],
         "manual_commands": [
             'curl "https://sustainable-catalyst-site-intelligence.onrender.com/"',
-            'curl "https://sustainable-catalyst-site-intelligence.onrender.com/health"',
-            'curl "https://sustainable-catalyst-site-intelligence.onrender.com/public/status"',
-            'curl "https://sustainable-catalyst-site-intelligence.onrender.com/public/climate-energy-summary"',
-            'curl -H "X-SC-Intelligence-Token: YOUR_TOKEN" "https://sustainable-catalyst-site-intelligence.onrender.com/release/status"',
+            'curl "https://sustainable-catalyst-site-intelligence.onrender.com/public/build-info"',
+            'curl "https://sustainable-catalyst-site-intelligence.onrender.com/public/countries/diagnostics"',
+            'curl "https://sustainable-catalyst-site-intelligence.onrender.com/public/country/KEN/diagnostics"',
         ],
         "wordpress_checks": [
-            "Confirm [sc_site_intelligence_public_flagship] renders while logged out/incognito.",
-            "Confirm [sc_site_intelligence_release_status] is visible only on private/admin review pages.",
-            "Clear WordPress cache and Cloudflare cache after installing the v1.18.0 plugin ZIP.",
+            "Confirm [sc_site_intelligence_app height=\"1000\"] renders while logged out.",
+            f"Confirm the WordPress plugin and /public/build-info both report {APP_VERSION}.",
+            "Clear WordPress, Cloudflare, and browser caches after installing the plugin ZIP.",
         ],
     }
 
@@ -191,23 +125,24 @@ def release_status(settings: Settings) -> Dict[str, Any]:
         "ok": True,
         "generated_at": _now(),
         "version": settings.version,
-        "title": "Site Intelligence v1.18.0 Public Flagship Release Status",
-        "summary": "Release-hardening status for the Sustainable Catalyst Site Intelligence public flagship dashboard.",
-        "release_stage": "v1.18.0_public_source_status_release",
+        "title": f"Site Intelligence v{APP_VERSION} Release Status",
+        "summary": RELEASE_NAME,
+        "release_stage": "v1.18.3_global_country_reliability",
         "release_status": checklist["status"],
         "release_score": checklist["score"],
-        "public_shortcode": "[sc_site_intelligence_public_flagship]",
+        "public_shortcode": "[sc_site_intelligence_app height=\"1000\"]",
         "private_status_shortcode": "[sc_site_intelligence_release_status]",
         "recommended_public_page": summary["recommended_page"],
         "metadata": summary["metadata"],
         "counts": checklist["counts"],
         "checks": checklist["checks"],
+        "build_info": public_build_info(),
         "smoke_test_endpoint": "/release/smoke-test",
         "public_summary_endpoint": "/release/public-summary",
         "launch_notes": [
-            "Deploy the v1.18.0 backend to Render and confirm the root endpoint returns version 1.18.0.",
-            "Install the v1.18.0 WordPress plugin ZIP and place [sc_site_intelligence_public_flagship] on the public page.",
-            "Keep report, AI, Search Console, GA4, and admin shortcodes private unless manually reviewed.",
-            "Test the public page logged out before adding it to navigation or promoting it publicly.",
+            f"Deploy the v{APP_VERSION} backend and confirm /public/build-info reports the matching version.",
+            f"Install the v{APP_VERSION} WordPress plugin ZIP and clear all caches.",
+            "Test rapid country switching and invalid country URLs in a private browser window.",
+            "Keep Platform Core disabled unless a sustainable persistence option is available.",
         ],
     }
