@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="dark light">
   <meta name="theme-color" content="#111111">
-  <title>Sustainable Catalyst Site Intelligence | Public-Interest Observatory</title>
-  <meta name="description" content="A public-interest observatory for Earth observation, country indicators, live events, thematic dashboards, comparative research, and source-aware briefs.">
+  <title>Sustainable Catalyst Site Intelligence | Auditable Public Observatory</title>
+  <meta name="description" content="An auditable public observatory for Earth observation, country indicators, live events, comparative research, evidence lineage, and source-aware briefs.">
   <meta property="og:title" content="Sustainable Catalyst Site Intelligence">
-  <meta property="og:description" content="Public evidence, Earth observation, country intelligence, live events, and source-aware research paths.">
+  <meta property="og:description" content="Public evidence, source lineage, Earth observation, country intelligence, live events, and verifiable research paths.">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://unpkg.com" crossorigin>
@@ -56,6 +56,7 @@
 
     <aside id="siteNavigation" class="sidebar" aria-label="Site Intelligence sections">
       <nav id="primaryNavigation" aria-label="Research workspaces">
+        <button class="nav-item" type="button" data-route="observatory"><span>Audit</span><small>Evidence and lineage</small></button>
         <button class="nav-item" type="button" data-route="launch"><span>Launch</span><small>Product and portfolio</small></button>
         <button class="nav-item active" type="button" data-route="overview" aria-current="page"><span>Overview</span><small>Live map and signals</small></button>
         <button class="nav-item" type="button" data-route="earth"><span>Earth</span><small>Satellite comparison</small></button>
@@ -67,7 +68,7 @@
         <button class="nav-item" type="button" data-route="sources"><span>Sources</span><small>Provenance and coverage</small></button>
         <button class="nav-item" type="button" data-route="saved"><span>Saved</span><small>Local research paths</small></button>
       </nav>
-      <div class="sidebar-note"><span class="public-beta-badge public-release-badge">Public Release</span>
+      <div class="sidebar-note"><span class="public-beta-badge public-release-badge">Auditable Public Observatory</span>
         <strong>Public evidence, not automated judgment.</strong>
         <span>Dates, source definitions, and missing data remain visible.</span>
       </div>
@@ -145,13 +146,13 @@
           </div>
           <div class="launch-release-card" aria-label="Public release status">
             <span>PUBLIC RELEASE</span>
-            <strong id="launchPortfolioVersion">v1.25.0</strong>
+            <strong id="launchPortfolioVersion">v2.0.0</strong>
             <small>Source-aware observatory · MIT licensed</small>
           </div>
         </div>
 
         <div class="launch-proof-grid" aria-label="Portfolio summary">
-          <article><span>Research workspaces</span><strong id="launchWorkspaceCount">9</strong><small>One coherent public application</small></article>
+          <article><span>Research workspaces</span><strong id="launchWorkspaceCount">10</strong><small>One coherent public application</small></article>
           <article><span>Evidence model</span><strong>Source-aware</strong><small>Dates, units, states, and limits visible</small></article>
           <article><span>Persistence</span><strong>Browser-local</strong><small>No hosted user-profile requirement</small></article>
           <article><span>Platform Core</span><strong>Optional</strong><small>Public reading remains independent</small></article>
@@ -170,6 +171,7 @@
           <article><span>06</span><h3>Briefs and Exports</h3><p>Generate deterministic briefs, evidence manifests, tables, and print-ready public records.</p><button type="button" class="text-button" data-route-link="briefing">Open briefing studio</button></article>
           <article><span>07</span><h3>Sources and Methods</h3><p>Inspect source coverage, delivery state, methodology, transformations, and known limits.</p><button type="button" class="text-button" data-route-link="sources">Review sources</button></article>
           <article><span>08</span><h3>Saved Research Paths</h3><p>Preserve and exchange public interface state without an account or hosted profile database.</p><button type="button" class="text-button" data-route-link="saved">Open saved views</button></article>
+          <article><span>09</span><h3>Audit and Lineage</h3><p>Inspect public evidence records, source-method relationships, integrity digests, release history, and verification boundaries.</p><button type="button" class="text-button" data-route-link="observatory">Open audit workspace</button></article>
         </div>
 
         <div class="launch-architecture-grid">
@@ -204,6 +206,66 @@
             <a class="ghost-button" href="/public/launch-profile/portfolio?format=json">Open portfolio JSON</a>
             <a class="ghost-button" href="/public/launch-profile/materials">Open launch materials JSON</a>
           </div>
+        </div>
+      </section>
+
+      <section id="auditablePublicObservatory" class="public-launch-portfolio auditable-observatory" hidden aria-busy="false">
+        <div class="launch-portfolio-hero">
+          <div>
+            <p class="eyebrow">AUDITABLE PUBLIC OBSERVATORY · VERSION 2.0</p>
+            <h2>Every public output should be traceable to evidence, method, and release</h2>
+            <p>Review registered evidence records, source and methodology links, lineage relationships, integrity digests, release milestones, and the limits of public verification.</p>
+            <div class="launch-portfolio-actions">
+              <a class="earth-primary-button launch-link-button" href="/public/observatory/export?format=markdown">Download audit packet</a>
+              <a class="ghost-button launch-link-button" href="/public/observatory/export?format=json">Open audit JSON</a>
+              <button class="ghost-button" type="button" data-route-link="sources">Review sources and methods</button>
+            </div>
+          </div>
+          <div class="launch-release-card" aria-label="Observatory release status">
+            <span>AUDITABLE PUBLIC OBSERVATORY</span>
+            <strong id="observatoryVersion">v2.0.0</strong>
+            <small>SHA-256 integrity · public lineage · no persistence</small>
+          </div>
+        </div>
+
+        <div class="launch-proof-grid" aria-label="Observatory audit summary">
+          <article><span>Audit records</span><strong id="observatoryRecordCount">—</strong><small>Registered public contracts</small></article>
+          <article><span>Source records</span><strong id="observatorySourceCount">—</strong><small>Public source identities</small></article>
+          <article><span>Methods</span><strong id="observatoryMethodCount">—</strong><small>Documented behavior rules</small></article>
+          <article><span>Verification</span><strong>Structural</strong><small>Integrity, not truth certification</small></article>
+        </div>
+
+        <div class="launch-section-head">
+          <div><p class="eyebrow">PUBLIC EVIDENCE LEDGER</p><h2>Registered audit records</h2></div>
+          <p>Each record publishes its schema, route, source references, methodology references, verification level, limitations, and canonical SHA-256 digest.</p>
+        </div>
+        <div id="observatoryAuditCatalog" class="observatory-audit-grid" aria-live="polite"><div class="loading-block">Loading the public evidence ledger…</div></div>
+
+        <div class="launch-architecture-grid">
+          <article>
+            <p class="eyebrow">LINEAGE GRAPH</p>
+            <h2>Source → method → artifact → workspace</h2>
+            <p id="observatoryLineageSummary">Loading lineage relationships…</p>
+            <div class="launch-stack-list" id="observatoryLineageTypes"><span>Public sources</span><span>Methodology records</span><span>Audit artifacts</span><span>Research workspaces</span></div>
+          </article>
+          <article>
+            <p class="eyebrow">INTEGRITY CONTRACT</p>
+            <h2>Detect changes without overstating proof</h2>
+            <p id="observatoryVerificationSummary">Loading verification rules…</p>
+            <div class="launch-stack-list"><span>Canonical UTF-8 JSON</span><span>Sorted object keys</span><span>SHA-256 digest</span><span>No submitted payload persistence</span></div>
+          </article>
+        </div>
+
+        <div class="launch-trust-panel">
+          <div><p class="eyebrow">VERIFICATION BOUNDARY</p><h2>Integrity is not authenticity, truth, or certification</h2></div>
+          <p>A matching digest can show that a canonical payload has not changed relative to an expected digest. It does not prove factual correctness, publisher identity, legal authenticity, source availability, or completeness.</p>
+          <a class="ghost-button launch-link-button" href="/public/observatory/verification">Open verification contract</a>
+        </div>
+
+        <div class="launch-materials-panel">
+          <div><p class="eyebrow">RELEASE LEDGER</p><h2>How the observatory became auditable</h2></div>
+          <p id="observatoryStatus" role="status" aria-live="polite">Loading observatory profile…</p>
+          <div id="observatoryReleaseLedger" class="observatory-release-ledger"></div>
         </div>
       </section>
 

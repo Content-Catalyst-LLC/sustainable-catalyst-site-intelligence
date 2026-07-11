@@ -48,7 +48,7 @@
   }
 
   const state = {map:null,base:null,imagery:null,markers:null,heat:null,layers:null,events:null,country:"KEN",route:"overview"};
-  const APP_VERSION="1.25.0";
+  const APP_VERSION="2.0.0";
   const SAVED_VIEW_SCHEMA="sc-saved-view/1.0";
   const SAVED_VIEW_STORAGE_KEY="sc_site_intelligence_saved_views_v1";
   const SAVED_VIEW_LIMIT=50;
@@ -146,6 +146,7 @@
   }
   function routeMeta(route){
     return {
+      observatory:["AUDITABLE PUBLIC OBSERVATORY","Evidence, lineage, and integrity","Inspect registered public evidence records, source and methodology lineage, canonical digests, release history, and verification boundaries."],
       launch:["PUBLIC LAUNCH AND PORTFOLIO","Site Intelligence","Explore the public product, technical architecture, responsible-use boundaries, and launch materials."],
       overview:["LIVE INTELLIGENCE WORKSPACE","Climate and Human Vulnerability","Satellite context, natural events, environmental pressure, and country evidence in one navigable view."],
       earth:["EARTH OBSERVATION STUDIO","Compare the planet through time","Explore satellite-derived imagery, environmental layers, date comparison, timeline playback, and exportable visual views."],
@@ -1129,6 +1130,7 @@
 
   const savedViewsState={items:[],storageAvailable:true,pendingManifest:null};
   const savedViewDefinitions={
+    observatory:{label:"Auditable Public Observatory",keys:[]},
     overview:{label:"Overview",keys:["country","imageryLayer","imageryDate","mapLat","mapLng","mapZoom"]},
     earth:{label:"Earth Observation",keys:["earthLayer","dateA","dateB","opacity","swipe","mapLat","mapLng","mapZoom"]},
     country:{label:"Country Intelligence",keys:["country","trend","mapLat","mapLng","mapZoom"]},
@@ -1287,6 +1289,24 @@
   }
   function closePublicLaunchPortfolio(){const panel=qs("#publicLaunchPortfolio");if(panel)panel.hidden=true;document.body.classList.remove("portfolio-route");const button=qs("#saveViewButton");if(button)button.disabled=false}
 
+  function renderObservatoryAuditCatalog(records){
+    const target=qs("#observatoryAuditCatalog");if(!target)return;
+    if(!records?.length){target.innerHTML='<div class="empty-state"><div><strong>No audit records are registered</strong><span>The public evidence ledger is temporarily unavailable.</span></div></div>';return}
+    target.innerHTML=records.map(record=>`<article class="observatory-audit-card"><div class="saved-view-card-head"><div><span>${escapeHtml(record.artifact_type||"audit record")}</span><h3>${escapeHtml(record.title||record.artifact_id)}</h3></div><small>${escapeHtml(record.verification_level||"registered")}</small></div><p>${escapeHtml((record.limitations||[])[0]||"Public audit contract")}</p><div class="observatory-audit-meta"><span>${(record.source_ids||[]).length} sources</span><span>${(record.methodology_ids||[]).length} methods</span><a href="${escapeHtml(record.route||"/app/?view=observatory")}">Open workspace</a></div><code title="Full SHA-256 digest">${escapeHtml(record.integrity?.digest||"Digest unavailable")}</code></article>`).join("")
+  }
+  async function openAuditablePublicObservatory(){
+    const panel=qs("#auditablePublicObservatory");if(!panel)return;panel.hidden=false;panel.setAttribute("aria-busy","true");document.body.classList.add("portfolio-route");qs("#saveViewButton").disabled=true;
+    try{
+      const [profile,catalog,lineage,verification,ledger]=await Promise.all([
+        apiWithRetry("/public/observatory",2),apiWithRetry("/public/observatory/catalog",2),apiWithRetry("/public/observatory/lineage",2),apiWithRetry("/public/observatory/verification",2),apiWithRetry("/public/observatory/release-ledger",2)
+      ]);
+      qs("#observatoryVersion").textContent=`v${profile.application_version||APP_VERSION}`;qs("#observatoryRecordCount").textContent=String(profile.counts?.audit_artifacts??catalog.record_count??"—");qs("#observatorySourceCount").textContent=String(profile.counts?.registered_sources??"—");qs("#observatoryMethodCount").textContent=String(profile.counts?.methodology_records??"—");
+      renderObservatoryAuditCatalog(catalog.records||[]);qs("#observatoryLineageSummary").textContent=`${lineage.nodes?.length||0} public nodes and ${lineage.edges?.length||0} documented lineage relationships are registered in the current release.`;qs("#observatoryVerificationSummary").textContent=`${verification.algorithm?.toUpperCase()||"SHA-256"} digests use ${verification.canonicalization||"canonical JSON"}. Submitted verification payloads are not persisted.`;qs("#observatoryReleaseLedger").innerHTML=(ledger.entries||[]).map(item=>`<div class="observatory-ledger-row"><strong>v${escapeHtml(item.version)}</strong><span>${escapeHtml(item.title)}</span><small>${escapeHtml(item.audit_contribution)}</small></div>`).join("");qs("#observatoryStatus").textContent=`Observatory profile loaded · ${profile.counts?.workspaces||10} workspaces · ${catalog.record_count||0} audit records · ${profile.release_status||"auditable-public-observatory"}.`;
+    }catch{qs("#observatoryStatus").textContent="The static observatory workspace is available. One or more public audit endpoints could not be refreshed.";renderObservatoryAuditCatalog([])}
+    finally{panel.setAttribute("aria-busy","false");reportHeight()}
+  }
+  function closeAuditablePublicObservatory(){const panel=qs("#auditablePublicObservatory");if(panel)panel.hidden=true;const button=qs("#saveViewButton");if(button)button.disabled=false}
+
   async function setRoute(route){
     qs("#main").classList.remove("route-enter");void qs("#main").offsetWidth;qs("#main").classList.add("route-enter");
     state.route=route;
@@ -1294,7 +1314,11 @@
     const [e,t,d]=routeMeta(route);qs("#viewEyebrow").textContent=e;qs("#viewTitle").textContent=t;qs("#viewDescription").textContent=d;
     const panel=qs("#routePanel");
     if(route!=="launch")closePublicLaunchPortfolio();
+    if(route!=="observatory")closeAuditablePublicObservatory();
 
+    if(route==="observatory"){
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();await openAuditablePublicObservatory();return;
+    }
     if(route==="launch"){
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();await openPublicLaunchPortfolio();return;
     }
@@ -1415,7 +1439,7 @@
     qs("#savedCreate").addEventListener("click",openSaveViewDialog);qs("#savedImport").addEventListener("click",()=>qs("#savedImportFile").click());qs("#savedImportFile").addEventListener("change",event=>{const file=event.target.files?.[0];importSavedViewFile(file);event.target.value=""});qs("#savedExportAll").addEventListener("click",()=>downloadSavedJson({schema:"sc-saved-view-collection/1.0",application_version:APP_VERSION,exported_at:savedIso(),views:savedViewsState.items},"site-intelligence-saved-views.json"));qs("#savedClearAll").addEventListener("click",()=>{if(!savedViewsState.items.length)return;if(confirm("Delete all locally saved Site Intelligence views from this browser?")){savedViewsState.items=[];try{persistSavedViews();renderSavedViews();toast("Local saved views cleared")}catch{}}});qs("#saveViewCancel").addEventListener("click",()=>qs("#saveViewDialog").close());qs("#saveViewForm").addEventListener("submit",event=>{event.preventDefault();if(saveCurrentManifest(qs("#saveViewName").value))qs("#saveViewDialog").close()});
     qs("#closeEvidenceDrawer").addEventListener("click",closeEvidenceDrawer);qs("#evidenceBackdrop").addEventListener("click",closeEvidenceDrawer);document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeEvidenceDrawer();setMobileNavigation(false,{restoreFocus:true})}});
     window.matchMedia("(max-width: 760px)").addEventListener?.("change",event=>{if(!event.matches)setMobileNavigation(false)});
-    const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const requestedView=params.get("view")||"overview";const initialView=[...Object.keys(savedViewDefinitions),"saved","launch"].includes(requestedView)?requestedView:"overview";const invalidRequestedView=requestedView!==initialView;qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";if(params.get("imageryDate"))qs("#dateSelect").value=params.get("imageryDate");try{setLaunch("Loading satellite imagery.",50);await loadLayers();await setImagery(params.get("imageryLayer")||"true-color");setLaunch("Connecting to live events and country evidence.",68);await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);setLaunch("Preparing the workspace.",88);await setRoute(initialView);applySharedControlState(initialView,params);finishLaunch();if(invalidRequestedView)toast("The requested view is unavailable; Overview was opened instead.")}
+    const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const requestedView=params.get("view")||"overview";const initialView=[...Object.keys(savedViewDefinitions),"saved","launch","observatory"].includes(requestedView)?requestedView:"overview";const invalidRequestedView=requestedView!==initialView;qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";if(params.get("imageryDate"))qs("#dateSelect").value=params.get("imageryDate");try{setLaunch("Loading satellite imagery.",50);await loadLayers();await setImagery(params.get("imageryLayer")||"true-color");setLaunch("Connecting to live events and country evidence.",68);await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);setLaunch("Preparing the workspace.",88);await setRoute(initialView);applySharedControlState(initialView,params);finishLaunch();if(invalidRequestedView)toast("The requested view is unavailable; Overview was opened instead.")}
     catch(e){qs("#statusText").textContent="Partial public data";toast("Some optional public data is temporarily unavailable.");finishLaunch()}
   }
   document.addEventListener("DOMContentLoaded",init);

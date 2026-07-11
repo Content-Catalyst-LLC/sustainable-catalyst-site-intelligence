@@ -728,3 +728,18 @@ body.portfolio-route .map-panel,body.portfolio-route .metric-grid,body.portfolio
 .launch-trust-panel{display:grid;grid-template-columns:minmax(230px,.6fr) 1fr auto;gap:22px;align-items:center;padding:26px;border:1px solid rgba(255,42,47,.22);border-radius:20px;background:linear-gradient(135deg,rgba(255,42,47,.08),rgba(255,255,255,.02))}.launch-trust-panel p{color:#aab4c0;line-height:1.7}.launch-materials-panel>p{color:#aab4c0;line-height:1.65}
 @media(max-width:1180px){.launch-feature-grid{grid-template-columns:repeat(2,1fr)}.launch-proof-grid{grid-template-columns:repeat(2,1fr)}.launch-trust-panel{grid-template-columns:1fr}.launch-trust-panel .ghost-button{justify-self:start}}
 @media(max-width:760px){.launch-portfolio-hero,.launch-section-head,.launch-architecture-grid{grid-template-columns:1fr}.launch-portfolio-hero{padding:24px 19px}.launch-release-card{min-height:170px}.launch-feature-grid,.launch-proof-grid{grid-template-columns:1fr}.launch-feature-grid article{min-height:0}.launch-process-list li{grid-template-columns:1fr;gap:4px}.launch-portfolio-actions .ghost-button,.launch-portfolio-actions .earth-primary-button,.launch-link-button,.launch-material-actions .ghost-button{width:100%;justify-content:center}.public-launch-portfolio{gap:16px}}
+
+/* v2.0.0 — Auditable Public Observatory */
+.auditable-observatory{--audit-line:rgba(255,255,255,.13)}
+.observatory-audit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:20px 0 34px}
+.observatory-audit-card{display:flex;flex-direction:column;gap:12px;min-width:0;padding:20px;border:1px solid var(--audit-line);border-radius:18px;background:rgba(255,255,255,.035)}
+.observatory-audit-card h3,.observatory-audit-card p{margin:0}
+.observatory-audit-card p{color:var(--muted);line-height:1.55}
+.observatory-audit-card code{display:block;max-width:100%;padding:10px 12px;overflow:auto;border:1px solid var(--audit-line);border-radius:10px;background:rgba(0,0,0,.28);font-size:.72rem;white-space:nowrap}
+.observatory-audit-meta{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;font-size:.78rem;color:var(--muted)}
+.observatory-audit-meta a{margin-left:auto;color:inherit;text-underline-offset:3px}
+.observatory-release-ledger{display:grid;gap:8px;margin-top:18px}
+.observatory-ledger-row{display:grid;grid-template-columns:72px minmax(150px,.7fr) minmax(240px,1.3fr);gap:14px;align-items:start;padding:12px 0;border-top:1px solid var(--audit-line)}
+.observatory-ledger-row span{font-weight:700}.observatory-ledger-row small{color:var(--muted);line-height:1.45}
+@media(max-width:760px){.observatory-audit-grid{grid-template-columns:1fr}.observatory-ledger-row{grid-template-columns:64px 1fr}.observatory-ledger-row small{grid-column:1/-1}.observatory-audit-meta a{margin-left:0;width:100%}}
+@media(forced-colors:active){.observatory-audit-card,.observatory-audit-card code{border:1px solid CanvasText}}

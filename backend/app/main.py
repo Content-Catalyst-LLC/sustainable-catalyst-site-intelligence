@@ -233,6 +233,19 @@ from .public_launch_portfolio import (
     portfolio_manifest as build_portfolio_manifest,
     portfolio_markdown as build_portfolio_markdown,
 )
+from .auditable_public_observatory import (
+    observatory_profile as build_observatory_profile,
+    audit_catalog as build_observatory_catalog,
+    audit_record as build_observatory_audit_record,
+    lineage_graph as build_observatory_lineage,
+    verification_contract as build_observatory_verification,
+    verify_payload as verify_observatory_payload,
+    release_ledger as build_observatory_release_ledger,
+    audit_packet as build_observatory_audit_packet,
+    audit_packet_markdown as build_observatory_audit_packet_markdown,
+    observatory_diagnostics as build_observatory_diagnostics,
+    ObservatoryError,
+)
 from .earth_observation_studio import (
     overview as build_earth_observation_overview,
     layers as build_earth_observation_layers,
@@ -327,7 +340,7 @@ async def public_experience_headers(request, call_next):
         response.headers.setdefault("Cache-Control", "public, max-age=300, stale-while-revalidate=86400")
     elif path == "/app" or path.startswith("/app/"):
         response.headers.setdefault("Cache-Control", "no-cache")
-    elif path.startswith("/public/experience-profile") or path.startswith("/public/launch-profile"):
+    elif path.startswith("/public/experience-profile") or path.startswith("/public/launch-profile") or path.startswith("/public/observatory"):
         response.headers.setdefault("Cache-Control", "public, max-age=300")
     return response
 
@@ -2045,6 +2058,69 @@ def public_launch_portfolio(format: str = Query("json")):
             headers={"Content-Disposition": 'attachment; filename="site-intelligence-portfolio.md"'},
         )
     raise HTTPException(status_code=422, detail="Supported portfolio formats are json and markdown.")
+
+
+@app.get("/public/observatory")
+def public_observatory_profile():
+    return build_observatory_profile()
+
+
+@app.get("/public/observatory/catalog")
+def public_observatory_catalog():
+    return build_observatory_catalog()
+
+
+@app.get("/public/observatory/audit/{artifact_id}")
+def public_observatory_audit_record(artifact_id: str):
+    try:
+        return build_observatory_audit_record(artifact_id)
+    except ObservatoryError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@app.get("/public/observatory/lineage")
+def public_observatory_lineage():
+    return build_observatory_lineage()
+
+
+@app.get("/public/observatory/verification")
+def public_observatory_verification():
+    return build_observatory_verification()
+
+
+@app.post("/public/observatory/verify")
+def public_observatory_verify(request: dict[str, Any]):
+    payload = request.get("payload")
+    if "payload" not in request:
+        raise HTTPException(status_code=422, detail="Verification request must contain payload.")
+    try:
+        return verify_observatory_payload(payload, request.get("expected_digest"))
+    except ObservatoryError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/public/observatory/release-ledger")
+def public_observatory_release_ledger():
+    return build_observatory_release_ledger()
+
+
+@app.get("/public/observatory/diagnostics")
+def public_observatory_diagnostics():
+    return build_observatory_diagnostics()
+
+
+@app.get("/public/observatory/export")
+def public_observatory_export(format: str = Query("json")):
+    normalized = str(format).strip().lower()
+    if normalized == "json":
+        return build_observatory_audit_packet()
+    if normalized in {"md", "markdown"}:
+        return PlainTextResponse(
+            build_observatory_audit_packet_markdown(),
+            media_type="text/markdown; charset=utf-8",
+            headers={"Content-Disposition": 'attachment; filename="site-intelligence-audit-packet.md"'},
+        )
+    raise HTTPException(status_code=422, detail="Supported observatory export formats are json and markdown.")
 
 
 @app.get("/public/page-builder")

@@ -1,0 +1,42 @@
+{
+  "release": "2.0.0",
+  "name": "Auditable Public Observatory",
+  "application_version": "2.0.0",
+  "api_schema_version": "2.0",
+  "schema": "sc-auditable-public-observatory/2.0",
+  "audit_record_schema": "sc-public-evidence-record/2.0",
+  "audit_packet_schema": "sc-public-observatory-packet/2.0",
+  "lineage_schema": "sc-public-lineage/2.0",
+  "verification_schema": "sc-public-integrity-verification/2.0",
+  "public_route": "/app/?view=observatory",
+  "public_endpoints": [
+    "/public/observatory",
+    "/public/observatory/catalog",
+    "/public/observatory/audit/{artifact_id}",
+    "/public/observatory/lineage",
+    "/public/observatory/verification",
+    "/public/observatory/verify",
+    "/public/observatory/release-ledger",
+    "/public/observatory/diagnostics",
+    "/public/observatory/export"
+  ],
+  "release_capabilities": [
+    "public evidence ledger",
+    "source-method-workspace lineage graph",
+    "canonical SHA-256 integrity records",
+    "non-persistent payload verification",
+    "release ledger",
+    "JSON and Markdown audit packet exports",
+    "observatory standalone route",
+    "WordPress observatory shortcode",
+    "migration-safe legacy shortcode aliases"
+  ],
+  "registered_public_workspaces": 10,
+  "registered_audit_artifacts": 10,
+  "primary_wordpress_shortcode": "[sc_site_intelligence_app height=\"1000\"]",
+  "observatory_wordpress_shortcode": "[sc_auditable_public_observatory height=\"1250\"]",
+  "integrity_algorithm": "sha256",
+  "verification_persistence": false,
+  "platform_core_optional": true,
+  "paid_infrastructure_added": false
+}

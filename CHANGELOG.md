@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.0.0 — Auditable Public Observatory
+
+- Added a first-class `/app/?view=observatory` workspace for evidence records, lineage, integrity, release history, and verification boundaries.
+- Added public observatory profile, catalog, audit-record, lineage, verification, release-ledger, diagnostics, and export endpoints.
+- Added ten registered public audit artifacts spanning sources, methodology, Earth observation, events, country intelligence, comparison, thematic dashboards, briefing manifests, saved views, and the public release record.
+- Added canonical UTF-8 JSON and SHA-256 integrity digests with explicit scope rules that exclude volatile timestamps.
+- Added a non-persistent verification endpoint with payload-size limits, sensitive-field rejection, and optional expected-digest matching.
+- Added a source → method → audit artifact → workspace lineage graph with public cross-reference diagnostics.
+- Added JSON and Markdown audit packets plus a release ledger documenting the auditability contribution of releases 1.18.0 through 2.0.0.
+- Added `[sc_auditable_public_observatory height="1250"]` for a dedicated WordPress observatory page.
+- Redesigned the three legacy preview shortcodes as migration-safe aliases to the modern Earth, country, and comparison workspaces.
+- Added the observatory route to browser-local saved views and shareable research paths.
+- Preserved explicit missing-data, source-state, methodology, and responsible-use boundaries.
+- Preserved Platform Core as optional and added no account system, telemetry vendor, paid database, Redis service, proprietary map service, or additional Render service.
+
 ## 1.25.0 — Public Launch and Portfolio Release
 
 - Added a dedicated public launch and portfolio route at `/app/?view=launch`.

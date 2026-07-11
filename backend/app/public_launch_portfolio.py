@@ -9,11 +9,12 @@ from .version import APP_VERSION, API_SCHEMA_VERSION
 LAUNCH_PROFILE_SCHEMA = "sc-site-intelligence-launch/1.0"
 PORTFOLIO_SCHEMA = "sc-site-intelligence-portfolio/1.0"
 PUBLIC_POSITIONING = (
-    "Sustainable Catalyst Site Intelligence is a public-interest observatory for satellite imagery, "
-    "global country indicators, natural hazards, humanitarian reporting, and source-aware comparative research."
+    "Sustainable Catalyst Site Intelligence is an auditable public observatory for satellite imagery, "
+    "global country indicators, natural hazards, humanitarian reporting, source-aware comparative research, and evidence lineage."
 )
 
 PUBLIC_WORKSPACES = [
+    {"id": "observatory", "title": "Auditable Public Observatory", "route": "/app/?view=observatory", "summary": "Inspect evidence records, lineage, integrity digests, and verification limits."},
     {"id": "overview", "title": "Global Observatory", "route": "/app/?view=overview", "summary": "Map-first satellite context, public event signals, and country evidence."},
     {"id": "earth", "title": "Earth Observation Studio", "route": "/app/?view=earth", "summary": "Compare satellite-derived layers across dates with source and imagery limits."},
     {"id": "events", "title": "Live Event Intelligence", "route": "/app/?view=events", "summary": "Filter public hazard and humanitarian records while retaining source identity."},
@@ -45,8 +46,8 @@ def launch_profile() -> dict[str, Any]:
         "schema": LAUNCH_PROFILE_SCHEMA,
         "application_version": APP_VERSION,
         "api_schema_version": API_SCHEMA_VERSION,
-        "release": "Public Launch and Portfolio Release",
-        "release_status": "public-release",
+        "release": "Auditable Public Observatory",
+        "release_status": "auditable-public-observatory",
         "positioning": PUBLIC_POSITIONING,
         "principles": [
             "Public evidence is separated from interpretation and automated judgment.",
@@ -151,7 +152,7 @@ def portfolio_markdown() -> str:
     lines = [
         "# Sustainable Catalyst Site Intelligence",
         "",
-        f"**Release:** v{APP_VERSION} — Public Launch and Portfolio Release",
+        f"**Release:** v{APP_VERSION} — Auditable Public Observatory",
         "",
         manifest["positioning"],
         "",
@@ -192,7 +193,7 @@ def launch_diagnostics() -> dict[str, Any]:
         "launch_profile_fetch": "/public/launch-profile" in js,
         "launch_route_handler": 'route==="launch"' in js,
         "launch_mobile_css": "public-launch-portfolio" in css and "launch-feature-grid" in css,
-        "wordpress_version": "Version: 1.25.0" in php and "const VERSION = '1.25.0';" in php,
+        "wordpress_version": "Version: 2.0.0" in php and "const VERSION = '2.0.0';" in php,
         "wordpress_launch_shortcode": "sc_site_intelligence_launch" in php and "site_intelligence_launch_shortcode" in php,
         "primary_embed_retained": "sc_site_intelligence_app" in php,
         "deprecated_shortcode_schedule": "LEGACY_SHORTCODE_REMOVAL_TARGET" in php,

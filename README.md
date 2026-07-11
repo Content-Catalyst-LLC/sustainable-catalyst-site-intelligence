@@ -1,12 +1,13 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v1.25.0 — Public Launch and Portfolio Release
+**Current release:** v2.0.0 — Auditable Public Observatory
 
-Sustainable Catalyst Site Intelligence is a public-interest observatory for Earth observation, global country indicators, natural hazards, humanitarian reporting, source-aware dashboards, and comparative research.
+Sustainable Catalyst Site Intelligence is an auditable public observatory for Earth observation, global country indicators, natural hazards, humanitarian reporting, comparative research, source-aware briefs, evidence lineage, and portable public verification records.
 
 ## Public application
 
 - Standalone app: `https://sustainable-catalyst-site-intelligence.onrender.com/app/`
+- Auditable Public Observatory: `/app/?view=observatory`
 - Public launch and portfolio: `/app/?view=launch`
 - Earth Observation: `/app/?view=earth`
 - Live Events: `/app/?view=events`
@@ -17,6 +18,50 @@ Sustainable Catalyst Site Intelligence is a public-interest observatory for Eart
 - Source and Methodology Studio: `/app/?view=sources`
 - Saved Views and Shareable Research Paths: `/app/?view=saved`
 - Primary WordPress embed: `[sc_site_intelligence_app height="1000"]`
+- Observatory WordPress embed: `[sc_auditable_public_observatory height="1250"]`
+
+## v2.0.0 release focus
+
+v2.0.0 consolidates Site Intelligence into an Auditable Public Observatory. It adds a public evidence ledger, source-method-workspace lineage graph, canonical SHA-256 integrity records, a non-persistent payload verification contract, a release ledger, downloadable audit packets, a first-class observatory workspace, and a dedicated WordPress embed.
+
+### Public observatory route
+
+```text
+/app/?view=observatory
+```
+
+### Public observatory endpoints
+
+- `GET /public/observatory`
+- `GET /public/observatory/catalog`
+- `GET /public/observatory/audit/{artifact_id}`
+- `GET /public/observatory/lineage`
+- `GET /public/observatory/verification`
+- `POST /public/observatory/verify`
+- `GET /public/observatory/release-ledger`
+- `GET /public/observatory/diagnostics`
+- `GET /public/observatory/export?format=json`
+- `GET /public/observatory/export?format=markdown`
+
+### Integrity boundary
+
+A matching SHA-256 digest can detect whether a canonicalized record changed relative to an expected digest. It does not prove factual correctness, publisher identity, legal authenticity, source availability, or completeness. Submitted verification payloads are validated in memory and are not persisted.
+
+### WordPress
+
+The flagship public page should continue using one primary application embed:
+
+```text
+[sc_site_intelligence_app height="1000"]
+```
+
+The dedicated audit workspace uses:
+
+```text
+[sc_auditable_public_observatory height="1250"]
+```
+
+The legacy country, comparison, and geospatial shortcode implementations are retired in v2.0.0. Their names remain as migration-safe aliases that open the modern standalone workspaces instead of rendering the former preview components.
 
 ## v1.25.0 release focus
 

@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
- * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.25.0
+ * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
+ * Version: 2.0.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,14 +13,15 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.25.0';
+    const VERSION = '2.0.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
     const BUILD_INFO_MATCH_TTL = 21600;
     const BUILD_INFO_MISMATCH_TTL = 45;
     const BUILD_INFO_ERROR_TTL = 30;
-    const LEGACY_SHORTCODE_REMOVAL_TARGET = '2.0.0';
+    const LEGACY_SHORTCODE_REMOVAL_TARGET = 'fulfilled-in-2.0.0';
+    const LEGACY_SHORTCODE_COMPATIBILITY = 'modern-workspace-aliases';
 
     public function __construct() {
         add_action('admin_menu', [$this, 'admin_menu']);
@@ -135,6 +136,7 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_public_dashboard_launch_readiness', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_dashboard_studio_navigation', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_site_intelligence_app', [$this, 'standalone_app_shortcode']);
+        add_shortcode('sc_auditable_public_observatory', [$this, 'auditable_public_observatory_shortcode']);
         add_shortcode('sc_site_intelligence_launch', [$this, 'site_intelligence_launch_shortcode']);
         add_shortcode('sc_earth_observation_studio', [$this, 'earth_observation_studio_shortcode']);
         add_shortcode('sc_live_event_intelligence', [$this, 'live_event_intelligence_shortcode']);
@@ -3696,6 +3698,30 @@ final class SC_Site_Intelligence_Plugin {
         );
     }
 
+    public function auditable_public_observatory_shortcode($atts = []) {
+        $atts = shortcode_atts([
+            'height' => '1250',
+            'title' => 'Sustainable Catalyst Auditable Public Observatory',
+        ], $atts, 'sc_auditable_public_observatory');
+
+        $options = self::options();
+        $backend = rtrim((string) ($options['backend_url'] ?? ''), '/');
+        if (!$backend) {
+            return '<div class="scsi-app-error">Configure the Site Intelligence backend URL before embedding the Auditable Public Observatory.</div>';
+        }
+
+        $height = max(850, min(2000, absint($atts['height'])));
+        $src = esc_url($backend . '/app/?view=observatory');
+        $title = esc_attr((string) $atts['title']);
+
+        return sprintf(
+            '<div class="scsi-standalone-app scsi-auditable-observatory-embed"><div class="scsi-app-loading">Opening the Auditable Public Observatory…</div><iframe src="%1$s" title="%2$s" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen; clipboard-write" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe></div>',
+            $src,
+            $title,
+            $height
+        );
+    }
+
     public function site_intelligence_launch_shortcode($atts = []) {
         $atts = shortcode_atts([
             'height' => '1200',
@@ -3749,16 +3775,29 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function geospatial_map_shortcode($atts = [], $content = null, $tag = '') {
-        $atts = shortcode_atts(['latitude' => '12', 'longitude' => '20', 'zoom' => '2', 'height' => '620', 'date' => gmdate('Y-m-d'), 'layer' => 'true-color'], $atts, $tag ?: 'sc_geospatial_intelligence_map');
-        if (self::options()['enable_dashboard'] !== '1') { return ''; }
-        ob_start(); ?>
-        <section class="scsi-card scsi-geospatial-app" data-scsi-geospatial-map data-latitude="<?php echo esc_attr($atts['latitude']); ?>" data-longitude="<?php echo esc_attr($atts['longitude']); ?>" data-zoom="<?php echo esc_attr($atts['zoom']); ?>" data-height="<?php echo esc_attr($atts['height']); ?>" data-date="<?php echo esc_attr($atts['date']); ?>" data-layer="<?php echo esc_attr($atts['layer']); ?>">
-            <div class="scsi-geo-header"><div><p class="scsi-eyebrow">Geospatial Intelligence</p><h2>Satellite Imagery and Live Event Map</h2><p class="scsi-muted">Loading satellite layers, event feeds, and map controls…</p></div><button type="button" class="scsi-public-action" data-scsi-geo-fullscreen>Fullscreen</button></div>
-            <div class="scsi-geo-toolbar" aria-label="Map controls"><label>Imagery <select data-scsi-geo-layer></select></label><label>Date <input type="date" value="<?php echo esc_attr($atts['date']); ?>" data-scsi-geo-date></label><label><input type="checkbox" checked data-scsi-geo-events> Events</label><label><input type="checkbox" data-scsi-geo-heat> Heat map</label><button type="button" class="scsi-public-action" data-scsi-geo-refresh>Refresh</button></div>
-            <div class="scsi-geo-map" style="height:<?php echo esc_attr(absint($atts['height'])); ?>px" role="application" aria-label="Interactive geospatial intelligence map"></div>
-            <div class="scsi-geo-legend" aria-live="polite"></div><div class="scsi-geo-status scsi-muted" aria-live="polite"></div>
-            <details class="scsi-geo-accessible"><summary>Accessible event table</summary><div class="scsi-geo-table"></div></details>
-        </section><?php return ob_get_clean();
+        $atts = shortcode_atts([
+            'latitude' => '12',
+            'longitude' => '20',
+            'zoom' => '2',
+            'height' => '1000',
+            'date' => gmdate('Y-m-d'),
+            'layer' => 'true-color',
+        ], $atts, $tag ?: 'sc_geospatial_intelligence_map');
+
+        $params = [
+            'view' => 'earth',
+            'latitude' => sanitize_text_field((string) $atts['latitude']),
+            'longitude' => sanitize_text_field((string) $atts['longitude']),
+            'zoom' => absint($atts['zoom']),
+            'dateB' => sanitize_text_field((string) $atts['date']),
+            'earthLayer' => sanitize_title((string) $atts['layer']),
+        ];
+
+        return $this->standalone_app_shortcode([
+            'height' => max(700, min(1600, absint($atts['height']))),
+            'title' => 'Sustainable Catalyst Earth Observation Studio',
+            'path' => '/app/?' . http_build_query($params, '', '&', PHP_QUERY_RFC3986),
+        ]);
     }
 
     public function geospatial_table_shortcode() {
@@ -3775,13 +3814,27 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function country_intelligence_shortcode($atts = []) {
-        $atts = shortcode_atts(['country' => 'KEN'], $atts, 'sc_public_country_intelligence');
-        return $this->cross_domain_panel_markup('country-intelligence', '', sanitize_text_field($atts['country']), '', '', '', 'Country Intelligence Profile');
+        $atts = shortcode_atts(['country' => 'KEN', 'height' => '1050'], $atts, 'sc_public_country_intelligence');
+        $country = strtoupper(trim((string) $atts['country']));
+        if (!preg_match('/^[A-Z]{3}$/', $country)) { $country = 'KEN'; }
+        return $this->standalone_app_shortcode([
+            'height' => max(700, min(1600, absint($atts['height']))),
+            'title' => 'Sustainable Catalyst Global Country Intelligence',
+            'path' => '/app/?view=country&country=' . rawurlencode($country),
+        ]);
     }
 
     public function cross_domain_comparison_shortcode($atts = []) {
-        $atts = shortcode_atts(['country' => 'KEN', 'compare' => 'GHA'], $atts, 'sc_public_cross_domain_comparison');
-        return $this->cross_domain_panel_markup('cross-domain-comparison', '', sanitize_text_field($atts['country']), '', sanitize_text_field($atts['compare']), '', 'Cross-Domain Comparison');
+        $atts = shortcode_atts(['country' => 'KEN', 'compare' => 'GHA', 'height' => '1100'], $atts, 'sc_public_cross_domain_comparison');
+        $country = strtoupper(trim((string) $atts['country']));
+        $compare = strtoupper(trim((string) $atts['compare']));
+        if (!preg_match('/^[A-Z]{3}$/', $country)) { $country = 'KEN'; }
+        if (!preg_match('/^[A-Z]{3}$/', $compare)) { $compare = 'GHA'; }
+        return $this->standalone_app_shortcode([
+            'height' => max(760, min(1700, absint($atts['height']))),
+            'title' => 'Sustainable Catalyst Comparative Intelligence',
+            'path' => '/app/?view=compare&country=' . rawurlencode($country) . '&compare=' . rawurlencode($compare),
+        ]);
     }
 
     public function cross_domain_dashboard_sources_shortcode($atts = []) {

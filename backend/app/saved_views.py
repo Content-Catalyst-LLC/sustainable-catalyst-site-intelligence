@@ -18,6 +18,12 @@ MAX_NAME_LENGTH = 120
 MAX_SAVED_VIEWS = 50
 
 ALLOWED_VIEWS: dict[str, dict[str, Any]] = {
+    "observatory": {
+        "label": "Auditable Public Observatory",
+        "description": "Evidence ledger, lineage, integrity contract, and release history.",
+        "state_keys": [],
+        "allow_empty_state": True,
+    },
     "overview": {
         "label": "Overview",
         "description": "Live map, imagery date, public events, and country context.",
@@ -436,7 +442,7 @@ def diagnostics() -> dict[str, Any]:
     issues: list[str] = []
     for view_id, record in ALLOWED_VIEWS.items():
         keys = record.get("state_keys") or []
-        if not keys:
+        if not keys and not record.get("allow_empty_state"):
             issues.append(f"{view_id} has no registered public state keys")
         if len(keys) != len(set(keys)):
             issues.append(f"{view_id} contains duplicate state keys")
