@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.20.1 — Backend Compatibility Check and Admin Cache Reliability Patch
+
+- Isolated pytest caches, Python bytecode, country last-known-good data, and optional Platform Core queue files outside the release tree during validation.
+
+- Replaced the single ten-minute build-info cache with version-scoped cache keys.
+- Cache matching versions for six hours, mismatches for 45 seconds, and verification errors for 30 seconds.
+- Added plugin-version and cache-busting query parameters to build-info requests.
+- Added explicit match, mismatch, unavailable, invalid-response, and not-configured states.
+- Added a Refresh backend version action to the settings page and admin notices.
+- Added backend URL, last verification time, backend version, and HTTP status to the settings page.
+- Clear legacy and version-scoped build-info transients on activation, plugin upgrade, and settings save.
+- Prevent an old cached mismatch from being presented as current deployment state.
+- Updated backend and WordPress plugin release metadata to v1.20.1.
+- Added automated compatibility-cache contract tests.
+
 ## 1.20.0 — Public Briefing and Export Studio
 
 - Added a first-class standalone Public Briefing and Export Studio for country, comparison, event, Earth-observation, and thematic investigations.

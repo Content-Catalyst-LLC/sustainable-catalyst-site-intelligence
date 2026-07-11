@@ -1,6 +1,6 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v1.20.0 — Public Briefing and Export Studio
+**Current release:** v1.20.1 — Backend Compatibility Check and Admin Cache Reliability Patch
 
 Sustainable Catalyst Site Intelligence is a public-interest observatory for Earth observation, global country indicators, natural hazards, humanitarian reporting, source-aware dashboards, and comparative research.
 
@@ -13,6 +13,21 @@ Sustainable Catalyst Site Intelligence is a public-interest observatory for Eart
 - Comparative Intelligence: `/app/?view=compare&country=KEN&compare=GHA`
 - Public Briefing Studio: `/app/?view=briefing&briefType=country&country=KEN`
 - Primary WordPress embed: `[sc_site_intelligence_app height="1000"]`
+
+## v1.20.1 release focus
+
+v1.20.1 makes the WordPress-to-backend compatibility check deployment-aware. Matching versions are cached efficiently, mismatches and errors are rechecked quickly, stale legacy transients are removed during activation and upgrade, and administrators can refresh the backend version directly from WordPress settings.
+
+### Admin reliability changes
+
+- version-scoped build-info cache keys
+- six-hour cache for successful matches
+- 45-second cache for mismatches
+- 30-second cache for unavailable or invalid responses
+- automatic cleanup on activation, upgrade, and settings save
+- explicit match, mismatch, unavailable, invalid-response, and not-configured states
+- backend URL, HTTP state, returned version, and last verification time
+- manual Refresh backend version action
 
 ## v1.20.0 release focus
 

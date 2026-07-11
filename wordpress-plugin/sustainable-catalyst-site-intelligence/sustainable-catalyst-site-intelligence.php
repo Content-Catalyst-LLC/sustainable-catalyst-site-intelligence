@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Connects Sustainable Catalyst pages to the Site Intelligence backend, GA4/dataLayer custom events, and shortcode dashboards.
- * Version: 1.20.0
+ * Version: 1.20.1
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,12 +13,19 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '1.20.0';
+    const VERSION = '1.20.1';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
+    const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
+    const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
+    const BUILD_INFO_MATCH_TTL = 21600;
+    const BUILD_INFO_MISMATCH_TTL = 45;
+    const BUILD_INFO_ERROR_TTL = 30;
 
     public function __construct() {
         add_action('admin_menu', [$this, 'admin_menu']);
         add_action('admin_init', [$this, 'register_settings']);
+        add_action('admin_init', [$this, 'maybe_upgrade']);
+        add_action('admin_post_scsi_refresh_backend_version', [$this, 'handle_refresh_backend_version']);
         add_action('admin_notices', [$this, 'backend_version_notice']);
         add_action('rest_api_init', [$this, 'register_rest_routes']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_assets']);
@@ -206,50 +213,236 @@ final class SC_Site_Intelligence_Plugin {
         return wp_parse_args(get_option(self::OPTION_KEY, []), self::defaults());
     }
 
-    public function backend_version_notice() {
-        if (!current_user_can('manage_options')) {
+    public static function activate() {
+        self::clear_all_build_info_cache();
+        delete_option(self::BUILD_INFO_STATUS_OPTION);
+        update_option(self::INSTALLED_VERSION_OPTION, self::VERSION, false);
+    }
+
+    public function maybe_upgrade() {
+        $installed = sanitize_text_field((string) get_option(self::INSTALLED_VERSION_OPTION, ''));
+        if ($installed === self::VERSION) {
             return;
         }
-        $options = self::options();
-        $backend = untrailingslashit((string) ($options['backend_url'] ?? ''));
+
+        self::clear_all_build_info_cache();
+        delete_option(self::BUILD_INFO_STATUS_OPTION);
+        update_option(self::INSTALLED_VERSION_OPTION, self::VERSION, false);
+    }
+
+    private static function build_info_cache_key($backend) {
+        $backend = untrailingslashit((string) $backend);
+        return 'scsi_build_info_' . md5($backend . '|' . self::VERSION);
+    }
+
+    private static function legacy_build_info_cache_key($backend) {
+        return 'scsi_build_info_' . md5(untrailingslashit((string) $backend));
+    }
+
+    private static function clear_backend_build_info_cache($backend) {
+        $backend = untrailingslashit((string) $backend);
         if ($backend === '') {
             return;
         }
 
-        $cache_key = 'scsi_build_info_' . md5($backend);
-        $build_info = get_transient($cache_key);
-        if (!is_array($build_info)) {
-            $response = wp_remote_get($backend . '/public/build-info', [
-                'timeout' => 4,
-                'redirection' => 2,
-                'headers' => [
-                    'Accept' => 'application/json',
-                    'User-Agent' => 'Sustainable-Catalyst-Site-Intelligence/' . self::VERSION,
-                ],
-            ]);
-            if (is_wp_error($response)) {
-                return;
+        delete_transient(self::build_info_cache_key($backend));
+        delete_transient(self::legacy_build_info_cache_key($backend));
+    }
+
+    public static function clear_all_build_info_cache() {
+        global $wpdb;
+
+        $patterns = [
+            $wpdb->esc_like('_transient_scsi_build_info_') . '%',
+            $wpdb->esc_like('_transient_timeout_scsi_build_info_') . '%',
+        ];
+
+        foreach ($patterns as $pattern) {
+            $names = $wpdb->get_col(
+                $wpdb->prepare(
+                    "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s",
+                    $pattern
+                )
+            );
+
+            foreach ((array) $names as $name) {
+                delete_option($name);
             }
-            $code = wp_remote_retrieve_response_code($response);
-            $payload = json_decode(wp_remote_retrieve_body($response), true);
-            if ($code < 200 || $code >= 300 || !is_array($payload)) {
-                return;
-            }
-            $build_info = $payload;
-            set_transient($cache_key, $build_info, 10 * MINUTE_IN_SECONDS);
+        }
+    }
+
+    private function backend_version_refresh_url() {
+        return wp_nonce_url(
+            admin_url('admin-post.php?action=scsi_refresh_backend_version'),
+            'scsi_refresh_backend_version'
+        );
+    }
+
+    private function store_backend_version_status($status, $ttl) {
+        $status = is_array($status) ? $status : [];
+        $status['plugin_version'] = self::VERSION;
+        $status['checked_at'] = gmdate('c');
+        $status['ttl_seconds'] = (int) $ttl;
+
+        $backend = untrailingslashit((string) ($status['backend_url'] ?? ''));
+        if ($backend !== '') {
+            set_transient(self::build_info_cache_key($backend), $status, (int) $ttl);
+        }
+        update_option(self::BUILD_INFO_STATUS_OPTION, $status, false);
+        return $status;
+    }
+
+    private function verify_backend_version($force = false) {
+        $options = self::options();
+        $backend = untrailingslashit((string) ($options['backend_url'] ?? ''));
+
+        if ($backend === '') {
+            return [
+                'state' => 'not-configured',
+                'backend_url' => '',
+                'plugin_version' => self::VERSION,
+                'backend_version' => '',
+                'expected_wordpress_plugin_version' => '',
+                'http_status' => 0,
+                'message' => 'No backend URL is configured.',
+                'checked_at' => gmdate('c'),
+            ];
         }
 
-        $backend_version = sanitize_text_field((string) ($build_info['backend_version'] ?? $build_info['version'] ?? ''));
-        $expected_plugin = sanitize_text_field((string) ($build_info['expected_wordpress_plugin_version'] ?? ''));
+        $cache_key = self::build_info_cache_key($backend);
+        if (!$force) {
+            $cached = get_transient($cache_key);
+            if (is_array($cached)) {
+                return $cached;
+            }
+        }
+
+        self::clear_backend_build_info_cache($backend);
+
+        $endpoint = add_query_arg([
+            'plugin_version' => self::VERSION,
+            'cache_bust' => (string) time(),
+        ], $backend . '/public/build-info');
+
+        $response = wp_remote_get($endpoint, [
+            'timeout' => 6,
+            'redirection' => 2,
+            'headers' => [
+                'Accept' => 'application/json',
+                'Cache-Control' => 'no-cache',
+                'User-Agent' => 'Sustainable-Catalyst-Site-Intelligence/' . self::VERSION,
+            ],
+        ]);
+
+        if (is_wp_error($response)) {
+            return $this->store_backend_version_status([
+                'state' => 'unavailable',
+                'backend_url' => $backend,
+                'backend_version' => '',
+                'expected_wordpress_plugin_version' => '',
+                'http_status' => 0,
+                'message' => sanitize_text_field($response->get_error_message()),
+            ], self::BUILD_INFO_ERROR_TTL);
+        }
+
+        $code = (int) wp_remote_retrieve_response_code($response);
+        $payload = json_decode(wp_remote_retrieve_body($response), true);
+
+        if ($code < 200 || $code >= 300 || !is_array($payload)) {
+            return $this->store_backend_version_status([
+                'state' => 'invalid-response',
+                'backend_url' => $backend,
+                'backend_version' => '',
+                'expected_wordpress_plugin_version' => '',
+                'http_status' => $code,
+                'message' => 'The build-info endpoint did not return a valid JSON response.',
+            ], self::BUILD_INFO_ERROR_TTL);
+        }
+
+        $backend_version = sanitize_text_field((string) ($payload['backend_version'] ?? $payload['version'] ?? ''));
+        $expected_plugin = sanitize_text_field((string) ($payload['expected_wordpress_plugin_version'] ?? ''));
+
         if ($backend_version === '') {
+            return $this->store_backend_version_status([
+                'state' => 'invalid-response',
+                'backend_url' => $backend,
+                'backend_version' => '',
+                'expected_wordpress_plugin_version' => $expected_plugin,
+                'http_status' => $code,
+                'message' => 'The build-info response did not include a backend version.',
+            ], self::BUILD_INFO_ERROR_TTL);
+        }
+
+        $matches = $backend_version === self::VERSION
+            && ($expected_plugin === '' || $expected_plugin === self::VERSION);
+
+        return $this->store_backend_version_status([
+            'state' => $matches ? 'match' : 'mismatch',
+            'backend_url' => $backend,
+            'backend_version' => $backend_version,
+            'expected_wordpress_plugin_version' => $expected_plugin,
+            'http_status' => $code,
+            'message' => $matches
+                ? 'The WordPress plugin and backend versions match.'
+                : 'The WordPress plugin and backend versions do not match.',
+        ], $matches ? self::BUILD_INFO_MATCH_TTL : self::BUILD_INFO_MISMATCH_TTL);
+    }
+
+    public function handle_refresh_backend_version() {
+        if (!current_user_can('manage_options')) {
+            wp_die(esc_html__('You are not allowed to refresh Site Intelligence status.', 'sc-site-intelligence'));
+        }
+
+        check_admin_referer('scsi_refresh_backend_version');
+
+        $options = self::options();
+        self::clear_backend_build_info_cache((string) ($options['backend_url'] ?? ''));
+        delete_option(self::BUILD_INFO_STATUS_OPTION);
+        $status = $this->verify_backend_version(true);
+
+        $redirect = add_query_arg([
+            'page' => 'sc-site-intelligence',
+            'scsi_version_refreshed' => '1',
+            'scsi_version_state' => sanitize_key((string) ($status['state'] ?? 'unknown')),
+        ], admin_url('options-general.php'));
+
+        wp_safe_redirect($redirect);
+        exit;
+    }
+
+    public function backend_version_notice() {
+        if (!current_user_can('manage_options')) {
             return;
         }
 
-        if ($backend_version !== self::VERSION || ($expected_plugin !== '' && $expected_plugin !== self::VERSION)) {
-            echo '<div class="notice notice-warning"><p><strong>Site Intelligence version mismatch.</strong> ';
-            echo 'WordPress plugin: <code>' . esc_html(self::VERSION) . '</code>; backend: <code>' . esc_html($backend_version) . '</code>. ';
-            echo 'Install the matching plugin/backend release, then clear WordPress and Cloudflare caches.</p></div>';
+        $status = $this->verify_backend_version(false);
+        $state = sanitize_key((string) ($status['state'] ?? ''));
+        if ($state === 'match' || $state === 'not-configured') {
+            return;
         }
+
+        $backend = sanitize_text_field((string) ($status['backend_version'] ?? ''));
+        $checked = sanitize_text_field((string) ($status['checked_at'] ?? ''));
+        $refresh_url = $this->backend_version_refresh_url();
+
+        if ($state === 'mismatch') {
+            echo '<div class="notice notice-warning"><p><strong>Site Intelligence version mismatch.</strong> ';
+            echo 'WordPress plugin: <code>' . esc_html(self::VERSION) . '</code>; backend: <code>' . esc_html($backend !== '' ? $backend : 'unknown') . '</code>. ';
+            echo 'This mismatch is rechecked automatically after ' . esc_html((string) self::BUILD_INFO_MISMATCH_TTL) . ' seconds. ';
+            echo '<a href="' . esc_url($refresh_url) . '">Refresh backend version now</a>';
+            if ($checked !== '') {
+                echo ' <span class="description">Last checked: ' . esc_html($checked) . '</span>';
+            }
+            echo '</p></div>';
+            return;
+        }
+
+        $label = $state === 'invalid-response'
+            ? 'Site Intelligence returned an invalid build-info response.'
+            : 'Site Intelligence backend verification is temporarily unavailable.';
+        echo '<div class="notice notice-info"><p><strong>' . esc_html($label) . '</strong> ';
+        echo 'The public application can remain available while the version check is retried. ';
+        echo '<a href="' . esc_url($refresh_url) . '">Refresh backend version now</a></p></div>';
     }
 
     public function admin_menu() {
@@ -271,11 +464,17 @@ final class SC_Site_Intelligence_Plugin {
 
     public function sanitize_options($input) {
         $defaults = self::defaults();
+        $current = self::options();
         $output = [];
         $output['backend_url'] = isset($input['backend_url']) ? esc_url_raw(trim($input['backend_url'])) : $defaults['backend_url'];
         $output['api_token'] = isset($input['api_token']) ? sanitize_text_field($input['api_token']) : $defaults['api_token'];
         $output['enable_event_bridge'] = !empty($input['enable_event_bridge']) ? '1' : '0';
         $output['enable_dashboard'] = !empty($input['enable_dashboard']) ? '1' : '0';
+
+        self::clear_backend_build_info_cache((string) ($current['backend_url'] ?? ''));
+        self::clear_backend_build_info_cache((string) ($output['backend_url'] ?? ''));
+        delete_option(self::BUILD_INFO_STATUS_OPTION);
+
         return $output;
     }
 
@@ -2010,6 +2209,28 @@ final class SC_Site_Intelligence_Plugin {
                 <div class="scsi-admin-panel"><h2>Connection</h2><p>Confirm the Render backend URL, API token, and current deployed version.</p><p><a class="button" href="<?php echo esc_url(rest_url(self::REST_NAMESPACE . '/admin-status')); ?>" target="_blank" rel="noopener">Open Admin Status</a></p></div>
                 <div class="scsi-admin-panel"><h2>Diagnostics</h2><p>Use the one-click diagnostic summary after each deploy.</p><p><a class="button" href="<?php echo esc_url(rest_url(self::REST_NAMESPACE . '/admin-diagnostic-summary')); ?>" target="_blank" rel="noopener">Open Diagnostic Summary</a></p></div>
                 <div class="scsi-admin-panel"><h2>Public / Private</h2><p>Keep raw analytics, reports, AI drafts, and admin diagnostics on private pages.</p><p><a class="button" href="<?php echo esc_url(rest_url(self::REST_NAMESPACE . '/admin-public-readiness-check')); ?>" target="_blank" rel="noopener">Open Public Readiness</a></p></div>
+            </div>
+            <?php
+            $version_status = get_option(self::BUILD_INFO_STATUS_OPTION, []);
+            if (!is_array($version_status) || empty($version_status)) {
+                $version_status = $this->verify_backend_version(false);
+            }
+            $version_state = sanitize_key((string) ($version_status['state'] ?? 'unknown'));
+            $version_backend = sanitize_text_field((string) ($version_status['backend_version'] ?? ''));
+            $version_checked = sanitize_text_field((string) ($version_status['checked_at'] ?? 'Never'));
+            $version_http = (int) ($version_status['http_status'] ?? 0);
+            $version_url = sanitize_text_field((string) ($version_status['backend_url'] ?? ($options['backend_url'] ?? '')));
+            ?>
+            <div class="notice inline <?php echo $version_state === 'match' ? 'notice-success' : ($version_state === 'mismatch' ? 'notice-warning' : 'notice-info'); ?>">
+                <p><strong>Backend version verification</strong></p>
+                <p>
+                    State: <code><?php echo esc_html($version_state); ?></code> ·
+                    Plugin: <code><?php echo esc_html(self::VERSION); ?></code> ·
+                    Backend: <code><?php echo esc_html($version_backend !== '' ? $version_backend : 'unknown'); ?></code> ·
+                    HTTP: <code><?php echo esc_html((string) $version_http); ?></code>
+                </p>
+                <p>Checked URL: <code><?php echo esc_html($version_url !== '' ? $version_url : 'not configured'); ?></code><br />Last verification: <code><?php echo esc_html($version_checked); ?></code></p>
+                <p><a class="button button-secondary" href="<?php echo esc_url($this->backend_version_refresh_url()); ?>">Refresh backend version</a></p>
             </div>
             <form method="post" action="options.php">
                 <?php settings_fields('sc_site_intelligence'); ?>
@@ -3840,4 +4061,5 @@ final class SC_Site_Intelligence_Plugin {
 
 }
 
+register_activation_hook(__FILE__, ['SC_Site_Intelligence_Plugin', 'activate']);
 new SC_Site_Intelligence_Plugin();

@@ -1,0 +1,23 @@
+{
+  "version": "1.20.1",
+  "release_name": "Backend Compatibility Check and Admin Cache Reliability Patch",
+  "backend_version": "1.20.1",
+  "wordpress_plugin_version": "1.20.1",
+  "cache_policy_seconds": {
+    "match": 21600,
+    "mismatch": 45,
+    "unavailable": 30,
+    "invalid_response": 30
+  },
+  "states": [
+    "match",
+    "mismatch",
+    "unavailable",
+    "invalid-response",
+    "not-configured"
+  ],
+  "paid_dependencies_added": false,
+  "platform_core_required": false,
+  "validation_artifacts_isolated": true,
+  "validation_cache_location": "temporary directory outside repository"
+}
