@@ -7,8 +7,10 @@
     const m=qs("#launchMessage"),b=qs("#launchProgressBar"),r=qs("#launchRetry");
     if(m)m.textContent=message;if(b){boot.progress=Math.max(boot.progress,progress||boot.progress);b.style.width=`${Math.min(100,boot.progress)}%`}if(r)r.hidden=!retry;
   }
-  function showGlobalNotice(title,text){qs("#globalNoticeTitle").textContent=title;qs("#globalNoticeText").textContent=text;qs("#globalNotice").hidden=false}
-  function hideGlobalNotice(){qs("#globalNotice").hidden=true}
+  function showGlobalNotice(title,text){
+    console.info(`[Site Intelligence] ${title}: ${text}`);
+  }
+  function hideGlobalNotice(){}
   function finishLaunch(){qs("#app").classList.remove("app-loading");qs("#app").classList.add("app-ready");setLaunch("Site Intelligence is ready.",100);setTimeout(()=>qs("#launchScreen").classList.add("hidden"),320);reportHeight()}
   async function apiWithRetry(path,attempts=3){let last;for(let i=0;i<attempts;i++){try{return await api(path)}catch(e){last=e;if(i<attempts-1)await new Promise(r=>setTimeout(r,700*(i+1)))}}throw last}
   function reportHeight(){window.parent?.postMessage({type:"scsi-height",height:Math.max(document.body.scrollHeight,document.documentElement.scrollHeight)},"*")}
@@ -81,7 +83,7 @@
       qs("#countrySummary").innerHTML=normalized.slice(0,5).map(x=>`<div class="country-stat"><span>${escapeHtml(x.title||x.label||x.domain||"Evidence domain")}</span><strong>${escapeHtml(x.summary||x.description||x.data_state||"Source context available")}</strong></div>`).join("")||`<div class="loading-block">Country evidence structure is available; validated values appear as connectors return records.</div>`;
     }catch{
       qs("#coverageCount").textContent="—";
-      qs("#countrySummary").innerHTML=publicErrorBlock("Country evidence unavailable","The public country service did not respond.",()=>loadCountry(code));showGlobalNotice("Country evidence is temporarily unavailable","The map and other public feeds remain available.");
+      qs("#countrySummary").innerHTML=publicErrorBlock("Country evidence unavailable","The public country service did not respond.",()=>loadCountry(code));
     }
   }
   function routeMeta(route){
@@ -482,7 +484,7 @@
     try{
       const canvas=await html2canvas(qs("#earthCapture"),{backgroundColor:"#05080c",useCORS:true,allowTaint:false,scale:1.5,logging:false});
       const a=document.createElement("a");a.href=canvas.toDataURL("image/png");a.download=`site-intelligence-earth-${earthState.activeLayer}-${qs("#earthDateB").value}.png`;a.click();
-    }catch{showGlobalNotice("PNG export could not include all imagery","Some external map tiles restrict browser capture. Use Print view or download the view manifest instead.")}
+    }catch{toast("PNG export could not include all imagery. Use Print view or the JSON manifest.")}
   }
   async function openEarthStudio(){
     qs("#earthStudio").hidden=false;
@@ -543,7 +545,7 @@
         "Indicators describe conditions but do not establish causes, rankings, or legal conclusions."
       ].map(x=>`<div class="evidence-note">${escapeHtml(x)}</div>`).join("");
     }catch{
-      qs("#countryIndicatorGrid").innerHTML=publicErrorBlock("Live country intelligence unavailable","The country indicator service may be waking up or temporarily unavailable.",()=>loadLiveCountry(code));showGlobalNotice("Country indicators are temporarily unavailable","Retry in a moment while the public service wakes up.");
+      qs("#countryIndicatorGrid").innerHTML=publicErrorBlock("Live country intelligence unavailable","The country indicator service may be waking up or temporarily unavailable.",()=>loadLiveCountry(code));
       qs("#countryDataState").textContent="Unavailable";qs("#countryDataState").classList.add("reference");
     }
   }
@@ -584,7 +586,7 @@
     qs("#eventsToggle").addEventListener("change",e=>e.target.checked?state.markers.addTo(state.map):state.map.removeLayer(state.markers));
     qs("#heatToggle").addEventListener("change",e=>toast(e.target.checked?"Density layer enabled for supported records":"Density layer hidden"));
     qs("#fullscreenButton").addEventListener("click",()=>{const p=qs(".map-panel");if(document.fullscreenElement)document.exitFullscreen();else p.requestFullscreen?.()});
-    qs("#shareButton").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("View link copied")});qs("#openNewButton").addEventListener("click",()=>window.open(location.href,"_blank","noopener"));qs("#dismissNotice").addEventListener("click",hideGlobalNotice);qs("#launchRetry").addEventListener("click",()=>location.reload());qs("#countrySearchButton").addEventListener("click",searchGlobalCountries);
+    qs("#shareButton").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("View link copied")});qs("#openNewButton").addEventListener("click",()=>window.open(location.href,"_blank","noopener"));qs("#launchRetry").addEventListener("click",()=>location.reload());qs("#countrySearchButton").addEventListener("click",searchGlobalCountries);
     qs("#countrySearchInput").addEventListener("keydown",e=>{if(e.key==="Enter")searchGlobalCountries()});
     qs("#countryRegionFilter").addEventListener("change",searchGlobalCountries);
     qs("#globalTrendSelect").addEventListener("change",e=>{const item=globalCountryState.trends.find(x=>x.key===e.target.value);if(item){qs("#globalTrendTitle").textContent=item.label;renderGlobalTrend(item)}});
@@ -614,7 +616,7 @@
     qs("#earthDownloadManifest").addEventListener("click",downloadEarthManifest);
     qs("#closeEvidenceDrawer").addEventListener("click",closeEvidenceDrawer);qs("#evidenceBackdrop").addEventListener("click",closeEvidenceDrawer);document.addEventListener("keydown",e=>{if(e.key==="Escape")closeEvidenceDrawer()});
     const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const initialView=params.get("view")||"overview";qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";try{setLaunch("Loading satellite imagery.",50);await loadLayers();await setImagery("true-color");setLaunch("Connecting to live events and country evidence.",68);await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);setLaunch("Preparing the workspace.",88);await setRoute(initialView);finishLaunch()}
-    catch(e){qs("#statusText").textContent="Partial public data";showGlobalNotice("Some public feeds are unavailable","The interface is open with partial data. Retry after the service finishes waking up.");finishLaunch()}
+    catch(e){qs("#statusText").textContent="Partial public data";toast("Some optional public data is temporarily unavailable.");finishLaunch()}
   }
   document.addEventListener("DOMContentLoaded",init);
 })();

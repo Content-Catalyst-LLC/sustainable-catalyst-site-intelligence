@@ -855,7 +855,7 @@ def public_cross_domain_dashboard_export(dashboard_id: str, country: str = ""):
 def public_launch_status():
     return {
         "ok": True,
-        "version": "1.18.0",
+        "version": "1.18.1",
         "release_channel": "public-beta",
         "standalone_app": "/app/",
         "platform_core_optional": True,
@@ -917,7 +917,7 @@ def public_country_evidence_lineage(country_code: str):
         })
     return {
         "ok": True,
-        "version": "1.18.0",
+        "version": "1.18.1",
         "country": payload.get("country"),
         "platform_core": build_platform_core_status(),
         "items": items,

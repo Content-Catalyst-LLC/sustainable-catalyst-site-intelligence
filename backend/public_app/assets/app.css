@@ -250,11 +250,9 @@ body{
 .launch-orbit:after{content:"";position:absolute;width:10px;height:10px;border-radius:50%;background:#43d6ff;right:80px;top:95px;box-shadow:0 0 18px #43d6ff}
 .app-loading{visibility:hidden}.app-ready{visibility:visible}
 .public-beta-badge{display:inline-flex;width:max-content;padding:5px 8px;border-radius:999px;background:rgba(255,42,47,.14);border:1px solid rgba(255,42,47,.28);color:#ff8d91;font-size:9px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
-.global-notice{position:fixed;z-index:2500;left:50%;top:92px;transform:translateX(-50%);width:min(760px,calc(100% - 28px));display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px 16px;border:1px solid rgba(245,185,66,.28);border-radius:14px;background:rgba(22,18,10,.94);color:#fff;box-shadow:0 18px 50px rgba(0,0,0,.32);backdrop-filter:blur(16px)}
-.global-notice div{display:grid;gap:3px}.global-notice strong{font-size:12px}.global-notice span{font-size:11px;color:#c7b995}.global-notice button{border:0;background:transparent;color:#ffd373;font-weight:800}
 .empty-state,.error-state{display:grid;place-items:center;min-height:160px;padding:24px;text-align:center;border:1px dashed rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.025);color:#9ba5b2}
 .error-state strong,.empty-state strong{display:block;color:#fff;margin-bottom:7px}.retry-button{margin-top:12px;border:1px solid rgba(255,255,255,.16);border-radius:9px;background:rgba(255,255,255,.05);color:#fff;padding:8px 11px;font-weight:800}
-@media(max-width:760px){.launch-card{padding:25px 21px}.topbar-controls #openNewButton{display:none}.global-notice{top:76px}}
+@media(max-width:760px){.launch-card{padding:25px 21px}.topbar-controls #openNewButton{display:none}}
 @media(prefers-reduced-motion:reduce){.launch-screen{transition:none}}
 
 /* v1.16.0 — Earth Observation Studio */

@@ -5,7 +5,7 @@ def test_plugin_version_is_110():
     plugin = Path(__file__).resolve().parents[2] / "wordpress-plugin" / "sustainable-catalyst-site-intelligence" / "sustainable-catalyst-site-intelligence.php"
     text = plugin.read_text()
     assert "Version: 1.18.0" in text
-    assert "const VERSION = '1.18.0';" in text
+    assert "const VERSION = '1.18.1';" in text
 
 
 def test_public_shortcode_visual_alignment_css_present():

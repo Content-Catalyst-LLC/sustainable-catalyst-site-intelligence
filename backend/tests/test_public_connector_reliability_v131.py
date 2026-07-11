@@ -11,7 +11,7 @@ from app.public_live_connectors import (
 
 
 def test_connector_reliability_payload_is_public_safe():
-    data = public_connector_reliability(Settings(version="1.18.0"))
+    data = public_connector_reliability(Settings(version="1.18.1"))
     assert data["ok"] is True
     assert data["version_scope"] == "v1.18.0"
     assert data["recommended_shortcode"] == "[sc_public_connector_reliability]"
@@ -22,7 +22,7 @@ def test_connector_reliability_payload_is_public_safe():
 
 
 def test_connector_status_now_includes_reliability_counts():
-    data = public_connector_status(Settings(version="1.18.0"))
+    data = public_connector_status(Settings(version="1.18.1"))
     assert data["version_scope"] == "v1.18.0"
     assert "reliability_score" in data
     assert "reliability_counts" in data
@@ -30,7 +30,7 @@ def test_connector_status_now_includes_reliability_counts():
 
 
 def test_status_polish_payload_contains_display_guidance_and_hidden_fields():
-    data = public_connector_status_polish(Settings(version="1.18.0"))
+    data = public_connector_status_polish(Settings(version="1.18.1"))
     assert data["ok"] is True
     assert data["recommended_shortcode"] == "[sc_public_connector_status_polish]"
     assert any("[sc_public_connector_status]" in item for item in data["display_guidance"])
@@ -38,7 +38,7 @@ def test_status_polish_payload_contains_display_guidance_and_hidden_fields():
 
 
 def test_admin_diagnostics_includes_recovery_queue_without_secrets():
-    settings = Settings(version="1.18.0", eia_api_key="secret-value", epa_aqs_key="secret-value", epa_aqs_email="ops@example.com")
+    settings = Settings(version="1.18.1", eia_api_key="secret-value", epa_aqs_key="secret-value", epa_aqs_email="ops@example.com")
     data = admin_connector_diagnostics(settings)
     assert data["version_scope"] == "v1.18.0"
     assert "recovery_queue" in data

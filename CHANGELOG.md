@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.18.1 — Public Feed Notice Removal
+
+- Removed the persistent global “Some public feeds are unavailable” banner.
+- Removed the fixed overlay that could not be dismissed reliably.
+- Replaced global warnings with quiet local panel states and brief toasts.
+- Preserved retries and fallback behavior without interrupting the interface.
+- Optional feed failures no longer create a site-wide warning.
+
 ## 1.18.0 — Global Country Intelligence
 
 - Expanded country intelligence from five hard-coded countries to dynamic global World Bank country coverage.
