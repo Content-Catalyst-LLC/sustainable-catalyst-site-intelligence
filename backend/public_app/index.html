@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="dark light">
   <meta name="theme-color" content="#111111">
-  <title>Sustainable Catalyst Site Intelligence | Economics, Markets, and Sustainability Signals</title>
-  <meta name="description" content="An auditable public observatory for official economics, markets, sustainability, Earth observation, country indicators, live events, and source-aware briefs.">
+  <title>Sustainable Catalyst Site Intelligence | International Law and Global Governance Observatory</title>
+  <meta name="description" content="An auditable public observatory for international law, global governance, official economics, sustainability, Earth observation, country indicators, and source-aware briefs.">
   <meta property="og:title" content="Sustainable Catalyst Site Intelligence">
   <meta property="og:description" content="Public evidence, source lineage, Earth observation, country intelligence, live events, and verifiable research paths.">
   <meta property="og:type" content="website">
@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="/app/assets/app.css">
   <link rel="stylesheet" href="/app/assets/global-conditions-v210.css?v=2.1.0">
   <link rel="stylesheet" href="/app/assets/economics-v220.css?v=2.2.0">
+  <link rel="stylesheet" href="/app/assets/law-v230.css?v=2.3.0">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to intelligence workspace</a>
@@ -62,6 +63,7 @@
         <button class="nav-item" type="button" data-route="launch"><span>Launch</span><small>Product and portfolio</small></button>
         <button class="nav-item active" type="button" data-route="overview" aria-current="page"><span>Overview</span><small>Live map and signals</small></button>
         <button class="nav-item" type="button" data-route="economics"><span>Economics</span><small>Markets and sustainability</small></button>
+        <button class="nav-item" type="button" data-route="law"><span>International law</span><small>Governance and authority</small></button>
         <button class="nav-item" type="button" data-route="earth"><span>Earth</span><small>Satellite comparison</small></button>
         <button class="nav-item" type="button" data-route="country"><span>Country</span><small>Place-based evidence</small></button>
         <button class="nav-item" type="button" data-route="events"><span>Events</span><small>Live event intelligence</small></button>
@@ -149,7 +151,7 @@
           </div>
           <div class="launch-release-card" aria-label="Public release status">
             <span>PUBLIC RELEASE</span>
-            <strong id="launchPortfolioVersion">v2.2.0</strong>
+            <strong id="launchPortfolioVersion">v2.3.0</strong>
             <small>Source-aware observatory · MIT licensed</small>
           </div>
         </div>
@@ -226,7 +228,7 @@
           </div>
           <div class="launch-release-card" aria-label="Observatory release status">
             <span>AUDITABLE PUBLIC OBSERVATORY</span>
-            <strong id="observatoryVersion">v2.2.0</strong>
+            <strong id="observatoryVersion">v2.3.0</strong>
             <small>SHA-256 integrity · public lineage · no persistence</small>
           </div>
         </div>
@@ -918,6 +920,84 @@
         </section>
       </section>
 
+      <section id="lawStudio" class="law-studio" hidden aria-busy="false">
+        <div class="law-hero">
+          <div>
+            <p class="eyebrow">INTERNATIONAL LAW · UNITED NATIONS · GLOBAL GOVERNANCE</p>
+            <h2>Trace official legal records without collapsing their authority, status, or procedural context</h2>
+            <p>Explore treaties, resolutions, judicial records, human-rights recommendations, official reports, humanitarian material, and codification work delivered through Sustainable Catalyst Core. Legal authority, document symbols, bodies, dates, countries, subjects, citations, and source links remain visible.</p>
+            <div class="law-actions">
+              <button id="lawShare" class="ghost-button" type="button">Copy filtered view</button>
+              <button id="lawExport" class="ghost-button" type="button">Download CSV</button>
+              <button id="lawWorkbench" class="earth-primary-button" type="button">Analyze in Workbench</button>
+              <button id="lawDecisionStudio" class="ghost-button" type="button">Open Decision Studio</button>
+            </div>
+          </div>
+          <aside class="law-policy-card">
+            <span class="public-beta-badge public-release-badge">Official-source research</span>
+            <strong>Authority is classified, not flattened</strong>
+            <p id="lawPolicy">Binding obligations, judicial decisions, recommendations, reports, and statistics remain distinct.</p>
+          </aside>
+        </div>
+
+        <div id="lawStatus" class="law-status" data-state="loading" role="status" aria-live="polite"><i aria-hidden="true"></i><span>Loading international-law and governance records</span></div>
+
+        <div class="law-filter-deck" aria-label="International-law filters">
+          <label>Authority<select id="lawAuthority"><option value="">All authority levels</option></select></label>
+          <label>Record type<select id="lawType"><option value="">All record types</option></select></label>
+          <label>Legal body<select id="lawBody"><option value="">All legal bodies</option></select></label>
+          <label>Country<select id="lawCountry"><option value="">All countries</option></select></label>
+          <label>Subject<select id="lawSubject"><option value="">All subjects</option></select></label>
+          <label>Search<input id="lawSearch" type="search" maxlength="240" placeholder="Treaty, resolution, case, symbol…"></label>
+          <div class="law-filter-actions"><button id="lawApply" class="earth-primary-button" type="button">Apply</button><button id="lawReset" class="ghost-button" type="button">Reset</button></div>
+        </div>
+
+        <div class="law-metrics" aria-label="International-law workspace counts">
+          <article><span>Available records</span><strong id="lawRecordCount">—</strong><small>Core public records</small></article>
+          <article><span>Legal bodies</span><strong id="lawBodyCount">—</strong><small>Issuing institutions</small></article>
+          <article><span>Countries</span><strong id="lawCountryCount">—</strong><small>Associated geographies</small></article>
+          <article><span>Subjects</span><strong id="lawSubjectCount">—</strong><small>Legal and policy topics</small></article>
+          <article><span>Authority levels</span><strong id="lawAuthorityCount">—</strong><small>Preserved classifications</small></article>
+        </div>
+
+        <div id="lawAuthoritySummary" class="law-authority-summary" aria-label="Legal authority taxonomy"></div>
+
+        <div class="law-primary-grid">
+          <article class="law-map-panel">
+            <div class="law-panel-head"><div><p class="eyebrow">GLOBAL RECORD MAP</p><h3>Country-associated official records</h3></div><strong id="lawReturnedCount">0</strong></div>
+            <div id="lawMap" class="law-map" role="region" aria-label="Map of country-associated international-law records" tabindex="0"></div>
+            <p class="law-map-note">Markers show record associations retained by official sources. Presence does not establish treaty applicability, legal responsibility, enforceability, or compliance.</p>
+          </article>
+          <article class="law-timeline-panel">
+            <div class="law-panel-head"><div><p class="eyebrow">LEGAL TIMELINE</p><h3>Published, adopted, and effective records</h3></div></div>
+            <div id="lawTimeline" class="law-timeline" aria-live="polite"></div>
+          </article>
+        </div>
+
+        <article class="law-record-panel">
+          <div class="law-panel-head"><div><p class="eyebrow">OFFICIAL RECORD EXPLORER</p><h3>Authority-aware legal and governance records</h3></div><p>Up to 80 records are displayed. Source links lead to the authoritative public record where available.</p></div>
+          <div id="lawRecords" class="law-records" aria-live="polite"></div>
+        </article>
+
+        <div class="law-secondary-grid">
+          <article class="law-country-panel">
+            <div class="law-panel-head"><div><p class="eyebrow">COUNTRY LEGAL PROFILE</p><h3>Official-source coverage by country</h3></div></div>
+            <div class="law-country-controls"><label>Country<select id="lawProfileCountry"><option value="">Choose country</option></select></label><button id="lawProfileApply" class="earth-primary-button" type="button">Build profile</button></div>
+            <div id="lawCountryProfile"><div class="law-empty"><div><strong>Choose a country</strong><span>Profiles organize record coverage without determining obligations or compliance.</span></div></div></div>
+          </article>
+          <article class="law-matrix-panel">
+            <div class="law-panel-head"><div><p class="eyebrow">AUTHORITY MATRIX</p><h3>Legal bodies and authority classifications</h3></div><p>Counts describe visible records, not legal force or institutional rank.</p></div>
+            <div id="lawAuthorityMatrix"><div class="law-empty"><div><strong>Choose a country</strong><span>The matrix will retain each record's authority type.</span></div></div></div>
+          </article>
+        </div>
+
+        <section class="law-method-panel" aria-label="International-law methodology">
+          <article><p class="eyebrow">LEGAL EFFECT</p><h3>No automatic binding inference</h3><p>A treaty record, Security Council resolution, judgment, recommendation, or report is not assigned legal effect solely from its title or document symbol. Charter basis, operative language, parties, jurisdiction, reservations, and procedural context require review.</p></article>
+          <article><p class="eyebrow">PROCEDURAL STATUS</p><h3>Different acts remain different</h3><p>Judgments, advisory opinions, orders, allegations, findings, recommendations, draft texts, official reports, and statistical observations are not presented as equivalent forms of authority.</p></article>
+          <article><p class="eyebrow">PUBLIC USE</p><h3>Research, not legal advice</h3><p>This observatory supports source discovery and structured analysis. It is not legal advice, commercial sanctions screening, an automated compliance system, or a determination of responsibility or guilt.</p></article>
+        </section>
+      </section>
+
       <section id="routePanel" class="route-panel" hidden></section>
 
       <section id="globalCountryExplorer" class="global-country-explorer" hidden>
@@ -1060,5 +1140,6 @@
   <script src="/app/assets/app.js" defer></script>
   <script src="/app/assets/global-conditions-v210.js?v=2.1.0" defer></script>
   <script src="/app/assets/economics-v220.js?v=2.2.0" defer></script>
+  <script src="/app/assets/law-v230.js?v=2.3.0" defer></script>
 </body>
 </html>

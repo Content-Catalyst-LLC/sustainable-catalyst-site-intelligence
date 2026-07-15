@@ -27,6 +27,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         {"id": "saved_views", "label": "Saved Views and Shareable Research Paths are available", "status": "pass", "detail": "Public interface state can be stored locally, reopened, exported, imported, migrated, and reconstructed from public URLs without server-side user profiles.", "action": "Verify /app/?view=saved, save and reopen each major route, import/export JSON, and clear local browser storage."},
         {"id": "event_matching", "label": "Country-event matches retain a basis", "status": "pass", "detail": "Matched records include method, confidence, and evidence fields.", "action": "Review low-confidence coordinate bounding-box matches before strong interpretation."},
         {"id": "economics_sustainability", "label": "Economics, Markets, and Sustainability Signals is available", "status": "pass", "detail": "Official economics records are proxied through Core with frequency, unit, vintage, source, and market-data timing labels preserved.", "action": "Verify /app/?view=economics, filters, map, series, comparison, CSV export, and Core fallback state."},
+        {"id": "international_law_observatory", "label": "International Law and Global Governance Observatory is available", "status": "pass", "detail": "Official legal and governance records are proxied through Core with authority type, procedural status, official symbols, countries, subjects, citations, and source links preserved.", "action": "Verify /app/?view=law, filters, map, timeline, country profile, authority matrix, CSV export, and Core fallback state."},
         {"id": "platform_core", "label": "Platform Core remains optional and free-source governed", "status": "pass", "detail": "Public routes degrade cleanly and do not require a paid provider or expose Core credentials.", "action": "Configure only the scoped Core public-read key in the Site Intelligence backend."},
         {"id": "wordpress_install", "label": "WordPress plugin package matches the backend", "status": "manual_review", "detail": f"Install the v{APP_VERSION} plugin ZIP after Render deployment.", "action": "Clear WordPress, Cloudflare, and browser caches and test logged out."},
         {"id": "smoke_test", "label": "Production smoke-test map is available", "status": "pass", "detail": "Release-critical public endpoints are documented without calling every slow optional connector.", "action": "Run the smoke-test endpoint after deployment."},
@@ -44,7 +45,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Checklist",
         "summary": RELEASE_NAME,
-        "release_stage": "v2.2.0_economics_markets_sustainability_signals",
+        "release_stage": "v2.3.0_international_law_global_governance_observatory",
         "status": "launch_ready_with_manual_review" if counts["fail"] == 0 else "needs_fix",
         "score": score,
         "counts": counts,
@@ -60,11 +61,12 @@ def release_public_summary(settings: Settings) -> Dict[str, Any]:
         "generated_at": _now(),
         "version": settings.version,
         "title": "Sustainable Catalyst Site Intelligence",
-        "subtitle": "A public geospatial, economic, sustainability, country, comparative, thematic, briefing, source, methodology, and saved-research application.",
-        "summary": "Site Intelligence connects official economics and sustainability signals, Earth observation, global country indicators, public events, dashboards, source records, methodology, saved research paths, diagnostics, and exports through one standalone public application.",
+        "subtitle": "A public geospatial, economic, sustainability, international-law, global-governance, country, comparative, thematic, briefing, source, methodology, and saved-research application.",
+        "summary": "Site Intelligence connects official economics and sustainability signals, international-law and global-governance records, Earth observation, global country indicators, public events, dashboards, source records, methodology, saved research paths, diagnostics, and exports through one standalone public application.",
         "public_value": [
             "Provides searchable global country intelligence and a two-country comparative workspace.",
             "Provides source-aware official economic and sustainability records with precise release-frequency labels and no simulated real-time market claims.",
+            "Provides official international-law and global-governance records while preserving authority type, procedural status, citations, official symbols, and non-advice boundaries.",
             "Generates deterministic country, comparison, event, Earth-observation, and thematic briefs with source-complete exports.",
             "Provides four focused thematic dashboards for climate and environment, human development, human security, and infrastructure and connectivity.",
             "Provides a searchable public source and methodology registry with coverage, delivery states, feature usage, known limits, diagnostics, and exports.",
@@ -87,11 +89,11 @@ def release_public_summary(settings: Settings) -> Dict[str, Any]:
 
 def release_metadata() -> Dict[str, str]:
     return {
-        "seo_title": "Site Intelligence: Earth Observation, Global Country Data, and Public Event Intelligence",
+        "seo_title": "Site Intelligence: Economics, International Law, Earth Observation, and Global Intelligence",
         "page_title": "Site Intelligence",
-        "excerpt": "Sustainable Catalyst Site Intelligence is a public-interest observatory for Earth observation, global country indicators, natural hazards, humanitarian reporting, and source-aware research.",
-        "meta_description": "Explore Earth observation, global country indicators, public events, trends, sources, and methodology through Sustainable Catalyst Site Intelligence.",
-        "social_description": "A public-interest observatory for satellite imagery, country indicators, natural hazards, humanitarian reporting, and source-aware research.",
+        "excerpt": "Sustainable Catalyst Site Intelligence is a public-interest observatory for official economics, international law, Earth observation, global country indicators, natural hazards, humanitarian reporting, and source-aware research.",
+        "meta_description": "Explore official economics, international law, Earth observation, global country indicators, public events, trends, sources, and methodology through Sustainable Catalyst Site Intelligence.",
+        "social_description": "A public-interest observatory for official economics, international law, satellite imagery, country indicators, natural hazards, humanitarian reporting, and source-aware research.",
     }
 
 
@@ -103,6 +105,8 @@ def smoke_test(settings: Settings) -> Dict[str, Any]:
         {"path": "/public/launch-status", "scope": "public", "critical": True, "expected": "public beta readiness"},
         {"path": "/public/economics-sustainability", "scope": "public", "critical": True, "expected": "economics workspace profile and Core state"},
         {"path": "/public/economics-sustainability/records?limit=10", "scope": "public", "critical": True, "expected": "sanitized official economic records or explicit empty state"},
+        {"path": "/public/international-law-observatory", "scope": "public", "critical": True, "expected": "international-law workspace profile and Core state"},
+        {"path": "/public/international-law-observatory/records?limit=10", "scope": "public", "critical": True, "expected": "sanitized official legal records or explicit empty state"},
         {"path": "/public/countries", "scope": "public", "critical": True, "expected": "normalized global catalog"},
         {"path": "/public/countries/diagnostics", "scope": "public", "critical": True, "expected": "public-safe catalog and cache diagnostics"},
         {"path": "/public/country/KEN/overview", "scope": "public", "critical": True, "expected": "country profile"},
@@ -155,7 +159,7 @@ def release_status(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Status",
         "summary": RELEASE_NAME,
-        "release_stage": "v2.2.0_economics_markets_sustainability_signals",
+        "release_stage": "v2.3.0_international_law_global_governance_observatory",
         "release_status": checklist["status"],
         "release_score": checklist["score"],
         "public_shortcode": "[sc_site_intelligence_app height=\"1000\"]",

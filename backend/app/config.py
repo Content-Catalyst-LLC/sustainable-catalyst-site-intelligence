@@ -107,6 +107,14 @@ class Settings(BaseSettings):
     economics_sustainability_timeout_seconds: int = Field(default=9, ge=2, le=30)
     economics_sustainability_cache_ttl_seconds: int = Field(default=120, ge=15, le=1800)
 
+    # Site Intelligence v2.3.0 — International Law and Global Governance Observatory.
+    # Reads public international-law records and authority taxonomy through
+    # Platform Core while preserving legal effect, procedural status, source
+    # links, and non-advice safeguards.
+    international_law_observatory_enabled: bool = True
+    international_law_observatory_timeout_seconds: int = Field(default=9, ge=2, le=30)
+    international_law_observatory_cache_ttl_seconds: int = Field(default=120, ge=15, le=1800)
+
 
     # Sustainable Development Data Connectors v1.14.1.
     sustainable_development_connectors_enabled: bool = True

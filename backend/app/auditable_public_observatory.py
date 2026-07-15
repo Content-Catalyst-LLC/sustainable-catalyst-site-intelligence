@@ -44,6 +44,12 @@ PUBLIC_WORKSPACES: list[dict[str, str]] = [
         "summary": "Inspect official economic, trade, labour, energy, demographic, company-filing, and sustainability records with source and timing context.",
     },
     {
+        "id": "law",
+        "title": "International Law and Global Governance Observatory",
+        "route": "/app/?view=law",
+        "summary": "Inspect official legal and governance records with authority type, procedural status, official symbols, citations, and source context preserved.",
+    },
+    {
         "id": "earth",
         "title": "Earth Observation Studio",
         "route": "/app/?view=earth",
@@ -115,6 +121,20 @@ AUDIT_ARTIFACTS: list[dict[str, Any]] = [
         "methodology_ids": [record["id"] for record in METHODOLOGY_RECORDS],
         "verification_level": "implementation-reference",
         "limitations": ["Methodology records describe application behavior but do not certify an external source methodology."],
+    },
+    {
+        "id": "international-law-governance",
+        "title": "International Law and Global Governance Observatory",
+        "artifact_type": "workspace",
+        "route": "/app/?view=law",
+        "schema": "sc-international-law-observatory/1.0",
+        "source_ids": ["platform-core"],
+        "methodology_ids": ["delivery-states", "optional-source-failures"],
+        "verification_level": "official-record-and-authority-linked",
+        "limitations": [
+            "Authority classifications preserve source metadata but do not independently establish binding legal effect.",
+            "The workspace provides public research context and is not legal advice or a compliance determination.",
+        ],
     },
     {
         "id": "earth-observation",
@@ -218,6 +238,7 @@ RELEASE_LEDGER = [
     {"version": "2.0.0", "title": "Auditable Public Observatory", "audit_contribution": "Evidence ledger, lineage graph, integrity digests, and public verification contract."},
     {"version": "2.1.0", "title": "Global Conditions and Live Map Observatory", "audit_contribution": "Core-powered public geographic records, observation signals, map-layer registry integration, and explicit fallback states."},
     {"version": "2.2.0", "title": "Economics, Markets, and Sustainability Signals", "audit_contribution": "Core-backed official-statistics records, timing classifications, source-preserving comparisons, geography mapping, and explicit no-real-time-market-data boundaries."},
+    {"version": "2.3.0", "title": "International Law and Global Governance Observatory", "audit_contribution": "Core-backed official legal records, legal-authority taxonomy, procedural-status preservation, source-aware country profiles, timelines, and explicit non-advice boundaries."},
 ]
 
 

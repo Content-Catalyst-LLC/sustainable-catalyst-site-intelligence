@@ -1,6 +1,21 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.2.0 — Economics, Markets, and Sustainability Signals
+**Current release:** v2.3.0 — International Law and Global Governance Observatory
+
+
+## v2.3.0 — International Law and Global Governance Observatory
+
+Site Intelligence v2.3.0 adds a dedicated public workspace for official international-law and global-governance records supplied through Sustainable Catalyst Core.
+
+Public route: `/app/?view=law`
+
+WordPress shortcode: `[sc_international_law_governance_observatory height="1350"]`
+
+The workspace supports authority and record-type filters, official document symbols, legal and issuing bodies, procedural status, adoption and publication dates, country and subject associations, citations, official source links, a geographic profile map, timeline, country legal profile, authority matrix, CSV export, Saved View support, and Workbench and Decision Studio handoffs.
+
+Legal authority is never flattened into a single score. Treaties, treaty actions, judgments, advisory opinions, procedural orders, Security Council resolutions, General Assembly resolutions, human-rights recommendations, ILC texts, and official reports retain distinct classifications. The workspace does not provide legal advice, compliance determinations, or automatic claims about binding effect.
+
+The Core connection remains optional. When Core is disabled or unavailable, the workspace reports an explicit unavailable or degraded state and does not fabricate legal records.
 
 Sustainable Catalyst Site Intelligence is an auditable public observatory for Earth observation, global country indicators, natural hazards, humanitarian reporting, comparative research, source-aware briefs, evidence lineage, and portable public verification records.
 

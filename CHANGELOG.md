@@ -1,3 +1,17 @@
+## 2.3.0 — International Law and Global Governance Observatory
+
+- Added the standalone `/app/?view=law` International Law and Global Governance Observatory.
+- Added server-side, public-safe delivery of Core international-law records without exposing Core credentials to browser JavaScript.
+- Added authority, record-type, legal-body, country, subject, date, and keyword filters.
+- Added official-symbol, citation, procedural-status, adoption-date, publication-date, and canonical-source preservation.
+- Added geographic country association mapping, chronological timeline, country legal profiles, and an authority matrix.
+- Added CSV export, shareable URL state, Saved View integration, and Workbench and Decision Studio handoffs.
+- Added explicit authority explanations and non-advice safeguards; the application does not infer binding effect, compliance, or legal conclusions from a document symbol alone.
+- Added public observatory profile, records, facets, timeline, country-profile, authority-matrix, brief, and diagnostics endpoints.
+- Added `[sc_international_law_governance_observatory height="1350"]` for WordPress.
+- Added free-source-only configuration and explicit disabled, unavailable, degraded, stale, and connected states.
+- Updated backend, standalone application, WordPress plugin, release metadata, documentation, and automated tests to v2.3.0.
+
 ## 2.2.0 — Economics, Markets, and Sustainability Signals
 
 - Release hardening: filtered country, category, and source requests no longer inherit a `stale` state from unrelated cached events when no matching evidence exists.

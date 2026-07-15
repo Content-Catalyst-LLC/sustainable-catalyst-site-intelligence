@@ -1,0 +1,27 @@
+{
+  "release": "2.3.0",
+  "name": "International Law and Global Governance Observatory",
+  "application_version": "2.3.0",
+  "schema": "sc-site-intelligence-release-manifest/2.3",
+  "public_route": "/app/?view=law",
+  "wordpress_shortcode": "[sc_international_law_governance_observatory height=\"1350\"]",
+  "backend_endpoints": [
+    "/public/international-law-observatory",
+    "/public/international-law-observatory/records",
+    "/public/international-law-observatory/facets",
+    "/public/international-law-observatory/timeline",
+    "/public/international-law-observatory/country-profile",
+    "/public/international-law-observatory/authority-matrix",
+    "/public/international-law-observatory/brief",
+    "/public/international-law-observatory/diagnostics"
+  ],
+  "authority_types_preserved": true,
+  "binding_effect_inferred_automatically": false,
+  "legal_advice_provided": false,
+  "provider_credentials_exposed_to_browser": false,
+  "free_provider_only": true,
+  "paid_api_required": false,
+  "platform_core_optional": true,
+  "core_minimum_release": "2.7.1",
+  "recommended_core_release": "2.8.0"
+}

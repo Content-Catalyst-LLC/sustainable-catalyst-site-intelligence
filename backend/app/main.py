@@ -3939,6 +3939,96 @@ def public_economics_sustainability_diagnostics(settings: Settings = Depends(get
     return build_economics_diagnostics(settings)
 
 
+# Site Intelligence v2.3.0 — International Law and Global Governance Observatory
+@app.get("/public/international-law-observatory")
+def public_international_law_observatory_overview(settings: Settings = Depends(get_settings)):
+    from .international_law_observatory import build_law_overview
+    return build_law_overview(settings)
+
+
+@app.get("/public/international-law-observatory/records")
+def public_international_law_observatory_records(
+    record_type: str = Query(default="", max_length=100),
+    authority_level: str = Query(default="", max_length=100),
+    legal_body: str = Query(default="", max_length=260),
+    country: str = Query(default="", max_length=120),
+    subject: str = Query(default="", max_length=180),
+    official_symbol: str = Query(default="", max_length=180),
+    query: str = Query(default="", max_length=240),
+    start: str = Query(default="", max_length=50),
+    end: str = Query(default="", max_length=50),
+    limit: int = Query(default=100, ge=1, le=300),
+    offset: int = Query(default=0, ge=0),
+    settings: Settings = Depends(get_settings),
+):
+    from .international_law_observatory import build_law_records
+    return build_law_records(
+        settings, record_type=record_type, authority_level=authority_level,
+        legal_body=legal_body, country=country, subject=subject,
+        official_symbol=official_symbol, query=query, start=start, end=end,
+        limit=limit, offset=offset,
+    )
+
+
+@app.get("/public/international-law-observatory/facets")
+def public_international_law_observatory_facets(settings: Settings = Depends(get_settings)):
+    from .international_law_observatory import build_law_facets
+    return build_law_facets(settings)
+
+
+@app.get("/public/international-law-observatory/timeline")
+def public_international_law_observatory_timeline(
+    country: str = Query(default="", max_length=120),
+    authority_level: str = Query(default="", max_length=100),
+    record_type: str = Query(default="", max_length=100),
+    limit: int = Query(default=160, ge=1, le=240),
+    settings: Settings = Depends(get_settings),
+):
+    from .international_law_observatory import build_law_timeline
+    return build_law_timeline(settings, country=country, authority_level=authority_level, record_type=record_type, limit=limit)
+
+
+@app.get("/public/international-law-observatory/country-profile")
+def public_international_law_observatory_country_profile(
+    country: str = Query(..., min_length=2, max_length=120),
+    limit: int = Query(default=160, ge=1, le=300),
+    settings: Settings = Depends(get_settings),
+):
+    from .international_law_observatory import build_country_legal_profile
+    try:
+        return build_country_legal_profile(settings, country=country, limit=limit)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/public/international-law-observatory/authority-matrix")
+def public_international_law_observatory_authority_matrix(
+    country: str = Query(default="", max_length=120),
+    limit: int = Query(default=300, ge=1, le=300),
+    settings: Settings = Depends(get_settings),
+):
+    from .international_law_observatory import build_authority_matrix
+    return build_authority_matrix(settings, country=country, limit=limit)
+
+
+@app.get("/public/international-law-observatory/brief")
+def public_international_law_observatory_brief(
+    country: str = Query(default="", max_length=120),
+    authority_level: str = Query(default="", max_length=100),
+    record_type: str = Query(default="", max_length=100),
+    limit: int = Query(default=100, ge=1, le=150),
+    settings: Settings = Depends(get_settings),
+):
+    from .international_law_observatory import build_law_brief
+    return build_law_brief(settings, country=country, authority_level=authority_level, record_type=record_type, limit=limit)
+
+
+@app.get("/public/international-law-observatory/diagnostics")
+def public_international_law_observatory_diagnostics(settings: Settings = Depends(get_settings)):
+    from .international_law_observatory import build_law_diagnostics
+    return build_law_diagnostics(settings)
+
+
 # Site Intelligence standalone public application.
 from pathlib import Path as _Path
 PUBLIC_APP_DIR = _Path(__file__).resolve().parent.parent / "public_app"

@@ -29,3 +29,9 @@ services:
         value: "9"
       - key: SC_SI_ECONOMICS_SUSTAINABILITY_CACHE_TTL_SECONDS
         value: "120"
+      - key: SC_SI_INTERNATIONAL_LAW_OBSERVATORY_ENABLED
+        value: "true"
+      - key: SC_SI_INTERNATIONAL_LAW_OBSERVATORY_TIMEOUT_SECONDS
+        value: "9"
+      - key: SC_SI_INTERNATIONAL_LAW_OBSERVATORY_CACHE_TTL_SECONDS
+        value: "120"
