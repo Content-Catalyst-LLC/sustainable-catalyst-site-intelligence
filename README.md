@@ -1,8 +1,17 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.5.0 — Humanitarian, Conflict, and Displacement Observatory
+**Current release:** v2.6.0 — Trade, Energy, and Resource Security Observatory
 
 
+
+## v2.6.0 — Trade, Energy, and Resource Security Observatory
+
+Site Intelligence v2.6.0 adds a public workspace for official trade flows, energy systems, agriculture, food, water, materials, supply-chain relationships, and climate-transition context. It preserves source units, periods, classifications, counterpart geographies, frequencies, licenses, and methodology rather than creating a proprietary resource-security score.
+
+- Public route: `/app/?view=resources`
+- WordPress shortcode: `[sc_trade_energy_resource_security_observatory height="1450"]`
+- Free official and public data through Platform Core
+- No simulated real-time markets, proprietary risk score, sanctions determination, or fabricated fallback values
 
 ## v2.5.0 — Humanitarian, Conflict, and Displacement Observatory
 

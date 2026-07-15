@@ -1,0 +1,7 @@
+cd ~/Downloads
+chmod 700 install_and_push_site_intelligence_v2_6_0.sh
+bash ./install_and_push_site_intelligence_v2_6_0.sh
+
+# After Render redeploys
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/health | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/public/trade-energy-resources/diagnostics | python3 -m json.tool

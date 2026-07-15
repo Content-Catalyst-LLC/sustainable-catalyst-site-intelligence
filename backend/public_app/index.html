@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="/app/assets/law-v230.css?v=2.3.0">
   <link rel="stylesheet" href="/app/assets/science-v240.css?v=2.4.0">
   <link rel="stylesheet" href="/app/assets/humanitarian-v250.css?v=2.5.0">
+  <link rel="stylesheet" href="/app/assets/resources-v260.css?v=2.6.0">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to intelligence workspace</a>
@@ -68,6 +69,7 @@
         <button class="nav-item" type="button" data-route="law"><span>International law</span><small>Governance and authority</small></button>
         <button class="nav-item" type="button" data-route="science"><span>Science</span><small>Earth systems and space</small></button>
         <button class="nav-item" type="button" data-route="humanitarian"><span>Humanitarian</span><small>Conflict and displacement</small></button>
+        <button class="nav-item" type="button" data-route="resources"><span>Resources</span><small>Trade, energy, and security</small></button>
         <button class="nav-item" type="button" data-route="earth"><span>Earth</span><small>Satellite comparison</small></button>
         <button class="nav-item" type="button" data-route="country"><span>Country</span><small>Place-based evidence</small></button>
         <button class="nav-item" type="button" data-route="events"><span>Events</span><small>Live event intelligence</small></button>
@@ -926,6 +928,16 @@
 
 
 
+
+      <section id="resourceStudio" class="resource-studio" hidden aria-busy="false">
+        <div class="resource-hero"><div><p class="eyebrow">TRADE · ENERGY · RESOURCE SECURITY</p><h2>Trace official trade flows, energy systems, food, water, and strategic-resource evidence</h2><p>Explore free official records from Sustainable Catalyst Core while retaining source, unit, period, counterpart, frequency, and methodology context.</p><div class="resource-actions"><button id="resourceShare" class="ghost-button" type="button">Copy filtered view</button><button id="resourceExport" class="ghost-button" type="button">Download CSV</button><button id="resourceWorkbench" class="earth-primary-button" type="button">Open briefing workflow</button></div></div><aside><span class="public-beta-badge public-release-badge">Official-source research</span><strong>No proprietary security score</strong><p>Published relationships are not automatically treated as dependency, vulnerability, sanctions exposure, or disruption probability.</p></aside></div>
+        <div id="resourceStatus" class="resource-status" data-state="loading" role="status" aria-live="polite"><i></i><span>Loading trade, energy, and resource records</span></div>
+        <div class="resource-filters"><label>Domain<select id="resourceFamily"><option value="">All domains</option></select></label><label>Source<select id="resourceSource"><option value="">All sources</option></select></label><label>Geography<select id="resourceCountry"><option value="">All geographies</option></select></label><label>Counterpart<select id="resourceCounterpart"><option value="">All counterparts</option></select></label><label>Indicator<select id="resourceIndicator"><option value="">All indicators</option></select></label><label>Search<input id="resourceSearch" maxlength="240" type="search" placeholder="Electricity, imports, water stress…"></label><div class="resource-filter-actions"><button id="resourceApply" class="earth-primary-button" type="button">Apply</button><button id="resourceReset" class="ghost-button" type="button">Reset</button></div></div>
+        <div class="resource-metrics"><article><span>Records</span><strong id="resourceRecordCount">—</strong><small>Official observations</small></article><article><span>Sources</span><strong id="resourceSourceCount">—</strong><small>Visible providers</small></article><article><span>Geographies</span><strong id="resourceCountryCount">—</strong><small>Reporting areas</small></article><article><span>Trade</span><strong id="resourceTradeCount">—</strong><small>Flow records</small></article><article><span>Energy</span><strong id="resourceEnergyCount">—</strong><small>System records</small></article></div>
+        <div class="resource-primary-grid"><article class="resource-panel"><div class="humanitarian-panel-head"><div><p class="eyebrow">GLOBAL COVERAGE MAP</p><h3>Countries with visible resource records</h3></div><strong id="resourceMappedCount">0</strong></div><div id="resourceMap" class="resource-map" tabindex="0" aria-label="Map of official trade, energy, and resource records"></div><p>Marker size shows visible record coverage only. It does not indicate security, scarcity, or resilience.</p></article><article class="resource-panel"><div class="humanitarian-panel-head"><div><p class="eyebrow">PUBLISHED COUNTERPARTS</p><h3>Trade and supply relationships</h3></div></div><div id="resourceDependencies" class="resource-dependencies"></div></article></div>
+        <article class="resource-panel"><div class="humanitarian-panel-head"><div><p class="eyebrow">SOURCE-AWARE RECORDS</p><h3>Trade, energy, food, water, materials, and transition context</h3></div></div><div id="resourceRecords" class="resource-records" aria-live="polite"></div></article>
+        <section class="resource-family-grid"><article><p class="eyebrow">COMPARABILITY</p><h3>Units and periods remain visible</h3><p>Values with different classifications, currencies, price bases, directions, and periods are not silently combined.</p></article><article><p class="eyebrow">DEPENDENCY</p><h3>Relationships are not risk scores</h3><p>A published counterpart or import record does not by itself prove vulnerability, coercion, concentration, or disruption.</p></article><article><p class="eyebrow">ENERGY</p><h3>Physical and economic records stay distinct</h3><p>Generation, capacity, consumption, prices, emissions, and forecasts retain their original meanings.</p></article><article><p class="eyebrow">PUBLIC USE</p><h3>Research, not advice</h3><p>This workspace is not investment, trade, sanctions, engineering, legal, or national-security advice.</p></article></section>
+      </section>
       <section id="humanitarianStudio" class="humanitarian-studio" hidden aria-busy="false">
         <div class="humanitarian-hero"><div><p class="eyebrow">HUMANITARIAN · CONFLICT · DISPLACEMENT</p><h2>Connect crisis reporting, displacement evidence, civilian-protection context, and hazard exposure</h2><p>Explore public records from Site Intelligence event feeds and Sustainable Catalyst Core while retaining source, date, geography, uncertainty, legal authority, and responsible-data limits.</p><div class="humanitarian-actions"><button id="humanitarianShare" class="ghost-button" type="button">Copy filtered view</button><button id="humanitarianExport" class="ghost-button" type="button">Download CSV</button><button id="humanitarianDecision" class="earth-primary-button" type="button">Open Decision Studio</button></div></div><aside><span class="public-beta-badge public-release-badge">Public-source research</span><strong>No fabricated crisis records</strong><p>This workspace does not infer legal responsibility, protection status, individual risk, eligibility, or operational priority.</p></aside></div>
         <div id="humanitarianStatus" class="humanitarian-status" data-state="loading" role="status" aria-live="polite"><i></i><span>Loading humanitarian and displacement evidence</span></div>
@@ -1176,5 +1188,6 @@
   <script src="/app/assets/law-v230.js?v=2.3.0" defer></script>
   <script src="/app/assets/science-v240.js?v=2.4.0" defer></script>
   <script src="/app/assets/humanitarian-v250.js?v=2.5.0" defer></script>
+  <script src="/app/assets/resources-v260.js?v=2.6.0" defer></script>
 </body>
 </html>

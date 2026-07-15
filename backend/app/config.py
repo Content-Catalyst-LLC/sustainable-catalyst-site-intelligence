@@ -131,6 +131,14 @@ class Settings(BaseSettings):
     humanitarian_conflict_displacement_timeout_seconds: int = Field(default=9, ge=2, le=30)
     humanitarian_conflict_displacement_cache_ttl_seconds: int = Field(default=90, ge=15, le=1800)
 
+    # Site Intelligence v2.6.0 — Trade, Energy, and Resource Security Observatory.
+    # Reads free official trade, energy, agriculture, water, materials, and
+    # sustainability records through Platform Core. Dependencies and exposure
+    # summaries preserve source units and never become proprietary risk scores.
+    trade_energy_resource_security_enabled: bool = True
+    trade_energy_resource_security_timeout_seconds: int = Field(default=9, ge=2, le=30)
+    trade_energy_resource_security_cache_ttl_seconds: int = Field(default=120, ge=15, le=1800)
+
 
     # Sustainable Development Data Connectors v1.14.1.
     sustainable_development_connectors_enabled: bool = True

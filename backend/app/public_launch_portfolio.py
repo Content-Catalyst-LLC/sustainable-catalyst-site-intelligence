@@ -10,7 +10,7 @@ LAUNCH_PROFILE_SCHEMA = "sc-site-intelligence-launch/1.0"
 PORTFOLIO_SCHEMA = "sc-site-intelligence-portfolio/1.0"
 PUBLIC_POSITIONING = (
     "Sustainable Catalyst Site Intelligence is an auditable public observatory for satellite imagery, "
-    "official economics and sustainability signals, global country indicators, natural hazards, humanitarian reporting, source-aware comparative research, and evidence lineage."
+    "official economics, trade, energy, resource-security, sustainability, global country indicators, natural hazards, humanitarian reporting, source-aware comparative research, and evidence lineage."
 )
 
 PUBLIC_WORKSPACES = [
@@ -20,6 +20,7 @@ PUBLIC_WORKSPACES = [
     {"id": "law", "title": "International Law and Global Governance Observatory", "route": "/app/?view=law", "summary": "Explore official legal and governance records while preserving authority type, procedural status, citations, and source context."},
     {"id": "science", "title": "Scientific and Earth Systems Observatory", "route": "/app/?view=science", "summary": "Discover Earth systems, space observations, biodiversity, chemistry, materials, scientific assets, layers, STAC items, and time series with source and quality context."},
     {"id": "humanitarian", "title": "Humanitarian, Conflict, and Displacement Observatory", "route": "/app/?view=humanitarian", "summary": "Connect public crisis reporting, displacement evidence, civilian-protection context, humanitarian access, and hazard exposure without fabricating records."},
+    {"id": "resources", "title": "Trade, Energy, and Resource Security Observatory", "route": "/app/?view=resources", "summary": "Trace official trade, energy, food, water, materials, and counterpart records without converting coverage into a proprietary risk score."},
     {"id": "earth", "title": "Earth Observation Studio", "route": "/app/?view=earth", "summary": "Compare satellite-derived layers across dates with source and imagery limits."},
     {"id": "events", "title": "Live Event Intelligence", "route": "/app/?view=events", "summary": "Filter public hazard and humanitarian records while retaining source identity."},
     {"id": "country", "title": "Global Country Intelligence", "route": "/app/?view=country&country=KEN", "summary": "Explore country indicators, trends, event context, and reporting-year differences."},
@@ -82,7 +83,7 @@ def launch_profile() -> dict[str, Any]:
 
 def launch_checklist() -> dict[str, Any]:
     groups = [
-        {"id": "product", "title": "Public product", "status": "implemented", "items": ["single primary application embed", "fourteen public research workspaces", "public launch route", "responsible-use boundary"]},
+        {"id": "product", "title": "Public product", "status": "implemented", "items": ["single primary application embed", "fifteen public research workspaces", "public launch route", "responsible-use boundary"]},
         {"id": "evidence", "title": "Evidence and provenance", "status": "implemented", "items": ["source registry", "methodology registry", "visible data states", "source-aware exports"]},
         {"id": "delivery", "title": "Delivery quality", "status": "implemented", "items": ["mobile navigation", "keyboard behavior", "reduced motion", "performance budgets", "responsive WordPress embed"]},
         {"id": "portfolio", "title": "Portfolio materials", "status": "implemented", "items": ["project description", "launch post", "homepage feature copy", "Platform page copy", "demo shot list"]},
@@ -112,7 +113,7 @@ def launch_materials() -> dict[str, Any]:
         },
         "platform_feature": {
             "title": "Source-aware public intelligence",
-            "body": "Site Intelligence connects Earth observation, public events, official economics, international law and governance records, country indicators, thematic dashboards, comparative research, briefing exports, and transparent methodology in one auditable workflow.",
+            "body": "Site Intelligence connects Earth observation, public events, official economics, trade, energy, resource-security records, international law and governance records, country indicators, thematic dashboards, comparative research, briefing exports, and transparent methodology in one auditable workflow.",
         },
         "linkedin_project_description": "An open-source public-interest observatory that connects official economics, international law, satellite imagery, country indicators, natural hazards, humanitarian reporting, comparative intelligence, transparent methods, and source-aware briefing exports.",
         "linkedin_launch_post": "I launched Sustainable Catalyst Site Intelligence, an open-source public-interest observatory for official economics, international law, Earth observation, global country indicators, natural hazards, humanitarian reporting, and source-aware comparative research. The platform keeps source identity, reporting dates, missing data, and methodological limits visible while supporting shareable research paths and reproducible exports.",

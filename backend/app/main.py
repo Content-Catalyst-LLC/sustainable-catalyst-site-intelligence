@@ -4216,6 +4216,59 @@ def public_humanitarian_conflict_displacement_diagnostics(settings: Settings = D
     return build_diagnostics(settings)
 
 
+
+# Site Intelligence v2.6.0 — Trade, Energy, and Resource Security Observatory
+@app.get("/public/trade-energy-resources")
+def public_trade_energy_resources_overview(settings: Settings = Depends(get_settings)):
+    from .trade_energy_resource_security_observatory import build_overview
+    return build_overview(settings)
+
+@app.get("/public/trade-energy-resources/records")
+def public_trade_energy_resources_records(family: str = Query(default="", max_length=100), source_id: str = Query(default="", max_length=160), geography_code: str = Query(default="", max_length=20), counterpart_code: str = Query(default="", max_length=20), indicator_code: str = Query(default="", max_length=180), frequency: str = Query(default="", max_length=40), query: str = Query(default="", max_length=240), start: str = Query(default="", max_length=50), end: str = Query(default="", max_length=50), limit: int = Query(default=150, ge=1, le=300), offset: int = Query(default=0, ge=0), settings: Settings = Depends(get_settings)):
+    from .trade_energy_resource_security_observatory import build_records
+    return build_records(settings,family=family,source_id=source_id,geography_code=geography_code,counterpart_code=counterpart_code,indicator_code=indicator_code,frequency=frequency,query=query,start=start,end=end,limit=limit,offset=offset)
+
+@app.get("/public/trade-energy-resources/facets")
+def public_trade_energy_resources_facets(geography_code: str = Query(default="", max_length=20), settings: Settings = Depends(get_settings)):
+    from .trade_energy_resource_security_observatory import build_facets
+    return build_facets(settings,geography_code=geography_code)
+
+@app.get("/public/trade-energy-resources/trade")
+def public_trade_energy_resources_trade(geography_code: str = Query(default="", max_length=20), query: str = Query(default="", max_length=240), limit: int = Query(default=250, ge=1, le=300), settings: Settings = Depends(get_settings)):
+    from .trade_energy_resource_security_observatory import build_trade
+    return build_trade(settings,geography_code=geography_code,query=query,limit=limit)
+
+@app.get("/public/trade-energy-resources/energy")
+def public_trade_energy_resources_energy(geography_code: str = Query(default="", max_length=20), query: str = Query(default="", max_length=240), limit: int = Query(default=250, ge=1, le=300), settings: Settings = Depends(get_settings)):
+    from .trade_energy_resource_security_observatory import build_energy
+    return build_energy(settings,geography_code=geography_code,query=query,limit=limit)
+
+@app.get("/public/trade-energy-resources/resources")
+def public_trade_energy_resources_resource_records(geography_code: str = Query(default="", max_length=20), query: str = Query(default="", max_length=240), limit: int = Query(default=250, ge=1, le=300), settings: Settings = Depends(get_settings)):
+    from .trade_energy_resource_security_observatory import build_resources
+    return build_resources(settings,geography_code=geography_code,query=query,limit=limit)
+
+@app.get("/public/trade-energy-resources/dependencies")
+def public_trade_energy_resources_dependencies(geography_code: str = Query(default="", max_length=20), family: str = Query(default="trade", max_length=100), limit: int = Query(default=250, ge=1, le=300), settings: Settings = Depends(get_settings)):
+    from .trade_energy_resource_security_observatory import build_dependencies
+    return build_dependencies(settings,geography_code=geography_code,family=family,limit=limit)
+
+@app.get("/public/trade-energy-resources/country-profile")
+def public_trade_energy_resources_country_profile(country: str = Query(..., min_length=2, max_length=20), limit: int = Query(default=300, ge=1, le=300), settings: Settings = Depends(get_settings)):
+    from .trade_energy_resource_security_observatory import build_country_profile
+    try:return build_country_profile(settings,country=country,limit=limit)
+    except ValueError as exc:raise HTTPException(status_code=422,detail=str(exc)) from exc
+
+@app.get("/public/trade-energy-resources/brief")
+def public_trade_energy_resources_brief(geography_code: str = Query(default="", max_length=20), family: str = Query(default="", max_length=100), query: str = Query(default="", max_length=240), limit: int = Query(default=100, ge=1, le=150), settings: Settings = Depends(get_settings)):
+    from .trade_energy_resource_security_observatory import build_brief
+    return build_brief(settings,geography_code=geography_code,family=family,query=query,limit=limit)
+
+@app.get("/public/trade-energy-resources/diagnostics")
+def public_trade_energy_resources_diagnostics(settings: Settings = Depends(get_settings)):
+    from .trade_energy_resource_security_observatory import build_diagnostics
+    return build_diagnostics(settings)
+
 # Site Intelligence standalone public application.
 from pathlib import Path as _Path
 PUBLIC_APP_DIR = _Path(__file__).resolve().parent.parent / "public_app"

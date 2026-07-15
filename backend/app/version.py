@@ -1,4 +1,4 @@
-APP_VERSION = "2.5.0"
+APP_VERSION = "2.6.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Humanitarian, Conflict, and Displacement Observatory"
+RELEASE_NAME = "Trade, Energy, and Resource Security Observatory"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

@@ -1,0 +1,24 @@
+{
+  "version": "2.6.0",
+  "release": "Trade, Energy, and Resource Security Observatory",
+  "route": "/app/?view=resources",
+  "shortcode": "[sc_trade_energy_resource_security_observatory height=\"1450\"]",
+  "public_endpoints": [
+    "/public/trade-energy-resources",
+    "/public/trade-energy-resources/records",
+    "/public/trade-energy-resources/facets",
+    "/public/trade-energy-resources/trade",
+    "/public/trade-energy-resources/energy",
+    "/public/trade-energy-resources/resources",
+    "/public/trade-energy-resources/dependencies",
+    "/public/trade-energy-resources/country-profile",
+    "/public/trade-energy-resources/brief",
+    "/public/trade-energy-resources/diagnostics"
+  ],
+  "paid_api_required": false,
+  "proprietary_risk_score": false,
+  "sanctions_screening": false,
+  "investment_advice": false,
+  "national_security_determination": false,
+  "fabricated_fallback": false
+}

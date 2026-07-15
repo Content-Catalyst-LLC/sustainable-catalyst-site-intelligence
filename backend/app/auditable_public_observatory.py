@@ -62,6 +62,12 @@ PUBLIC_WORKSPACES: list[dict[str, str]] = [
         "summary": "Connect public humanitarian, conflict, displacement, protection, and hazard evidence without fabricated crisis records or hidden responsible-data limits.",
     },
     {
+        "id": "resources",
+        "title": "Trade, Energy, and Resource Security Observatory",
+        "route": "/app/?view=resources",
+        "summary": "Trace official trade, energy, food, water, materials, and counterpart records without converting coverage into a proprietary risk score.",
+    },
+    {
         "id": "earth",
         "title": "Earth Observation Studio",
         "route": "/app/?view=earth",
@@ -177,6 +183,20 @@ AUDIT_ARTIFACTS: list[dict[str, Any]] = [
         ],
     },
     {
+        "id": "trade-energy-resource-security",
+        "title": "Trade, Energy, and Resource Security Observatory",
+        "artifact_type": "workspace",
+        "route": "/app/?view=resources",
+        "schema": "sc-site-intelligence-trade-energy-resource-security/1.0",
+        "source_ids": ["platform-core"],
+        "methodology_ids": ["delivery-states", "optional-source-failures", "missing-values"],
+        "verification_level": "official-statistic-and-source-linked",
+        "limitations": [
+            "Trade, energy, and resource records can use incompatible units, periods, price bases, classifications, and directions.",
+            "Published counterpart relationships do not establish dependency, vulnerability, sanctions exposure, or disruption probability.",
+        ],
+    },
+    {
         "id": "earth-observation",
         "title": "Earth Observation Studio",
         "artifact_type": "workspace",
@@ -281,6 +301,7 @@ RELEASE_LEDGER = [
     {"version": "2.3.0", "title": "International Law and Global Governance Observatory", "audit_contribution": "Core-backed official legal records, legal-authority taxonomy, procedural-status preservation, source-aware country profiles, timelines, and explicit non-advice boundaries."},
     {"version": "2.4.0", "title": "Scientific and Earth Systems Observatory", "audit_contribution": "Core-backed scientific records, scientific assets, map layers, STAC discovery, time-series access, source and quality preservation, and explicit no-fabrication boundaries."},
     {"version": "2.5.0", "title": "Humanitarian, Conflict, and Displacement Observatory", "audit_contribution": "Source-aware crisis, displacement, civilian-protection, humanitarian access, and hazard evidence with no-fabrication and responsible-data safeguards."},
+    {"version": "2.6.0", "title": "Trade, Energy, and Resource Security Observatory", "audit_contribution": "Core-backed official trade, energy, agriculture, water, materials, and counterpart records with unit-preserving analysis and explicit no-risk-score boundaries."},
 ]
 
 

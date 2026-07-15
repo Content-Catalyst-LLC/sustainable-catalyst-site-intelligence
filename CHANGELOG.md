@@ -1,3 +1,12 @@
+## 2.6.0 — Trade, Energy, and Resource Security Observatory
+
+- Added `/app/?view=resources` and nine source-aware public endpoints.
+- Added official trade, energy, food, agriculture, water, materials, supply-chain, and climate-transition record views.
+- Added country profiles, counterpart relationship lists, global coverage mapping, CSV export, shareable views, and briefing handoff.
+- Preserved units, periods, directions, classifications, source identity, frequency, license, and attribution.
+- Added explicit no-risk-score, no-sanctions-screening, no-investment-advice, and no-fabrication safeguards.
+- Added `[sc_trade_energy_resource_security_observatory height="1450"]`.
+
 ## 2.5.0 — Humanitarian, Conflict, and Displacement Observatory
 
 - Added `/app/?view=humanitarian` and eight source-aware public endpoints.

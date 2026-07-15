@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 2.5.0
+ * Version: 2.6.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '2.5.0';
+    const VERSION = '2.6.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -4407,6 +4407,31 @@ if (!function_exists('scsi_humanitarian_conflict_displacement_observatory_shortc
     }
 }
 add_shortcode('sc_humanitarian_conflict_displacement_observatory', 'scsi_humanitarian_conflict_displacement_observatory_shortcode_v250');
+
+
+
+// Site Intelligence v2.6.0 trade, energy, and resource-security shortcode
+if (!function_exists('scsi_trade_energy_resource_security_observatory_shortcode_v260')) {
+    function scsi_trade_energy_resource_security_observatory_shortcode_v260($atts = []) {
+        $atts = shortcode_atts([
+            'height' => '1450',
+            'title' => 'Sustainable Catalyst Trade, Energy, and Resource Security Observatory',
+        ], $atts, 'sc_trade_energy_resource_security_observatory');
+        $options = SC_Site_Intelligence_Plugin::options();
+        $backend = rtrim((string) ($options['backend_url'] ?? ''), '/');
+        if ($backend === '') {
+            return '<div class="scsi-notice">Configure the Site Intelligence backend URL before embedding the Trade, Energy, and Resource Security Observatory.</div>';
+        }
+        $height = max(920, min(2800, absint($atts['height'])));
+        $src = esc_url($backend . '/app/?view=resources');
+        $title = esc_attr((string) $atts['title']);
+        return sprintf(
+            '<div class="scsi-app-shell"><iframe class="scsi-app-frame" src="%1$s" title="%2$s" loading="lazy" style="width:100%%;min-height:%3$dpx;border:0" allow="fullscreen; clipboard-write"></iframe><p class="scsi-app-fallback"><a href="%1$s" target="_blank" rel="noopener noreferrer">Open Trade, Energy, and Resource Security Observatory in a new tab</a></p></div>',
+            $src, $title, $height
+        );
+    }
+}
+add_shortcode('sc_trade_energy_resource_security_observatory', 'scsi_trade_energy_resource_security_observatory_shortcode_v260');
 
 register_activation_hook(__FILE__, ['SC_Site_Intelligence_Plugin', 'activate']);
 new SC_Site_Intelligence_Plugin();
