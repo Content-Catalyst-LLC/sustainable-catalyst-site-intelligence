@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 2.0.0
+ * Version: 2.1.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '2.0.0';
+    const VERSION = '2.1.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -4277,6 +4277,33 @@ final class SC_Site_Intelligence_Plugin {
     }
 
 }
+
+
+
+// Site Intelligence v2.1.0 global conditions shortcode
+if (!function_exists('scsi_global_conditions_observatory_shortcode_v210')) {
+    function scsi_global_conditions_observatory_shortcode_v210($atts = []) {
+        $atts = shortcode_atts([
+            'height' => '1150',
+            'title' => 'Sustainable Catalyst Global Conditions and Live Map Observatory',
+        ], $atts, 'sc_global_conditions_observatory');
+        $options = SC_Site_Intelligence_Plugin::options();
+        $backend = rtrim((string) ($options['backend_url'] ?? ''), '/');
+        if ($backend === '') {
+            return '<div class="scsi-notice">Configure the Site Intelligence backend URL before embedding the Global Conditions Observatory.</div>';
+        }
+        $height = max(760, min(1900, absint($atts['height'])));
+        $src = esc_url($backend . '/app/?view=global');
+        $title = esc_attr((string) $atts['title']);
+        return sprintf(
+            '<div class="scsi-app-shell"><iframe class="scsi-app-frame" src="%1$s" title="%2$s" loading="lazy" style="width:100%%;min-height:%3$dpx;border:0" allow="fullscreen; clipboard-write"></iframe><p class="scsi-app-fallback"><a href="%1$s" target="_blank" rel="noopener noreferrer">Open Global Conditions in a new tab</a></p></div>',
+            $src,
+            $title,
+            $height
+        );
+    }
+}
+add_shortcode('sc_global_conditions_observatory', 'scsi_global_conditions_observatory_shortcode_v210');
 
 register_activation_hook(__FILE__, ['SC_Site_Intelligence_Plugin', 'activate']);
 new SC_Site_Intelligence_Plugin();

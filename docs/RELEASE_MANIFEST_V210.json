@@ -1,0 +1,28 @@
+{
+  "release": "2.1.0",
+  "name": "Global Conditions and Live Map Observatory",
+  "application_version": "2.1.0",
+  "api_schema_version": "2.0",
+  "schema": "sc-site-intelligence-global-conditions/1.0",
+  "public_route": "/app/?view=global",
+  "public_endpoints": [
+    "/public/global-conditions",
+    "/public/global-conditions/layers",
+    "/public/global-conditions/features",
+    "/public/global-conditions/signals",
+    "/public/global-conditions/diagnostics"
+  ],
+  "release_capabilities": [
+    "server-side public-read bridge to Sustainable Catalyst Core v2.8.0",
+    "sanitized GeoJSON feature delivery",
+    "Core map-layer registry delivery",
+    "latest normalized observation signals",
+    "explicit connected, degraded, and local-fallback states",
+    "Global Conditions standalone route",
+    "WordPress Global Conditions shortcode"
+  ],
+  "global_conditions_wordpress_shortcode": "[sc_global_conditions_observatory height=\"1150\"]",
+  "platform_core_optional": true,
+  "provider_credentials_exposed_to_browser": false,
+  "paid_infrastructure_added": false
+}

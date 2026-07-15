@@ -3786,6 +3786,64 @@ def publishing_intelligence_report(
 
 
 # Site Intelligence standalone public application.
+
+
+# Site Intelligence v2.1.0 — Global Conditions and Live Map Observatory
+@app.get("/public/global-conditions")
+def public_global_conditions_endpoint(settings: Settings = Depends(get_settings)):
+    from .global_conditions_observatory import build_global_conditions_overview
+    return build_global_conditions_overview(settings)
+
+
+@app.get("/public/global-conditions/layers")
+def public_global_conditions_layers_endpoint(
+    limit: int = Query(default=100, ge=1, le=200),
+    settings: Settings = Depends(get_settings),
+):
+    from .global_conditions_observatory import build_global_conditions_layers
+    return build_global_conditions_layers(settings, limit=limit)
+
+
+@app.get("/public/global-conditions/features")
+def public_global_conditions_features_endpoint(
+    bbox: str = Query(default="", max_length=120),
+    domain: str = Query(default="", max_length=80),
+    source_id: str = Query(default="", max_length=160),
+    connector_id: str = Query(default="", max_length=160),
+    observed_after: str = Query(default="", max_length=40),
+    limit: int = Query(default=300, ge=1, le=500),
+    settings: Settings = Depends(get_settings),
+):
+    from .global_conditions_observatory import build_global_conditions_features
+    try:
+        return build_global_conditions_features(
+            settings,
+            bbox=bbox,
+            domain=domain,
+            source_id=source_id,
+            connector_id=connector_id,
+            observed_after=observed_after,
+            limit=limit,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/public/global-conditions/signals")
+def public_global_conditions_signals_endpoint(
+    limit: int = Query(default=50, ge=1, le=100),
+    settings: Settings = Depends(get_settings),
+):
+    from .global_conditions_observatory import build_global_conditions_signals
+    return build_global_conditions_signals(settings, limit=limit)
+
+
+@app.get("/public/global-conditions/diagnostics")
+def public_global_conditions_diagnostics_endpoint(settings: Settings = Depends(get_settings)):
+    from .global_conditions_observatory import build_global_conditions_diagnostics
+    return build_global_conditions_diagnostics(settings)
+
+
 from pathlib import Path as _Path
 PUBLIC_APP_DIR = _Path(__file__).resolve().parent.parent / "public_app"
 if PUBLIC_APP_DIR.exists():

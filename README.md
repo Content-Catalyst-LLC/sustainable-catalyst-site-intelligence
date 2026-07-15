@@ -1,6 +1,6 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.0.0 — Auditable Public Observatory
+**Current release:** v2.1.0 — Global Conditions and Live Map Observatory
 
 Sustainable Catalyst Site Intelligence is an auditable public observatory for Earth observation, global country indicators, natural hazards, humanitarian reporting, comparative research, source-aware briefs, evidence lineage, and portable public verification records.
 

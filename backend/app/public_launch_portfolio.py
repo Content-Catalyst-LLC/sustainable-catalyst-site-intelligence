@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from .version import APP_VERSION, API_SCHEMA_VERSION
+from .version import APP_VERSION, API_SCHEMA_VERSION, RELEASE_NAME
 
 LAUNCH_PROFILE_SCHEMA = "sc-site-intelligence-launch/1.0"
 PORTFOLIO_SCHEMA = "sc-site-intelligence-portfolio/1.0"
@@ -46,7 +46,7 @@ def launch_profile() -> dict[str, Any]:
         "schema": LAUNCH_PROFILE_SCHEMA,
         "application_version": APP_VERSION,
         "api_schema_version": API_SCHEMA_VERSION,
-        "release": "Auditable Public Observatory",
+        "release": RELEASE_NAME,
         "release_status": "auditable-public-observatory",
         "positioning": PUBLIC_POSITIONING,
         "principles": [
@@ -152,7 +152,7 @@ def portfolio_markdown() -> str:
     lines = [
         "# Sustainable Catalyst Site Intelligence",
         "",
-        f"**Release:** v{APP_VERSION} — Auditable Public Observatory",
+        f"**Release:** v{APP_VERSION} — {RELEASE_NAME}",
         "",
         manifest["positioning"],
         "",
@@ -193,7 +193,7 @@ def launch_diagnostics() -> dict[str, Any]:
         "launch_profile_fetch": "/public/launch-profile" in js,
         "launch_route_handler": 'route==="launch"' in js,
         "launch_mobile_css": "public-launch-portfolio" in css and "launch-feature-grid" in css,
-        "wordpress_version": "Version: 2.0.0" in php and "const VERSION = '2.0.0';" in php,
+        "wordpress_version": f"Version: {APP_VERSION}" in php and f"const VERSION = '{APP_VERSION}';" in php,
         "wordpress_launch_shortcode": "sc_site_intelligence_launch" in php and "site_intelligence_launch_shortcode" in php,
         "primary_embed_retained": "sc_site_intelligence_app" in php,
         "deprecated_shortcode_schedule": "LEGACY_SHORTCODE_REMOVAL_TARGET" in php,

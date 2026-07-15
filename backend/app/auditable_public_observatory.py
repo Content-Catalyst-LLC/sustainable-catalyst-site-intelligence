@@ -8,7 +8,7 @@ import re
 from typing import Any
 
 from .source_methodology_studio import METHODOLOGY_RECORDS, SOURCE_RECORDS
-from .version import APP_VERSION, API_SCHEMA_VERSION
+from .version import APP_VERSION, API_SCHEMA_VERSION, RELEASE_NAME
 
 OBSERVATORY_SCHEMA = "sc-auditable-public-observatory/2.0"
 AUDIT_RECORD_SCHEMA = "sc-public-evidence-record/2.0"
@@ -210,6 +210,7 @@ RELEASE_LEDGER = [
     {"version": "1.24.0", "title": "Accessibility, Performance, and Mobile", "audit_contribution": "Public delivery diagnostics and explicit quality budgets."},
     {"version": "1.25.0", "title": "Public Launch and Portfolio", "audit_contribution": "Public product record and launch checklist."},
     {"version": "2.0.0", "title": "Auditable Public Observatory", "audit_contribution": "Evidence ledger, lineage graph, integrity digests, and public verification contract."},
+    {"version": "2.1.0", "title": "Global Conditions and Live Map Observatory", "audit_contribution": "Core-powered public geographic records, observation signals, map-layer registry integration, and explicit fallback states."},
 ]
 
 
@@ -465,7 +466,7 @@ def audit_packet_markdown() -> str:
     lines = [
         "# Sustainable Catalyst Site Intelligence",
         "",
-        f"**Release:** v{APP_VERSION} — Auditable Public Observatory",
+        f"**Release:** v{APP_VERSION} — {RELEASE_NAME}",
         "",
         packet["profile"]["positioning"],
         "",
@@ -514,7 +515,7 @@ def observatory_diagnostics() -> dict[str, Any]:
     php = (root / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text(encoding="utf-8")
     main = (root / "backend/app/main.py").read_text(encoding="utf-8")
     checks = {
-        "backend_version": 'APP_VERSION = "2.0.0"' in (root / "backend/app/version.py").read_text(encoding="utf-8"),
+        "backend_version": f'APP_VERSION = "{APP_VERSION}"' in (root / "backend/app/version.py").read_text(encoding="utf-8"),
         "observatory_navigation": 'data-route="observatory"' in html,
         "observatory_workspace": 'id="auditablePublicObservatory"' in html,
         "observatory_route_loader": "openAuditablePublicObservatory" in js,
@@ -523,7 +524,7 @@ def observatory_diagnostics() -> dict[str, Any]:
         "observatory_catalog_endpoint": "/public/observatory/catalog" in main,
         "observatory_verify_endpoint": "/public/observatory/verify" in main,
         "observatory_shortcode": "sc_auditable_public_observatory" in php,
-        "wordpress_version": "Version: 2.0.0" in php and "const VERSION = '2.0.0';" in php,
+        "wordpress_version": f"Version: {APP_VERSION}" in php and f"const VERSION = '{APP_VERSION}';" in php,
         "audit_record_count": len(AUDIT_ARTIFACTS) >= 10,
         "source_cross_references": all(
             source_id in {record["id"] for record in SOURCE_RECORDS}

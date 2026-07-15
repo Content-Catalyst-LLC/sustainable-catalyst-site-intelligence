@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.1.0 — Global Conditions and Live Map Observatory
+
+- Added a first-class Global Conditions workspace at `/app/?view=global`.
+- Added a server-side public-read bridge to Sustainable Catalyst Core v2.8.0.
+- Added sanitized Core GeoJSON features, map-layer registry records, and latest observation signals.
+- Added an automatic local fallback to existing Site Intelligence events when Core is unavailable.
+- Added visible freshness, quality, source, attribution, and integration-state handling.
+- Added the `[sc_global_conditions_observatory]` WordPress shortcode.
+- Preserved the zero-paid-provider architecture and existing v2.0.0 Auditable Public Observatory.
+
+
 ## 2.0.0 — Auditable Public Observatory
 
 - Added a first-class `/app/?view=observatory` workspace for evidence records, lineage, integrity, release history, and verification boundaries.

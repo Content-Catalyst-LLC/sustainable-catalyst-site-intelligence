@@ -48,7 +48,7 @@
   }
 
   const state = {map:null,base:null,imagery:null,markers:null,heat:null,layers:null,events:null,country:"KEN",route:"overview"};
-  const APP_VERSION="2.0.0";
+  const APP_VERSION="2.1.0";
   const SAVED_VIEW_SCHEMA="sc-saved-view/1.0";
   const SAVED_VIEW_STORAGE_KEY="sc_site_intelligence_saved_views_v1";
   const SAVED_VIEW_LIMIT=50;
@@ -146,6 +146,7 @@
   }
   function routeMeta(route){
     return {
+      global:["GLOBAL CONDITIONS AND LIVE MAP OBSERVATORY","Global public conditions","Explore Core-powered geographic records, source-aware observations, existing Site Intelligence events, and Earth-observation context in one map."],
       observatory:["AUDITABLE PUBLIC OBSERVATORY","Evidence, lineage, and integrity","Inspect registered public evidence records, source and methodology lineage, canonical digests, release history, and verification boundaries."],
       launch:["PUBLIC LAUNCH AND PORTFOLIO","Site Intelligence","Explore the public product, technical architecture, responsible-use boundaries, and launch materials."],
       overview:["LIVE INTELLIGENCE WORKSPACE","Climate and Human Vulnerability","Satellite context, natural events, environmental pressure, and country evidence in one navigable view."],
@@ -1130,6 +1131,7 @@
 
   const savedViewsState={items:[],storageAvailable:true,pendingManifest:null};
   const savedViewDefinitions={
+    global:{label:"Global Conditions",keys:["domain","observed","mapLat","mapLng","mapZoom"]},
     observatory:{label:"Auditable Public Observatory",keys:[]},
     overview:{label:"Overview",keys:["country","imageryLayer","imageryDate","mapLat","mapLng","mapZoom"]},
     earth:{label:"Earth Observation",keys:["earthLayer","dateA","dateB","opacity","swipe","mapLat","mapLng","mapZoom"]},
@@ -1148,6 +1150,7 @@
     return (navigator.clipboard?.writeText?navigator.clipboard.writeText(value).catch(fallback):Promise.resolve(fallback())).then(()=>toast(message));
   }
   function activeSavedMap(route){
+    if(route==="global")return window.SCGlobalConditionsV210?.status?.().map||null;
     if(route==="overview")return state.map;
     if(route==="earth")return earthState.mapA;
     if(route==="country")return globalCountryState.overviewMap;
@@ -1165,6 +1168,7 @@
   function currentSavedState(){
     const route=state.route;if(!savedViewDefinitions[route])return null;
     let values={};
+    if(route==="global")values={domain:qs("#gcDomain")?.value||"",observed:qs("#gcObservedAfter")?.value||""};
     if(route==="overview")values={country:state.country,imageryLayer:qs(".layer-tab.active")?.dataset.layer||"true-color",imageryDate:qs("#dateSelect").value};
     if(route==="earth")values={earthLayer:qs("#earthLayerSelect").value,dateA:qs("#earthDateA").value,dateB:qs("#earthDateB").value,opacity:qs("#earthOpacity").value,swipe:qs("#earthSwipe").value};
     if(route==="country")values={country:globalCountryState.activeCode||state.country,trend:qs("#globalTrendSelect").value};
@@ -1313,6 +1317,14 @@
     updateActiveNavigation(route);setMobileNavigation(false);
     const [e,t,d]=routeMeta(route);qs("#viewEyebrow").textContent=e;qs("#viewTitle").textContent=t;qs("#viewDescription").textContent=d;
     const panel=qs("#routePanel");
+    if(route!=="global")window.SCGlobalConditionsV210?.close?.();
+    if(route==="global"){
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
+      closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
+      closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
+      closePublicLaunchPortfolio();closeAuditablePublicObservatory();
+      await window.SCGlobalConditionsV210?.open?.();return;
+    }
     if(route!=="launch")closePublicLaunchPortfolio();
     if(route!=="observatory")closeAuditablePublicObservatory();
 
