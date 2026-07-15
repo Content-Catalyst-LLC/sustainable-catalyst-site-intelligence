@@ -35,3 +35,9 @@ services:
         value: "9"
       - key: SC_SI_INTERNATIONAL_LAW_OBSERVATORY_CACHE_TTL_SECONDS
         value: "120"
+      - key: SC_SI_SCIENTIFIC_EARTH_SYSTEMS_ENABLED
+        value: "true"
+      - key: SC_SI_SCIENTIFIC_EARTH_SYSTEMS_TIMEOUT_SECONDS
+        value: "9"
+      - key: SC_SI_SCIENTIFIC_EARTH_SYSTEMS_CACHE_TTL_SECONDS
+        value: "120"

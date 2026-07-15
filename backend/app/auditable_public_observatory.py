@@ -50,6 +50,12 @@ PUBLIC_WORKSPACES: list[dict[str, str]] = [
         "summary": "Inspect official legal and governance records with authority type, procedural status, official symbols, citations, and source context preserved.",
     },
     {
+        "id": "science",
+        "title": "Scientific and Earth Systems Observatory",
+        "route": "/app/?view=science",
+        "summary": "Discover scientific records, assets, map layers, STAC items, and time series with mission, quality, license, attribution, and observation context preserved.",
+    },
+    {
         "id": "earth",
         "title": "Earth Observation Studio",
         "route": "/app/?view=earth",
@@ -134,6 +140,20 @@ AUDIT_ARTIFACTS: list[dict[str, Any]] = [
         "limitations": [
             "Authority classifications preserve source metadata but do not independently establish binding legal effect.",
             "The workspace provides public research context and is not legal advice or a compliance determination.",
+        ],
+    },
+    {
+        "id": "scientific-earth-systems",
+        "title": "Scientific and Earth Systems Observatory",
+        "artifact_type": "workspace",
+        "route": "/app/?view=science",
+        "schema": "sc-site-intelligence-scientific-earth-systems/1.0",
+        "source_ids": ["platform-core"],
+        "methodology_ids": ["delivery-states", "optional-source-failures", "imagery-interpretation", "missing-values"],
+        "verification_level": "scientific-record-and-data-fabric-linked",
+        "limitations": [
+            "Metadata discovery is not equivalent to scientific validation or peer review.",
+            "Forecasts, observations, model products, catalog records, and computed properties remain distinct.",
         ],
     },
     {
@@ -239,6 +259,7 @@ RELEASE_LEDGER = [
     {"version": "2.1.0", "title": "Global Conditions and Live Map Observatory", "audit_contribution": "Core-powered public geographic records, observation signals, map-layer registry integration, and explicit fallback states."},
     {"version": "2.2.0", "title": "Economics, Markets, and Sustainability Signals", "audit_contribution": "Core-backed official-statistics records, timing classifications, source-preserving comparisons, geography mapping, and explicit no-real-time-market-data boundaries."},
     {"version": "2.3.0", "title": "International Law and Global Governance Observatory", "audit_contribution": "Core-backed official legal records, legal-authority taxonomy, procedural-status preservation, source-aware country profiles, timelines, and explicit non-advice boundaries."},
+    {"version": "2.4.0", "title": "Scientific and Earth Systems Observatory", "audit_contribution": "Core-backed scientific records, scientific assets, map layers, STAC discovery, time-series access, source and quality preservation, and explicit no-fabrication boundaries."},
 ]
 
 

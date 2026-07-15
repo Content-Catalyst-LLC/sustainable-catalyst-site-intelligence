@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="dark light">
   <meta name="theme-color" content="#111111">
-  <title>Sustainable Catalyst Site Intelligence | International Law and Global Governance Observatory</title>
-  <meta name="description" content="An auditable public observatory for international law, global governance, official economics, sustainability, Earth observation, country indicators, and source-aware briefs.">
+  <title>Sustainable Catalyst Site Intelligence | Scientific and Earth Systems Observatory</title>
+  <meta name="description" content="An auditable public observatory for scientific datasets, Earth systems, space observations, international law, official economics, sustainability, country indicators, and source-aware briefs.">
   <meta property="og:title" content="Sustainable Catalyst Site Intelligence">
   <meta property="og:description" content="Public evidence, source lineage, Earth observation, country intelligence, live events, and verifiable research paths.">
   <meta property="og:type" content="website">
@@ -19,6 +19,7 @@
   <link rel="stylesheet" href="/app/assets/global-conditions-v210.css?v=2.1.0">
   <link rel="stylesheet" href="/app/assets/economics-v220.css?v=2.2.0">
   <link rel="stylesheet" href="/app/assets/law-v230.css?v=2.3.0">
+  <link rel="stylesheet" href="/app/assets/science-v240.css?v=2.4.0">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to intelligence workspace</a>
@@ -64,6 +65,7 @@
         <button class="nav-item active" type="button" data-route="overview" aria-current="page"><span>Overview</span><small>Live map and signals</small></button>
         <button class="nav-item" type="button" data-route="economics"><span>Economics</span><small>Markets and sustainability</small></button>
         <button class="nav-item" type="button" data-route="law"><span>International law</span><small>Governance and authority</small></button>
+        <button class="nav-item" type="button" data-route="science"><span>Science</span><small>Earth systems and space</small></button>
         <button class="nav-item" type="button" data-route="earth"><span>Earth</span><small>Satellite comparison</small></button>
         <button class="nav-item" type="button" data-route="country"><span>Country</span><small>Place-based evidence</small></button>
         <button class="nav-item" type="button" data-route="events"><span>Events</span><small>Live event intelligence</small></button>
@@ -920,6 +922,24 @@
         </section>
       </section>
 
+
+      <section id="scienceStudio" class="science-studio" hidden aria-busy="false">
+        <div class="science-hero">
+          <div><p class="eyebrow">SCIENTIFIC AND EARTH SYSTEMS OBSERVATORY</p><h2>Discover scientific records across Earth, atmosphere, water, space, biology, chemistry, and materials</h2><p>Source-aware metadata, assets, layers, STAC items, and time series from free official and public scientific services integrated through Sustainable Catalyst Core.</p><div class="science-actions"><button id="scienceShare" class="ghost-button" type="button">Copy view</button><button id="scienceExport" class="ghost-button" type="button">Export records</button><button id="scienceWorkbench" class="earth-primary-button" type="button">Open Workbench</button></div></div>
+          <aside class="science-policy-card"><span>SCIENTIFIC BOUNDARY</span><strong id="sciencePolicy">Metadata discovery is not scientific validation.</strong><p>Forecasts, observations, model products, catalog records, and computed properties remain visibly distinct. No records are fabricated when Core is unavailable.</p></aside>
+        </div>
+        <div id="scienceStatus" class="science-status" data-state="loading" role="status" aria-live="polite"><i aria-hidden="true"></i><span>Loading scientific records and data-fabric services</span></div>
+        <div class="science-filter-deck" aria-label="Scientific record filters">
+          <label>Domain<select id="scienceFamily"><option value="">All science domains</option></select></label><label>Record type<select id="scienceType"><option value="">All record types</option></select></label><label>Discipline<select id="scienceDiscipline"><option value="">All disciplines</option></select></label><label>Source<select id="scienceSource"><option value="">All sources</option></select></label><label>Mission<select id="scienceMission"><option value="">All missions</option></select></label><label>Search<input id="scienceSearch" type="search" placeholder="Dataset, target, collection, mission"></label><div class="science-filter-actions"><button id="scienceApply" class="earth-primary-button" type="button">Apply</button><button id="scienceReset" class="ghost-button" type="button">Reset</button></div>
+        </div>
+        <div class="science-metrics" aria-label="Scientific workspace counts"><article><span>Records</span><strong id="scienceRecordCount">0</strong></article><article><span>Assets</span><strong id="scienceAssetCount">0</strong></article><article><span>Map layers</span><strong id="scienceLayerCount">0</strong></article><article><span>Time series</span><strong id="scienceSeriesCount">0</strong></article><article><span>Missions</span><strong id="scienceMissionCount">0</strong></article><article><span>Sources</span><strong id="scienceSourceCount">0</strong></article></div>
+        <div id="scienceFamilySummary" class="science-family-summary" aria-label="Scientific domain summary"></div>
+        <div class="science-primary-grid"><article class="science-map-panel"><div class="science-panel-head"><div><p class="eyebrow">GEOSPATIAL SCIENCE</p><h3>Mapped scientific records and STAC items</h3></div><strong id="scienceMappedCount">0</strong></div><div id="scienceMap" class="science-map" role="region" aria-label="Map of scientific records" tabindex="0"></div><p class="science-note">Geometry describes dataset or observation coverage. It does not imply precision, validation, or representativeness beyond the source metadata.</p></article><article class="science-series-panel"><div class="science-panel-head"><div><p class="eyebrow">TIME-SERIES FABRIC</p><h3 id="scienceSeriesTitle">Available scientific series</h3></div><select id="scienceSeriesSelect"><option value="">Choose a series</option></select></div><div id="scienceChart" class="science-chart"></div></article></div>
+        <article class="science-record-panel"><div class="science-panel-head"><div><p class="eyebrow">SCIENTIFIC RECORD EXPLORER</p><h3>Datasets, observations, catalogs, compounds, materials, and telescope records</h3></div><p>Up to 90 public records are displayed with source, quality, date, license, and access context.</p></div><div id="scienceRecords" class="science-records" aria-live="polite"></div></article>
+        <div class="science-secondary-grid"><article><div class="science-panel-head"><div><p class="eyebrow">SCIENTIFIC ASSETS</p><h3>Remote files and services</h3></div><select id="scienceAssetFormat"><option value="">All formats</option></select></div><div id="scienceAssets" class="science-assets"></div></article><article><div class="science-panel-head"><div><p class="eyebrow">MAP LAYERS</p><h3>Registered public visualization services</h3></div></div><div id="scienceLayers" class="science-layers"></div></article></div>
+        <section class="science-method-panel" aria-label="Scientific methodology"><article><p class="eyebrow">SOURCE CONTEXT</p><h3>Metadata remains attached</h3><p>Mission, instrument, collection, dataset identifier, observation date, source, license, attribution, quality status, variables, and file formats remain visible where available.</p></article><article><p class="eyebrow">INTERPRETATION</p><h3>No silent scientific inference</h3><p>Record counts do not measure importance. Satellite imagery requires domain interpretation and ground validation. Forecast fields are not observations, and computed material properties are not automatically experimental findings.</p></article><article><p class="eyebrow">PUBLIC USE</p><h3>Research discovery, not clinical advice</h3><p>The observatory supports discovery and structured public analysis. It does not provide diagnosis, treatment recommendations, or automated scientific conclusions.</p></article></section>
+      </section>
+
       <section id="lawStudio" class="law-studio" hidden aria-busy="false">
         <div class="law-hero">
           <div>
@@ -1141,5 +1161,6 @@
   <script src="/app/assets/global-conditions-v210.js?v=2.1.0" defer></script>
   <script src="/app/assets/economics-v220.js?v=2.2.0" defer></script>
   <script src="/app/assets/law-v230.js?v=2.3.0" defer></script>
+  <script src="/app/assets/science-v240.js?v=2.4.0" defer></script>
 </body>
 </html>

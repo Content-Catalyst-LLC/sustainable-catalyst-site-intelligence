@@ -1,3 +1,13 @@
+## 2.4.0 — Scientific and Earth Systems Observatory
+
+- Added a public scientific and Earth systems workspace backed by Sustainable Catalyst Core v2.8.0.
+- Added scientific record, asset, map-layer, STAC, time-series, brief, and diagnostics endpoints.
+- Added source, quality, mission, instrument, license, attribution, date, variable, and file-format preservation.
+- Added explicit distinctions among observations, forecasts, catalogs, telescope records, compounds, materials, and scientific datasets.
+- Added a WordPress shortcode, saved-view state, CSV export, Workbench handoff, and responsive public interface.
+- Added no-fabrication, no-clinical-advice, remote-sensing interpretation, and scientific-validation boundaries.
+- Updated backend, standalone application, WordPress plugin, release metadata, documentation, and automated tests to v2.4.0.
+
 ## 2.3.0 — International Law and Global Governance Observatory
 
 - Added the standalone `/app/?view=law` International Law and Global Governance Observatory.

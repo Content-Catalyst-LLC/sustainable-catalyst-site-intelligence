@@ -1,0 +1,20 @@
+{
+  "release": "2.4.0",
+  "title": "Scientific and Earth Systems Observatory",
+  "application_version": "2.4.0",
+  "route": "/app/?view=science",
+  "shortcode": "[sc_scientific_earth_systems_observatory height=\"1400\"]",
+  "public_endpoints": [
+    "/public/scientific-earth-systems",
+    "/public/scientific-earth-systems/records",
+    "/public/scientific-earth-systems/facets",
+    "/public/scientific-earth-systems/assets",
+    "/public/scientific-earth-systems/map-layers",
+    "/public/scientific-earth-systems/stac",
+    "/public/scientific-earth-systems/timeseries",
+    "/public/scientific-earth-systems/brief",
+    "/public/scientific-earth-systems/diagnostics"
+  ],
+  "paid_provider_required": false,
+  "fabricated_fallback": false
+}

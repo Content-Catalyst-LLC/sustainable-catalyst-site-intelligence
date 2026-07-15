@@ -1,7 +1,16 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.3.0 — International Law and Global Governance Observatory
+**Current release:** v2.4.0 — Scientific and Earth Systems Observatory
 
+
+
+## v2.4.0 — Scientific and Earth Systems Observatory
+
+Site Intelligence v2.4.0 adds a dedicated public workspace for scientific records and the Core v2.8.0 data fabric. It exposes public scientific metadata, assets, map layers, STAC items, and time-series records while preserving mission, instrument, observation time, quality, license, attribution, file formats, and explicit interpretation limits.
+
+- Public workspace: `/app/?view=science`
+- WordPress shortcode: `[sc_scientific_earth_systems_observatory height="1400"]`
+- No paid provider dependency and no fabricated scientific fallback records
 
 ## v2.3.0 — International Law and Global Governance Observatory
 
@@ -23,6 +32,10 @@ Sustainable Catalyst Site Intelligence is an auditable public observatory for Ea
 
 - Standalone app: `https://sustainable-catalyst-site-intelligence.onrender.com/app/`
 - Auditable Public Observatory: `/app/?view=observatory`
+- Scientific and Earth Systems Observatory: `/app/?view=science`
+- International Law and Global Governance Observatory: `/app/?view=law`
+- Economics, Markets, and Sustainability Signals: `/app/?view=economics`
+- Global Conditions and Live Map Observatory: `/app/?view=global`
 - Public launch and portfolio: `/app/?view=launch`
 - Earth Observation: `/app/?view=earth`
 - Live Events: `/app/?view=events`

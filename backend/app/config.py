@@ -115,6 +115,14 @@ class Settings(BaseSettings):
     international_law_observatory_timeout_seconds: int = Field(default=9, ge=2, le=30)
     international_law_observatory_cache_ttl_seconds: int = Field(default=120, ge=15, le=1800)
 
+    # Site Intelligence v2.4.0 — Scientific and Earth Systems Observatory.
+    # Reads public scientific records, assets, map layers, STAC items, and
+    # time-series data through Platform Core without exposing credentials or
+    # fabricating scientific records when the data fabric is unavailable.
+    scientific_earth_systems_enabled: bool = True
+    scientific_earth_systems_timeout_seconds: int = Field(default=9, ge=2, le=30)
+    scientific_earth_systems_cache_ttl_seconds: int = Field(default=120, ge=15, le=1800)
+
 
     # Sustainable Development Data Connectors v1.14.1.
     sustainable_development_connectors_enabled: bool = True

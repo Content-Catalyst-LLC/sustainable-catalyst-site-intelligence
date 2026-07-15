@@ -4029,6 +4029,135 @@ def public_international_law_observatory_diagnostics(settings: Settings = Depend
     return build_law_diagnostics(settings)
 
 
+# Site Intelligence v2.4.0 — Scientific and Earth Systems Observatory
+@app.get("/public/scientific-earth-systems")
+def public_scientific_earth_systems_overview(settings: Settings = Depends(get_settings)):
+    from .scientific_earth_systems_observatory import build_science_overview
+    return build_science_overview(settings)
+
+
+@app.get("/public/scientific-earth-systems/records")
+def public_scientific_earth_systems_records(
+    record_type: str = Query(default="", max_length=100),
+    discipline: str = Query(default="", max_length=160),
+    source_id: str = Query(default="", max_length=160),
+    collection: str = Query(default="", max_length=300),
+    mission: str = Query(default="", max_length=240),
+    instrument: str = Query(default="", max_length=240),
+    target: str = Query(default="", max_length=300),
+    dataset_id: str = Query(default="", max_length=240),
+    query: str = Query(default="", max_length=240),
+    start: str = Query(default="", max_length=50),
+    end: str = Query(default="", max_length=50),
+    limit: int = Query(default=100, ge=1, le=300),
+    offset: int = Query(default=0, ge=0),
+    settings: Settings = Depends(get_settings),
+):
+    from .scientific_earth_systems_observatory import build_science_records
+    return build_science_records(settings, record_type=record_type, discipline=discipline, source_id=source_id, collection=collection, mission=mission, instrument=instrument, target=target, dataset_id=dataset_id, query=query, start=start, end=end, limit=limit, offset=offset)
+
+
+@app.get("/public/scientific-earth-systems/facets")
+def public_scientific_earth_systems_facets(settings: Settings = Depends(get_settings)):
+    from .scientific_earth_systems_observatory import build_science_facets
+    return build_science_facets(settings)
+
+
+@app.get("/public/scientific-earth-systems/assets")
+def public_scientific_earth_systems_assets(
+    source_id: str = Query(default="", max_length=160),
+    scientific_record_id: str = Query(default="", max_length=180),
+    dataset_id: str = Query(default="", max_length=240),
+    format: str = Query(default="", max_length=80),
+    asset_role: str = Query(default="", max_length=100),
+    limit: int = Query(default=100, ge=1, le=250),
+    offset: int = Query(default=0, ge=0),
+    settings: Settings = Depends(get_settings),
+):
+    from .scientific_earth_systems_observatory import build_science_assets
+    return build_science_assets(settings, source_id=source_id, scientific_record_id=scientific_record_id, dataset_id=dataset_id, format=format, asset_role=asset_role, limit=limit, offset=offset)
+
+
+@app.get("/public/scientific-earth-systems/map-layers")
+def public_scientific_earth_systems_layers(
+    source_id: str = Query(default="", max_length=160),
+    layer_type: str = Query(default="", max_length=80),
+    limit: int = Query(default=100, ge=1, le=160),
+    offset: int = Query(default=0, ge=0),
+    settings: Settings = Depends(get_settings),
+):
+    from .scientific_earth_systems_observatory import build_science_layers
+    return build_science_layers(settings, source_id=source_id, layer_type=layer_type, limit=limit, offset=offset)
+
+
+@app.get("/public/scientific-earth-systems/stac")
+def public_scientific_earth_systems_stac(
+    collections: str = Query(default="", max_length=500),
+    bbox: str = Query(default="", max_length=120),
+    start: str = Query(default="", max_length=50),
+    end: str = Query(default="", max_length=50),
+    query: str = Query(default="", max_length=240),
+    limit: int = Query(default=100, ge=1, le=300),
+    offset: int = Query(default=0, ge=0),
+    settings: Settings = Depends(get_settings),
+):
+    from .scientific_earth_systems_observatory import build_science_stac
+    try:
+        return build_science_stac(settings, collections=collections, bbox=bbox, start=start, end=end, query=query, limit=limit, offset=offset)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/public/scientific-earth-systems/timeseries")
+def public_scientific_earth_systems_timeseries(
+    source_id: str = Query(default="", max_length=160),
+    metric: str = Query(default="", max_length=240),
+    domain: str = Query(default="", max_length=160),
+    dataset_id: str = Query(default="", max_length=240),
+    geography_code: str = Query(default="", max_length=40),
+    limit: int = Query(default=100, ge=1, le=200),
+    offset: int = Query(default=0, ge=0),
+    settings: Settings = Depends(get_settings),
+):
+    from .scientific_earth_systems_observatory import build_science_series
+    return build_science_series(settings, source_id=source_id, metric=metric, domain=domain, dataset_id=dataset_id, geography_code=geography_code, limit=limit, offset=offset)
+
+
+@app.get("/public/scientific-earth-systems/timeseries/{series_id}/points")
+def public_scientific_earth_systems_timeseries_points(
+    series_id: str,
+    start: str = Query(default="", max_length=50),
+    end: str = Query(default="", max_length=50),
+    limit: int = Query(default=300, ge=1, le=500),
+    offset: int = Query(default=0, ge=0),
+    settings: Settings = Depends(get_settings),
+):
+    from .scientific_earth_systems_observatory import build_science_series_points
+    try:
+        return build_science_series_points(settings, series_id=series_id, start=start, end=end, limit=limit, offset=offset)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/public/scientific-earth-systems/brief")
+def public_scientific_earth_systems_brief(
+    family: str = Query(default="", max_length=100),
+    discipline: str = Query(default="", max_length=160),
+    source_id: str = Query(default="", max_length=160),
+    query: str = Query(default="", max_length=240),
+    limit: int = Query(default=80, ge=1, le=150),
+    settings: Settings = Depends(get_settings),
+):
+    from .scientific_earth_systems_observatory import build_science_brief
+    return build_science_brief(settings, family=family, discipline=discipline, source_id=source_id, query=query, limit=limit)
+
+
+@app.get("/public/scientific-earth-systems/diagnostics")
+def public_scientific_earth_systems_diagnostics(settings: Settings = Depends(get_settings)):
+    from .scientific_earth_systems_observatory import build_science_diagnostics
+    return build_science_diagnostics(settings)
+
+
 # Site Intelligence standalone public application.
 from pathlib import Path as _Path
 PUBLIC_APP_DIR = _Path(__file__).resolve().parent.parent / "public_app"

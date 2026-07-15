@@ -1,4 +1,4 @@
-APP_VERSION = "2.3.0"
+APP_VERSION = "2.4.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "International Law and Global Governance Observatory"
+RELEASE_NAME = "Scientific and Earth Systems Observatory"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

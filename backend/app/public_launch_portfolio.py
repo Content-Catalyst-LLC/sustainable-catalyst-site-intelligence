@@ -18,6 +18,7 @@ PUBLIC_WORKSPACES = [
     {"id": "overview", "title": "Global Observatory", "route": "/app/?view=overview", "summary": "Map-first satellite context, public event signals, and country evidence."},
     {"id": "economics", "title": "Economics, Markets, and Sustainability Signals", "route": "/app/?view=economics", "summary": "Explore official economics, labour, trade, energy, demographic, company-filing, and sustainability records with source and timing context."},
     {"id": "law", "title": "International Law and Global Governance Observatory", "route": "/app/?view=law", "summary": "Explore official legal and governance records while preserving authority type, procedural status, citations, and source context."},
+    {"id": "science", "title": "Scientific and Earth Systems Observatory", "route": "/app/?view=science", "summary": "Discover Earth systems, space observations, biodiversity, chemistry, materials, scientific assets, layers, STAC items, and time series with source and quality context."},
     {"id": "earth", "title": "Earth Observation Studio", "route": "/app/?view=earth", "summary": "Compare satellite-derived layers across dates with source and imagery limits."},
     {"id": "events", "title": "Live Event Intelligence", "route": "/app/?view=events", "summary": "Filter public hazard and humanitarian records while retaining source identity."},
     {"id": "country", "title": "Global Country Intelligence", "route": "/app/?view=country&country=KEN", "summary": "Explore country indicators, trends, event context, and reporting-year differences."},
