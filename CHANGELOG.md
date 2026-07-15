@@ -1,3 +1,12 @@
+## 2.5.0 — Humanitarian, Conflict, and Displacement Observatory
+
+- Added `/app/?view=humanitarian` and eight source-aware public endpoints.
+- Combined non-fabricated Site Intelligence events with scoped Core live, legal, and official-statistics records.
+- Added country, category, source, time-window, and text filters; global map; timeline; record explorer; CSV export; shareable views; and Decision Studio handoff.
+- Added explicit responsible-data, non-advice, non-targeting, non-eligibility, and no-fabrication safeguards.
+- Added `[sc_humanitarian_conflict_displacement_observatory height="1450"]`.
+- Updated release metadata, public workspace registry, audit ledger, documentation, and regression tests to v2.5.0.
+
 ## 2.4.0 — Scientific and Earth Systems Observatory
 
 - Added a public scientific and Earth systems workspace backed by Sustainable Catalyst Core v2.8.0.

@@ -442,7 +442,7 @@ def build_science_records(settings: Any = None, **filters: Any) -> dict[str, Any
     config = _core_config(settings)
     generated_at = datetime.now(timezone.utc).isoformat()
     if not config.configured:
-        return {"ok": True, "schema": RECORDS_SCHEMA, "version": "2.4.0", "generated_at": generated_at, "records": [], "total": 0, "integration": _integration_state(settings)}
+        return {"ok": True, "schema": RECORDS_SCHEMA, "version": "2.5.0", "generated_at": generated_at, "records": [], "total": 0, "integration": _integration_state(settings)}
     try:
         payload = _core_json(config, "/api/v1/science/records", _record_query(**filters))
         records = [_public_record(item) for item in _items(payload, "items", "records")]
@@ -452,14 +452,14 @@ def build_science_records(settings: Any = None, **filters: Any) -> dict[str, Any
         return {
             "ok": True,
             "schema": RECORDS_SCHEMA,
-            "version": "2.4.0",
+            "version": "2.5.0",
             "generated_at": generated_at,
             "records": records,
             "total": int(pagination.get("total") or len(records)),
             "integration": _integration_state(settings),
         }
     except RuntimeError as exc:
-        return {"ok": True, "schema": RECORDS_SCHEMA, "version": "2.4.0", "generated_at": generated_at, "records": [], "total": 0, "integration": _integration_state(settings, str(exc))}
+        return {"ok": True, "schema": RECORDS_SCHEMA, "version": "2.5.0", "generated_at": generated_at, "records": [], "total": 0, "integration": _integration_state(settings, str(exc))}
 
 
 def build_science_facets(settings: Any = None, limit: int = 300) -> dict[str, Any]:
@@ -468,7 +468,7 @@ def build_science_facets(settings: Any = None, limit: int = 300) -> dict[str, An
     return {
         "ok": True,
         "schema": RELEASE_SCHEMA,
-        "version": "2.4.0",
+        "version": "2.5.0",
         "families": _facet(records, "family", "family_label"),
         "record_types": _facet(records, "record_type", "record_type_label"),
         "disciplines": _facet(records, "discipline"),
@@ -488,7 +488,7 @@ def build_science_assets(
     config = _core_config(settings)
     generated_at = datetime.now(timezone.utc).isoformat()
     if not config.configured:
-        return {"ok": True, "schema": ASSETS_SCHEMA, "version": "2.4.0", "generated_at": generated_at, "assets": [], "total": 0, "integration": _integration_state(settings)}
+        return {"ok": True, "schema": ASSETS_SCHEMA, "version": "2.5.0", "generated_at": generated_at, "assets": [], "total": 0, "integration": _integration_state(settings)}
     try:
         payload = _core_json(config, "/api/v1/fabric/assets", {
             "source_id": source_id, "scientific_record_id": scientific_record_id, "dataset_id": dataset_id,
@@ -498,24 +498,24 @@ def build_science_assets(
         assets = [item for item in assets if item["href"]]
         meta = payload.get("meta", {}) if isinstance(payload, Mapping) else {}
         pagination = meta.get("pagination", {}) if isinstance(meta, Mapping) else {}
-        return {"ok": True, "schema": ASSETS_SCHEMA, "version": "2.4.0", "generated_at": generated_at, "assets": assets, "total": int(pagination.get("total") or len(assets)), "integration": _integration_state(settings)}
+        return {"ok": True, "schema": ASSETS_SCHEMA, "version": "2.5.0", "generated_at": generated_at, "assets": assets, "total": int(pagination.get("total") or len(assets)), "integration": _integration_state(settings)}
     except RuntimeError as exc:
-        return {"ok": True, "schema": ASSETS_SCHEMA, "version": "2.4.0", "generated_at": generated_at, "assets": [], "total": 0, "integration": _integration_state(settings, str(exc))}
+        return {"ok": True, "schema": ASSETS_SCHEMA, "version": "2.5.0", "generated_at": generated_at, "assets": [], "total": 0, "integration": _integration_state(settings, str(exc))}
 
 
 def build_science_layers(settings: Any = None, *, source_id: str = "", layer_type: str = "", limit: int = 100, offset: int = 0) -> dict[str, Any]:
     config = _core_config(settings)
     generated_at = datetime.now(timezone.utc).isoformat()
     if not config.configured:
-        return {"ok": True, "schema": LAYERS_SCHEMA, "version": "2.4.0", "generated_at": generated_at, "layers": [], "total": 0, "integration": _integration_state(settings)}
+        return {"ok": True, "schema": LAYERS_SCHEMA, "version": "2.5.0", "generated_at": generated_at, "layers": [], "total": 0, "integration": _integration_state(settings)}
     try:
         payload = _core_json(config, "/api/v1/fabric/map-layers", {"source_id": source_id, "layer_type": layer_type, "limit": min(max(limit, 1), MAX_LAYERS), "offset": max(offset, 0)})
         layers = [_public_layer(item) for item in _items(payload, "items", "layers")]
         meta = payload.get("meta", {}) if isinstance(payload, Mapping) else {}
         pagination = meta.get("pagination", {}) if isinstance(meta, Mapping) else {}
-        return {"ok": True, "schema": LAYERS_SCHEMA, "version": "2.4.0", "generated_at": generated_at, "layers": layers, "total": int(pagination.get("total") or len(layers)), "integration": _integration_state(settings)}
+        return {"ok": True, "schema": LAYERS_SCHEMA, "version": "2.5.0", "generated_at": generated_at, "layers": layers, "total": int(pagination.get("total") or len(layers)), "integration": _integration_state(settings)}
     except RuntimeError as exc:
-        return {"ok": True, "schema": LAYERS_SCHEMA, "version": "2.4.0", "generated_at": generated_at, "layers": [], "total": 0, "integration": _integration_state(settings, str(exc))}
+        return {"ok": True, "schema": LAYERS_SCHEMA, "version": "2.5.0", "generated_at": generated_at, "layers": [], "total": 0, "integration": _integration_state(settings, str(exc))}
 
 
 def build_science_stac(
@@ -527,7 +527,7 @@ def build_science_stac(
     if bbox:
         bbox = _validate_bbox(bbox)
     if not config.configured:
-        return {"ok": True, "schema": "sc-site-intelligence-stac/1.0", "version": "2.4.0", "generated_at": generated_at, "type": "FeatureCollection", "features": [], "numberMatched": 0, "numberReturned": 0, "integration": _integration_state(settings)}
+        return {"ok": True, "schema": "sc-site-intelligence-stac/1.0", "version": "2.5.0", "generated_at": generated_at, "type": "FeatureCollection", "features": [], "numberMatched": 0, "numberReturned": 0, "integration": _integration_state(settings)}
     try:
         payload = _core_json(config, "/api/v1/stac/search", {"collections": collections, "bbox": bbox, "start": start, "end": end, "query": query, "limit": min(max(limit, 1), MAX_RECORDS), "offset": max(offset, 0)})
         features = []
@@ -551,9 +551,9 @@ def build_science_stac(
                 "properties": properties,
                 "assets": assets,
             })
-        return {"ok": True, "schema": "sc-site-intelligence-stac/1.0", "version": "2.4.0", "generated_at": generated_at, "type": "FeatureCollection", "features": features, "numberMatched": int(payload.get("numberMatched") or len(features)), "numberReturned": len(features), "integration": _integration_state(settings)}
+        return {"ok": True, "schema": "sc-site-intelligence-stac/1.0", "version": "2.5.0", "generated_at": generated_at, "type": "FeatureCollection", "features": features, "numberMatched": int(payload.get("numberMatched") or len(features)), "numberReturned": len(features), "integration": _integration_state(settings)}
     except RuntimeError as exc:
-        return {"ok": True, "schema": "sc-site-intelligence-stac/1.0", "version": "2.4.0", "generated_at": generated_at, "type": "FeatureCollection", "features": [], "numberMatched": 0, "numberReturned": 0, "integration": _integration_state(settings, str(exc))}
+        return {"ok": True, "schema": "sc-site-intelligence-stac/1.0", "version": "2.5.0", "generated_at": generated_at, "type": "FeatureCollection", "features": [], "numberMatched": 0, "numberReturned": 0, "integration": _integration_state(settings, str(exc))}
 
 
 def build_science_series(
@@ -563,15 +563,15 @@ def build_science_series(
     config = _core_config(settings)
     generated_at = datetime.now(timezone.utc).isoformat()
     if not config.configured:
-        return {"ok": True, "schema": SERIES_SCHEMA, "version": "2.4.0", "generated_at": generated_at, "series": [], "total": 0, "integration": _integration_state(settings)}
+        return {"ok": True, "schema": SERIES_SCHEMA, "version": "2.5.0", "generated_at": generated_at, "series": [], "total": 0, "integration": _integration_state(settings)}
     try:
         payload = _core_json(config, "/api/v1/fabric/timeseries", {"source_id": source_id, "metric": metric, "domain": domain, "dataset_id": dataset_id, "geography_code": geography_code, "limit": min(max(limit, 1), MAX_SERIES), "offset": max(offset, 0)})
         series = [_public_series(item) for item in _items(payload, "items", "series")]
         meta = payload.get("meta", {}) if isinstance(payload, Mapping) else {}
         pagination = meta.get("pagination", {}) if isinstance(meta, Mapping) else {}
-        return {"ok": True, "schema": SERIES_SCHEMA, "version": "2.4.0", "generated_at": generated_at, "series": series, "total": int(pagination.get("total") or len(series)), "integration": _integration_state(settings)}
+        return {"ok": True, "schema": SERIES_SCHEMA, "version": "2.5.0", "generated_at": generated_at, "series": series, "total": int(pagination.get("total") or len(series)), "integration": _integration_state(settings)}
     except RuntimeError as exc:
-        return {"ok": True, "schema": SERIES_SCHEMA, "version": "2.4.0", "generated_at": generated_at, "series": [], "total": 0, "integration": _integration_state(settings, str(exc))}
+        return {"ok": True, "schema": SERIES_SCHEMA, "version": "2.5.0", "generated_at": generated_at, "series": [], "total": 0, "integration": _integration_state(settings, str(exc))}
 
 
 def build_science_series_points(settings: Any = None, *, series_id: str, start: str = "", end: str = "", limit: int = 300, offset: int = 0) -> dict[str, Any]:
@@ -581,16 +581,16 @@ def build_science_series_points(settings: Any = None, *, series_id: str, start: 
     config = _core_config(settings)
     generated_at = datetime.now(timezone.utc).isoformat()
     if not config.configured:
-        return {"ok": True, "schema": SERIES_SCHEMA, "version": "2.4.0", "generated_at": generated_at, "series_id": series_id, "points": [], "total": 0, "integration": _integration_state(settings)}
+        return {"ok": True, "schema": SERIES_SCHEMA, "version": "2.5.0", "generated_at": generated_at, "series_id": series_id, "points": [], "total": 0, "integration": _integration_state(settings)}
     try:
         payload = _core_json(config, f"/api/v1/fabric/timeseries/{series_id}/points", {"start": start, "end": end, "limit": min(max(limit, 1), MAX_POINTS), "offset": max(offset, 0)})
         points = [_public_point(item) for item in _items(payload, "items", "points")]
         points.sort(key=lambda item: item["observed_at"])
         meta = payload.get("meta", {}) if isinstance(payload, Mapping) else {}
         pagination = meta.get("pagination", {}) if isinstance(meta, Mapping) else {}
-        return {"ok": True, "schema": SERIES_SCHEMA, "version": "2.4.0", "generated_at": generated_at, "series_id": series_id, "points": points, "total": int(pagination.get("total") or len(points)), "integration": _integration_state(settings)}
+        return {"ok": True, "schema": SERIES_SCHEMA, "version": "2.5.0", "generated_at": generated_at, "series_id": series_id, "points": points, "total": int(pagination.get("total") or len(points)), "integration": _integration_state(settings)}
     except RuntimeError as exc:
-        return {"ok": True, "schema": SERIES_SCHEMA, "version": "2.4.0", "generated_at": generated_at, "series_id": series_id, "points": [], "total": 0, "integration": _integration_state(settings, str(exc))}
+        return {"ok": True, "schema": SERIES_SCHEMA, "version": "2.5.0", "generated_at": generated_at, "series_id": series_id, "points": [], "total": 0, "integration": _integration_state(settings, str(exc))}
 
 
 def build_science_overview(settings: Any = None) -> dict[str, Any]:
@@ -603,7 +603,7 @@ def build_science_overview(settings: Any = None) -> dict[str, Any]:
     return {
         "ok": True,
         "schema": RELEASE_SCHEMA,
-        "version": "2.4.0",
+        "version": "2.5.0",
         "release_name": "Scientific and Earth Systems Observatory",
         "generated_at": generated_at,
         "integration": records["integration"],
@@ -648,7 +648,7 @@ def build_science_brief(settings: Any = None, *, family: str = "", discipline: s
     return {
         "ok": True,
         "schema": "sc-site-intelligence-science-brief/1.0",
-        "version": "2.4.0",
+        "version": "2.5.0",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "title": "Scientific and Earth Systems source brief",
         "scope": {"family": family, "discipline": discipline, "source_id": source_id, "query": query},
@@ -671,7 +671,7 @@ def build_science_diagnostics(settings: Any = None) -> dict[str, Any]:
     payload: dict[str, Any] = {
         "ok": True,
         "schema": "sc-site-intelligence-science-diagnostics/1.0",
-        "version": "2.4.0",
+        "version": "2.5.0",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "integration": _integration_state(settings),
         "credential_exposed": False,

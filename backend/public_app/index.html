@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="dark light">
   <meta name="theme-color" content="#111111">
-  <title>Sustainable Catalyst Site Intelligence | Scientific and Earth Systems Observatory</title>
+  <title>Sustainable Catalyst Site Intelligence | Humanitarian, Conflict, and Displacement Observatory</title>
   <meta name="description" content="An auditable public observatory for scientific datasets, Earth systems, space observations, international law, official economics, sustainability, country indicators, and source-aware briefs.">
   <meta property="og:title" content="Sustainable Catalyst Site Intelligence">
   <meta property="og:description" content="Public evidence, source lineage, Earth observation, country intelligence, live events, and verifiable research paths.">
@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="/app/assets/economics-v220.css?v=2.2.0">
   <link rel="stylesheet" href="/app/assets/law-v230.css?v=2.3.0">
   <link rel="stylesheet" href="/app/assets/science-v240.css?v=2.4.0">
+  <link rel="stylesheet" href="/app/assets/humanitarian-v250.css?v=2.5.0">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to intelligence workspace</a>
@@ -66,6 +67,7 @@
         <button class="nav-item" type="button" data-route="economics"><span>Economics</span><small>Markets and sustainability</small></button>
         <button class="nav-item" type="button" data-route="law"><span>International law</span><small>Governance and authority</small></button>
         <button class="nav-item" type="button" data-route="science"><span>Science</span><small>Earth systems and space</small></button>
+        <button class="nav-item" type="button" data-route="humanitarian"><span>Humanitarian</span><small>Conflict and displacement</small></button>
         <button class="nav-item" type="button" data-route="earth"><span>Earth</span><small>Satellite comparison</small></button>
         <button class="nav-item" type="button" data-route="country"><span>Country</span><small>Place-based evidence</small></button>
         <button class="nav-item" type="button" data-route="events"><span>Events</span><small>Live event intelligence</small></button>
@@ -923,6 +925,17 @@
       </section>
 
 
+
+      <section id="humanitarianStudio" class="humanitarian-studio" hidden aria-busy="false">
+        <div class="humanitarian-hero"><div><p class="eyebrow">HUMANITARIAN · CONFLICT · DISPLACEMENT</p><h2>Connect crisis reporting, displacement evidence, civilian-protection context, and hazard exposure</h2><p>Explore public records from Site Intelligence event feeds and Sustainable Catalyst Core while retaining source, date, geography, uncertainty, legal authority, and responsible-data limits.</p><div class="humanitarian-actions"><button id="humanitarianShare" class="ghost-button" type="button">Copy filtered view</button><button id="humanitarianExport" class="ghost-button" type="button">Download CSV</button><button id="humanitarianDecision" class="earth-primary-button" type="button">Open Decision Studio</button></div></div><aside><span class="public-beta-badge public-release-badge">Public-source research</span><strong>No fabricated crisis records</strong><p>This workspace does not infer legal responsibility, protection status, individual risk, eligibility, or operational priority.</p></aside></div>
+        <div id="humanitarianStatus" class="humanitarian-status" data-state="loading" role="status" aria-live="polite"><i></i><span>Loading humanitarian and displacement evidence</span></div>
+        <div class="humanitarian-filter-deck"><label>Country<input id="humanitarianCountry" maxlength="120" placeholder="ISO code, e.g. SDN"></label><label>Category<select id="humanitarianCategory"><option value="">All categories</option></select></label><label>Source<select id="humanitarianSource"><option value="">All sources</option></select></label><label>Window<select id="humanitarianDays"><option value="14">14 days</option><option value="30" selected>30 days</option><option value="60">60 days</option><option value="90">90 days</option></select></label><label>Search<input id="humanitarianSearch" maxlength="240" type="search" placeholder="Displacement, access, protection…"></label><div><button id="humanitarianApply" class="earth-primary-button" type="button">Apply</button><button id="humanitarianReset" class="ghost-button" type="button">Reset</button></div></div>
+        <div class="humanitarian-metrics"><article><span>Records</span><strong id="humanitarianRecordCount">—</strong><small>Public evidence returned</small></article><article><span>Countries</span><strong id="humanitarianCountryCount">—</strong><small>Associated geographies</small></article><article><span>Sources</span><strong id="humanitarianSourceCount">—</strong><small>Connected public sources</small></article><article><span>Displacement</span><strong id="humanitarianDisplacementCount">—</strong><small>Records, not a combined total</small></article></div>
+        <div class="humanitarian-primary-grid"><article><div class="humanitarian-panel-head"><div><p class="eyebrow">GLOBAL EVIDENCE MAP</p><h3>Events and country-associated records</h3></div><strong id="humanitarianMappedCount">0</strong></div><div id="humanitarianMap" class="humanitarian-map" tabindex="0" aria-label="Map of humanitarian, conflict, displacement, and hazard records"></div><p>Mapped locations inherit source precision. Sensitive or uncertain locations may be generalized or absent.</p></article><article><div class="humanitarian-panel-head"><div><p class="eyebrow">TIMELINE</p><h3>Reported and observed records</h3></div></div><div id="humanitarianTimeline" class="humanitarian-timeline"></div></article></div>
+        <article class="humanitarian-record-panel"><div class="humanitarian-panel-head"><div><p class="eyebrow">SOURCE-AWARE RECORDS</p><h3>Humanitarian, conflict, displacement, protection, and hazard context</h3></div></div><div id="humanitarianRecords" class="humanitarian-records" aria-live="polite"></div></article>
+        <section class="humanitarian-method-panel"><article><p class="eyebrow">DISTINCTIONS</p><h3>Stocks, flows, events, and reports remain separate</h3><p>Displacement registrations, estimates, movement flows, humanitarian reports, observed hazards, and legal records are not silently combined.</p></article><article><p class="eyebrow">RESPONSIBLE DATA</p><h3>No individual or operational targeting</h3><p>The observatory does not support military targeting, individual risk scoring, refugee-status determination, automated eligibility decisions, or emergency dispatch.</p></article><article><p class="eyebrow">INTERPRETATION</p><h3>Public evidence is incomplete</h3><p>Record counts do not measure total incidence, severity, unmet need, causality, or legal responsibility.</p></article></section>
+      </section>
+
       <section id="scienceStudio" class="science-studio" hidden aria-busy="false">
         <div class="science-hero">
           <div><p class="eyebrow">SCIENTIFIC AND EARTH SYSTEMS OBSERVATORY</p><h2>Discover scientific records across Earth, atmosphere, water, space, biology, chemistry, and materials</h2><p>Source-aware metadata, assets, layers, STAC items, and time series from free official and public scientific services integrated through Sustainable Catalyst Core.</p><div class="science-actions"><button id="scienceShare" class="ghost-button" type="button">Copy view</button><button id="scienceExport" class="ghost-button" type="button">Export records</button><button id="scienceWorkbench" class="earth-primary-button" type="button">Open Workbench</button></div></div>
@@ -1162,5 +1175,6 @@
   <script src="/app/assets/economics-v220.js?v=2.2.0" defer></script>
   <script src="/app/assets/law-v230.js?v=2.3.0" defer></script>
   <script src="/app/assets/science-v240.js?v=2.4.0" defer></script>
+  <script src="/app/assets/humanitarian-v250.js?v=2.5.0" defer></script>
 </body>
 </html>

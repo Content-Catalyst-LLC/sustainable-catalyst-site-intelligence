@@ -19,6 +19,7 @@ PUBLIC_WORKSPACES = [
     {"id": "economics", "title": "Economics, Markets, and Sustainability Signals", "route": "/app/?view=economics", "summary": "Explore official economics, labour, trade, energy, demographic, company-filing, and sustainability records with source and timing context."},
     {"id": "law", "title": "International Law and Global Governance Observatory", "route": "/app/?view=law", "summary": "Explore official legal and governance records while preserving authority type, procedural status, citations, and source context."},
     {"id": "science", "title": "Scientific and Earth Systems Observatory", "route": "/app/?view=science", "summary": "Discover Earth systems, space observations, biodiversity, chemistry, materials, scientific assets, layers, STAC items, and time series with source and quality context."},
+    {"id": "humanitarian", "title": "Humanitarian, Conflict, and Displacement Observatory", "route": "/app/?view=humanitarian", "summary": "Connect public crisis reporting, displacement evidence, civilian-protection context, humanitarian access, and hazard exposure without fabricating records."},
     {"id": "earth", "title": "Earth Observation Studio", "route": "/app/?view=earth", "summary": "Compare satellite-derived layers across dates with source and imagery limits."},
     {"id": "events", "title": "Live Event Intelligence", "route": "/app/?view=events", "summary": "Filter public hazard and humanitarian records while retaining source identity."},
     {"id": "country", "title": "Global Country Intelligence", "route": "/app/?view=country&country=KEN", "summary": "Explore country indicators, trends, event context, and reporting-year differences."},
@@ -81,7 +82,7 @@ def launch_profile() -> dict[str, Any]:
 
 def launch_checklist() -> dict[str, Any]:
     groups = [
-        {"id": "product", "title": "Public product", "status": "implemented", "items": ["single primary application embed", "twelve public research workspaces", "public launch route", "responsible-use boundary"]},
+        {"id": "product", "title": "Public product", "status": "implemented", "items": ["single primary application embed", "fourteen public research workspaces", "public launch route", "responsible-use boundary"]},
         {"id": "evidence", "title": "Evidence and provenance", "status": "implemented", "items": ["source registry", "methodology registry", "visible data states", "source-aware exports"]},
         {"id": "delivery", "title": "Delivery quality", "status": "implemented", "items": ["mobile navigation", "keyboard behavior", "reduced motion", "performance budgets", "responsive WordPress embed"]},
         {"id": "portfolio", "title": "Portfolio materials", "status": "implemented", "items": ["project description", "launch post", "homepage feature copy", "Platform page copy", "demo shot list"]},

@@ -4158,6 +4158,64 @@ def public_scientific_earth_systems_diagnostics(settings: Settings = Depends(get
     return build_science_diagnostics(settings)
 
 
+# Site Intelligence v2.5.0 — Humanitarian, Conflict, and Displacement Observatory
+@app.get("/public/humanitarian-conflict-displacement")
+def public_humanitarian_conflict_displacement_overview(settings: Settings = Depends(get_settings)):
+    from .humanitarian_conflict_displacement_observatory import build_overview
+    return build_overview(settings)
+
+@app.get("/public/humanitarian-conflict-displacement/records")
+def public_humanitarian_conflict_displacement_records(
+    country: str = Query(default="", max_length=120), category: str = Query(default="", max_length=100),
+    source_id: str = Query(default="", max_length=160), query: str = Query(default="", max_length=240),
+    days: int = Query(default=30, ge=1, le=90), include_hazards: bool = Query(default=True),
+    limit: int = Query(default=150, ge=1, le=300), offset: int = Query(default=0, ge=0),
+    settings: Settings = Depends(get_settings),
+):
+    from .humanitarian_conflict_displacement_observatory import build_records
+    return build_records(settings,country=country,category=category,source_id=source_id,query=query,days=days,include_hazards=include_hazards,limit=limit,offset=offset)
+
+@app.get("/public/humanitarian-conflict-displacement/facets")
+def public_humanitarian_conflict_displacement_facets(settings: Settings = Depends(get_settings)):
+    from .humanitarian_conflict_displacement_observatory import build_facets
+    return build_facets(settings)
+
+@app.get("/public/humanitarian-conflict-displacement/timeline")
+def public_humanitarian_conflict_displacement_timeline(
+    country: str = Query(default="", max_length=120), category: str = Query(default="", max_length=100),
+    query: str = Query(default="", max_length=240), days: int = Query(default=30, ge=1, le=90),
+    settings: Settings = Depends(get_settings),
+):
+    from .humanitarian_conflict_displacement_observatory import build_timeline
+    return build_timeline(settings,country=country,category=category,query=query,days=days)
+
+@app.get("/public/humanitarian-conflict-displacement/displacement")
+def public_humanitarian_conflict_displacement_displacement(country: str = Query(default="", max_length=120), limit: int = Query(default=200, ge=1, le=300), settings: Settings = Depends(get_settings)):
+    from .humanitarian_conflict_displacement_observatory import build_displacement
+    return build_displacement(settings,country=country,limit=limit)
+
+@app.get("/public/humanitarian-conflict-displacement/country-profile")
+def public_humanitarian_conflict_displacement_country_profile(country: str = Query(..., max_length=120), limit: int = Query(default=250, ge=1, le=300), settings: Settings = Depends(get_settings)):
+    from .humanitarian_conflict_displacement_observatory import build_country_profile
+    try: return build_country_profile(settings,country=country,limit=limit)
+    except ValueError as exc: raise HTTPException(status_code=422,detail=str(exc)) from exc
+
+@app.get("/public/humanitarian-conflict-displacement/access")
+def public_humanitarian_conflict_displacement_access(country: str = Query(default="", max_length=120), limit: int = Query(default=200, ge=1, le=300), settings: Settings = Depends(get_settings)):
+    from .humanitarian_conflict_displacement_observatory import build_access_snapshot
+    return build_access_snapshot(settings,country=country,limit=limit)
+
+@app.get("/public/humanitarian-conflict-displacement/brief")
+def public_humanitarian_conflict_displacement_brief(country: str = Query(default="", max_length=120), category: str = Query(default="", max_length=100), query: str = Query(default="", max_length=240), limit: int = Query(default=100, ge=1, le=150), settings: Settings = Depends(get_settings)):
+    from .humanitarian_conflict_displacement_observatory import build_brief
+    return build_brief(settings,country=country,category=category,query=query,limit=limit)
+
+@app.get("/public/humanitarian-conflict-displacement/diagnostics")
+def public_humanitarian_conflict_displacement_diagnostics(settings: Settings = Depends(get_settings)):
+    from .humanitarian_conflict_displacement_observatory import build_diagnostics
+    return build_diagnostics(settings)
+
+
 # Site Intelligence standalone public application.
 from pathlib import Path as _Path
 PUBLIC_APP_DIR = _Path(__file__).resolve().parent.parent / "public_app"

@@ -48,7 +48,7 @@
   }
 
   const state = {map:null,base:null,imagery:null,markers:null,heat:null,layers:null,events:null,country:"KEN",route:"overview"};
-  const APP_VERSION="2.4.0";
+  const APP_VERSION="2.5.0";
   const SAVED_VIEW_SCHEMA="sc-saved-view/1.0";
   const SAVED_VIEW_STORAGE_KEY="sc_site_intelligence_saved_views_v1";
   const SAVED_VIEW_LIMIT=50;
@@ -150,6 +150,7 @@
       economics:["ECONOMICS, MARKETS, AND SUSTAINABILITY SIGNALS","Official economic conditions","Explore source-aware macroeconomic, labour, trade, energy, agriculture, demographic, company-filing, and sustainability records without hiding reporting frequency or methodological limits."],
       law:["INTERNATIONAL LAW AND GLOBAL GOVERNANCE OBSERVATORY","Official legal and governance records","Explore treaties, resolutions, judicial material, human-rights recommendations, reports, and codification work without flattening authority, procedure, or legal effect."],
       science:["SCIENTIFIC AND EARTH SYSTEMS OBSERVATORY","Scientific records and Earth-system data","Discover Earth science, atmosphere, water, hazards, space observations, biodiversity, chemistry, materials, scientific assets, map layers, STAC items, and time series with source and quality context."],
+      humanitarian:["HUMANITARIAN, CONFLICT, AND DISPLACEMENT OBSERVATORY","Crisis and displacement evidence","Connect public humanitarian reports, conflict-related records, displacement context, civilian-protection evidence, and hazard exposure without fabricating records or flattening source limitations."],
       observatory:["AUDITABLE PUBLIC OBSERVATORY","Evidence, lineage, and integrity","Inspect registered public evidence records, source and methodology lineage, canonical digests, release history, and verification boundaries."],
       launch:["PUBLIC LAUNCH AND PORTFOLIO","Site Intelligence","Explore the public product, technical architecture, responsible-use boundaries, and launch materials."],
       overview:["LIVE INTELLIGENCE WORKSPACE","Climate and Human Vulnerability","Satellite context, natural events, environmental pressure, and country evidence in one navigable view."],
@@ -1138,6 +1139,7 @@
     economics:{label:"Economics and Sustainability",keys:["family","source_id","geography_code","indicator_code","frequency","query","mapLat","mapLng","mapZoom"]},
     law:{label:"International Law and Governance",keys:["lawAuthority","lawType","lawBody","lawCountry","lawSubject","lawQuery","mapLat","mapLng","mapZoom"]},
     science:{label:"Scientific and Earth Systems",keys:["scienceFamily","scienceType","scienceDiscipline","scienceSource","scienceMission","scienceQuery","scienceSeries","scienceFormat","mapLat","mapLng","mapZoom"]},
+    humanitarian:{label:"Humanitarian, Conflict, and Displacement",keys:["country","category","source_id","query","days","mapLat","mapLng","mapZoom"]},
     observatory:{label:"Auditable Public Observatory",keys:[]},
     overview:{label:"Overview",keys:["country","imageryLayer","imageryDate","mapLat","mapLng","mapZoom"]},
     earth:{label:"Earth Observation",keys:["earthLayer","dateA","dateB","opacity","swipe","mapLat","mapLng","mapZoom"]},
@@ -1160,6 +1162,7 @@
     if(route==="economics")return window.SCEconomicsV220?.status?.().map||null;
     if(route==="law")return window.SCLawV230?.status?.().map||null;
     if(route==="science")return window.SCScienceV240?.status?.().map||null;
+    if(route==="humanitarian")return window.SCHumanitarianV250?.status?.().map||null;
     if(route==="overview")return state.map;
     if(route==="earth")return earthState.mapA;
     if(route==="country")return globalCountryState.overviewMap;
@@ -1181,6 +1184,7 @@
     if(route==="economics")values={family:qs("#economicsFamily")?.value||"",source_id:qs("#economicsSource")?.value||"",geography_code:qs("#economicsCountry")?.value||"",indicator_code:qs("#economicsIndicator")?.value||"",frequency:qs("#economicsFrequency")?.value||"",query:qs("#economicsSearch")?.value?.trim?.()||""};
     if(route==="law")values={lawAuthority:qs("#lawAuthority")?.value||"",lawType:qs("#lawType")?.value||"",lawBody:qs("#lawBody")?.value||"",lawCountry:qs("#lawCountry")?.value||"",lawSubject:qs("#lawSubject")?.value||"",lawQuery:qs("#lawSearch")?.value?.trim?.()||""};
     if(route==="science")values={scienceFamily:qs("#scienceFamily")?.value||"",scienceType:qs("#scienceType")?.value||"",scienceDiscipline:qs("#scienceDiscipline")?.value||"",scienceSource:qs("#scienceSource")?.value||"",scienceMission:qs("#scienceMission")?.value||"",scienceQuery:qs("#scienceSearch")?.value?.trim?.()||"",scienceSeries:qs("#scienceSeriesSelect")?.value||"",scienceFormat:qs("#scienceAssetFormat")?.value||""};
+    if(route==="humanitarian")values={country:qs("#humanitarianCountry")?.value||"",category:qs("#humanitarianCategory")?.value||"",source_id:qs("#humanitarianSource")?.value||"",query:qs("#humanitarianSearch")?.value?.trim?.()||"",days:qs("#humanitarianDays")?.value||"30"};
     if(route==="overview")values={country:state.country,imageryLayer:qs(".layer-tab.active")?.dataset.layer||"true-color",imageryDate:qs("#dateSelect").value};
     if(route==="earth")values={earthLayer:qs("#earthLayerSelect").value,dateA:qs("#earthDateA").value,dateB:qs("#earthDateB").value,opacity:qs("#earthOpacity").value,swipe:qs("#earthSwipe").value};
     if(route==="country")values={country:globalCountryState.activeCode||state.country,trend:qs("#globalTrendSelect").value};
@@ -1333,6 +1337,7 @@
     if(route!=="economics")window.SCEconomicsV220?.close?.();
     if(route!=="law")window.SCLawV230?.close?.();
     if(route!=="science")window.SCScienceV240?.close?.();
+    if(route!=="humanitarian")window.SCHumanitarianV250?.close?.();
     if(route==="global"){
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
       closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
@@ -1360,6 +1365,13 @@
       closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
       closePublicLaunchPortfolio();closeAuditablePublicObservatory();
       await window.SCScienceV240?.open?.();return;
+    }
+    if(route==="humanitarian"){
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
+      closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
+      closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
+      closePublicLaunchPortfolio();closeAuditablePublicObservatory();
+      await window.SCHumanitarianV250?.open?.();return;
     }
     if(route!=="launch")closePublicLaunchPortfolio();
     if(route!=="observatory")closeAuditablePublicObservatory();

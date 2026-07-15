@@ -123,6 +123,14 @@ class Settings(BaseSettings):
     scientific_earth_systems_timeout_seconds: int = Field(default=9, ge=2, le=30)
     scientific_earth_systems_cache_ttl_seconds: int = Field(default=120, ge=15, le=1800)
 
+    # Site Intelligence v2.5.0 — Humanitarian, Conflict, and Displacement Observatory.
+    # Combines public live-event records with scoped Platform Core data while
+    # preserving source, date, geographic precision, uncertainty, and safety
+    # boundaries. No demonstration records are used in this workspace.
+    humanitarian_conflict_displacement_enabled: bool = True
+    humanitarian_conflict_displacement_timeout_seconds: int = Field(default=9, ge=2, le=30)
+    humanitarian_conflict_displacement_cache_ttl_seconds: int = Field(default=90, ge=15, le=1800)
+
 
     # Sustainable Development Data Connectors v1.14.1.
     sustainable_development_connectors_enabled: bool = True

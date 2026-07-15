@@ -56,6 +56,12 @@ PUBLIC_WORKSPACES: list[dict[str, str]] = [
         "summary": "Discover scientific records, assets, map layers, STAC items, and time series with mission, quality, license, attribution, and observation context preserved.",
     },
     {
+        "id": "humanitarian",
+        "title": "Humanitarian, Conflict, and Displacement Observatory",
+        "route": "/app/?view=humanitarian",
+        "summary": "Connect public humanitarian, conflict, displacement, protection, and hazard evidence without fabricated crisis records or hidden responsible-data limits.",
+    },
+    {
         "id": "earth",
         "title": "Earth Observation Studio",
         "route": "/app/?view=earth",
@@ -154,6 +160,20 @@ AUDIT_ARTIFACTS: list[dict[str, Any]] = [
         "limitations": [
             "Metadata discovery is not equivalent to scientific validation or peer review.",
             "Forecasts, observations, model products, catalog records, and computed properties remain distinct.",
+        ],
+    },
+    {
+        "id": "humanitarian-conflict-displacement",
+        "title": "Humanitarian, Conflict, and Displacement Observatory",
+        "artifact_type": "workspace",
+        "route": "/app/?view=humanitarian",
+        "schema": "sc-site-intelligence-humanitarian-conflict-displacement/1.0",
+        "source_ids": ["platform-core", "reliefweb", "usgs-earthquakes", "nasa-eonet"],
+        "methodology_ids": ["delivery-states", "optional-source-failures", "event-deduplication", "country-event-matching", "missing-values"],
+        "verification_level": "source-record-and-responsible-data-linked",
+        "limitations": [
+            "Public humanitarian and conflict records are incomplete and source-dependent.",
+            "The workspace does not infer legal responsibility, protection status, eligibility, individual risk, or operational priority.",
         ],
     },
     {
@@ -260,6 +280,7 @@ RELEASE_LEDGER = [
     {"version": "2.2.0", "title": "Economics, Markets, and Sustainability Signals", "audit_contribution": "Core-backed official-statistics records, timing classifications, source-preserving comparisons, geography mapping, and explicit no-real-time-market-data boundaries."},
     {"version": "2.3.0", "title": "International Law and Global Governance Observatory", "audit_contribution": "Core-backed official legal records, legal-authority taxonomy, procedural-status preservation, source-aware country profiles, timelines, and explicit non-advice boundaries."},
     {"version": "2.4.0", "title": "Scientific and Earth Systems Observatory", "audit_contribution": "Core-backed scientific records, scientific assets, map layers, STAC discovery, time-series access, source and quality preservation, and explicit no-fabrication boundaries."},
+    {"version": "2.5.0", "title": "Humanitarian, Conflict, and Displacement Observatory", "audit_contribution": "Source-aware crisis, displacement, civilian-protection, humanitarian access, and hazard evidence with no-fabrication and responsible-data safeguards."},
 ]
 
 

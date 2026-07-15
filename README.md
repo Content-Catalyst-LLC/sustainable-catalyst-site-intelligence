@@ -1,8 +1,17 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.4.0 — Scientific and Earth Systems Observatory
+**Current release:** v2.5.0 — Humanitarian, Conflict, and Displacement Observatory
 
 
+
+## v2.5.0 — Humanitarian, Conflict, and Displacement Observatory
+
+Site Intelligence v2.5.0 adds a source-aware public workspace for humanitarian reporting, conflict-related public records, displacement evidence, civilian-protection context, humanitarian access, and hazard exposure. It combines the existing live-event layer with scoped Platform Core records while preserving source, date, geography, uncertainty, legal authority, and explicit responsible-data boundaries.
+
+- Public route: `/app/?view=humanitarian`
+- WordPress shortcode: `[sc_humanitarian_conflict_displacement_observatory height="1450"]`
+- No fabricated crisis records or paid provider requirement
+- No legal-responsibility inference, military targeting, individual risk scoring, refugee-status determination, eligibility decision, or emergency warning
 
 ## v2.4.0 — Scientific and Earth Systems Observatory
 

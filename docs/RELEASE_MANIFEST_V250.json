@@ -1,0 +1,31 @@
+{
+  "release": "2.5.0",
+  "title": "Humanitarian, Conflict, and Displacement Observatory",
+  "application_version": "2.5.0",
+  "route": "/app/?view=humanitarian",
+  "shortcode": "[sc_humanitarian_conflict_displacement_observatory height=\"1450\"]",
+  "public_endpoints": [
+    "/public/humanitarian-conflict-displacement",
+    "/public/humanitarian-conflict-displacement/records",
+    "/public/humanitarian-conflict-displacement/facets",
+    "/public/humanitarian-conflict-displacement/timeline",
+    "/public/humanitarian-conflict-displacement/displacement",
+    "/public/humanitarian-conflict-displacement/country-profile",
+    "/public/humanitarian-conflict-displacement/access",
+    "/public/humanitarian-conflict-displacement/brief",
+    "/public/humanitarian-conflict-displacement/diagnostics"
+  ],
+  "integrated_public_sources": [
+    "Site Intelligence unified live events",
+    "Sustainable Catalyst Core public live observations",
+    "Sustainable Catalyst Core international-law records",
+    "Sustainable Catalyst Core official statistics"
+  ],
+  "paid_provider_required": false,
+  "fabricated_fallback": false,
+  "military_targeting": false,
+  "individual_risk_scoring": false,
+  "refugee_status_determination": false,
+  "automated_eligibility": false,
+  "emergency_warning": false
+}
