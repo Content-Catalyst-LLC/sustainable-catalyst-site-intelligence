@@ -1,4 +1,4 @@
-APP_VERSION = "2.1.0"
+APP_VERSION = "2.2.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Global Conditions and Live Map Observatory"
+RELEASE_NAME = "Economics, Markets, and Sustainability Signals"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

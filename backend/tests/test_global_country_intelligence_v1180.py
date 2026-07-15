@@ -17,7 +17,7 @@ FAKE_CATALOG = {
 def test_root_reports_v1180():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json()["version"] == "2.1.0"
+    assert response.json()["version"] == "2.2.0"
 
 @patch("app.live_country_intelligence._catalog_from_world_bank", return_value=FAKE_CATALOG)
 def test_country_catalog_is_searchable(mock_catalog):

@@ -1,3 +1,13 @@
+## 2.2.0 — Economics, Markets, and Sustainability Signals
+
+- Release hardening: filtered country, category, and source requests no longer inherit a `stale` state from unrelated cached events when no matching evidence exists.
+
+- Added a server-side public bridge to Core economics and official-statistics records.
+- Added economic-domain classification, precise data-timing labels, source-safe sanitization, geography mapping, time-series visualization, comparison, filtering, and CSV export.
+- Added an explicit boundary against simulated or falsely labeled real-time exchange data.
+- Added `/app/?view=economics` and `[sc_economics_sustainability_observatory]`.
+- Preserved v2.1.0 global conditions and all earlier public workspaces.
+
 # Changelog
 
 ## 2.1.0 — Global Conditions and Live Map Observatory

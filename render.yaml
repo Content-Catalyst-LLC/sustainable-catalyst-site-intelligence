@@ -23,3 +23,9 @@ services:
         value: "true"
       - key: SC_SI_SEARCH_CONSOLE_SITE_URL
         value: https://sustainablecatalyst.com/
+      - key: SC_SI_ECONOMICS_SUSTAINABILITY_ENABLED
+        value: "true"
+      - key: SC_SI_ECONOMICS_SUSTAINABILITY_TIMEOUT_SECONDS
+        value: "9"
+      - key: SC_SI_ECONOMICS_SUSTAINABILITY_CACHE_TTL_SECONDS
+        value: "120"

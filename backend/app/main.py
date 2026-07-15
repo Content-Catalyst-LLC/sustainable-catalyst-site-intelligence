@@ -3785,7 +3785,6 @@ def publishing_intelligence_report(
 
 
 
-# Site Intelligence standalone public application.
 
 
 # Site Intelligence v2.1.0 — Global Conditions and Live Map Observatory
@@ -3844,6 +3843,103 @@ def public_global_conditions_diagnostics_endpoint(settings: Settings = Depends(g
     return build_global_conditions_diagnostics(settings)
 
 
+
+
+# Site Intelligence v2.2.0 — Economics, Markets, and Sustainability Signals
+@app.get("/public/economics-sustainability")
+def public_economics_sustainability_overview(settings: Settings = Depends(get_settings)):
+    from .economics_markets_sustainability import build_economics_overview
+    return build_economics_overview(settings)
+
+
+@app.get("/public/economics-sustainability/records")
+def public_economics_sustainability_records(
+    family: str = Query(default="", max_length=80),
+    record_type: str = Query(default="", max_length=80),
+    subject: str = Query(default="", max_length=160),
+    source_id: str = Query(default="", max_length=160),
+    indicator_code: str = Query(default="", max_length=180),
+    geography_code: str = Query(default="", max_length=20),
+    frequency: str = Query(default="", max_length=40),
+    query: str = Query(default="", max_length=240),
+    start: str = Query(default="", max_length=50),
+    end: str = Query(default="", max_length=50),
+    limit: int = Query(default=100, ge=1, le=300),
+    offset: int = Query(default=0, ge=0),
+    settings: Settings = Depends(get_settings),
+):
+    from .economics_markets_sustainability import build_economic_records
+    return build_economic_records(
+        settings, family=family, record_type=record_type, subject=subject,
+        source_id=source_id, indicator_code=indicator_code,
+        geography_code=geography_code, frequency=frequency, query=query,
+        start=start, end=end, limit=limit, offset=offset,
+    )
+
+
+@app.get("/public/economics-sustainability/facets")
+def public_economics_sustainability_facets(
+    geography_code: str = Query(default="", max_length=20),
+    settings: Settings = Depends(get_settings),
+):
+    from .economics_markets_sustainability import build_economic_facets
+    return build_economic_facets(settings, geography_code=geography_code)
+
+
+@app.get("/public/economics-sustainability/series")
+def public_economics_sustainability_series(
+    indicator_code: str = Query(..., min_length=1, max_length=180),
+    geography_code: str = Query(default="", max_length=20),
+    source_id: str = Query(default="", max_length=160),
+    limit: int = Query(default=120, ge=1, le=240),
+    settings: Settings = Depends(get_settings),
+):
+    from .economics_markets_sustainability import build_economic_series
+    try:
+        return build_economic_series(
+            settings, indicator_code=indicator_code, geography_code=geography_code,
+            source_id=source_id, limit=limit,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/public/economics-sustainability/compare")
+def public_economics_sustainability_compare(
+    indicator_code: str = Query(..., min_length=1, max_length=180),
+    geography_a: str = Query(..., min_length=2, max_length=20),
+    geography_b: str = Query(..., min_length=2, max_length=20),
+    limit: int = Query(default=120, ge=1, le=240),
+    settings: Settings = Depends(get_settings),
+):
+    from .economics_markets_sustainability import build_economic_comparison
+    try:
+        return build_economic_comparison(
+            settings, indicator_code=indicator_code, geography_a=geography_a,
+            geography_b=geography_b, limit=limit,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/public/economics-sustainability/brief")
+def public_economics_sustainability_brief(
+    geography_code: str = Query(default="", max_length=20),
+    family: str = Query(default="", max_length=80),
+    limit: int = Query(default=80, ge=1, le=150),
+    settings: Settings = Depends(get_settings),
+):
+    from .economics_markets_sustainability import build_economics_brief
+    return build_economics_brief(settings, geography_code=geography_code, family=family, limit=limit)
+
+
+@app.get("/public/economics-sustainability/diagnostics")
+def public_economics_sustainability_diagnostics(settings: Settings = Depends(get_settings)):
+    from .economics_markets_sustainability import build_economics_diagnostics
+    return build_economics_diagnostics(settings)
+
+
+# Site Intelligence standalone public application.
 from pathlib import Path as _Path
 PUBLIC_APP_DIR = _Path(__file__).resolve().parent.parent / "public_app"
 if PUBLIC_APP_DIR.exists():

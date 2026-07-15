@@ -1,6 +1,6 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.1.0 — Global Conditions and Live Map Observatory
+**Current release:** v2.2.0 — Economics, Markets, and Sustainability Signals
 
 Sustainable Catalyst Site Intelligence is an auditable public observatory for Earth observation, global country indicators, natural hazards, humanitarian reporting, comparative research, source-aware briefs, evidence lineage, and portable public verification records.
 
@@ -698,3 +698,12 @@ Site Intelligence supports research, orientation, source review, public understa
 ## License
 
 MIT. See `LICENSE`.
+
+
+## v2.2.0 economics workspace
+
+Site Intelligence v2.2.0 adds a Core-backed public workspace for official economics, markets, and sustainability records. It preserves source identity, geography, reporting period, frequency, units, vintage dates, and market-data timing labels while explicitly avoiding simulated real-time exchange data.
+
+Public route: `/app/?view=economics`
+
+WordPress shortcode: `[sc_economics_sustainability_observatory height="1250"]`

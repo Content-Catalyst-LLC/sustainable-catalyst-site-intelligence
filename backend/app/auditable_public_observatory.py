@@ -38,6 +38,12 @@ PUBLIC_WORKSPACES: list[dict[str, str]] = [
         "summary": "Map-first satellite context, public event signals, and country evidence.",
     },
     {
+        "id": "economics",
+        "title": "Economics, Markets, and Sustainability Signals",
+        "route": "/app/?view=economics",
+        "summary": "Inspect official economic, trade, labour, energy, demographic, company-filing, and sustainability records with source and timing context.",
+    },
+    {
         "id": "earth",
         "title": "Earth Observation Studio",
         "route": "/app/?view=earth",
@@ -211,6 +217,7 @@ RELEASE_LEDGER = [
     {"version": "1.25.0", "title": "Public Launch and Portfolio", "audit_contribution": "Public product record and launch checklist."},
     {"version": "2.0.0", "title": "Auditable Public Observatory", "audit_contribution": "Evidence ledger, lineage graph, integrity digests, and public verification contract."},
     {"version": "2.1.0", "title": "Global Conditions and Live Map Observatory", "audit_contribution": "Core-powered public geographic records, observation signals, map-layer registry integration, and explicit fallback states."},
+    {"version": "2.2.0", "title": "Economics, Markets, and Sustainability Signals", "audit_contribution": "Core-backed official-statistics records, timing classifications, source-preserving comparisons, geography mapping, and explicit no-real-time-market-data boundaries."},
 ]
 
 

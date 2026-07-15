@@ -1,0 +1,22 @@
+{
+  "release": "2.2.0",
+  "name": "Economics, Markets, and Sustainability Signals",
+  "application_version": "2.2.0",
+  "schema": "sc-site-intelligence-release-manifest/2.2",
+  "public_route": "/app/?view=economics",
+  "wordpress_shortcode": "[sc_economics_sustainability_observatory height=\"1250\"]",
+  "backend_endpoints": [
+    "/public/economics-sustainability",
+    "/public/economics-sustainability/records",
+    "/public/economics-sustainability/facets",
+    "/public/economics-sustainability/series",
+    "/public/economics-sustainability/compare",
+    "/public/economics-sustainability/brief",
+    "/public/economics-sustainability/diagnostics"
+  ],
+  "free_provider_only": true,
+  "paid_api_required": false,
+  "licensed_real_time_exchange_feed_claimed": false,
+  "core_minimum_release": "2.7.3",
+  "recommended_core_release": "2.8.0"
+}

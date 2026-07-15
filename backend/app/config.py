@@ -100,6 +100,14 @@ class Settings(BaseSettings):
     platform_core_public_evidence_url: str = ""
 
 
+    # Site Intelligence v2.2.0 — Economics, Markets, and Sustainability Signals.
+    # Reads scoped public records through Platform Core; no provider credentials
+    # or licensed real-time exchange feeds are exposed to the browser.
+    economics_sustainability_enabled: bool = True
+    economics_sustainability_timeout_seconds: int = Field(default=9, ge=2, le=30)
+    economics_sustainability_cache_ttl_seconds: int = Field(default=120, ge=15, le=1800)
+
+
     # Sustainable Development Data Connectors v1.14.1.
     sustainable_development_connectors_enabled: bool = True
     sustainable_development_live_checks: bool = False

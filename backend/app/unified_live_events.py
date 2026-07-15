@@ -448,7 +448,15 @@ def unified_events(
         records = _fallback_events()
         overall_state = "fallback"
     elif not records:
-        overall_state = delivery_state if delivery_state in {"live", "partial-live", "cached", "stale"} else "unavailable"
+        # A stale global cache only supports a filtered request when at least
+        # one stale record actually survives that request's filters. Unrelated
+        # stale records must not make a country/category/source diagnostic look
+        # stale when no matching evidence exists.
+        filtered_request = bool(country_code or categories or sources)
+        if delivery_state == "stale" and filtered_request:
+            overall_state = "unavailable"
+        else:
+            overall_state = delivery_state if delivery_state in {"live", "partial-live", "cached", "stale"} else "unavailable"
     else:
         overall_state = delivery_state
 

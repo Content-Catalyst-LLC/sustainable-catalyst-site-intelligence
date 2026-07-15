@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="dark light">
   <meta name="theme-color" content="#111111">
-  <title>Sustainable Catalyst Site Intelligence | Global Conditions and Live Map Observatory</title>
-  <meta name="description" content="An auditable public observatory for Earth observation, country indicators, live events, comparative research, evidence lineage, and source-aware briefs.">
+  <title>Sustainable Catalyst Site Intelligence | Economics, Markets, and Sustainability Signals</title>
+  <meta name="description" content="An auditable public observatory for official economics, markets, sustainability, Earth observation, country indicators, live events, and source-aware briefs.">
   <meta property="og:title" content="Sustainable Catalyst Site Intelligence">
   <meta property="og:description" content="Public evidence, source lineage, Earth observation, country intelligence, live events, and verifiable research paths.">
   <meta property="og:type" content="website">
@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="/app/assets/app.css">
   <link rel="stylesheet" href="/app/assets/global-conditions-v210.css?v=2.1.0">
+  <link rel="stylesheet" href="/app/assets/economics-v220.css?v=2.2.0">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to intelligence workspace</a>
@@ -60,6 +61,7 @@
         <button class="nav-item" type="button" data-route="observatory"><span>Audit</span><small>Evidence and lineage</small></button>
         <button class="nav-item" type="button" data-route="launch"><span>Launch</span><small>Product and portfolio</small></button>
         <button class="nav-item active" type="button" data-route="overview" aria-current="page"><span>Overview</span><small>Live map and signals</small></button>
+        <button class="nav-item" type="button" data-route="economics"><span>Economics</span><small>Markets and sustainability</small></button>
         <button class="nav-item" type="button" data-route="earth"><span>Earth</span><small>Satellite comparison</small></button>
         <button class="nav-item" type="button" data-route="country"><span>Country</span><small>Place-based evidence</small></button>
         <button class="nav-item" type="button" data-route="events"><span>Events</span><small>Live event intelligence</small></button>
@@ -147,7 +149,7 @@
           </div>
           <div class="launch-release-card" aria-label="Public release status">
             <span>PUBLIC RELEASE</span>
-            <strong id="launchPortfolioVersion">v2.1.0</strong>
+            <strong id="launchPortfolioVersion">v2.2.0</strong>
             <small>Source-aware observatory · MIT licensed</small>
           </div>
         </div>
@@ -224,7 +226,7 @@
           </div>
           <div class="launch-release-card" aria-label="Observatory release status">
             <span>AUDITABLE PUBLIC OBSERVATORY</span>
-            <strong id="observatoryVersion">v2.1.0</strong>
+            <strong id="observatoryVersion">v2.2.0</strong>
             <small>SHA-256 integrity · public lineage · no persistence</small>
           </div>
         </div>
@@ -839,6 +841,83 @@
         </div>
       </section>
 
+
+      <section id="economicsStudio" class="economics-studio" hidden aria-busy="false">
+        <div class="economics-hero">
+          <div>
+            <p class="eyebrow">OFFICIAL ECONOMICS · MARKETS · SUSTAINABILITY</p>
+            <h2>Read global economic conditions without hiding the source, period, or limits</h2>
+            <p>Explore official macroeconomic, labour, trade, energy, agriculture, demographic, company-filing, and sustainability records delivered through Sustainable Catalyst Core. Reporting frequency, release state, unit, geography, and attribution remain visible.</p>
+            <div class="economics-actions">
+              <button id="economicsShare" class="ghost-button" type="button">Copy filtered view</button>
+              <button id="economicsExport" class="ghost-button" type="button">Download CSV</button>
+              <button id="economicsWorkbench" class="earth-primary-button" type="button">Analyze in Workbench</button>
+              <button id="economicsDecisionStudio" class="ghost-button" type="button">Open Decision Studio</button>
+            </div>
+          </div>
+          <aside class="economics-policy-card">
+            <span class="public-beta-badge public-release-badge">Free official data</span>
+            <strong>No simulated real-time market feed</strong>
+            <p id="economicsPolicy">Official release frequency and source dates remain visible.</p>
+          </aside>
+        </div>
+
+        <div id="economicsStatus" class="economics-status" data-state="loading" role="status" aria-live="polite"><i aria-hidden="true"></i><span>Loading official economics and sustainability records</span></div>
+
+        <div class="economics-filter-deck" aria-label="Economics filters">
+          <label>Domain<select id="economicsFamily"><option value="">All domains</option></select></label>
+          <label>Official source<select id="economicsSource"><option value="">All official sources</option></select></label>
+          <label>Geography<select id="economicsCountry"><option value="">All geographies</option></select></label>
+          <label>Indicator<select id="economicsIndicator"><option value="">All indicators</option></select></label>
+          <label>Frequency<select id="economicsFrequency"><option value="">All frequencies</option></select></label>
+          <label>Search<input id="economicsSearch" type="search" maxlength="240" placeholder="GDP, employment, energy…"></label>
+          <div class="economics-filter-actions"><button id="economicsApply" class="earth-primary-button" type="button">Apply</button><button id="economicsReset" class="ghost-button" type="button">Reset</button></div>
+        </div>
+
+        <div class="economics-metrics" aria-label="Economics workspace counts">
+          <article><span>Available records</span><strong id="economicsRecordCount">—</strong><small>Core public records</small></article>
+          <article><span>Official sources</span><strong id="economicsSourceCount">—</strong><small>Visible in current window</small></article>
+          <article><span>Geographies</span><strong id="economicsGeographyCount">—</strong><small>Country or regional codes</small></article>
+          <article><span>Indicators</span><strong id="economicsIndicatorCount">—</strong><small>Distinct published series</small></article>
+        </div>
+
+        <div id="economicsFamilySummary" class="economics-family-summary" aria-label="Record families"></div>
+
+        <div class="economics-primary-grid">
+          <article class="economics-map-panel">
+            <div class="economics-panel-head"><div><p class="eyebrow">GLOBAL INDICATOR MAP</p><h3>Latest mapped official observations</h3></div><strong id="economicsReturnedCount">0</strong></div>
+            <div id="economicsMap" role="region" aria-label="Map of official economic and sustainability observations" tabindex="0"></div>
+            <p class="economics-map-note">Markers show the latest matching record for geographies with public coordinates. Marker presence does not imply equal reporting periods, definitions, or coverage.</p>
+          </article>
+          <article class="economics-series-panel">
+            <div class="economics-panel-head"><div><p class="eyebrow">TIME SERIES</p><h3 id="economicsSeriesTitle">Indicator history</h3></div><strong id="economicsLatestPeriod">—</strong></div>
+            <div id="economicsChart" role="img" aria-label="Official indicator time series"></div>
+          </article>
+        </div>
+
+        <article class="economics-record-panel">
+          <div class="economics-panel-head"><div><p class="eyebrow">RECORD EXPLORER</p><h3>Source-aware observations</h3></div><p>Up to 80 records are displayed; the CSV export preserves the full filtered response.</p></div>
+          <div id="economicsRecords" class="economics-records" aria-live="polite"></div>
+        </article>
+
+        <article class="economics-compare-panel">
+          <div class="economics-panel-head"><div><p class="eyebrow">COUNTRY COMPARISON</p><h3>Compare the same published indicator</h3></div><p>Units, periods, source, and status remain explicit.</p></div>
+          <div class="economics-compare-controls">
+            <label>Geography A<select id="economicsCompareA"><option value="">Choose geography</option></select></label>
+            <label>Geography B<select id="economicsCompareB"><option value="">Choose geography</option></select></label>
+            <label>Indicator<select id="economicsCompareIndicator"><option value="">Choose indicator</option></select></label>
+            <button id="economicsCompareApply" class="earth-primary-button" type="button">Compare</button>
+          </div>
+          <div id="economicsCompareResult" class="economics-compare-result"><div class="economics-empty"><strong>Choose an indicator and two geographies</strong><span>Comparison keeps reporting differences visible.</span></div></div>
+        </article>
+
+        <section class="economics-method-panel" aria-label="Economics methodology">
+          <article><p class="eyebrow">MARKET DATA</p><h3>Precise timing labels</h3><p>Site Intelligence does not present free official-statistics records as licensed real-time exchange prices. Records are labeled as official release, latest available, delayed, end of day, or by their published frequency.</p></article>
+          <article><p class="eyebrow">COMPARABILITY</p><h3>No silent normalization</h3><p>Source, unit, multiplier, seasonal adjustment, price basis, vintage, and reporting period remain available. Missing observations are not filled automatically.</p></article>
+          <article><p class="eyebrow">INTERPRETATION</p><h3>Evidence, not investment advice</h3><p>This workspace supports public research and comparative analysis. It does not recommend securities, forecast markets, establish causality, or replace professional economic advice.</p></article>
+        </section>
+      </section>
+
       <section id="routePanel" class="route-panel" hidden></section>
 
       <section id="globalCountryExplorer" class="global-country-explorer" hidden>
@@ -980,5 +1059,6 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
   <script src="/app/assets/app.js" defer></script>
   <script src="/app/assets/global-conditions-v210.js?v=2.1.0" defer></script>
+  <script src="/app/assets/economics-v220.js?v=2.2.0" defer></script>
 </body>
 </html>

@@ -10,12 +10,13 @@ LAUNCH_PROFILE_SCHEMA = "sc-site-intelligence-launch/1.0"
 PORTFOLIO_SCHEMA = "sc-site-intelligence-portfolio/1.0"
 PUBLIC_POSITIONING = (
     "Sustainable Catalyst Site Intelligence is an auditable public observatory for satellite imagery, "
-    "global country indicators, natural hazards, humanitarian reporting, source-aware comparative research, and evidence lineage."
+    "official economics and sustainability signals, global country indicators, natural hazards, humanitarian reporting, source-aware comparative research, and evidence lineage."
 )
 
 PUBLIC_WORKSPACES = [
     {"id": "observatory", "title": "Auditable Public Observatory", "route": "/app/?view=observatory", "summary": "Inspect evidence records, lineage, integrity digests, and verification limits."},
     {"id": "overview", "title": "Global Observatory", "route": "/app/?view=overview", "summary": "Map-first satellite context, public event signals, and country evidence."},
+    {"id": "economics", "title": "Economics, Markets, and Sustainability Signals", "route": "/app/?view=economics", "summary": "Explore official economics, labour, trade, energy, demographic, company-filing, and sustainability records with source and timing context."},
     {"id": "earth", "title": "Earth Observation Studio", "route": "/app/?view=earth", "summary": "Compare satellite-derived layers across dates with source and imagery limits."},
     {"id": "events", "title": "Live Event Intelligence", "route": "/app/?view=events", "summary": "Filter public hazard and humanitarian records while retaining source identity."},
     {"id": "country", "title": "Global Country Intelligence", "route": "/app/?view=country&country=KEN", "summary": "Explore country indicators, trends, event context, and reporting-year differences."},
@@ -78,7 +79,7 @@ def launch_profile() -> dict[str, Any]:
 
 def launch_checklist() -> dict[str, Any]:
     groups = [
-        {"id": "product", "title": "Public product", "status": "implemented", "items": ["single primary application embed", "nine public research workspaces", "public launch route", "responsible-use boundary"]},
+        {"id": "product", "title": "Public product", "status": "implemented", "items": ["single primary application embed", "eleven public research workspaces", "public launch route", "responsible-use boundary"]},
         {"id": "evidence", "title": "Evidence and provenance", "status": "implemented", "items": ["source registry", "methodology registry", "visible data states", "source-aware exports"]},
         {"id": "delivery", "title": "Delivery quality", "status": "implemented", "items": ["mobile navigation", "keyboard behavior", "reduced motion", "performance budgets", "responsive WordPress embed"]},
         {"id": "portfolio", "title": "Portfolio materials", "status": "implemented", "items": ["project description", "launch post", "homepage feature copy", "Platform page copy", "demo shot list"]},
@@ -115,7 +116,7 @@ def launch_materials() -> dict[str, Any]:
         "github_about": "Public-interest observatory for Earth observation, country indicators, live events, thematic dashboards, comparative research, and source-aware briefs.",
         "social_preview": {
             "title": "Sustainable Catalyst Site Intelligence",
-            "description": "Public evidence, Earth observation, country intelligence, live events, and source-aware research paths.",
+            "description": "Public evidence, Economics, sustainability, Earth observation, country intelligence, live events, and source-aware research paths.",
             "recommended_size": "1200x630",
             "alt_text": "A global public-intelligence interface showing Earth observation, event signals, country evidence, and source-aware research tools.",
         },
