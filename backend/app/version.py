@@ -1,4 +1,4 @@
-APP_VERSION = "2.7.0"
+APP_VERSION = "2.8.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Unified Country and Regional Intelligence Dossiers"
+RELEASE_NAME = "Alerts, Monitoring, and Live Intelligence Streams"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

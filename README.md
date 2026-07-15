@@ -1,9 +1,23 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.7.0 — Unified Country and Regional Intelligence Dossiers
+**Current release:** v2.8.0 — Alerts, Monitoring, and Live Intelligence Streams
 
 
 
+
+
+## v2.8.0 — Alerts, Monitoring, and Live Intelligence Streams
+
+Site Intelligence v2.8.0 adds a reconnectable public monitoring workspace at `/app/?view=alerts`. It combines sanitized public records from global conditions, humanitarian evidence, economics, international law, scientific data, and trade/resource systems. Alert rules and watched places remain browser-local; the backend performs stateless matching and does not create user profiles or monitoring histories.
+
+Key capabilities:
+
+- reconnecting server-sent stream snapshots with JSON fallback;
+- browser-local alert rules and watched country filters;
+- source availability and public-record recency monitoring;
+- deterministic digests and CSV exports;
+- explicit no-fabrication, no-emergency-service, no-risk-score, and no-server-tracking boundaries; and
+- WordPress embed `[sc_alerts_monitoring_live_intelligence height="1500"]`.
 
 ## v2.7.0 — Unified Country and Regional Intelligence Dossiers
 

@@ -1,0 +1,28 @@
+{
+  "version": "2.8.0",
+  "release": "Alerts, Monitoring, and Live Intelligence Streams",
+  "schema": "sc-site-intelligence-release-manifest/1.0",
+  "public_route": "/app/?view=alerts",
+  "public_shortcode": "[sc_alerts_monitoring_live_intelligence height=\"1500\"]",
+  "public_endpoints": [
+    "/public/alerts-monitoring",
+    "/public/live-intelligence-stream",
+    "/public/live-intelligence-stream/events",
+    "/public/alerts-monitoring/facets",
+    "/public/alerts-monitoring/evaluate",
+    "/public/alerts-monitoring/sources",
+    "/public/alerts-monitoring/digest",
+    "/public/alerts-monitoring/diagnostics"
+  ],
+  "paid_api_required": false,
+  "fabricated_fallback": false,
+  "server_side_user_tracking": false,
+  "operational_emergency_alert": false,
+  "individual_risk_scoring": false,
+  "investment_signal": false,
+  "legal_determination": false,
+  "military_targeting": false,
+  "rule_storage": "browser-local",
+  "stream_delivery": "reconnectable server-sent snapshot with JSON fallback",
+  "digest_generation": "deterministic, non-generative"
+}

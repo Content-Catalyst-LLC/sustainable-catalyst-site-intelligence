@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 2.7.0
+ * Version: 2.8.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '2.7.0';
+    const VERSION = '2.8.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -4455,6 +4455,30 @@ if (!function_exists('scsi_country_regional_intelligence_dossiers_shortcode_v270
     }
 }
 add_shortcode('sc_country_regional_intelligence_dossiers', 'scsi_country_regional_intelligence_dossiers_shortcode_v270');
+
+
+// Site Intelligence v2.8.0 alerts, monitoring, and live-stream shortcode
+if (!function_exists('scsi_alerts_monitoring_live_streams_shortcode_v280')) {
+    function scsi_alerts_monitoring_live_streams_shortcode_v280($atts = []) {
+        $atts = shortcode_atts([
+            'height' => '1500',
+            'title' => 'Sustainable Catalyst Alerts, Monitoring, and Live Intelligence Streams',
+        ], $atts, 'sc_alerts_monitoring_live_intelligence');
+        $options = SC_Site_Intelligence_Plugin::options();
+        $backend = rtrim((string) ($options['backend_url'] ?? ''), '/');
+        if ($backend === '') {
+            return '<div class="scsi-notice">Configure the Site Intelligence backend URL before embedding Alerts, Monitoring, and Live Intelligence Streams.</div>';
+        }
+        $height = max(950, min(3200, absint($atts['height'])));
+        $src = esc_url($backend . '/app/?view=alerts');
+        $title = esc_attr((string) $atts['title']);
+        return sprintf(
+            '<div class="scsi-app-shell"><iframe class="scsi-app-frame" src="%1$s" title="%2$s" loading="lazy" style="width:100%%;min-height:%3$dpx;border:0" allow="fullscreen; clipboard-write"></iframe><p class="scsi-app-fallback"><a href="%1$s" target="_blank" rel="noopener noreferrer">Open Alerts, Monitoring, and Live Intelligence Streams in a new tab</a></p></div>',
+            $src, $title, $height
+        );
+    }
+}
+add_shortcode('sc_alerts_monitoring_live_intelligence', 'scsi_alerts_monitoring_live_streams_shortcode_v280');
 
 register_activation_hook(__FILE__, ['SC_Site_Intelligence_Plugin', 'activate']);
 new SC_Site_Intelligence_Plugin();

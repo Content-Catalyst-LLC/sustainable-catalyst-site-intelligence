@@ -31,6 +31,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         {"id": "scientific_earth_systems", "label": "Scientific and Earth Systems Observatory is available", "status": "pass", "detail": "Core scientific records, assets, layers, STAC items, and time-series records are proxied with source, quality, mission, license, and file-format context preserved.", "action": "Verify /app/?view=science, filters, map, record cards, assets, layers, time-series chart, export, and Core-unavailable state."},
         {"id": "humanitarian_conflict_displacement", "label": "Humanitarian, Conflict, and Displacement Observatory is available", "status": "pass", "detail": "Public live events and Core records are combined without fabricated crisis records, hidden credentials, or automatic legal, protection, eligibility, or severity conclusions.", "action": "Verify /app/?view=humanitarian, filters, map, timeline, records, CSV export, and unavailable state."},
         {"id": "unified_dossiers", "label": "Unified Country and Regional Intelligence Dossiers are available", "status": "pass", "detail": "Country and regional dossiers compose public conditions, indicators, economics, law, science, humanitarian evidence, and resource records while preserving evidence classes and source states.", "action": "Verify /app/?view=dossiers for a country, region, and two-country coverage comparison."},
+        {"id": "alerts_monitoring", "label": "Alerts, Monitoring, and Live Intelligence Streams are available", "status": "pass", "detail": "Reconnectable public stream snapshots, browser-local rules, stateless matching, source-watch states, and deterministic digests are available without server-side user tracking.", "action": "Verify /app/?view=alerts, create a local rule, reconnect the stream, inspect source watch, and generate a digest."},
         {"id": "platform_core", "label": "Platform Core remains optional and free-source governed", "status": "pass", "detail": "Public routes degrade cleanly and do not require a paid provider or expose Core credentials.", "action": "Configure only the scoped Core public-read key in the Site Intelligence backend."},
         {"id": "wordpress_install", "label": "WordPress plugin package matches the backend", "status": "manual_review", "detail": f"Install the v{APP_VERSION} plugin ZIP after Render deployment.", "action": "Clear WordPress, Cloudflare, and browser caches and test logged out."},
         {"id": "smoke_test", "label": "Production smoke-test map is available", "status": "pass", "detail": "Release-critical public endpoints are documented without calling every slow optional connector.", "action": "Run the smoke-test endpoint after deployment."},
@@ -48,7 +49,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Checklist",
         "summary": RELEASE_NAME,
-        "release_stage": "v2.7.0_unified_country_regional_intelligence_dossiers",
+        "release_stage": "v2.8.0_alerts_monitoring_live_intelligence_streams",
         "status": "launch_ready_with_manual_review" if counts["fail"] == 0 else "needs_fix",
         "score": score,
         "counts": counts,
@@ -64,9 +65,10 @@ def release_public_summary(settings: Settings) -> Dict[str, Any]:
         "generated_at": _now(),
         "version": settings.version,
         "title": "Sustainable Catalyst Site Intelligence",
-        "subtitle": "A public geospatial, economic, sustainability, international-law, scientific, humanitarian, resource-security, country-dossier, comparative, briefing, source, methodology, and saved-research application.",
-        "summary": "Site Intelligence connects unified country and regional dossiers with official economics, international law, science, Earth observation, humanitarian evidence, trade and resource records, global indicators, public events, sources, methodology, and exports through one standalone public application.",
+        "subtitle": "A public geospatial, economic, sustainability, international-law, scientific, humanitarian, resource-security, country-dossier, alert-monitoring, comparative, briefing, source, methodology, and saved-research application.",
+        "summary": "Site Intelligence connects live intelligence streams and browser-local monitoring rules with unified country and regional dossiers, official economics, international law, science, Earth observation, humanitarian evidence, trade and resource records, global indicators, sources, methodology, and exports through one standalone public application.",
         "public_value": [
+            "Provides reconnectable public intelligence snapshots, browser-local alert rules, stateless matching, source-recency monitoring, and deterministic digests without server-side profiling.",
             "Provides unified source-aware country and regional dossiers without composite scores or rankings.",
             "Provides searchable global country intelligence and a two-country comparative workspace.",
             "Provides source-aware official economic and sustainability records with precise release-frequency labels and no simulated real-time market claims.",
@@ -93,11 +95,11 @@ def release_public_summary(settings: Settings) -> Dict[str, Any]:
 
 def release_metadata() -> Dict[str, str]:
     return {
-        "seo_title": "Site Intelligence: Unified Country and Regional Intelligence Dossiers",
+        "seo_title": "Site Intelligence: Alerts, Monitoring, and Live Intelligence Streams",
         "page_title": "Site Intelligence",
-        "excerpt": "Sustainable Catalyst Site Intelligence provides unified country and regional dossiers across official economics, international law, science, humanitarian evidence, Earth observation, trade, energy, and sustainability.",
-        "meta_description": "Explore unified country and regional dossiers with official economics, law, science, humanitarian evidence, Earth observation, resources, sources, and methodology.",
-        "social_description": "Source-aware country and regional intelligence dossiers across economics, law, science, humanitarian evidence, Earth systems, trade, energy, and sustainability.",
+        "excerpt": "Sustainable Catalyst Site Intelligence provides source-aware live streams, browser-local alert rules, source monitoring, deterministic digests, and unified cross-domain intelligence workspaces.",
+        "meta_description": "Monitor source-aware public intelligence streams, create browser-local alert rules, review stale sources, and generate deterministic cross-domain digests.",
+        "social_description": "Source-aware live intelligence streams, browser-local alert rules, source monitoring, digests, and cross-domain country intelligence.",
     }
 
 
@@ -109,6 +111,9 @@ def smoke_test(settings: Settings) -> Dict[str, Any]:
         {"path": "/public/launch-status", "scope": "public", "critical": True, "expected": "public beta readiness"},
         {"path": "/public/intelligence-dossiers", "scope": "public", "critical": True, "expected": "unified dossier workspace profile"},
         {"path": "/public/intelligence-dossiers/country?country=KEN&limit_per_domain=5", "scope": "public", "critical": True, "expected": "source-aware country dossier"},
+        {"path": "/public/alerts-monitoring", "scope": "public", "critical": True, "expected": "alerts and monitoring workspace profile"},
+        {"path": "/public/live-intelligence-stream?country=KEN&limit=10", "scope": "public", "critical": True, "expected": "sanitized reconnectable stream snapshot or explicit unavailable state"},
+        {"path": "/public/alerts-monitoring/diagnostics", "scope": "public", "critical": True, "expected": "public-safe monitoring diagnostics"},
         {"path": "/public/economics-sustainability", "scope": "public", "critical": True, "expected": "economics workspace profile and Core state"},
         {"path": "/public/economics-sustainability/records?limit=10", "scope": "public", "critical": True, "expected": "sanitized official economic records or explicit empty state"},
         {"path": "/public/international-law-observatory", "scope": "public", "critical": True, "expected": "international-law workspace profile and Core state"},
@@ -165,7 +170,7 @@ def release_status(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Status",
         "summary": RELEASE_NAME,
-        "release_stage": "v2.7.0_unified_country_regional_intelligence_dossiers",
+        "release_stage": "v2.8.0_alerts_monitoring_live_intelligence_streams",
         "release_status": checklist["status"],
         "release_score": checklist["score"],
         "public_shortcode": "[sc_site_intelligence_app height=\"1000\"]",

@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Any, Optional
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Query
+from fastapi import Body, Depends, FastAPI, Header, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -4316,6 +4316,76 @@ def public_intelligence_dossiers_brief(country: str = Query(default="", max_leng
 def public_intelligence_dossiers_diagnostics(settings: Settings = Depends(get_settings)):
     from .unified_country_regional_dossiers import build_dossier_diagnostics
     return build_dossier_diagnostics(settings)
+
+# Site Intelligence v2.8.0 — Alerts, Monitoring, and Live Intelligence Streams
+@app.get("/public/alerts-monitoring")
+def public_alerts_monitoring_overview(settings: Settings = Depends(get_settings)):
+    from .alerts_monitoring_live_streams import build_monitoring_overview
+    return build_monitoring_overview(settings)
+
+@app.get("/public/live-intelligence-stream")
+def public_live_intelligence_stream(
+    families: str = Query(default="", max_length=240),
+    country: str = Query(default="", max_length=20),
+    query: str = Query(default="", max_length=240),
+    source_id: str = Query(default="", max_length=180),
+    freshness: str = Query(default="", max_length=80),
+    limit: int = Query(default=180, ge=1, le=400),
+    settings: Settings = Depends(get_settings),
+):
+    from .alerts_monitoring_live_streams import build_stream_snapshot
+    return build_stream_snapshot(settings, families=families, country=country, query=query, source_id=source_id, freshness=freshness, limit=limit)
+
+@app.get("/public/live-intelligence-stream/events")
+def public_live_intelligence_stream_events(
+    families: str = Query(default="", max_length=240),
+    country: str = Query(default="", max_length=20),
+    query: str = Query(default="", max_length=240),
+    source_id: str = Query(default="", max_length=180),
+    freshness: str = Query(default="", max_length=80),
+    limit: int = Query(default=120, ge=1, le=300),
+    settings: Settings = Depends(get_settings),
+):
+    from .alerts_monitoring_live_streams import build_sse_snapshot
+    payload = build_sse_snapshot(settings, families=families, country=country, query=query, source_id=source_id, freshness=freshness, limit=limit)
+    return Response(payload, media_type="text/event-stream", headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
+
+@app.get("/public/alerts-monitoring/facets")
+def public_alerts_monitoring_facets(limit: int = Query(default=240, ge=20, le=400), settings: Settings = Depends(get_settings)):
+    from .alerts_monitoring_live_streams import build_monitoring_facets
+    return build_monitoring_facets(settings, limit=limit)
+
+@app.post("/public/alerts-monitoring/evaluate")
+def public_alerts_monitoring_evaluate(payload: dict[str, Any] = Body(default_factory=dict), settings: Settings = Depends(get_settings)):
+    from .alerts_monitoring_live_streams import evaluate_alert_rules
+    rules = payload.get("rules") if isinstance(payload, dict) else []
+    if rules is not None and not isinstance(rules, list):
+        raise HTTPException(status_code=422, detail="rules must be a list")
+    return evaluate_alert_rules(settings, rules=rules or [])
+
+@app.get("/public/alerts-monitoring/sources")
+def public_alerts_monitoring_sources(limit: int = Query(default=240, ge=20, le=400), settings: Settings = Depends(get_settings)):
+    from .alerts_monitoring_live_streams import build_source_watch
+    return build_source_watch(settings, limit=limit)
+
+@app.post("/public/alerts-monitoring/digest")
+def public_alerts_monitoring_digest(payload: dict[str, Any] = Body(default_factory=dict), settings: Settings = Depends(get_settings)):
+    from .alerts_monitoring_live_streams import build_monitoring_digest
+    rules = payload.get("rules") if isinstance(payload, dict) else []
+    if rules is not None and not isinstance(rules, list):
+        raise HTTPException(status_code=422, detail="rules must be a list")
+    return build_monitoring_digest(
+        settings,
+        rules=rules or [],
+        country=str(payload.get("country") or ""),
+        families=payload.get("families") or None,
+        limit=max(1, min(int(payload.get("limit") or 120), 300)),
+    )
+
+@app.get("/public/alerts-monitoring/diagnostics")
+def public_alerts_monitoring_diagnostics(settings: Settings = Depends(get_settings)):
+    from .alerts_monitoring_live_streams import build_monitoring_diagnostics
+    return build_monitoring_diagnostics(settings)
 
 # Site Intelligence standalone public application.
 from pathlib import Path as _Path

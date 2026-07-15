@@ -74,6 +74,12 @@ PUBLIC_WORKSPACES: list[dict[str, str]] = [
         "summary": "Combine public evidence across domains for countries and regions while preserving source state, units, authority, dates, and responsible-use boundaries.",
     },
     {
+        "id": "alerts",
+        "title": "Alerts, Monitoring, and Live Intelligence Streams",
+        "route": "/app/?view=alerts",
+        "summary": "Monitor reconnectable public snapshots, browser-local alert rules, source recency, and deterministic digests without server-side user profiles.",
+    },
+    {
         "id": "earth",
         "title": "Earth Observation Studio",
         "route": "/app/?view=earth",
@@ -217,6 +223,20 @@ AUDIT_ARTIFACTS: list[dict[str, Any]] = [
         ],
     },
     {
+        "id": "alerts-monitoring-live-streams",
+        "title": "Alerts, Monitoring, and Live Intelligence Streams",
+        "artifact_type": "workspace",
+        "route": "/app/?view=alerts",
+        "schema": "sc-site-intelligence-alerts-monitoring/1.0",
+        "source_ids": ["platform-core", "world-bank", "usgs-earthquakes", "nasa-eonet", "reliefweb"],
+        "methodology_ids": ["delivery-states", "optional-source-failures", "missing-values", "event-deduplication"],
+        "verification_level": "public-stream-and-rule-contract-linked",
+        "limitations": [
+            "Stream snapshots and rule matches are public research prompts, not emergency instructions or operational alerts.",
+            "Rules remain browser-local and matches do not create risk scores, legal conclusions, investment signals, eligibility decisions, or targeting recommendations.",
+        ],
+    },
+    {
         "id": "earth-observation",
         "title": "Earth Observation Studio",
         "artifact_type": "workspace",
@@ -323,6 +343,7 @@ RELEASE_LEDGER = [
     {"version": "2.5.0", "title": "Humanitarian, Conflict, and Displacement Observatory", "audit_contribution": "Source-aware crisis, displacement, civilian-protection, humanitarian access, and hazard evidence with no-fabrication and responsible-data safeguards."},
     {"version": "2.6.0", "title": "Trade, Energy, and Resource Security Observatory", "audit_contribution": "Core-backed official trade, energy, agriculture, water, materials, and counterpart records with unit-preserving analysis and explicit no-risk-score boundaries."},
     {"version": "2.7.0", "title": "Unified Country and Regional Intelligence Dossiers", "audit_contribution": "Cross-domain country and regional dossiers with preserved evidence classes, source states, dates, units, authority distinctions, and explicit no-composite-score safeguards."},
+    {"version": "2.8.0", "title": "Alerts, Monitoring, and Live Intelligence Streams", "audit_contribution": "Reconnectable public stream snapshots, browser-local alert rules, stateless matching, source-recency monitoring, deterministic digests, and explicit no-server-profile safeguards."},
 ]
 
 

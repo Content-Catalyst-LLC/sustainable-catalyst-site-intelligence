@@ -146,6 +146,14 @@ class Settings(BaseSettings):
     unified_dossiers_enabled: bool = True
     unified_dossiers_max_records_per_domain: int = Field(default=40, ge=5, le=60)
 
+    # Site Intelligence v2.8.0 — Alerts, Monitoring, and Live Intelligence Streams.
+    # Alert rules remain browser-local. The backend evaluates rules statelessly
+    # against public records and emits reconnectable server-sent snapshots.
+    alerts_monitoring_enabled: bool = True
+    alerts_stream_reconnect_seconds: int = Field(default=30, ge=10, le=300)
+    alerts_stream_max_signals: int = Field(default=180, ge=20, le=400)
+    alerts_stale_source_hours: int = Field(default=72, ge=6, le=8760)
+
 
     # Sustainable Development Data Connectors v1.14.1.
     sustainable_development_connectors_enabled: bool = True

@@ -12,7 +12,7 @@ def test_v101_public_visual_qa_endpoint():
     assert response.status_code == 200
     data = response.json()
     assert data['ok'] is True
-    assert data['version'] == '2.7.0'
+    assert data['version'] == '2.8.0'
     assert data['status'] == 'release_candidate'
     assert data['recommended_public_shortcode'] == '[sc_site_intelligence_public_flagship]'
     assert '[sc_public_dashboard_visual_qa]' == data['review_shortcode']
@@ -20,15 +20,15 @@ def test_v101_public_visual_qa_endpoint():
 
 
 def test_v101_page_builder_includes_copy_polish_status():
-    data = public_page_builder(Settings(version='2.7.0'))
-    assert data['version'] == '2.7.0'
+    data = public_page_builder(Settings(version='2.8.0'))
+    assert data['version'] == '2.8.0'
     assert data['visual_qa_status'] == 'release_candidate'
     assert data['copy_polish_status'] == 'polished'
     assert 'Read the full page aloud' in ' '.join(data['release_checklist'])
 
 
 def test_v101_visual_qa_payload_has_public_page_copy():
-    data = public_dashboard_visual_qa(Settings(version='2.7.0'))
+    data = public_dashboard_visual_qa(Settings(version='2.8.0'))
     copy = data['public_page_copy']
     assert copy['suggested_title'] == 'Sustainable Catalyst Site Intelligence'
     assert 'public-safe dashboard' in copy['suggested_excerpt']
@@ -42,7 +42,7 @@ def test_v101_admin_catalog_includes_visual_qa_shortcode():
 
 
 def test_v101_module_catalog_includes_public_release_qa_module():
-    modules = module_manager(Settings(version='2.7.0'))['modules']
+    modules = module_manager(Settings(version='2.8.0'))['modules']
     qa = [module for module in modules if module['id'] == 'public-release-qa'][0]
     assert qa['visibility'] == 'private-review'
     assert '[sc_public_dashboard_visual_qa]' in qa['shortcodes']

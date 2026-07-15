@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="dark light">
   <meta name="theme-color" content="#111111">
   <title>Sustainable Catalyst Site Intelligence | Unified Country and Regional Intelligence Dossiers</title>
-  <meta name="description" content="Unified source-aware country and regional dossiers spanning live conditions, economics, law, science, humanitarian evidence, and resource systems.">
+  <meta name="description" content="Source-aware live intelligence streams, browser-local alert rules, source monitoring, country dossiers, economics, law, science, humanitarian evidence, and resource systems.">
   <meta property="og:title" content="Sustainable Catalyst Site Intelligence">
   <meta property="og:description" content="Public evidence, source lineage, Earth observation, country intelligence, live events, and verifiable research paths.">
   <meta property="og:type" content="website">
@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="/app/assets/humanitarian-v250.css?v=2.5.0">
   <link rel="stylesheet" href="/app/assets/resources-v260.css?v=2.6.0">
   <link rel="stylesheet" href="/app/assets/dossiers-v270.css?v=2.7.0">
+  <link rel="stylesheet" href="/app/assets/alerts-v280.css?v=2.8.0">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to intelligence workspace</a>
@@ -72,6 +73,7 @@
         <button class="nav-item" type="button" data-route="humanitarian"><span>Humanitarian</span><small>Conflict and displacement</small></button>
         <button class="nav-item" type="button" data-route="resources"><span>Resources</span><small>Trade, energy, and security</small></button>
         <button class="nav-item" type="button" data-route="dossiers"><span>Dossiers</span><small>Countries and regions</small></button>
+        <button class="nav-item" type="button" data-route="alerts"><span>Alerts</span><small>Monitoring and streams</small></button>
         <button class="nav-item" type="button" data-route="earth"><span>Earth</span><small>Satellite comparison</small></button>
         <button class="nav-item" type="button" data-route="country"><span>Country</span><small>Place-based evidence</small></button>
         <button class="nav-item" type="button" data-route="events"><span>Events</span><small>Live event intelligence</small></button>
@@ -1074,6 +1076,38 @@
       </section>
 
 
+      <section id="alertsStudio" class="alerts-studio" hidden aria-busy="false">
+        <div class="alerts-hero">
+          <div>
+            <p class="eyebrow">WATCH · MATCH · REVIEW · VERIFY</p>
+            <h2>Monitor public intelligence without turning evidence into an automated decision</h2>
+            <p>Follow reconnecting public stream snapshots, create browser-local rules, watch source freshness, and generate deterministic digests across global conditions, economics, law, science, humanitarian evidence, and resource systems.</p>
+            <div class="alerts-actions"><button id="alertsReconnect" class="earth-primary-button" type="button">Reconnect stream</button><button id="alertsShare" class="ghost-button" type="button">Copy monitoring view</button><button id="alertsExport" class="ghost-button" type="button">Download matched signals</button><button id="alertsDigest" class="ghost-button" type="button">Generate digest</button></div>
+          </div>
+          <aside><span class="public-beta-badge public-release-badge">Browser-local monitoring</span><strong>No server-side user tracking</strong><p>Rules and watched places remain in this browser. Matches are research prompts, not emergency instructions, legal conclusions, trading signals, or risk scores.</p></aside>
+        </div>
+        <div id="alertsStatus" class="alerts-status" data-state="loading" role="status" aria-live="polite"><i></i><span>Connecting public intelligence stream</span></div>
+        <div class="alerts-controls">
+          <label>Evidence family<select id="alertsFamily"><option value="">All families</option><option value="conditions">Global conditions</option><option value="humanitarian">Humanitarian and displacement</option><option value="economics">Economics and sustainability</option><option value="law">International law and governance</option><option value="science">Scientific and Earth systems</option><option value="resources">Trade, energy, and resources</option></select></label>
+          <label>Country or ISO code<input id="alertsCountry" type="search" maxlength="20" placeholder="KEN"></label>
+          <label>Source<select id="alertsSource"><option value="">All public sources</option></select></label>
+          <label>Freshness<select id="alertsFreshness"><option value="">All states</option><option value="current">Current</option><option value="recent">Recent</option><option value="older">Older</option><option value="stale">Stale</option><option value="unknown">Unknown</option></select></label>
+          <label>Keyword<input id="alertsQuery" type="search" maxlength="180" placeholder="earthquake, inflation, resolution..."></label>
+          <button id="alertsApply" class="earth-primary-button" type="button">Apply stream filters</button>
+        </div>
+        <div class="alerts-metrics"><article><span>Stream records</span><strong id="alertsSignalCount">—</strong><small>Current public snapshot</small></article><article><span>Active rules</span><strong id="alertsRuleCount">0</strong><small>Stored in this browser</small></article><article><span>Matches</span><strong id="alertsMatchCount">0</strong><small>Rule-to-record matches</small></article><article><span>Stale sources</span><strong id="alertsStaleCount">0</strong><small>Public recency watch</small></article></div>
+        <div class="alerts-primary-grid">
+          <article class="alerts-panel"><div class="alerts-panel-head"><div><p class="eyebrow">LIVE STREAM</p><h3>Reconnectable public intelligence snapshots</h3></div><span id="alertsLastUpdate">Waiting</span></div><div id="alertsStream" class="alerts-stream" aria-live="polite"></div></article>
+          <article class="alerts-panel"><div class="alerts-panel-head"><div><p class="eyebrow">ALERT RULES</p><h3>Create stateless matching rules</h3></div><button id="alertsAddRule" class="ghost-button" type="button">Add rule</button></div><form id="alertsRuleForm" class="alerts-rule-form" hidden><label>Rule name<input id="alertRuleName" maxlength="120" required placeholder="Kenya humanitarian updates"></label><label>Family<select id="alertRuleFamily"><option value="">Any family</option><option value="conditions">Global conditions</option><option value="humanitarian">Humanitarian</option><option value="economics">Economics</option><option value="law">Law and governance</option><option value="science">Science</option><option value="resources">Resources</option></select></label><label>Country<input id="alertRuleCountry" maxlength="20" placeholder="KEN"></label><label>Keyword<input id="alertRuleKeyword" maxlength="180" placeholder="displacement"></label><label>Freshness<select id="alertRuleFreshness"><option value="">Any state</option><option value="current">Current</option><option value="recent">Recent</option><option value="older">Older</option><option value="stale">Stale</option></select></label><div class="alerts-rule-actions"><button id="alertsRuleCancel" class="ghost-button" type="button">Cancel</button><button class="earth-primary-button" type="submit">Save locally</button></div></form><div id="alertsRules" class="alerts-rules"></div></article>
+        </div>
+        <div class="alerts-secondary-grid">
+          <article class="alerts-panel"><div class="alerts-panel-head"><div><p class="eyebrow">SOURCE WATCH</p><h3>Availability and public-record recency</h3></div></div><div id="alertsSources" class="alerts-source-watch"></div></article>
+          <article class="alerts-panel"><div class="alerts-panel-head"><div><p class="eyebrow">MATCHED SIGNALS</p><h3>Rules that matched the current snapshot</h3></div></div><div id="alertsMatches" class="alerts-matches"></div></article>
+        </div>
+        <article class="alerts-panel"><div class="alerts-panel-head"><div><p class="eyebrow">MONITORING DIGEST</p><h3>Deterministic summary of the current evidence window</h3></div></div><div id="alertsDigestOutput" class="alerts-digest"><p>Generate a digest to summarize source counts, freshness states, latest records, and rule matches. No generative model is used.</p></div></article>
+        <section class="alerts-boundaries"><article><p class="eyebrow">NOT AN EMERGENCY SERVICE</p><h3>Verify urgent information with official authorities</h3><p>Stream records may be delayed, incomplete, revised, or unavailable. This interface does not dispatch responders or replace official warning systems.</p></article><article><p class="eyebrow">NO HIDDEN PROFILE</p><h3>Rules stay browser-local</h3><p>The backend receives rules only for stateless evaluation and does not create user accounts, subscriptions, personal profiles, or server-side monitoring histories.</p></article><article><p class="eyebrow">NO AUTOMATED JUDGMENT</p><h3>Matches are prompts for review</h3><p>A match does not establish severity, causality, legal responsibility, investment relevance, eligibility, sanctions exposure, or national-security risk.</p></article></section>
+      </section>
+
       <section id="routePanel" class="route-panel" hidden></section>
 
       <section id="globalCountryExplorer" class="global-country-explorer" hidden>
@@ -1221,5 +1255,6 @@
   <script src="/app/assets/humanitarian-v250.js?v=2.5.0" defer></script>
   <script src="/app/assets/resources-v260.js?v=2.6.0" defer></script>
   <script src="/app/assets/dossiers-v270.js?v=2.7.0" defer></script>
+  <script src="/app/assets/alerts-v280.js?v=2.8.0" defer></script>
 </body>
 </html>

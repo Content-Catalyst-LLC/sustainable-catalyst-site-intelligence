@@ -1,3 +1,12 @@
+## 2.8.0 — Alerts, Monitoring, and Live Intelligence Streams
+
+- Added reconnectable public server-sent intelligence snapshots.
+- Added browser-local alert rules with stateless backend evaluation.
+- Added source-watch recency and availability diagnostics.
+- Added deterministic monitoring digests and matched-signal CSV export.
+- Added `/app/?view=alerts` and `[sc_alerts_monitoring_live_intelligence]`.
+- Preserved no-fabrication, no-emergency-service, no-profile, no-risk-score, and free-data boundaries.
+
 ## 2.7.0 — Unified Country and Regional Intelligence Dossiers
 
 - Added country and regional cross-domain dossiers.
