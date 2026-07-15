@@ -1,4 +1,4 @@
-APP_VERSION = "2.6.0"
+APP_VERSION = "2.7.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Trade, Energy, and Resource Security Observatory"
+RELEASE_NAME = "Unified Country and Regional Intelligence Dossiers"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

@@ -1,8 +1,19 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.6.0 — Trade, Energy, and Resource Security Observatory
+**Current release:** v2.7.0 — Unified Country and Regional Intelligence Dossiers
 
 
+
+
+## v2.7.0 — Unified Country and Regional Intelligence Dossiers
+
+Site Intelligence v2.7.0 adds a cross-domain dossier workspace for countries and catalog regions. It composes public conditions, country indicators, official economics, international law, scientific records, humanitarian evidence, and trade, energy, and resource context without creating a composite score, ranking, causal conclusion, or automated judgment.
+
+- Public route: `/app/?view=dossiers`
+- WordPress shortcode: `[sc_country_regional_intelligence_dossiers height="1500"]`
+- Country, regional, and two-country coverage views
+- Source-aware evidence samples and domain delivery states
+- No paid provider requirement and no fabricated fallback records
 
 ## v2.6.0 — Trade, Energy, and Resource Security Observatory
 

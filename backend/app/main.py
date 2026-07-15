@@ -4269,6 +4269,54 @@ def public_trade_energy_resources_diagnostics(settings: Settings = Depends(get_s
     from .trade_energy_resource_security_observatory import build_diagnostics
     return build_diagnostics(settings)
 
+# Site Intelligence v2.7.0 — Unified Country and Regional Intelligence Dossiers
+@app.get("/public/intelligence-dossiers")
+def public_intelligence_dossiers_overview(settings: Settings = Depends(get_settings)):
+    from .unified_country_regional_dossiers import build_dossier_overview
+    return build_dossier_overview(settings)
+
+@app.get("/public/intelligence-dossiers/facets")
+def public_intelligence_dossiers_facets(settings: Settings = Depends(get_settings)):
+    from .unified_country_regional_dossiers import build_dossier_facets
+    return build_dossier_facets(settings)
+
+@app.get("/public/intelligence-dossiers/country")
+def public_intelligence_dossiers_country(country: str = Query(..., min_length=2, max_length=20), limit_per_domain: int = Query(default=40, ge=5, le=60), settings: Settings = Depends(get_settings)):
+    from .unified_country_regional_dossiers import build_country_dossier
+    try:
+        return build_country_dossier(settings, country=country, limit_per_domain=limit_per_domain)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+@app.get("/public/intelligence-dossiers/region")
+def public_intelligence_dossiers_region(region: str = Query(..., min_length=2, max_length=160), limit_per_domain: int = Query(default=40, ge=5, le=60), settings: Settings = Depends(get_settings)):
+    from .unified_country_regional_dossiers import build_regional_dossier
+    try:
+        return build_regional_dossier(settings, region=region, limit_per_domain=limit_per_domain)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+@app.get("/public/intelligence-dossiers/compare")
+def public_intelligence_dossiers_compare(country_a: str = Query(..., min_length=2, max_length=20), country_b: str = Query(..., min_length=2, max_length=20), limit_per_domain: int = Query(default=12, ge=5, le=30), settings: Settings = Depends(get_settings)):
+    from .unified_country_regional_dossiers import build_dossier_comparison
+    try:
+        return build_dossier_comparison(settings, country_a=country_a, country_b=country_b, limit_per_domain=limit_per_domain)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+@app.get("/public/intelligence-dossiers/brief")
+def public_intelligence_dossiers_brief(country: str = Query(default="", max_length=20), region: str = Query(default="", max_length=160), limit_per_domain: int = Query(default=10, ge=5, le=30), settings: Settings = Depends(get_settings)):
+    from .unified_country_regional_dossiers import build_dossier_brief
+    try:
+        return build_dossier_brief(settings, country=country, region=region, limit_per_domain=limit_per_domain)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+@app.get("/public/intelligence-dossiers/diagnostics")
+def public_intelligence_dossiers_diagnostics(settings: Settings = Depends(get_settings)):
+    from .unified_country_regional_dossiers import build_dossier_diagnostics
+    return build_dossier_diagnostics(settings)
+
 # Site Intelligence standalone public application.
 from pathlib import Path as _Path
 PUBLIC_APP_DIR = _Path(__file__).resolve().parent.parent / "public_app"

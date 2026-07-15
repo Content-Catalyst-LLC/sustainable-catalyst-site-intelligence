@@ -139,6 +139,13 @@ class Settings(BaseSettings):
     trade_energy_resource_security_timeout_seconds: int = Field(default=9, ge=2, le=30)
     trade_energy_resource_security_cache_ttl_seconds: int = Field(default=120, ge=15, le=1800)
 
+    # Site Intelligence v2.7.0 — Unified Country and Regional Intelligence Dossiers.
+    # Composes existing public observatories into source-aware dossiers without
+    # creating country rankings, composite scores, causal claims, or automated
+    # legal, humanitarian, financial, or national-security determinations.
+    unified_dossiers_enabled: bool = True
+    unified_dossiers_max_records_per_domain: int = Field(default=40, ge=5, le=60)
+
 
     # Sustainable Development Data Connectors v1.14.1.
     sustainable_development_connectors_enabled: bool = True

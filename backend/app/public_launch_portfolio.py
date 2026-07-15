@@ -10,7 +10,7 @@ LAUNCH_PROFILE_SCHEMA = "sc-site-intelligence-launch/1.0"
 PORTFOLIO_SCHEMA = "sc-site-intelligence-portfolio/1.0"
 PUBLIC_POSITIONING = (
     "Sustainable Catalyst Site Intelligence is an auditable public observatory for satellite imagery, "
-    "official economics, trade, energy, resource-security, sustainability, global country indicators, natural hazards, humanitarian reporting, source-aware comparative research, and evidence lineage."
+    "official economics, trade, energy, resource-security, unified country and regional dossiers, sustainability, global country indicators, natural hazards, humanitarian reporting, source-aware comparative research, and evidence lineage."
 )
 
 PUBLIC_WORKSPACES = [
@@ -21,6 +21,7 @@ PUBLIC_WORKSPACES = [
     {"id": "science", "title": "Scientific and Earth Systems Observatory", "route": "/app/?view=science", "summary": "Discover Earth systems, space observations, biodiversity, chemistry, materials, scientific assets, layers, STAC items, and time series with source and quality context."},
     {"id": "humanitarian", "title": "Humanitarian, Conflict, and Displacement Observatory", "route": "/app/?view=humanitarian", "summary": "Connect public crisis reporting, displacement evidence, civilian-protection context, humanitarian access, and hazard exposure without fabricating records."},
     {"id": "resources", "title": "Trade, Energy, and Resource Security Observatory", "route": "/app/?view=resources", "summary": "Trace official trade, energy, food, water, materials, and counterpart records without converting coverage into a proprietary risk score."},
+    {"id": "dossiers", "title": "Unified Country and Regional Intelligence Dossiers", "route": "/app/?view=dossiers&country=KEN", "summary": "Combine cross-domain public evidence for a country or region without creating a composite score, ranking, or automated judgment."},
     {"id": "earth", "title": "Earth Observation Studio", "route": "/app/?view=earth", "summary": "Compare satellite-derived layers across dates with source and imagery limits."},
     {"id": "events", "title": "Live Event Intelligence", "route": "/app/?view=events", "summary": "Filter public hazard and humanitarian records while retaining source identity."},
     {"id": "country", "title": "Global Country Intelligence", "route": "/app/?view=country&country=KEN", "summary": "Explore country indicators, trends, event context, and reporting-year differences."},
@@ -83,7 +84,7 @@ def launch_profile() -> dict[str, Any]:
 
 def launch_checklist() -> dict[str, Any]:
     groups = [
-        {"id": "product", "title": "Public product", "status": "implemented", "items": ["single primary application embed", "fifteen public research workspaces", "public launch route", "responsible-use boundary"]},
+        {"id": "product", "title": "Public product", "status": "implemented", "items": ["single primary application embed", "sixteen public research workspaces", "public launch route", "responsible-use boundary"]},
         {"id": "evidence", "title": "Evidence and provenance", "status": "implemented", "items": ["source registry", "methodology registry", "visible data states", "source-aware exports"]},
         {"id": "delivery", "title": "Delivery quality", "status": "implemented", "items": ["mobile navigation", "keyboard behavior", "reduced motion", "performance budgets", "responsive WordPress embed"]},
         {"id": "portfolio", "title": "Portfolio materials", "status": "implemented", "items": ["project description", "launch post", "homepage feature copy", "Platform page copy", "demo shot list"]},

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 2.6.0
+ * Version: 2.7.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '2.6.0';
+    const VERSION = '2.7.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -4432,6 +4432,29 @@ if (!function_exists('scsi_trade_energy_resource_security_observatory_shortcode_
     }
 }
 add_shortcode('sc_trade_energy_resource_security_observatory', 'scsi_trade_energy_resource_security_observatory_shortcode_v260');
+
+// Site Intelligence v2.7.0 unified country and regional dossier shortcode
+if (!function_exists('scsi_country_regional_intelligence_dossiers_shortcode_v270')) {
+    function scsi_country_regional_intelligence_dossiers_shortcode_v270($atts = []) {
+        $atts = shortcode_atts([
+            'height' => '1500',
+            'title' => 'Sustainable Catalyst Unified Country and Regional Intelligence Dossiers',
+        ], $atts, 'sc_country_regional_intelligence_dossiers');
+        $options = SC_Site_Intelligence_Plugin::options();
+        $backend = rtrim((string) ($options['backend_url'] ?? ''), '/');
+        if ($backend === '') {
+            return '<div class="scsi-notice">Configure the Site Intelligence backend URL before embedding Unified Country and Regional Intelligence Dossiers.</div>';
+        }
+        $height = max(950, min(3000, absint($atts['height'])));
+        $src = esc_url($backend . '/app/?view=dossiers');
+        $title = esc_attr((string) $atts['title']);
+        return sprintf(
+            '<div class="scsi-app-shell"><iframe class="scsi-app-frame" src="%1$s" title="%2$s" loading="lazy" style="width:100%%;min-height:%3$dpx;border:0" allow="fullscreen; clipboard-write"></iframe><p class="scsi-app-fallback"><a href="%1$s" target="_blank" rel="noopener noreferrer">Open Unified Country and Regional Intelligence Dossiers in a new tab</a></p></div>',
+            $src, $title, $height
+        );
+    }
+}
+add_shortcode('sc_country_regional_intelligence_dossiers', 'scsi_country_regional_intelligence_dossiers_shortcode_v270');
 
 register_activation_hook(__FILE__, ['SC_Site_Intelligence_Plugin', 'activate']);
 new SC_Site_Intelligence_Plugin();

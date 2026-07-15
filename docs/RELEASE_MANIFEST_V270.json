@@ -1,0 +1,24 @@
+{
+  "version": "2.7.0",
+  "release": "Unified Country and Regional Intelligence Dossiers",
+  "route": "/app/?view=dossiers",
+  "shortcode": "[sc_country_regional_intelligence_dossiers height=\"1500\"]",
+  "public_endpoints": [
+    "/public/intelligence-dossiers",
+    "/public/intelligence-dossiers/facets",
+    "/public/intelligence-dossiers/country",
+    "/public/intelligence-dossiers/region",
+    "/public/intelligence-dossiers/compare",
+    "/public/intelligence-dossiers/brief",
+    "/public/intelligence-dossiers/diagnostics"
+  ],
+  "domains": ["baseline", "conditions", "economics", "law", "science", "humanitarian", "resources"],
+  "paid_api_required": false,
+  "fabricated_fallback": false,
+  "composite_score": false,
+  "country_ranking": false,
+  "causal_inference": false,
+  "legal_determination": false,
+  "humanitarian_priority": false,
+  "national_security_rating": false
+}

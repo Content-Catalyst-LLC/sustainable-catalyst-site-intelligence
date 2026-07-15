@@ -48,7 +48,7 @@
   }
 
   const state = {map:null,base:null,imagery:null,markers:null,heat:null,layers:null,events:null,country:"KEN",route:"overview"};
-  const APP_VERSION="2.6.0";
+  const APP_VERSION="2.7.0";
   const SAVED_VIEW_SCHEMA="sc-saved-view/1.0";
   const SAVED_VIEW_STORAGE_KEY="sc_site_intelligence_saved_views_v1";
   const SAVED_VIEW_LIMIT=50;
@@ -152,6 +152,7 @@
       science:["SCIENTIFIC AND EARTH SYSTEMS OBSERVATORY","Scientific records and Earth-system data","Discover Earth science, atmosphere, water, hazards, space observations, biodiversity, chemistry, materials, scientific assets, map layers, STAC items, and time series with source and quality context."],
       humanitarian:["HUMANITARIAN, CONFLICT, AND DISPLACEMENT OBSERVATORY","Crisis and displacement evidence","Connect public humanitarian reports, conflict-related records, displacement context, civilian-protection evidence, and hazard exposure without fabricating records or flattening source limitations."],
       resources:["TRADE, ENERGY, AND RESOURCE SECURITY OBSERVATORY","Official resource and dependency evidence","Trace trade, energy, food, water, materials, and transition records while preserving units, periods, counterpart context, and methodological limits."],
+      dossiers:["UNIFIED COUNTRY AND REGIONAL INTELLIGENCE DOSSIERS","Cross-domain country and regional evidence","Combine public conditions, indicators, economics, law, science, humanitarian evidence, and resource context without collapsing them into a score or ranking."],
       observatory:["AUDITABLE PUBLIC OBSERVATORY","Evidence, lineage, and integrity","Inspect registered public evidence records, source and methodology lineage, canonical digests, release history, and verification boundaries."],
       launch:["PUBLIC LAUNCH AND PORTFOLIO","Site Intelligence","Explore the public product, technical architecture, responsible-use boundaries, and launch materials."],
       overview:["LIVE INTELLIGENCE WORKSPACE","Climate and Human Vulnerability","Satellite context, natural events, environmental pressure, and country evidence in one navigable view."],
@@ -1142,6 +1143,7 @@
     science:{label:"Scientific and Earth Systems",keys:["scienceFamily","scienceType","scienceDiscipline","scienceSource","scienceMission","scienceQuery","scienceSeries","scienceFormat","mapLat","mapLng","mapZoom"]},
     humanitarian:{label:"Humanitarian, Conflict, and Displacement",keys:["country","category","source_id","query","days","mapLat","mapLng","mapZoom"]},
     resources:{label:"Trade, Energy, and Resource Security",keys:["family","source_id","geography_code","counterpart_code","indicator_code","query","mapLat","mapLng","mapZoom"]},
+    dossiers:{label:"Unified Country and Regional Dossiers",keys:["dossierMode","country","compare","region","mapLat","mapLng","mapZoom"]},
     observatory:{label:"Auditable Public Observatory",keys:[]},
     overview:{label:"Overview",keys:["country","imageryLayer","imageryDate","mapLat","mapLng","mapZoom"]},
     earth:{label:"Earth Observation",keys:["earthLayer","dateA","dateB","opacity","swipe","mapLat","mapLng","mapZoom"]},
@@ -1166,6 +1168,7 @@
     if(route==="science")return window.SCScienceV240?.status?.().map||null;
     if(route==="humanitarian")return window.SCHumanitarianV250?.status?.().map||null;
     if(route==="resources")return window.SCResourcesV260?.status?.().map||null;
+    if(route==="dossiers")return window.SCDossiersV270?.status?.().map||null;
     if(route==="overview")return state.map;
     if(route==="earth")return earthState.mapA;
     if(route==="country")return globalCountryState.overviewMap;
@@ -1189,6 +1192,7 @@
     if(route==="science")values={scienceFamily:qs("#scienceFamily")?.value||"",scienceType:qs("#scienceType")?.value||"",scienceDiscipline:qs("#scienceDiscipline")?.value||"",scienceSource:qs("#scienceSource")?.value||"",scienceMission:qs("#scienceMission")?.value||"",scienceQuery:qs("#scienceSearch")?.value?.trim?.()||"",scienceSeries:qs("#scienceSeriesSelect")?.value||"",scienceFormat:qs("#scienceAssetFormat")?.value||""};
     if(route==="humanitarian")values={country:qs("#humanitarianCountry")?.value||"",category:qs("#humanitarianCategory")?.value||"",source_id:qs("#humanitarianSource")?.value||"",query:qs("#humanitarianSearch")?.value?.trim?.()||"",days:qs("#humanitarianDays")?.value||"30"};
     if(route==="resources")values={family:qs("#resourceFamily")?.value||"",source_id:qs("#resourceSource")?.value||"",geography_code:qs("#resourceCountry")?.value||"",counterpart_code:qs("#resourceCounterpart")?.value||"",indicator_code:qs("#resourceIndicator")?.value||"",query:qs("#resourceSearch")?.value?.trim?.()||""};
+    if(route==="dossiers")values={dossierMode:qs("#dossierMode")?.value||"country",country:qs("#dossierCountry")?.value||"",compare:qs("#dossierCompare")?.value||"",region:qs("#dossierRegion")?.value||""};
     if(route==="overview")values={country:state.country,imageryLayer:qs(".layer-tab.active")?.dataset.layer||"true-color",imageryDate:qs("#dateSelect").value};
     if(route==="earth")values={earthLayer:qs("#earthLayerSelect").value,dateA:qs("#earthDateA").value,dateB:qs("#earthDateB").value,opacity:qs("#earthOpacity").value,swipe:qs("#earthSwipe").value};
     if(route==="country")values={country:globalCountryState.activeCode||state.country,trend:qs("#globalTrendSelect").value};
@@ -1343,6 +1347,7 @@
     if(route!=="science")window.SCScienceV240?.close?.();
     if(route!=="humanitarian")window.SCHumanitarianV250?.close?.();
     if(route!=="resources")window.SCResourcesV260?.close?.();
+    if(route!=="dossiers")window.SCDossiersV270?.close?.();
     if(route==="global"){
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
       closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
@@ -1384,6 +1389,13 @@
       closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
       closePublicLaunchPortfolio();closeAuditablePublicObservatory();
       await window.SCResourcesV260?.open?.();return;
+    }
+    if(route==="dossiers"){
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
+      closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
+      closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
+      closePublicLaunchPortfolio();closeAuditablePublicObservatory();
+      await window.SCDossiersV270?.open?.();return;
     }
     if(route!=="launch")closePublicLaunchPortfolio();
     if(route!=="observatory")closeAuditablePublicObservatory();

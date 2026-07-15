@@ -1,0 +1,6 @@
+cd ~/Downloads
+chmod 700 install_and_push_site_intelligence_v2_7_0.sh
+bash ./install_and_push_site_intelligence_v2_7_0.sh
+
+# Optional validation without pushing:
+SC_SKIP_PUSH=1 bash ./install_and_push_site_intelligence_v2_7_0.sh

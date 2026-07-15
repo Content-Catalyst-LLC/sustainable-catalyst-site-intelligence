@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="dark light">
   <meta name="theme-color" content="#111111">
-  <title>Sustainable Catalyst Site Intelligence | Humanitarian, Conflict, and Displacement Observatory</title>
-  <meta name="description" content="An auditable public observatory for scientific datasets, Earth systems, space observations, international law, official economics, sustainability, country indicators, and source-aware briefs.">
+  <title>Sustainable Catalyst Site Intelligence | Unified Country and Regional Intelligence Dossiers</title>
+  <meta name="description" content="Unified source-aware country and regional dossiers spanning live conditions, economics, law, science, humanitarian evidence, and resource systems.">
   <meta property="og:title" content="Sustainable Catalyst Site Intelligence">
   <meta property="og:description" content="Public evidence, source lineage, Earth observation, country intelligence, live events, and verifiable research paths.">
   <meta property="og:type" content="website">
@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="/app/assets/science-v240.css?v=2.4.0">
   <link rel="stylesheet" href="/app/assets/humanitarian-v250.css?v=2.5.0">
   <link rel="stylesheet" href="/app/assets/resources-v260.css?v=2.6.0">
+  <link rel="stylesheet" href="/app/assets/dossiers-v270.css?v=2.7.0">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to intelligence workspace</a>
@@ -70,6 +71,7 @@
         <button class="nav-item" type="button" data-route="science"><span>Science</span><small>Earth systems and space</small></button>
         <button class="nav-item" type="button" data-route="humanitarian"><span>Humanitarian</span><small>Conflict and displacement</small></button>
         <button class="nav-item" type="button" data-route="resources"><span>Resources</span><small>Trade, energy, and security</small></button>
+        <button class="nav-item" type="button" data-route="dossiers"><span>Dossiers</span><small>Countries and regions</small></button>
         <button class="nav-item" type="button" data-route="earth"><span>Earth</span><small>Satellite comparison</small></button>
         <button class="nav-item" type="button" data-route="country"><span>Country</span><small>Place-based evidence</small></button>
         <button class="nav-item" type="button" data-route="events"><span>Events</span><small>Live event intelligence</small></button>
@@ -1043,6 +1045,35 @@
         </section>
       </section>
 
+      <section id="dossierStudio" class="dossier-studio" hidden aria-busy="false">
+        <div class="dossier-hero">
+          <div>
+            <p class="eyebrow">COUNTRY · REGION · CROSS-DOMAIN EVIDENCE</p>
+            <h2>Build a unified intelligence dossier without flattening distinct evidence</h2>
+            <p>Combine country indicators, live conditions, official economics, international law, scientific records, humanitarian evidence, and trade, energy, and resource context while preserving each source's units, dates, authority, quality, and delivery state.</p>
+            <div class="dossier-actions"><button id="dossierShare" class="ghost-button" type="button">Copy dossier view</button><button id="dossierExport" class="ghost-button" type="button">Download evidence CSV</button><button id="dossierBrief" class="earth-primary-button" type="button">Open briefing workflow</button></div>
+          </div>
+          <aside><span class="public-beta-badge public-release-badge">Cross-domain public research</span><strong>No composite score or country ranking</strong><p>Coverage counts describe available public records. They do not establish performance, resilience, risk, responsibility, compliance, or causality.</p></aside>
+        </div>
+        <div id="dossierStatus" class="dossier-status" data-state="loading" role="status" aria-live="polite"><i></i><span>Preparing unified dossier</span></div>
+        <div class="dossier-controls">
+          <label>Dossier type<select id="dossierMode"><option value="country">Country dossier</option><option value="region">Regional dossier</option></select></label>
+          <label class="dossier-country-field">Country<select id="dossierCountry"><option value="KEN">Kenya · KEN</option></select></label>
+          <label class="dossier-compare-field">Compare with<select id="dossierCompare"><option value="">No comparison</option></select></label>
+          <label class="dossier-region-field" hidden>Region<select id="dossierRegion"><option value="">Choose region</option></select></label>
+          <div class="dossier-control-actions"><button id="dossierApply" class="earth-primary-button" type="button">Build dossier</button></div>
+        </div>
+        <div class="dossier-metrics"><article><span>Subject</span><strong id="dossierSubject">—</strong><small>Country or catalog region</small></article><article><span>Domains</span><strong id="dossierDomainCount">—</strong><small>With visible evidence</small></article><article><span>Evidence</span><strong id="dossierEvidenceCount">—</strong><small>Records across domains</small></article><article><span>Sources</span><strong id="dossierSourceCount">—</strong><small>Distinct public sources</small></article></div>
+        <div class="dossier-primary-grid">
+          <article class="dossier-panel"><div class="dossier-panel-head"><div><p class="eyebrow">GEOGRAPHIC CONTEXT</p><h3>Country and regional coverage</h3></div><strong id="dossierCountryCount">0</strong></div><div id="dossierMap" class="dossier-map" tabindex="0" aria-label="Map of the dossier country or regional members"></div><div id="dossierCountries" class="dossier-country-list"></div><p>Markers identify dossier subjects only. They do not represent risk, severity, priority, or a live operating picture.</p></article>
+          <article class="dossier-panel"><div class="dossier-panel-head"><div><p class="eyebrow">COVERAGE MATRIX</p><h3>Domain records and delivery states</h3></div></div><div id="dossierCoverage" class="dossier-coverage"></div></article>
+        </div>
+        <article class="dossier-panel"><div class="dossier-panel-head"><div><p class="eyebrow">SOURCE-AWARE EVIDENCE</p><h3>Selected records from every connected domain</h3></div><p>Samples retain source, date, type, value, unit, and state where available.</p></div><div id="dossierRecords" class="dossier-records" aria-live="polite"></div></article>
+        <article class="dossier-panel"><div class="dossier-panel-head"><div><p class="eyebrow">TWO-COUNTRY ALIGNMENT</p><h3>Compare coverage without declaring a winner</h3></div></div><div id="dossierComparison" class="dossier-comparison"></div></article>
+        <section class="dossier-boundaries"><article><p class="eyebrow">DISTINCT EVIDENCE</p><h3>Statistics, forecasts, law, science, and reports remain different</h3><p>The dossier does not convert unlike evidence into one metric or imply that every record has the same authority or reliability.</p></article><article><p class="eyebrow">REGIONAL CONTEXT</p><h3>Membership is a catalog convention</h3><p>Regional grouping does not make claims about sovereignty, recognition, identity, political alignment, or institutional membership.</p></article><article><p class="eyebrow">PUBLIC USE</p><h3>Research orientation, not automated judgment</h3><p>Dossiers are not legal, financial, medical, engineering, emergency-response, sanctions, or national-security advice.</p></article></section>
+      </section>
+
+
       <section id="routePanel" class="route-panel" hidden></section>
 
       <section id="globalCountryExplorer" class="global-country-explorer" hidden>
@@ -1189,5 +1220,6 @@
   <script src="/app/assets/science-v240.js?v=2.4.0" defer></script>
   <script src="/app/assets/humanitarian-v250.js?v=2.5.0" defer></script>
   <script src="/app/assets/resources-v260.js?v=2.6.0" defer></script>
+  <script src="/app/assets/dossiers-v270.js?v=2.7.0" defer></script>
 </body>
 </html>

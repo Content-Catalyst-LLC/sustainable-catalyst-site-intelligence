@@ -54,3 +54,7 @@ services:
         value: "9"
       - key: SC_SI_TRADE_ENERGY_RESOURCE_SECURITY_CACHE_TTL_SECONDS
         value: "120"
+      - key: SC_SI_UNIFIED_DOSSIERS_ENABLED
+        value: "true"
+      - key: SC_SI_UNIFIED_DOSSIERS_MAX_RECORDS_PER_DOMAIN
+        value: "40"

@@ -1,3 +1,12 @@
+## 2.7.0 — Unified Country and Regional Intelligence Dossiers
+
+- Added country and regional cross-domain dossiers.
+- Added coverage matrices for conditions, indicators, economics, law, science, humanitarian evidence, and resources.
+- Added two-country evidence coverage alignment without composite scoring or silent normalization.
+- Added public dossier, facets, region, comparison, brief, and diagnostics endpoints.
+- Added `/app/?view=dossiers` and `[sc_country_regional_intelligence_dossiers]`.
+- Preserved free-source, no-fabrication, and responsible-use safeguards.
+
 ## 2.6.0 — Trade, Energy, and Resource Security Observatory
 
 - Added `/app/?view=resources` and nine source-aware public endpoints.

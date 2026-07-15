@@ -68,6 +68,12 @@ PUBLIC_WORKSPACES: list[dict[str, str]] = [
         "summary": "Trace official trade, energy, food, water, materials, and counterpart records without converting coverage into a proprietary risk score.",
     },
     {
+        "id": "dossiers",
+        "title": "Unified Country and Regional Intelligence Dossiers",
+        "route": "/app/?view=dossiers&country=KEN",
+        "summary": "Combine public evidence across domains for countries and regions while preserving source state, units, authority, dates, and responsible-use boundaries.",
+    },
+    {
         "id": "earth",
         "title": "Earth Observation Studio",
         "route": "/app/?view=earth",
@@ -197,6 +203,20 @@ AUDIT_ARTIFACTS: list[dict[str, Any]] = [
         ],
     },
     {
+        "id": "unified-country-regional-dossiers",
+        "title": "Unified Country and Regional Intelligence Dossiers",
+        "artifact_type": "workspace",
+        "route": "/app/?view=dossiers&country=KEN",
+        "schema": "sc-site-intelligence-unified-dossiers/1.0",
+        "source_ids": ["platform-core", "world-bank", "usgs-earthquakes", "nasa-eonet", "reliefweb", "nasa-gibs"],
+        "methodology_ids": ["delivery-states", "optional-source-failures", "missing-values", "country-normalization", "latest-value-selection"],
+        "verification_level": "cross-domain-source-and-state-linked",
+        "limitations": [
+            "Dossier coverage does not constitute a country score, ranking, causal finding, legal determination, humanitarian priority, or national-security rating.",
+            "Statistics, forecasts, legal records, humanitarian reports, scientific observations, and derived analysis remain distinct evidence classes.",
+        ],
+    },
+    {
         "id": "earth-observation",
         "title": "Earth Observation Studio",
         "artifact_type": "workspace",
@@ -302,6 +322,7 @@ RELEASE_LEDGER = [
     {"version": "2.4.0", "title": "Scientific and Earth Systems Observatory", "audit_contribution": "Core-backed scientific records, scientific assets, map layers, STAC discovery, time-series access, source and quality preservation, and explicit no-fabrication boundaries."},
     {"version": "2.5.0", "title": "Humanitarian, Conflict, and Displacement Observatory", "audit_contribution": "Source-aware crisis, displacement, civilian-protection, humanitarian access, and hazard evidence with no-fabrication and responsible-data safeguards."},
     {"version": "2.6.0", "title": "Trade, Energy, and Resource Security Observatory", "audit_contribution": "Core-backed official trade, energy, agriculture, water, materials, and counterpart records with unit-preserving analysis and explicit no-risk-score boundaries."},
+    {"version": "2.7.0", "title": "Unified Country and Regional Intelligence Dossiers", "audit_contribution": "Cross-domain country and regional dossiers with preserved evidence classes, source states, dates, units, authority distinctions, and explicit no-composite-score safeguards."},
 ]
 
 
