@@ -15,17 +15,17 @@ def test_backend_and_plugin_report_v1201():
     build = client.get("/public/build-info")
 
     assert root.status_code == 200
-    assert root.json()["version"] == "2.17.0"
+    assert root.json()["version"] == "2.18.0"
     assert build.status_code == 200
-    assert build.json()["backend_version"] == "2.17.0"
-    assert build.json()["expected_wordpress_plugin_version"] == "2.17.0"
+    assert build.json()["backend_version"] == "2.18.0"
+    assert build.json()["expected_wordpress_plugin_version"] == "2.18.0"
 
 
 def test_wordpress_cache_reliability_contract():
     php = PLUGIN.read_text(encoding="utf-8")
 
-    assert "Version: 2.17.0" in php
-    assert "const VERSION = '2.17.0';" in php
+    assert "Version: 2.18.0" in php
+    assert "const VERSION = '2.18.0';" in php
     assert "BUILD_INFO_MATCH_TTL = 21600" in php
     assert "BUILD_INFO_MISMATCH_TTL = 45" in php
     assert "BUILD_INFO_ERROR_TTL = 30" in php

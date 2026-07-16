@@ -58,6 +58,7 @@ from .historical_archive_v2140 import HistoricalArchiveCenter
 from .spatial_evidence_v2150 import SpatialEvidenceStudio
 from .statistical_harmonization_v2160 import StatisticalHarmonizationEngine
 from .model_forecast_early_warning_v2170 import ModelForecastEarlyWarningCenter
+from .evidence_synthesis_v2180 import EvidenceSynthesisCenter
 from .public_live_connectors import (
     public_connector_status as build_public_connector_status,
     public_cache_status as build_public_cache_status,
@@ -2209,7 +2210,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v2.17.0 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v2.18.0 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -2351,7 +2352,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.17.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v2.18.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -2466,6 +2467,128 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         return _model_governance(settings).export_governance_packet(model_id, model_version)
     except KeyError as exc:
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
+
+
+# Site Intelligence v2.18.0 — Evidence Synthesis, Claims, and Contradiction Review.
+def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
+    if not settings.evidence_synthesis_enabled:
+        raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
+    return EvidenceSynthesisCenter(settings)
+
+
+@app.get("/public/evidence-synthesis")
+def public_evidence_synthesis_summary_endpoint(settings: Settings = Depends(get_settings)):
+    return _evidence_synthesis(settings).public_summary()
+
+
+@app.get("/public/evidence-synthesis/methodology")
+def public_evidence_synthesis_methodology_endpoint(settings: Settings = Depends(get_settings)):
+    return _evidence_synthesis(settings).methodology()
+
+
+@app.get("/public/evidence-synthesis/diagnostics")
+def public_evidence_synthesis_diagnostics_endpoint(settings: Settings = Depends(get_settings)):
+    return _evidence_synthesis(settings).diagnostics(public=True)
+
+
+@app.get("/public/claims")
+def public_claims_endpoint(settings: Settings = Depends(get_settings)):
+    return _evidence_synthesis(settings).claims(public=True)
+
+
+@app.get("/public/claims/{claim_id}")
+def public_claim_detail_endpoint(claim_id: str, settings: Settings = Depends(get_settings)):
+    try:
+        return _evidence_synthesis(settings).claim_detail(claim_id, public=True)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown or non-public claim: {exc.args[0]}") from exc
+
+
+@app.get("/public/claims/{claim_id}/contradictions")
+def public_claim_contradictions_endpoint(claim_id: str, settings: Settings = Depends(get_settings)):
+    try:
+        return _evidence_synthesis(settings).contradiction_review(claim_id, public=True)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown or non-public claim: {exc.args[0]}") from exc
+
+
+@app.get("/public/evidence-synthesis/export")
+def public_evidence_synthesis_export_endpoint(claim_id: str = Query(..., min_length=2, max_length=140), settings: Settings = Depends(get_settings)):
+    try:
+        return _evidence_synthesis(settings).export_packet(claim_id, public=True)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown or non-public claim: {exc.args[0]}") from exc
+
+
+@app.get("/admin/evidence-synthesis/control-center")
+def admin_evidence_synthesis_control_center_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _evidence_synthesis(settings).control_center()
+
+
+@app.post("/admin/evidence-synthesis/claims/register")
+def admin_evidence_claim_register_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _evidence_synthesis(settings).register_claim(request)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/admin/evidence-synthesis/evidence/add")
+def admin_evidence_add_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _evidence_synthesis(settings).add_evidence(request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown claim: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/admin/evidence-synthesis/uncertainty/record")
+def admin_evidence_uncertainty_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _evidence_synthesis(settings).record_uncertainty(request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown claim: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/admin/evidence-synthesis/claims/review")
+def admin_evidence_claim_review_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _evidence_synthesis(settings).review_claim(request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown claim: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/admin/evidence-synthesis/synthesize")
+def admin_evidence_synthesize_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _evidence_synthesis(settings).synthesize(request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown claim: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/admin/evidence-synthesis/export")
+def admin_evidence_synthesis_export_endpoint(claim_id: str = Query(..., min_length=2, max_length=140), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _evidence_synthesis(settings).export_packet(claim_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown claim: {exc.args[0]}") from exc
+
+
+@app.get("/admin/evidence-synthesis/handoff")
+def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_length=2, max_length=140), destination: str = Query(...), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _evidence_synthesis(settings).handoff(claim_id, destination)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown claim: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
 @app.get("/public/source-pages")

@@ -1,0 +1,32 @@
+SITE INTELLIGENCE v2.18.0 BUILD VALIDATION
+
+Release: Evidence Synthesis, Claims, and Contradiction Review
+Base release: v2.17.0
+
+VALIDATED
+- 465 backend tests passed.
+- v2.18.0 release contract passed.
+- Python application and release scripts compile successfully.
+- Public application, Evidence workspace, service worker, and WordPress JavaScript syntax passed.
+- WordPress PHP syntax passed.
+- JSON and webmanifest parsing passed.
+- Backend, public app, offline shell, service worker, WordPress plugin, README, changelog, release metadata, and observatory ledger report v2.18.0.
+- Public routes expose only approved public claims, public evidence, public uncertainty, approved public syntheses, methodology, diagnostics, contradiction review, and read-only export packets.
+- Administrative routes preserve claim registration, evidence capture, uncertainty records, human review, synthesis, exports, and research handoffs behind the existing API-token boundary.
+- Claim, evidence, review, synthesis, uncertainty, export, and handoff records are SHA-256 digest linked.
+- Contradictions remain visible and require human resolution.
+- Deterministic synthesis uses registered evidence IDs and does not invoke an external model.
+- Writable evidence, model, harmonization, spatial, historical, connector, cache, quarantine, and queue state is excluded from the immutable release.
+
+GOVERNANCE BOUNDARIES
+- No fabricated evidence, quotations, citations, or source authority.
+- No suppression of conflicting evidence or unresolved uncertainty.
+- No causal conclusion from correlation, proximity, sequence, or majority count alone.
+- No public claim or synthesis without human approval.
+- No automatic legal, medical, scientific, security, or policy determination.
+- No individual targeting, surveillance, risk scoring, or consequential automated action.
+
+DEPLOYMENT
+- File-backed zero-cost operation remains supported.
+- Persistent production claim and review records require a durable configured storage path.
+- Deploy the backend before installing the v2.18.0 WordPress plugin to preserve version parity.

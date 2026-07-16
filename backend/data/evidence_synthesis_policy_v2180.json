@@ -1,0 +1,24 @@
+{
+  "schema": "sc-site-intelligence-evidence-synthesis-policy/1.0",
+  "version": "2.18.0",
+  "title": "Evidence Synthesis, Claims, and Contradiction Review Policy",
+  "principles": [
+    "Claims remain separate from evidence records and source documents.",
+    "Supporting, qualifying, conflicting, and contextual evidence remain explicitly typed.",
+    "Public claims and syntheses require human approval.",
+    "Contradictions and unresolved uncertainty remain visible rather than being averaged away.",
+    "Deterministic synthesis may organize evidence but cannot invent sources or citations.",
+    "AI-assisted wording must remain grounded in registered evidence IDs and visibly labeled."
+  ],
+  "boundaries": [
+    "No fabricated evidence, quotations, citations, or source authority.",
+    "No automatic legal, medical, scientific, security, or policy determination.",
+    "No causal conclusion from correlation, proximity, sequence, or majority count alone.",
+    "No public synthesis without human review and an approved claim.",
+    "No suppression of conflicting evidence or unresolved uncertainty.",
+    "No individual targeting, surveillance, risk scoring, or consequential automated action."
+  ],
+  "handoffs": ["knowledge-library", "research-librarian"],
+  "external_ai_default": "disabled",
+  "human_review_required": true
+}

@@ -15,7 +15,7 @@ from uuid import uuid4
 from .config import Settings
 from .version import APP_VERSION
 
-RELEASE_VERSION = "2.17.0"
+RELEASE_VERSION = "2.18.0"
 SCHEMA_VERSION = "sc-site-intelligence-spatial-evidence/1.0"
 AREA_SCHEMA = "sc-site-intelligence-area-of-interest/1.0"
 DATASET_SCHEMA = "sc-site-intelligence-spatial-dataset/1.0"

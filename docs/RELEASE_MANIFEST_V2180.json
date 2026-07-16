@@ -1,0 +1,50 @@
+{
+  "schema": "sc-site-intelligence-release-manifest/1.0",
+  "release": "2.18.0",
+  "title": "Evidence Synthesis, Claims, and Contradiction Review",
+  "base_release": "2.17.0",
+  "governance_schema": "sc-site-intelligence-evidence-synthesis/1.0",
+  "claim_schema": "sc-site-intelligence-claim/1.0",
+  "evidence_schema": "sc-site-intelligence-claim-evidence/1.0",
+  "review_schema": "sc-site-intelligence-claim-review/1.0",
+  "synthesis_schema": "sc-site-intelligence-synthesis/1.0",
+  "uncertainty_schema": "sc-site-intelligence-uncertainty/1.0",
+  "digest_algorithm": "sha256",
+  "human_review_required": true,
+  "public_claim_approval_required": true,
+  "public_synthesis_approval_required": true,
+  "fabricated_evidence_allowed": false,
+  "hidden_contradictions_allowed": false,
+  "automatic_causal_determination": false,
+  "automatic_consequential_decision": false,
+  "individual_targeting": false,
+  "external_ai_default_enabled": false,
+  "paid_database_required": false,
+  "persistent_disk_recommended": true,
+  "public_endpoints": [
+    "/public/evidence-synthesis",
+    "/public/evidence-synthesis/methodology",
+    "/public/evidence-synthesis/diagnostics",
+    "/public/claims",
+    "/public/claims/{claim_id}",
+    "/public/claims/{claim_id}/contradictions",
+    "/public/evidence-synthesis/export"
+  ],
+  "private_endpoints": [
+    "/admin/evidence-synthesis/control-center",
+    "/admin/evidence-synthesis/claims/register",
+    "/admin/evidence-synthesis/evidence/add",
+    "/admin/evidence-synthesis/uncertainty/record",
+    "/admin/evidence-synthesis/claims/review",
+    "/admin/evidence-synthesis/synthesize",
+    "/admin/evidence-synthesis/export",
+    "/admin/evidence-synthesis/handoff"
+  ],
+  "shortcodes": [
+    "[sc_public_evidence_synthesis]",
+    "[sc_evidence_synthesis_control_center]"
+  ],
+  "runtime_paths_excluded_from_release": [
+    "backend/data/evidence_synthesis_v2180/"
+  ]
+}

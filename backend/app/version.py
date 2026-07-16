@@ -1,4 +1,4 @@
-APP_VERSION = "2.17.0"
+APP_VERSION = "2.18.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Model Registry, Forecast Evaluation, and Early-Warning Indicators"
+RELEASE_NAME = "Evidence Synthesis, Claims, and Contradiction Review"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

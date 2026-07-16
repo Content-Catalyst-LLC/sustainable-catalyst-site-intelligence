@@ -1,4 +1,4 @@
-const RELEASE="2.17.0";
+const RELEASE="2.18.0";
 const CACHE_PREFIX="scsi-";
 const VERSION=`${CACHE_PREFIX}v${RELEASE}`;
 const SHELL=`${VERSION}-shell`;
@@ -8,7 +8,7 @@ const APP_HOME="/app/";
 const MAX_DATA_ENTRIES=120;
 const MAX_SHELL_ENTRIES=80;
 const MAX_DATA_AGE_MS=24*60*60*1000;
-const SHELL_URLS=["/app/","/app/offline.html","/app/manifest.webmanifest","/app/assets/alerts-v280.css","/app/assets/alerts-v280.js","/app/assets/app.css","/app/assets/app.js","/app/assets/dossiers-v270.css","/app/assets/dossiers-v270.js","/app/assets/economics-v220.css","/app/assets/economics-v220.js","/app/assets/experience-v2120.css","/app/assets/experience-v2120.js","/app/assets/global-conditions-v210.css","/app/assets/global-conditions-v210.js","/app/assets/humanitarian-v250.css","/app/assets/humanitarian-v250.js","/app/assets/icon-192.png","/app/assets/icon-512.png","/app/assets/integration-v2110.css","/app/assets/integration-v2110.js","/app/assets/law-v230.css","/app/assets/law-v230.js","/app/assets/research-v2100.css","/app/assets/research-v2100.js","/app/assets/resources-v260.css","/app/assets/resources-v260.js","/app/assets/scenarios-v290.css","/app/assets/scenarios-v290.js","/app/assets/science-v240.css","/app/assets/science-v240.js","/app/assets/spatial-v2150.css","/app/assets/spatial-v2150.js","/app/assets/harmonization-v2160.css","/app/assets/harmonization-v2160.js","/app/assets/models-v2170.css","/app/assets/models-v2170.js"];
+const SHELL_URLS=["/app/","/app/offline.html","/app/manifest.webmanifest","/app/assets/alerts-v280.css","/app/assets/alerts-v280.js","/app/assets/app.css","/app/assets/app.js","/app/assets/dossiers-v270.css","/app/assets/dossiers-v270.js","/app/assets/economics-v220.css","/app/assets/economics-v220.js","/app/assets/experience-v2120.css","/app/assets/experience-v2120.js","/app/assets/global-conditions-v210.css","/app/assets/global-conditions-v210.js","/app/assets/humanitarian-v250.css","/app/assets/humanitarian-v250.js","/app/assets/icon-192.png","/app/assets/icon-512.png","/app/assets/integration-v2110.css","/app/assets/integration-v2110.js","/app/assets/law-v230.css","/app/assets/law-v230.js","/app/assets/research-v2100.css","/app/assets/research-v2100.js","/app/assets/resources-v260.css","/app/assets/resources-v260.js","/app/assets/scenarios-v290.css","/app/assets/scenarios-v290.js","/app/assets/science-v240.css","/app/assets/science-v240.js","/app/assets/spatial-v2150.css","/app/assets/spatial-v2150.js","/app/assets/harmonization-v2160.css","/app/assets/harmonization-v2160.js","/app/assets/models-v2170.css","/app/assets/models-v2170.js","/app/assets/evidence-v2180.css","/app/assets/evidence-v2180.js"];
 
 function cacheable(response){
   if(!response||!response.ok||response.type==="opaque")return false;

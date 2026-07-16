@@ -1,6 +1,6 @@
 {
   "schema": "sc-site-intelligence-spatial-layer-catalog/1.0",
-  "version": "2.17.0",
+  "version": "2.18.0",
   "layers": [
     {"id": "earth-observation", "title": "Earth Observation", "geometry_types": ["Point", "Polygon", "MultiPolygon"], "source_families": ["NASA", "NOAA", "USGS"], "temporal": true, "public_safe": true},
     {"id": "humanitarian-events", "title": "Humanitarian and Disaster Events", "geometry_types": ["Point", "Polygon"], "source_families": ["GDACS", "ReliefWeb", "NASA EONET", "USGS"], "temporal": true, "public_safe": true},

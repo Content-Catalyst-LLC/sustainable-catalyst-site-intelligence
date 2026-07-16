@@ -245,7 +245,7 @@ class Settings(BaseSettings):
     spatial_evidence_max_radius_km: float = Field(default=5000.0, ge=0.1, le=20000.0)
     spatial_evidence_max_proximity_km: float = Field(default=5000.0, ge=0.1, le=20000.0)
 
-    # Site Intelligence v2.17.0 — Statistical Harmonization and Comparable-Series Engine.
+    # Site Intelligence v2.18.0 — Statistical Harmonization and Comparable-Series Engine.
     # Source series, transformed series, and lineage receipts are writable runtime
     # state and may be redirected to durable storage. Release registries remain immutable.
     statistical_harmonization_enabled: bool = True
@@ -258,7 +258,7 @@ class Settings(BaseSettings):
     statistical_harmonization_max_records: int = Field(default=10000, ge=100, le=100000)
     statistical_harmonization_max_observations: int = Field(default=5000, ge=1, le=100000)
 
-    # Site Intelligence v2.17.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+    # Site Intelligence v2.18.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
     # Model cards and immutable policy registries ship with the release. Forecasts,
     # evaluations, warning rules, and warning events are writable runtime state.
     model_governance_enabled: bool = True
@@ -272,6 +272,20 @@ class Settings(BaseSettings):
     model_governance_metric_registry_path: str = "backend/data/model_metric_registry_v2170.json"
     model_governance_max_records: int = Field(default=10000, ge=100, le=100000)
     model_governance_max_forecast_points: int = Field(default=5000, ge=1, le=100000)
+
+    # Site Intelligence v2.18.0 — Evidence Synthesis, Claims, and Contradiction Review.
+    # Claims, evidence, reviews, syntheses, and uncertainty records are writable
+    # runtime state. Immutable policy files ship with the release.
+    evidence_synthesis_enabled: bool = True
+    evidence_synthesis_root_path: str = "backend/data/evidence_synthesis_v2180"
+    evidence_synthesis_claims_path: str = "backend/data/evidence_synthesis_v2180/claims_v2180.jsonl"
+    evidence_synthesis_evidence_path: str = "backend/data/evidence_synthesis_v2180/evidence_v2180.jsonl"
+    evidence_synthesis_reviews_path: str = "backend/data/evidence_synthesis_v2180/reviews_v2180.jsonl"
+    evidence_synthesis_syntheses_path: str = "backend/data/evidence_synthesis_v2180/syntheses_v2180.jsonl"
+    evidence_synthesis_uncertainty_path: str = "backend/data/evidence_synthesis_v2180/uncertainty_v2180.jsonl"
+    evidence_synthesis_policy_path: str = "backend/data/evidence_synthesis_policy_v2180.json"
+    evidence_synthesis_max_records: int = Field(default=10000, ge=100, le=100000)
+    evidence_synthesis_max_excerpt_chars: int = Field(default=4000, ge=100, le=20000)
 
 
     # Sustainable Development Data Connectors v1.14.1.

@@ -1,3 +1,13 @@
+## 2.18.0 — Evidence Synthesis, Claims, and Contradiction Review
+
+- Added structured claim, evidence, review, synthesis, and uncertainty records.
+- Added typed support, qualification, conflict, and context relationships.
+- Added contradiction and evidence-completeness diagnostics.
+- Added human approval and supersession workflows.
+- Added deterministic grounded synthesis and citation-ready exports.
+- Added public/admin APIs, WordPress surfaces, app workspace, and research handoffs.
+- Added responsible-use controls against fabricated evidence, hidden contradictions, causal overreach, and autonomous conclusions.
+
 ## 2.17.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators
 
 - Added versioned model cards with intended use, limitations, provenance, uncertainty, training and evaluation periods, lifecycle status, expiry, and prohibited uses.

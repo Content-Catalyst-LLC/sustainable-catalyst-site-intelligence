@@ -1,6 +1,21 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.17.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators
+**Current release:** v2.18.0 — Evidence Synthesis, Claims, and Contradiction Review
+
+
+## v2.18.0 — Evidence Synthesis, Claims, and Contradiction Review
+
+- Structured factual, interpretive, causal, projection, and normative claim records.
+- Typed supporting, qualifying, conflicting, and contextual evidence relationships.
+- Explicit source, methodology, authority, excerpt, locator, limitation, and integrity metadata.
+- Contradiction review that preserves disagreement and requires human resolution.
+- Measurement, method, source, comparability, causal, forecast, and coverage uncertainty records.
+- Human approval, rejection, revision, unresolved, and supersession workflows.
+- Deterministic grounded synthesis that never invents sources or citations.
+- Citation-ready JSON, CSV, and Markdown evidence packets.
+- Read-only Knowledge Library and Research Librarian handoffs.
+- Public-safe claim and synthesis views plus administrator control-center endpoints.
+- Public workspace: `/app/?view=evidence`.
 
 ## v2.17.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators
 

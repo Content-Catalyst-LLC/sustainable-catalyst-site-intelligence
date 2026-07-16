@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 2.17.0
+ * Version: 2.18.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '2.17.0';
+    const VERSION = '2.18.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -87,6 +87,8 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_statistical_harmonization_control_center', [$this, 'statistical_harmonization_control_center_shortcode']);
         add_shortcode('sc_public_model_forecasts', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_model_forecast_control_center', [$this, 'model_forecast_control_center_shortcode']);
+        add_shortcode('sc_public_evidence_synthesis', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_evidence_synthesis_control_center', [$this, 'evidence_synthesis_control_center_shortcode']);
         add_shortcode('sc_public_cache_status', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_source_freshness', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_connector_reliability', [$this, 'public_connector_panel_shortcode']);
@@ -783,6 +785,11 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-model-forecasts', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_model_forecasts'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-evidence-synthesis', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_evidence_synthesis'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/public-cache-status', [
@@ -1838,6 +1845,7 @@ final class SC_Site_Intelligence_Plugin {
             'spatial_evidence' => 'public/spatial',
             'comparable_series' => 'public/harmonization',
             'model_forecasts' => 'public/model-governance',
+            'evidence_synthesis' => 'public/evidence-synthesis',
             'cache_status' => 'public/connectors/cache',
             'source_freshness' => 'public/connectors/freshness',
             'connector_reliability' => 'public/connectors/reliability',
@@ -1865,6 +1873,7 @@ final class SC_Site_Intelligence_Plugin {
     public function rest_public_spatial_evidence(WP_REST_Request $request) { return $this->rest_public_connector_panel('spatial_evidence'); }
     public function rest_public_comparable_series(WP_REST_Request $request) { return $this->rest_public_connector_panel('comparable_series'); }
     public function rest_public_model_forecasts(WP_REST_Request $request) { return $this->rest_public_connector_panel('model_forecasts'); }
+    public function rest_public_evidence_synthesis(WP_REST_Request $request) { return $this->rest_public_connector_panel('evidence_synthesis'); }
     public function rest_public_cache_status(WP_REST_Request $request) { return $this->rest_public_connector_panel('cache_status'); }
     public function rest_public_source_freshness(WP_REST_Request $request) { return $this->rest_public_connector_panel('source_freshness'); }
     public function rest_public_connector_reliability(WP_REST_Request $request) { return $this->rest_public_connector_panel('connector_reliability'); }
@@ -3226,6 +3235,7 @@ final class SC_Site_Intelligence_Plugin {
             'sc_public_spatial_evidence' => ['spatial-evidence', 'Geospatial Analysis and Spatial Evidence Studio', 'Areas of interest, source-aware spatial layers, transparent methods, and evidence exports without individual tracking.'],
             'sc_public_comparable_series' => ['comparable-series', 'Statistical Harmonization and Comparable-Series Engine', 'Explicit units, currencies, periods, geographic definitions, missing-data classes, and transformation lineage without silent normalization.'],
             'sc_public_model_forecasts' => ['model-forecasts', 'Model Registry, Forecast Evaluation, and Early-Warning Indicators', 'Published model cards, forecast records, accuracy and calibration evidence, drift review, and threshold indicators with human-governance boundaries.'],
+            'sc_public_evidence_synthesis' => ['evidence-synthesis', 'Evidence Synthesis, Claims, and Contradiction Review', 'Approved claims, typed supporting and conflicting evidence, explicit uncertainty, contradiction review, citations, and human-review status without fabricated conclusions.'],
             'sc_public_cache_status' => ['cache-status', 'Public Cache Status', 'Cache TTL, stale-safe display, and public source refresh policy.'],
             'sc_public_source_freshness' => ['source-freshness', 'Public Source Freshness', 'Freshness labels for public source families and connector panels.'],
             'sc_public_connector_reliability' => ['connector-reliability', 'Connector Reliability Summary', 'Public display reliability, recovery guidance, and degraded/fallback-safe source labels.'],
@@ -3497,6 +3507,53 @@ final class SC_Site_Intelligence_Plugin {
                 <?php endforeach; ?>
             <?php endif; ?>
             <p class="scsi-muted">No individual targeting, emergency dispatch, guaranteed outcome, or autonomous consequential decision is authorized by this workspace.</p>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
+    public function evidence_synthesis_control_center_shortcode($atts = []) {
+        if (!current_user_can('manage_options')) {
+            return '';
+        }
+        $data = $this->backend_request('admin/evidence-synthesis/control-center');
+        if (is_wp_error($data)) {
+            return '<section class="scsi-card"><p class="scsi-eyebrow">Evidence Synthesis</p><h2>Control Center unavailable</h2><p class="scsi-muted">' . esc_html($data->get_error_message()) . '</p></section>';
+        }
+        $counts = isset($data['counts']) && is_array($data['counts']) ? $data['counts'] : [];
+        $claims = isset($data['claims']) && is_array($data['claims']) ? $data['claims'] : [];
+        $reviews = isset($data['recent_reviews']) && is_array($data['recent_reviews']) ? $data['recent_reviews'] : [];
+        $syntheses = isset($data['recent_syntheses']) && is_array($data['recent_syntheses']) ? $data['recent_syntheses'] : [];
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-evidence-synthesis-control-center">
+            <p class="scsi-eyebrow">Private Admin Workspace · v<?php echo esc_html(self::VERSION); ?></p>
+            <h2>Evidence Synthesis, Claims, and Contradiction Review</h2>
+            <p class="scsi-muted">Review structured claims, supporting and conflicting evidence, uncertainty, human decisions, citation packets, and grounded synthesis without fabricating sources or suppressing disagreement.</p>
+            <div class="scsi-grid scsi-public-connector-health-grid">
+                <?php foreach (['claims' => 'Claims', 'evidence' => 'Evidence', 'reviews' => 'Reviews', 'syntheses' => 'Syntheses', 'uncertainties' => 'Uncertainty records'] as $key => $label) : ?>
+                    <div class="scsi-stat scsi-public-connector-status-card"><span class="scsi-public-label"><?php echo esc_html($label); ?></span><strong><?php echo esc_html((string) ($counts[$key] ?? 0)); ?></strong></div>
+                <?php endforeach; ?>
+            </div>
+            <?php if (!empty($claims)) : ?>
+                <h3>Claims awaiting or recording review</h3>
+                <?php foreach (array_slice($claims, 0, 15) as $item) : ?>
+                    <div class="scsi-page-row"><strong><?php echo esc_html((string) ($item['title'] ?? $item['claim_id'] ?? 'Claim')); ?></strong><small><?php echo esc_html((string) ($item['claim_type'] ?? 'claim')); ?> · <?php echo esc_html((string) ($item['status'] ?? 'draft')); ?> · <?php echo esc_html((string) ($item['visibility'] ?? 'private')); ?></small></div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            <?php if (!empty($reviews)) : ?>
+                <h3>Recent human reviews</h3>
+                <?php foreach (array_slice($reviews, -10) as $item) : ?>
+                    <div class="scsi-page-row"><strong><?php echo esc_html((string) ($item['claim_id'] ?? 'Claim')); ?></strong><small><?php echo esc_html((string) ($item['decision'] ?? 'review')); ?> · <?php echo esc_html((string) ($item['reviewer_role'] ?? 'reviewer')); ?></small></div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            <?php if (!empty($syntheses)) : ?>
+                <h3>Recent syntheses</h3>
+                <?php foreach (array_slice($syntheses, -10) as $item) : ?>
+                    <div class="scsi-page-row"><strong><?php echo esc_html((string) ($item['claim_id'] ?? 'Claim')); ?></strong><small><?php echo esc_html((string) ($item['conclusion'] ?? 'draft')); ?> · <?php echo esc_html((string) ($item['approval_status'] ?? 'draft')); ?></small></div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            <p class="scsi-muted">Public claims and syntheses require human approval. Conflicting evidence and unresolved uncertainty remain visible.</p>
         </section>
         <?php
         return ob_get_clean();
