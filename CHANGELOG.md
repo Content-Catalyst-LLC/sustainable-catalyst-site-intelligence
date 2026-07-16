@@ -1,3 +1,16 @@
+## 2.15.0 — Geospatial Analysis and Spatial Evidence Studio
+
+- Added validated WGS84 bounding-box, polygon, and radius areas of interest.
+- Added versioned, digest-verified GeoJSON spatial datasets with public/private visibility boundaries.
+- Added exact point-in-polygon, segment-aware intersection, great-circle point proximity, and explicitly labeled approximation methods for complex geometries.
+- Added geographic aggregation without silent imputation or hidden normalization.
+- Added temporal comparison between spatial dataset versions with added, removed, moved, changed, and unchanged feature receipts.
+- Added public-safe spatial catalogs, methodology, areas, datasets, and evidence packets.
+- Added token-protected spatial administration, analysis receipts, and JSON, GeoJSON, and CSV evidence exports.
+- Added `/app/?view=spatial`, `[sc_public_spatial_evidence]`, and the administrator-only `[sc_spatial_evidence_control_center]`.
+- Preserved explicit CRS declarations and prohibited military targeting, individual tracking, hidden place rankings, and unsupported causal inference.
+- Kept the zero-cost file-backed mode and excluded writable spatial state from Git and release manifests.
+
 ## 2.14.0 — Historical Archive and Temporal Change Intelligence
 
 - Added sanitized immutable snapshots for accepted connector datasets.

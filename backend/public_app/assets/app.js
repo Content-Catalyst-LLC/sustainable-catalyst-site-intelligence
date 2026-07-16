@@ -23,7 +23,7 @@
     }
     throw last;
   }
-  const APP_VERSION="2.14.0";
+  const APP_VERSION="2.15.0";
   let heightFrame=0;
   function documentHeight(){
     const body=document.body,root=document.documentElement;
@@ -191,6 +191,7 @@
       launch:["PUBLIC LAUNCH AND PORTFOLIO","Site Intelligence","Explore the public product, technical architecture, responsible-use boundaries, and launch materials."],
       overview:["LIVE INTELLIGENCE WORKSPACE","Climate and Human Vulnerability","Satellite context, natural events, environmental pressure, and country evidence in one navigable view."],
       earth:["EARTH OBSERVATION STUDIO","Compare the planet through time","Explore satellite-derived imagery, environmental layers, date comparison, timeline playback, and exportable visual views."],
+      spatial:["GEOSPATIAL ANALYSIS AND SPATIAL EVIDENCE STUDIO","Analyze public evidence by place","Use explicit areas of interest, source-aware spatial layers, intersections, proximity, aggregation, and temporal comparisons without hiding coordinate or approximation limits."],
       country:["COUNTRY INTELLIGENCE",`${names[state.country]||state.country} evidence profile`,"Environmental, development, humanitarian, security, and legal context for one selected country."],
       events:["UNIFIED LIVE EVENT INTELLIGENCE","Explore public events across sources","Natural hazards, humanitarian reporting, and country-linked event context in one source-aware workspace."],
       compare:["CROSS-DOMAIN COMPARISON","Compare country contexts","Align available evidence without flattening dates, units, definitions, or missing-data states."],
@@ -1184,6 +1185,7 @@
     observatory:{label:"Auditable Public Observatory",keys:[]},
     overview:{label:"Overview",keys:["country","imageryLayer","imageryDate","mapLat","mapLng","mapZoom"]},
     earth:{label:"Earth Observation",keys:["earthLayer","dateA","dateB","opacity","swipe","mapLat","mapLng","mapZoom"]},
+    spatial:{label:"Spatial Evidence",keys:["spatialArea","spatialDataset"]},
     country:{label:"Country Intelligence",keys:["country","trend","mapLat","mapLng","mapZoom"]},
     events:{label:"Live Event Intelligence",keys:["eventDays","eventCategory","eventSource","eventCountry","mapLat","mapLng","mapZoom"]},
     compare:{label:"Comparative Intelligence",keys:["country","compare","compareView","indicator","trend","mapLat","mapLng","mapZoom"]},
@@ -1236,6 +1238,7 @@
     if(route==="scenarios")values={scenarioGeographies:qs("#scenarioGeographies")?.value||"",scenarioIndicators:qs("#scenarioIndicators")?.value||"",scenarioDomain:qs("#scenarioDomain")?.value||"",scenarioStart:qs("#scenarioStart")?.value||"",scenarioEnd:qs("#scenarioEnd")?.value||""};
     if(route==="overview")values={country:state.country,imageryLayer:qs(".layer-tab.active")?.dataset.layer||"true-color",imageryDate:qs("#dateSelect").value};
     if(route==="earth")values={earthLayer:qs("#earthLayerSelect").value,dateA:qs("#earthDateA").value,dateB:qs("#earthDateB").value,opacity:qs("#earthOpacity").value,swipe:qs("#earthSwipe").value};
+    if(route==="spatial")values={spatialArea:qs("#spatialAreaSelect")?.value||"",spatialDataset:qs("#spatialDatasetSelect")?.value||""};
     if(route==="country")values={country:globalCountryState.activeCode||state.country,trend:qs("#globalTrendSelect").value};
     if(route==="events")values={eventDays:qs("#eventDays").value,eventCategory:qs("#eventCategory").value,eventSource:qs("#eventSource").value,eventCountry:qs("#eventCountry").value.trim().toUpperCase()};
     if(route==="compare")values={country:qs("#compareCountryA").value,compare:qs("#compareCountryB").value,compareView:compareState.activeView,indicator:qs("#compareIndicatorFilter").value,trend:qs("#compareTrendSelect").value};
@@ -1394,6 +1397,7 @@
     if(route!=="research")window.SCResearchV2100?.close?.();
     if(route!=="integration")window.SCIntegrationV2110?.close?.();
     if(route!=="experience")window.SCExperienceV2120?.close?.();
+    if(route!=="spatial")window.SCSpatialV2150?.close?.();
     if(route==="global"){
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
       closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
@@ -1477,6 +1481,13 @@
       closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
       closePublicLaunchPortfolio();closeAuditablePublicObservatory();
       await window.SCExperienceV2120?.open?.();return;
+    }
+    if(route==="spatial"){
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
+      closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
+      closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
+      closePublicLaunchPortfolio();closeAuditablePublicObservatory();
+      await window.SCSpatialV2150?.open?.();return;
     }
     if(route!=="launch")closePublicLaunchPortfolio();
     if(route!=="observatory")closeAuditablePublicObservatory();

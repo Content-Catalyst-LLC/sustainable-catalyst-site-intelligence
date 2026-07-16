@@ -1,8 +1,22 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.14.0 — Historical Archive and Temporal Change Intelligence
+**Current release:** v2.15.0 — Geospatial Analysis and Spatial Evidence Studio
 
+## v2.15.0 — Geospatial Analysis and Spatial Evidence Studio
 
+Site Intelligence v2.15.0 turns the existing map and public-data layers into an inspectable geospatial analysis system. It adds validated WGS84 areas of interest, versioned spatial datasets, exact point-in-polygon tests, segment-aware geometry intersections, great-circle point proximity, explicit approximation labels for complex geometries, geographic aggregation, temporal layer comparison, and reproducible spatial evidence exports.
+
+Spatial records preserve source identity, geometry type, coordinate-reference-system declarations, observation periods, method notes, payload digests, and interpretation limits. The studio does not silently reproject coordinates, invent missing geographic values, rank places, track individuals, or support military targeting. Raw private datasets and administrative analysis history remain outside public endpoints.
+
+Public workspace: `/app/?view=spatial`
+
+Public endpoints: `/public/spatial`, `/public/spatial/layers`, `/public/spatial/methodology`, `/public/spatial/areas`, `/public/spatial/datasets`, and `/public/spatial/evidence`
+
+Private control center: `/admin/spatial/control-center`
+
+Command-line utility: `python scripts/spatial_evidence_v2150.py summary`
+
+WordPress shortcodes: `[sc_public_spatial_evidence]` and `[sc_spatial_evidence_control_center]`
 
 ## v2.14.0 — Historical Archive and Temporal Change Intelligence
 
@@ -17,7 +31,6 @@ Private control center: `/admin/history/control-center`
 Command-line utility: `python scripts/historical_archive_v2140.py datasets`
 
 WordPress shortcodes: `[sc_public_temporal_intelligence]` and `[sc_historical_archive_control_center]`
-
 
 ## v2.13.0 — Connector Operations and Data Ingestion Control Center
 

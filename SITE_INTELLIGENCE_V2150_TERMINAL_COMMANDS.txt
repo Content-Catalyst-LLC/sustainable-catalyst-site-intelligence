@@ -1,0 +1,32 @@
+SITE INTELLIGENCE v2.15.0 — TERMINAL COMMANDS
+
+INSTALL, VALIDATE, COMMIT, AND PUSH
+
+cd ~/Downloads
+chmod 700 install_and_push_site_intelligence_v2_15_0.sh
+bash ./install_and_push_site_intelligence_v2_15_0.sh
+
+VERIFY RENDER AFTER CLEAR BUILD CACHE & DEPLOY
+
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/health | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/release | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/public/spatial | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/public/spatial/layers | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/public/spatial/methodology | python3 -m json.tool
+
+LOCAL COMMAND-LINE INSPECTION
+
+cd ~/sustainable-catalyst-site-intelligence
+python3 scripts/spatial_evidence_v2150.py summary
+python3 scripts/spatial_evidence_v2150.py layers
+python3 scripts/spatial_evidence_v2150.py areas --public
+python3 scripts/spatial_evidence_v2150.py datasets --public
+
+PUBLIC APPLICATION
+
+https://sustainable-catalyst-site-intelligence.onrender.com/app/?view=spatial
+
+WORDPRESS SHORTCODES
+
+[sc_public_spatial_evidence]
+[sc_spatial_evidence_control_center]

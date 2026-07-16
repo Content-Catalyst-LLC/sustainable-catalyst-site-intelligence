@@ -1,4 +1,4 @@
-APP_VERSION = "2.14.0"
+APP_VERSION = "2.15.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Historical Archive and Temporal Change Intelligence"
+RELEASE_NAME = "Geospatial Analysis and Spatial Evidence Studio"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

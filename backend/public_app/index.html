@@ -9,8 +9,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <link rel="manifest" href="/app/manifest.webmanifest">
   <link rel="apple-touch-icon" href="/app/assets/icon-192.png">
-  <title>Sustainable Catalyst Site Intelligence | Offline, Mobile, Accessibility, and Performance</title>
-  <meta name="description" content="Installable, mobile-safe, accessibility-focused Site Intelligence with offline fallback, low-bandwidth controls, and transparent performance budgets.">
+  <title>Sustainable Catalyst Site Intelligence | Geospatial Analysis and Spatial Evidence Studio</title>
+  <meta name="description" content="Source-aware geospatial analysis with public areas of interest, spatial datasets, intersections, proximity, aggregation, temporal comparison, and auditable evidence exports.">
   <meta property="og:title" content="Sustainable Catalyst Site Intelligence">
   <meta property="og:description" content="Public evidence, source lineage, Earth observation, country intelligence, live events, and verifiable research paths.">
   <meta property="og:type" content="website">
@@ -31,7 +31,8 @@
   <link rel="stylesheet" href="/app/assets/scenarios-v290.css?v=2.9.0">
   <link rel="stylesheet" href="/app/assets/research-v2100.css?v=2.10.0">
   <link rel="stylesheet" href="/app/assets/integration-v2110.css?v=2.11.0">
-  <link rel="stylesheet" href="/app/assets/experience-v2120.css?v=2.14.0">
+  <link rel="stylesheet" href="/app/assets/experience-v2120.css?v=2.15.0">
+  <link rel="stylesheet" href="/app/assets/spatial-v2150.css?v=2.15.0">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to intelligence workspace</a>
@@ -87,6 +88,7 @@
         <button class="nav-item" type="button" data-route="integration"><span>API &amp; embeds</span><small>Institutional integration</small></button>
         <button class="nav-item" type="button" data-route="experience"><span>Offline &amp; access</span><small>Mobile and performance</small></button>
         <button class="nav-item" type="button" data-route="earth"><span>Earth</span><small>Satellite comparison</small></button>
+        <button class="nav-item" type="button" data-route="spatial"><span>Spatial</span><small>Areas and evidence</small></button>
         <button class="nav-item" type="button" data-route="country"><span>Country</span><small>Place-based evidence</small></button>
         <button class="nav-item" type="button" data-route="events"><span>Events</span><small>Live event intelligence</small></button>
         <button class="nav-item" type="button" data-route="compare"><span>Compare</span><small>Two-country context</small></button>
@@ -173,7 +175,7 @@
           </div>
           <div class="launch-release-card" aria-label="Public release status">
             <span>PUBLIC RELEASE</span>
-            <strong id="launchPortfolioVersion">v2.14.0</strong>
+            <strong id="launchPortfolioVersion">v2.15.0</strong>
             <small>Source-aware observatory · MIT licensed</small>
           </div>
         </div>
@@ -1169,7 +1171,7 @@
       <section id="offlineExperienceStudio" class="offline-experience-studio" hidden aria-busy="false">
         <div class="experience-hero">
           <article class="experience-card"><p class="eyebrow">OFFLINE · MOBILE · ACCESSIBILITY · PERFORMANCE</p><h2>Resilient public intelligence</h2><p id="experienceSummary">Install the application shell, reduce network demand, inspect accessibility contracts, and review first-party performance budgets without creating a hosted user profile.</p><div class="experience-actions"><button id="experienceInstall" class="earth-primary-button" type="button">Installation help</button><button id="experienceClearCache" class="ghost-button" type="button">Clear offline cache</button></div><p id="experienceInstallHelp" class="experience-note" hidden>Use the browser’s Install App or Add to Home Screen command when it is available.</p></article>
-          <article class="experience-status-card"><span id="experienceConnectionStatus" class="experience-status">Checking connection</span><p>Release <strong id="experienceVersion">v2.14.0</strong></p><p>PWA shell <strong id="experiencePwaState">Checking</strong></p><p>First-party shell <strong id="experienceShellBytes" class="experience-metric">—</strong> bytes</p><p>Cache cap <strong id="experienceCacheEntries">—</strong> entries</p></article>
+          <article class="experience-status-card"><span id="experienceConnectionStatus" class="experience-status">Checking connection</span><p>Release <strong id="experienceVersion">v2.15.0</strong></p><p>PWA shell <strong id="experiencePwaState">Checking</strong></p><p>First-party shell <strong id="experienceShellBytes" class="experience-metric">—</strong> bytes</p><p>Cache cap <strong id="experienceCacheEntries">—</strong> entries</p></article>
         </div>
         <div class="experience-grid">
           <article class="experience-control"><h3>Browser-local controls</h3><label><span>Low-bandwidth mode</span><input id="experienceLowBandwidth" type="checkbox"></label><label><span>Offline application shell</span><input id="experienceOfflineEnabled" type="checkbox" checked></label><p class="experience-note">Low-bandwidth mode suppresses optional motion and presentation-heavy behavior. It does not alter source values.</p></article>
@@ -1319,6 +1321,55 @@
         </div>
       </section>
 
+
+      <section id="spatialEvidenceStudio" class="spatial-evidence-studio" hidden aria-busy="false" aria-labelledby="spatialEvidenceTitle">
+        <div class="spatial-hero">
+          <div>
+            <p class="eyebrow">GEOSPATIAL ANALYSIS · SPATIAL EVIDENCE</p>
+            <h2 id="spatialEvidenceTitle">Analyze public records by place without hiding spatial assumptions</h2>
+            <p>Inspect public areas of interest, registered geospatial datasets, exact point and segment intersections, source-aware proximity, geographic aggregation, and temporal layer comparisons. Coordinate reference systems, methods, and approximation limits remain visible.</p>
+            <p id="spatialAvailability" class="spatial-availability" role="status" aria-live="polite">Loading public spatial evidence contracts.</p>
+          </div>
+          <div class="spatial-metrics" aria-label="Spatial evidence summary">
+            <article class="spatial-metric"><span>Public areas</span><strong id="spatialPublicAreas">—</strong></article>
+            <article class="spatial-metric"><span>Public datasets</span><strong id="spatialPublicDatasets">—</strong></article>
+            <article class="spatial-metric"><span>Catalog layers</span><strong id="spatialCatalogLayers">—</strong></article>
+            <article class="spatial-metric"><span>Reference system</span><strong id="spatialCrs">EPSG:4326</strong></article>
+          </div>
+        </div>
+
+        <div class="spatial-grid">
+          <article class="spatial-panel">
+            <p class="eyebrow">PUBLIC LAYER CATALOG</p>
+            <h3>Source-aware spatial layers</h3>
+            <div id="spatialLayerList" class="spatial-list"><div class="loading-block">Loading layer contracts.</div></div>
+          </article>
+          <article class="spatial-panel">
+            <p class="eyebrow">RESPONSIBLE USE</p>
+            <h3>Interpretation and safety boundaries</h3>
+            <ul id="spatialMethodList" class="spatial-responsible-use">
+              <li>Public spatial evidence supports research and orientation, not military targeting or individual tracking.</li>
+              <li>Coordinate systems and approximation methods remain explicit.</li>
+            </ul>
+          </article>
+        </div>
+
+        <article class="spatial-panel">
+          <p class="eyebrow">PUBLIC EVIDENCE INTERSECTION</p>
+          <h3>Inspect published records inside an area of interest</h3>
+          <div class="spatial-form">
+            <label>Public area of interest
+              <select id="spatialAreaSelect"><option value="">Select a public area</option></select>
+            </label>
+            <label>Public spatial dataset
+              <select id="spatialDatasetSelect"><option value="">Select a public dataset</option></select>
+            </label>
+            <button id="spatialRunEvidence" class="earth-primary-button" type="button">Run spatial evidence</button>
+          </div>
+          <div id="spatialEvidenceOutput" class="spatial-output" aria-live="polite"></div>
+        </article>
+      </section>
+
       <section class="method-note">
         <div>
           <p class="eyebrow">READING THE VIEW</p>
@@ -1371,6 +1422,7 @@
   <script src="/app/assets/scenarios-v290.js?v=2.9.0" defer></script>
   <script src="/app/assets/research-v2100.js?v=2.10.0" defer></script>
   <script src="/app/assets/integration-v2110.js?v=2.11.0" defer></script>
-  <script src="/app/assets/experience-v2120.js?v=2.14.0" defer></script>
+  <script src="/app/assets/experience-v2120.js?v=2.15.0" defer></script>
+  <script src="/app/assets/spatial-v2150.js?v=2.15.0" defer></script>
 </body>
 </html>

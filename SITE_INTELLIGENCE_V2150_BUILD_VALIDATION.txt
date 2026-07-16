@@ -1,0 +1,63 @@
+SUSTAINABLE CATALYST SITE INTELLIGENCE v2.15.0
+BUILD VALIDATION REPORT
+
+Release: Geospatial Analysis and Spatial Evidence Studio
+Base release: v2.14.0
+
+BACKEND TESTS
+- 430 tests passed
+- No skipped release-critical tests
+- Writable connector, archive, spatial, cache, and queue paths redirected outside the repository
+
+RELEASE CONTRACT
+- v2.15.0 release validator passed
+- Backend, public application, service worker, WordPress plugin, README, changelog, policy, catalog, documentation, and release manifest aligned
+- Historical v2.14.0 policy and release identity preserved
+
+SPATIAL ENGINE
+- Bounding-box, polygon, and radius area validation passed
+- EPSG:4326 coordinate validation passed
+- Dataset redaction, versioning, deduplication, and SHA-256 verification passed
+- Exact point intersection and segment-aware line/polygon intersection passed
+- Haversine point proximity and labeled complex-geometry approximation passed
+- Geographic aggregation without imputation passed
+- Temporal dataset-version comparison passed
+- Public/private evidence boundaries passed
+
+PUBLIC APPLICATION
+- Dedicated /app/?view=spatial route registered
+- Spatial workspace CSS and JavaScript syntax passed
+- Service-worker shell includes spatial assets
+- Mobile responsive contract present
+- Public evidence selector and evidence-packet rendering registered
+
+WORDPRESS
+- Plugin version 2.15.0
+- PHP syntax passed
+- Public and administrator shortcodes registered
+- Public WordPress REST proxy registered
+- Administrator control center remains capability-restricted
+
+STATIC VALIDATION
+- Python compilation passed
+- JavaScript and service-worker syntax passed
+- JSON and webmanifest parsing passed
+- Available YAML parsing passed
+- WordPress PHP syntax passed
+- Duplicate HTML ID check passed
+
+RELEASE INTEGRITY
+- 382 immutable files verified
+- MANIFEST.json excluded from its own digest list
+- Runtime historical archive excluded
+- Runtime spatial evidence state excluded
+- Connector state, execution history, quarantine, country cache, queues, Python caches, and pytest caches excluded
+
+INSTALLER
+- Python 3.13/3.12/3.11 preference
+- Explicit HTTPX2/TestClient preflight
+- Isolated writable runtime paths
+- Post-test manifest verification
+- WordPress ZIP packaging
+- GitHub CLI or SSH noninteractive authentication
+- Safety archive and backup branch before repository replacement

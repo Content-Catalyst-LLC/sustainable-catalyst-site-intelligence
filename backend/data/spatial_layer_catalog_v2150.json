@@ -1,0 +1,17 @@
+{
+  "schema": "sc-site-intelligence-spatial-layer-catalog/1.0",
+  "version": "2.15.0",
+  "layers": [
+    {"id": "earth-observation", "title": "Earth Observation", "geometry_types": ["Point", "Polygon", "MultiPolygon"], "source_families": ["NASA", "NOAA", "USGS"], "temporal": true, "public_safe": true},
+    {"id": "humanitarian-events", "title": "Humanitarian and Disaster Events", "geometry_types": ["Point", "Polygon"], "source_families": ["GDACS", "ReliefWeb", "NASA EONET", "USGS"], "temporal": true, "public_safe": true},
+    {"id": "country-regional-context", "title": "Country and Regional Context", "geometry_types": ["Polygon", "MultiPolygon"], "source_families": ["public administrative boundaries"], "temporal": false, "public_safe": true},
+    {"id": "infrastructure-resources", "title": "Infrastructure, Energy, and Resources", "geometry_types": ["Point", "LineString", "Polygon"], "source_families": ["EIA", "World Bank", "public infrastructure records"], "temporal": true, "public_safe": true},
+    {"id": "biodiversity-land-use", "title": "Biodiversity and Land Use", "geometry_types": ["Point", "Polygon", "MultiPolygon"], "source_families": ["GBIF", "NASA", "public conservation records"], "temporal": true, "public_safe": true},
+    {"id": "custom", "title": "Validated Custom Spatial Dataset", "geometry_types": ["Point", "MultiPoint", "LineString", "MultiLineString", "Polygon", "MultiPolygon"], "source_families": ["user-supplied public or institutional records"], "temporal": true, "public_safe": false}
+  ],
+  "methodology": [
+    "All registered datasets use GeoJSON and WGS84 longitude/latitude coordinates.",
+    "Layer registration preserves source, observation time, license, feature count, bounding box, geometry types, and SHA-256 digest.",
+    "Public visibility is explicit and does not expose private dataset payloads by default."
+  ]
+}

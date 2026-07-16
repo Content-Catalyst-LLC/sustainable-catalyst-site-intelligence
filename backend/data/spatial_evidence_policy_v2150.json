@@ -1,0 +1,35 @@
+{
+  "schema": "sc-site-intelligence-spatial-evidence/1.0",
+  "version": "2.15.0",
+  "title": "Geospatial Analysis and Spatial Evidence Policy",
+  "capabilities": [
+    "user-defined bounding-box, polygon, and radius areas of interest",
+    "WGS84 geometry validation",
+    "point-in-polygon and segment-aware intersection",
+    "great-circle proximity analysis",
+    "geographic counts and numeric aggregation without imputation",
+    "stable-identifier temporal layer comparison",
+    "GeoJSON, CSV, and evidence-packet exports"
+  ],
+  "methods": [
+    {"id": "intersection", "description": "Point-in-polygon, segment intersection, and representative-point radius tests are applied to WGS84 GeoJSON."},
+    {"id": "proximity", "description": "Point distances use the haversine formula. Non-point features use a clearly labeled minimum vertex/centroid approximation."},
+    {"id": "aggregation", "description": "Only intersecting features are counted or aggregated. Missing metric values are reported and never imputed."},
+    {"id": "temporal-comparison", "description": "Stable feature identifiers are compared across immutable dataset versions; geometry and property digests reveal changes."}
+  ],
+  "limitations": [
+    "No coordinate reprojection is performed; inputs must use EPSG:4326 longitude and latitude.",
+    "The dependency-light engine is not a replacement for cadastral, surveying, emergency-response, or high-precision GIS software.",
+    "Non-point proximity is approximate and does not calculate exact geodesic distance to every edge.",
+    "Spatial overlap, proximity, or temporal coincidence does not establish causation, responsibility, severity, or individual risk."
+  ],
+  "responsible_use": [
+    "Do not use this studio for military targeting, weapons deployment, or operational tracking of people.",
+    "Do not create precise personal-location profiles or infer protected characteristics from spatial records.",
+    "Public outputs must preserve source, date, method, resolution, license, and limitation context.",
+    "Human review is required before publishing consequential spatial claims."
+  ],
+  "public_raw_private_dataset_access": false,
+  "paid_gis_server_required": false,
+  "persistent_disk_recommended": true
+}

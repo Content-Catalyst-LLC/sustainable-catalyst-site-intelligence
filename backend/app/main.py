@@ -55,6 +55,7 @@ from .public_api_sources import (
 )
 from .connector_operations_v2130 import ConnectorOperationsCenter
 from .historical_archive_v2140 import HistoricalArchiveCenter
+from .spatial_evidence_v2150 import SpatialEvidenceStudio
 from .public_live_connectors import (
     public_connector_status as build_public_connector_status,
     public_cache_status as build_public_cache_status,
@@ -2028,6 +2029,182 @@ def admin_history_retention_apply_endpoint(
         retention_days=int(request.get("retention_days") or settings.historical_archive_default_retention_days),
         max_snapshots=int(request.get("max_snapshots") or settings.historical_archive_max_snapshots_per_dataset),
     )
+
+
+# Site Intelligence v2.15.0 — Geospatial Analysis and Spatial Evidence Studio.
+def _spatial_evidence(settings: Settings) -> SpatialEvidenceStudio:
+    if not settings.spatial_evidence_enabled:
+        raise HTTPException(status_code=403, detail="Spatial evidence studio is disabled.")
+    try:
+        return SpatialEvidenceStudio(settings)
+    except ValueError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@app.get("/public/spatial")
+def public_spatial_summary_endpoint(settings: Settings = Depends(get_settings)):
+    return _spatial_evidence(settings).public_summary()
+
+
+@app.get("/public/spatial/layers")
+def public_spatial_layers_endpoint(settings: Settings = Depends(get_settings)):
+    return _spatial_evidence(settings).layers()
+
+
+@app.get("/public/spatial/methodology")
+def public_spatial_methodology_endpoint(settings: Settings = Depends(get_settings)):
+    return _spatial_evidence(settings).methodology()
+
+
+@app.get("/public/spatial/areas")
+def public_spatial_areas_endpoint(settings: Settings = Depends(get_settings)):
+    return _spatial_evidence(settings).areas(public=True)
+
+
+@app.get("/public/spatial/datasets")
+def public_spatial_datasets_endpoint(settings: Settings = Depends(get_settings)):
+    return _spatial_evidence(settings).datasets(public=True)
+
+
+@app.get("/public/spatial/evidence")
+def public_spatial_evidence_endpoint(
+    area_id: str = Query(..., min_length=2, max_length=120),
+    dataset_id: str = Query(..., min_length=2, max_length=120),
+    version_id: str = Query(default="", max_length=180),
+    settings: Settings = Depends(get_settings),
+):
+    try:
+        return _spatial_evidence(settings).export_evidence(area_id, dataset_id, version_id=version_id, public=True)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown or non-public spatial record: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+
+@app.get("/admin/spatial/control-center")
+def admin_spatial_control_center_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _spatial_evidence(settings).control_center()
+
+
+@app.get("/admin/spatial/areas")
+def admin_spatial_areas_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _spatial_evidence(settings).areas()
+
+
+@app.post("/admin/spatial/areas")
+def admin_spatial_create_area_endpoint(
+    request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)
+):
+    try:
+        return _spatial_evidence(settings).create_area(request)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/admin/spatial/datasets")
+def admin_spatial_datasets_endpoint(
+    latest_only: bool = Query(default=True), settings: Settings = Depends(get_settings), _: None = Depends(require_token)
+):
+    return _spatial_evidence(settings).datasets(latest_only=latest_only)
+
+
+@app.post("/admin/spatial/datasets/register")
+def admin_spatial_register_dataset_endpoint(
+    request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)
+):
+    try:
+        return _spatial_evidence(settings).register_dataset(request)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/admin/spatial/analyze/intersection")
+def admin_spatial_intersection_endpoint(
+    request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)
+):
+    try:
+        return _spatial_evidence(settings).intersection(
+            str(request.get("area_id") or ""), str(request.get("dataset_id") or ""), str(request.get("version_id") or "")
+        )
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown spatial record: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/admin/spatial/analyze/proximity")
+def admin_spatial_proximity_endpoint(
+    request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)
+):
+    try:
+        return _spatial_evidence(settings).proximity(
+            str(request.get("dataset_id") or ""),
+            float(request.get("longitude")),
+            float(request.get("latitude")),
+            float(request.get("max_distance_km") or 100),
+            str(request.get("version_id") or ""),
+        )
+    except (TypeError, ValueError) as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown spatial dataset: {exc.args[0]}") from exc
+
+
+@app.post("/admin/spatial/analyze/aggregate")
+def admin_spatial_aggregate_endpoint(
+    request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)
+):
+    try:
+        return _spatial_evidence(settings).aggregate(
+            str(request.get("area_id") or ""),
+            str(request.get("dataset_id") or ""),
+            str(request.get("metric") or ""),
+            str(request.get("version_id") or ""),
+        )
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown spatial record: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/admin/spatial/analyze/compare")
+def admin_spatial_compare_endpoint(
+    request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)
+):
+    try:
+        return _spatial_evidence(settings).compare(
+            str(request.get("dataset_id") or ""),
+            str(request.get("previous_version_id") or ""),
+            str(request.get("current_version_id") or ""),
+            str(request.get("metric") or ""),
+        )
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown spatial dataset version: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/admin/spatial/analyses")
+def admin_spatial_analyses_endpoint(
+    limit: int = Query(default=100, ge=1, le=1000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)
+):
+    return _spatial_evidence(settings).analyses(limit=limit)
+
+
+@app.get("/admin/spatial/export")
+def admin_spatial_export_endpoint(
+    area_id: str = Query(..., min_length=2, max_length=120),
+    dataset_id: str = Query(..., min_length=2, max_length=120),
+    version_id: str = Query(default="", max_length=180),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    try:
+        return _spatial_evidence(settings).export_evidence(area_id, dataset_id, version_id=version_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown spatial record: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
 @app.get("/public/source-pages")

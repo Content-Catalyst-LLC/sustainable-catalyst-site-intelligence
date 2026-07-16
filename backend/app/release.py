@@ -38,6 +38,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         {"id": "offline_mobile_accessibility_performance", "label": "Production offline, mobile, and embed reliability controls are available", "status": "pass", "detail": "The release-aligned application shell uses failure-tolerant installation, bounded age-limited caches, offline repair controls, and origin-checked responsive WordPress embeds without server-side user tracking.", "action": "Verify /app/?view=experience, /app/manifest.webmanifest, /app/service-worker.js, /public/offline-experience/diagnostics, and a logged-out WordPress embed on mobile."},
         {"id": "connector_operations", "label": "Connector Operations and Data Ingestion Control Center is available", "status": "pass", "detail": "A managed registry, manual/scheduled/conditional job definitions, execution receipts, freshness, quotas, retries, circuit breakers, schema validation, quarantine, and dataset diagnostics are available without exposing credentials or raw upstream payloads.", "action": "Verify /public/connectors/operations and the token-protected /admin/connectors/control-center, jobs, executions, quarantine, and datasets endpoints."},
         {"id": "historical_archive_temporal_change", "label": "Historical Archive and Temporal Change Intelligence is available", "status": "pass", "detail": "Accepted connector datasets can create sanitized immutable snapshots, temporal change and source-revision receipts, comparable historical series, retention previews, export bundles, and verified restoration previews without public payload exposure.", "action": "Verify /public/history, /public/history/datasets, a historical series endpoint, and the token-protected /admin/history/control-center."},
+        {"id": "geospatial_analysis_spatial_evidence", "label": "Geospatial Analysis and Spatial Evidence Studio is available", "status": "pass", "detail": "Validated WGS84 areas of interest, spatial datasets, intersection, proximity, geographic aggregation, temporal layer comparison, and evidence exports are available with explicit approximation and responsible-use boundaries.", "action": "Verify /public/spatial, /public/spatial/layers, /public/spatial/methodology, and the token-protected /admin/spatial/control-center."},
         {"id": "platform_core", "label": "Platform Core remains optional and free-source governed", "status": "pass", "detail": "Public routes degrade cleanly and do not require a paid provider or expose Core credentials.", "action": "Configure only the scoped Core public-read key in the Site Intelligence backend."},
         {"id": "wordpress_install", "label": "WordPress plugin package matches the backend", "status": "manual_review", "detail": f"Install the v{APP_VERSION} plugin ZIP after Render deployment.", "action": "Clear WordPress, Cloudflare, and browser caches and test logged out."},
         {"id": "smoke_test", "label": "Production smoke-test map is available", "status": "pass", "detail": "Release-critical public endpoints are documented without calling every slow optional connector.", "action": "Run the smoke-test endpoint after deployment."},
@@ -55,7 +56,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Checklist",
         "summary": RELEASE_NAME,
-        "release_stage": "v2.14.0_historical_archive_temporal_change",
+        "release_stage": "v2.15.0_geospatial_analysis_spatial_evidence",
         "status": "launch_ready_with_manual_review" if counts["fail"] == 0 else "needs_fix",
         "score": score,
         "counts": counts,
@@ -76,6 +77,7 @@ def release_public_summary(settings: Settings) -> Dict[str, Any]:
         "public_value": [
             "Provides reconnectable public intelligence snapshots, browser-local alert rules, stateless matching, source-recency monitoring, and deterministic digests without server-side profiling.",
             "Preserves sanitized accepted dataset snapshots, historical coverage, temporal changes, and source revisions without publicly exposing archived payload bodies.",
+            "Provides validated WGS84 areas of interest, source-aware spatial layers, explicit intersections, proximity methods, geographic aggregation, temporal comparisons, and reproducible evidence exports.",
             "Provides unified source-aware country and regional dossiers without composite scores or rankings.",
             "Provides searchable global country intelligence and a two-country comparative workspace.",
             "Provides source-aware official economic and sustainability records with precise release-frequency labels and no simulated real-time market claims.",
@@ -102,11 +104,11 @@ def release_public_summary(settings: Settings) -> Dict[str, Any]:
 
 def release_metadata() -> Dict[str, str]:
     return {
-        "seo_title": "Site Intelligence Historical Archive and Temporal Change Intelligence",
+        "seo_title": "Site Intelligence Geospatial Analysis and Spatial Evidence Studio",
         "page_title": "Site Intelligence",
-        "excerpt": "Sustainable Catalyst Site Intelligence now preserves sanitized dataset snapshots, historical coverage, temporal changes, source revisions, and verified archive receipts behind its managed connector operations.",
-        "meta_description": "Explore historical dataset coverage, temporal changes, source revisions, archive integrity, and managed public-data ingestion in Site Intelligence.",
-        "social_description": "An auditable historical archive and temporal change layer for source-aware public intelligence.",
+        "excerpt": "Sustainable Catalyst Site Intelligence now turns validated WGS84 spatial records into inspectable areas of interest, intersections, proximity findings, geographic aggregates, temporal layer comparisons, and evidence exports.",
+        "meta_description": "Explore transparent geospatial analysis, areas of interest, proximity, spatial overlap, temporal layer change, source context, and evidence exports in Site Intelligence.",
+        "social_description": "An auditable geospatial analysis and spatial evidence layer for source-aware public intelligence.",
     }
 
 
@@ -115,6 +117,9 @@ def smoke_test(settings: Settings) -> Dict[str, Any]:
         {"path": "/", "scope": "public", "critical": True, "expected": "canonical version"},
         {"path": "/health", "scope": "public", "critical": True, "expected": "service health"},
         {"path": "/public/build-info", "scope": "public", "critical": True, "expected": "backend/plugin compatibility metadata"},
+        {"path": "/public/spatial", "scope": "public", "critical": True, "expected": "spatial evidence workspace summary"},
+        {"path": "/public/spatial/layers", "scope": "public", "critical": True, "expected": "source-aware spatial layer catalog"},
+        {"path": "/public/spatial/methodology", "scope": "public", "critical": True, "expected": "spatial methods and responsible-use boundaries"},
         {"path": "/public/launch-status", "scope": "public", "critical": True, "expected": "public beta readiness"},
         {"path": "/public/intelligence-dossiers", "scope": "public", "critical": True, "expected": "unified dossier workspace profile"},
         {"path": "/public/intelligence-dossiers/country?country=KEN&limit_per_domain=5", "scope": "public", "critical": True, "expected": "source-aware country dossier"},
@@ -196,7 +201,7 @@ def release_status(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Status",
         "summary": RELEASE_NAME,
-        "release_stage": "v2.14.0_historical_archive_temporal_change",
+        "release_stage": "v2.15.0_geospatial_analysis_spatial_evidence",
         "release_status": checklist["status"],
         "release_score": checklist["score"],
         "public_shortcode": "[sc_site_intelligence_app height=\"1000\"]",

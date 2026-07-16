@@ -11,7 +11,7 @@ client = TestClient(app)
 def test_root_reports_v1170():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json()["version"] == "2.14.0"
+    assert response.json()["version"] == "2.15.0"
 
 @patch("app.unified_live_events._usgs_events", return_value=[])
 @patch("app.unified_live_events._eonet_events", return_value=[])

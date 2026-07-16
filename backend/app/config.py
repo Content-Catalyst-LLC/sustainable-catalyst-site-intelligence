@@ -228,6 +228,23 @@ class Settings(BaseSettings):
     historical_archive_max_snapshots_per_dataset: int = Field(default=3650, ge=2, le=50000)
     historical_archive_material_change_ratio: float = Field(default=0.01, ge=0.0, le=1.0)
 
+    # Site Intelligence v2.15.0 — Geospatial Analysis and Spatial Evidence Studio.
+    # Spatial workspaces use validated WGS84 GeoJSON and dependency-light,
+    # inspectable methods. Writable areas, datasets, and analyses are excluded
+    # from immutable releases and may be redirected to persistent storage.
+    spatial_evidence_enabled: bool = True
+    spatial_evidence_root_path: str = "backend/data/spatial_evidence_v2150"
+    spatial_evidence_areas_path: str = "backend/data/spatial_evidence_v2150/areas_v2150.jsonl"
+    spatial_evidence_datasets_path: str = "backend/data/spatial_evidence_v2150/datasets_v2150.jsonl"
+    spatial_evidence_analysis_path: str = "backend/data/spatial_evidence_v2150/analyses_v2150.jsonl"
+    spatial_evidence_policy_path: str = "backend/data/spatial_evidence_policy_v2150.json"
+    spatial_evidence_layer_catalog_path: str = "backend/data/spatial_layer_catalog_v2150.json"
+    spatial_evidence_max_features: int = Field(default=5000, ge=1, le=50000)
+    spatial_evidence_max_payload_bytes: int = Field(default=10000000, ge=10000, le=100000000)
+    spatial_evidence_max_records: int = Field(default=10000, ge=100, le=100000)
+    spatial_evidence_max_radius_km: float = Field(default=5000.0, ge=0.1, le=20000.0)
+    spatial_evidence_max_proximity_km: float = Field(default=5000.0, ge=0.1, le=20000.0)
+
 
     # Sustainable Development Data Connectors v1.14.1.
     sustainable_development_connectors_enabled: bool = True

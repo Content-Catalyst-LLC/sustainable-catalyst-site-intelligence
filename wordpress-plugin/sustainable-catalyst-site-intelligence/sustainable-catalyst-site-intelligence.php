@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 2.14.0
+ * Version: 2.15.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '2.14.0';
+    const VERSION = '2.15.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -81,6 +81,8 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_connector_operations_control_center', [$this, 'connector_operations_control_center_shortcode']);
         add_shortcode('sc_public_temporal_intelligence', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_historical_archive_control_center', [$this, 'historical_archive_control_center_shortcode']);
+        add_shortcode('sc_public_spatial_evidence', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_spatial_evidence_control_center', [$this, 'spatial_evidence_control_center_shortcode']);
         add_shortcode('sc_public_cache_status', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_source_freshness', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_connector_reliability', [$this, 'public_connector_panel_shortcode']);
@@ -762,6 +764,11 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-temporal-intelligence', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_temporal_intelligence'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-spatial-evidence', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_spatial_evidence'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/public-cache-status', [
@@ -1814,6 +1821,7 @@ final class SC_Site_Intelligence_Plugin {
             'connector_status' => 'public/connectors/status',
             'connector_operations' => 'public/connectors/operations',
             'temporal_intelligence' => 'public/history',
+            'spatial_evidence' => 'public/spatial',
             'cache_status' => 'public/connectors/cache',
             'source_freshness' => 'public/connectors/freshness',
             'connector_reliability' => 'public/connectors/reliability',
@@ -1838,6 +1846,7 @@ final class SC_Site_Intelligence_Plugin {
     public function rest_public_connector_status(WP_REST_Request $request) { return $this->rest_public_connector_panel('connector_status'); }
     public function rest_public_connector_operations(WP_REST_Request $request) { return $this->rest_public_connector_panel('connector_operations'); }
     public function rest_public_temporal_intelligence(WP_REST_Request $request) { return $this->rest_public_connector_panel('temporal_intelligence'); }
+    public function rest_public_spatial_evidence(WP_REST_Request $request) { return $this->rest_public_connector_panel('spatial_evidence'); }
     public function rest_public_cache_status(WP_REST_Request $request) { return $this->rest_public_connector_panel('cache_status'); }
     public function rest_public_source_freshness(WP_REST_Request $request) { return $this->rest_public_connector_panel('source_freshness'); }
     public function rest_public_connector_reliability(WP_REST_Request $request) { return $this->rest_public_connector_panel('connector_reliability'); }
@@ -3196,6 +3205,7 @@ final class SC_Site_Intelligence_Plugin {
             'sc_public_connector_status' => ['connector-status', 'Public Connector Status', 'Live, cached, fallback, and planned connector readiness for public source panels.'],
             'sc_public_connector_operations' => ['connector-operations', 'Connector Operations Status', 'Sanitized ingestion availability, freshness, and operational state across managed connectors.'],
             'sc_public_temporal_intelligence' => ['temporal-intelligence', 'Historical Archive and Temporal Change Intelligence', 'Versioned dataset coverage, detected changes, and source-revision context without archived payload exposure.'],
+            'sc_public_spatial_evidence' => ['spatial-evidence', 'Geospatial Analysis and Spatial Evidence Studio', 'Areas of interest, source-aware spatial layers, transparent methods, and evidence exports without individual tracking.'],
             'sc_public_cache_status' => ['cache-status', 'Public Cache Status', 'Cache TTL, stale-safe display, and public source refresh policy.'],
             'sc_public_source_freshness' => ['source-freshness', 'Public Source Freshness', 'Freshness labels for public source families and connector panels.'],
             'sc_public_connector_reliability' => ['connector-reliability', 'Connector Reliability Summary', 'Public display reliability, recovery guidance, and degraded/fallback-safe source labels.'],
@@ -3312,6 +3322,60 @@ final class SC_Site_Intelligence_Plugin {
                 <?php endforeach; ?>
             <?php endif; ?>
             <p class="scsi-muted">Job execution and quarantine resolution remain token-protected backend actions. This shortcode intentionally does not expose credentials or raw upstream payloads.</p>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
+    public function spatial_evidence_control_center_shortcode($atts = []) {
+        if (!current_user_can('manage_options')) {
+            return '';
+        }
+        $data = $this->backend_request('admin/spatial/control-center');
+        if (is_wp_error($data)) {
+            return '<section class="scsi-card"><p class="scsi-eyebrow">Spatial Evidence</p><h2>Control Center unavailable</h2><p class="scsi-muted">' . esc_html($data->get_error_message()) . '</p></section>';
+        }
+        $counts = isset($data['counts']) && is_array($data['counts']) ? $data['counts'] : [];
+        $areas = isset($data['areas']) && is_array($data['areas']) ? $data['areas'] : [];
+        $datasets = isset($data['datasets']) && is_array($data['datasets']) ? $data['datasets'] : [];
+        $analyses = isset($data['recent_analyses']) && is_array($data['recent_analyses']) ? $data['recent_analyses'] : [];
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-spatial-evidence-control-center">
+            <p class="scsi-eyebrow">Private Admin Workspace · v<?php echo esc_html(self::VERSION); ?></p>
+            <h2>Geospatial Analysis and Spatial Evidence Studio</h2>
+            <p class="scsi-muted">Validated WGS84 areas of interest, spatial dataset versions, intersections, proximity analysis, geographic aggregation, temporal layer comparison, and source-preserving evidence exports.</p>
+            <div class="scsi-grid scsi-public-connector-health-grid">
+                <?php foreach ([
+                    'areas' => 'Areas of interest',
+                    'public_areas' => 'Public areas',
+                    'datasets' => 'Datasets',
+                    'public_datasets' => 'Public datasets',
+                    'analyses' => 'Analysis receipts',
+                    'catalog_layers' => 'Catalog layers',
+                ] as $key => $label) : ?>
+                    <div class="scsi-stat scsi-public-connector-status-card"><span class="scsi-public-label"><?php echo esc_html($label); ?></span><strong><?php echo esc_html((string) ($counts[$key] ?? 0)); ?></strong></div>
+                <?php endforeach; ?>
+            </div>
+            <?php if (!empty($areas)) : ?>
+                <h3>Recent areas of interest</h3>
+                <?php foreach (array_slice($areas, 0, 12) as $item) : ?>
+                    <div class="scsi-page-row"><strong><?php echo esc_html((string) ($item['name'] ?? $item['area_id'] ?? 'Area')); ?></strong><small><?php echo esc_html((string) ($item['mode'] ?? 'geometry')); ?> · <?php echo esc_html((string) ($item['visibility'] ?? 'private')); ?> · <?php echo esc_html((string) ($item['approximate_area_sq_km'] ?? 0)); ?> km²</small></div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            <?php if (!empty($datasets)) : ?>
+                <h3>Spatial datasets</h3>
+                <?php foreach (array_slice($datasets, 0, 12) as $item) : ?>
+                    <div class="scsi-page-row"><strong><?php echo esc_html((string) ($item['title'] ?? $item['dataset_id'] ?? 'Dataset')); ?></strong><small><?php echo esc_html((string) ($item['feature_count'] ?? 0)); ?> features · <?php echo esc_html((string) ($item['source'] ?? 'Source unavailable')); ?> · <?php echo esc_html((string) ($item['visibility'] ?? 'private')); ?></small></div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            <?php if (!empty($analyses)) : ?>
+                <h3>Recent analyses</h3>
+                <?php foreach (array_slice($analyses, 0, 10) as $item) : ?>
+                    <div class="scsi-page-row"><strong><?php echo esc_html((string) ($item['analysis_type'] ?? 'analysis')); ?></strong><small><?php echo esc_html((string) ($item['dataset_id'] ?? '')); ?> · <?php echo esc_html((string) ($item['generated_at'] ?? '')); ?></small></div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            <p class="scsi-muted">This view does not expose private GeoJSON payloads, precise personal-location profiles, connector credentials, or operational targeting functions.</p>
         </section>
         <?php
         return ob_get_clean();

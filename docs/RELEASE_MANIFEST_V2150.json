@@ -1,0 +1,55 @@
+{
+  "schema": "sc-site-intelligence-release-manifest/1.0",
+  "release": "2.15.0",
+  "title": "Geospatial Analysis and Spatial Evidence Studio",
+  "base_release": "2.14.0",
+  "spatial_evidence_schema": "sc-site-intelligence-spatial-evidence/1.0",
+  "spatial_dataset_schema": "sc-site-intelligence-spatial-dataset/1.0",
+  "spatial_analysis_schema": "sc-site-intelligence-spatial-analysis/1.0",
+  "coordinate_reference_system": "EPSG:4326",
+  "supported_area_types": ["bbox", "polygon", "radius"],
+  "supported_geometry_types": ["Point", "MultiPoint", "LineString", "MultiLineString", "Polygon", "MultiPolygon"],
+  "spatial_layer_catalog_count": 6,
+  "versioned_datasets": true,
+  "digest_algorithm": "sha256",
+  "silent_reprojection": false,
+  "silent_imputation": false,
+  "public_raw_private_dataset_access": false,
+  "paid_gis_server_required": false,
+  "persistent_disk_recommended": true,
+  "public_endpoints": [
+    "/public/spatial",
+    "/public/spatial/layers",
+    "/public/spatial/methodology",
+    "/public/spatial/areas",
+    "/public/spatial/datasets",
+    "/public/spatial/evidence"
+  ],
+  "private_endpoints": [
+    "/admin/spatial/control-center",
+    "/admin/spatial/areas",
+    "/admin/spatial/datasets",
+    "/admin/spatial/datasets/register",
+    "/admin/spatial/analyze/intersection",
+    "/admin/spatial/analyze/proximity",
+    "/admin/spatial/analyze/aggregate",
+    "/admin/spatial/analyze/compare",
+    "/admin/spatial/analyses",
+    "/admin/spatial/export"
+  ],
+  "shortcodes": [
+    "[sc_public_spatial_evidence]",
+    "[sc_spatial_evidence_control_center]"
+  ],
+  "runtime_paths_excluded_from_release": [
+    "backend/data/spatial_evidence_v2150/"
+  ],
+  "governance": [
+    "All registered geometry must declare WGS84 longitude and latitude coordinates.",
+    "Spatial methods and approximation limits remain visible in evidence packets.",
+    "Missing metric values are reported and never silently imputed.",
+    "Public endpoints do not expose private dataset payloads or administrative analysis history.",
+    "The studio prohibits military targeting, weapons deployment, and operational tracking of people.",
+    "Spatial overlap, proximity, or temporal coincidence does not establish causation or responsibility."
+  ]
+}
