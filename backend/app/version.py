@@ -1,4 +1,4 @@
-APP_VERSION = "2.21.0"
+APP_VERSION = "2.22.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Scheduled Monitoring, Digests, and Public Intelligence Feeds"
+RELEASE_NAME = "Institutional Workspaces, Collaboration, and Review"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

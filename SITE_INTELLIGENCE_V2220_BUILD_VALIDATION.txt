@@ -1,0 +1,50 @@
+Sustainable Catalyst Site Intelligence v2.22.0
+Institutional Workspaces, Collaboration, and Review
+
+VALIDATION RESULT: PASS
+
+Backend regression suite
+- 517 tests passed
+- Institutional workspace workflow tests passed
+- Release-contract tests passed
+
+Core workflow coverage
+- Private, unlisted, and public workspace boundaries
+- Analyst, reviewer, publisher, and administrator permissions
+- Member-role records without account-provisioning claims
+- Assignment status and priority workflows
+- Private comments and review notes
+- Human evidence approval and rejection records
+- Public-eligible evidence filtering
+- Shared source collections
+- Publication readiness and urgent-assignment blocking
+- Activity and decision receipts
+- Preview-first retention with confirm=true enforcement
+- JSON and ZIP workspace archives
+- Public API privacy boundary
+
+Release integrity
+- 631 unique application HTML IDs; no duplicates
+- Python syntax passed
+- JavaScript and service-worker syntax passed
+- WordPress JavaScript syntax passed
+- WordPress PHP syntax passed
+- JSON and webmanifest parsing passed
+- v2.22.0 release validator passed
+- Writable institutional and inherited runtime state excluded from immutable packaging
+
+Governance assertions
+- Public accounts required: false
+- Persistent authentication included: false
+- Automatic publication: false
+- Automatic evidence approval: false
+- Private collaboration records public: false
+- Individual tracking: false
+- Retention preview required: true
+- Remote write claimed: false
+
+Installer rehearsal
+- Packaged manifest and overlay verification passed in a disposable Git checkout
+- TestClient preflight passed
+- 517 tests passed in the installed checkout
+- The execution wrapper stopped after pytest output; syntax, post-test manifest, WordPress packaging, and clean local commit were completed successfully in the same checkout

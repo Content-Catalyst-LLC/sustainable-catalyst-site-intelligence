@@ -1,9 +1,17 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.21.0 — Scheduled Monitoring, Digests, and Public Intelligence Feeds
+**Current release:** v2.22.0 — Institutional Workspaces, Collaboration, and Review
 
+## v2.22.0 — Institutional Workspaces, Collaboration, and Review
 
+This release adds optional shared institutional workspaces while preserving the public, account-free Site Intelligence experience. It introduces explicit analyst, reviewer, publisher, and administrator roles; assignments; comments and review notes; evidence approval; shared source collections; activity receipts; preview-first retention; institutional branding; and exportable workspace archives. It does not provision accounts, replace an identity provider, expose private collaboration records, or publish evidence automatically.
 
+- Public workspace: `/app/?view=workspaces`
+- Public directory: `/public/institutional-workspaces`
+- Public diagnostics: `/public/institutional-workspaces/diagnostics`
+- Admin control center: `/admin/institutional-workspaces/control-center`
+- Public shortcode: `[sc_public_institutional_workspaces]`
+- Admin shortcode: `[sc_institutional_workspaces_control_center]`
 
 ## v2.21.0 — Scheduled Monitoring, Digests, and Public Intelligence Feeds
 

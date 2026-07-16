@@ -1,8 +1,8 @@
-# Site Intelligence v2.21.0 — Scheduled Monitoring, Digests, and Public Intelligence Feeds
+# Site Intelligence v2.22.0 — Scheduled Monitoring, Digests, and Public Intelligence Feeds
 
 ## Purpose
 
-v2.21.0 adds a governed operational layer above the existing public intelligence stream. Administrators can define reusable monitors, run explicit due checks, suppress duplicate matches, prepare daily or weekly digests, review publication decisions, and expose approved outputs through JSON, RSS, and Atom.
+v2.22.0 adds a governed operational layer above the existing public intelligence stream. Administrators can define reusable monitors, run explicit due checks, suppress duplicate matches, prepare daily or weekly digests, review publication decisions, and expose approved outputs through JSON, RSS, and Atom.
 
 ## Core contracts
 

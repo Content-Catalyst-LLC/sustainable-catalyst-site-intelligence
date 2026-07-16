@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 2.21.0
+ * Version: 2.22.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '2.21.0';
+    const VERSION = '2.22.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -95,6 +95,9 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_intelligence_publishing_control_center', [$this, 'intelligence_publishing_control_center_shortcode']);
         add_shortcode('sc_intelligence_publication', [$this, 'intelligence_publication_shortcode']);
         add_shortcode('sc_public_monitoring_digests', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_public_institutional_workspaces', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_institutional_workspace', [$this, 'institutional_workspace_shortcode']);
+        add_shortcode('sc_institutional_workspaces_control_center', [$this, 'institutional_workspaces_control_center_shortcode']);
         add_shortcode('sc_scheduled_monitoring_control_center', [$this, 'scheduled_monitoring_control_center_shortcode']);
         add_shortcode('sc_public_intelligence_feed', [$this, 'public_intelligence_feed_shortcode']);
         add_shortcode('sc_public_cache_status', [$this, 'public_connector_panel_shortcode']);
@@ -808,6 +811,11 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-monitoring-digests', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_monitoring_digests'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-institutional-workspaces', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_institutional_workspaces'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/public-cache-status', [
@@ -1866,6 +1874,7 @@ final class SC_Site_Intelligence_Plugin {
             'evidence_synthesis' => 'public/evidence-synthesis',
             'relationship_explorer' => 'public/knowledge-graph',
             'monitoring_digests' => 'public/scheduled-monitoring',
+            'institutional_workspaces' => 'public/institutional-workspaces',
             'cache_status' => 'public/connectors/cache',
             'source_freshness' => 'public/connectors/freshness',
             'connector_reliability' => 'public/connectors/reliability',
@@ -1896,6 +1905,7 @@ final class SC_Site_Intelligence_Plugin {
     public function rest_public_evidence_synthesis(WP_REST_Request $request) { return $this->rest_public_connector_panel('evidence_synthesis'); }
     public function rest_public_relationship_explorer(WP_REST_Request $request) { return $this->rest_public_connector_panel('relationship_explorer'); }
     public function rest_public_monitoring_digests(WP_REST_Request $request) { return $this->rest_public_connector_panel('monitoring_digests'); }
+    public function rest_public_institutional_workspaces(WP_REST_Request $request) { return $this->rest_public_connector_panel('institutional_workspaces'); }
     public function rest_public_cache_status(WP_REST_Request $request) { return $this->rest_public_connector_panel('cache_status'); }
     public function rest_public_source_freshness(WP_REST_Request $request) { return $this->rest_public_connector_panel('source_freshness'); }
     public function rest_public_connector_reliability(WP_REST_Request $request) { return $this->rest_public_connector_panel('connector_reliability'); }
@@ -3261,6 +3271,7 @@ final class SC_Site_Intelligence_Plugin {
             'sc_public_relationship_explorer' => ['relationship-explorer', 'Intelligence Publishing and Story Map Studio', 'Typed entities, aliases, identifiers, evidence-backed temporal relationships, and graph traversal without automatic causation or entity merging.'],
             'sc_public_intelligence_publications' => ['intelligence-publications', 'Intelligence Publishing and Story Map Studio', 'Human-reviewed public intelligence publications, story maps, timelines, charts, evidence blocks, methodology, and immutable version history.'],
             'sc_public_monitoring_digests' => ['monitoring-digests', 'Scheduled Monitoring, Digests, and Public Intelligence Feeds', 'Human-reviewed daily and weekly digests, deduplicated alert evidence, and JSON, RSS, and Atom feeds without hosted subscriber profiles.'],
+            'sc_public_institutional_workspaces' => ['institutional-workspaces', 'Institutional Workspaces, Collaboration, and Review', 'Human-published institutional workspace summaries and public source collections without exposing members, assignments, comments, review notes, or activity logs.'],
             'sc_public_cache_status' => ['cache-status', 'Public Cache Status', 'Cache TTL, stale-safe display, and public source refresh policy.'],
             'sc_public_source_freshness' => ['source-freshness', 'Public Source Freshness', 'Freshness labels for public source families and connector panels.'],
             'sc_public_connector_reliability' => ['connector-reliability', 'Connector Reliability Summary', 'Public display reliability, recovery guidance, and degraded/fallback-safe source labels.'],
@@ -4729,6 +4740,60 @@ final class SC_Site_Intelligence_Plugin {
         <?php return ob_get_clean();
     }
 
+
+    public function institutional_workspaces_control_center_shortcode($atts = []) {
+        if (!current_user_can('manage_options')) {
+            return '';
+        }
+        $data = $this->backend_request('admin/institutional-workspaces/control-center');
+        if (is_wp_error($data)) {
+            return '<section class="scsi-card"><p class="scsi-eyebrow">Institutional Workspaces</p><h2>Control Center unavailable</h2><p class="scsi-muted">' . esc_html($data->get_error_message()) . '</p></section>';
+        }
+        $summary = isset($data['summary']) && is_array($data['summary']) ? $data['summary'] : [];
+        $workspaces = isset($data['workspaces']) && is_array($data['workspaces']) ? $data['workspaces'] : [];
+        $activity = isset($data['recent_activity']) && is_array($data['recent_activity']) ? $data['recent_activity'] : [];
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-institutional-workspaces-control-center">
+            <p class="scsi-eyebrow">Private Admin Workspace · v<?php echo esc_html(self::VERSION); ?></p>
+            <h2>Institutional Workspaces, Collaboration, and Review</h2>
+            <p class="scsi-muted">Coordinate shared investigations, role-based review, assignments, comments, evidence decisions, source collections, retention previews, and exportable workspace archives.</p>
+            <div class="scsi-grid scsi-public-connector-health-grid">
+                <?php foreach (['workspace_count' => 'Workspaces', 'public_workspace_count' => 'Public', 'member_count' => 'Members', 'assignment_count' => 'Assignments', 'comment_count' => 'Comments', 'evidence_review_count' => 'Reviews', 'source_collection_count' => 'Collections'] as $key => $label) : ?>
+                    <div class="scsi-stat scsi-public-connector-status-card"><span class="scsi-public-label"><?php echo esc_html($label); ?></span><strong><?php echo esc_html((string) ($summary[$key] ?? 0)); ?></strong></div>
+                <?php endforeach; ?>
+            </div>
+            <?php if (!empty($workspaces)) : ?><h3>Workspace register</h3><?php foreach (array_slice($workspaces, 0, 20) as $item) : ?><div class="scsi-page-row"><strong><?php echo esc_html((string) ($item['title'] ?? $item['workspace_id'] ?? 'Workspace')); ?></strong><small><?php echo esc_html((string) ($item['status'] ?? 'draft')); ?> · <?php echo esc_html((string) ($item['visibility'] ?? 'private')); ?> · updated <?php echo esc_html((string) ($item['updated_at'] ?? 'unknown')); ?></small></div><?php endforeach; ?><?php endif; ?>
+            <?php if (!empty($activity)) : ?><h3>Recent activity</h3><?php foreach (array_slice($activity, 0, 15) as $item) : ?><div class="scsi-page-row"><strong><?php echo esc_html((string) ($item['action'] ?? 'Activity')); ?></strong><small><?php echo esc_html((string) ($item['target_type'] ?? 'record')); ?> · <?php echo esc_html((string) ($item['occurred_at'] ?? 'unknown')); ?></small></div><?php endforeach; ?><?php endif; ?>
+            <p class="scsi-muted">Roles do not replace an identity provider. Public visitors require no account. Publication and evidence approval remain human decisions, and retention is preview-first.</p>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
+    public function institutional_workspace_shortcode($atts = []) {
+        $atts = shortcode_atts(['workspace_id' => '', 'title' => 'Institutional Workspace'], $atts, 'sc_institutional_workspace');
+        $workspace_id = sanitize_text_field((string) $atts['workspace_id']);
+        if ($workspace_id === '') {
+            return '<section class="scsi-card"><p class="scsi-muted">Provide a workspace_id to render a published institutional workspace.</p></section>';
+        }
+        $data = $this->backend_request('public/institutional-workspaces/' . rawurlencode($workspace_id));
+        if (is_wp_error($data) || empty($data['workspace']) || !is_array($data['workspace'])) {
+            return '<section class="scsi-card"><p class="scsi-eyebrow">Institutional Workspace</p><h2>Published workspace unavailable</h2><p class="scsi-muted">The workspace is private, unpublished, or could not be loaded.</p></section>';
+        }
+        $workspace = $data['workspace'];
+        $collections = isset($workspace['public_source_collections']) && is_array($workspace['public_source_collections']) ? $workspace['public_source_collections'] : [];
+        ob_start(); ?>
+        <section class="scsi-card scsi-public-institutional-workspace">
+            <p class="scsi-eyebrow"><?php echo esc_html((string) ($workspace['institution']['name'] ?? 'Institutional Workspace')); ?></p>
+            <h2><?php echo esc_html((string) ($workspace['title'] ?? $atts['title'])); ?></h2>
+            <p><?php echo esc_html((string) ($workspace['summary'] ?? '')); ?></p>
+            <div class="scsi-grid scsi-public-connector-health-grid"><div class="scsi-stat"><span>Approved evidence</span><strong><?php echo esc_html((string) ($workspace['approved_evidence_count'] ?? 0)); ?></strong></div><div class="scsi-stat"><span>Public collections</span><strong><?php echo esc_html((string) count($collections)); ?></strong></div></div>
+            <?php foreach ($collections as $collection) : ?><div class="scsi-page-row"><strong><?php echo esc_html((string) ($collection['title'] ?? $collection['collection_id'] ?? 'Collection')); ?></strong><small><?php echo esc_html((string) count($collection['source_ids'] ?? [])); ?> sources · <?php echo esc_html((string) count($collection['evidence_ids'] ?? [])); ?> evidence records</small></div><?php endforeach; ?>
+            <p class="scsi-muted">Member identities, assignments, comments, review notes, and private evidence are not included in this public view.</p>
+        </section>
+        <?php return ob_get_clean();
+    }
 
     public function scheduled_monitoring_control_center_shortcode($atts = []) {
         if (!current_user_can('manage_options')) {

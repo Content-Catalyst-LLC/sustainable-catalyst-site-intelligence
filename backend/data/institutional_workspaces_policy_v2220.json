@@ -1,0 +1,33 @@
+{
+  "schema": "sc-site-intelligence-institutional-workspaces-policy/1.0",
+  "version": "2.22.0",
+  "title": "Institutional Workspaces, Collaboration, and Review",
+  "principles": [
+    "Public visitors never need an account to read published public workspaces.",
+    "Private workspaces, members, assignments, comments, review notes, and activity logs remain private.",
+    "Human approval is required before evidence becomes public-eligible or a workspace becomes published.",
+    "Roles express workspace permissions but do not replace an institutional identity provider or identity management system.",
+    "Retention is preview-first and preserves evidence decisions, published summaries, member-role history, and append-only audit receipts.",
+    "Exports are read-only archive packets and do not claim successful remote ingestion."
+  ],
+  "role_definitions": {
+    "analyst": "Capture sources, create assignments, and add comments.",
+    "reviewer": "Review evidence and add review notes.",
+    "publisher": "Approve publication readiness and create export packets.",
+    "administrator": "Manage workspaces, members, retention, and all publisher permissions."
+  },
+  "prohibited": [
+    "No automatic public publication",
+    "No automatic evidence approval",
+    "No hidden individual tracking or social scoring",
+    "No account provisioning or identity-provider claims",
+    "No exposure of member identities or private collaboration records through public endpoints",
+    "No automatic deletion without explicit confirmation"
+  ],
+  "public_accounts_required": false,
+  "persistent_authentication_included": false,
+  "automatic_publication": false,
+  "automatic_evidence_approval": false,
+  "individual_tracking": false,
+  "retention_preview_required": true
+}

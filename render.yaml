@@ -93,3 +93,15 @@ services:
 # SC_SI_OFFLINE_CACHE_TTL_HOURS=24
 # SC_SI_LOW_BANDWIDTH_DEFAULT=false
 
+
+# v2.22.0 optional institutional workspace persistence values:
+# SC_SI_INSTITUTIONAL_WORKSPACES_ENABLED=true
+# SC_SI_INSTITUTIONAL_WORKSPACES_ROOT_PATH=/var/data/institutional-workspaces
+# SC_SI_INSTITUTIONAL_WORKSPACES_WORKSPACES_PATH=/var/data/institutional-workspaces/workspaces_v2220.jsonl
+# SC_SI_INSTITUTIONAL_WORKSPACES_MEMBERS_PATH=/var/data/institutional-workspaces/members_v2220.jsonl
+# SC_SI_INSTITUTIONAL_WORKSPACES_ASSIGNMENTS_PATH=/var/data/institutional-workspaces/assignments_v2220.jsonl
+# SC_SI_INSTITUTIONAL_WORKSPACES_COMMENTS_PATH=/var/data/institutional-workspaces/comments_v2220.jsonl
+# SC_SI_INSTITUTIONAL_WORKSPACES_REVIEWS_PATH=/var/data/institutional-workspaces/evidence_reviews_v2220.jsonl
+# SC_SI_INSTITUTIONAL_WORKSPACES_COLLECTIONS_PATH=/var/data/institutional-workspaces/source_collections_v2220.jsonl
+# SC_SI_INSTITUTIONAL_WORKSPACES_ACTIVITY_PATH=/var/data/institutional-workspaces/activity_v2220.jsonl
+# SC_SI_INSTITUTIONAL_WORKSPACES_RETENTION_PATH=/var/data/institutional-workspaces/retention_v2220.jsonl

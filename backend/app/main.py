@@ -62,6 +62,7 @@ from .evidence_synthesis_v2180 import EvidenceSynthesisCenter
 from .knowledge_graph_v2190 import KnowledgeGraphExplorer
 from .intelligence_publishing_v2200 import IntelligencePublishingStudio
 from .scheduled_monitoring_v2210 import ScheduledMonitoringCenter
+from .institutional_workspaces_v2220 import InstitutionalWorkspaceCenter
 from .public_live_connectors import (
     public_connector_status as build_public_connector_status,
     public_cache_status as build_public_cache_status,
@@ -2213,7 +2214,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v2.21.0 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v2.22.0 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -2355,7 +2356,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.21.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v2.22.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -2472,7 +2473,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.21.0 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v2.22.0 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -2594,7 +2595,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v2.21.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v2.22.0 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -2730,7 +2731,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.21.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v2.22.0 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -2965,6 +2966,172 @@ def admin_scheduled_monitoring_feed_endpoint(request: dict = Body(default={}), s
         return _scheduled_monitoring(settings).save_feed(request)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+
+def _institutional_workspaces(settings: Settings) -> InstitutionalWorkspaceCenter:
+    if not settings.institutional_workspaces_enabled:
+        raise HTTPException(status_code=503, detail="Institutional workspaces are disabled.")
+    return InstitutionalWorkspaceCenter(settings)
+
+
+def _workspace_actor(request: dict[str, Any]) -> tuple[str, str]:
+    return str(request.get("actor_role") or "administrator"), str(request.get("actor_id") or "system")
+
+
+@app.get("/public/institutional-workspaces")
+def public_institutional_workspaces_endpoint(settings: Settings = Depends(get_settings)):
+    return _institutional_workspaces(settings).public_summary()
+
+
+@app.get("/public/institutional-workspaces/diagnostics")
+def public_institutional_workspaces_diagnostics_endpoint(settings: Settings = Depends(get_settings)):
+    return _institutional_workspaces(settings).diagnostics(public=True)
+
+
+@app.get("/public/institutional-workspaces/{workspace_id}")
+def public_institutional_workspace_endpoint(workspace_id: str, settings: Settings = Depends(get_settings)):
+    try:
+        return {"ok": True, "version": APP_VERSION, "workspace": _institutional_workspaces(settings).workspace_detail(workspace_id, public=True)}
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Published public workspace not found.") from exc
+
+
+@app.get("/admin/institutional-workspaces/control-center")
+def admin_institutional_workspaces_control_center_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _institutional_workspaces(settings).control_center()
+
+
+@app.get("/admin/institutional-workspaces/{workspace_id}")
+def admin_institutional_workspace_endpoint(workspace_id: str, settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _institutional_workspaces(settings).workspace_detail(workspace_id, public=False)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Workspace not found.") from exc
+
+
+@app.post("/admin/institutional-workspaces")
+def admin_institutional_workspace_create_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    role, actor = _workspace_actor(request)
+    try:
+        return _institutional_workspaces(settings).create_workspace(request, role, actor)
+    except PermissionError as exc:
+        raise HTTPException(status_code=403, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/institutional-workspaces/{workspace_id}")
+def admin_institutional_workspace_update_endpoint(workspace_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    role, actor = _workspace_actor(request)
+    try:
+        return _institutional_workspaces(settings).update_workspace(workspace_id, request, role, actor)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Workspace not found.") from exc
+    except PermissionError as exc:
+        raise HTTPException(status_code=403, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/institutional-workspaces/{workspace_id}/members")
+def admin_institutional_workspace_member_endpoint(workspace_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    role, actor = _workspace_actor(request)
+    try:
+        return _institutional_workspaces(settings).add_member(workspace_id, request, role, actor)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Workspace not found.") from exc
+    except PermissionError as exc:
+        raise HTTPException(status_code=403, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/institutional-workspaces/{workspace_id}/assignments")
+def admin_institutional_workspace_assignment_endpoint(workspace_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    role, actor = _workspace_actor(request)
+    try:
+        return _institutional_workspaces(settings).save_assignment(workspace_id, request, role, actor)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Workspace not found.") from exc
+    except PermissionError as exc:
+        raise HTTPException(status_code=403, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/institutional-workspaces/{workspace_id}/comments")
+def admin_institutional_workspace_comment_endpoint(workspace_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    role, actor = _workspace_actor(request)
+    try:
+        return _institutional_workspaces(settings).add_comment(workspace_id, request, role, actor)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Workspace not found.") from exc
+    except PermissionError as exc:
+        raise HTTPException(status_code=403, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/institutional-workspaces/{workspace_id}/evidence-reviews")
+def admin_institutional_workspace_review_endpoint(workspace_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    role, actor = _workspace_actor(request)
+    try:
+        return _institutional_workspaces(settings).review_evidence(workspace_id, request, role, actor)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Workspace not found.") from exc
+    except PermissionError as exc:
+        raise HTTPException(status_code=403, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/institutional-workspaces/{workspace_id}/source-collections")
+def admin_institutional_workspace_collection_endpoint(workspace_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    role, actor = _workspace_actor(request)
+    try:
+        return _institutional_workspaces(settings).save_collection(workspace_id, request, role, actor)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Workspace not found.") from exc
+    except PermissionError as exc:
+        raise HTTPException(status_code=403, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/admin/institutional-workspaces/{workspace_id}/retention-preview")
+def admin_institutional_workspace_retention_preview_endpoint(workspace_id: str, cutoff_days: int | None = Query(default=None, ge=30, le=3650), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _institutional_workspaces(settings).retention_preview(workspace_id, cutoff_days)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Workspace not found.") from exc
+
+
+@app.post("/admin/institutional-workspaces/{workspace_id}/retention")
+def admin_institutional_workspace_retention_endpoint(workspace_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    role, actor = _workspace_actor(request)
+    try:
+        return _institutional_workspaces(settings).apply_retention(workspace_id, request, role, actor)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Workspace not found.") from exc
+    except PermissionError as exc:
+        raise HTTPException(status_code=403, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/admin/institutional-workspaces/{workspace_id}/export")
+def admin_institutional_workspace_export_endpoint(workspace_id: str, format: str = Query(default="json", pattern="^(json|zip)$"), actor_role: str = Query(default="publisher"), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        media_type, body = _institutional_workspaces(settings).export_workspace(workspace_id, actor_role, format)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Workspace not found.") from exc
+    except PermissionError as exc:
+        raise HTTPException(status_code=403, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    suffix = "zip" if format == "zip" else "json"
+    return Response(content=body, media_type=media_type, headers={"Content-Disposition": f'attachment; filename="institutional-workspace-{workspace_id}.{suffix}"', "X-SC-Site-Intelligence-Version": APP_VERSION})
 
 
 @app.get("/public/source-pages")

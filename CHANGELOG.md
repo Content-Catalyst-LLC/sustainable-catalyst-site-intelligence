@@ -1,3 +1,13 @@
+## 2.22.0 — Institutional Workspaces, Collaboration, and Review
+
+- Added shared institutional workspaces with private, unlisted, and public visibility.
+- Added analyst, reviewer, publisher, and administrator roles with explicit permission contracts.
+- Added assignments, comments, review notes, evidence approval decisions, shared source collections, and activity receipts.
+- Added human-gated publication, public-safe workspace summaries, and strict member/private-record boundaries.
+- Added preview-first retention, explicit confirmed cleanup, institutional branding, and JSON/ZIP workspace archives.
+- Added public and administrator APIs, a dedicated Workspaces application view, and WordPress public/admin shortcodes.
+- Preserved account-free public access and explicitly avoided identity-provider, automatic-publication, social-scoring, and remote-write claims.
+
 ## 2.21.0 — Scheduled Monitoring, Digests, and Public Intelligence Feeds
 
 - Added reusable manual, hourly, daily, and weekly monitor definitions.

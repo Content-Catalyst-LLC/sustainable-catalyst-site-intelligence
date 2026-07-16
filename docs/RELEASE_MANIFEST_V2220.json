@@ -1,0 +1,38 @@
+{
+  "release": "2.22.0",
+  "title": "Institutional Workspaces, Collaboration, and Review",
+  "workspace_roles": ["analyst", "reviewer", "publisher", "administrator"],
+  "public_accounts_required": false,
+  "persistent_authentication_included": false,
+  "automatic_publication": false,
+  "automatic_evidence_approval": false,
+  "individual_tracking": false,
+  "private_collaboration_records_public": false,
+  "human_evidence_review_required": true,
+  "retention_preview_required": true,
+  "remote_write_claimed": false,
+  "file_backed_zero_cost_mode": true,
+  "durable_storage_required_for_production_persistence": true,
+  "public_endpoints": [
+    "/public/institutional-workspaces",
+    "/public/institutional-workspaces/diagnostics",
+    "/public/institutional-workspaces/{workspace_id}"
+  ],
+  "admin_endpoints": [
+    "/admin/institutional-workspaces/control-center",
+    "/admin/institutional-workspaces/{workspace_id}",
+    "/admin/institutional-workspaces/{workspace_id}/members",
+    "/admin/institutional-workspaces/{workspace_id}/assignments",
+    "/admin/institutional-workspaces/{workspace_id}/comments",
+    "/admin/institutional-workspaces/{workspace_id}/evidence-reviews",
+    "/admin/institutional-workspaces/{workspace_id}/source-collections",
+    "/admin/institutional-workspaces/{workspace_id}/retention-preview",
+    "/admin/institutional-workspaces/{workspace_id}/retention",
+    "/admin/institutional-workspaces/{workspace_id}/export"
+  ],
+  "wordpress_shortcodes": [
+    "[sc_public_institutional_workspaces]",
+    "[sc_institutional_workspace workspace_id=WORKSPACE_ID]",
+    "[sc_institutional_workspaces_control_center]"
+  ]
+}
