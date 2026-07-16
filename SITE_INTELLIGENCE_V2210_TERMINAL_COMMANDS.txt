@@ -1,0 +1,16 @@
+SITE INTELLIGENCE v2.21.0 TERMINAL COMMANDS
+
+cd ~/Downloads
+chmod 700 install_and_push_site_intelligence_v2_21_0.sh
+bash ./install_and_push_site_intelligence_v2_21_0.sh
+
+After the push, deploy the latest main commit in Render with Clear build cache & deploy.
+
+Verify:
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/health | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/release | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/public/scheduled-monitoring | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/public/intelligence-digests | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/public/intelligence-feeds | python3 -m json.tool
+
+Install the WordPress plugin only after backend and plugin versions both equal 2.21.0.

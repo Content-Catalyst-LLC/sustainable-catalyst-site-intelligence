@@ -1,0 +1,26 @@
+{
+  "release": "2.21.0",
+  "title": "Scheduled Monitoring, Digests, and Public Intelligence Feeds",
+  "schema": "sc-site-intelligence-release-manifest/1.0",
+  "monitor_cadences": ["manual", "hourly", "daily", "weekly"],
+  "digest_periods": ["daily", "weekly"],
+  "feed_formats": ["json", "rss", "atom"],
+  "deduplication_receipts": true,
+  "human_digest_approval_required": true,
+  "persistent_scheduler_claimed": false,
+  "hosted_subscriber_profile_required": false,
+  "subscriber_tracking": false,
+  "email_adapter_enabled_by_default": false,
+  "webhook_adapter_enabled_by_default": false,
+  "automatic_emergency_dispatch": false,
+  "automatic_publication": false,
+  "individual_tracking": false,
+  "delivery_recipient_redaction": true,
+  "public_shortcodes": [
+    "sc_public_monitoring_digests",
+    "sc_public_intelligence_feed"
+  ],
+  "admin_shortcodes": [
+    "sc_scheduled_monitoring_control_center"
+  ]
+}

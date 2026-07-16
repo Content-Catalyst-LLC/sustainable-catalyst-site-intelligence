@@ -245,7 +245,7 @@ class Settings(BaseSettings):
     spatial_evidence_max_radius_km: float = Field(default=5000.0, ge=0.1, le=20000.0)
     spatial_evidence_max_proximity_km: float = Field(default=5000.0, ge=0.1, le=20000.0)
 
-    # Site Intelligence v2.20.0 — Statistical Harmonization and Comparable-Series Engine.
+    # Site Intelligence v2.21.0 — Statistical Harmonization and Comparable-Series Engine.
     # Source series, transformed series, and lineage receipts are writable runtime
     # state and may be redirected to durable storage. Release registries remain immutable.
     statistical_harmonization_enabled: bool = True
@@ -258,7 +258,7 @@ class Settings(BaseSettings):
     statistical_harmonization_max_records: int = Field(default=10000, ge=100, le=100000)
     statistical_harmonization_max_observations: int = Field(default=5000, ge=1, le=100000)
 
-    # Site Intelligence v2.20.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+    # Site Intelligence v2.21.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
     # Model cards and immutable policy registries ship with the release. Forecasts,
     # evaluations, warning rules, and warning events are writable runtime state.
     model_governance_enabled: bool = True
@@ -273,7 +273,7 @@ class Settings(BaseSettings):
     model_governance_max_records: int = Field(default=10000, ge=100, le=100000)
     model_governance_max_forecast_points: int = Field(default=5000, ge=1, le=100000)
 
-    # Site Intelligence v2.20.0 — Evidence Synthesis, Claims, and Contradiction Review.
+    # Site Intelligence v2.21.0 — Evidence Synthesis, Claims, and Contradiction Review.
     # Claims, evidence, reviews, syntheses, and uncertainty records are writable
     # runtime state. Immutable policy files ship with the release.
     evidence_synthesis_enabled: bool = True
@@ -287,7 +287,7 @@ class Settings(BaseSettings):
     evidence_synthesis_max_records: int = Field(default=10000, ge=100, le=100000)
     evidence_synthesis_max_excerpt_chars: int = Field(default=4000, ge=100, le=20000)
 
-    # Site Intelligence v2.20.0 — Intelligence Publishing and Story Map Studio.
+    # Site Intelligence v2.21.0 — Intelligence Publishing and Story Map Studio.
     # Entity, relationship, and alias records are writable runtime state. Immutable
     # policy and relationship registries ship with the release.
     knowledge_graph_enabled: bool = True
@@ -302,7 +302,7 @@ class Settings(BaseSettings):
     knowledge_graph_max_results: int = Field(default=1000, ge=10, le=10000)
 
 
-    # Site Intelligence v2.20.0 — Intelligence Publishing and Story Map Studio.
+    # Site Intelligence v2.21.0 — Intelligence Publishing and Story Map Studio.
     # Publication projects, blocks, reviews, and immutable published versions are
     # writable runtime state. Policy files ship with the immutable release.
     intelligence_publishing_enabled: bool = True
@@ -315,6 +315,24 @@ class Settings(BaseSettings):
     intelligence_publishing_max_records: int = Field(default=10000, ge=100, le=100000)
     intelligence_publishing_max_blocks: int = Field(default=250, ge=1, le=2000)
     intelligence_publishing_max_block_chars: int = Field(default=100000, ge=1000, le=1000000)
+
+    # Site Intelligence v2.21.0 — Scheduled Monitoring, Digests, and Public Intelligence Feeds.
+    # Monitor definitions, checks, alerts, digests, delivery receipts, and feed
+    # definitions are writable runtime state. The policy file is immutable.
+    scheduled_monitoring_enabled: bool = True
+    scheduled_monitoring_root_path: str = "backend/data/scheduled_monitoring_v2210"
+    scheduled_monitoring_monitors_path: str = "backend/data/scheduled_monitoring_v2210/monitors_v2210.jsonl"
+    scheduled_monitoring_checks_path: str = "backend/data/scheduled_monitoring_v2210/checks_v2210.jsonl"
+    scheduled_monitoring_alerts_path: str = "backend/data/scheduled_monitoring_v2210/alerts_v2210.jsonl"
+    scheduled_monitoring_digests_path: str = "backend/data/scheduled_monitoring_v2210/digests_v2210.jsonl"
+    scheduled_monitoring_deliveries_path: str = "backend/data/scheduled_monitoring_v2210/deliveries_v2210.jsonl"
+    scheduled_monitoring_feeds_path: str = "backend/data/scheduled_monitoring_v2210/feeds_v2210.jsonl"
+    scheduled_monitoring_policy_path: str = "backend/data/scheduled_monitoring_policy_v2210.json"
+    scheduled_monitoring_max_records: int = Field(default=20000, ge=100, le=200000)
+    scheduled_monitoring_max_signals: int = Field(default=400, ge=20, le=1000)
+    scheduled_monitoring_dedupe_hours: int = Field(default=72, ge=1, le=8760)
+    scheduled_monitoring_email_enabled: bool = False
+    scheduled_monitoring_webhook_enabled: bool = False
 
 
     # Sustainable Development Data Connectors v1.14.1.

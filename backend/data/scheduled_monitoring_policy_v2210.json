@@ -1,0 +1,21 @@
+{
+  "schema": "sc-site-intelligence-scheduled-monitoring-policy/1.0",
+  "version": "2.21.0",
+  "title": "Scheduled Monitoring, Digests, and Public Intelligence Feeds",
+  "principles": [
+    "Monitoring checks evaluate public source records and do not prove that no real-world event occurred when no match is found.",
+    "Duplicate alerts are suppressed by transparent fingerprints and configurable time windows.",
+    "Daily and weekly digests remain drafts until a human explicitly approves or publishes them.",
+    "Public RSS, Atom, and JSON feeds do not require hosted subscriber profiles or tracking.",
+    "Email and webhook delivery adapters are optional and disabled by default.",
+    "Quiet periods, notification limits, source failures, and stale-data conditions remain visible."
+  ],
+  "prohibited": {
+    "automatic_emergency_dispatch": true,
+    "individual_tracking": true,
+    "hidden_risk_scoring": true,
+    "automatic_publication": true,
+    "fabricated_source_events": true,
+    "guaranteed_delivery": true
+  }
+}

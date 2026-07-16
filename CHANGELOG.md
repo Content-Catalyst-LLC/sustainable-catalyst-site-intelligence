@@ -1,3 +1,13 @@
+## 2.21.0 — Scheduled Monitoring, Digests, and Public Intelligence Feeds
+
+- Added reusable manual, hourly, daily, and weekly monitor definitions.
+- Added explicit due-job dry runs and bounded batch execution without claiming an embedded scheduler.
+- Added deterministic alert matching, transparent fingerprints, deduplication windows, and grouping.
+- Added human-reviewed daily and weekly digests with draft, approved, and published states.
+- Added public JSON, RSS, and Atom feeds without hosted subscriber profiles.
+- Added quiet periods, optional delivery adapters, redacted delivery receipts, and public-safe diagnostics.
+- Added public app, WordPress, CLI, release-contract, and immutable-package coverage.
+
 ## 2.20.0 — Intelligence Publishing and Story Map Studio
 
 - Added human-reviewed publication projects and structured narrative, map, timeline, chart, evidence, source, methodology, image, and callout blocks.

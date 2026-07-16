@@ -2601,6 +2601,7 @@
       'spatial-evidence': '/public-spatial-evidence',
       'comparable-series': '/public-comparable-series',
       'model-forecasts': '/public-model-forecasts',
+      'monitoring-digests': '/public-monitoring-digests',
       'cache-status': '/public-cache-status',
       'source-freshness': '/public-source-freshness',
       'connector-reliability': '/public-connector-reliability',

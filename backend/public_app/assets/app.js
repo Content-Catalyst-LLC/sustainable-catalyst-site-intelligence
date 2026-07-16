@@ -23,7 +23,7 @@
     }
     throw last;
   }
-  const APP_VERSION="2.20.0";
+  const APP_VERSION="2.21.0";
   let heightFrame=0;
   function documentHeight(){
     const body=document.body,root=document.documentElement;
@@ -197,6 +197,7 @@
       evidence:["EVIDENCE SYNTHESIS, CLAIMS, AND CONTRADICTION REVIEW","Review evidence and disagreement","Inspect approved claims, typed evidence relationships, contradictions, uncertainty, citations, and human-review decisions without fabricated sources or automatic conclusions."],
       graph:["CROSS-DOMAIN KNOWLEDGE GRAPH AND RELATIONSHIP EXPLORER","Trace evidence-backed relationships","Explore typed entities, aliases, identifiers, temporal relationships, graph paths, and evidence references without inferring causation or merging entities automatically."],
       publishing:["INTELLIGENCE PUBLISHING AND STORY MAP STUDIO","Publish source-aware intelligence","Read human-reviewed publications, story maps, timelines, charts, evidence blocks, methodology, and immutable version history."],
+      monitoring:["SCHEDULED MONITORING, DIGESTS, AND PUBLIC FEEDS","Follow public evidence over time","Read human-approved digests, inspect deduplicated alerts, and subscribe through JSON, RSS, or Atom without a hosted profile."],
       country:["COUNTRY INTELLIGENCE",`${names[state.country]||state.country} evidence profile`,"Environmental, development, humanitarian, security, and legal context for one selected country."],
       events:["UNIFIED LIVE EVENT INTELLIGENCE","Explore public events across sources","Natural hazards, humanitarian reporting, and country-linked event context in one source-aware workspace."],
       compare:["CROSS-DOMAIN COMPARISON","Compare country contexts","Align available evidence without flattening dates, units, definitions, or missing-data states."],
@@ -1409,6 +1410,7 @@
     if(route!=="evidence")window.SCEvidenceV2180?.close?.();
     if(route!=="graph")window.SCKnowledgeGraphV2190?.close?.();
     if(route!=="publishing")window.SCIntelligencePublishingV2200?.close?.();
+    if(route!=="monitoring")window.SCScheduledMonitoringV2210?.close?.();
     if(route==="global"){
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
       closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
@@ -1527,6 +1529,13 @@
       closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
       closePublicLaunchPortfolio();closeAuditablePublicObservatory();
       await window.SCIntelligencePublishingV2200?.open?.();return;
+    }
+    if(route==="monitoring"){
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
+      closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
+      closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
+      closePublicLaunchPortfolio();closeAuditablePublicObservatory();
+      await window.SCScheduledMonitoringV2210?.open?.();return;
     }
     if(route==="graph"){
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
@@ -1682,4 +1691,5 @@ document.head.appendChild(visualStyle);
 
 window.addEventListener("load",reportHeight,{once:true});window.addEventListener("resize",reportHeight,{passive:true});window.visualViewport?.addEventListener("resize",reportHeight,{passive:true});window.addEventListener("message",event=>{if(event.data?.type==="SC_SI_REQUEST_HEIGHT")reportHeight()});if("ResizeObserver" in window)new ResizeObserver(reportHeight).observe(document.body);
 
-/* v2.20.0 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v2.21.0 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v2.21.0 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

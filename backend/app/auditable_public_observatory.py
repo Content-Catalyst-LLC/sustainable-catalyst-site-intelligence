@@ -437,6 +437,7 @@ RELEASE_LEDGER = [
     {"version": "2.18.0", "title": "Evidence Synthesis, Claims, and Contradiction Review", "audit_contribution": "Structured claim records, typed supporting, qualifying, conflicting, and contextual evidence, explicit uncertainty, contradiction review, human approval, deterministic grounded synthesis, citation-ready exports, and read-only Knowledge Library and Research Librarian handoffs."},
     {"version": "2.19.0", "title": "Cross-Domain Knowledge Graph and Relationship Explorer", "audit_contribution": "Typed entities, aliases, external identifiers, evidence-backed temporal relationships, confidence metadata, bounded traversal, path exploration, reconciliation previews, graph exports, and read-only Platform Core handoffs without automatic causation or entity merging."},
     {"version": "2.20.0", "title": "Intelligence Publishing and Story Map Studio", "audit_contribution": "Human-reviewed publication projects, structured story-map blocks, editorial decisions, immutable versions, public and unlisted modes, source-aware exports, and read-only WordPress handoffs without automatic publication or fabricated evidence."},
+    {"version": "2.21.0", "title": "Scheduled Monitoring, Digests, and Public Intelligence Feeds", "audit_contribution": "Reusable monitor definitions, explicit due checks, deterministic alert fingerprints, duplicate suppression, human-reviewed daily and weekly digests, public JSON/RSS/Atom feeds, quiet periods, redacted delivery receipts, and no-profile/no-emergency-authority boundaries."},
 ]
 
 

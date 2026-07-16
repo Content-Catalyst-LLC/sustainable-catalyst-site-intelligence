@@ -61,6 +61,7 @@ from .model_forecast_early_warning_v2170 import ModelForecastEarlyWarningCenter
 from .evidence_synthesis_v2180 import EvidenceSynthesisCenter
 from .knowledge_graph_v2190 import KnowledgeGraphExplorer
 from .intelligence_publishing_v2200 import IntelligencePublishingStudio
+from .scheduled_monitoring_v2210 import ScheduledMonitoringCenter
 from .public_live_connectors import (
     public_connector_status as build_public_connector_status,
     public_cache_status as build_public_cache_status,
@@ -2212,7 +2213,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v2.20.0 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v2.21.0 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -2354,7 +2355,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.20.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v2.21.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -2471,7 +2472,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.20.0 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v2.21.0 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -2593,7 +2594,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v2.20.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v2.21.0 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -2729,7 +2730,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.20.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v2.21.0 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -2855,6 +2856,115 @@ def admin_intelligence_publishing_wordpress_handoff_endpoint(project_id: str, se
         return _intelligence_publishing(settings).wordpress_handoff(project_id)
     except KeyError as exc:
         raise HTTPException(status_code=404, detail=f"Unknown publication project: {exc.args[0]}") from exc
+
+
+def _scheduled_monitoring(settings: Settings) -> ScheduledMonitoringCenter:
+    if not settings.scheduled_monitoring_enabled:
+        raise HTTPException(status_code=503, detail="Scheduled monitoring is disabled.")
+    return ScheduledMonitoringCenter(settings)
+
+
+@app.get("/public/scheduled-monitoring")
+def public_scheduled_monitoring_summary_endpoint(settings: Settings = Depends(get_settings)):
+    return _scheduled_monitoring(settings).public_summary()
+
+
+@app.get("/public/scheduled-monitoring/diagnostics")
+def public_scheduled_monitoring_diagnostics_endpoint(settings: Settings = Depends(get_settings)):
+    return _scheduled_monitoring(settings).diagnostics(public=True)
+
+
+@app.get("/public/intelligence-digests")
+def public_intelligence_digests_endpoint(limit: int = Query(default=50, ge=1, le=500), settings: Settings = Depends(get_settings)):
+    return {"ok": True, "version": APP_VERSION, "digests": _scheduled_monitoring(settings).digests(public=True, limit=limit)}
+
+
+@app.get("/public/intelligence-digests/{digest_id}")
+def public_intelligence_digest_endpoint(digest_id: str, settings: Settings = Depends(get_settings)):
+    digest = next((x for x in _scheduled_monitoring(settings).digests(public=True, limit=1000) if x.get("digest_id") == digest_id), None)
+    if not digest:
+        raise HTTPException(status_code=404, detail="Published digest not found.")
+    return {"ok": True, "version": APP_VERSION, "digest": digest}
+
+
+@app.get("/public/intelligence-feeds")
+def public_intelligence_feeds_endpoint(settings: Settings = Depends(get_settings)):
+    return {"ok": True, "version": APP_VERSION, "feeds": _scheduled_monitoring(settings).feeds(public=True)}
+
+
+@app.get("/public/intelligence-feeds/{feed_id}")
+def public_intelligence_feed_endpoint(feed_id: str, format: str = Query(default="json", pattern="^(json|rss|atom)$"), settings: Settings = Depends(get_settings)):
+    try:
+        media_type, body = _scheduled_monitoring(settings).feed_payload(feed_id, format)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Feed not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return Response(content=body, media_type=media_type, headers={"X-SC-Site-Intelligence-Version": APP_VERSION})
+
+
+@app.get("/admin/scheduled-monitoring/control-center")
+def admin_scheduled_monitoring_control_center_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _scheduled_monitoring(settings).control_center()
+
+
+@app.post("/admin/scheduled-monitoring/monitors")
+def admin_scheduled_monitoring_monitor_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _scheduled_monitoring(settings).save_monitor(request)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/scheduled-monitoring/monitors/{monitor_id}/check")
+def admin_scheduled_monitoring_check_endpoint(monitor_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _scheduled_monitoring(settings).check_monitor(monitor_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Monitor not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/scheduled-monitoring/run-due")
+def admin_scheduled_monitoring_run_due_endpoint(dry_run: bool = Query(default=True), limit: int = Query(default=100, ge=1, le=500), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _scheduled_monitoring(settings).run_due(dry_run=dry_run, limit=limit)
+
+
+@app.post("/admin/scheduled-monitoring/digests")
+def admin_scheduled_monitoring_digest_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _scheduled_monitoring(settings).generate_digest(request)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/scheduled-monitoring/digests/{digest_id}/review")
+def admin_scheduled_monitoring_digest_review_endpoint(digest_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _scheduled_monitoring(settings).approve_digest(digest_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Digest not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/scheduled-monitoring/digests/{digest_id}/deliver")
+def admin_scheduled_monitoring_digest_delivery_endpoint(digest_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _scheduled_monitoring(settings).deliver_digest(digest_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Digest not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/scheduled-monitoring/feeds")
+def admin_scheduled_monitoring_feed_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _scheduled_monitoring(settings).save_feed(request)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
 @app.get("/public/source-pages")

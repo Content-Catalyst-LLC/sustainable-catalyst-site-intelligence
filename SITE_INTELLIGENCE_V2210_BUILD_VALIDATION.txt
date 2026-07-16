@@ -1,0 +1,35 @@
+SUSTAINABLE CATALYST SITE INTELLIGENCE v2.21.0
+BUILD VALIDATION REPORT
+
+Release: Scheduled Monitoring, Digests, and Public Intelligence Feeds
+Validation date: 2026-07-16
+
+RESULTS
+- 504 backend tests passed.
+- v2.21.0 release contract passed.
+- Python source compilation passed.
+- Public application, Monitoring workspace, service worker, and WordPress JavaScript syntax passed.
+- WordPress PHP syntax passed.
+- JSON and webmanifest parsing passed.
+- 622 application HTML IDs were unique; no duplicates were found.
+- Immutable package manifest verified after testing.
+- WordPress plugin package integrity passed.
+
+MONITORING CONTRACTS
+- Reusable manual, hourly, daily, and weekly monitor definitions.
+- Due-monitor evaluation is explicit and dry-run by default.
+- Deterministic SHA-256 alert fingerprints and duplicate suppression.
+- Daily and weekly digest generation with mandatory human publication approval.
+- Public JSON, RSS, and Atom feed rendering.
+- Quiet-period deferral and redacted delivery receipts.
+- Optional email and webhook adapters disabled by default.
+- No embedded persistent scheduler, emergency authority, subscriber profiling, individual tracking, or automatic publication claims.
+
+RELEASE INTEGRITY
+- All writable monitor, alert, digest, delivery, feed, publication, graph, evidence, model, harmonization, spatial, historical, connector, cache, quarantine, and queue state is excluded from the immutable release.
+- Installer uses Python 3.11-3.13, verifies HTTPX2/TestClient compatibility, isolates runtime state, rechecks the package manifest, and uses noninteractive GitHub CLI or SSH authentication.
+
+INSTALLER REHEARSAL NOTE
+- The sandbox execution wrapper repeatedly interrupted a nested full-suite installer run near completion.
+- The packaged regression runner completed all 504 tests on the same installed checkout.
+- Release contracts, syntax checks, post-test manifest verification, WordPress packaging, and clean Git commit validation were completed directly in that checkout.

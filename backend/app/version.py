@@ -1,4 +1,4 @@
-APP_VERSION = "2.20.0"
+APP_VERSION = "2.21.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Intelligence Publishing and Story Map Studio"
+RELEASE_NAME = "Scheduled Monitoring, Digests, and Public Intelligence Feeds"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

@@ -1,8 +1,20 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.20.0 — Intelligence Publishing and Story Map Studio
+**Current release:** v2.21.0 — Scheduled Monitoring, Digests, and Public Intelligence Feeds
 
 
+
+
+## v2.21.0 — Scheduled Monitoring, Digests, and Public Intelligence Feeds
+
+This release turns browser-local alert concepts into a governed, file-backed monitoring and delivery layer. It adds reusable monitor definitions, explicit due-job execution, deduplicated alert receipts, human-reviewed daily and weekly digests, public JSON/RSS/Atom feeds, quiet periods, delivery logs, and optional email/webhook adapter boundaries. No always-on scheduler, emergency authority, subscriber tracking, or automatic publication is claimed.
+
+- Public workspace: `/app/?view=monitoring`
+- Public summary: `/public/scheduled-monitoring`
+- Public digests: `/public/intelligence-digests`
+- Public feeds: `/public/intelligence-feeds`
+- Admin control center: `/admin/scheduled-monitoring/control-center`
+- Due-job runner: `/admin/scheduled-monitoring/run-due?dry_run=true`
 
 
 ## v2.20.0 — Intelligence Publishing and Story Map Studio

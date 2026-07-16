@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 2.20.0
+ * Version: 2.21.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '2.20.0';
+    const VERSION = '2.21.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -94,6 +94,9 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_public_intelligence_publications', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_intelligence_publishing_control_center', [$this, 'intelligence_publishing_control_center_shortcode']);
         add_shortcode('sc_intelligence_publication', [$this, 'intelligence_publication_shortcode']);
+        add_shortcode('sc_public_monitoring_digests', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_scheduled_monitoring_control_center', [$this, 'scheduled_monitoring_control_center_shortcode']);
+        add_shortcode('sc_public_intelligence_feed', [$this, 'public_intelligence_feed_shortcode']);
         add_shortcode('sc_public_cache_status', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_source_freshness', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_connector_reliability', [$this, 'public_connector_panel_shortcode']);
@@ -800,6 +803,11 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-relationship-explorer', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_relationship_explorer'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-monitoring-digests', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_monitoring_digests'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/public-cache-status', [
@@ -1857,6 +1865,7 @@ final class SC_Site_Intelligence_Plugin {
             'model_forecasts' => 'public/model-governance',
             'evidence_synthesis' => 'public/evidence-synthesis',
             'relationship_explorer' => 'public/knowledge-graph',
+            'monitoring_digests' => 'public/scheduled-monitoring',
             'cache_status' => 'public/connectors/cache',
             'source_freshness' => 'public/connectors/freshness',
             'connector_reliability' => 'public/connectors/reliability',
@@ -1886,6 +1895,7 @@ final class SC_Site_Intelligence_Plugin {
     public function rest_public_model_forecasts(WP_REST_Request $request) { return $this->rest_public_connector_panel('model_forecasts'); }
     public function rest_public_evidence_synthesis(WP_REST_Request $request) { return $this->rest_public_connector_panel('evidence_synthesis'); }
     public function rest_public_relationship_explorer(WP_REST_Request $request) { return $this->rest_public_connector_panel('relationship_explorer'); }
+    public function rest_public_monitoring_digests(WP_REST_Request $request) { return $this->rest_public_connector_panel('monitoring_digests'); }
     public function rest_public_cache_status(WP_REST_Request $request) { return $this->rest_public_connector_panel('cache_status'); }
     public function rest_public_source_freshness(WP_REST_Request $request) { return $this->rest_public_connector_panel('source_freshness'); }
     public function rest_public_connector_reliability(WP_REST_Request $request) { return $this->rest_public_connector_panel('connector_reliability'); }
@@ -3250,6 +3260,7 @@ final class SC_Site_Intelligence_Plugin {
             'sc_public_evidence_synthesis' => ['evidence-synthesis', 'Evidence Synthesis, Claims, and Contradiction Review', 'Approved claims, typed supporting and conflicting evidence, explicit uncertainty, contradiction review, citations, and human-review status without fabricated conclusions.'],
             'sc_public_relationship_explorer' => ['relationship-explorer', 'Intelligence Publishing and Story Map Studio', 'Typed entities, aliases, identifiers, evidence-backed temporal relationships, and graph traversal without automatic causation or entity merging.'],
             'sc_public_intelligence_publications' => ['intelligence-publications', 'Intelligence Publishing and Story Map Studio', 'Human-reviewed public intelligence publications, story maps, timelines, charts, evidence blocks, methodology, and immutable version history.'],
+            'sc_public_monitoring_digests' => ['monitoring-digests', 'Scheduled Monitoring, Digests, and Public Intelligence Feeds', 'Human-reviewed daily and weekly digests, deduplicated alert evidence, and JSON, RSS, and Atom feeds without hosted subscriber profiles.'],
             'sc_public_cache_status' => ['cache-status', 'Public Cache Status', 'Cache TTL, stale-safe display, and public source refresh policy.'],
             'sc_public_source_freshness' => ['source-freshness', 'Public Source Freshness', 'Freshness labels for public source families and connector panels.'],
             'sc_public_connector_reliability' => ['connector-reliability', 'Connector Reliability Summary', 'Public display reliability, recovery guidance, and degraded/fallback-safe source labels.'],
@@ -4718,6 +4729,51 @@ final class SC_Site_Intelligence_Plugin {
         <?php return ob_get_clean();
     }
 
+
+    public function scheduled_monitoring_control_center_shortcode($atts = []) {
+        if (!current_user_can('manage_options')) {
+            return '';
+        }
+        $data = $this->backend_request('admin/scheduled-monitoring/control-center');
+        if (is_wp_error($data)) {
+            return '<section class="scsi-card"><p class="scsi-eyebrow">Scheduled Monitoring</p><h2>Control Center unavailable</h2><p class="scsi-muted">' . esc_html($data->get_error_message()) . '</p></section>';
+        }
+        $summary = isset($data['summary']) && is_array($data['summary']) ? $data['summary'] : [];
+        $monitors = isset($data['monitors']) && is_array($data['monitors']) ? $data['monitors'] : [];
+        $digests = isset($data['digests']) && is_array($data['digests']) ? $data['digests'] : [];
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-scheduled-monitoring-control-center">
+            <p class="scsi-eyebrow">Private Admin Workspace · v<?php echo esc_html(self::VERSION); ?></p>
+            <h2>Scheduled Monitoring, Digests, and Public Intelligence Feeds</h2>
+            <p class="scsi-muted">Manage monitor definitions, due checks, deduplicated alerts, daily and weekly digests, human publication review, quiet periods, delivery receipts, and public JSON, RSS, and Atom feeds.</p>
+            <div class="scsi-grid scsi-public-connector-health-grid">
+                <?php foreach (['monitor_count' => 'Monitors', 'due_monitor_count' => 'Due', 'check_count' => 'Checks', 'alert_count' => 'Alerts', 'digest_count' => 'Digests', 'delivery_count' => 'Deliveries', 'feed_count' => 'Feeds'] as $key => $label) : ?>
+                    <div class="scsi-stat scsi-public-connector-status-card"><span class="scsi-public-label"><?php echo esc_html($label); ?></span><strong><?php echo esc_html((string) ($summary[$key] ?? 0)); ?></strong></div>
+                <?php endforeach; ?>
+            </div>
+            <?php if (!empty($monitors)) : ?><h3>Monitor definitions</h3><?php foreach (array_slice($monitors, 0, 15) as $item) : ?><div class="scsi-page-row"><strong><?php echo esc_html((string) ($item['title'] ?? $item['monitor_id'] ?? 'Monitor')); ?></strong><small><?php echo esc_html((string) ($item['cadence'] ?? 'manual')); ?> · <?php echo !empty($item['enabled']) ? 'enabled' : 'disabled'; ?> · next <?php echo esc_html((string) ($item['next_due_at'] ?? 'not scheduled')); ?></small></div><?php endforeach; ?><?php endif; ?>
+            <?php if (!empty($digests)) : ?><h3>Recent digests</h3><?php foreach (array_slice($digests, 0, 15) as $item) : ?><div class="scsi-page-row"><strong><?php echo esc_html((string) ($item['title'] ?? $item['digest_id'] ?? 'Digest')); ?></strong><small><?php echo esc_html((string) ($item['period'] ?? 'digest')); ?> · <?php echo esc_html((string) ($item['status'] ?? 'draft')); ?> · <?php echo esc_html((string) ($item['alert_count'] ?? 0)); ?> alerts</small></div><?php endforeach; ?><?php endif; ?>
+            <p class="scsi-muted">No persistent scheduler is claimed. Public digests require human approval. Email and webhook delivery remain optional and disabled by default.</p>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
+    public function public_intelligence_feed_shortcode($atts = []) {
+        $atts = shortcode_atts(['feed_id' => '', 'title' => 'Public Intelligence Feed'], $atts, 'sc_public_intelligence_feed');
+        $feed_id = sanitize_text_field((string) $atts['feed_id']);
+        if ($feed_id === '') {
+            return '<section class="scsi-card"><p class="scsi-muted">Provide a feed_id to render public JSON, RSS, and Atom subscription links.</p></section>';
+        }
+        $options = self::options();
+        $backend = rtrim((string) ($options['backend_url'] ?? ''), '/');
+        if ($backend === '') {
+            return '<section class="scsi-card"><p class="scsi-muted">Configure the Site Intelligence backend URL before rendering a feed.</p></section>';
+        }
+        $path = '/public/intelligence-feeds/' . rawurlencode($feed_id);
+        return '<section class="scsi-card scsi-public-intelligence-feed"><p class="scsi-eyebrow">Public Intelligence Feed</p><h2>' . esc_html((string) $atts['title']) . '</h2><p class="scsi-muted">Subscribe without a hosted user profile.</p><p><a class="scsi-button" href="' . esc_url($backend . $path . '?format=json') . '">JSON</a> <a class="scsi-button" href="' . esc_url($backend . $path . '?format=rss') . '">RSS</a> <a class="scsi-button" href="' . esc_url($backend . $path . '?format=atom') . '">Atom</a></p></section>';
+    }
 
     private function admin_control_shortcode($type, $eyebrow, $title, $loading) {
         $options = self::options();
