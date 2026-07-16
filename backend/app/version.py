@@ -1,4 +1,4 @@
-APP_VERSION = "2.19.0"
+APP_VERSION = "2.20.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Cross-Domain Knowledge Graph and Relationship Explorer"
+RELEASE_NAME = "Intelligence Publishing and Story Map Studio"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

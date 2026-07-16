@@ -13,7 +13,7 @@ from uuid import uuid4
 
 from .config import Settings
 
-RELEASE_VERSION = "2.19.0"
+RELEASE_VERSION = "2.20.0"
 SCHEMA_VERSION = "sc-site-intelligence-knowledge-graph/1.0"
 ENTITY_SCHEMA = "sc-site-intelligence-graph-entity/1.0"
 RELATIONSHIP_SCHEMA = "sc-site-intelligence-graph-relationship/1.0"
@@ -499,7 +499,7 @@ class KnowledgeGraphExplorer:
     def public_summary(self) -> dict[str, Any]:
         entities = self._entities(public=True)
         relationships = self._relationships(public=True)
-        return {"schema": SCHEMA_VERSION, "release_version": RELEASE_VERSION, "title": "Cross-Domain Knowledge Graph and Relationship Explorer", "counts": {"entities": len(entities), "relationships": len(relationships), "entity_types": len(set(e.get("entity_type") for e in entities)), "relationship_types": len(set(r.get("relationship_type") for r in relationships))}, "entity_type_counts": dict(Counter(str(e.get("entity_type")) for e in entities)), "relationship_type_counts": dict(Counter(str(r.get("relationship_type")) for r in relationships)), "boundaries": list(self.policy.get("boundaries", [])), "evidence_backed_relationships": True, "automatic_causation": False, "automatic_entity_merge": False}
+        return {"schema": SCHEMA_VERSION, "release_version": RELEASE_VERSION, "title": "Intelligence Publishing and Story Map Studio", "counts": {"entities": len(entities), "relationships": len(relationships), "entity_types": len(set(e.get("entity_type") for e in entities)), "relationship_types": len(set(r.get("relationship_type") for r in relationships))}, "entity_type_counts": dict(Counter(str(e.get("entity_type")) for e in entities)), "relationship_type_counts": dict(Counter(str(r.get("relationship_type")) for r in relationships)), "boundaries": list(self.policy.get("boundaries", [])), "evidence_backed_relationships": True, "automatic_causation": False, "automatic_entity_merge": False}
 
     def methodology(self) -> dict[str, Any]:
         return {"schema": SCHEMA_VERSION, "release_version": RELEASE_VERSION, "policy": self.policy, "registry": self.registry, "temporal_relationships": True, "evidence_backing_required": True}

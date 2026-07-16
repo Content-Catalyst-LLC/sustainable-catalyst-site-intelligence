@@ -60,6 +60,7 @@ from .statistical_harmonization_v2160 import StatisticalHarmonizationEngine
 from .model_forecast_early_warning_v2170 import ModelForecastEarlyWarningCenter
 from .evidence_synthesis_v2180 import EvidenceSynthesisCenter
 from .knowledge_graph_v2190 import KnowledgeGraphExplorer
+from .intelligence_publishing_v2200 import IntelligencePublishingStudio
 from .public_live_connectors import (
     public_connector_status as build_public_connector_status,
     public_cache_status as build_public_cache_status,
@@ -2211,7 +2212,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v2.19.0 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v2.20.0 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -2353,7 +2354,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.19.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v2.20.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -2470,7 +2471,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.19.0 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v2.20.0 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -2592,7 +2593,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v2.19.0 — Cross-Domain Knowledge Graph and Relationship Explorer.
+# Site Intelligence v2.20.0 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -2726,6 +2727,134 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         return _knowledge_graph(settings).platform_core_handoff(entity_id, depth=depth)
     except KeyError as exc:
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
+
+
+# Site Intelligence v2.20.0 — Intelligence Publishing and Story Map Studio.
+def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
+    if not settings.intelligence_publishing_enabled:
+        raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
+    return IntelligencePublishingStudio(settings)
+
+
+@app.get("/public/intelligence-publishing")
+def public_intelligence_publishing_summary_endpoint(settings: Settings = Depends(get_settings)):
+    return _intelligence_publishing(settings).public_summary()
+
+
+@app.get("/public/intelligence-publishing/methodology")
+def public_intelligence_publishing_methodology_endpoint(settings: Settings = Depends(get_settings)):
+    return _intelligence_publishing(settings).methodology()
+
+
+@app.get("/public/intelligence-publishing/diagnostics")
+def public_intelligence_publishing_diagnostics_endpoint(settings: Settings = Depends(get_settings)):
+    return _intelligence_publishing(settings).diagnostics(public=True)
+
+
+@app.get("/public/intelligence-publications")
+def public_intelligence_publications_endpoint(limit: int = Query(default=100, ge=1, le=1000), settings: Settings = Depends(get_settings)):
+    return _intelligence_publishing(settings).public_publications(limit=limit)
+
+
+@app.get("/public/intelligence-publications/{publication_id}")
+def public_intelligence_publication_detail_endpoint(publication_id: str, settings: Settings = Depends(get_settings)):
+    try:
+        return _intelligence_publishing(settings).publication_detail(publication_id, public=True)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown or non-public publication: {exc.args[0]}") from exc
+
+
+@app.get("/public/intelligence-publications/{publication_id}/story-map")
+def public_intelligence_story_map_endpoint(publication_id: str, settings: Settings = Depends(get_settings)):
+    try:
+        return _intelligence_publishing(settings).story_map(publication_id, public=True)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown or non-public publication: {exc.args[0]}") from exc
+
+
+@app.get("/public/intelligence-publications/{publication_id}/versions")
+def public_intelligence_publication_versions_endpoint(publication_id: str, settings: Settings = Depends(get_settings)):
+    try:
+        return _intelligence_publishing(settings).version_history(publication_id, public=True)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown or non-public publication: {exc.args[0]}") from exc
+
+
+@app.get("/public/intelligence-publications/{publication_id}/export")
+def public_intelligence_publication_export_endpoint(publication_id: str, settings: Settings = Depends(get_settings)):
+    try:
+        return _intelligence_publishing(settings).export_publication(publication_id, public=True)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown or non-public publication: {exc.args[0]}") from exc
+
+
+@app.get("/admin/intelligence-publishing/control-center")
+def admin_intelligence_publishing_control_center_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _intelligence_publishing(settings).control_center()
+
+
+@app.post("/admin/intelligence-publishing/projects")
+def admin_intelligence_publishing_project_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _intelligence_publishing(settings).create_project(request)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/admin/intelligence-publishing/projects/{project_id}/blocks")
+def admin_intelligence_publishing_block_endpoint(project_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _intelligence_publishing(settings).add_block(project_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown publication project: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/admin/intelligence-publishing/projects/{project_id}/review/submit")
+def admin_intelligence_publishing_review_submit_endpoint(project_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _intelligence_publishing(settings).submit_review(project_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown publication project: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/admin/intelligence-publishing/projects/{project_id}/review/decide")
+def admin_intelligence_publishing_review_decide_endpoint(project_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _intelligence_publishing(settings).decide_review(project_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown publication project: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/admin/intelligence-publishing/projects/{project_id}/publish")
+def admin_intelligence_publishing_publish_endpoint(project_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _intelligence_publishing(settings).publish_project(project_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown publication project: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/admin/intelligence-publishing/projects/{project_id}/export")
+def admin_intelligence_publishing_export_endpoint(project_id: str, settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _intelligence_publishing(settings).export_publication(project_id, public=False)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown publication project: {exc.args[0]}") from exc
+
+
+@app.get("/admin/intelligence-publishing/projects/{project_id}/wordpress-handoff")
+def admin_intelligence_publishing_wordpress_handoff_endpoint(project_id: str, settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _intelligence_publishing(settings).wordpress_handoff(project_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown publication project: {exc.args[0]}") from exc
 
 
 @app.get("/public/source-pages")

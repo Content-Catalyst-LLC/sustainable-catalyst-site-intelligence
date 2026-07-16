@@ -1,0 +1,41 @@
+{
+  "release": "2.20.0",
+  "name": "Intelligence Publishing and Story Map Studio",
+  "schema": "sc-site-intelligence-release-manifest/1.0",
+  "human_editorial_approval_required": true,
+  "explicit_publish_confirmation_required": true,
+  "immutable_publication_versions": true,
+  "public_and_unlisted_modes": true,
+  "source_and_evidence_references_preserved": true,
+  "automatic_publication": false,
+  "fabricated_sources": false,
+  "automatic_causal_inference": false,
+  "hidden_conflict_suppression": false,
+  "wordpress_write_performed": false,
+  "pdf_binary_generated": false,
+  "public_routes": [
+    "/public/intelligence-publishing",
+    "/public/intelligence-publishing/methodology",
+    "/public/intelligence-publishing/diagnostics",
+    "/public/intelligence-publications",
+    "/public/intelligence-publications/{publication_id}",
+    "/public/intelligence-publications/{publication_id}/story-map",
+    "/public/intelligence-publications/{publication_id}/versions",
+    "/public/intelligence-publications/{publication_id}/export"
+  ],
+  "admin_routes": [
+    "/admin/intelligence-publishing/control-center",
+    "/admin/intelligence-publishing/projects",
+    "/admin/intelligence-publishing/projects/{project_id}/blocks",
+    "/admin/intelligence-publishing/projects/{project_id}/review/submit",
+    "/admin/intelligence-publishing/projects/{project_id}/review/decide",
+    "/admin/intelligence-publishing/projects/{project_id}/publish",
+    "/admin/intelligence-publishing/projects/{project_id}/export",
+    "/admin/intelligence-publishing/projects/{project_id}/wordpress-handoff"
+  ],
+  "shortcodes": [
+    "sc_public_intelligence_publications",
+    "sc_intelligence_publishing_control_center",
+    "sc_intelligence_publication"
+  ]
+}

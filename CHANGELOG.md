@@ -1,3 +1,11 @@
+## 2.20.0 — Intelligence Publishing and Story Map Studio
+
+- Added human-reviewed publication projects and structured narrative, map, timeline, chart, evidence, source, methodology, image, and callout blocks.
+- Added editorial submission, approval, rejection, changes-requested, and explicit human publish-confirmation workflows.
+- Added immutable publication versions, public and unlisted visibility, version history, story-map views, and source-aware export packets.
+- Added public and administrator APIs, the Publishing application workspace, WordPress publication shortcodes, and read-only WordPress handoffs.
+- Preserved conflicts, limitations, methodology, source identity, and the boundary that sequence, proximity, and chart alignment do not establish causation.
+
 ## 2.19.0 — Cross-Domain Knowledge Graph and Relationship Explorer
 
 - Added typed cross-domain entity and relationship records with SHA-256 integrity receipts.

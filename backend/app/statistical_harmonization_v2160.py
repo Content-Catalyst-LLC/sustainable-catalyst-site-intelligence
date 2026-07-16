@@ -14,7 +14,7 @@ from uuid import uuid4
 
 from .config import Settings
 
-RELEASE_VERSION = "2.19.0"
+RELEASE_VERSION = "2.20.0"
 SCHEMA_VERSION = "sc-site-intelligence-statistical-harmonization/1.0"
 SERIES_SCHEMA = "sc-site-intelligence-comparable-series/1.0"
 TRANSFORMATION_SCHEMA = "sc-site-intelligence-transformation-lineage/1.0"

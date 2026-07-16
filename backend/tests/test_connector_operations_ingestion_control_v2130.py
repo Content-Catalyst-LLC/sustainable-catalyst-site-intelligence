@@ -16,7 +16,7 @@ REGISTRY = ROOT / "backend/data/connector_operations_registry_v2130.json"
 
 def _settings(tmp_path: Path, **overrides) -> Settings:
     values = {
-        "version": "2.19.0",
+        "version": "2.20.0",
         "connector_operations_registry_path": str(REGISTRY),
         "connector_operations_state_path": str(tmp_path / "state.json"),
         "connector_operations_history_path": str(tmp_path / "history.jsonl"),
@@ -31,7 +31,7 @@ def test_v2130_registry_unifies_operational_connectors_without_secret_values(tmp
     center = ConnectorOperationsCenter(_settings(tmp_path))
     payload = center.registry(public=False)
     assert payload["schema"] == SCHEMA_VERSION
-    assert payload["version"] == "2.19.0"
+    assert payload["version"] == "2.20.0"
     assert payload["connector_count"] == 14
     ids = {item["connector_id"] for item in payload["connectors"]}
     assert {"nasa_power", "world_bank", "sustainable_development"}.issubset(ids)
@@ -113,7 +113,7 @@ def test_public_status_is_sanitized_and_endpoint_is_available(tmp_path):
     assert response.status_code == 200
     data = response.json()
     assert data["ok"] is True
-    assert data["version"] == "2.19.0"
+    assert data["version"] == "2.20.0"
     assert len(data["connectors"]) == 14
 
 

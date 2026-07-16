@@ -1,0 +1,19 @@
+{
+  "schema": "sc-site-intelligence-publication-policy/1.0",
+  "version": "2.20.0",
+  "title": "Intelligence Publishing and Story Map Studio policy",
+  "human_editorial_approval_required": true,
+  "automatic_publication": false,
+  "public_and_unlisted_modes": true,
+  "immutable_publication_versions": true,
+  "source_and_evidence_references_preserved": true,
+  "pdf_ready_html_only": true,
+  "boundaries": [
+    "No publication is made public without an explicit human editorial approval and publish confirmation.",
+    "Story sequence, spatial proximity, chart alignment, and temporal adjacency does not establish causation.",
+    "Conflicting evidence, limitations, missing data, and methodology notes must not be silently removed.",
+    "Unlisted publications are omitted from public directories but remain accessible through an exact identifier.",
+    "The studio does not fabricate sources, quotations, evidence, maps, or institutional approval.",
+    "WordPress handoffs are read-only and do not claim a successful remote write."
+  ]
+}

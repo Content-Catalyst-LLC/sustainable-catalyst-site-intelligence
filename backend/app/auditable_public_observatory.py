@@ -436,6 +436,7 @@ RELEASE_LEDGER = [
     {"version": "2.17.0", "title": "Model Registry, Forecast Evaluation, and Early-Warning Indicators", "audit_contribution": "Versioned model cards, attributable forecast records, overlapping-period accuracy metrics, interval calibration, drift review, expiry visibility, threshold evidence, and explicit human-governance, no-targeting, and no-emergency-authority boundaries."},
     {"version": "2.18.0", "title": "Evidence Synthesis, Claims, and Contradiction Review", "audit_contribution": "Structured claim records, typed supporting, qualifying, conflicting, and contextual evidence, explicit uncertainty, contradiction review, human approval, deterministic grounded synthesis, citation-ready exports, and read-only Knowledge Library and Research Librarian handoffs."},
     {"version": "2.19.0", "title": "Cross-Domain Knowledge Graph and Relationship Explorer", "audit_contribution": "Typed entities, aliases, external identifiers, evidence-backed temporal relationships, confidence metadata, bounded traversal, path exploration, reconciliation previews, graph exports, and read-only Platform Core handoffs without automatic causation or entity merging."},
+    {"version": "2.20.0", "title": "Intelligence Publishing and Story Map Studio", "audit_contribution": "Human-reviewed publication projects, structured story-map blocks, editorial decisions, immutable versions, public and unlisted modes, source-aware exports, and read-only WordPress handoffs without automatic publication or fabricated evidence."},
 ]
 
 

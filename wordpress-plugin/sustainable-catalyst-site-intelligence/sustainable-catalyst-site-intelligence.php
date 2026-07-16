@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 2.19.0
+ * Version: 2.20.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '2.19.0';
+    const VERSION = '2.20.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -91,6 +91,9 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_evidence_synthesis_control_center', [$this, 'evidence_synthesis_control_center_shortcode']);
         add_shortcode('sc_public_relationship_explorer', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_knowledge_graph_control_center', [$this, 'knowledge_graph_control_center_shortcode']);
+        add_shortcode('sc_public_intelligence_publications', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_intelligence_publishing_control_center', [$this, 'intelligence_publishing_control_center_shortcode']);
+        add_shortcode('sc_intelligence_publication', [$this, 'intelligence_publication_shortcode']);
         add_shortcode('sc_public_cache_status', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_source_freshness', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_connector_reliability', [$this, 'public_connector_panel_shortcode']);
@@ -3245,7 +3248,8 @@ final class SC_Site_Intelligence_Plugin {
             'sc_public_comparable_series' => ['comparable-series', 'Statistical Harmonization and Comparable-Series Engine', 'Explicit units, currencies, periods, geographic definitions, missing-data classes, and transformation lineage without silent normalization.'],
             'sc_public_model_forecasts' => ['model-forecasts', 'Model Registry, Forecast Evaluation, and Early-Warning Indicators', 'Published model cards, forecast records, accuracy and calibration evidence, drift review, and threshold indicators with human-governance boundaries.'],
             'sc_public_evidence_synthesis' => ['evidence-synthesis', 'Evidence Synthesis, Claims, and Contradiction Review', 'Approved claims, typed supporting and conflicting evidence, explicit uncertainty, contradiction review, citations, and human-review status without fabricated conclusions.'],
-            'sc_public_relationship_explorer' => ['relationship-explorer', 'Cross-Domain Knowledge Graph and Relationship Explorer', 'Typed entities, aliases, identifiers, evidence-backed temporal relationships, and graph traversal without automatic causation or entity merging.'],
+            'sc_public_relationship_explorer' => ['relationship-explorer', 'Intelligence Publishing and Story Map Studio', 'Typed entities, aliases, identifiers, evidence-backed temporal relationships, and graph traversal without automatic causation or entity merging.'],
+            'sc_public_intelligence_publications' => ['intelligence-publications', 'Intelligence Publishing and Story Map Studio', 'Human-reviewed public intelligence publications, story maps, timelines, charts, evidence blocks, methodology, and immutable version history.'],
             'sc_public_cache_status' => ['cache-status', 'Public Cache Status', 'Cache TTL, stale-safe display, and public source refresh policy.'],
             'sc_public_source_freshness' => ['source-freshness', 'Public Source Freshness', 'Freshness labels for public source families and connector panels.'],
             'sc_public_connector_reliability' => ['connector-reliability', 'Connector Reliability Summary', 'Public display reliability, recovery guidance, and degraded/fallback-safe source labels.'],
@@ -3584,7 +3588,7 @@ final class SC_Site_Intelligence_Plugin {
         ?>
         <section class="scsi-card scsi-knowledge-graph-control-center">
             <p class="scsi-eyebrow">Private Admin Workspace · v<?php echo esc_html(self::VERSION); ?></p>
-            <h2>Cross-Domain Knowledge Graph and Relationship Explorer</h2>
+            <h2>Intelligence Publishing and Story Map Studio</h2>
             <p class="scsi-muted">Review typed entities, aliases, external identifiers, evidence-backed temporal relationships, confidence metadata, graph diagnostics, exports, and read-only Platform Core handoffs.</p>
             <div class="scsi-grid scsi-public-connector-health-grid">
                 <?php foreach ([
@@ -3611,6 +3615,73 @@ final class SC_Site_Intelligence_Plugin {
             <?php endif; ?>
             <p class="scsi-muted">Graph connectivity does not establish causation, importance, or risk. Entity reconciliation remains preview-only and requires human review.</p>
         </section>
+        <?php
+        return ob_get_clean();
+    }
+
+
+    public function intelligence_publishing_control_center_shortcode($atts = []) {
+        if (!current_user_can('manage_options')) {
+            return '';
+        }
+        $data = $this->backend_request('admin/intelligence-publishing/control-center');
+        if (is_wp_error($data)) {
+            return '<section class="scsi-card"><p class="scsi-eyebrow">Intelligence Publishing</p><h2>Control Center unavailable</h2><p class="scsi-muted">' . esc_html($data->get_error_message()) . '</p></section>';
+        }
+        $counts = isset($data['counts']) && is_array($data['counts']) ? $data['counts'] : [];
+        $projects = isset($data['projects']) && is_array($data['projects']) ? $data['projects'] : [];
+        $versions = isset($data['recent_versions']) && is_array($data['recent_versions']) ? $data['recent_versions'] : [];
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-intelligence-publishing-control-center">
+            <p class="scsi-eyebrow">Private Admin Workspace · v<?php echo esc_html(self::VERSION); ?></p>
+            <h2>Intelligence Publishing and Story Map Studio</h2>
+            <p class="scsi-muted">Manage publication projects, narrative and evidence blocks, story maps, timelines, editorial review, immutable versions, public and unlisted visibility, exports, and read-only WordPress handoffs.</p>
+            <div class="scsi-grid scsi-public-connector-health-grid">
+                <?php foreach (['projects' => 'Projects', 'blocks' => 'Blocks', 'reviews' => 'Reviews', 'versions' => 'Versions', 'publications' => 'Publications', 'story_map_blocks' => 'Story-map blocks'] as $key => $label) : ?>
+                    <div class="scsi-stat scsi-public-connector-status-card"><span class="scsi-public-label"><?php echo esc_html($label); ?></span><strong><?php echo esc_html((string) ($counts[$key] ?? 0)); ?></strong></div>
+                <?php endforeach; ?>
+            </div>
+            <?php if (!empty($projects)) : ?>
+                <h3>Publication projects</h3>
+                <?php foreach (array_slice($projects, 0, 15) as $item) : ?>
+                    <div class="scsi-page-row"><strong><?php echo esc_html((string) ($item['title'] ?? $item['project_id'] ?? 'Publication')); ?></strong><small><?php echo esc_html((string) ($item['status'] ?? 'draft')); ?> · <?php echo esc_html((string) ($item['visibility'] ?? 'private')); ?> · <?php echo esc_html((string) ($item['publication_type'] ?? 'intelligence-brief')); ?></small></div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            <?php if (!empty($versions)) : ?>
+                <h3>Recent immutable versions</h3>
+                <?php foreach (array_slice($versions, -10) as $item) : ?>
+                    <div class="scsi-page-row"><strong><?php echo esc_html((string) ($item['version_id'] ?? 'Version')); ?></strong><small><?php echo esc_html((string) ($item['visibility'] ?? 'private')); ?> · <?php echo esc_html((string) ($item['published_at'] ?? '')); ?></small></div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            <p class="scsi-muted">No public release occurs without human editorial approval and explicit publish confirmation. WordPress handoffs are read-only.</p>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
+    public function intelligence_publication_shortcode($atts = []) {
+        $atts = shortcode_atts(['publication_id' => ''], $atts, 'sc_intelligence_publication');
+        $publication_id = sanitize_text_field((string) $atts['publication_id']);
+        if ($publication_id === '') {
+            return '<section class="scsi-card"><p class="scsi-muted">A publication_id is required.</p></section>';
+        }
+        $data = $this->backend_request('public/intelligence-publications/' . rawurlencode($publication_id));
+        if (is_wp_error($data)) {
+            return '<section class="scsi-card"><p class="scsi-eyebrow">Intelligence Publication</p><h2>Publication unavailable</h2><p class="scsi-muted">' . esc_html($data->get_error_message()) . '</p></section>';
+        }
+        $blocks = isset($data['blocks']) && is_array($data['blocks']) ? $data['blocks'] : [];
+        ob_start();
+        ?>
+        <article class="scsi-card scsi-intelligence-publication">
+            <p class="scsi-eyebrow"><?php echo esc_html((string) ($data['publication_type'] ?? 'Intelligence publication')); ?> · v<?php echo esc_html((string) ($data['version_number'] ?? '1')); ?></p>
+            <h2><?php echo esc_html((string) ($data['title'] ?? $publication_id)); ?></h2>
+            <p class="scsi-muted"><?php echo esc_html((string) ($data['summary'] ?? '')); ?></p>
+            <?php foreach ($blocks as $block) : $content = isset($block['content']) && is_array($block['content']) ? $block['content'] : []; ?>
+                <section class="scsi-page-row"><strong><?php echo esc_html((string) ($block['title'] ?? $block['block_type'] ?? 'Block')); ?></strong><small><?php echo esc_html((string) ($content['text'] ?? $block['caption'] ?? '')); ?></small></section>
+            <?php endforeach; ?>
+            <p class="scsi-muted">Human editorial approval recorded. Story sequence, chart alignment, spatial proximity, and temporal adjacency do not establish causation.</p>
+        </article>
         <?php
         return ob_get_clean();
     }

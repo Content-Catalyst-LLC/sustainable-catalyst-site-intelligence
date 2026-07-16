@@ -1,8 +1,18 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.19.0 — Cross-Domain Knowledge Graph and Relationship Explorer
+**Current release:** v2.20.0 — Intelligence Publishing and Story Map Studio
 
 
+
+
+## v2.20.0 — Intelligence Publishing and Story Map Studio
+
+- Human-reviewed publication projects with narrative, map, timeline, chart, evidence, source, methodology, image, and callout blocks.
+- Explicit draft, review, approval, publication, and archive lifecycle states.
+- Immutable publication versions with SHA-256 integrity receipts.
+- Public and unlisted modes, version history, story-map views, and JSON/CSV/Markdown/print-HTML exports.
+- Read-only WordPress handoffs and public application workspace at `/app/?view=publishing`.
+- No automatic publication, fabricated sources, hidden conflicts, or causal inference from narrative sequence or map proximity.
 
 ## v2.19.0 — Cross-Domain Knowledge Graph and Relationship Explorer
 

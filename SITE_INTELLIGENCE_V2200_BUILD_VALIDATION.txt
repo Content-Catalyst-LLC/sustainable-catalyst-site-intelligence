@@ -1,0 +1,36 @@
+SITE INTELLIGENCE v2.20.0 BUILD VALIDATION
+
+Release: Intelligence Publishing and Story Map Studio
+Base release: v2.19.0
+
+VALIDATED
+- 490 backend tests passed.
+- 456 immutable files verified.
+- v2.20.0 release contract passed.
+- Python application and release scripts parse successfully.
+- Public application, Publishing workspace, service worker, and WordPress JavaScript syntax passed.
+- WordPress PHP syntax passed.
+- JSON and webmanifest parsing passed.
+- 612 application HTML IDs are unique.
+- Backend, public app, offline shell, service worker, WordPress plugin, README, changelog, release metadata, and observatory ledger report v2.20.0.
+- Publication projects support private, unlisted, and public visibility.
+- Narrative, map, timeline, chart, evidence, source, methodology, and supporting editorial blocks preserve source/evidence references.
+- Public publication requires a completed human editorial approval and explicit publish confirmation.
+- Immutable publication versions preserve SHA-256 integrity receipts and version history.
+- Public directory responses omit unlisted publications; exact-ID retrieval remains available.
+- JSON, CSV, Markdown, and print-ready HTML exports are reproducible.
+- WordPress handoffs remain read-only.
+- Writable publishing, graph, evidence, model, harmonization, spatial, historical, connector, cache, quarantine, and queue state is excluded from the immutable release.
+
+GOVERNANCE BOUNDARIES
+- No automatic publication.
+- No fabricated sources, quotations, evidence, maps, or institutional approval.
+- No automatic causal inference from story order, spatial proximity, chart alignment, or temporal adjacency.
+- No silent removal of conflicting evidence, limitations, missing data, or methodology notes.
+- No claim that a WordPress write occurred through a handoff packet.
+- No automatic PDF binary generation; the release provides print-ready HTML.
+
+DEPLOYMENT
+- File-backed zero-cost operation remains supported.
+- Persistent production publication records require a durable configured storage path.
+- Deploy the backend before installing the v2.20.0 WordPress plugin to preserve version parity.
