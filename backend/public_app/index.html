@@ -25,6 +25,7 @@
   <link rel="stylesheet" href="/app/assets/dossiers-v270.css?v=2.7.0">
   <link rel="stylesheet" href="/app/assets/alerts-v280.css?v=2.8.0">
   <link rel="stylesheet" href="/app/assets/scenarios-v290.css?v=2.9.0">
+  <link rel="stylesheet" href="/app/assets/research-v2100.css?v=2.10.0">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to intelligence workspace</a>
@@ -76,6 +77,7 @@
         <button class="nav-item" type="button" data-route="dossiers"><span>Dossiers</span><small>Countries and regions</small></button>
         <button class="nav-item" type="button" data-route="alerts"><span>Alerts</span><small>Monitoring and streams</small></button>
         <button class="nav-item" type="button" data-route="scenarios"><span>Scenarios</span><small>Compare and explore</small></button>
+        <button class="nav-item" type="button" data-route="research"><span>Research paths</span><small>Investigations and briefs</small></button>
         <button class="nav-item" type="button" data-route="earth"><span>Earth</span><small>Satellite comparison</small></button>
         <button class="nav-item" type="button" data-route="country"><span>Country</span><small>Place-based evidence</small></button>
         <button class="nav-item" type="button" data-route="events"><span>Events</span><small>Live event intelligence</small></button>
@@ -1135,6 +1137,48 @@
         <section class="scenario-boundaries"><article><p class="eyebrow">NO SILENT NORMALIZATION</p><h3>Unlike values remain unlike</h3><p>Direct differences are withheld when units, frequencies, price bases, or seasonal adjustments conflict.</p></article><article><p class="eyebrow">NO PREDICTION</p><h3>Scenarios are arithmetic assumptions</h3><p>A scenario is not a probability, forecast, causal model, investment signal, policy recommendation, or stress-test certification.</p></article><article><p class="eyebrow">REPRODUCIBLE PACKETS</p><h3>Filters and assumptions travel with the output</h3><p>Export packets include selected geographies, indicators, source records, warnings, adjustments, responsible-use notes, and an integrity digest.</p></article></section>
       </section>
 
+      
+      <section id="researchWorkflowStudio" class="research-workflow-studio" hidden aria-busy="false">
+        <div class="research-hero">
+          <div><p class="eyebrow">RESEARCH PATHS, SAVED INVESTIGATIONS, AND BRIEFING WORKFLOWS</p><h2>Turn public evidence into a reviewable research process</h2><p>Keep investigations, notes, evidence sets, checkpoints, and briefing packets in this browser. Export or hand off records only when you choose.</p></div>
+          <div class="research-privacy"><strong>Browser-local by default</strong><span>No account, hosted profile, paid queue, or server-side research-history database.</span></div>
+        </div>
+        <div class="research-toolbar">
+          <button id="researchNew" class="earth-primary-button" type="button">New investigation</button>
+          <button id="researchSave" class="ghost-button" type="button">Save locally</button>
+          <button id="researchCaptureView" class="ghost-button" type="button">Capture current view</button>
+          <button id="researchExport" class="ghost-button" type="button">Export JSON</button>
+          <label class="research-import">Import JSON<input id="researchImport" type="file" accept="application/json"></label>
+        </div>
+        <div id="researchStatus" class="workspace-status">Loading local research workspace…</div>
+        <div class="research-layout">
+          <aside class="research-library"><div class="panel-head"><div><p class="eyebrow">LOCAL LIBRARY</p><h3>Investigations</h3></div><span id="researchCount">0</span></div><div id="researchList" class="research-list"></div></aside>
+          <div class="research-editor">
+            <div class="research-form-grid">
+              <label>Title<input id="researchTitle" maxlength="240" placeholder="Regional climate and food-security review"></label>
+              <label>Status<select id="researchStatusField"><option>draft</option><option>active</option><option>review</option><option>complete</option><option>archived</option></select></label>
+              <label class="wide">Research question<textarea id="researchQuestion" rows="3" maxlength="1600" placeholder="What does the available evidence establish, and what remains uncertain?"></textarea></label>
+              <label>Countries<input id="researchCountries" placeholder="KEN, GHA"></label>
+              <label>Regions<input id="researchRegions" placeholder="Sub-Saharan Africa"></label>
+              <label>Domains<input id="researchDomains" placeholder="economics, science, humanitarian"></label>
+              <label>Tags<input id="researchTags" placeholder="food security, climate"></label>
+            </div>
+            <div class="research-work-grid">
+              <article><div class="panel-head"><div><p class="eyebrow">NOTES</p><h3>Research notes</h3></div><button id="researchAddNote" class="text-button" type="button">Add note</button></div><div id="researchNotes" class="research-stack"></div></article>
+              <article><div class="panel-head"><div><p class="eyebrow">EVIDENCE SET</p><h3>Captured records</h3></div><button id="researchAddEvidence" class="text-button" type="button">Add evidence</button></div><div id="researchEvidence" class="research-stack"></div></article>
+              <article><div class="panel-head"><div><p class="eyebrow">CHECKPOINTS</p><h3>Review trail</h3></div><button id="researchAddCheckpoint" class="text-button" type="button">Add checkpoint</button></div><div id="researchCheckpoints" class="research-stack"></div></article>
+              <article><div class="panel-head"><div><p class="eyebrow">SAVED VIEWS</p><h3>Public interface state</h3></div></div><div id="researchViews" class="research-stack"></div></article>
+            </div>
+          </div>
+        </div>
+        <section class="research-briefing">
+          <div><p class="eyebrow">BRIEFING WORKFLOW</p><h3>Package the investigation for review</h3><p>Generate a deterministic outline that preserves evidence classes, notes, gaps, saved views, and integrity metadata without inventing conclusions.</p></div>
+          <div class="research-actions"><button id="researchBriefing" class="earth-primary-button" type="button">Generate briefing packet</button><button data-research-handoff="knowledge-library" class="ghost-button" type="button">Knowledge Library</button><button data-research-handoff="research-librarian" class="ghost-button" type="button">Research Librarian</button><button data-research-handoff="workbench" class="ghost-button" type="button">Workbench</button><button data-research-handoff="decision-studio" class="ghost-button" type="button">Decision Studio</button></div>
+        </section>
+        <div id="researchOutput" class="research-output"><p>Briefing and handoff packets will appear here for review and download.</p></div>
+        <section class="research-boundaries"><article><p class="eyebrow">PRIVATE BY DEFAULT</p><h3>Local storage, explicit export</h3><p>Nothing is uploaded as a persistent user profile. Clearing browser storage removes local investigations unless exported.</p></article><article><p class="eyebrow">SOURCE-AWARE</p><h3>Evidence classes stay distinct</h3><p>Statistics, forecasts, legal records, humanitarian reports, scientific observations, and derived analysis are never flattened into one authority type.</p></article><article><p class="eyebrow">HUMAN REVIEW</p><h3>No automatic conclusions</h3><p>Packets create structure, not factual claims, legal determinations, forecasts, rankings, or recommendations.</p></article></section>
+      </section>
+
       <section id="routePanel" class="route-panel" hidden></section>
 
       <section id="globalCountryExplorer" class="global-country-explorer" hidden>
@@ -1284,5 +1328,6 @@
   <script src="/app/assets/dossiers-v270.js?v=2.7.0" defer></script>
   <script src="/app/assets/alerts-v280.js?v=2.8.0" defer></script>
   <script src="/app/assets/scenarios-v290.js?v=2.9.0" defer></script>
+  <script src="/app/assets/research-v2100.js?v=2.10.0" defer></script>
 </body>
 </html>

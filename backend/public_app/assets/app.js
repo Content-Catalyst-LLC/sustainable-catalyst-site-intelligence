@@ -48,7 +48,7 @@
   }
 
   const state = {map:null,base:null,imagery:null,markers:null,heat:null,layers:null,events:null,country:"KEN",route:"overview"};
-  const APP_VERSION="2.9.0";
+  const APP_VERSION="2.10.0";
   const SAVED_VIEW_SCHEMA="sc-saved-view/1.0";
   const SAVED_VIEW_STORAGE_KEY="sc_site_intelligence_saved_views_v1";
   const SAVED_VIEW_LIMIT=50;
@@ -155,6 +155,7 @@
       dossiers:["UNIFIED COUNTRY AND REGIONAL INTELLIGENCE DOSSIERS","Cross-domain country and regional evidence","Combine public conditions, indicators, economics, law, science, humanitarian evidence, and resource context without collapsing them into a score or ranking."],
       alerts:["ALERTS, MONITORING, AND LIVE INTELLIGENCE STREAMS","Watch public evidence across domains","Use reconnecting source-aware streams, browser-local rules, source freshness monitoring, and deterministic digests without server-side profiling or automated risk decisions."],
       scenarios:["COMPARATIVE INTELLIGENCE AND SCENARIO STUDIO","Compare evidence and test assumptions","Build multi-geography indicator baskets, inspect compatibility, apply transparent arithmetic scenarios, review correlation, and export reproducible packets without rankings or forecasts."],
+      research:["RESEARCH PATHS, SAVED INVESTIGATIONS, AND BRIEFING WORKFLOWS","Organize evidence into reviewable research","Create browser-local investigations, capture evidence and public views, preserve notes and checkpoints, and export briefing or product handoff packets without a hosted profile."],
       observatory:["AUDITABLE PUBLIC OBSERVATORY","Evidence, lineage, and integrity","Inspect registered public evidence records, source and methodology lineage, canonical digests, release history, and verification boundaries."],
       launch:["PUBLIC LAUNCH AND PORTFOLIO","Site Intelligence","Explore the public product, technical architecture, responsible-use boundaries, and launch materials."],
       overview:["LIVE INTELLIGENCE WORKSPACE","Climate and Human Vulnerability","Satellite context, natural events, environmental pressure, and country evidence in one navigable view."],
@@ -1148,6 +1149,7 @@
     dossiers:{label:"Unified Country and Regional Dossiers",keys:["dossierMode","country","compare","region","mapLat","mapLng","mapZoom"]},
     alerts:{label:"Alerts, Monitoring, and Live Streams",keys:["alertFamily","alertCountry","alertSource","alertFreshness","alertQuery"]},
     scenarios:{label:"Comparative Intelligence and Scenario Studio",keys:["scenarioGeographies","scenarioIndicators","scenarioDomain","scenarioStart","scenarioEnd"]},
+    research:{label:"Research Paths and Investigations",keys:[]},
     observatory:{label:"Auditable Public Observatory",keys:[]},
     overview:{label:"Overview",keys:["country","imageryLayer","imageryDate","mapLat","mapLng","mapZoom"]},
     earth:{label:"Earth Observation",keys:["earthLayer","dateA","dateB","opacity","swipe","mapLat","mapLng","mapZoom"]},
@@ -1358,6 +1360,7 @@
     if(route!=="dossiers")window.SCDossiersV270?.close?.();
     if(route!=="alerts")window.SCAlertsV280?.close?.();
     if(route!=="scenarios")window.SCScenariosV290?.close?.();
+    if(route!=="research")window.SCResearchV2100?.close?.();
     if(route==="global"){
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
       closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
@@ -1420,6 +1423,13 @@
       closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
       closePublicLaunchPortfolio();closeAuditablePublicObservatory();
       await window.SCScenariosV290?.open?.();return;
+    }
+    if(route==="research"){
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
+      closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
+      closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
+      closePublicLaunchPortfolio();closeAuditablePublicObservatory();
+      await window.SCResearchV2100?.open?.();return;
     }
     if(route!=="launch")closePublicLaunchPortfolio();
     if(route!=="observatory")closeAuditablePublicObservatory();

@@ -162,6 +162,15 @@ class Settings(BaseSettings):
     comparative_scenario_max_indicators: int = Field(default=12, ge=1, le=16)
     comparative_scenario_max_records: int = Field(default=400, ge=50, le=500)
 
+    # Site Intelligence v2.10.0 — Research Paths, Saved Investigations, and Briefing Workflows.
+    # Investigation records remain browser-local unless the user explicitly exports
+    # or sends a structured handoff. The backend validates and packages records
+    # statelessly and never persists private notes or research history.
+    research_workflows_enabled: bool = True
+    research_workflows_max_investigations: int = Field(default=30, ge=1, le=100)
+    research_workflows_max_evidence_items: int = Field(default=120, ge=1, le=300)
+    research_workflows_max_notes: int = Field(default=80, ge=1, le=200)
+
 
     # Sustainable Development Data Connectors v1.14.1.
     sustainable_development_connectors_enabled: bool = True

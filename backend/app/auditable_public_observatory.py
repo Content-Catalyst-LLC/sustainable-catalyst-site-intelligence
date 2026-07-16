@@ -86,6 +86,12 @@ PUBLIC_WORKSPACES: list[dict[str, str]] = [
         "summary": "Compare multiple geographies, inspect compatibility, test transparent arithmetic scenarios, review correlation, and export reproducible packets without rankings or forecasts.",
     },
     {
+        "id": "research",
+        "title": "Research Paths, Saved Investigations, and Briefing Workflows",
+        "route": "/app/?view=research",
+        "summary": "Organize browser-local investigations, evidence sets, notes, checkpoints, saved public views, briefing packets, and explicit product handoffs without a hosted profile.",
+    },
+    {
         "id": "earth",
         "title": "Earth Observation Studio",
         "route": "/app/?view=earth",
@@ -257,6 +263,20 @@ AUDIT_ARTIFACTS: list[dict[str, Any]] = [
         ],
     },
     {
+        "id": "research-paths-investigations",
+        "title": "Research Paths, Saved Investigations, and Briefing Workflows",
+        "artifact_type": "workspace",
+        "route": "/app/?view=research",
+        "schema": "sc-site-intelligence-research-workflows/1.0",
+        "source_ids": ["platform-core"],
+        "methodology_ids": ["delivery-states", "missing-values", "export-generation"],
+        "verification_level": "browser-local-investigation-and-packet-contract-linked",
+        "limitations": [
+            "Investigations are stored in browser-local storage unless explicitly exported by the user.",
+            "Briefing and handoff packets organize evidence but do not generate factual claims, legal conclusions, forecasts, rankings, or recommendations.",
+        ],
+    },
+    {
         "id": "earth-observation",
         "title": "Earth Observation Studio",
         "artifact_type": "workspace",
@@ -365,6 +385,7 @@ RELEASE_LEDGER = [
     {"version": "2.7.0", "title": "Unified Country and Regional Intelligence Dossiers", "audit_contribution": "Cross-domain country and regional dossiers with preserved evidence classes, source states, dates, units, authority distinctions, and explicit no-composite-score safeguards."},
     {"version": "2.8.0", "title": "Alerts, Monitoring, and Live Intelligence Streams", "audit_contribution": "Reconnectable public stream snapshots, browser-local alert rules, stateless matching, source-recency monitoring, deterministic digests, and explicit no-server-profile safeguards."},
     {"version": "2.9.0", "title": "Comparative Intelligence and Scenario Studio", "audit_contribution": "Multi-geography indicator alignment, explicit compatibility warnings, transparent arithmetic scenarios, correlation review, peer context, reproducible packets, and no-ranking/no-forecast safeguards."},
+    {"version": "2.10.0", "title": "Research Paths, Saved Investigations, and Briefing Workflows", "audit_contribution": "Browser-local investigations, explicit evidence classes, notes, checkpoints, saved public views, briefing packet integrity, structured product handoffs, and no hosted profile or automatic claim generation."},
 ]
 
 

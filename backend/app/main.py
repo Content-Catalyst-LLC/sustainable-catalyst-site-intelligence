@@ -4443,6 +4443,54 @@ def public_comparative_scenario_diagnostics(settings: Settings = Depends(get_set
     from .comparative_scenario_studio_v290 import build_studio_diagnostics
     return build_studio_diagnostics(settings)
 
+# Site Intelligence v2.10.0 — Research Paths, Saved Investigations, and Briefing Workflows
+@app.get("/public/research-workflows")
+def public_research_workflows(settings: Settings = Depends(get_settings)):
+    from .research_paths_investigations_v2100 import build_workflow_overview
+    return build_workflow_overview(settings)
+
+@app.get("/public/research-workflows/schema")
+def public_research_workflow_schema(settings: Settings = Depends(get_settings)):
+    from .research_paths_investigations_v2100 import build_workflow_schema
+    return build_workflow_schema(settings)
+
+@app.post("/public/research-workflows/validate")
+def public_research_workflow_validate(payload: dict[str, Any] = Body(default_factory=dict), settings: Settings = Depends(get_settings)):
+    from .research_paths_investigations_v2100 import validate_investigation
+    try:
+        return validate_investigation(payload, settings)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+@app.post("/public/research-workflows/evidence-set")
+def public_research_workflow_evidence_set(payload: dict[str, Any] = Body(default_factory=dict), settings: Settings = Depends(get_settings)):
+    from .research_paths_investigations_v2100 import build_evidence_set
+    try:
+        return build_evidence_set(payload, settings)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+@app.post("/public/research-workflows/briefing")
+def public_research_workflow_briefing(payload: dict[str, Any] = Body(default_factory=dict), settings: Settings = Depends(get_settings)):
+    from .research_paths_investigations_v2100 import build_briefing_packet
+    try:
+        return build_briefing_packet(payload, settings)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+@app.post("/public/research-workflows/handoff/{target}")
+def public_research_workflow_handoff(target: str, payload: dict[str, Any] = Body(default_factory=dict), settings: Settings = Depends(get_settings)):
+    from .research_paths_investigations_v2100 import build_product_handoff
+    try:
+        return build_product_handoff(payload, target, settings)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+@app.get("/public/research-workflows/diagnostics")
+def public_research_workflow_diagnostics(settings: Settings = Depends(get_settings)):
+    from .research_paths_investigations_v2100 import build_workflow_diagnostics
+    return build_workflow_diagnostics(settings)
+
 # Site Intelligence standalone public application.
 from pathlib import Path as _Path
 PUBLIC_APP_DIR = _Path(__file__).resolve().parent.parent / "public_app"

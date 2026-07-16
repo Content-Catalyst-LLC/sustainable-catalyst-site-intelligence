@@ -1,0 +1,16 @@
+{
+  "version": "2.10.0",
+  "release": "Research Paths, Saved Investigations, and Briefing Workflows",
+  "route": "/app/?view=research",
+  "shortcode": "[sc_research_paths_investigations height=\"1650\"]",
+  "browser_local": true,
+  "server_persistence": false,
+  "paid_api_required": false,
+  "automatic_claim_generation": false,
+  "handoff_targets": [
+    "knowledge-library",
+    "research-librarian",
+    "workbench",
+    "decision-studio"
+  ]
+}

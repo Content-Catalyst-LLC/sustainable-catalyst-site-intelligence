@@ -1,4 +1,4 @@
-APP_VERSION = "2.9.0"
+APP_VERSION = "2.10.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Comparative Intelligence and Scenario Studio"
+RELEASE_NAME = "Research Paths, Saved Investigations, and Briefing Workflows"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

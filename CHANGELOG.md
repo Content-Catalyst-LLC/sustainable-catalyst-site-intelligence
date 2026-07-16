@@ -1,3 +1,12 @@
+## 2.10.0 — Research Paths, Saved Investigations, and Briefing Workflows
+
+- Added browser-local research paths and saved investigations.
+- Added evidence sets, notes, checkpoints, saved public views, and JSON import/export.
+- Added deterministic briefing packets and structured cross-product handoffs.
+- Added public validation, schema, evidence-set, briefing, handoff, and diagnostics endpoints.
+- Added `[sc_research_paths_investigations height="1650"]`.
+- Preserved evidence classes and prohibited automatic factual, legal, predictive, ranking, or recommendation claims.
+
 ## 2.9.0 — Comparative Intelligence and Scenario Studio
 
 - Added multi-geography indicator baskets and explicit compatibility warnings.

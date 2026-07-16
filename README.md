@@ -1,11 +1,15 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.9.0 — Comparative Intelligence and Scenario Studio
+**Current release:** v2.10.0 — Research Paths, Saved Investigations, and Briefing Workflows
 
 
 
 
 
+
+## v2.10.0 — Research Paths, Saved Investigations, and Briefing Workflows
+
+Site Intelligence v2.10.0 adds `/app/?view=research` for browser-local investigations, evidence sets, notes, checkpoints, saved public views, deterministic briefing packets, JSON import/export, and explicit handoffs to Knowledge Library, Research Librarian, Workbench, and Decision Studio. The backend validates and packages records statelessly; it does not persist private research history or generate factual conclusions.
 
 ## v2.9.0 — Comparative Intelligence and Scenario Studio
 

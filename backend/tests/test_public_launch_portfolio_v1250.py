@@ -23,14 +23,14 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_launch_profile_is_public_release_and_version_aligned():
     payload = launch_profile()
-    assert payload["application_version"] == "2.9.0"
+    assert payload["application_version"] == "2.10.0"
     assert payload["release_status"] == "auditable-public-observatory"
     assert payload["positioning"] == PUBLIC_POSITIONING
 
 
 def test_launch_profile_registers_all_public_research_workspaces():
     payload = launch_profile()
-    assert len(payload["workspaces"]) == 18
+    assert len(payload["workspaces"]) == 19
     assert {item["id"] for item in payload["workspaces"]} == {item["id"] for item in PUBLIC_WORKSPACES}
     assert all(item["route"].startswith("/app/?view=") for item in payload["workspaces"])
 
@@ -63,13 +63,13 @@ def test_portfolio_manifest_preserves_architecture_and_responsible_use():
     assert payload["schema"] == "sc-site-intelligence-portfolio/1.0"
     assert "FastAPI" in payload["project"]["architecture"]
     assert "emergency response" in payload["responsible_use"]["not_for"]
-    assert len(payload["workspaces"]) == 18
+    assert len(payload["workspaces"]) == 19
 
 
 def test_portfolio_markdown_is_download_ready():
     body = portfolio_markdown()
     assert body.startswith("# Sustainable Catalyst Site Intelligence")
-    assert "**Release:** v2.9.0" in body
+    assert "**Release:** v2.10.0" in body
     assert "## Public workspaces" in body
     assert "Repository:" in body
 
@@ -78,7 +78,7 @@ def test_public_launch_profile_endpoints():
     for path in ("/public/launch-profile", "/public/launch-profile/checklist", "/public/launch-profile/materials", "/public/launch-profile/diagnostics"):
         response = client.get(path)
         assert response.status_code == 200
-        assert response.json()["application_version"] == "2.9.0"
+        assert response.json()["application_version"] == "2.10.0"
 
 
 def test_public_portfolio_endpoint_supports_json_and_markdown():
@@ -97,7 +97,7 @@ def test_launch_diagnostics_pass_without_exposing_secrets():
     assert payload["ok"] is True
     assert all(payload["checks"].values())
     assert payload["secrets_exposed"] is False
-    assert payload["workspace_count"] == 18
+    assert payload["workspace_count"] == 19
 
 
 def test_standalone_app_has_launch_route_portfolio_and_social_metadata():
@@ -111,7 +111,7 @@ def test_standalone_app_has_launch_route_portfolio_and_social_metadata():
 
 def test_frontend_loads_launch_profile_and_handles_launch_route():
     js = (ROOT / "backend/public_app/assets/app.js").read_text(encoding="utf-8")
-    assert 'APP_VERSION="2.9.0"' in js
+    assert 'APP_VERSION="2.10.0"' in js
     assert 'route==="launch"' in js
     assert "function openPublicLaunchPortfolio" in js
     assert 'apiWithRetry("/public/launch-profile"' in js
@@ -120,8 +120,8 @@ def test_frontend_loads_launch_profile_and_handles_launch_route():
 
 def test_wordpress_launch_shortcode_and_deprecation_schedule():
     php = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text(encoding="utf-8")
-    assert "Version: 2.9.0" in php
-    assert "const VERSION = '2.9.0';" in php
+    assert "Version: 2.10.0" in php
+    assert "const VERSION = '2.10.0';" in php
     assert "add_shortcode('sc_site_intelligence_launch'" in php
     assert "public function site_intelligence_launch_shortcode" in php
     assert "/app/?view=launch" in php
@@ -133,7 +133,7 @@ def test_release_documentation_and_manifest_are_complete():
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
     manifest = (ROOT / "docs/RELEASE_MANIFEST_V1250.json").read_text(encoding="utf-8")
-    assert "**Current release:** v2.9.0" in readme
+    assert "**Current release:** v2.10.0" in readme
     assert "## 1.25.0 — Public Launch and Portfolio Release" in changelog
     assert '"release": "1.25.0"' in manifest
     assert (ROOT / "docs/PUBLIC_LAUNCH_PORTFOLIO_V1250.md").exists()
