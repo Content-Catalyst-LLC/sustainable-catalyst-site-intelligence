@@ -1,9 +1,9 @@
 {
   "name": "Sustainable Catalyst Site Intelligence",
   "short_name": "Site Intelligence",
-  "description": "Source-aware global intelligence workspaces with browser-local offline support.",
+  "description": "Source-aware global intelligence workspaces with production security, privacy, governance, and browser-local offline support.",
   "id": "/app/",
-  "start_url": "/app/?source=pwa&release=2.24.0",
+  "start_url": "/app/?source=pwa&release=2.25.0",
   "scope": "/app/",
   "display": "standalone",
   "display_override": [
@@ -44,6 +44,11 @@
       "name": "Institutional Exchange",
       "short_name": "Federation",
       "url": "/app/?view=federation"
+    },
+    {
+      "name": "Production Governance",
+      "short_name": "Governance",
+      "url": "/app/?view=governance"
     }
   ],
   "icons": [

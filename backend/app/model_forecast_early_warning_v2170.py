@@ -15,7 +15,7 @@ from uuid import uuid4
 
 from .config import Settings
 
-RELEASE_VERSION = "2.24.0"
+RELEASE_VERSION = "2.25.0"
 SCHEMA_VERSION = "sc-site-intelligence-model-forecast-governance/1.0"
 MODEL_SCHEMA = "sc-site-intelligence-model-card/1.0"
 FORECAST_SCHEMA = "sc-site-intelligence-forecast-record/1.0"

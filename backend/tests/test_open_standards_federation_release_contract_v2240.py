@@ -6,12 +6,12 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_release_contract_markers():
     checks = {
-        "backend/app/version.py": ["2.24.0", "Open Standards, Federation, and Institutional Data Exchange"],
+        "backend/app/version.py": ["2.25.0", "Security, Privacy, Governance, and Production Scale"],
         "backend/app/federation_exchange_v2240.py": ["class InstitutionalDataExchange", "def build_manifest(", "def validate_manifest(", "def accept_import("],
         "backend/public_app/index.html": ["data-route=\"federation\"", "id=\"institutionalDataExchangeStudio\""],
         "backend/public_app/service-worker.js": ["/app/assets/federation-v2240.js", "/app/assets/federation-v2240.css"],
-        "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": ["Version: 2.24.0", "sc_public_institutional_data_exchange", "sc_institutional_data_exchange_control_center"],
-        "README.md": ["Current release:** v2.24.0 — Open Standards, Federation, and Institutional Data Exchange"],
+        "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": ["Version: 2.25.0", "sc_public_institutional_data_exchange", "sc_institutional_data_exchange_control_center"],
+        "README.md": ["Current release:** v2.25.0 — Security, Privacy, Governance, and Production Scale"],
     }
     for rel, markers in checks.items():
         text = (ROOT / rel).read_text()

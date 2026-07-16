@@ -1,14 +1,13 @@
-## 2.24.0 — Open Standards, Federation, and Institutional Data Exchange
+## 2.25.0 — Security, Privacy, Governance, and Production Scale
 
-- Added public institution and catalog registries for datasets, publications, services, models, evidence packages, and spatial layers.
-- Added DCAT-compatible JSON-LD, PROV-compatible provenance, GeoJSON, CSV, machine-readable licensing, and distribution metadata.
-- Added explicit hosted, mirrored, and externally referenced record modes.
-- Added signed federation manifests using SHA-256 and HMAC-SHA256 integrity receipts.
-- Added institution-level trust policies, expected signing-key IDs, allowed record types, and allowed hosting modes.
-- Added preview-first manifest validation, duplicate detection, quarantine receipts, and human-confirmed import acceptance.
-- Added public-safe federation summaries and catalogs while keeping trust policies, import receipts, signing keys, and private records protected.
-- Added the Federation public application workspace and WordPress public/admin shortcodes.
-- Preserved boundaries against automatic remote fetching, automatic imports, institutional identity claims, private-record exposure, individual tracking, and autonomous consequential actions.
+- Added versioned SQLite schema migrations and production storage diagnostics.
+- Added scoped API keys stored as SHA-256 hashes and displayed only once.
+- Added hash-chained, secret-redacted audit events with verification diagnostics.
+- Added privacy-request workflows and preview-first retention requiring `confirm=true`.
+- Added digest-verified SQLite backups and restore previews without automatic restoration.
+- Added a persistent bounded job queue with leasing, attempts, and explicit completion receipts.
+- Added deployment receipts, synthetic load probes, stronger security headers, public governance diagnostics, a Governance application workspace, and WordPress public/admin shortcodes.
+- Preserved explicit boundaries against automatic compliance claims, distributed-enforcement claims, silent deletion, secret exposure, and unverified disaster-recovery claims.
 
 ## 2.23.0 — Typed Cross-Platform Intelligence Workflows
 

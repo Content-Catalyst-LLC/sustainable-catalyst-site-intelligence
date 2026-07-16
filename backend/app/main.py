@@ -65,6 +65,7 @@ from .scheduled_monitoring_v2210 import ScheduledMonitoringCenter
 from .institutional_workspaces_v2220 import InstitutionalWorkspaceCenter
 from .cross_platform_workflows_v2230 import CrossPlatformWorkflowCenter
 from .federation_exchange_v2240 import InstitutionalDataExchange
+from .production_governance_v2250 import ProductionGovernanceCenter, SlidingWindowRateLimiter
 from .public_live_connectors import (
     public_connector_status as build_public_connector_status,
     public_cache_status as build_public_cache_status,
@@ -328,6 +329,7 @@ def get_registry(settings: Settings = Depends(get_settings)) -> ContentRegistry:
 
 
 settings = get_settings()
+_production_rate_limiter = SlidingWindowRateLimiter(settings.production_admin_rate_limit, settings.production_admin_rate_window_seconds)
 app = FastAPI(title=settings.app_name, version=settings.version)
 app.add_middleware(
     CORSMiddleware,
@@ -345,6 +347,8 @@ async def public_experience_headers(request, call_next):
     response.headers.setdefault("X-Content-Type-Options", "nosniff")
     response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
     response.headers.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
+    response.headers.setdefault("Cross-Origin-Opener-Policy", "same-origin")
+    response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
     response.headers.setdefault("Vary", "Accept-Encoding")
 
     path = request.url.path
@@ -2216,7 +2220,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v2.24.0 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v2.25.0 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -2358,7 +2362,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.24.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v2.25.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -2475,7 +2479,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.24.0 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v2.25.0 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -2597,7 +2601,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v2.24.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v2.25.0 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -2733,7 +2737,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.24.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v2.25.0 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -5910,7 +5914,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v2.24.0 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v2.25.0 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -6144,7 +6148,7 @@ def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     return build_reliability(settings)
 
 
-# Site Intelligence v2.24.0 — Open Standards, Federation, and Institutional Data Exchange.
+# Site Intelligence v2.25.0 — Open Standards, Federation, and Institutional Data Exchange.
 def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
     if not settings.federation_exchange_enabled:
         raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
@@ -6232,6 +6236,156 @@ def admin_federation_accept_import_endpoint(request: dict = Body(default={}), se
         return _federation_exchange(settings).accept_import(request.get("manifest"), request)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+# Site Intelligence v2.25.0 — Security, Privacy, Governance, and Production Scale.
+def _production_governance(settings: Settings) -> ProductionGovernanceCenter:
+    if not settings.production_governance_enabled:
+        raise HTTPException(status_code=503, detail="Production governance is disabled.")
+    return ProductionGovernanceCenter(settings)
+
+
+def require_governance_scope(
+    required_scope: str,
+    settings: Settings,
+    x_sc_api_key: Optional[str],
+    x_sc_intelligence_token: Optional[str],
+):
+    if settings.environment != "production":
+        return {"valid": True, "actor": "development", "scopes": [required_scope]}
+    if settings.api_token and x_sc_intelligence_token == settings.api_token:
+        return {"valid": True, "actor": "legacy-admin-token", "scopes": ["*"]}
+    result = _production_governance(settings).verify_api_key(x_sc_api_key or "", required_scope)
+    if not result.get("valid"):
+        raise HTTPException(status_code=401 if result.get("reason") == "unknown_key" else 403, detail=f"Governance authorization failed: {result.get('reason')}")
+    return result
+
+
+@app.get("/public/production-governance")
+def public_production_governance_endpoint(settings: Settings = Depends(get_settings)):
+    return _production_governance(settings).public_summary()
+
+
+@app.get("/public/production-governance/diagnostics")
+def public_production_governance_diagnostics_endpoint(settings: Settings = Depends(get_settings)):
+    return _production_governance(settings).diagnostics(public=True)
+
+
+@app.get("/admin/production-governance/control-center")
+def admin_production_governance_control_center_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _production_governance(settings).control_center()
+
+
+@app.post("/admin/production-governance/migrations")
+def admin_production_governance_migrations_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _production_governance(settings).apply_migrations()
+
+
+@app.post("/admin/production-governance/api-keys")
+def admin_production_governance_create_api_key_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _production_governance(settings).create_api_key(request)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/production-governance/api-keys/{key_id}/revoke")
+def admin_production_governance_revoke_api_key_endpoint(key_id: str, settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _production_governance(settings).revoke_api_key(key_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="API key not found.") from exc
+
+
+@app.get("/admin/production-governance/audit")
+def admin_production_governance_audit_endpoint(limit: int = Query(default=100, ge=1, le=1000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    center = _production_governance(settings)
+    return {"events": center.audit_events(limit), "verification": center.verify_audit_chain()}
+
+
+@app.post("/admin/production-governance/privacy-requests")
+def admin_production_governance_privacy_request_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _production_governance(settings).create_privacy_request(request)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/production-governance/privacy-requests/{request_id}")
+def admin_production_governance_privacy_update_endpoint(request_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _production_governance(settings).update_privacy_request(request_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Privacy request not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/production-governance/retention/preview")
+def admin_production_governance_retention_preview_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _production_governance(settings).retention_preview(request)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/production-governance/retention/apply")
+def admin_production_governance_retention_apply_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _production_governance(settings).apply_retention(request)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/production-governance/backups")
+def admin_production_governance_backup_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _production_governance(settings).create_backup(request)
+
+
+@app.get("/admin/production-governance/backups/{backup_id}/verify")
+def admin_production_governance_verify_backup_endpoint(backup_id: str, settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _production_governance(settings).verify_backup(backup_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Backup not found.") from exc
+
+
+@app.get("/admin/production-governance/backups/{backup_id}/restore-preview")
+def admin_production_governance_restore_preview_endpoint(backup_id: str, settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _production_governance(settings).restore_preview(backup_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Backup not found.") from exc
+
+
+@app.post("/admin/production-governance/jobs")
+def admin_production_governance_enqueue_job_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _production_governance(settings).enqueue_job(request)
+
+
+@app.post("/admin/production-governance/jobs/lease")
+def admin_production_governance_lease_job_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _production_governance(settings).lease_job(request.get("worker_id") or "worker", request.get("lease_seconds") or 60)
+
+
+@app.post("/admin/production-governance/jobs/{job_id}/complete")
+def admin_production_governance_complete_job_endpoint(job_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _production_governance(settings).complete_job(job_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Job not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/production-governance/deployments")
+def admin_production_governance_deployment_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _production_governance(settings).record_deployment(request)
+
+
+@app.get("/admin/production-governance/load-probe")
+def admin_production_governance_load_probe_endpoint(requests: int = Query(default=250, ge=1, le=5000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _production_governance(settings).load_probe(requests)
 
 # Site Intelligence standalone public application.
 from pathlib import Path as _Path

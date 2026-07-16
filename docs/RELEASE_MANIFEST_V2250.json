@@ -1,0 +1,21 @@
+{
+  "release": "2.25.0",
+  "title": "Security, Privacy, Governance, and Production Scale",
+  "sqlite_migrations": true,
+  "scoped_api_keys": true,
+  "api_key_hash_storage": true,
+  "hash_chained_audit": true,
+  "privacy_request_tracking": true,
+  "automatic_privacy_deletion": false,
+  "preview_first_retention": true,
+  "digest_verified_backups": true,
+  "automatic_restore": false,
+  "persistent_job_queue": true,
+  "automatic_queue_worker": false,
+  "local_rate_limiter": true,
+  "distributed_rate_limiter": false,
+  "deployment_receipts": true,
+  "synthetic_load_probe": true,
+  "automatic_compliance_claim": false,
+  "secrets_publicly_exposed": false
+}

@@ -1,4 +1,4 @@
-APP_VERSION = "2.24.0"
+APP_VERSION = "2.25.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Open Standards, Federation, and Institutional Data Exchange"
+RELEASE_NAME = "Security, Privacy, Governance, and Production Scale"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

@@ -11,7 +11,7 @@ from uuid import uuid4
 
 from .config import Settings
 
-RELEASE_VERSION = "2.24.0"
+RELEASE_VERSION = "2.25.0"
 SCHEMA_VERSION = "sc-site-intelligence-cross-platform-workflows/1.0"
 PACKET_SCHEMA = "sc-cross-platform-intelligence-packet/1.0"
 RECEIPT_SCHEMA = "sc-cross-platform-intelligence-receipt/1.0"

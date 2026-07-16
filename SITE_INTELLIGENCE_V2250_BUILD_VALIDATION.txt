@@ -1,0 +1,23 @@
+Site Intelligence v2.25.0 — Security, Privacy, Governance, and Production Scale
+
+Validation completed:
+- 554 backend tests passed.
+- v2.25.0 release contract passed.
+- 531 immutable files verified in MANIFEST.json.
+- 658 unique public-application HTML IDs; no duplicates.
+- Python compilation and AST parsing passed.
+- Public application, governance workspace, service worker, and WordPress JavaScript syntax passed.
+- WordPress PHP syntax passed.
+- JSON and webmanifest parsing passed.
+- WordPress package integrity passed.
+- Writable SQLite databases, backups, runtime archives, queues, caches, quarantine records, and generated Python state are excluded.
+
+Production boundaries:
+- SQLite paths must be mapped to persistent storage for durable Render operation.
+- Local process rate limiting is not distributed enforcement.
+- The job queue does not include an always-on worker.
+- Backups require a tested, human-confirmed restoration procedure.
+- Retention never deletes records without confirm=true.
+- The release does not claim automatic regulatory compliance or unbreakable security.
+- Installed-checkout rehearsal completed against a disposable v2.24.0 Git origin.
+- The rehearsal reverified all 554 tests, release contracts, syntax, the 531-file manifest, WordPress packaging, and a clean v2.25.0 commit.

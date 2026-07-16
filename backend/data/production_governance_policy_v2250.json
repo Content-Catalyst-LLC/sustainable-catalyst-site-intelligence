@@ -1,0 +1,46 @@
+{
+  "policy_version": "2.25.0",
+  "title": "Site Intelligence production security, privacy, and governance policy",
+  "storage": {
+    "default_engine": "sqlite",
+    "migration_framework": true,
+    "durable_path_required_for_production": true,
+    "automatic_remote_database_provisioning": false
+  },
+  "authentication": {
+    "scoped_api_keys": true,
+    "keys_stored_as_hashes": true,
+    "secrets_exposed_publicly": false,
+    "identity_provider_replacement": false
+  },
+  "audit": {
+    "append_only": true,
+    "hash_chained": true,
+    "secret_redaction": true
+  },
+  "privacy": {
+    "request_tracking": true,
+    "raw_subject_reference_stored": false,
+    "automatic_deletion": false,
+    "human_confirmation_required": true
+  },
+  "backups": {
+    "digest_verified": true,
+    "automatic_restore": false,
+    "restore_preview_only": true
+  },
+  "scale": {
+    "persistent_job_queue": true,
+    "automatic_worker": false,
+    "local_rate_limiter": true,
+    "distributed_rate_limiter": false,
+    "external_gateway_recommended": true
+  },
+  "prohibited_claims": [
+    "unbreakable security",
+    "automatic regulatory compliance",
+    "distributed enforcement from a local process limiter",
+    "successful disaster recovery without a tested restore procedure",
+    "zero data loss without durable storage and verified backups"
+  ]
+}

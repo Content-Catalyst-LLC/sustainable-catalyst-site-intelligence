@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 2.24.0
+ * Version: 2.25.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '2.24.0';
+    const VERSION = '2.25.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -102,6 +102,8 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_cross_platform_workflows_control_center', [$this, 'cross_platform_workflows_control_center_shortcode']);
         add_shortcode('sc_public_institutional_data_exchange', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_institutional_data_exchange_control_center', [$this, 'institutional_data_exchange_control_center_shortcode']);
+        add_shortcode('sc_public_production_governance', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_production_governance_control_center', [$this, 'production_governance_control_center_shortcode']);
         add_shortcode('sc_scheduled_monitoring_control_center', [$this, 'scheduled_monitoring_control_center_shortcode']);
         add_shortcode('sc_public_intelligence_feed', [$this, 'public_intelligence_feed_shortcode']);
         add_shortcode('sc_public_cache_status', [$this, 'public_connector_panel_shortcode']);
@@ -830,6 +832,11 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-institutional-data-exchange', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_institutional_data_exchange'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-production-governance', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_production_governance'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/public-cache-status', [
@@ -1891,6 +1898,7 @@ final class SC_Site_Intelligence_Plugin {
             'institutional_workspaces' => 'public/institutional-workspaces',
             'cross_platform_workflows' => 'public/cross-platform-workflows',
             'institutional_data_exchange' => 'public/institutional-data-exchange',
+            'production_governance' => 'public/production-governance',
             'cache_status' => 'public/connectors/cache',
             'source_freshness' => 'public/connectors/freshness',
             'connector_reliability' => 'public/connectors/reliability',
@@ -1924,6 +1932,7 @@ final class SC_Site_Intelligence_Plugin {
     public function rest_public_institutional_workspaces(WP_REST_Request $request) { return $this->rest_public_connector_panel('institutional_workspaces'); }
     public function rest_public_cross_platform_workflows(WP_REST_Request $request) { return $this->rest_public_connector_panel('cross_platform_workflows'); }
     public function rest_public_institutional_data_exchange(WP_REST_Request $request) { return $this->rest_public_connector_panel('institutional_data_exchange'); }
+    public function rest_public_production_governance(WP_REST_Request $request) { return $this->rest_public_connector_panel('production_governance'); }
     public function rest_public_cache_status(WP_REST_Request $request) { return $this->rest_public_connector_panel('cache_status'); }
     public function rest_public_source_freshness(WP_REST_Request $request) { return $this->rest_public_connector_panel('source_freshness'); }
     public function rest_public_connector_reliability(WP_REST_Request $request) { return $this->rest_public_connector_panel('connector_reliability'); }
@@ -3292,6 +3301,7 @@ final class SC_Site_Intelligence_Plugin {
             'sc_public_institutional_workspaces' => ['institutional-workspaces', 'Institutional Workspaces, Collaboration, and Review', 'Human-published institutional workspace summaries and public source collections without exposing members, assignments, comments, review notes, or activity logs.'],
             'sc_public_cross_platform_workflows' => ['cross-platform-workflows', 'Typed Cross-Platform Intelligence Workflows', 'Public route contracts, required fields, platforms, and responsible-use boundaries without exposing packet payloads, receipts, retries, or linkbacks.'],
             'sc_public_institutional_data_exchange' => ['institutional-data-exchange', 'Open Standards, Federation, and Institutional Data Exchange', 'Public institutions, DCAT-compatible records, licenses, provenance, distributions, signed-manifest metadata, and explicit hosted, mirrored, or referenced states without exposing trust policies or private imports.'],
+            'sc_public_production_governance' => ['production-governance', 'Security, Privacy, Governance, and Production Scale', 'Public migration, audit-integrity, backup, queue, privacy, and rate-limiting boundaries without exposing credentials or private operational records.'],
             'sc_public_cache_status' => ['cache-status', 'Public Cache Status', 'Cache TTL, stale-safe display, and public source refresh policy.'],
             'sc_public_source_freshness' => ['source-freshness', 'Public Source Freshness', 'Freshness labels for public source families and connector panels.'],
             'sc_public_connector_reliability' => ['connector-reliability', 'Connector Reliability Summary', 'Public display reliability, recovery guidance, and degraded/fallback-safe source labels.'],
@@ -4853,6 +4863,23 @@ final class SC_Site_Intelligence_Plugin {
             <?php if (!empty($records)): ?><h3>Exchange records</h3><?php foreach (array_slice($records,0,15) as $item): ?><div class="scsi-page-row"><strong><?php echo esc_html((string)($item['title']??$item['record_id']??'Record')); ?></strong><small><?php echo esc_html((string)($item['record_type']??'dataset')); ?> · <?php echo esc_html((string)($item['hosting_mode']??'referenced')); ?> · <?php echo esc_html((string)($item['license']??'license not supplied')); ?></small></div><?php endforeach; ?><?php endif; ?>
             <?php if (!empty($imports)): ?><h3>Recent import receipts</h3><?php foreach (array_slice($imports,0,10) as $item): ?><div class="scsi-page-row"><strong><?php echo esc_html((string)($item['manifest_id']??$item['import_id']??'Import')); ?></strong><small><?php echo esc_html((string)($item['status']??'preview')); ?> · <?php echo esc_html((string)($item['record_count']??0)); ?> records</small></div><?php endforeach; ?><?php endif; ?>
             <p class="scsi-muted">Remote catalogs are never fetched or imported automatically. Signatures attest integrity only when a trusted verification key is configured and do not independently prove institutional identity.</p>
+        </section><?php return ob_get_clean();
+    }
+
+    public function production_governance_control_center_shortcode($atts = []) {
+        if (!current_user_can('manage_options')) { return ''; }
+        $data = $this->backend_request('admin/production-governance/control-center');
+        if (is_wp_error($data)) { return '<section class="scsi-card"><p class="scsi-eyebrow">Production Governance</p><h2>Control Center unavailable</h2><p class="scsi-muted">' . esc_html($data->get_error_message()) . '</p></section>'; }
+        $diagnostics = isset($data['diagnostics']) && is_array($data['diagnostics']) ? $data['diagnostics'] : [];
+        $counts = isset($diagnostics['counts']) && is_array($diagnostics['counts']) ? $diagnostics['counts'] : [];
+        $storage = isset($diagnostics['storage']) && is_array($diagnostics['storage']) ? $diagnostics['storage'] : [];
+        ob_start(); ?>
+        <section class="scsi-card scsi-production-governance-control-center">
+            <p class="scsi-eyebrow">Private Admin Workspace · v<?php echo esc_html(self::VERSION); ?></p>
+            <h2>Security, Privacy, Governance, and Production Scale</h2>
+            <p class="scsi-muted">Inspect database migrations, scoped API keys, audit integrity, privacy requests, retention previews, verified backups, persistent jobs, deployment receipts, and production diagnostics.</p>
+            <div class="scsi-grid scsi-public-connector-health-grid"><?php foreach (['migration_version'=>'Migration','database_bytes'=>'Database bytes'] as $key=>$label): ?><div class="scsi-stat"><span><?php echo esc_html($label); ?></span><strong><?php echo esc_html((string)($storage[$key]??0)); ?></strong></div><?php endforeach; ?><?php foreach (['audit_events'=>'Audit events','privacy_requests'=>'Privacy requests','deployment_receipts'=>'Deployments'] as $key=>$label): ?><div class="scsi-stat"><span><?php echo esc_html($label); ?></span><strong><?php echo esc_html((string)($counts[$key]??0)); ?></strong></div><?php endforeach; ?></div>
+            <p class="scsi-muted">Local process rate limits are not distributed enforcement. Backups are verified, but restoration remains a confirmed maintenance procedure. Retention never deletes records without confirm=true.</p>
         </section><?php return ob_get_clean();
     }
 

@@ -23,7 +23,7 @@
     }
     throw last;
   }
-  const APP_VERSION="2.24.0";
+  const APP_VERSION="2.25.0";
   let heightFrame=0;
   function documentHeight(){
     const body=document.body,root=document.documentElement;
@@ -200,6 +200,7 @@
       monitoring:["SCHEDULED MONITORING, DIGESTS, AND PUBLIC FEEDS","Follow public evidence over time","Read human-approved digests, inspect deduplicated alerts, and subscribe through JSON, RSS, or Atom without a hosted profile."],
       workspaces:["INSTITUTIONAL WORKSPACES, COLLABORATION, AND REVIEW","Coordinate review without exposing private work","Browse human-published institutional workspaces and public source collections while membership, assignments, comments, and review notes remain private."],
       federation:["OPEN STANDARDS, FEDERATION, AND INSTITUTIONAL DATA EXCHANGE","Exchange institutional evidence through open standards","Browse public institutions, catalogs, licenses, provenance, distributions, and manifest metadata without exposing trust policies or private import operations."],
+      governance:["SECURITY, PRIVACY, GOVERNANCE, AND PRODUCTION SCALE","Inspect production-readiness contracts","Review public migration, audit, backup, queue, privacy, and rate-limiting boundaries without exposing operational secrets."],
       country:["COUNTRY INTELLIGENCE",`${names[state.country]||state.country} evidence profile`,"Environmental, development, humanitarian, security, and legal context for one selected country."],
       events:["UNIFIED LIVE EVENT INTELLIGENCE","Explore public events across sources","Natural hazards, humanitarian reporting, and country-linked event context in one source-aware workspace."],
       compare:["CROSS-DOMAIN COMPARISON","Compare country contexts","Align available evidence without flattening dates, units, definitions, or missing-data states."],
@@ -1201,6 +1202,7 @@
     thematic:{label:"Thematic Intelligence",keys:["dashboard","country","thematicDays","thematicLayer","thematicTrend","mapLat","mapLng","mapZoom"]},
     briefing:{label:"Public Briefing Studio",keys:["briefType","type","country","compare","days","event_id","dashboard_id","layer_id","date_a","date_b","latitude","longitude","zoom","opacity"]},
     federation:{label:"Institutional Data Exchange",keys:[]},
+    governance:{label:"Production Governance",keys:[]},
     sources:{label:"Source and Methodology Studio",keys:["source","domain","state","feature","query"]}
   };
   const sensitiveSavedKey=/(api[_-]?key|password|secret|token|authorization|cookie|session|private[_-]?url|stack[_-]?trace|environment|diagnostics)/i;
@@ -1417,6 +1419,7 @@
     if(route!=="workspaces")window.SCInstitutionalWorkspacesV2220?.close?.();
     if(route!=="workflows")window.SCCrossPlatformWorkflowsV2230?.close?.();
     if(route!=="federation")window.SCInstitutionalFederationV2240?.close?.();
+    if(route!=="governance")window.SCProductionGovernanceV2250?.close?.();
     if(route==="global"){
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
       closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
@@ -1556,6 +1559,13 @@
       closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
       closePublicLaunchPortfolio();closeAuditablePublicObservatory();
       await window.SCInstitutionalFederationV2240?.open?.();return;
+    }
+    if(route==="governance"){
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
+      closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
+      closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
+      closePublicLaunchPortfolio();closeAuditablePublicObservatory();
+      await window.SCProductionGovernanceV2250?.open?.();return;
     }
     if(route==="workspaces"){
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
@@ -1718,5 +1728,5 @@ document.head.appendChild(visualStyle);
 
 window.addEventListener("load",reportHeight,{once:true});window.addEventListener("resize",reportHeight,{passive:true});window.visualViewport?.addEventListener("resize",reportHeight,{passive:true});window.addEventListener("message",event=>{if(event.data?.type==="SC_SI_REQUEST_HEIGHT")reportHeight()});if("ResizeObserver" in window)new ResizeObserver(reportHeight).observe(document.body);
 
-/* v2.24.0 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v2.24.0 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v2.25.0 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v2.25.0 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
