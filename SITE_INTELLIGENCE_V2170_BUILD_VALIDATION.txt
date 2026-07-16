@@ -1,0 +1,34 @@
+SITE INTELLIGENCE v2.17.0 BUILD VALIDATION
+
+Release: Model Registry, Forecast Evaluation, and Early-Warning Indicators
+Base release: v2.16.0
+
+VALIDATED
+- 452 backend tests passed.
+- v2.17.0 release contract passed.
+- FastAPI 0.128.x, Starlette 0.50.x, Uvicorn 0.48.x, Pydantic 2.13.x, HTTPX 0.27–0.28, and HTTPX2 2.7.x validation ranges are constrained for reproducible local and Render builds.
+- Python application and release scripts compile successfully.
+- Public application, model workspace, service worker, and WordPress JavaScript syntax passed.
+- WordPress PHP syntax passed.
+- JSON and webmanifest parsing passed.
+- Version alignment covers backend, release metadata, public app, offline shell, service worker, WordPress plugin, README, changelog, and observatory ledger.
+- Public routes expose only public active models, public forecasts, public evaluations, public warning rules/events, methodology, diagnostics, and read-only export packets.
+- Administrative routes preserve model registration, forecast ingestion, evaluation, warning-rule management, warning evaluation, and governance export behind the existing API-token boundary.
+- Model cards require intended use and limitations and record prohibited uses, provenance, uncertainty, lifecycle, expiry, and SHA-256 digests.
+- Forecast evaluation includes MAE, RMSE, bias, MAPE, sMAPE, interval coverage, calibration gaps, interval width, and recent-versus-baseline drift review.
+- Early-warning events are explicitly review signals, not emergency services, causal findings, guaranteed outcomes, or autonomous actions.
+- Writable model, forecast, evaluation, warning, archive, spatial, harmonization, connector, cache, quarantine, and queue state is excluded from the immutable release.
+
+GOVERNANCE BOUNDARIES
+- No individual targeting or surveillance.
+- No autonomous consequential decisions.
+- No emergency dispatch or official-warning authority.
+- No military targeting or operational planning.
+- No hidden model substitution or silent retraining.
+- No conversion of scenarios into forecasts without an attributable registered model.
+- No guaranteed accuracy, outcomes, or unsupported causal claims.
+
+DEPLOYMENT
+- File-backed zero-cost operation remains supported.
+- Persistent production model records require a durable configured storage path.
+- Deploy the backend before installing the v2.17.0 WordPress plugin to preserve version parity.

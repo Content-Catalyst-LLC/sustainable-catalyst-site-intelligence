@@ -1,0 +1,26 @@
+{
+  "version": "2.17.0",
+  "schema": "sc-site-intelligence-model-governance-policy/1.0",
+  "default_drift_ratio": 1.5,
+  "principles": [
+    "Models must have named versions, intended uses, limitations, provenance, and expiry or review expectations.",
+    "Forecasts remain distinguishable from user-authored scenarios and deterministic projections.",
+    "Evaluation metrics must be tied to overlapping forecast and observed periods.",
+    "Uncertainty intervals, calibration gaps, and drift indicators must remain visible when available.",
+    "Threshold crossings are review signals, not proof of cause or guaranteed outcomes."
+  ],
+  "boundaries": [
+    "No autonomous legal, humanitarian, financial, medical, employment, credit, policing, military, or emergency decisions.",
+    "No individual-level targeting, surveillance, or personal risk scoring.",
+    "No guaranteed-outcome, emergency-service, or official-warning claims.",
+    "No hidden model substitution, silent retraining, or unlabeled forecast revision.",
+    "No conversion of scenarios into forecasts without an attributable registered model."
+  ],
+  "default_prohibited_uses": [
+    "Individual targeting or surveillance",
+    "Autonomous consequential decisions",
+    "Emergency dispatch or evacuation authority",
+    "Military targeting or operational planning",
+    "Guaranteed financial, legal, medical, or humanitarian outcomes"
+  ]
+}

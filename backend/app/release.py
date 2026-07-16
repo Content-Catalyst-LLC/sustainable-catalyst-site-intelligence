@@ -40,6 +40,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         {"id": "historical_archive_temporal_change", "label": "Historical Archive and Temporal Change Intelligence is available", "status": "pass", "detail": "Accepted connector datasets can create sanitized immutable snapshots, temporal change and source-revision receipts, comparable historical series, retention previews, export bundles, and verified restoration previews without public payload exposure.", "action": "Verify /public/history, /public/history/datasets, a historical series endpoint, and the token-protected /admin/history/control-center."},
         {"id": "geospatial_analysis_spatial_evidence", "label": "Geospatial Analysis and Spatial Evidence Studio is available", "status": "pass", "detail": "Validated WGS84 areas of interest, spatial datasets, intersection, proximity, geographic aggregation, temporal layer comparison, and evidence exports are available with explicit approximation and responsible-use boundaries.", "action": "Verify /public/spatial, /public/spatial/layers, /public/spatial/methodology, and the token-protected /admin/spatial/control-center."},
         {"id": "statistical_harmonization_comparable_series", "label": "Statistical Harmonization and Comparable-Series Engine is available", "status": "pass", "detail": "Explicit unit, currency, price-basis, denominator, period, geography, missing-data, and index transformations preserve raw values and digest-linked lineage without silent normalization or rankings.", "action": "Verify /public/harmonization, /public/harmonization/standards, /public/harmonization/methodology, and the token-protected /admin/harmonization/control-center."},
+        {"id": "model_registry_forecast_evaluation_early_warning", "label": "Model Registry, Forecast Evaluation, and Early-Warning Indicators are available", "status": "pass", "detail": "Versioned model cards, attributed forecasts, overlapping-period accuracy evaluation, interval calibration, drift review, expiry visibility, and threshold indicators preserve human governance and responsible-use boundaries.", "action": "Verify /public/model-governance, /public/models, /public/forecast-evaluations, /public/early-warning, and the token-protected /admin/model-governance/control-center."},
         {"id": "platform_core", "label": "Platform Core remains optional and free-source governed", "status": "pass", "detail": "Public routes degrade cleanly and do not require a paid provider or expose Core credentials.", "action": "Configure only the scoped Core public-read key in the Site Intelligence backend."},
         {"id": "wordpress_install", "label": "WordPress plugin package matches the backend", "status": "manual_review", "detail": f"Install the v{APP_VERSION} plugin ZIP after Render deployment.", "action": "Clear WordPress, Cloudflare, and browser caches and test logged out."},
         {"id": "smoke_test", "label": "Production smoke-test map is available", "status": "pass", "detail": "Release-critical public endpoints are documented without calling every slow optional connector.", "action": "Run the smoke-test endpoint after deployment."},
@@ -57,7 +58,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Checklist",
         "summary": RELEASE_NAME,
-        "release_stage": "v2.16.0_statistical_harmonization_comparable_series",
+        "release_stage": "v2.17.0_model_registry_forecast_evaluation_early_warning",
         "status": "launch_ready_with_manual_review" if counts["fail"] == 0 else "needs_fix",
         "score": score,
         "counts": counts,
@@ -73,13 +74,14 @@ def release_public_summary(settings: Settings) -> Dict[str, Any]:
         "generated_at": _now(),
         "version": settings.version,
         "title": "Sustainable Catalyst Site Intelligence",
-        "subtitle": "A public intelligence application with managed connector operations, historical evidence, temporal change, geospatial, economic, sustainability, legal, scientific, humanitarian, resource-security, country, monitoring, comparison, briefing, source, methodology, and saved-research workflows.",
+        "subtitle": "A public intelligence application with governed models and forecasts, managed connector operations, historical evidence, temporal change, geospatial, economic, sustainability, legal, scientific, humanitarian, resource-security, country, monitoring, comparison, briefing, source, methodology, and saved-research workflows.",
         "summary": "Site Intelligence connects managed public-data ingestion and historical evidence with live intelligence streams, browser-local monitoring, country and regional dossiers, official economics, international law, science, Earth observation, humanitarian evidence, trade and resource records, sources, methodology, and exports.",
         "public_value": [
             "Provides reconnectable public intelligence snapshots, browser-local alert rules, stateless matching, source-recency monitoring, and deterministic digests without server-side profiling.",
             "Preserves sanitized accepted dataset snapshots, historical coverage, temporal changes, and source revisions without publicly exposing archived payload bodies.",
             "Provides validated WGS84 areas of interest, source-aware spatial layers, explicit intersections, proximity methods, geographic aggregation, temporal comparisons, and reproducible evidence exports.",
             "Provides raw-versus-transformed statistical series, dimensional unit checks, supplied-rate currency and constant-price adjustments, explicit period aggregation, geographic-definition diagnostics, missing-data classes, and reproducible transformation lineage.",
+            "Provides published model cards, attributable forecast records, accuracy and calibration evidence, drift review, expiry visibility, and threshold indicators without autonomous decisions or emergency-service claims.",
             "Provides unified source-aware country and regional dossiers without composite scores or rankings.",
             "Provides searchable global country intelligence and a two-country comparative workspace.",
             "Provides source-aware official economic and sustainability records with precise release-frequency labels and no simulated real-time market claims.",
@@ -106,11 +108,11 @@ def release_public_summary(settings: Settings) -> Dict[str, Any]:
 
 def release_metadata() -> Dict[str, str]:
     return {
-        "seo_title": "Site Intelligence Statistical Harmonization and Comparable-Series Engine",
+        "seo_title": "Site Intelligence Model Registry, Forecast Evaluation, and Early-Warning Indicators",
         "page_title": "Site Intelligence",
-        "excerpt": "Sustainable Catalyst Site Intelligence now makes units, currencies, price bases, population denominators, reporting periods, geographic definitions, and missing-data classes explicit before statistical series are compared.",
-        "meta_description": "Inspect raw and transformed statistical series with explicit unit conversion, period alignment, currency and price metadata, geography checks, missing-data classes, and reproducible lineage.",
-        "social_description": "An auditable comparable-series engine for explicit statistical harmonization without hidden normalization, imputation, or rankings.",
+        "excerpt": "Sustainable Catalyst Site Intelligence now governs published models and forecasts with model cards, backtesting, calibration, drift review, expiry metadata, and threshold indicators.",
+        "meta_description": "Inspect registered models, attributable forecasts, forecast performance, uncertainty calibration, drift diagnostics, and early-warning threshold evidence with human-governance boundaries.",
+        "social_description": "An auditable model and forecast governance layer for transparent evaluation and reviewable early-warning indicators.",
     }
 
 
@@ -125,6 +127,11 @@ def smoke_test(settings: Settings) -> Dict[str, Any]:
         {"path": "/public/harmonization", "scope": "public", "critical": True, "expected": "statistical harmonization workspace summary"},
         {"path": "/public/harmonization/standards", "scope": "public", "critical": True, "expected": "unit, currency, missing-data, and geography registries"},
         {"path": "/public/harmonization/methodology", "scope": "public", "critical": True, "expected": "no-silent-normalization methodology and boundaries"},
+        {"path": "/public/model-governance", "scope": "public", "critical": True, "expected": "model registry, forecast evaluation, and early-warning workspace summary"},
+        {"path": "/public/models", "scope": "public", "critical": True, "expected": "published active model cards"},
+        {"path": "/public/forecast-evaluations", "scope": "public", "critical": True, "expected": "public forecast accuracy, calibration, and drift records"},
+        {"path": "/public/early-warning", "scope": "public", "critical": True, "expected": "reviewable public threshold indicators with safety boundaries"},
+        {"path": "/admin/model-governance/control-center", "scope": "private/admin", "critical": True, "expected": "model cards, forecasts, evaluations, warnings, and governance diagnostics"},
         {"path": "/public/launch-status", "scope": "public", "critical": True, "expected": "public beta readiness"},
         {"path": "/public/intelligence-dossiers", "scope": "public", "critical": True, "expected": "unified dossier workspace profile"},
         {"path": "/public/intelligence-dossiers/country?country=KEN&limit_per_domain=5", "scope": "public", "critical": True, "expected": "source-aware country dossier"},
@@ -189,6 +196,7 @@ def smoke_test(settings: Settings) -> Dict[str, Any]:
             'curl "https://sustainable-catalyst-site-intelligence.onrender.com/public/research-workflows/diagnostics"',
             'curl "https://sustainable-catalyst-site-intelligence.onrender.com/public/connectors/operations"',
             'curl "https://sustainable-catalyst-site-intelligence.onrender.com/public/harmonization"',
+            'curl "https://sustainable-catalyst-site-intelligence.onrender.com/public/model-governance"',
         ],
         "wordpress_checks": [
             "Confirm [sc_site_intelligence_app height=\"1000\"] renders while logged out.",
@@ -207,7 +215,7 @@ def release_status(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Status",
         "summary": RELEASE_NAME,
-        "release_stage": "v2.16.0_statistical_harmonization_comparable_series",
+        "release_stage": "v2.17.0_model_registry_forecast_evaluation_early_warning",
         "release_status": checklist["status"],
         "release_score": checklist["score"],
         "public_shortcode": "[sc_site_intelligence_app height=\"1000\"]",

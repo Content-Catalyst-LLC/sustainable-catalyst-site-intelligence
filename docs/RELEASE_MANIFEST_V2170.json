@@ -1,0 +1,59 @@
+{
+  "schema": "sc-site-intelligence-release-manifest/1.0",
+  "release": "2.17.0",
+  "title": "Model Registry, Forecast Evaluation, and Early-Warning Indicators",
+  "base_release": "2.16.0",
+  "governance_schema": "sc-site-intelligence-model-forecast-governance/1.0",
+  "model_schema": "sc-site-intelligence-model-card/1.0",
+  "forecast_schema": "sc-site-intelligence-forecast-record/1.0",
+  "evaluation_schema": "sc-site-intelligence-forecast-evaluation/1.0",
+  "warning_schema": "sc-site-intelligence-early-warning/1.0",
+  "digest_algorithm": "sha256",
+  "human_review_required": true,
+  "automatic_decision_authority": false,
+  "individual_targeting": false,
+  "emergency_dispatch_authority": false,
+  "forecast_scenario_substitution": false,
+  "silent_retraining": false,
+  "guaranteed_outcomes": false,
+  "paid_database_required": false,
+  "persistent_disk_recommended": true,
+  "metrics": [
+    "mae",
+    "rmse",
+    "bias",
+    "mape",
+    "smape",
+    "empirical_coverage",
+    "calibration_gap",
+    "mean_interval_width",
+    "drift_ratio"
+  ],
+  "public_endpoints": [
+    "/public/model-governance",
+    "/public/model-governance/methodology",
+    "/public/model-governance/diagnostics",
+    "/public/models",
+    "/public/models/{model_id}",
+    "/public/forecasts",
+    "/public/forecast-evaluations",
+    "/public/early-warning",
+    "/public/model-governance/export"
+  ],
+  "private_endpoints": [
+    "/admin/model-governance/control-center",
+    "/admin/model-governance/models/register",
+    "/admin/model-governance/forecasts/ingest",
+    "/admin/model-governance/evaluations/run",
+    "/admin/model-governance/warnings/register",
+    "/admin/model-governance/warnings/evaluate",
+    "/admin/model-governance/export"
+  ],
+  "shortcodes": [
+    "[sc_public_model_forecasts]",
+    "[sc_model_forecast_control_center]"
+  ],
+  "runtime_paths_excluded_from_release": [
+    "backend/data/model_governance_v2170/"
+  ]
+}

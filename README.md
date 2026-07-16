@@ -1,6 +1,24 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.16.0 — Statistical Harmonization and Comparable-Series Engine
+**Current release:** v2.17.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators
+
+## v2.17.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators
+
+Site Intelligence v2.17.0 adds an auditable governance layer for models, forecasts, evaluation evidence, and early-warning indicators. It registers versioned model cards; preserves intended use, limitations, provenance, uncertainty, training and evaluation periods, expiry, and prohibited uses; ingests attributable forecasts; evaluates overlapping observed periods; and keeps calibration, drift, and threshold evidence reviewable without granting autonomous decision authority.
+
+The engine supports MAE, RMSE, bias, MAPE, sMAPE, prediction-interval empirical coverage, calibration gaps, mean interval width, recent-versus-baseline drift review, model expiry diagnostics, and threshold or percent-change indicators. Forecasts remain distinct from user-defined scenarios, and threshold crossings remain review signals rather than evidence of cause or emergency instructions.
+
+Public workspace: `/app/?view=models`
+
+Public endpoints: `/public/model-governance`, `/public/model-governance/methodology`, `/public/models`, `/public/forecasts`, `/public/forecast-evaluations`, `/public/early-warning`, and `/public/model-governance/export`
+
+Private control center: `/admin/model-governance/control-center`
+
+Command-line utility: `python scripts/model_governance_v2170.py summary`
+
+WordPress shortcodes: `[sc_public_model_forecasts]` and `[sc_model_forecast_control_center]`
+
+The release prohibits individual targeting, surveillance, emergency dispatch, autonomous consequential decisions, hidden model substitution, silent retraining, guaranteed outcomes, and unsupported causal claims.
 
 ## v2.16.0 — Statistical Harmonization and Comparable-Series Engine
 

@@ -433,6 +433,7 @@ RELEASE_LEDGER = [
     {"version": "2.14.0", "title": "Historical Archive and Temporal Change Intelligence", "audit_contribution": "Sanitized immutable dataset snapshots, digest verification, historical coverage, temporal change events, source-revision receipts, comparable series, retention previews, export bundles, and restoration previews."},
     {"version": "2.15.0", "title": "Geospatial Analysis and Spatial Evidence Studio", "audit_contribution": "Validated WGS84 areas of interest, source-preserving spatial dataset versions, point-in-polygon and proximity methods, geographic aggregation without imputation, temporal layer comparison, evidence packets, and explicit no-targeting/no-individual-tracking safeguards."},
     {"version": "2.16.0", "title": "Statistical Harmonization and Comparable-Series Engine", "audit_contribution": "Explicit dimensional conversion, period alignment, supplied-rate currency and constant-price transformations, denominator-aware normalization, missing-data classes, geographic-definition checks, raw-versus-transformed views, and digest-linked lineage without hidden rankings or imputation."},
+    {"version": "2.17.0", "title": "Model Registry, Forecast Evaluation, and Early-Warning Indicators", "audit_contribution": "Versioned model cards, attributable forecast records, overlapping-period accuracy metrics, interval calibration, drift review, expiry visibility, threshold evidence, and explicit human-governance, no-targeting, and no-emergency-authority boundaries."},
 ]
 
 

@@ -10,7 +10,7 @@ def test_v2150_policy_and_catalog_define_spatial_governance():
     policy = json.loads((ROOT / "backend/data/spatial_evidence_policy_v2150.json").read_text(encoding="utf-8"))
     catalog = json.loads((ROOT / "backend/data/spatial_layer_catalog_v2150.json").read_text(encoding="utf-8"))
     assert policy["schema"] == "sc-site-intelligence-spatial-evidence/1.0"
-    assert policy["version"] == "2.16.0"
+    assert policy["version"] == "2.17.0"
     assert policy["public_raw_private_dataset_access"] is False
     assert policy["paid_gis_server_required"] is False
     assert len(catalog["layers"]) >= 6
@@ -23,7 +23,7 @@ def test_v2150_wordpress_and_backend_publish_spatial_surfaces():
     js = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js").read_text(encoding="utf-8")
     for marker in ["/public/spatial", "/admin/spatial/control-center", "/admin/spatial/analyze/intersection", "/admin/spatial/analyze/compare"]:
         assert marker in main
-    assert "Version: 2.16.0" in plugin
+    assert "Version: 2.17.0" in plugin
     assert "sc_public_spatial_evidence" in plugin
     assert "sc_spatial_evidence_control_center" in plugin
     assert "public-spatial-evidence" in plugin
@@ -44,7 +44,7 @@ def test_v2150_public_application_registers_spatial_workspace_and_offline_assets
     spatial_css = (ROOT / "backend/public_app/assets/spatial-v2150.css").read_text(encoding="utf-8")
     assert 'data-route="spatial"' in index
     assert 'id="spatialEvidenceStudio"' in index
-    assert '/app/assets/spatial-v2150.js?v=2.16.0' in index
+    assert '/app/assets/spatial-v2150.js?v=2.17.0' in index
     assert 'spatial:[' in app
     assert 'SCSpatialV2150' in app
     assert '/app/assets/spatial-v2150.js' in worker

@@ -1,0 +1,14 @@
+{
+  "version": "2.17.0",
+  "schema": "sc-site-intelligence-model-metric-registry/1.0",
+  "metrics": [
+    {"code": "mae", "name": "Mean absolute error", "direction": "lower_is_better", "limitations": "Scale-dependent."},
+    {"code": "rmse", "name": "Root mean squared error", "direction": "lower_is_better", "limitations": "Weights large errors more heavily."},
+    {"code": "bias", "name": "Mean signed error", "direction": "closer_to_zero", "limitations": "Positive and negative errors can cancel."},
+    {"code": "mape", "name": "Mean absolute percentage error", "direction": "lower_is_better", "limitations": "Undefined for zero actual values."},
+    {"code": "smape", "name": "Symmetric mean absolute percentage error", "direction": "lower_is_better", "limitations": "Can be unstable near zero."},
+    {"code": "empirical_coverage", "name": "Prediction interval empirical coverage", "direction": "closer_to_target", "limitations": "Requires declared intervals and sufficient observations."},
+    {"code": "calibration_gap", "name": "Absolute coverage calibration gap", "direction": "lower_is_better", "limitations": "Does not measure sharpness alone."},
+    {"code": "drift_ratio", "name": "Recent-to-baseline MAE ratio", "direction": "lower_is_better", "limitations": "A review signal, not proof of data or concept drift."}
+  ]
+}

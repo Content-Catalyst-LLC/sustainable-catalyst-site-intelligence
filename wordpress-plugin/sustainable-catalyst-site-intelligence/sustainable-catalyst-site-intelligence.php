@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 2.16.0
+ * Version: 2.17.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '2.16.0';
+    const VERSION = '2.17.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -85,6 +85,8 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_spatial_evidence_control_center', [$this, 'spatial_evidence_control_center_shortcode']);
         add_shortcode('sc_public_comparable_series', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_statistical_harmonization_control_center', [$this, 'statistical_harmonization_control_center_shortcode']);
+        add_shortcode('sc_public_model_forecasts', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_model_forecast_control_center', [$this, 'model_forecast_control_center_shortcode']);
         add_shortcode('sc_public_cache_status', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_source_freshness', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_connector_reliability', [$this, 'public_connector_panel_shortcode']);
@@ -776,6 +778,11 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-comparable-series', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_comparable_series'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-model-forecasts', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_model_forecasts'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/public-cache-status', [
@@ -1830,6 +1837,7 @@ final class SC_Site_Intelligence_Plugin {
             'temporal_intelligence' => 'public/history',
             'spatial_evidence' => 'public/spatial',
             'comparable_series' => 'public/harmonization',
+            'model_forecasts' => 'public/model-governance',
             'cache_status' => 'public/connectors/cache',
             'source_freshness' => 'public/connectors/freshness',
             'connector_reliability' => 'public/connectors/reliability',
@@ -1856,6 +1864,7 @@ final class SC_Site_Intelligence_Plugin {
     public function rest_public_temporal_intelligence(WP_REST_Request $request) { return $this->rest_public_connector_panel('temporal_intelligence'); }
     public function rest_public_spatial_evidence(WP_REST_Request $request) { return $this->rest_public_connector_panel('spatial_evidence'); }
     public function rest_public_comparable_series(WP_REST_Request $request) { return $this->rest_public_connector_panel('comparable_series'); }
+    public function rest_public_model_forecasts(WP_REST_Request $request) { return $this->rest_public_connector_panel('model_forecasts'); }
     public function rest_public_cache_status(WP_REST_Request $request) { return $this->rest_public_connector_panel('cache_status'); }
     public function rest_public_source_freshness(WP_REST_Request $request) { return $this->rest_public_connector_panel('source_freshness'); }
     public function rest_public_connector_reliability(WP_REST_Request $request) { return $this->rest_public_connector_panel('connector_reliability'); }
@@ -3216,6 +3225,7 @@ final class SC_Site_Intelligence_Plugin {
             'sc_public_temporal_intelligence' => ['temporal-intelligence', 'Historical Archive and Temporal Change Intelligence', 'Versioned dataset coverage, detected changes, and source-revision context without archived payload exposure.'],
             'sc_public_spatial_evidence' => ['spatial-evidence', 'Geospatial Analysis and Spatial Evidence Studio', 'Areas of interest, source-aware spatial layers, transparent methods, and evidence exports without individual tracking.'],
             'sc_public_comparable_series' => ['comparable-series', 'Statistical Harmonization and Comparable-Series Engine', 'Explicit units, currencies, periods, geographic definitions, missing-data classes, and transformation lineage without silent normalization.'],
+            'sc_public_model_forecasts' => ['model-forecasts', 'Model Registry, Forecast Evaluation, and Early-Warning Indicators', 'Published model cards, forecast records, accuracy and calibration evidence, drift review, and threshold indicators with human-governance boundaries.'],
             'sc_public_cache_status' => ['cache-status', 'Public Cache Status', 'Cache TTL, stale-safe display, and public source refresh policy.'],
             'sc_public_source_freshness' => ['source-freshness', 'Public Source Freshness', 'Freshness labels for public source families and connector panels.'],
             'sc_public_connector_reliability' => ['connector-reliability', 'Connector Reliability Summary', 'Public display reliability, recovery guidance, and degraded/fallback-safe source labels.'],
@@ -3433,6 +3443,60 @@ final class SC_Site_Intelligence_Plugin {
                 <?php endforeach; ?>
             <?php endif; ?>
             <p class="scsi-muted">No silent normalization, implicit exchange rate, hidden imputation, composite score, or country ranking is performed.</p>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
+    public function model_forecast_control_center_shortcode($atts = []) {
+        if (!current_user_can('manage_options')) {
+            return '';
+        }
+        $data = $this->backend_request('admin/model-governance/control-center');
+        if (is_wp_error($data)) {
+            return '<section class="scsi-card"><p class="scsi-eyebrow">Model Governance</p><h2>Control Center unavailable</h2><p class="scsi-muted">' . esc_html($data->get_error_message()) . '</p></section>';
+        }
+        $diagnostics = isset($data['diagnostics']) && is_array($data['diagnostics']) ? $data['diagnostics'] : [];
+        $counts = isset($diagnostics['counts']) && is_array($diagnostics['counts']) ? $diagnostics['counts'] : [];
+        $models = isset($data['models']) && is_array($data['models']) ? $data['models'] : [];
+        $evaluations = isset($data['latest_evaluations']) && is_array($data['latest_evaluations']) ? $data['latest_evaluations'] : [];
+        $events = isset($data['latest_warning_events']) && is_array($data['latest_warning_events']) ? $data['latest_warning_events'] : [];
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-model-forecast-control-center">
+            <p class="scsi-eyebrow">Private Admin Workspace · v<?php echo esc_html(self::VERSION); ?></p>
+            <h2>Model Registry, Forecast Evaluation, and Early-Warning Indicators</h2>
+            <p class="scsi-muted">Review model cards, published forecasts, backtesting, calibration, drift, expiry, and threshold indicators without granting autonomous decision authority.</p>
+            <div class="scsi-grid scsi-public-connector-health-grid">
+                <?php foreach ([
+                    'models' => 'Models',
+                    'forecasts' => 'Forecasts',
+                    'evaluations' => 'Evaluations',
+                    'warning_rules' => 'Warning rules',
+                    'warning_events' => 'Warning events',
+                ] as $key => $label) : ?>
+                    <div class="scsi-stat scsi-public-connector-status-card"><span class="scsi-public-label"><?php echo esc_html($label); ?></span><strong><?php echo esc_html((string) ($counts[$key] ?? 0)); ?></strong></div>
+                <?php endforeach; ?>
+            </div>
+            <?php if (!empty($models)) : ?>
+                <h3>Registered models</h3>
+                <?php foreach (array_slice($models, 0, 15) as $item) : ?>
+                    <div class="scsi-page-row"><strong><?php echo esc_html((string) ($item['title'] ?? $item['model_id'] ?? 'Model')); ?></strong><small><?php echo esc_html((string) ($item['model_type'] ?? 'model')); ?> · v<?php echo esc_html((string) ($item['model_version'] ?? '?')); ?> · <?php echo esc_html((string) ($item['status'] ?? 'review')); ?></small></div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            <?php if (!empty($evaluations)) : ?>
+                <h3>Recent evaluations</h3>
+                <?php foreach (array_slice($evaluations, 0, 10) as $item) : ?>
+                    <div class="scsi-page-row"><strong><?php echo esc_html((string) ($item['forecast_id'] ?? 'Forecast')); ?></strong><small>MAE <?php echo esc_html((string) ($item['metrics']['mae'] ?? 'n/a')); ?> · drift <?php echo esc_html((string) ($item['drift']['status'] ?? 'not reviewed')); ?></small></div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            <?php if (!empty($events)) : ?>
+                <h3>Recent warning evaluations</h3>
+                <?php foreach (array_slice($events, 0, 10) as $item) : ?>
+                    <div class="scsi-page-row"><strong><?php echo esc_html((string) ($item['rule_id'] ?? 'Warning rule')); ?></strong><small><?php echo !empty($item['matched']) ? 'Matched' : 'Clear'; ?> · <?php echo esc_html((string) ($item['severity'] ?? 'none')); ?> · <?php echo esc_html((string) ($item['latest_period'] ?? '')); ?></small></div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            <p class="scsi-muted">No individual targeting, emergency dispatch, guaranteed outcome, or autonomous consequential decision is authorized by this workspace.</p>
         </section>
         <?php
         return ob_get_clean();

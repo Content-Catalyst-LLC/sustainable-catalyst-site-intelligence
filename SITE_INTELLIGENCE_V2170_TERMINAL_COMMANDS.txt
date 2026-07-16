@@ -1,0 +1,22 @@
+SITE INTELLIGENCE v2.17.0
+
+INSTALL, VALIDATE, COMMIT, AND PUSH
+
+cd ~/Downloads
+chmod 700 install_and_push_site_intelligence_v2_17_0.sh
+bash ./install_and_push_site_intelligence_v2_17_0.sh
+
+VERIFY RENDER AFTER CLEAR BUILD CACHE & DEPLOY
+
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/health | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/release | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/public/model-governance | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/public/models | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/public/early-warning | python3 -m json.tool
+
+LOCAL GOVERNANCE CHECKS
+
+cd ~/sustainable-catalyst-site-intelligence
+python3 scripts/model_governance_v2170.py summary
+python3 scripts/model_governance_v2170.py methodology
+python3 scripts/validate_v2170_release.py

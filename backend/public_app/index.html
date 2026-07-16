@@ -31,9 +31,10 @@
   <link rel="stylesheet" href="/app/assets/scenarios-v290.css?v=2.9.0">
   <link rel="stylesheet" href="/app/assets/research-v2100.css?v=2.10.0">
   <link rel="stylesheet" href="/app/assets/integration-v2110.css?v=2.11.0">
-  <link rel="stylesheet" href="/app/assets/experience-v2120.css?v=2.16.0">
-  <link rel="stylesheet" href="/app/assets/spatial-v2150.css?v=2.16.0">
-  <link rel="stylesheet" href="/app/assets/harmonization-v2160.css?v=2.16.0">
+  <link rel="stylesheet" href="/app/assets/experience-v2120.css?v=2.17.0">
+  <link rel="stylesheet" href="/app/assets/spatial-v2150.css?v=2.17.0">
+  <link rel="stylesheet" href="/app/assets/harmonization-v2160.css?v=2.17.0">
+  <link rel="stylesheet" href="/app/assets/models-v2170.css?v=2.17.0">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to intelligence workspace</a>
@@ -91,6 +92,7 @@
         <button class="nav-item" type="button" data-route="earth"><span>Earth</span><small>Satellite comparison</small></button>
         <button class="nav-item" type="button" data-route="spatial"><span>Spatial</span><small>Areas and evidence</small></button>
         <button class="nav-item" type="button" data-route="harmonization"><span>Harmonize</span><small>Comparable series</small></button>
+        <button class="nav-item" type="button" data-route="models"><span>Models</span><small>Forecasts and warnings</small></button>
         <button class="nav-item" type="button" data-route="country"><span>Country</span><small>Place-based evidence</small></button>
         <button class="nav-item" type="button" data-route="events"><span>Events</span><small>Live event intelligence</small></button>
         <button class="nav-item" type="button" data-route="compare"><span>Compare</span><small>Two-country context</small></button>
@@ -177,7 +179,7 @@
           </div>
           <div class="launch-release-card" aria-label="Public release status">
             <span>PUBLIC RELEASE</span>
-            <strong id="launchPortfolioVersion">v2.16.0</strong>
+            <strong id="launchPortfolioVersion">v2.17.0</strong>
             <small>Source-aware observatory · MIT licensed</small>
           </div>
         </div>
@@ -1173,7 +1175,7 @@
       <section id="offlineExperienceStudio" class="offline-experience-studio" hidden aria-busy="false">
         <div class="experience-hero">
           <article class="experience-card"><p class="eyebrow">OFFLINE · MOBILE · ACCESSIBILITY · PERFORMANCE</p><h2>Resilient public intelligence</h2><p id="experienceSummary">Install the application shell, reduce network demand, inspect accessibility contracts, and review first-party performance budgets without creating a hosted user profile.</p><div class="experience-actions"><button id="experienceInstall" class="earth-primary-button" type="button">Installation help</button><button id="experienceClearCache" class="ghost-button" type="button">Clear offline cache</button></div><p id="experienceInstallHelp" class="experience-note" hidden>Use the browser’s Install App or Add to Home Screen command when it is available.</p></article>
-          <article class="experience-status-card"><span id="experienceConnectionStatus" class="experience-status">Checking connection</span><p>Release <strong id="experienceVersion">v2.16.0</strong></p><p>PWA shell <strong id="experiencePwaState">Checking</strong></p><p>First-party shell <strong id="experienceShellBytes" class="experience-metric">—</strong> bytes</p><p>Cache cap <strong id="experienceCacheEntries">—</strong> entries</p></article>
+          <article class="experience-status-card"><span id="experienceConnectionStatus" class="experience-status">Checking connection</span><p>Release <strong id="experienceVersion">v2.17.0</strong></p><p>PWA shell <strong id="experiencePwaState">Checking</strong></p><p>First-party shell <strong id="experienceShellBytes" class="experience-metric">—</strong> bytes</p><p>Cache cap <strong id="experienceCacheEntries">—</strong> entries</p></article>
         </div>
         <div class="experience-grid">
           <article class="experience-control"><h3>Browser-local controls</h3><label><span>Low-bandwidth mode</span><input id="experienceLowBandwidth" type="checkbox"></label><label><span>Offline application shell</span><input id="experienceOfflineEnabled" type="checkbox" checked></label><p class="experience-note">Low-bandwidth mode suppresses optional motion and presentation-heavy behavior. It does not alter source values.</p></article>
@@ -1226,11 +1228,17 @@
 
       <section id="harmonizationStudio" class="harmonization-studio" hidden aria-busy="false" aria-labelledby="harmonizationTitle">
         <div class="harmonization-hero">
-          <div><p class="eyebrow">STATISTICAL HARMONIZATION · v2.16.0</p><h2 id="harmonizationTitle">Compare statistical series without hiding the transformations</h2><p>Inspect units, currencies, price bases, population denominators, reporting periods, geographic definitions, missing-data classes, raw values, transformed values, and digest-linked lineage before deciding whether two series are comparable.</p><p id="harmStatus" role="status" aria-live="polite">Loading comparable-series contracts.</p></div>
+          <div><p class="eyebrow">STATISTICAL HARMONIZATION · v2.17.0</p><h2 id="harmonizationTitle">Compare statistical series without hiding the transformations</h2><p>Inspect units, currencies, price bases, population denominators, reporting periods, geographic definitions, missing-data classes, raw values, transformed values, and digest-linked lineage before deciding whether two series are comparable.</p><p id="harmStatus" role="status" aria-live="polite">Loading comparable-series contracts.</p></div>
           <div class="harmonization-metrics" aria-label="Comparable-series summary"><article class="harmonization-metric"><span>Public series</span><strong id="harmSeriesCount">—</strong></article><article class="harmonization-metric"><span>Transformed</span><strong id="harmTransformedCount">—</strong></article><article class="harmonization-metric"><span>Units</span><strong id="harmUnitCount">—</strong></article><article class="harmonization-metric"><span>Currencies</span><strong id="harmCurrencyCount">—</strong></article></div>
         </div>
         <div class="harmonization-grid"><article class="harmonization-panel"><p class="eyebrow">PUBLIC SERIES</p><h3>Raw and reviewed transformed records</h3><div id="harmSeriesList"></div></article><article class="harmonization-panel"><p class="eyebrow">METHOD BOUNDARIES</p><h3>What the engine will not hide</h3><ul class="harmonization-boundaries"><li>No silent normalization or missing-value imputation.</li><li>No implicit exchange rates or inflation assumptions.</li><li>No automatic country ranking or composite score.</li><li>Geographic and methodological differences remain review items.</li></ul></article></div>
         <article class="harmonization-panel"><p class="eyebrow">COMPARABILITY DIAGNOSTICS</p><h3>Check two public series</h3><div class="harmonization-form"><label>Left series<select id="harmLeftSeries"><option value="">Select public series</option></select></label><label>Right series<select id="harmRightSeries"><option value="">Select public series</option></select></label><button id="harmRunCompare" class="earth-primary-button" type="button">Run diagnostics</button></div><div id="harmCompareOutput" class="harmonization-output" aria-live="polite"></div></article>
+      </section>
+
+      <section id="modelGovernanceStudio" class="model-governance-studio" hidden aria-busy="false" aria-labelledby="modelGovernanceTitle">
+        <div class="model-hero"><div><p class="eyebrow">MODEL AND FORECAST GOVERNANCE · v2.17.0</p><h2 id="modelGovernanceTitle">Inspect models, forecast performance, and warning evidence</h2><p>Published model cards disclose intended use, limitations, provenance, uncertainty, evaluation periods, and prohibited uses. Forecast records remain distinct from scenarios, while calibration, drift, and threshold indicators require human review.</p><p id="modelStatus" role="status" aria-live="polite">Loading model-governance contracts.</p></div><div class="model-metrics"><article class="model-metric"><span>Models</span><strong id="modelCount">—</strong></article><article class="model-metric"><span>Forecasts</span><strong id="forecastCount">—</strong></article><article class="model-metric"><span>Evaluations</span><strong id="evaluationCount">—</strong></article><article class="model-metric"><span>Warnings</span><strong id="warningCount">—</strong></article></div></div>
+        <div class="model-grid"><article class="model-panel"><p class="eyebrow">MODEL REGISTRY</p><h3>Published model cards</h3><div id="modelRegistryList" class="model-list"></div></article><article class="model-panel"><p class="eyebrow">FORECAST RECORDS</p><h3>Attributed expected values</h3><div id="forecastList" class="model-list"></div></article><article class="model-panel"><p class="eyebrow">EVALUATION</p><h3>Accuracy, calibration, and drift</h3><div id="evaluationList" class="model-list"></div></article><article class="model-panel"><p class="eyebrow">EARLY WARNING</p><h3>Threshold review signals</h3><div id="warningList" class="model-list"></div></article></div>
+        <article class="model-panel"><p class="eyebrow">RESPONSIBLE-USE BOUNDARIES</p><ul class="model-boundaries"><li>No guaranteed outcomes or emergency-service claims.</li><li>No individual targeting, surveillance, or personal risk scoring.</li><li>No autonomous consequential decisions.</li><li>No hidden model substitution or silent retraining.</li><li>Threshold crossings do not establish causation.</li></ul></article>
       </section>
 
       <section id="routePanel" class="route-panel" hidden></section>
@@ -1433,8 +1441,9 @@
   <script src="/app/assets/scenarios-v290.js?v=2.9.0" defer></script>
   <script src="/app/assets/research-v2100.js?v=2.10.0" defer></script>
   <script src="/app/assets/integration-v2110.js?v=2.11.0" defer></script>
-  <script src="/app/assets/experience-v2120.js?v=2.16.0" defer></script>
-  <script src="/app/assets/spatial-v2150.js?v=2.16.0" defer></script>
-  <script src="/app/assets/harmonization-v2160.js?v=2.16.0" defer></script>
+  <script src="/app/assets/experience-v2120.js?v=2.17.0" defer></script>
+  <script src="/app/assets/spatial-v2150.js?v=2.17.0" defer></script>
+  <script src="/app/assets/harmonization-v2160.js?v=2.17.0" defer></script>
+  <script src="/app/assets/models-v2170.js?v=2.17.0" defer></script>
 </body>
 </html>

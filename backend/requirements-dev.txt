@@ -1,4 +1,5 @@
 -r requirements.txt
 # FastAPI/Starlette TestClient dependency used only for local and CI validation.
-# Starlette 2026 releases use the Pydantic-maintained HTTPX2 package.
-httpx2>=2.0,<3.0
+# Starlette 0.50 uses HTTPX; later Starlette releases use the Pydantic-maintained HTTPX2 package.
+httpx>=0.27,<0.29
+httpx2>=2.7,<2.8

@@ -2600,6 +2600,7 @@
       'temporal-intelligence': '/public-temporal-intelligence',
       'spatial-evidence': '/public-spatial-evidence',
       'comparable-series': '/public-comparable-series',
+      'model-forecasts': '/public-model-forecasts',
       'cache-status': '/public-cache-status',
       'source-freshness': '/public-source-freshness',
       'connector-reliability': '/public-connector-reliability',

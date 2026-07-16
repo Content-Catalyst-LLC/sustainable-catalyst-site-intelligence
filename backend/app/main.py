@@ -57,6 +57,7 @@ from .connector_operations_v2130 import ConnectorOperationsCenter
 from .historical_archive_v2140 import HistoricalArchiveCenter
 from .spatial_evidence_v2150 import SpatialEvidenceStudio
 from .statistical_harmonization_v2160 import StatisticalHarmonizationEngine
+from .model_forecast_early_warning_v2170 import ModelForecastEarlyWarningCenter
 from .public_live_connectors import (
     public_connector_status as build_public_connector_status,
     public_cache_status as build_public_cache_status,
@@ -2208,7 +2209,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v2.16.0 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v2.17.0 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -2348,6 +2349,123 @@ def admin_harmonization_workbench_handoff_endpoint(
         return _harmonization(settings).workbench_handoff(series_id, version_id)
     except KeyError as exc:
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
+
+
+# Site Intelligence v2.17.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
+    if not settings.model_governance_enabled:
+        raise HTTPException(status_code=403, detail="Model governance is disabled.")
+    return ModelForecastEarlyWarningCenter(settings)
+
+
+@app.get("/public/model-governance")
+def public_model_governance_summary_endpoint(settings: Settings = Depends(get_settings)):
+    return _model_governance(settings).public_summary()
+
+
+@app.get("/public/model-governance/methodology")
+def public_model_governance_methodology_endpoint(settings: Settings = Depends(get_settings)):
+    return _model_governance(settings).methodology()
+
+
+@app.get("/public/model-governance/diagnostics")
+def public_model_governance_diagnostics_endpoint(settings: Settings = Depends(get_settings)):
+    return _model_governance(settings).diagnostics(public=True)
+
+
+@app.get("/public/models")
+def public_models_endpoint(settings: Settings = Depends(get_settings)):
+    return _model_governance(settings).models(public=True)
+
+
+@app.get("/public/models/{model_id}")
+def public_model_detail_endpoint(model_id: str, model_version: str = Query(default="", max_length=120), settings: Settings = Depends(get_settings)):
+    try:
+        return _model_governance(settings).model_detail(model_id, model_version, public=True)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown or non-public model: {exc.args[0]}") from exc
+
+
+@app.get("/public/forecasts")
+def public_forecasts_endpoint(model_id: str = Query(default="", max_length=140), limit: int = Query(default=100, ge=1, le=1000), settings: Settings = Depends(get_settings)):
+    return _model_governance(settings).forecasts(public=True, model_id=model_id, limit=limit)
+
+
+@app.get("/public/forecast-evaluations")
+def public_forecast_evaluations_endpoint(model_id: str = Query(default="", max_length=140), limit: int = Query(default=100, ge=1, le=1000), settings: Settings = Depends(get_settings)):
+    return _model_governance(settings).evaluations(public=True, model_id=model_id, limit=limit)
+
+
+@app.get("/public/early-warning")
+def public_early_warning_endpoint(limit: int = Query(default=100, ge=1, le=1000), settings: Settings = Depends(get_settings)):
+    return _model_governance(settings).warning_summary(public=True, limit=limit)
+
+
+@app.get("/public/model-governance/export")
+def public_model_governance_export_endpoint(model_id: str = Query(..., min_length=2, max_length=140), model_version: str = Query(default="", max_length=120), settings: Settings = Depends(get_settings)):
+    try:
+        return _model_governance(settings).export_governance_packet(model_id, model_version, public=True)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown or non-public model: {exc.args[0]}") from exc
+
+
+@app.get("/admin/model-governance/control-center")
+def admin_model_governance_control_center_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _model_governance(settings).control_center()
+
+
+@app.post("/admin/model-governance/models/register")
+def admin_model_register_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _model_governance(settings).register_model(request)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/admin/model-governance/forecasts/ingest")
+def admin_forecast_ingest_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _model_governance(settings).ingest_forecast(request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/admin/model-governance/evaluations/run")
+def admin_forecast_evaluation_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _model_governance(settings).evaluate_forecast(request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown forecast: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/admin/model-governance/warnings/register")
+def admin_warning_register_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _model_governance(settings).register_warning_rule(request)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/admin/model-governance/warnings/evaluate")
+def admin_warning_evaluate_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _model_governance(settings).evaluate_warning(request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown warning rule: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/admin/model-governance/export")
+def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length=2, max_length=140), model_version: str = Query(default="", max_length=120), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _model_governance(settings).export_governance_packet(model_id, model_version)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
 @app.get("/public/source-pages")

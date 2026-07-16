@@ -1,3 +1,16 @@
+## 2.17.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators
+
+- Added versioned model cards with intended use, limitations, provenance, uncertainty, training and evaluation periods, lifecycle status, expiry, and prohibited uses.
+- Added attributable public/private forecast records with declared intervals and explicit forecast-versus-scenario labeling.
+- Added MAE, RMSE, bias, MAPE, and sMAPE evaluation against overlapping observed periods.
+- Added prediction-interval empirical coverage, calibration gaps, mean interval width, and recent-versus-baseline drift review.
+- Added threshold and percent-change early-warning rules with reviewable evidence receipts.
+- Added public-safe model, forecast, evaluation, warning, methodology, diagnostics, and export endpoints.
+- Added token-protected model registration, forecast ingestion, evaluation, warning registration, warning evaluation, governance export, and control-center endpoints.
+- Added `/app/?view=models`, `[sc_public_model_forecasts]`, and the administrator-only `[sc_model_forecast_control_center]`.
+- Prohibited individual targeting, emergency dispatch, autonomous consequential decisions, hidden model substitution, silent retraining, guaranteed outcomes, and unsupported causal claims.
+- Kept writable model, forecast, evaluation, and warning state outside the immutable release.
+
 ## 2.16.0 — Statistical Harmonization and Comparable-Series Engine
 
 - Added source-preserving statistical series registration with explicit units, currencies, price bases, frequencies, geography definitions, missing-data classes, and methodology.
