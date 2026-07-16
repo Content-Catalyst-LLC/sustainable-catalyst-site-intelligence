@@ -1,0 +1,31 @@
+{
+  "version": "2.11.0",
+  "release": "Public Data API, Embeds, and Institutional Integration",
+  "route": "/app/?view=integration",
+  "api_base": "/api/public/v1",
+  "shortcodes": [
+    "[sc_public_data_api_integration height=\"1500\"]",
+    "[sc_site_intelligence_embed view=\"economics\" height=\"900\"]"
+  ],
+  "public_read_only": true,
+  "provider_credentials_exposed": false,
+  "server_user_tracking": false,
+  "paid_api_required": false,
+  "workspace_count": 20,
+  "generic_record_workspaces": [
+    "global",
+    "economics",
+    "law",
+    "science",
+    "humanitarian",
+    "resources"
+  ],
+  "formats": [
+    "json",
+    "csv",
+    "geojson",
+    "stac",
+    "event-stream",
+    "html"
+  ]
+}

@@ -48,7 +48,7 @@
   }
 
   const state = {map:null,base:null,imagery:null,markers:null,heat:null,layers:null,events:null,country:"KEN",route:"overview"};
-  const APP_VERSION="2.10.0";
+  const APP_VERSION="2.11.0";
   const SAVED_VIEW_SCHEMA="sc-saved-view/1.0";
   const SAVED_VIEW_STORAGE_KEY="sc_site_intelligence_saved_views_v1";
   const SAVED_VIEW_LIMIT=50;
@@ -156,6 +156,7 @@
       alerts:["ALERTS, MONITORING, AND LIVE INTELLIGENCE STREAMS","Watch public evidence across domains","Use reconnecting source-aware streams, browser-local rules, source freshness monitoring, and deterministic digests without server-side profiling or automated risk decisions."],
       scenarios:["COMPARATIVE INTELLIGENCE AND SCENARIO STUDIO","Compare evidence and test assumptions","Build multi-geography indicator baskets, inspect compatibility, apply transparent arithmetic scenarios, review correlation, and export reproducible packets without rankings or forecasts."],
       research:["RESEARCH PATHS, SAVED INVESTIGATIONS, AND BRIEFING WORKFLOWS","Organize evidence into reviewable research","Create browser-local investigations, capture evidence and public views, preserve notes and checkpoints, and export briefing or product handoff packets without a hosted profile."],
+      integration:["PUBLIC DATA API, EMBEDS, AND INSTITUTIONAL INTEGRATION","Reuse public intelligence safely","Discover versioned read-only endpoints, portable embeds, and institutional presentation metadata while preserving attribution and credentials."],
       observatory:["AUDITABLE PUBLIC OBSERVATORY","Evidence, lineage, and integrity","Inspect registered public evidence records, source and methodology lineage, canonical digests, release history, and verification boundaries."],
       launch:["PUBLIC LAUNCH AND PORTFOLIO","Site Intelligence","Explore the public product, technical architecture, responsible-use boundaries, and launch materials."],
       overview:["LIVE INTELLIGENCE WORKSPACE","Climate and Human Vulnerability","Satellite context, natural events, environmental pressure, and country evidence in one navigable view."],
@@ -1361,6 +1362,7 @@
     if(route!=="alerts")window.SCAlertsV280?.close?.();
     if(route!=="scenarios")window.SCScenariosV290?.close?.();
     if(route!=="research")window.SCResearchV2100?.close?.();
+    if(route!=="integration")window.SCIntegrationV2110?.close?.();
     if(route==="global"){
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
       closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
@@ -1430,6 +1432,13 @@
       closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
       closePublicLaunchPortfolio();closeAuditablePublicObservatory();
       await window.SCResearchV2100?.open?.();return;
+    }
+    if(route==="integration"){
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
+      closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
+      closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
+      closePublicLaunchPortfolio();closeAuditablePublicObservatory();
+      await window.SCIntegrationV2110?.open?.();return;
     }
     if(route!=="launch")closePublicLaunchPortfolio();
     if(route!=="observatory")closeAuditablePublicObservatory();

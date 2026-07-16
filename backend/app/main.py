@@ -340,6 +340,11 @@ async def public_experience_headers(request, call_next):
         response.headers.setdefault("Cache-Control", "public, max-age=300, stale-while-revalidate=86400")
     elif path == "/app" or path.startswith("/app/"):
         response.headers.setdefault("Cache-Control", "no-cache")
+        if settings.public_embeds_enabled:
+            frame_ancestors = ["'self'"] + [origin for origin in settings.public_embed_allowed_origins.split(",") if origin.strip()]
+            response.headers.setdefault("Content-Security-Policy", "frame-ancestors " + (" ".join(item.strip() for item in frame_ancestors) if len(frame_ancestors) > 1 else "*"))
+        else:
+            response.headers.setdefault("Content-Security-Policy", "frame-ancestors 'self'")
     elif path.startswith("/public/experience-profile") or path.startswith("/public/launch-profile") or path.startswith("/public/observatory"):
         response.headers.setdefault("Cache-Control", "public, max-age=300")
     return response
@@ -4490,6 +4495,107 @@ def public_research_workflow_handoff(target: str, payload: dict[str, Any] = Body
 def public_research_workflow_diagnostics(settings: Settings = Depends(get_settings)):
     from .research_paths_investigations_v2100 import build_workflow_diagnostics
     return build_workflow_diagnostics(settings)
+
+# Site Intelligence v2.11.0 — Public Data API, Embeds, and Institutional Integration
+@app.get("/public/public-data-api-integration")
+def public_data_api_integration(settings: Settings = Depends(get_settings)):
+    from .public_data_api_embeds_v2110 import build_overview
+    return build_overview(settings)
+
+@app.get("/api/public/v1")
+def public_data_api_root(settings: Settings = Depends(get_settings)):
+    from .public_data_api_embeds_v2110 import build_overview
+    return build_overview(settings)
+
+@app.get("/api/public/v1/catalog")
+def public_data_api_catalog(settings: Settings = Depends(get_settings)):
+    from .public_data_api_embeds_v2110 import build_catalog
+    return build_catalog(settings)
+
+@app.get("/api/public/v1/workspaces")
+def public_data_api_workspaces(settings: Settings = Depends(get_settings)):
+    from .public_data_api_embeds_v2110 import build_catalog
+    return build_catalog(settings)
+
+@app.get("/api/public/v1/workspaces/{workspace_id}")
+def public_data_api_workspace(workspace_id: str, settings: Settings = Depends(get_settings)):
+    from .public_data_api_embeds_v2110 import build_workspace_manifest
+    try:
+        return build_workspace_manifest(workspace_id, settings)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+@app.get("/api/public/v1/workspaces/{workspace_id}/records")
+def public_data_api_workspace_records(
+    workspace_id: str,
+    country: str = Query(default="", max_length=20),
+    geography_code: str = Query(default="", max_length=20),
+    source_id: str = Query(default="", max_length=180),
+    query: str = Query(default="", max_length=240),
+    family: str = Query(default="", max_length=100),
+    domain: str = Query(default="", max_length=100),
+    category: str = Query(default="", max_length=100),
+    discipline: str = Query(default="", max_length=100),
+    authority_level: str = Query(default="", max_length=100),
+    record_type: str = Query(default="", max_length=100),
+    indicator_code: str = Query(default="", max_length=160),
+    bbox: str = Query(default="", max_length=120),
+    limit: int = Query(default=100, ge=1, le=500),
+    offset: int = Query(default=0, ge=0),
+    settings: Settings = Depends(get_settings),
+):
+    from .public_data_api_embeds_v2110 import build_workspace_records
+    try:
+        return build_workspace_records(workspace_id, settings, country=country, geography_code=geography_code, source_id=source_id, query=query, family=family, domain=domain, category=category, discipline=discipline, authority_level=authority_level, record_type=record_type, indicator_code=indicator_code, bbox=bbox, limit=limit, offset=offset)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+@app.get("/api/public/v1/workspaces/{workspace_id}/records.csv")
+def public_data_api_workspace_records_csv(
+    workspace_id: str,
+    country: str = Query(default="", max_length=20),
+    source_id: str = Query(default="", max_length=180),
+    query: str = Query(default="", max_length=240),
+    family: str = Query(default="", max_length=100),
+    limit: int = Query(default=100, ge=1, le=500),
+    settings: Settings = Depends(get_settings),
+):
+    from .public_data_api_embeds_v2110 import build_workspace_csv
+    try:
+        content = build_workspace_csv(workspace_id, settings, country=country, source_id=source_id, query=query, family=family, limit=limit)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    return Response(content=content, media_type="text/csv", headers={"Content-Disposition": f'attachment; filename="site-intelligence-{workspace_id}-records.csv"'})
+
+@app.get("/api/public/v1/embed")
+def public_data_api_embed(
+    view: str = Query(default="overview", max_length=80),
+    theme: str = Query(default="system", max_length=20),
+    chrome: str = Query(default="compact", max_length=20),
+    height: int = Query(default=900, ge=420, le=2200),
+    institution: str = Query(default="", max_length=120),
+    settings: Settings = Depends(get_settings),
+):
+    from .public_data_api_embeds_v2110 import build_embed_manifest
+    try:
+        return build_embed_manifest(view, theme=theme, chrome=chrome, height=height, institution=institution, settings=settings)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+@app.get("/api/public/v1/institution")
+def public_data_api_institution(settings: Settings = Depends(get_settings)):
+    from .public_data_api_embeds_v2110 import build_institution_profile
+    return build_institution_profile(settings)
+
+@app.get("/api/public/v1/openapi-summary")
+def public_data_api_openapi_summary(settings: Settings = Depends(get_settings)):
+    from .public_data_api_embeds_v2110 import build_openapi_summary
+    return build_openapi_summary(settings)
+
+@app.get("/api/public/v1/diagnostics")
+def public_data_api_diagnostics(settings: Settings = Depends(get_settings)):
+    from .public_data_api_embeds_v2110 import build_diagnostics
+    return build_diagnostics(settings)
 
 # Site Intelligence standalone public application.
 from pathlib import Path as _Path

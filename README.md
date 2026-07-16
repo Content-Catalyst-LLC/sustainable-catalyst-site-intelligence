@@ -1,11 +1,17 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.10.0 — Research Paths, Saved Investigations, and Briefing Workflows
+**Current release:** v2.11.0 — Public Data API, Embeds, and Institutional Integration
 
 
 
 
 
+
+## v2.11.0 — Public Data API, Embeds, and Institutional Integration
+
+Site Intelligence v2.11.0 adds a versioned read-only public API at `/api/public/v1`, workspace manifests, sanitized record collections for the primary data observatories, portable iframe manifests, a public institutional presentation profile, a dedicated `/app/?view=integration` workspace, and generic WordPress embeds. Provider credentials, private ingestion configuration, and hosted user profiles remain excluded.
+
+Public shortcodes: `[sc_public_data_api_integration height="1500"]` and `[sc_site_intelligence_embed view="economics" height="900"]`.
 
 ## v2.10.0 — Research Paths, Saved Investigations, and Briefing Workflows
 

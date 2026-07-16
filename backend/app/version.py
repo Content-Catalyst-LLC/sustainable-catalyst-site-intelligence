@@ -1,4 +1,4 @@
-APP_VERSION = "2.10.0"
+APP_VERSION = "2.11.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Research Paths, Saved Investigations, and Briefing Workflows"
+RELEASE_NAME = "Public Data API, Embeds, and Institutional Integration"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

@@ -34,6 +34,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         {"id": "alerts_monitoring", "label": "Alerts, Monitoring, and Live Intelligence Streams are available", "status": "pass", "detail": "Reconnectable public stream snapshots, browser-local rules, stateless matching, source-watch states, and deterministic digests are available without server-side user tracking.", "action": "Verify /app/?view=alerts, create a local rule, reconnect the stream, inspect source watch, and generate a digest."},
         {"id": "comparative_scenario_studio", "label": "Comparative Intelligence and Scenario Studio is available", "status": "pass", "detail": "Multi-geography comparison, compatibility warnings, transparent arithmetic scenarios, peer context, correlation review, and reproducible packets are available without rankings or forecasts.", "action": "Verify /app/?view=scenarios, run a comparison, apply a transparent adjustment, review a correlation, and export a packet."},
         {"id": "research_workflows", "label": "Research Paths and Briefing Workflows are available", "status": "pass", "detail": "Browser-local investigations, evidence sets, notes, checkpoints, briefing packets, and structured handoffs are available without hosted profiles.", "action": "Verify /app/?view=research, create an investigation, capture evidence, export JSON, and generate a briefing packet."},
+        {"id": "public_data_api_integration", "label": "Public Data API, Embeds, and Institutional Integration are available", "status": "pass", "detail": "Versioned read-only endpoints, workspace manifests, sanitized record collections, portable embeds, and public institutional presentation metadata are available without provider credential exposure.", "action": "Verify /app/?view=integration, /api/public/v1/catalog, one records endpoint, and a generated embed manifest."},
         {"id": "platform_core", "label": "Platform Core remains optional and free-source governed", "status": "pass", "detail": "Public routes degrade cleanly and do not require a paid provider or expose Core credentials.", "action": "Configure only the scoped Core public-read key in the Site Intelligence backend."},
         {"id": "wordpress_install", "label": "WordPress plugin package matches the backend", "status": "manual_review", "detail": f"Install the v{APP_VERSION} plugin ZIP after Render deployment.", "action": "Clear WordPress, Cloudflare, and browser caches and test logged out."},
         {"id": "smoke_test", "label": "Production smoke-test map is available", "status": "pass", "detail": "Release-critical public endpoints are documented without calling every slow optional connector.", "action": "Run the smoke-test endpoint after deployment."},
@@ -51,7 +52,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Checklist",
         "summary": RELEASE_NAME,
-        "release_stage": "v2.10.0_research_paths_saved_investigations_briefing_workflows",
+        "release_stage": "v2.11.0_public_data_api_embeds_institutional_integration",
         "status": "launch_ready_with_manual_review" if counts["fail"] == 0 else "needs_fix",
         "score": score,
         "counts": counts,
@@ -97,11 +98,11 @@ def release_public_summary(settings: Settings) -> Dict[str, Any]:
 
 def release_metadata() -> Dict[str, str]:
     return {
-        "seo_title": "Site Intelligence: Research Paths, Saved Investigations, and Briefing Workflows",
+        "seo_title": "Site Intelligence: Public Data API, Embeds, and Institutional Integration",
         "page_title": "Site Intelligence",
-        "excerpt": "Sustainable Catalyst Site Intelligence now supports browser-local research paths, saved investigations, evidence sets, review checkpoints, deterministic briefing packets, and structured cross-product handoffs.",
-        "meta_description": "Organize source-aware public evidence into browser-local investigations, notes, checkpoints, briefing packets, and explicit product handoffs without a hosted profile.",
-        "social_description": "Browser-local research paths, saved investigations, evidence sets, briefing workflows, and reviewable cross-product handoffs.",
+        "excerpt": "Sustainable Catalyst Site Intelligence now exposes a versioned read-only public API, portable embed manifests, and institutional presentation metadata while preserving source attribution and credential boundaries.",
+        "meta_description": "Reuse source-aware Site Intelligence records through versioned public endpoints, portable embeds, and institutional integration metadata without exposing provider credentials.",
+        "social_description": "Versioned public data endpoints, portable Site Intelligence embeds, and source-preserving institutional integration.",
     }
 
 
@@ -121,6 +122,9 @@ def smoke_test(settings: Settings) -> Dict[str, Any]:
         {"path": "/public/research-workflows", "scope": "public", "critical": True, "expected": "research workflow profile and privacy boundary"},
         {"path": "/public/research-workflows/schema", "scope": "public", "critical": True, "expected": "investigation, evidence, briefing, and handoff contract"},
         {"path": "/public/research-workflows/diagnostics", "scope": "public", "critical": True, "expected": "public-safe browser-local workflow diagnostics"},
+        {"path": "/api/public/v1/catalog", "scope": "public", "critical": True, "expected": "versioned public workspace and format catalog"},
+        {"path": "/api/public/v1/workspaces/economics/records?limit=5", "scope": "public", "critical": True, "expected": "sanitized public records or explicit empty integration state"},
+        {"path": "/api/public/v1/embed?view=economics&chrome=compact", "scope": "public", "critical": True, "expected": "portable read-only iframe manifest"},
         {"path": "/public/economics-sustainability", "scope": "public", "critical": True, "expected": "economics workspace profile and Core state"},
         {"path": "/public/economics-sustainability/records?limit=10", "scope": "public", "critical": True, "expected": "sanitized official economic records or explicit empty state"},
         {"path": "/public/international-law-observatory", "scope": "public", "critical": True, "expected": "international-law workspace profile and Core state"},
@@ -178,7 +182,7 @@ def release_status(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Status",
         "summary": RELEASE_NAME,
-        "release_stage": "v2.10.0_research_paths_saved_investigations_briefing_workflows",
+        "release_stage": "v2.11.0_public_data_api_embeds_institutional_integration",
         "release_status": checklist["status"],
         "release_score": checklist["score"],
         "public_shortcode": "[sc_site_intelligence_app height=\"1000\"]",

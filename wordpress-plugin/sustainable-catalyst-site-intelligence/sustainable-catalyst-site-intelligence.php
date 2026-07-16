@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 2.10.0
+ * Version: 2.11.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '2.10.0';
+    const VERSION = '2.11.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -4510,3 +4510,36 @@ if (!function_exists('scsi_research_paths_workflows_shortcode_v2100')) {
     }
 }
 add_shortcode('sc_research_paths_investigations', 'scsi_research_paths_workflows_shortcode_v2100');
+
+// Site Intelligence v2.11.0 Public Data API, Embeds, and Institutional Integration shortcodes
+if (!function_exists('scsi_public_data_api_integration_shortcode_v2110')) {
+    function scsi_public_data_api_integration_shortcode_v2110($atts = []) {
+        $atts = shortcode_atts(['height' => '1500'], $atts, 'sc_public_data_api_integration');
+        $height = max(760, min(2600, intval($atts['height'])));
+        $backend = function_exists('scsi_backend_url') ? scsi_backend_url() : get_option('scsi_backend_url', '');
+        if (!$backend) return '<div class="scsi-notice">Site Intelligence backend is not configured.</div>';
+        $src = esc_url(rtrim($backend, '/') . '/app/?view=integration');
+        return '<div class="scsi-embed scsi-public-data-integration"><iframe title="Public Data API, Embeds, and Institutional Integration" src="' . $src . '" style="width:100%;height:' . esc_attr($height) . 'px;border:0" loading="lazy" allow="clipboard-write; fullscreen"></iframe></div>';
+    }
+}
+add_shortcode('sc_public_data_api_integration', 'scsi_public_data_api_integration_shortcode_v2110');
+
+if (!function_exists('scsi_site_intelligence_embed_shortcode_v2110')) {
+    function scsi_site_intelligence_embed_shortcode_v2110($atts = []) {
+        $atts = shortcode_atts(['view' => 'overview', 'height' => '900', 'theme' => 'system', 'chrome' => 'compact', 'institution' => ''], $atts, 'sc_site_intelligence_embed');
+        $allowed_views = ['overview','global','economics','law','science','humanitarian','resources','dossiers','alerts','scenarios','research','integration','earth','country','events','compare','thematic','briefing','sources','saved','observatory','launch'];
+        $view = sanitize_key($atts['view']);
+        if (!in_array($view, $allowed_views, true)) $view = 'overview';
+        $theme = in_array($atts['theme'], ['system','light','dark'], true) ? $atts['theme'] : 'system';
+        $chrome = in_array($atts['chrome'], ['full','compact','none'], true) ? $atts['chrome'] : 'compact';
+        $height = max(420, min(2200, intval($atts['height'])));
+        $backend = function_exists('scsi_backend_url') ? scsi_backend_url() : get_option('scsi_backend_url', '');
+        if (!$backend) return '<div class="scsi-notice">Site Intelligence backend is not configured.</div>';
+        $query = ['view' => $view, 'embed' => '1', 'theme' => $theme, 'chrome' => $chrome];
+        if (!empty($atts['institution'])) $query['institution'] = sanitize_text_field($atts['institution']);
+        $src = esc_url(add_query_arg($query, rtrim($backend, '/') . '/app/'));
+        return '<div class="scsi-embed scsi-generic-public-embed"><iframe title="Sustainable Catalyst Site Intelligence — ' . esc_attr($view) . '" src="' . $src . '" style="width:100%;height:' . esc_attr($height) . 'px;border:0" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="clipboard-write; fullscreen"></iframe></div>';
+    }
+}
+add_shortcode('sc_site_intelligence_embed', 'scsi_site_intelligence_embed_shortcode_v2110');
+

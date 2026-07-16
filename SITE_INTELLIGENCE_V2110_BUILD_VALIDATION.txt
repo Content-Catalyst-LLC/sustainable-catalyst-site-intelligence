@@ -1,0 +1,24 @@
+Sustainable Catalyst Site Intelligence v2.11.0
+Public Data API, Embeds, and Institutional Integration
+
+Validation summary
+- 384 backend tests passed.
+- 20 public workspaces registered.
+- 19 auditable evidence artifacts registered.
+- 532 unique HTML IDs validated with no duplicates.
+- Python compilation passed.
+- All JavaScript syntax checks passed.
+- WordPress PHP syntax passed.
+- JSON and YAML validation passed.
+- v2.11.0 release contract passed.
+- Push-safe secret scan passed.
+- Public API credentials and sensitive nested fields are removed from public record wrappers.
+- Credential-bearing URL query values are removed.
+- Public embeds use bounded height, allowlisted views, optional origin controls, and read-only iframe manifests.
+- Institutional metadata is presentation-only and cannot alter evidence, sources, licenses, dates, quality, or methodology.
+- No paid API, paid queue, hosted user profile, or persistent institutional database is required.
+- 321-file release manifest verified.
+- Repository and WordPress ZIP integrity passed.
+- Exact installer dry run passed against a temporary v2.10.0 Git repository.
+- Safety backup, origin reset, installation, full validation, artifact packaging, and Git commit were verified.
+- Push was intentionally skipped during validation.

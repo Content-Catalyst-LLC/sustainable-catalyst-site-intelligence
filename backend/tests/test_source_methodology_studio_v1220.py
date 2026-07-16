@@ -18,7 +18,7 @@ def test_source_directory_contains_required_public_records_and_states():
     payload = studio.source_directory(include_health=False)
 
     assert payload["ok"] is True
-    assert payload["version"] == "2.10.0"
+    assert payload["version"] == "2.11.0"
     assert payload["schema_version"] == "sc-source-methodology/1.0"
     assert payload["recommended_shortcode"] == '[sc_source_methodology_studio height="1100"]'
 
@@ -103,7 +103,7 @@ def test_methodology_registry_matches_actual_reliability_rules():
     payload = studio.methodology_directory()
     method_ids = {item["id"] for item in payload["methods"]}
 
-    assert payload["version"] == "2.10.0"
+    assert payload["version"] == "2.11.0"
     assert payload["total_registered"] >= 17
     assert {
         "latest-value-selection",
@@ -246,8 +246,8 @@ def test_wordpress_source_methodology_shortcode_contract():
         / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
     ).read_text(encoding="utf-8")
 
-    assert "Version: 2.10.0" in php
-    assert "const VERSION = '2.10.0';" in php
+    assert "Version: 2.11.0" in php
+    assert "const VERSION = '2.11.0';" in php
     assert "add_shortcode('sc_source_methodology_studio'" in php
     assert "public function source_methodology_studio_shortcode" in php
     assert "view' => 'sources'" in php
@@ -263,4 +263,4 @@ def test_release_docs_and_manifest_exist():
     assert "Source and Methodology Studio" in documentation
     assert '"release": "1.22.0"' in manifest
     assert "## 1.22.0 — Source and Methodology Studio" in changelog
-    assert "**Current release:** v2.10.0" in readme
+    assert "**Current release:** v2.11.0" in readme

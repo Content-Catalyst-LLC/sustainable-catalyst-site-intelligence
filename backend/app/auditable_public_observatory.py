@@ -92,6 +92,12 @@ PUBLIC_WORKSPACES: list[dict[str, str]] = [
         "summary": "Organize browser-local investigations, evidence sets, notes, checkpoints, saved public views, briefing packets, and explicit product handoffs without a hosted profile.",
     },
     {
+        "id": "integration",
+        "title": "Public Data API, Embeds, and Institutional Integration",
+        "route": "/app/?view=integration",
+        "summary": "Publish versioned read-only records, portable iframe manifests, and public institutional presentation metadata while preserving source attribution and credential boundaries.",
+    },
+    {
         "id": "earth",
         "title": "Earth Observation Studio",
         "route": "/app/?view=earth",
@@ -277,6 +283,20 @@ AUDIT_ARTIFACTS: list[dict[str, Any]] = [
         ],
     },
     {
+        "id": "public-data-api-integration",
+        "title": "Public Data API, Embeds, and Institutional Integration",
+        "artifact_type": "workspace",
+        "route": "/app/?view=integration",
+        "schema": "sc-site-intelligence-public-api-integration/1.0",
+        "source_ids": ["platform-core"],
+        "methodology_ids": ["delivery-states", "missing-values", "export-generation"],
+        "verification_level": "public-api-catalog-and-embed-contract-linked",
+        "limitations": [
+            "The public API exposes sanitized read-only records and never provider credentials or private ingestion configuration.",
+            "Institutional presentation metadata cannot alter source attribution, licenses, methods, dates, quality states, or evidence content.",
+        ],
+    },
+    {
         "id": "earth-observation",
         "title": "Earth Observation Studio",
         "artifact_type": "workspace",
@@ -386,6 +406,7 @@ RELEASE_LEDGER = [
     {"version": "2.8.0", "title": "Alerts, Monitoring, and Live Intelligence Streams", "audit_contribution": "Reconnectable public stream snapshots, browser-local alert rules, stateless matching, source-recency monitoring, deterministic digests, and explicit no-server-profile safeguards."},
     {"version": "2.9.0", "title": "Comparative Intelligence and Scenario Studio", "audit_contribution": "Multi-geography indicator alignment, explicit compatibility warnings, transparent arithmetic scenarios, correlation review, peer context, reproducible packets, and no-ranking/no-forecast safeguards."},
     {"version": "2.10.0", "title": "Research Paths, Saved Investigations, and Briefing Workflows", "audit_contribution": "Browser-local investigations, explicit evidence classes, notes, checkpoints, saved public views, briefing packet integrity, structured product handoffs, and no hosted profile or automatic claim generation."},
+    {"version": "2.11.0", "title": "Public Data API, Embeds, and Institutional Integration", "audit_contribution": "Versioned read-only API discovery, sanitized workspace records, portable iframe manifests, institutional presentation metadata, credential non-disclosure, and source-preserving integration boundaries."},
 ]
 
 

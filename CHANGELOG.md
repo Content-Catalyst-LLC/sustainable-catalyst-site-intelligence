@@ -1,3 +1,13 @@
+## 2.11.0 — Public Data API, Embeds, and Institutional Integration
+
+- Added the versioned read-only `/api/public/v1` namespace.
+- Added workspace catalog and manifest endpoints.
+- Added sanitized generic record collections for global conditions, economics, law, science, humanitarian, and resource workspaces.
+- Added portable iframe manifests and embed presentation modes.
+- Added public institutional presentation metadata without altering evidence attribution.
+- Added `/app/?view=integration`, `[sc_public_data_api_integration]`, and `[sc_site_intelligence_embed]`.
+- Preserved provider credential non-disclosure, source licenses, methodology, dates, quality states, and no-user-tracking boundaries.
+
 ## 2.10.0 — Research Paths, Saved Investigations, and Briefing Workflows
 
 - Added browser-local research paths and saved investigations.

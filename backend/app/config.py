@@ -171,6 +171,19 @@ class Settings(BaseSettings):
     research_workflows_max_evidence_items: int = Field(default=120, ge=1, le=300)
     research_workflows_max_notes: int = Field(default=80, ge=1, le=200)
 
+    # Site Intelligence v2.11.0 — Public Data API, Embeds, and Institutional Integration.
+    # Exposes versioned read-only public records, embed manifests, and public
+    # institutional presentation metadata without provider credentials or user tracking.
+    public_data_api_enabled: bool = True
+    public_data_api_max_limit: int = Field(default=200, ge=10, le=500)
+    public_embeds_enabled: bool = True
+    public_embed_allowed_origins: str = ""
+    institution_name: str = "Sustainable Catalyst"
+    institution_website: str = "https://sustainablecatalyst.com"
+    institution_logo_url: str = ""
+    institution_contact: str = ""
+    institution_accent: str = "#8b1e3f"
+
 
     # Sustainable Development Data Connectors v1.14.1.
     sustainable_development_connectors_enabled: bool = True
@@ -193,7 +206,9 @@ class Settings(BaseSettings):
 
     @property
     def cors_origin_list(self) -> List[str]:
-        return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
+        origins = [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
+        origins.extend(origin.strip() for origin in self.public_embed_allowed_origins.split(",") if origin.strip())
+        return list(dict.fromkeys(origins))
 
     @property
     def ga4_enabled(self) -> bool:
