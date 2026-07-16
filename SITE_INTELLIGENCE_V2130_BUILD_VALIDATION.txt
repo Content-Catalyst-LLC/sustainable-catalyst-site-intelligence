@@ -1,0 +1,35 @@
+SITE INTELLIGENCE v2.13.0 — BUILD VALIDATION
+
+Release: Connector Operations and Data Ingestion Control Center
+
+Validated capabilities:
+- 14-connector managed registry
+- 14 manual/scheduled/conditional job definitions
+- explicit dry-run-first due-job batch runner
+- execution receipts and history filtering
+- dataset acceptance and freshness diagnostics
+- quota windows, retries, backoff, and circuit breakers
+- schema, payload-size, and record-count validation
+- redacted quarantine and resolution records
+- token-protected administrative endpoints
+- sanitized public connector-operations endpoint
+- public and administrator-only WordPress shortcodes
+- zero-cost file-backed runtime with configurable paths
+
+Automated validation:
+- 405 backend tests passed
+- v2.13.0 release contract passed
+- Python compilation passed
+- JavaScript and service-worker syntax passed
+- WordPress PHP syntax passed
+- JSON, webmanifest, and YAML parsing passed
+- immutable release manifest verified before and after testing
+- runtime state, history, quarantine, country cache, Python caches, and pytest caches excluded
+
+Governance validation:
+- no credential values persisted or returned
+- no complete upstream payload persistence
+- public output excludes quotas, credential names, payload previews, and private errors
+- accepted receipts do not claim upstream factual certification
+- no persistent scheduler is claimed unless separately configured
+- no paid scheduler, database, queue, cache, or connector provider is required

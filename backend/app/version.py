@@ -1,4 +1,4 @@
-APP_VERSION = "2.12.1"
+APP_VERSION = "2.13.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Production Offline, Mobile, and Embed Reliability Patch"
+RELEASE_NAME = "Connector Operations and Data Ingestion Control Center"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

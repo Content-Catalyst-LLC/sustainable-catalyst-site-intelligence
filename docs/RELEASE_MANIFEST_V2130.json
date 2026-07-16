@@ -1,0 +1,42 @@
+{
+  "version": "2.13.0",
+  "release": "Connector Operations and Data Ingestion Control Center",
+  "schema": "sc-site-intelligence-connector-operations/1.0",
+  "connector_count": 14,
+  "job_count": 14,
+  "dataset_count": 14,
+  "public_endpoint": "/public/connectors/operations",
+  "admin_endpoints": [
+    "/admin/connectors/control-center",
+    "/admin/connectors/registry",
+    "/admin/connectors/jobs",
+    "/admin/connectors/jobs/due",
+    "/admin/connectors/jobs/run-due",
+    "/admin/connectors/jobs/{job_id}/run",
+    "/admin/connectors/executions",
+    "/admin/connectors/quarantine",
+    "/admin/connectors/quarantine/{quarantine_id}/resolve",
+    "/admin/connectors/datasets"
+  ],
+  "shortcodes": [
+    "[sc_public_connector_operations]",
+    "[sc_connector_operations_control_center]"
+  ],
+  "refresh_triggers": ["manual", "scheduled", "conditional"],
+  "batch_runner_default": "dry_run",
+  "execution_receipts": true,
+  "freshness_diagnostics": true,
+  "quota_windows": true,
+  "bounded_retries": true,
+  "circuit_breakers": true,
+  "schema_validation": true,
+  "redacted_quarantine": true,
+  "raw_payload_persistence": false,
+  "credential_persistence": false,
+  "public_quota_visibility": false,
+  "file_backed_default": true,
+  "paid_scheduler_required": false,
+  "paid_database_required": false,
+  "paid_connector_required": false,
+  "persistent_scheduler_claimed": false
+}

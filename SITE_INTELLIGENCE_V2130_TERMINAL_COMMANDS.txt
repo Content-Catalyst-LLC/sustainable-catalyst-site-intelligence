@@ -1,0 +1,22 @@
+SITE INTELLIGENCE v2.13.0 — TERMINAL COMMANDS
+
+1. Install, validate, commit, and push
+
+cd ~/Downloads
+chmod 700 install_and_push_site_intelligence_v2_13_0.sh
+bash ./install_and_push_site_intelligence_v2_13_0.sh
+
+2. After Render clear-cache deployment, verify
+
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/health | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/release | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/public/connectors/operations | python3 -m json.tool
+
+3. Local dry-run of currently due connector jobs
+
+cd ~/sustainable-catalyst-site-intelligence
+python3 scripts/run_connector_jobs_v2130.py --limit 5
+
+4. Live invocation only when intended
+
+python3 scripts/run_connector_jobs_v2130.py --live --limit 5

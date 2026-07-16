@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 2.12.1
+ * Version: 2.13.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '2.12.1';
+    const VERSION = '2.13.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -77,6 +77,8 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_public_source_page_templates', [$this, 'public_source_page_templates_shortcode']);
         add_shortcode('sc_public_source_page_visual_qa', [$this, 'public_source_page_visual_qa_shortcode']);
         add_shortcode('sc_public_connector_status', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_public_connector_operations', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_connector_operations_control_center', [$this, 'connector_operations_control_center_shortcode']);
         add_shortcode('sc_public_cache_status', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_source_freshness', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_connector_reliability', [$this, 'public_connector_panel_shortcode']);
@@ -748,6 +750,11 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-connector-status', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_connector_status'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-connector-operations', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_connector_operations'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/public-cache-status', [
@@ -1798,6 +1805,7 @@ final class SC_Site_Intelligence_Plugin {
     private function public_connector_endpoint_map($key) {
         $map = [
             'connector_status' => 'public/connectors/status',
+            'connector_operations' => 'public/connectors/operations',
             'cache_status' => 'public/connectors/cache',
             'source_freshness' => 'public/connectors/freshness',
             'connector_reliability' => 'public/connectors/reliability',
@@ -1820,6 +1828,7 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function rest_public_connector_status(WP_REST_Request $request) { return $this->rest_public_connector_panel('connector_status'); }
+    public function rest_public_connector_operations(WP_REST_Request $request) { return $this->rest_public_connector_panel('connector_operations'); }
     public function rest_public_cache_status(WP_REST_Request $request) { return $this->rest_public_connector_panel('cache_status'); }
     public function rest_public_source_freshness(WP_REST_Request $request) { return $this->rest_public_connector_panel('source_freshness'); }
     public function rest_public_connector_reliability(WP_REST_Request $request) { return $this->rest_public_connector_panel('connector_reliability'); }
@@ -3176,6 +3185,7 @@ final class SC_Site_Intelligence_Plugin {
     private function public_connector_panel_from_shortcode_tag($tag) {
         $map = [
             'sc_public_connector_status' => ['connector-status', 'Public Connector Status', 'Live, cached, fallback, and planned connector readiness for public source panels.'],
+            'sc_public_connector_operations' => ['connector-operations', 'Connector Operations Status', 'Sanitized ingestion availability, freshness, and operational state across managed connectors.'],
             'sc_public_cache_status' => ['cache-status', 'Public Cache Status', 'Cache TTL, stale-safe display, and public source refresh policy.'],
             'sc_public_source_freshness' => ['source-freshness', 'Public Source Freshness', 'Freshness labels for public source families and connector panels.'],
             'sc_public_connector_reliability' => ['connector-reliability', 'Connector Reliability Summary', 'Public display reliability, recovery guidance, and degraded/fallback-safe source labels.'],
@@ -3244,6 +3254,54 @@ final class SC_Site_Intelligence_Plugin {
             <h2><?php echo esc_html($panel[1]); ?></h2>
             <p class="scsi-muted"><?php echo esc_html($panel[2]); ?></p>
             <div class="scsi-output" aria-live="polite"></div>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
+    public function connector_operations_control_center_shortcode($atts = []) {
+        if (!current_user_can('manage_options')) {
+            return '';
+        }
+        $data = $this->backend_request('admin/connectors/control-center');
+        if (is_wp_error($data)) {
+            return '<section class="scsi-card"><p class="scsi-eyebrow">Connector Operations</p><h2>Control Center unavailable</h2><p class="scsi-muted">' . esc_html($data->get_error_message()) . '</p></section>';
+        }
+        $counts = isset($data['counts']) && is_array($data['counts']) ? $data['counts'] : [];
+        $due = isset($data['due_jobs']) && is_array($data['due_jobs']) ? $data['due_jobs'] : [];
+        $quarantine = isset($data['open_quarantine']) && is_array($data['open_quarantine']) ? $data['open_quarantine'] : [];
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-connector-operations-control-center">
+            <p class="scsi-eyebrow">Private Admin Workspace · v<?php echo esc_html(self::VERSION); ?></p>
+            <h2>Connector Operations and Data Ingestion Control Center</h2>
+            <p class="scsi-muted">Managed connector registry, due refresh jobs, execution receipts, freshness, dataset diagnostics, circuit-breaker state, and quarantine review.</p>
+            <div class="scsi-grid scsi-public-connector-health-grid">
+                <?php foreach ([
+                    'connectors' => 'Connectors',
+                    'jobs' => 'Jobs',
+                    'due_jobs' => 'Due jobs',
+                    'datasets' => 'Datasets',
+                    'healthy' => 'Healthy',
+                    'degraded' => 'Degraded',
+                    'open_quarantine' => 'Open quarantine',
+                ] as $key => $label) : ?>
+                    <div class="scsi-stat scsi-public-connector-status-card"><span class="scsi-public-label"><?php echo esc_html($label); ?></span><strong><?php echo esc_html((string) ($counts[$key] ?? 0)); ?></strong></div>
+                <?php endforeach; ?>
+            </div>
+            <?php if (!empty($due)) : ?>
+                <h3>Due refresh jobs</h3>
+                <?php foreach (array_slice($due, 0, 20) as $job) : ?>
+                    <div class="scsi-page-row"><strong><?php echo esc_html((string) ($job['name'] ?? $job['job_id'] ?? 'Job')); ?></strong><small><?php echo esc_html(implode(', ', (array) ($job['reasons'] ?? []))); ?></small></div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            <?php if (!empty($quarantine)) : ?>
+                <h3>Quarantine review</h3>
+                <?php foreach (array_slice($quarantine, 0, 10) as $item) : ?>
+                    <div class="scsi-page-row"><strong><?php echo esc_html((string) ($item['connector_id'] ?? 'Connector')); ?></strong><small><?php echo esc_html(implode('; ', (array) ($item['validation_errors'] ?? []))); ?></small></div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            <p class="scsi-muted">Job execution and quarantine resolution remain token-protected backend actions. This shortcode intentionally does not expose credentials or raw upstream payloads.</p>
         </section>
         <?php
         return ob_get_clean();

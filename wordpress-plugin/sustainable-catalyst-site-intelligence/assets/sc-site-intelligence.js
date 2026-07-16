@@ -2596,6 +2596,7 @@
   function connectorPanelEndpoint(panel, root) {
     const map = {
       'connector-status': '/public-connector-status',
+      'connector-operations': '/public-connector-operations',
       'cache-status': '/public-cache-status',
       'source-freshness': '/public-source-freshness',
       'connector-reliability': '/public-connector-reliability',
@@ -3002,12 +3003,15 @@
       connectors.forEach(function (item) {
         const row = document.createElement('div');
         row.className = 'scsi-page-row scsi-public-connector-row';
-        row.innerHTML = '<strong>' + escapeHtml(item.label || item.slug || '') + '</strong><br>' +
-          statusBadge(item.status || 'planned') + '<span class="scsi-badge scsi-badge-soft">' + escapeHtml(item.source_mode || item.family || 'public_connector') + '</span>' +
+        row.innerHTML = '<strong>' + escapeHtml(item.label || item.name || item.slug || item.connector_id || '') + '</strong><br>' +
+          statusBadge(item.operational_status || item.status || item.public_status || 'planned') + '<span class="scsi-badge scsi-badge-soft">' + escapeHtml(item.source_mode || item.family || 'public_connector') + '</span>' +
           '<small><b>Family:</b> ' + escapeHtml(item.family || '') + '</small>' +
-          '<small><b>Public use:</b> ' + escapeHtml(item.public_use || '') + '</small>' +
-          '<small><b>Safe display:</b> ' + escapeHtml(item.safe_display || '') + '</small>' +
-          '<small><b>Fallback:</b> ' + escapeHtml(item.fallback_reason || '') + '</small>' +
+          (item.provider ? '<small><b>Provider:</b> ' + escapeHtml(item.provider) + '</small>' : '') +
+          (item.freshness_state ? '<small><b>Freshness:</b> ' + escapeHtml(item.freshness_state) + '</small>' : '') +
+          (item.last_success_at ? '<small><b>Last success:</b> ' + escapeHtml(item.last_success_at) + '</small>' : '') +
+          '<small><b>Public use:</b> ' + escapeHtml(item.public_use || item.public_note || '') + '</small>' +
+          (item.safe_display ? '<small><b>Safe display:</b> ' + escapeHtml(item.safe_display) + '</small>' : '') +
+          (item.fallback_reason ? '<small><b>Fallback:</b> ' + escapeHtml(item.fallback_reason) + '</small>' : '') +
           renderConnectorRuntime(item);
         out.appendChild(row);
       });

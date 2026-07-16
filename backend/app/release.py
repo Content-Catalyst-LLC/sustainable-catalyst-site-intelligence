@@ -36,6 +36,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         {"id": "research_workflows", "label": "Research Paths and Briefing Workflows are available", "status": "pass", "detail": "Browser-local investigations, evidence sets, notes, checkpoints, briefing packets, and structured handoffs are available without hosted profiles.", "action": "Verify /app/?view=research, create an investigation, capture evidence, export JSON, and generate a briefing packet."},
         {"id": "public_data_api_integration", "label": "Public Data API, Embeds, and Institutional Integration are available", "status": "pass", "detail": "Versioned read-only endpoints, workspace manifests, sanitized record collections, portable embeds, and public institutional presentation metadata are available without provider credential exposure.", "action": "Verify /app/?view=integration, /api/public/v1/catalog, one records endpoint, and a generated embed manifest."},
         {"id": "offline_mobile_accessibility_performance", "label": "Production offline, mobile, and embed reliability controls are available", "status": "pass", "detail": "The release-aligned application shell uses failure-tolerant installation, bounded age-limited caches, offline repair controls, and origin-checked responsive WordPress embeds without server-side user tracking.", "action": "Verify /app/?view=experience, /app/manifest.webmanifest, /app/service-worker.js, /public/offline-experience/diagnostics, and a logged-out WordPress embed on mobile."},
+        {"id": "connector_operations", "label": "Connector Operations and Data Ingestion Control Center is available", "status": "pass", "detail": "A managed registry, manual/scheduled/conditional job definitions, execution receipts, freshness, quotas, retries, circuit breakers, schema validation, quarantine, and dataset diagnostics are available without exposing credentials or raw upstream payloads.", "action": "Verify /public/connectors/operations and the token-protected /admin/connectors/control-center, jobs, executions, quarantine, and datasets endpoints."},
         {"id": "platform_core", "label": "Platform Core remains optional and free-source governed", "status": "pass", "detail": "Public routes degrade cleanly and do not require a paid provider or expose Core credentials.", "action": "Configure only the scoped Core public-read key in the Site Intelligence backend."},
         {"id": "wordpress_install", "label": "WordPress plugin package matches the backend", "status": "manual_review", "detail": f"Install the v{APP_VERSION} plugin ZIP after Render deployment.", "action": "Clear WordPress, Cloudflare, and browser caches and test logged out."},
         {"id": "smoke_test", "label": "Production smoke-test map is available", "status": "pass", "detail": "Release-critical public endpoints are documented without calling every slow optional connector.", "action": "Run the smoke-test endpoint after deployment."},
@@ -53,7 +54,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Checklist",
         "summary": RELEASE_NAME,
-        "release_stage": "v2.12.1_production_offline_mobile_embed_reliability",
+        "release_stage": "v2.13.0_connector_operations_ingestion_control",
         "status": "launch_ready_with_manual_review" if counts["fail"] == 0 else "needs_fix",
         "score": score,
         "counts": counts,
@@ -69,7 +70,7 @@ def release_public_summary(settings: Settings) -> Dict[str, Any]:
         "generated_at": _now(),
         "version": settings.version,
         "title": "Sustainable Catalyst Site Intelligence",
-        "subtitle": "A public geospatial, economic, sustainability, international-law, scientific, humanitarian, resource-security, country-dossier, alert-monitoring, comparative, briefing, source, methodology, and saved-research application.",
+        "subtitle": "A public intelligence application with managed connector operations, geospatial, economic, sustainability, legal, scientific, humanitarian, resource-security, country, monitoring, comparison, briefing, source, methodology, and saved-research workflows.",
         "summary": "Site Intelligence connects live intelligence streams and browser-local monitoring rules with unified country and regional dossiers, official economics, international law, science, Earth observation, humanitarian evidence, trade and resource records, global indicators, sources, methodology, and exports through one standalone public application.",
         "public_value": [
             "Provides reconnectable public intelligence snapshots, browser-local alert rules, stateless matching, source-recency monitoring, and deterministic digests without server-side profiling.",
@@ -99,11 +100,11 @@ def release_public_summary(settings: Settings) -> Dict[str, Any]:
 
 def release_metadata() -> Dict[str, str]:
     return {
-        "seo_title": "Site Intelligence: Offline, Mobile, Accessibility, and Performance",
+        "seo_title": "Site Intelligence Connector Operations and Data Ingestion Control Center",
         "page_title": "Site Intelligence",
-        "excerpt": "Sustainable Catalyst Site Intelligence now supports an installable application shell, browser-local offline fallback, low-bandwidth controls, accessibility contracts, and public performance budgets.",
-        "meta_description": "Use Site Intelligence with offline fallback, mobile-safe navigation, accessibility-focused delivery, low-bandwidth controls, and transparent first-party performance budgets.",
-        "social_description": "Installable, mobile-safe, accessibility-focused Site Intelligence with offline fallback and transparent performance budgets.",
+        "excerpt": "Sustainable Catalyst Site Intelligence now manages connector refresh jobs, execution receipts, freshness, quotas, retries, circuit breakers, schema validation, quarantine, and dataset diagnostics.",
+        "meta_description": "Review source-aware connector operations, ingestion receipts, freshness, quotas, schema validation, quarantine, and dataset diagnostics in Site Intelligence.",
+        "social_description": "A source-aware connector operations and data ingestion control center for auditable public intelligence.",
     }
 
 
@@ -128,6 +129,9 @@ def smoke_test(settings: Settings) -> Dict[str, Any]:
         {"path": "/api/public/v1/embed?view=economics&chrome=compact", "scope": "public", "critical": True, "expected": "portable read-only iframe manifest"},
         {"path": "/public/offline-experience", "scope": "public", "critical": True, "expected": "offline, mobile, accessibility, and performance workspace profile"},
         {"path": "/public/offline-experience/diagnostics", "scope": "public", "critical": True, "expected": "public-safe PWA, cache, accessibility, and performance diagnostics"},
+        {"path": "/public/connectors/operations", "scope": "public", "critical": True, "expected": "sanitized managed-connector operational and freshness summary"},
+        {"path": "/admin/connectors/control-center", "scope": "private/admin", "critical": True, "expected": "managed connector registry, jobs, receipts, datasets, and quarantine summary"},
+        {"path": "/admin/connectors/jobs/run-due", "scope": "private/admin", "critical": False, "expected": "explicit dry-run batch execution of currently due jobs"},
         {"path": "/app/manifest.webmanifest", "scope": "public", "critical": True, "expected": "installable application manifest"},
         {"path": "/public/economics-sustainability", "scope": "public", "critical": True, "expected": "economics workspace profile and Core state"},
         {"path": "/public/economics-sustainability/records?limit=10", "scope": "public", "critical": True, "expected": "sanitized official economic records or explicit empty state"},
@@ -168,6 +172,7 @@ def smoke_test(settings: Settings) -> Dict[str, Any]:
             'curl "https://sustainable-catalyst-site-intelligence.onrender.com/public/source-methodology/diagnostics"',
             'curl "https://sustainable-catalyst-site-intelligence.onrender.com/public/saved-views/diagnostics"',
             'curl "https://sustainable-catalyst-site-intelligence.onrender.com/public/research-workflows/diagnostics"',
+            'curl "https://sustainable-catalyst-site-intelligence.onrender.com/public/connectors/operations"',
         ],
         "wordpress_checks": [
             "Confirm [sc_site_intelligence_app height=\"1000\"] renders while logged out.",
@@ -186,7 +191,7 @@ def release_status(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Status",
         "summary": RELEASE_NAME,
-        "release_stage": "v2.12.1_production_offline_mobile_embed_reliability",
+        "release_stage": "v2.13.0_connector_operations_ingestion_control",
         "release_status": checklist["status"],
         "release_score": checklist["score"],
         "public_shortcode": "[sc_site_intelligence_app height=\"1000\"]",

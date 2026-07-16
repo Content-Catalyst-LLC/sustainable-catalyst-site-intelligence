@@ -53,6 +53,7 @@ from .public_api_sources import (
     public_indicator_overview as build_public_indicator_overview,
     public_sustainability_indicators as build_public_sustainability_indicators,
 )
+from .connector_operations_v2130 import ConnectorOperationsCenter
 from .public_live_connectors import (
     public_connector_status as build_public_connector_status,
     public_cache_status as build_public_cache_status,
@@ -1746,6 +1747,123 @@ def public_dashboard_export_visual_qa_endpoint(settings: Settings = Depends(get_
 @app.get("/admin/connectors/diagnostics")
 def admin_connector_diagnostics_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return build_admin_connector_diagnostics(settings)
+
+
+def _connector_operations(settings: Settings) -> ConnectorOperationsCenter:
+    if not settings.connector_operations_enabled:
+        raise HTTPException(status_code=403, detail="Connector operations are disabled.")
+    try:
+        return ConnectorOperationsCenter(settings)
+    except ValueError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@app.get("/public/connectors/operations")
+def public_connector_operations_endpoint(settings: Settings = Depends(get_settings)):
+    return _connector_operations(settings).public_status()
+
+
+@app.get("/admin/connectors/control-center")
+def admin_connector_control_center_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _connector_operations(settings).control_center()
+
+
+@app.get("/admin/connectors/registry")
+def admin_connector_registry_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _connector_operations(settings).registry(public=False)
+
+
+@app.get("/admin/connectors/jobs")
+def admin_connector_jobs_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _connector_operations(settings).jobs()
+
+
+@app.get("/admin/connectors/jobs/due")
+def admin_connector_due_jobs_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _connector_operations(settings).due_jobs()
+
+
+@app.post("/admin/connectors/jobs/run-due")
+def admin_connector_run_due_jobs_endpoint(
+    request: dict = Body(default={}),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    return _connector_operations(settings).run_due_jobs(
+        dry_run=bool(request.get("dry_run", True)),
+        force=bool(request.get("force", False)),
+        limit=int(request.get("limit", 25)),
+    )
+
+
+@app.post("/admin/connectors/jobs/{job_id}/run")
+def admin_connector_run_job_endpoint(
+    job_id: str,
+    request: Dict[str, Any] = Body(default={}),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    center = _connector_operations(settings)
+    supplied = request.get("payload")
+    if supplied is not None and not isinstance(supplied, dict):
+        raise HTTPException(status_code=422, detail="payload must be a JSON object.")
+    try:
+        return center.run_job(
+            job_id,
+            trigger=str(request.get("trigger") or "manual"),
+            dry_run=bool(request.get("dry_run", True)),
+            supplied_payload=supplied,
+            force=bool(request.get("force", False)),
+        )
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown connector job: {job_id}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/admin/connectors/executions")
+def admin_connector_executions_endpoint(
+    limit: int = Query(default=100, ge=1, le=5000),
+    connector_id: str = Query(default=""),
+    status: str = Query(default=""),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    return _connector_operations(settings).executions(limit=limit, connector_id=connector_id, status=status)
+
+
+@app.get("/admin/connectors/quarantine")
+def admin_connector_quarantine_endpoint(
+    limit: int = Query(default=100, ge=1, le=5000),
+    status: str = Query(default="open"),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    return _connector_operations(settings).quarantine(limit=limit, status=status)
+
+
+@app.post("/admin/connectors/quarantine/{quarantine_id}/resolve")
+def admin_connector_quarantine_resolve_endpoint(
+    quarantine_id: str,
+    request: Dict[str, Any] = Body(default={}),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    try:
+        return _connector_operations(settings).resolve_quarantine(
+            quarantine_id,
+            action=str(request.get("action") or ""),
+            note=str(request.get("note") or ""),
+        )
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown quarantine item: {quarantine_id}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/admin/connectors/datasets")
+def admin_connector_datasets_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _connector_operations(settings).datasets()
 
 
 @app.get("/public/source-pages")
@@ -4607,7 +4725,7 @@ def public_data_api_diagnostics(settings: Settings = Depends(get_settings)):
     return build_diagnostics(settings)
 
 
-# Site Intelligence v2.12.1 — Production Offline, Mobile, and Embed Reliability Patch.
+# Site Intelligence v2.13.0 — Connector Operations and Data Ingestion Control Center.
 @app.get("/public/offline-experience")
 def offline_experience(settings: Settings = Depends(get_settings)):
     from .offline_mobile_accessibility_performance_v2120 import build_overview

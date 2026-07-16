@@ -1,3 +1,17 @@
+## 2.13.0 — Connector Operations and Data Ingestion Control Center
+
+- Added a unified registry for 14 operational connector families and their public datasets.
+- Added manual, scheduled, and conditional refresh-job definitions with due-job evaluation and an explicit batch runner.
+- Added immutable-style execution receipts with timing, attempts, record counts, payload digests, source state, schema version, transformations, and validation results.
+- Added connector freshness, expected-update, dataset, credential-readiness, and operational-state diagnostics.
+- Added bounded retries, exponential backoff, quota windows, and circuit breakers.
+- Added schema validation, payload-size and record-count limits, and redacted quarantine records without storing complete upstream payloads.
+- Added quarantine accept, reject, and retry resolution records.
+- Added token-protected administrative endpoints and sanitized public connector-operations status.
+- Added `[sc_public_connector_operations]` and the administrator-only `[sc_connector_operations_control_center]` WordPress shortcodes.
+- Added a file-backed zero-cost runtime with configurable paths and explicit exclusions from release manifests.
+- Preserved existing public connector endpoints and kept provider credentials, request headers, quota internals, and raw payloads private.
+
 ## 2.12.1 — Production Offline, Mobile, and Embed Reliability Patch
 
 - Made service-worker shell installation resilient to individual optional asset failures.

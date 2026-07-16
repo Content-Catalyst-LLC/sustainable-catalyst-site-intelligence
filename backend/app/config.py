@@ -193,6 +193,22 @@ class Settings(BaseSettings):
     offline_cache_ttl_hours: int = Field(default=24, ge=1, le=168)
     low_bandwidth_default: bool = False
 
+    # Site Intelligence v2.13.0 — Connector Operations and Data Ingestion Control Center.
+    # The zero-cost default uses file-backed receipts and state. Runtime files are
+    # excluded from release manifests and may be redirected to /tmp on ephemeral hosts.
+    connector_operations_enabled: bool = True
+    connector_operations_registry_path: str = "backend/data/connector_operations_registry_v2130.json"
+    connector_operations_state_path: str = "backend/data/connector_operations_state_v2130.json"
+    connector_operations_history_path: str = "backend/data/connector_operations_history_v2130.jsonl"
+    connector_operations_quarantine_path: str = "backend/data/connector_operations_quarantine_v2130.jsonl"
+    connector_operations_max_history: int = Field(default=500, ge=50, le=5000)
+    connector_operations_default_retry_attempts: int = Field(default=3, ge=1, le=5)
+    connector_operations_retry_backoff_seconds: float = Field(default=0.25, ge=0.0, le=10.0)
+    connector_operations_circuit_breaker_failures: int = Field(default=3, ge=1, le=20)
+    connector_operations_circuit_breaker_seconds: int = Field(default=300, ge=30, le=86400)
+    connector_operations_max_records_per_run: int = Field(default=500, ge=1, le=5000)
+    connector_operations_max_payload_bytes: int = Field(default=2000000, ge=10000, le=20000000)
+
 
     # Sustainable Development Data Connectors v1.14.1.
     sustainable_development_connectors_enabled: bool = True

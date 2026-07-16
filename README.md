@@ -1,7 +1,22 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.12.1 — Production Offline, Mobile, and Embed Reliability Patch
+**Current release:** v2.13.0 — Connector Operations and Data Ingestion Control Center
 
+
+
+## v2.13.0 — Connector Operations and Data Ingestion Control Center
+
+Site Intelligence v2.13.0 adds a managed, source-aware operations layer across 14 existing public-data connectors. It introduces a unified connector and dataset registry, manual/scheduled/conditional refresh jobs, due-job evaluation, execution receipts, freshness diagnostics, quota windows, bounded retries, circuit breakers, schema validation, transformation declarations, and redacted quarantine review.
+
+The zero-cost default remains file-backed and can be redirected to ephemeral or durable storage through environment variables. Credentials, request headers, and complete upstream payloads are never returned by the control center or persisted in execution history. Scheduled work remains explicit: a protected endpoint and command-line runner can execute due jobs, but the application does not claim a background scheduler is active unless one is configured.
+
+Public status endpoint: `/public/connectors/operations`
+
+Private control center: `/admin/connectors/control-center`
+
+Due-job runner: `python scripts/run_connector_jobs_v2130.py --dry-run`
+
+WordPress shortcodes: `[sc_public_connector_operations]` and `[sc_connector_operations_control_center]`
 
 
 ## v2.12.1 — Production Offline, Mobile, and Embed Reliability Patch

@@ -23,7 +23,7 @@
     }
     throw last;
   }
-  const APP_VERSION="2.12.1";
+  const APP_VERSION="2.13.0";
   let heightFrame=0;
   function documentHeight(){
     const body=document.body,root=document.documentElement;
