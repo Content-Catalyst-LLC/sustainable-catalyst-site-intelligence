@@ -28,7 +28,7 @@ def settings(**kwargs):
 
 def test_catalog_and_workspace_manifests_are_versioned_and_read_only():
     catalog = module.build_catalog(settings())
-    assert catalog["version"] == "2.12.0"
+    assert catalog["version"] == "2.12.1"
     assert catalog["api_version"] == "v1"
     assert catalog["count"] == 12
     manifest = module.build_workspace_manifest("economics", settings())
@@ -91,5 +91,5 @@ def test_public_routes_frontend_and_wordpress_contract():
     php = (root / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
     assert 'data-route="integration"' in html and 'id="publicDataIntegrationStudio"' in html
     assert "SCIntegrationV2110" in js and ".public-data-integration-studio" in css
-    assert 'const APP_VERSION="2.12.0"' in appjs
-    assert "Version: 2.12.0" in php and "sc_site_intelligence_embed" in php and "sc_public_data_api_integration" in php
+    assert 'const APP_VERSION="2.12.1"' in appjs
+    assert "Version: 2.12.1" in php and "sc_site_intelligence_embed" in php and "sc_public_data_api_integration" in php

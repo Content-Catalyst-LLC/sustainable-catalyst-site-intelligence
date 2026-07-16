@@ -1,0 +1,52 @@
+{
+  "version": "2.12.1",
+  "release": "Production Offline, Mobile, and Embed Reliability Patch",
+  "route": "/app/?view=experience",
+  "shortcodes": [
+    "[sc_site_intelligence_app height=\"1000\"]",
+    "[sc_offline_mobile_accessibility_performance height=\"1500\"]",
+    "[sc_site_intelligence_embed view=\"experience\" height=\"1000\"]"
+  ],
+  "public_endpoints": [
+    "/public/offline-experience",
+    "/public/offline-experience/cache-plan",
+    "/public/offline-experience/accessibility",
+    "/public/offline-experience/performance",
+    "/public/offline-experience/diagnostics",
+    "/public/offline-experience/reliability"
+  ],
+  "pwa": {
+    "manifest": "/app/manifest.webmanifest",
+    "service_worker": "/app/service-worker.js",
+    "offline_fallback": "/app/offline.html",
+    "scope": "/app/",
+    "release_scoped_cache": "scsi-v2.12.1",
+    "partial_install_recovery": true,
+    "navigation_preload": true,
+    "old_release_cache_cleanup": true
+  },
+  "cache": {
+    "public_maximum_entries": 120,
+    "public_maximum_age_hours": 24,
+    "bounded": true,
+    "age_limited": true,
+    "browser_local": true
+  },
+  "embeds": {
+    "origin_checked": true,
+    "source_window_checked": true,
+    "desktop_minimum_height": 620,
+    "mobile_minimum_height": 760,
+    "maximum_height": 2600,
+    "new_tab_fallback": true
+  },
+  "offline_freshness_guaranteed": false,
+  "accessibility_target": "WCAG 2.2 Level AA target; not a third-party certification",
+  "accessibility_certification": "none",
+  "server_user_tracking": false,
+  "paid_api_required": false,
+  "paid_cache_required": false,
+  "new_server_required": false,
+  "workspace_count": 21,
+  "auditable_artifact_count": 20
+}

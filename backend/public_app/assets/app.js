@@ -23,13 +23,41 @@
     }
     throw last;
   }
+  const APP_VERSION="2.12.1";
   let heightFrame=0;
+  function documentHeight(){
+    const body=document.body,root=document.documentElement;
+    return Math.max(620,Math.min(2600,Math.ceil(Math.max(body?.scrollHeight||0,body?.offsetHeight||0,root?.scrollHeight||0,root?.offsetHeight||0,root?.getBoundingClientRect?.().height||0))));
+  }
   function reportHeight(){
     if(heightFrame)cancelAnimationFrame(heightFrame);
-    heightFrame=requestAnimationFrame(()=>{heightFrame=0;window.parent?.postMessage({type:"scsi-height",height:Math.max(document.body.scrollHeight,document.documentElement.scrollHeight)},"*")});
+    heightFrame=requestAnimationFrame(()=>{heightFrame=0;window.parent?.postMessage({type:"scsi-height",height:documentHeight(),version:APP_VERSION,path:location.pathname+location.search},"*")});
   }
   const reducedMotion=window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches===true;
-  if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/app/service-worker.js",{scope:"/app/"}).catch(()=>{}),{once:true})}
+  async function registerServiceWorkerReliably(){
+    if(!("serviceWorker" in navigator))return null;
+    const hadController=Boolean(navigator.serviceWorker.controller);
+    const registration=await navigator.serviceWorker.register(`/app/service-worker.js?v=${encodeURIComponent(APP_VERSION)}`,{scope:"/app/",updateViaCache:"none"});
+    registration.update().catch(()=>{});
+    const activateWaiting=()=>registration.waiting?.postMessage({type:"SC_SI_ACTIVATE_UPDATE"});
+    if(registration.waiting)activateWaiting();
+    registration.addEventListener("updatefound",()=>{
+      const worker=registration.installing;if(!worker)return;
+      worker.addEventListener("statechange",()=>{if(worker.state==="installed"&&navigator.serviceWorker.controller)activateWaiting()});
+    });
+    let reloading=false;
+    navigator.serviceWorker.addEventListener("controllerchange",()=>{
+      if(!hadController||reloading)return;
+      reloading=true;
+      const key=`scsi-sw-reloaded-${APP_VERSION}`;
+      if(sessionStorage.getItem(key)!=="1"){sessionStorage.setItem(key,"1");location.reload()}
+    });
+    navigator.serviceWorker.addEventListener("message",event=>{
+      if(event.data?.type==="SC_SI_SW_READY"&&event.data.version===APP_VERSION)console.info(`[Site Intelligence] Offline shell ${APP_VERSION} active.`);
+    });
+    return registration;
+  }
+  window.addEventListener("load",()=>registerServiceWorkerReliably().catch(error=>console.warn("[Site Intelligence] Service worker registration failed.",error)),{once:true});
   if(navigator.connection?.saveData||localStorage.getItem("scsi_experience_v2120")?.includes('"lowBandwidth":true'))document.documentElement.dataset.lowBandwidth="1";
   let html2CanvasPromise=null;
   function loadScriptOnce(src,globalName){
@@ -50,7 +78,6 @@
   }
 
   const state = {map:null,base:null,imagery:null,markers:null,heat:null,layers:null,events:null,country:"KEN",route:"overview"};
-  const APP_VERSION="2.12.0";
   const SAVED_VIEW_SCHEMA="sc-saved-view/1.0";
   const SAVED_VIEW_STORAGE_KEY="sc_site_intelligence_saved_views_v1";
   const SAVED_VIEW_LIMIT=50;
@@ -1596,4 +1623,4 @@ visualStyle.textContent=`
 `;
 document.head.appendChild(visualStyle);
 
-window.addEventListener("load",reportHeight,{once:true});window.addEventListener("resize",reportHeight,{passive:true});if("ResizeObserver" in window)new ResizeObserver(reportHeight).observe(document.body);
+window.addEventListener("load",reportHeight,{once:true});window.addEventListener("resize",reportHeight,{passive:true});window.visualViewport?.addEventListener("resize",reportHeight,{passive:true});window.addEventListener("message",event=>{if(event.data?.type==="SC_SI_REQUEST_HEIGHT")reportHeight()});if("ResizeObserver" in window)new ResizeObserver(reportHeight).observe(document.body);

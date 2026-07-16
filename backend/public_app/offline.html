@@ -1,1 +1,30 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#111111"><title>Site Intelligence is offline</title><style>body{margin:0;background:#05070a;color:#f7f7f7;font:16px/1.6 system-ui;display:grid;min-height:100dvh;place-items:center;padding:24px}.card{max-width:620px;border:1px solid #333;border-radius:18px;padding:28px;background:#101216}a,button{color:#fff;background:#8b1e3f;border:0;border-radius:10px;padding:12px 16px;text-decoration:none;display:inline-block}.muted{color:#b9bdc6}</style></head><body><main class="card"><p class="muted">SUSTAINABLE CATALYST</p><h1>Site Intelligence is offline</h1><p>The live services could not be reached. Previously cached application pages may remain available, but cached records can be stale and should not be treated as current conditions.</p><p><a href="/app/">Try reconnecting</a></p></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111111">
+  <title>Site Intelligence is offline</title>
+  <style>
+    :root{color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#05070a;color:#f7f7f7;font:16px/1.6 system-ui;display:grid;min-height:100dvh;place-items:center;padding:24px}.card{width:min(100%,660px);border:1px solid #333;border-radius:18px;padding:clamp(22px,5vw,34px);background:#101216;box-shadow:0 24px 70px rgba(0,0,0,.28)}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}a,button{color:#fff;background:#8b1e3f;border:1px solid #8b1e3f;border-radius:10px;padding:12px 16px;text-decoration:none;display:inline-flex;min-height:44px;align-items:center;font:inherit;font-weight:700;cursor:pointer}button.secondary{background:transparent;border-color:#666}.muted{color:#b9bdc6}.status{min-height:1.5em;margin-top:14px;color:#cbd0d8}@media(max-width:520px){.actions>*{width:100%;justify-content:center}}@media(forced-colors:active){a,button,.card{border:1px solid CanvasText}}
+  </style>
+</head>
+<body>
+  <main class="card">
+    <p class="muted">SUSTAINABLE CATALYST · RELEASE 2.12.1</p>
+    <h1>Site Intelligence is offline</h1>
+    <p>The live services could not be reached. A previously cached application shell or public record may still be available, but cached evidence can be stale and should not be treated as current conditions.</p>
+    <div class="actions">
+      <a href="/app/">Try reconnecting</a>
+      <button id="clearOffline" class="secondary" type="button">Reset offline cache</button>
+    </div>
+    <p id="offlineStatus" class="status" role="status" aria-live="polite"></p>
+  </main>
+  <script>
+    document.getElementById('clearOffline').addEventListener('click',async()=>{
+      const status=document.getElementById('offlineStatus');status.textContent='Clearing browser-local Site Intelligence caches…';
+      try{if('caches' in window){for(const key of await caches.keys())if(key.startsWith('scsi-'))await caches.delete(key)}if(navigator.serviceWorker?.controller)navigator.serviceWorker.controller.postMessage({type:'SC_SI_CLEAR_OFFLINE'});status.textContent='Offline cache cleared. Reconnect and reload the application.'}catch(error){status.textContent='The browser could not clear every cache. Use the browser site-data controls if the problem continues.'}
+    });
+  </script>
+</body>
+</html>

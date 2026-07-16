@@ -3582,9 +3582,80 @@
     document.querySelectorAll('[data-scsi-geospatial-layers]').forEach(function(root){fetchJson(cfg.restBase+'/public-geospatial-layers').then(function(data){root.querySelector('.scsi-muted').textContent='Satellite, event, heat, and boundary layers'; var out=root.querySelector('.scsi-output'); out.innerHTML='<div class="scsi-directory-grid">'+(data.satellite_layers||[]).concat(data.vector_layers||[]).map(function(x){return '<article class="scsi-directory-link"><strong>'+escapeHtml(x.title)+'</strong><span>'+escapeHtml(x.description||x.source||x.kind)+'</span><small>'+escapeHtml(x.source||'')+'</small></article>';}).join('')+'</div>';}).catch(function(err){showError(root,err.message);});});
   }
 
+  function setupResponsiveEmbeds() {
+    var frames = Array.prototype.slice.call(document.querySelectorAll('[data-scsi-embed-frame], .scsi-standalone-app iframe, .scsi-app-shell iframe, .scsi-embed iframe'));
+    if (!frames.length) return;
+    var records = frames.map(function (frame) {
+      var wrapper = frame.closest('.scsi-standalone-app, .scsi-app-shell, .scsi-embed') || frame.parentElement;
+      var origin = '';
+      try { origin = new URL(frame.src, window.location.href).origin; } catch (error) { origin = ''; }
+      frame.setAttribute('loading', frame.getAttribute('loading') || 'lazy');
+      frame.setAttribute('referrerpolicy', frame.getAttribute('referrerpolicy') || 'strict-origin-when-cross-origin');
+      if (!frame.getAttribute('allow')) frame.setAttribute('allow', 'fullscreen; clipboard-write');
+      frame.dataset.scsiEmbedFrame = '1';
+      var fallback = wrapper ? wrapper.querySelector('.scsi-embed-fallback') : null;
+      if (wrapper && !fallback) {
+        fallback = document.createElement('p');
+        fallback.className = 'scsi-embed-fallback';
+        var link = document.createElement('a');
+        link.href = frame.src;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = 'Open Site Intelligence in a new tab';
+        fallback.appendChild(link);
+        wrapper.appendChild(fallback);
+      }
+      var record = {
+        frame: frame,
+        wrapper: wrapper,
+        origin: origin,
+        minimum: Number(frame.dataset.scsiMinHeight || 620),
+        mobileMinimum: Number(frame.dataset.scsiMobileMinHeight || 760),
+        maximum: Number(frame.dataset.scsiMaxHeight || 2600),
+        loaded: false
+      };
+      frame.addEventListener('load', function () {
+        record.loaded = true;
+        if (wrapper) wrapper.classList.add('is-loaded');
+        try { frame.contentWindow.postMessage({type: 'SC_SI_REQUEST_HEIGHT', hostVersion: cfg.version || ''}, origin || '*'); } catch (error) {}
+      });
+      window.setTimeout(function () {
+        if (!record.loaded && wrapper) wrapper.classList.add('scsi-embed-delayed');
+      }, 20000);
+      return record;
+    });
+
+    function minimumFor(record) {
+      return window.matchMedia('(max-width: 760px)').matches ? record.mobileMinimum : record.minimum;
+    }
+    function applyHeight(record, value) {
+      var parsed = Number.parseInt(value, 10);
+      if (!Number.isFinite(parsed) || parsed <= 0) return;
+      var height = Math.max(minimumFor(record), Math.min(record.maximum, parsed + 8));
+      record.frame.style.height = height + 'px';
+      record.frame.setAttribute('height', String(height));
+      if (record.wrapper) record.wrapper.style.setProperty('--scsi-embed-height', height + 'px');
+    }
+    window.addEventListener('message', function (event) {
+      if (!event.data || event.data.type !== 'scsi-height') return;
+      records.forEach(function (record) {
+        if (!record.origin || event.origin !== record.origin) return;
+        if (event.source !== record.frame.contentWindow) return;
+        applyHeight(record, event.data.height);
+      });
+    });
+    window.addEventListener('resize', function () {
+      records.forEach(function (record) {
+        var current = Number.parseInt(record.frame.style.height || record.frame.getAttribute('height') || 0, 10);
+        if (current) applyHeight(record, current);
+      });
+    }, {passive: true});
+  }
+
   function init() {
     setupActivePageLinks();
     setupLaunchActions();
+    setupResponsiveEmbeds();
     fetchDashboards();
     initGeospatialExtras();
   }

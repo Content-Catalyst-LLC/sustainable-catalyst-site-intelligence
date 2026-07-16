@@ -1,0 +1,10 @@
+cd ~/Downloads
+chmod 700 install_and_push_site_intelligence_v2_12_1.sh
+bash ./install_and_push_site_intelligence_v2_12_1.sh
+
+# Post-deploy checks
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/health | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/public/build-info | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/public/offline-experience/diagnostics | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/public/offline-experience/reliability | python3 -m json.tool
+curl -I https://sustainable-catalyst-site-intelligence.onrender.com/app/service-worker.js

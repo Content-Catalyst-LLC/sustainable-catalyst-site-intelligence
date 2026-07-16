@@ -1,12 +1,20 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.12.0 — Offline, Mobile, Accessibility, and Performance
+**Current release:** v2.12.1 — Production Offline, Mobile, and Embed Reliability Patch
 
 
 
+## v2.12.1 — Production Offline, Mobile, and Embed Reliability Patch
 
+Site Intelligence v2.12.1 hardens the v2.12.0 delivery layer for production. Service-worker installation now survives individual optional asset failures, activates release updates without reusing a cached worker script, removes prior release caches, and applies real entry and age limits to public-data fallbacks. The offline page and Experience workspace can repair browser-local cache state. Application HTML, the manifest, service worker, backend responses, and WordPress plugin expose aligned release metadata.
 
+WordPress embeds now share one responsive controller that verifies both the message origin and the iframe source window, adjusts desktop and mobile heights up to a safe maximum, reports delayed loads, and preserves a new-tab fallback. No account, telemetry service, paid cache, paid API, or server-side user profile is added.
 
+Public route: `/app/?view=experience`
+
+Reliability endpoint: `/public/offline-experience/reliability`
+
+WordPress shortcode: `[sc_site_intelligence_app height="1000"]`
 
 ## v2.12.0 — Offline, Mobile, Accessibility, and Performance
 

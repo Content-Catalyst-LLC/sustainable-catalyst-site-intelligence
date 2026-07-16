@@ -428,6 +428,7 @@ RELEASE_LEDGER = [
     {"version": "2.10.0", "title": "Research Paths, Saved Investigations, and Briefing Workflows", "audit_contribution": "Browser-local investigations, explicit evidence classes, notes, checkpoints, saved public views, briefing packet integrity, structured product handoffs, and no hosted profile or automatic claim generation."},
     {"version": "2.11.0", "title": "Public Data API, Embeds, and Institutional Integration", "audit_contribution": "Versioned read-only API discovery, sanitized workspace records, portable iframe manifests, institutional presentation metadata, credential non-disclosure, and source-preserving integration boundaries."},
     {"version": "2.12.0", "title": "Offline, Mobile, Accessibility, and Performance", "audit_contribution": "Installable application shell, bounded browser-local cache plan, offline fallback, low-bandwidth controls, accessibility contracts, first-party performance budgets, and explicit no-certification/no-freshness-guarantee boundaries."},
+    {"version": "2.12.1", "title": "Production Offline, Mobile, and Embed Reliability Patch", "audit_contribution": "Failure-tolerant application-shell installation, release-scoped cache cleanup, bounded age-limited public-data fallback, offline cache repair, version-aligned delivery headers, and origin-and-source-checked responsive WordPress embeds."},
 ]
 
 

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 2.12.0
+ * Version: 2.12.1
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '2.12.0';
+    const VERSION = '2.12.1';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -3765,7 +3765,7 @@ final class SC_Site_Intelligence_Plugin {
 
         $frame_id = 'scsi-app-' . wp_generate_uuid4();
         return sprintf(
-            '<div class="scsi-standalone-app" data-scsi-responsive-app><div class="scsi-app-loading">Opening Site Intelligence…</div><iframe id="%4$s" src="%1$s" title="%2$s" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen; clipboard-write" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a" onload="this.parentNode.classList.add(\'is-loaded\')"></iframe><script>(function(){var frame=document.getElementById(%5$s);if(!frame)return;var expectedOrigin=new URL(frame.src,window.location.href).origin;window.addEventListener(\'message\',function(e){if(e.origin!==expectedOrigin||!e.data||e.data.type!==\'scsi-height\')return;var h=Math.max(620,Math.min(1800,parseInt(e.data.height||0,10)+8));if(h)frame.style.height=h+\'px\';});})();</script></div>',
+            '<div class="scsi-standalone-app" data-scsi-responsive-app><div class="scsi-app-loading" role="status" aria-live="polite">Opening Site Intelligence…</div><iframe id="%4$s" src="%1$s" title="%2$s" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen; clipboard-write" data-scsi-embed-frame data-scsi-min-height="620" data-scsi-mobile-min-height="760" data-scsi-max-height="2600" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a"></iframe><p class="scsi-embed-fallback"><a href="%1$s" target="_blank" rel="noopener noreferrer">Open Site Intelligence in a new tab</a></p></div>',
             $src,
             $title,
             $height,

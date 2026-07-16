@@ -184,7 +184,7 @@ class Settings(BaseSettings):
     institution_contact: str = ""
     institution_accent: str = "#8b1e3f"
 
-    # Site Intelligence v2.12.0 — Offline, Mobile, Accessibility, and Performance.
+    # Site Intelligence v2.12.1 — Production Offline, Mobile, and Embed Reliability Patch.
     # Offline data and preferences remain browser-local. Cached responses must
     # retain stale-state labels and never become a substitute for live sources.
     offline_experience_enabled: bool = True

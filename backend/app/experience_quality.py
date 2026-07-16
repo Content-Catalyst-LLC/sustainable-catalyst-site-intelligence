@@ -61,7 +61,7 @@ def experience_profile() -> dict[str, Any]:
         "performance_budgets": PERFORMANCE_BUDGETS,
         "delivery": {
             "compression": "gzip for eligible responses",
-            "application_html_cache": "no-cache",
+            "application_html_cache": "no-cache, no-store, must-revalidate",
             "application_asset_cache": "short public cache with stale-while-revalidate",
             "optional_png_library": "loaded on demand only when a PNG export is requested",
             "below_fold_rendering": "content-visibility where supported",
@@ -144,7 +144,8 @@ def experience_diagnostics() -> dict[str, Any]:
         "wordpress_version": f"Version: {APP_VERSION}" in php and f"const VERSION = '{APP_VERSION}';" in php,
         "wordpress_lazy_iframe": 'loading="lazy"' in php,
         "wordpress_clipboard_permission": 'allow="fullscreen; clipboard-write"' in php,
-        "wordpress_message_origin_check": "e.origin!==expectedOrigin" in php,
+        "wordpress_message_origin_check": "event.origin !== record.origin" in (root / "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js").read_text(encoding="utf-8"),
+        "wordpress_message_source_check": "event.source !== record.frame.contentWindow" in (root / "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js").read_text(encoding="utf-8"),
     }
     checks.update({f"budget_{key}": value for key, value in budget_checks.items()})
     return {

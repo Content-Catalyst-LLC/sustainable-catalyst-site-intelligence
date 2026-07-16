@@ -1,3 +1,18 @@
+## 2.12.1 — Production Offline, Mobile, and Embed Reliability Patch
+
+- Made service-worker shell installation resilient to individual optional asset failures.
+- Added release-scoped worker registration with `updateViaCache: none`, immediate waiting-worker activation, controller-change refresh protection, and old-release cache cleanup.
+- Enforced bounded public-data cache entries and age-limited offline fallbacks.
+- Added navigation preload, exact cached navigation fallback, application-shell fallback, and offline-page fallback ordering.
+- Added browser-local cache repair controls to both the Experience workspace and offline fallback page.
+- Added `/public/offline-experience/reliability` with production delivery, embed, cache, and version-alignment contracts.
+- Added release headers and strict no-store policies for application HTML and the service-worker script.
+- Added PWA shortcuts and a release-aligned start URL.
+- Replaced the single-shortcode inline resize listener with one WordPress embed controller covering standalone, workspace, and legacy iframe wrappers.
+- Added iframe origin checks, source-window checks, bounded desktop/mobile sizing, delayed-load state, and new-tab fallbacks.
+- Preserved browser-local storage, public-first access, no hosted profiles, no added telemetry, and no paid infrastructure requirement.
+- Removed generated country-cache data from the release package and manifest, and isolated writable validation state outside the repository.
+
 ## 2.12.0 — Offline, Mobile, Accessibility, and Performance
 
 - Added an installable web application manifest and browser service worker.

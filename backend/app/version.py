@@ -1,4 +1,4 @@
-APP_VERSION = "2.12.0"
+APP_VERSION = "2.12.1"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Offline, Mobile, Accessibility, and Performance"
+RELEASE_NAME = "Production Offline, Mobile, and Embed Reliability Patch"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

@@ -1,0 +1,26 @@
+Sustainable Catalyst Site Intelligence v2.12.1
+Production Offline, Mobile, and Embed Reliability Patch
+
+Validation summary
+- 395 backend tests passed.
+- Installer validation dependencies include explicit `httpx2` support for Starlette TestClient on Python 3.14.
+- Render production requirements remain separate from test-only dependencies.
+- 547 unique public-application HTML IDs validated with no duplicates.
+- 20 auditable evidence artifacts and 22 release-ledger entries registered.
+- Service-worker shell installation survives individual optional asset failures.
+- Release-scoped service-worker registration disables worker-script cache reuse.
+- Previous Site Intelligence release caches are removed during worker activation.
+- Public-data offline fallbacks are capped at 120 entries and expire after 24 hours by default.
+- Navigation preload and the live → exact cache → app shell → offline page fallback chain are implemented.
+- Browser-local cache repair is available from the Experience workspace and offline page.
+- Application HTML, manifest, service worker, backend headers, frontend assets, and WordPress plugin align on v2.12.1.
+- WordPress iframe resizing verifies both the backend origin and iframe source window.
+- Desktop and mobile embed minimums, a 2,600-pixel safety maximum, delayed-load state, and new-tab fallback are implemented.
+- No paid API, paid cache, telemetry vendor, hosted profile, account system, or new server is required.
+- Python compilation passed.
+- All JavaScript and service-worker syntax checks passed.
+- WordPress PHP syntax passed.
+- JSON, webmanifest, and YAML validation passed.
+- v2.12.1 release contract passed.
+- First-party JavaScript, CSS, HTML, and total shell remain within published performance budgets.
+- 344-file release manifest verified after generated caches were removed.

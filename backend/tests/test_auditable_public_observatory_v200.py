@@ -39,7 +39,7 @@ def test_observatory_profile_is_version_aligned_and_public():
     payload = observatory_profile()
     assert payload["ok"] is True
     assert payload["schema"] == OBSERVATORY_SCHEMA
-    assert payload["application_version"] == "2.12.0"
+    assert payload["application_version"] == "2.12.1"
     assert payload["api_schema_version"] == "2.0"
     assert payload["release_status"] == "auditable-public-observatory"
     assert "integrity" in payload["positioning"].lower()
@@ -83,7 +83,7 @@ def test_audit_catalog_contains_complete_records():
     payload = audit_catalog()
     assert payload["record_count"] == len(AUDIT_ARTIFACTS)
     assert len(payload["records"]) == payload["record_count"]
-    assert all(record["application_version"] == "2.12.0" for record in payload["records"])
+    assert all(record["application_version"] == "2.12.1" for record in payload["records"])
     assert all(record["integrity"]["algorithm"] == "sha256" for record in payload["records"])
 
 
@@ -131,8 +131,8 @@ def test_verify_payload_rejects_oversized_canonical_payload():
 
 def test_release_ledger_reaches_the_major_observatory_release():
     payload = release_ledger()
-    assert payload["entries"][-1]["version"] == "2.12.0"
-    assert payload["entries"][-1]["title"] == "Offline, Mobile, Accessibility, and Performance"
+    assert payload["entries"][-1]["version"] == "2.12.1"
+    assert payload["entries"][-1]["title"] == "Production Offline, Mobile, and Embed Reliability Patch"
     assert len(payload["integrity"]["digest"]) == 64
 
 
@@ -140,10 +140,10 @@ def test_audit_packet_and_markdown_are_download_ready():
     payload = audit_packet()
     markdown = audit_packet_markdown()
     assert payload["schema"] == AUDIT_PACKET_SCHEMA
-    assert payload["application_version"] == "2.12.0"
+    assert payload["application_version"] == "2.12.1"
     assert len(payload["records"]) == len(AUDIT_ARTIFACTS)
     assert markdown.startswith("# Sustainable Catalyst Site Intelligence")
-    assert "**Release:** v2.12.0 — Offline, Mobile, Accessibility, and Performance" in markdown
+    assert "**Release:** v2.12.1 — Production Offline, Mobile, and Embed Reliability Patch" in markdown
     assert "## Verification boundary" in markdown
 
 
@@ -160,7 +160,7 @@ def test_public_observatory_get_endpoints():
     for path in paths:
         response = client.get(path)
         assert response.status_code == 200, path
-        assert response.json()["application_version"] == "2.12.0", path
+        assert response.json()["application_version"] == "2.12.1", path
     assert client.get("/public/observatory/audit/unknown").status_code == 404
 
 
@@ -194,7 +194,7 @@ def test_saved_view_contract_includes_observatory_route():
         "/public/saved-views/validate",
         json={
             "schema": "sc-saved-view/1.0",
-            "application_version": "2.12.0",
+            "application_version": "2.12.1",
             "id": "sv-observatory",
             "name": "Audit workspace",
             "view": "observatory",
@@ -214,7 +214,7 @@ def test_frontend_registers_observatory_navigation_workspace_and_loader():
     assert 'data-route="observatory"' in html
     assert 'id="auditablePublicObservatory"' in html
     assert "Every public output should be traceable" in html
-    assert 'const APP_VERSION="2.12.0"' in js
+    assert 'const APP_VERSION="2.12.1"' in js
     assert "function openAuditablePublicObservatory" in js
     assert 'route==="observatory"' in js
     assert 'apiWithRetry("/public/observatory/catalog"' in js
@@ -224,8 +224,8 @@ def test_frontend_registers_observatory_navigation_workspace_and_loader():
 
 def test_wordpress_observatory_shortcode_and_modern_legacy_aliases():
     php = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text(encoding="utf-8")
-    assert "Version: 2.12.0" in php
-    assert "const VERSION = '2.12.0';" in php
+    assert "Version: 2.12.1" in php
+    assert "const VERSION = '2.12.1';" in php
     assert "add_shortcode('sc_auditable_public_observatory'" in php
     assert "public function auditable_public_observatory_shortcode" in php
     assert "/app/?view=observatory" in php
@@ -244,7 +244,7 @@ def test_observatory_diagnostics_and_release_files_are_complete():
     assert diagnostics["ok"] is True
     assert all(diagnostics["checks"].values())
     assert diagnostics["secrets_exposed"] is False
-    assert "**Current release:** v2.12.0" in readme
+    assert "**Current release:** v2.12.1" in readme
     assert "## 2.0.0 — Auditable Public Observatory" in changelog
     assert manifest["release"] == "2.0.0"
     assert manifest["schema"] == OBSERVATORY_SCHEMA

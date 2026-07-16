@@ -336,15 +336,19 @@ async def public_experience_headers(request, call_next):
     response.headers.setdefault("Vary", "Accept-Encoding")
 
     path = request.url.path
+    response.headers.setdefault("X-SC-Site-Intelligence-Version", APP_VERSION)
     if path == "/app/service-worker.js":
-        response.headers.setdefault("Cache-Control", "no-cache, no-store, must-revalidate")
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        response.headers["Pragma"] = "no-cache"
+        response.headers["Expires"] = "0"
         response.headers.setdefault("Service-Worker-Allowed", "/app/")
+        response.headers.setdefault("X-SC-Cache-Generation", f"scsi-v{APP_VERSION}")
     elif path in {"/app/manifest.webmanifest", "/app/offline.html"}:
-        response.headers.setdefault("Cache-Control", "public, max-age=300, stale-while-revalidate=86400")
+        response.headers["Cache-Control"] = "no-cache, max-age=0, must-revalidate"
     elif path.startswith("/app/assets/"):
-        response.headers.setdefault("Cache-Control", "public, max-age=300, stale-while-revalidate=86400")
+        response.headers.setdefault("Cache-Control", "public, max-age=3600, stale-while-revalidate=86400, stale-if-error=604800")
     elif path == "/app" or path.startswith("/app/"):
-        response.headers.setdefault("Cache-Control", "no-cache")
+        response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         if settings.public_embeds_enabled:
             frame_ancestors = ["'self'"] + [origin for origin in settings.public_embed_allowed_origins.split(",") if origin.strip()]
             response.headers.setdefault("Content-Security-Policy", "frame-ancestors " + (" ".join(item.strip() for item in frame_ancestors) if len(frame_ancestors) > 1 else "*"))
@@ -4603,7 +4607,7 @@ def public_data_api_diagnostics(settings: Settings = Depends(get_settings)):
     return build_diagnostics(settings)
 
 
-# Site Intelligence v2.12.0 — Offline, Mobile, Accessibility, and Performance.
+# Site Intelligence v2.12.1 — Production Offline, Mobile, and Embed Reliability Patch.
 @app.get("/public/offline-experience")
 def offline_experience(settings: Settings = Depends(get_settings)):
     from .offline_mobile_accessibility_performance_v2120 import build_overview
@@ -4628,6 +4632,11 @@ def offline_experience_performance(settings: Settings = Depends(get_settings)):
 def offline_experience_diagnostics(settings: Settings = Depends(get_settings)):
     from .offline_mobile_accessibility_performance_v2120 import build_diagnostics
     return build_diagnostics(settings)
+
+@app.get("/public/offline-experience/reliability")
+def offline_experience_reliability(settings: Settings = Depends(get_settings)):
+    from .offline_mobile_accessibility_performance_v2120 import build_reliability
+    return build_reliability(settings)
 
 # Site Intelligence standalone public application.
 from pathlib import Path as _Path

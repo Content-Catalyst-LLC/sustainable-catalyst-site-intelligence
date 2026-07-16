@@ -1,4 +1,4 @@
-"""Public Data API, Embeds, and Institutional Integration for v2.12.0.
+"""Public Data API, Embeds, and Institutional Integration for the current release.
 
 The module exposes a versioned, read-only API catalog over existing public Site
 Intelligence workspaces. It does not expose provider credentials, raw private
@@ -13,7 +13,9 @@ import re
 from typing import Any, Callable, Mapping
 from urllib.parse import urlencode
 
-VERSION = "2.12.0"
+from .version import APP_VERSION
+
+VERSION = APP_VERSION
 API_VERSION = "v1"
 RELEASE_SCHEMA = "sc-site-intelligence-public-api-integration/1.0"
 CATALOG_SCHEMA = "sc-site-intelligence-public-api-catalog/1.0"
