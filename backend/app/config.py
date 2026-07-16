@@ -209,6 +209,25 @@ class Settings(BaseSettings):
     connector_operations_max_records_per_run: int = Field(default=500, ge=1, le=5000)
     connector_operations_max_payload_bytes: int = Field(default=2000000, ge=10000, le=20000000)
 
+    # Site Intelligence v2.14.0 — Historical Archive and Temporal Change Intelligence.
+    # Accepted connector payloads are sanitized before file-backed archival. The
+    # default path may be redirected to a persistent disk; runtime archive files
+    # are excluded from immutable release manifests and Git history.
+    historical_archive_enabled: bool = True
+    historical_archive_capture_on_ingest: bool = True
+    historical_archive_root_path: str = "backend/data/historical_archive_v2140"
+    historical_archive_index_path: str = "backend/data/historical_archive_v2140/snapshot_index_v2140.jsonl"
+    historical_archive_change_path: str = "backend/data/historical_archive_v2140/change_events_v2140.jsonl"
+    historical_archive_revision_path: str = "backend/data/historical_archive_v2140/revision_events_v2140.jsonl"
+    historical_archive_retention_log_path: str = "backend/data/historical_archive_v2140/retention_events_v2140.jsonl"
+    historical_archive_policy_path: str = "backend/data/historical_archive_policy_v2140.json"
+    historical_archive_max_snapshot_bytes: int = Field(default=5000000, ge=10000, le=50000000)
+    historical_archive_max_index_records: int = Field(default=10000, ge=100, le=100000)
+    historical_archive_public_series_limit: int = Field(default=120, ge=10, le=1000)
+    historical_archive_default_retention_days: int = Field(default=3650, ge=30, le=36500)
+    historical_archive_max_snapshots_per_dataset: int = Field(default=3650, ge=2, le=50000)
+    historical_archive_material_change_ratio: float = Field(default=0.01, ge=0.0, le=1.0)
+
 
     # Sustainable Development Data Connectors v1.14.1.
     sustainable_development_connectors_enabled: bool = True

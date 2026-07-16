@@ -14,7 +14,7 @@ from uuid import uuid4
 from .config import Settings
 
 SCHEMA_VERSION = "sc-site-intelligence-connector-operations/1.0"
-RELEASE_VERSION = "2.13.0"
+RELEASE_VERSION = "2.14.0"
 
 _LOCK = threading.RLock()
 _SECRET_FRAGMENTS = ("key", "token", "secret", "password", "authorization", "credential", "cookie")
@@ -605,6 +605,23 @@ class ConnectorOperationsCenter:
             quarantine_id = f"quarantine-{uuid4().hex[:16]}"
             receipt["quarantine_id"] = quarantine_id
             self._record_quarantine(quarantine_id, receipt, payload)
+
+        if (
+            receipt["status"] == "accepted"
+            and not dry_run
+            and self.settings.historical_archive_enabled
+            and self.settings.historical_archive_capture_on_ingest
+        ):
+            try:
+                from .historical_archive_v2140 import HistoricalArchiveCenter
+                receipt["historical_archive"] = HistoricalArchiveCenter(self.settings).capture_ingestion(connector, receipt, payload)
+            except Exception as exc:  # Archival failure must not falsify ingestion acceptance.
+                receipt["historical_archive"] = {
+                    "ok": False,
+                    "version": "2.14.0",
+                    "error": f"{type(exc).__name__}: {exc}"[:500],
+                    "ingestion_status_unchanged": True,
+                }
 
         with _LOCK:
             state = self._state()

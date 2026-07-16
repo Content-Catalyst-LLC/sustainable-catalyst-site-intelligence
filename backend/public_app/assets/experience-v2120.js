@@ -2,7 +2,7 @@
   const API=window.SC_SITE_INTELLIGENCE_API||location.origin;
   const q=selector=>document.querySelector(selector);
   const STORAGE_KEY="scsi_experience_v2120";
-  const RELEASE="2.13.0";
+  const RELEASE="2.14.0";
   let state={lowBandwidth:false,offlineEnabled:true};
 
   function read(){try{return {...state,...JSON.parse(localStorage.getItem(STORAGE_KEY)||"{}")}}catch{return {...state}}}

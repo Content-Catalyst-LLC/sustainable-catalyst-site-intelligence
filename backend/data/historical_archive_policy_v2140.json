@@ -1,0 +1,38 @@
+{
+  "schema": "sc-site-intelligence-historical-archive/1.0",
+  "version": "2.14.0",
+  "title": "Historical Archive and Temporal Change Policy",
+  "timestamp_fields": [
+    "source_timestamp",
+    "updated_at",
+    "last_updated",
+    "retrieved_at",
+    "generated_at",
+    "timestamp",
+    "date"
+  ],
+  "revision_fields": [
+    "source_revision_id",
+    "revision",
+    "dataset_version",
+    "release",
+    "version"
+  ],
+  "comparison_ignored_paths": [
+    "retrieved_at",
+    "generated_at",
+    "ingested_at",
+    "ingestion_timestamp",
+    "request_id",
+    "execution_id"
+  ],
+  "minimum_snapshots_to_keep": 2,
+  "public_payload_access": false,
+  "rules": [
+    "Accepted payloads are sanitized and canonicalized before archival.",
+    "Identical payload digests are deduplicated unless force is explicitly requested.",
+    "A changed payload for the same source period is recorded as a source revision.",
+    "Missing historical observations are not silently interpolated or imputed.",
+    "Restoration remains preview-only and cannot overwrite live connector state in v2.14.0."
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "schema": "sc-site-intelligence-release-manifest/1.0",
+  "release": "2.14.0",
+  "title": "Historical Archive and Temporal Change Intelligence",
+  "base_release": "2.13.0",
+  "historical_archive_schema": "sc-site-intelligence-historical-archive/1.0",
+  "snapshot_schema": "sc-site-intelligence-dataset-snapshot/1.0",
+  "change_schema": "sc-site-intelligence-temporal-change/1.0",
+  "revision_schema": "sc-site-intelligence-source-revision/1.0",
+  "managed_dataset_count": 14,
+  "automatic_capture_on_accepted_ingestion": true,
+  "duplicate_deduplication": true,
+  "digest_algorithm": "sha256",
+  "public_payload_access": false,
+  "restore_applies_live_state": false,
+  "retention_dry_run_default": true,
+  "paid_database_required": false,
+  "paid_archive_service_required": false,
+  "persistent_disk_recommended_for_durable_hosted_history": true,
+  "public_endpoints": [
+    "/public/history",
+    "/public/history/datasets",
+    "/public/history/datasets/{dataset_id}/series",
+    "/public/history/changes",
+    "/public/history/revisions"
+  ],
+  "private_endpoints": [
+    "/admin/history/control-center",
+    "/admin/history/snapshots",
+    "/admin/history/snapshots/capture",
+    "/admin/history/snapshots/{snapshot_id}",
+    "/admin/history/compare",
+    "/admin/history/export/{dataset_id}",
+    "/admin/history/restore-preview/{snapshot_id}",
+    "/admin/history/retention",
+    "/admin/history/retention/apply"
+  ],
+  "shortcodes": [
+    "[sc_public_temporal_intelligence]",
+    "[sc_historical_archive_control_center]"
+  ],
+  "runtime_paths_excluded_from_release": [
+    "backend/data/historical_archive_v2140/"
+  ],
+  "governance": [
+    "Archived payloads are sanitized before persistence.",
+    "Public endpoints return metadata and derived series rather than archived payload bodies.",
+    "Source revisions are distinguished from new observations when timestamps or revision identifiers support that conclusion.",
+    "Missing historical values are not silently imputed.",
+    "Restoration remains preview-only in v2.14.0."
+  ]
+}

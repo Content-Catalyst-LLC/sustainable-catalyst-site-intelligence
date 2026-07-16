@@ -1,4 +1,4 @@
-APP_VERSION = "2.13.0"
+APP_VERSION = "2.14.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Connector Operations and Data Ingestion Control Center"
+RELEASE_NAME = "Historical Archive and Temporal Change Intelligence"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

@@ -430,6 +430,7 @@ RELEASE_LEDGER = [
     {"version": "2.12.0", "title": "Offline, Mobile, Accessibility, and Performance", "audit_contribution": "Installable application shell, bounded browser-local cache plan, offline fallback, low-bandwidth controls, accessibility contracts, first-party performance budgets, and explicit no-certification/no-freshness-guarantee boundaries."},
     {"version": "2.12.1", "title": "Production Offline, Mobile, and Embed Reliability Patch", "audit_contribution": "Failure-tolerant application-shell installation, release-scoped cache cleanup, bounded age-limited public-data fallback, offline cache repair, version-aligned delivery headers, and origin-and-source-checked responsive WordPress embeds."},
     {"version": "2.13.0", "title": "Connector Operations and Data Ingestion Control Center", "audit_contribution": "Managed connector and dataset registry, explicit refresh jobs, execution receipts, freshness and quota diagnostics, bounded retries, circuit breakers, schema validation, redacted quarantine, and sanitized public operational status."},
+    {"version": "2.14.0", "title": "Historical Archive and Temporal Change Intelligence", "audit_contribution": "Sanitized immutable dataset snapshots, digest verification, historical coverage, temporal change events, source-revision receipts, comparable series, retention previews, export bundles, and restoration previews."},
 ]
 
 

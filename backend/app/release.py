@@ -37,6 +37,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         {"id": "public_data_api_integration", "label": "Public Data API, Embeds, and Institutional Integration are available", "status": "pass", "detail": "Versioned read-only endpoints, workspace manifests, sanitized record collections, portable embeds, and public institutional presentation metadata are available without provider credential exposure.", "action": "Verify /app/?view=integration, /api/public/v1/catalog, one records endpoint, and a generated embed manifest."},
         {"id": "offline_mobile_accessibility_performance", "label": "Production offline, mobile, and embed reliability controls are available", "status": "pass", "detail": "The release-aligned application shell uses failure-tolerant installation, bounded age-limited caches, offline repair controls, and origin-checked responsive WordPress embeds without server-side user tracking.", "action": "Verify /app/?view=experience, /app/manifest.webmanifest, /app/service-worker.js, /public/offline-experience/diagnostics, and a logged-out WordPress embed on mobile."},
         {"id": "connector_operations", "label": "Connector Operations and Data Ingestion Control Center is available", "status": "pass", "detail": "A managed registry, manual/scheduled/conditional job definitions, execution receipts, freshness, quotas, retries, circuit breakers, schema validation, quarantine, and dataset diagnostics are available without exposing credentials or raw upstream payloads.", "action": "Verify /public/connectors/operations and the token-protected /admin/connectors/control-center, jobs, executions, quarantine, and datasets endpoints."},
+        {"id": "historical_archive_temporal_change", "label": "Historical Archive and Temporal Change Intelligence is available", "status": "pass", "detail": "Accepted connector datasets can create sanitized immutable snapshots, temporal change and source-revision receipts, comparable historical series, retention previews, export bundles, and verified restoration previews without public payload exposure.", "action": "Verify /public/history, /public/history/datasets, a historical series endpoint, and the token-protected /admin/history/control-center."},
         {"id": "platform_core", "label": "Platform Core remains optional and free-source governed", "status": "pass", "detail": "Public routes degrade cleanly and do not require a paid provider or expose Core credentials.", "action": "Configure only the scoped Core public-read key in the Site Intelligence backend."},
         {"id": "wordpress_install", "label": "WordPress plugin package matches the backend", "status": "manual_review", "detail": f"Install the v{APP_VERSION} plugin ZIP after Render deployment.", "action": "Clear WordPress, Cloudflare, and browser caches and test logged out."},
         {"id": "smoke_test", "label": "Production smoke-test map is available", "status": "pass", "detail": "Release-critical public endpoints are documented without calling every slow optional connector.", "action": "Run the smoke-test endpoint after deployment."},
@@ -54,7 +55,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Checklist",
         "summary": RELEASE_NAME,
-        "release_stage": "v2.13.0_connector_operations_ingestion_control",
+        "release_stage": "v2.14.0_historical_archive_temporal_change",
         "status": "launch_ready_with_manual_review" if counts["fail"] == 0 else "needs_fix",
         "score": score,
         "counts": counts,
@@ -70,10 +71,11 @@ def release_public_summary(settings: Settings) -> Dict[str, Any]:
         "generated_at": _now(),
         "version": settings.version,
         "title": "Sustainable Catalyst Site Intelligence",
-        "subtitle": "A public intelligence application with managed connector operations, geospatial, economic, sustainability, legal, scientific, humanitarian, resource-security, country, monitoring, comparison, briefing, source, methodology, and saved-research workflows.",
-        "summary": "Site Intelligence connects live intelligence streams and browser-local monitoring rules with unified country and regional dossiers, official economics, international law, science, Earth observation, humanitarian evidence, trade and resource records, global indicators, sources, methodology, and exports through one standalone public application.",
+        "subtitle": "A public intelligence application with managed connector operations, historical evidence, temporal change, geospatial, economic, sustainability, legal, scientific, humanitarian, resource-security, country, monitoring, comparison, briefing, source, methodology, and saved-research workflows.",
+        "summary": "Site Intelligence connects managed public-data ingestion and historical evidence with live intelligence streams, browser-local monitoring, country and regional dossiers, official economics, international law, science, Earth observation, humanitarian evidence, trade and resource records, sources, methodology, and exports.",
         "public_value": [
             "Provides reconnectable public intelligence snapshots, browser-local alert rules, stateless matching, source-recency monitoring, and deterministic digests without server-side profiling.",
+            "Preserves sanitized accepted dataset snapshots, historical coverage, temporal changes, and source revisions without publicly exposing archived payload bodies.",
             "Provides unified source-aware country and regional dossiers without composite scores or rankings.",
             "Provides searchable global country intelligence and a two-country comparative workspace.",
             "Provides source-aware official economic and sustainability records with precise release-frequency labels and no simulated real-time market claims.",
@@ -100,11 +102,11 @@ def release_public_summary(settings: Settings) -> Dict[str, Any]:
 
 def release_metadata() -> Dict[str, str]:
     return {
-        "seo_title": "Site Intelligence Connector Operations and Data Ingestion Control Center",
+        "seo_title": "Site Intelligence Historical Archive and Temporal Change Intelligence",
         "page_title": "Site Intelligence",
-        "excerpt": "Sustainable Catalyst Site Intelligence now manages connector refresh jobs, execution receipts, freshness, quotas, retries, circuit breakers, schema validation, quarantine, and dataset diagnostics.",
-        "meta_description": "Review source-aware connector operations, ingestion receipts, freshness, quotas, schema validation, quarantine, and dataset diagnostics in Site Intelligence.",
-        "social_description": "A source-aware connector operations and data ingestion control center for auditable public intelligence.",
+        "excerpt": "Sustainable Catalyst Site Intelligence now preserves sanitized dataset snapshots, historical coverage, temporal changes, source revisions, and verified archive receipts behind its managed connector operations.",
+        "meta_description": "Explore historical dataset coverage, temporal changes, source revisions, archive integrity, and managed public-data ingestion in Site Intelligence.",
+        "social_description": "An auditable historical archive and temporal change layer for source-aware public intelligence.",
     }
 
 
@@ -132,6 +134,9 @@ def smoke_test(settings: Settings) -> Dict[str, Any]:
         {"path": "/public/connectors/operations", "scope": "public", "critical": True, "expected": "sanitized managed-connector operational and freshness summary"},
         {"path": "/admin/connectors/control-center", "scope": "private/admin", "critical": True, "expected": "managed connector registry, jobs, receipts, datasets, and quarantine summary"},
         {"path": "/admin/connectors/jobs/run-due", "scope": "private/admin", "critical": False, "expected": "explicit dry-run batch execution of currently due jobs"},
+        {"path": "/public/history", "scope": "public", "critical": True, "expected": "sanitized historical dataset coverage and temporal-change summary"},
+        {"path": "/public/history/datasets", "scope": "public", "critical": True, "expected": "public historical coverage metadata without archived payload bodies"},
+        {"path": "/admin/history/control-center", "scope": "private/admin", "critical": True, "expected": "snapshot, change, revision, retention, export, and restore-preview control center"},
         {"path": "/app/manifest.webmanifest", "scope": "public", "critical": True, "expected": "installable application manifest"},
         {"path": "/public/economics-sustainability", "scope": "public", "critical": True, "expected": "economics workspace profile and Core state"},
         {"path": "/public/economics-sustainability/records?limit=10", "scope": "public", "critical": True, "expected": "sanitized official economic records or explicit empty state"},
@@ -191,7 +196,7 @@ def release_status(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Status",
         "summary": RELEASE_NAME,
-        "release_stage": "v2.13.0_connector_operations_ingestion_control",
+        "release_stage": "v2.14.0_historical_archive_temporal_change",
         "release_status": checklist["status"],
         "release_score": checklist["score"],
         "public_shortcode": "[sc_site_intelligence_app height=\"1000\"]",

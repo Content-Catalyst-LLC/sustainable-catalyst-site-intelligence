@@ -1,3 +1,15 @@
+## 2.14.0 — Historical Archive and Temporal Change Intelligence
+
+- Added sanitized immutable snapshots for accepted connector datasets.
+- Added SHA-256 verification, duplicate detection, and historical coverage metadata.
+- Added temporal change events with scalar deltas and material-change labels.
+- Added source-revision receipts for corrected payloads covering the same source period.
+- Added public dataset, change, revision, and historical-series endpoints without payload-body exposure.
+- Added private snapshot capture, inspection, comparison, export, retention, and restoration-preview operations.
+- Added automatic archive receipts to successful live connector ingestions.
+- Added public and administrator WordPress shortcodes plus a command-line archive utility.
+- Kept file-backed zero-cost operation and excluded writable archives from Git and release manifests.
+
 ## 2.13.0 — Connector Operations and Data Ingestion Control Center
 
 - Added a unified registry for 14 operational connector families and their public datasets.

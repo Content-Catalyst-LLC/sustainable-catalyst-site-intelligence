@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 2.13.0
+ * Version: 2.14.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '2.13.0';
+    const VERSION = '2.14.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -79,6 +79,8 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_public_connector_status', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_connector_operations', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_connector_operations_control_center', [$this, 'connector_operations_control_center_shortcode']);
+        add_shortcode('sc_public_temporal_intelligence', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_historical_archive_control_center', [$this, 'historical_archive_control_center_shortcode']);
         add_shortcode('sc_public_cache_status', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_source_freshness', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_connector_reliability', [$this, 'public_connector_panel_shortcode']);
@@ -755,6 +757,11 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-connector-operations', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_connector_operations'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-temporal-intelligence', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_temporal_intelligence'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/public-cache-status', [
@@ -1806,6 +1813,7 @@ final class SC_Site_Intelligence_Plugin {
         $map = [
             'connector_status' => 'public/connectors/status',
             'connector_operations' => 'public/connectors/operations',
+            'temporal_intelligence' => 'public/history',
             'cache_status' => 'public/connectors/cache',
             'source_freshness' => 'public/connectors/freshness',
             'connector_reliability' => 'public/connectors/reliability',
@@ -1829,6 +1837,7 @@ final class SC_Site_Intelligence_Plugin {
 
     public function rest_public_connector_status(WP_REST_Request $request) { return $this->rest_public_connector_panel('connector_status'); }
     public function rest_public_connector_operations(WP_REST_Request $request) { return $this->rest_public_connector_panel('connector_operations'); }
+    public function rest_public_temporal_intelligence(WP_REST_Request $request) { return $this->rest_public_connector_panel('temporal_intelligence'); }
     public function rest_public_cache_status(WP_REST_Request $request) { return $this->rest_public_connector_panel('cache_status'); }
     public function rest_public_source_freshness(WP_REST_Request $request) { return $this->rest_public_connector_panel('source_freshness'); }
     public function rest_public_connector_reliability(WP_REST_Request $request) { return $this->rest_public_connector_panel('connector_reliability'); }
@@ -3186,6 +3195,7 @@ final class SC_Site_Intelligence_Plugin {
         $map = [
             'sc_public_connector_status' => ['connector-status', 'Public Connector Status', 'Live, cached, fallback, and planned connector readiness for public source panels.'],
             'sc_public_connector_operations' => ['connector-operations', 'Connector Operations Status', 'Sanitized ingestion availability, freshness, and operational state across managed connectors.'],
+            'sc_public_temporal_intelligence' => ['temporal-intelligence', 'Historical Archive and Temporal Change Intelligence', 'Versioned dataset coverage, detected changes, and source-revision context without archived payload exposure.'],
             'sc_public_cache_status' => ['cache-status', 'Public Cache Status', 'Cache TTL, stale-safe display, and public source refresh policy.'],
             'sc_public_source_freshness' => ['source-freshness', 'Public Source Freshness', 'Freshness labels for public source families and connector panels.'],
             'sc_public_connector_reliability' => ['connector-reliability', 'Connector Reliability Summary', 'Public display reliability, recovery guidance, and degraded/fallback-safe source labels.'],
@@ -3302,6 +3312,52 @@ final class SC_Site_Intelligence_Plugin {
                 <?php endforeach; ?>
             <?php endif; ?>
             <p class="scsi-muted">Job execution and quarantine resolution remain token-protected backend actions. This shortcode intentionally does not expose credentials or raw upstream payloads.</p>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
+    public function historical_archive_control_center_shortcode($atts = []) {
+        if (!current_user_can('manage_options')) {
+            return '';
+        }
+        $data = $this->backend_request('admin/history/control-center');
+        if (is_wp_error($data)) {
+            return '<section class="scsi-card"><p class="scsi-eyebrow">Historical Archive</p><h2>Control Center unavailable</h2><p class="scsi-muted">' . esc_html($data->get_error_message()) . '</p></section>';
+        }
+        $counts = isset($data['counts']) && is_array($data['counts']) ? $data['counts'] : [];
+        $datasets = isset($data['datasets']) && is_array($data['datasets']) ? $data['datasets'] : [];
+        $changes = isset($data['recent_changes']) && is_array($data['recent_changes']) ? $data['recent_changes'] : [];
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-historical-archive-control-center">
+            <p class="scsi-eyebrow">Private Admin Workspace · v<?php echo esc_html(self::VERSION); ?></p>
+            <h2>Historical Archive and Temporal Change Intelligence</h2>
+            <p class="scsi-muted">Versioned accepted snapshots, temporal coverage, material-change detection, source-revision review, retention previews, export, and verified restoration previews.</p>
+            <div class="scsi-grid scsi-public-connector-health-grid">
+                <?php foreach ([
+                    'datasets' => 'Datasets',
+                    'snapshots' => 'Snapshots',
+                    'changes' => 'Changes',
+                    'revisions' => 'Source revisions',
+                    'retention_candidates' => 'Retention candidates',
+                ] as $key => $label) : ?>
+                    <div class="scsi-stat scsi-public-connector-status-card"><span class="scsi-public-label"><?php echo esc_html($label); ?></span><strong><?php echo esc_html((string) ($counts[$key] ?? 0)); ?></strong></div>
+                <?php endforeach; ?>
+            </div>
+            <?php if (!empty($datasets)) : ?>
+                <h3>Historical dataset coverage</h3>
+                <?php foreach (array_slice($datasets, 0, 20) as $item) : ?>
+                    <div class="scsi-page-row"><strong><?php echo esc_html((string) ($item['name'] ?? $item['dataset_id'] ?? 'Dataset')); ?></strong><small><?php echo esc_html((string) ($item['snapshot_count'] ?? 0)); ?> snapshots · <?php echo esc_html((string) ($item['change_count'] ?? 0)); ?> changes · <?php echo esc_html((string) ($item['revision_count'] ?? 0)); ?> revisions</small></div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            <?php if (!empty($changes)) : ?>
+                <h3>Recent temporal changes</h3>
+                <?php foreach (array_slice($changes, 0, 10) as $item) : ?>
+                    <div class="scsi-page-row"><strong><?php echo esc_html((string) ($item['dataset_id'] ?? 'Dataset')); ?></strong><small><?php echo esc_html((string) ($item['change_type'] ?? 'change')); ?> · <?php echo !empty($item['material_change']) ? 'material change' : 'non-material change'; ?> · <?php echo esc_html((string) ($item['changed_field_count'] ?? 0)); ?> changed fields</small></div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+            <p class="scsi-muted">Archived payload bodies, storage paths, connector credentials, and live restore actions are not exposed by this WordPress view.</p>
         </section>
         <?php
         return ob_get_clean();

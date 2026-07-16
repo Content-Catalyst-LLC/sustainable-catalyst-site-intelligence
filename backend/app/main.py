@@ -54,6 +54,7 @@ from .public_api_sources import (
     public_sustainability_indicators as build_public_sustainability_indicators,
 )
 from .connector_operations_v2130 import ConnectorOperationsCenter
+from .historical_archive_v2140 import HistoricalArchiveCenter
 from .public_live_connectors import (
     public_connector_status as build_public_connector_status,
     public_cache_status as build_public_cache_status,
@@ -1864,6 +1865,169 @@ def admin_connector_quarantine_resolve_endpoint(
 @app.get("/admin/connectors/datasets")
 def admin_connector_datasets_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return _connector_operations(settings).datasets()
+
+
+# Site Intelligence v2.14.0 — Historical Archive and Temporal Change Intelligence.
+def _historical_archive(settings: Settings) -> HistoricalArchiveCenter:
+    if not settings.historical_archive_enabled:
+        raise HTTPException(status_code=403, detail="Historical archive is disabled.")
+    try:
+        return HistoricalArchiveCenter(settings)
+    except ValueError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@app.get("/public/history")
+def public_history_summary_endpoint(settings: Settings = Depends(get_settings)):
+    return _historical_archive(settings).public_summary()
+
+
+@app.get("/public/history/datasets")
+def public_history_datasets_endpoint(settings: Settings = Depends(get_settings)):
+    return _historical_archive(settings).datasets(public=True)
+
+
+@app.get("/public/history/datasets/{dataset_id}/series")
+def public_history_series_endpoint(
+    dataset_id: str,
+    metric: str = Query(default="", max_length=240),
+    limit: int = Query(default=120, ge=1, le=1000),
+    settings: Settings = Depends(get_settings),
+):
+    return _historical_archive(settings).series(dataset_id, metric=metric, limit=limit)
+
+
+@app.get("/public/history/changes")
+def public_history_changes_endpoint(
+    dataset_id: str = Query(default="", max_length=180),
+    material_only: bool = Query(default=False),
+    limit: int = Query(default=100, ge=1, le=1000),
+    settings: Settings = Depends(get_settings),
+):
+    return _historical_archive(settings).changes(dataset_id=dataset_id, material_only=material_only, limit=limit)
+
+
+@app.get("/public/history/revisions")
+def public_history_revisions_endpoint(
+    dataset_id: str = Query(default="", max_length=180),
+    limit: int = Query(default=100, ge=1, le=1000),
+    settings: Settings = Depends(get_settings),
+):
+    return _historical_archive(settings).revisions(dataset_id=dataset_id, limit=limit)
+
+
+@app.get("/admin/history/control-center")
+def admin_history_control_center_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _historical_archive(settings).control_center()
+
+
+@app.get("/admin/history/snapshots")
+def admin_history_snapshots_endpoint(
+    dataset_id: str = Query(default="", max_length=180),
+    connector_id: str = Query(default="", max_length=180),
+    limit: int = Query(default=100, ge=1, le=1000),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    return _historical_archive(settings).snapshots(dataset_id=dataset_id, connector_id=connector_id, limit=limit, public=False)
+
+
+@app.post("/admin/history/snapshots/capture")
+def admin_history_capture_endpoint(
+    request: dict = Body(default={}),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    payload = request.get("payload")
+    if not isinstance(payload, dict):
+        raise HTTPException(status_code=422, detail="payload must be a JSON object.")
+    try:
+        return _historical_archive(settings).capture_snapshot(
+            dataset_id=str(request.get("dataset_id") or ""),
+            connector_id=str(request.get("connector_id") or "manual"),
+            payload=payload,
+            execution_id=str(request.get("execution_id") or ""),
+            schema_version=str(request.get("schema_version") or "1.0"),
+            source_timestamp=str(request.get("source_timestamp") or ""),
+            source_revision_id=str(request.get("source_revision_id") or ""),
+            note=str(request.get("note") or ""),
+            force=bool(request.get("force", False)),
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/admin/history/snapshots/{snapshot_id}")
+def admin_history_snapshot_endpoint(snapshot_id: str, settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _historical_archive(settings).snapshot(snapshot_id, include_payload=True)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown historical snapshot: {snapshot_id}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+
+@app.get("/admin/history/compare")
+def admin_history_compare_endpoint(
+    previous_snapshot_id: str = Query(..., min_length=5, max_length=100),
+    current_snapshot_id: str = Query(..., min_length=5, max_length=100),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    try:
+        return _historical_archive(settings).compare_snapshots(previous_snapshot_id, current_snapshot_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown historical snapshot: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/admin/history/export/{dataset_id}")
+def admin_history_export_endpoint(
+    dataset_id: str,
+    include_payloads: bool = Query(default=False),
+    limit: int = Query(default=500, ge=1, le=1000),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    return _historical_archive(settings).export_bundle(dataset_id, include_payloads=include_payloads, limit=limit)
+
+
+@app.get("/admin/history/restore-preview/{snapshot_id}")
+def admin_history_restore_preview_endpoint(snapshot_id: str, settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _historical_archive(settings).restore_preview(snapshot_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown historical snapshot: {snapshot_id}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+
+@app.get("/admin/history/retention")
+def admin_history_retention_preview_endpoint(
+    dataset_id: str = Query(default="", max_length=180),
+    retention_days: int = Query(default=3650, ge=1, le=36500),
+    max_snapshots: int = Query(default=3650, ge=2, le=50000),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    return _historical_archive(settings).retention(
+        dry_run=True, dataset_id=dataset_id, retention_days=retention_days, max_snapshots=max_snapshots
+    )
+
+
+@app.post("/admin/history/retention/apply")
+def admin_history_retention_apply_endpoint(
+    request: dict = Body(default={}),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    return _historical_archive(settings).retention(
+        dry_run=bool(request.get("dry_run", True)),
+        dataset_id=str(request.get("dataset_id") or ""),
+        retention_days=int(request.get("retention_days") or settings.historical_archive_default_retention_days),
+        max_snapshots=int(request.get("max_snapshots") or settings.historical_archive_max_snapshots_per_dataset),
+    )
 
 
 @app.get("/public/source-pages")

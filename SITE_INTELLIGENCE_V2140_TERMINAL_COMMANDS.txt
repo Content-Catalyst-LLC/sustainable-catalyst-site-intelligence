@@ -1,0 +1,30 @@
+SITE INTELLIGENCE v2.14.0 — TERMINAL COMMANDS
+
+1. Install, validate, commit, and push
+
+cd ~/Downloads
+chmod 700 install_and_push_site_intelligence_v2_14_0.sh
+bash ./install_and_push_site_intelligence_v2_14_0.sh
+
+2. After Render clear-cache deployment, verify
+
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/health | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/release | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/public/history | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/public/history/datasets | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/public/history/changes | python3 -m json.tool
+curl -s https://sustainable-catalyst-site-intelligence.onrender.com/public/history/revisions | python3 -m json.tool
+
+3. Local historical archive inspection
+
+cd ~/sustainable-catalyst-site-intelligence
+python3 scripts/historical_archive_v2140.py datasets
+python3 scripts/historical_archive_v2140.py snapshots --dataset climate-energy-timeseries
+
+4. Preview retention; no deletion occurs
+
+python3 scripts/historical_archive_v2140.py retention --days 3650 --max-snapshots 3650
+
+5. Apply retention only when explicitly intended
+
+python3 scripts/historical_archive_v2140.py retention --days 3650 --max-snapshots 3650 --apply

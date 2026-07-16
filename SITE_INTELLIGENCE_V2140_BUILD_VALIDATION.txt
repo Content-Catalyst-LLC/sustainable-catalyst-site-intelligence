@@ -1,0 +1,40 @@
+SITE INTELLIGENCE v2.14.0 — BUILD VALIDATION
+
+Release: Historical Archive and Temporal Change Intelligence
+
+Validated capabilities:
+- immutable sanitized snapshots across 14 managed datasets
+- canonical serialization and SHA-256 integrity receipts
+- automatic capture following accepted live connector ingestion
+- duplicate payload deduplication
+- temporal coverage and numeric historical series
+- field-level and numeric snapshot comparisons
+- explicit material-change classification
+- same-period source revision detection
+- public-safe history, dataset, series, change, and revision endpoints
+- administrator-only snapshot inspection, comparisons, exports, retention, and restoration previews
+- preview-first retention with newest-snapshot protection
+- verified restoration preview without live-state mutation
+- public and administrator-only WordPress temporal surfaces
+- zero-cost file-backed default with configurable durable storage paths
+
+Automated validation:
+- 417 backend tests passed
+- v2.14.0 release contract passed
+- Python compilation passed
+- JavaScript and service-worker syntax passed
+- WordPress PHP syntax passed
+- JSON, webmanifest, and YAML parsing passed
+- immutable release manifest verified before and after testing
+- 367 immutable release files verified before and after testing
+- writable archive, connector state, connector history, quarantine, country cache, Platform Core queue, Python caches, and pytest caches excluded
+
+Governance validation:
+- archived payloads are sanitized before persistence
+- archived payload bodies are not exposed publicly
+- source revisions are distinguished from new observations when source evidence permits
+- missing values are not silently interpolated or imputed
+- retention remains dry-run unless explicitly applied
+- restoration remains preview-only and cannot overwrite live state
+- no paid database or archive service is required
+- durable hosted history is not claimed without persistent storage

@@ -12,7 +12,7 @@ def test_v100_release_public_summary_endpoint_is_public_safe():
     assert response.status_code == 200
     data = response.json()
     assert data['ok'] is True
-    assert data['version'] == '2.13.0'
+    assert data['version'] == '2.14.0'
     assert data['recommended_page']['shortcode'] == '[sc_site_intelligence_app height="1000"]'
     assert 'raw analytics' in ' '.join(data['boundaries']).lower()
     assert 'meta_description' in data['metadata']
@@ -24,14 +24,14 @@ def test_v100_release_status_requires_token_in_production():
     # Default test settings have no token configured, so protected route is callable in tests.
     assert response.status_code == 200
     data = response.json()
-    assert data['version'] == '2.13.0'
-    assert data['release_stage'] == 'v2.13.0_connector_operations_ingestion_control'
+    assert data['version'] == '2.14.0'
+    assert data['release_stage'] == 'v2.14.0_historical_archive_temporal_change'
     assert data['public_shortcode'] == '[sc_site_intelligence_app height="1000"]'
     assert data['release_score'] >= 70
 
 
 def test_v100_release_helpers_include_launch_metadata_and_smoke_checks():
-    settings = Settings(version='2.13.0')
+    settings = Settings(version='2.14.0')
     checklist = release_checklist(settings)
     summary = release_public_summary(settings)
     status = release_status(settings)
@@ -48,7 +48,7 @@ def test_v100_admin_catalog_includes_release_status_shortcode():
 
 
 def test_v100_module_catalog_includes_release_module():
-    modules = module_manager(Settings(version='2.13.0'))['modules']
+    modules = module_manager(Settings(version='2.14.0'))['modules']
     release_modules = [module for module in modules if module['id'] == 'release-status']
     assert release_modules
     module = release_modules[0]

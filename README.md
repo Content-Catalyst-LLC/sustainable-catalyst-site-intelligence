@@ -1,7 +1,22 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.13.0 — Connector Operations and Data Ingestion Control Center
+**Current release:** v2.14.0 — Historical Archive and Temporal Change Intelligence
 
+
+
+## v2.14.0 — Historical Archive and Temporal Change Intelligence
+
+Site Intelligence v2.14.0 adds a file-backed historical evidence layer behind the managed connector system. Successful live ingestions can create sanitized, canonicalized, SHA-256-verified dataset snapshots. Identical payloads are deduplicated, changed records create temporal change receipts, and corrections to the same source period are distinguished as source revisions when the available metadata supports that interpretation.
+
+The release adds historical coverage diagnostics, scalar time-series extraction without imputation, snapshot comparison, material-change labels, retention previews and controlled application, portable history bundles, and verified restoration previews. Public endpoints expose metadata and derived series only; archived payload bodies, storage paths, credentials, and live restore actions remain private. The zero-cost file-backed mode remains available, but persistent hosting requires a durable disk path.
+
+Public endpoints: `/public/history`, `/public/history/datasets`, `/public/history/changes`, `/public/history/revisions`, and `/public/history/datasets/{dataset_id}/series`
+
+Private control center: `/admin/history/control-center`
+
+Command-line utility: `python scripts/historical_archive_v2140.py datasets`
+
+WordPress shortcodes: `[sc_public_temporal_intelligence]` and `[sc_historical_archive_control_center]`
 
 
 ## v2.13.0 — Connector Operations and Data Ingestion Control Center
