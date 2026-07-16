@@ -1,4 +1,4 @@
-APP_VERSION = "2.18.0"
+APP_VERSION = "2.19.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Evidence Synthesis, Claims, and Contradiction Review"
+RELEASE_NAME = "Cross-Domain Knowledge Graph and Relationship Explorer"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

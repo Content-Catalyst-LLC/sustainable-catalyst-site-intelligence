@@ -59,6 +59,7 @@ from .spatial_evidence_v2150 import SpatialEvidenceStudio
 from .statistical_harmonization_v2160 import StatisticalHarmonizationEngine
 from .model_forecast_early_warning_v2170 import ModelForecastEarlyWarningCenter
 from .evidence_synthesis_v2180 import EvidenceSynthesisCenter
+from .knowledge_graph_v2190 import KnowledgeGraphExplorer
 from .public_live_connectors import (
     public_connector_status as build_public_connector_status,
     public_cache_status as build_public_cache_status,
@@ -2210,7 +2211,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v2.18.0 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v2.19.0 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -2352,7 +2353,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.18.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v2.19.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -2469,7 +2470,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.18.0 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v2.19.0 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -2589,6 +2590,142 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=404, detail=f"Unknown claim: {exc.args[0]}") from exc
     except ValueError as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+# Site Intelligence v2.19.0 — Cross-Domain Knowledge Graph and Relationship Explorer.
+def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
+    if not settings.knowledge_graph_enabled:
+        raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
+    return KnowledgeGraphExplorer(settings)
+
+
+@app.get("/public/knowledge-graph")
+def public_knowledge_graph_summary_endpoint(settings: Settings = Depends(get_settings)):
+    return _knowledge_graph(settings).public_summary()
+
+
+@app.get("/public/knowledge-graph/methodology")
+def public_knowledge_graph_methodology_endpoint(settings: Settings = Depends(get_settings)):
+    return _knowledge_graph(settings).methodology()
+
+
+@app.get("/public/knowledge-graph/diagnostics")
+def public_knowledge_graph_diagnostics_endpoint(settings: Settings = Depends(get_settings)):
+    return _knowledge_graph(settings).diagnostics(public=True)
+
+
+@app.get("/public/knowledge-graph/entities")
+def public_knowledge_graph_entities_endpoint(entity_type: str = Query(default="", max_length=120), q: str = Query(default="", max_length=500), limit: int = Query(default=100, ge=1, le=1000), settings: Settings = Depends(get_settings)):
+    return _knowledge_graph(settings).entities(public=True, entity_type=entity_type, query=q, limit=limit)
+
+
+@app.get("/public/knowledge-graph/entities/{entity_id}")
+def public_knowledge_graph_entity_endpoint(entity_id: str, as_of: str = Query(default="", max_length=120), settings: Settings = Depends(get_settings)):
+    try:
+        return _knowledge_graph(settings).entity_detail(entity_id, public=True, as_of=as_of)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown or non-public entity: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/public/knowledge-graph/relationships")
+def public_knowledge_graph_relationships_endpoint(relationship_type: str = Query(default="", max_length=120), entity_id: str = Query(default="", max_length=180), as_of: str = Query(default="", max_length=120), limit: int = Query(default=200, ge=1, le=1000), settings: Settings = Depends(get_settings)):
+    try:
+        return _knowledge_graph(settings).relationships(public=True, relationship_type=relationship_type, entity_id=entity_id, as_of=as_of, limit=limit)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/public/knowledge-graph/resolve")
+def public_knowledge_graph_resolve_endpoint(q: str = Query(..., min_length=1, max_length=500), namespace: str = Query(default="", max_length=120), settings: Settings = Depends(get_settings)):
+    return _knowledge_graph(settings).resolve(q, public=True, namespace=namespace)
+
+
+@app.get("/public/knowledge-graph/traverse")
+def public_knowledge_graph_traverse_endpoint(entity_id: str = Query(..., min_length=1, max_length=180), depth: int = Query(default=2, ge=0, le=12), direction: str = Query(default="both"), relationship_type: list[str] = Query(default=[]), as_of: str = Query(default="", max_length=120), settings: Settings = Depends(get_settings)):
+    try:
+        return _knowledge_graph(settings).traverse(entity_id, public=True, depth=depth, direction=direction, relationship_types=relationship_type, as_of=as_of)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown or non-public entity: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/public/knowledge-graph/path")
+def public_knowledge_graph_path_endpoint(source_id: str = Query(..., min_length=1, max_length=180), target_id: str = Query(..., min_length=1, max_length=180), max_depth: int = Query(default=4, ge=1, le=12), relationship_type: list[str] = Query(default=[]), as_of: str = Query(default="", max_length=120), settings: Settings = Depends(get_settings)):
+    try:
+        return _knowledge_graph(settings).shortest_path(source_id, target_id, public=True, max_depth=max_depth, relationship_types=relationship_type, as_of=as_of)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown or non-public entity: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/public/knowledge-graph/export")
+def public_knowledge_graph_export_endpoint(entity_id: str = Query(..., min_length=1, max_length=180), depth: int = Query(default=2, ge=0, le=12), as_of: str = Query(default="", max_length=120), settings: Settings = Depends(get_settings)):
+    try:
+        return _knowledge_graph(settings).export_subgraph(entity_id, public=True, depth=depth, as_of=as_of)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown or non-public entity: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/admin/knowledge-graph/control-center")
+def admin_knowledge_graph_control_center_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _knowledge_graph(settings).control_center()
+
+
+@app.post("/admin/knowledge-graph/entities/register")
+def admin_knowledge_graph_entity_register_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _knowledge_graph(settings).register_entity(request)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/admin/knowledge-graph/aliases/register")
+def admin_knowledge_graph_alias_register_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _knowledge_graph(settings).register_alias(request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/admin/knowledge-graph/relationships/register")
+def admin_knowledge_graph_relationship_register_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _knowledge_graph(settings).register_relationship(request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/admin/knowledge-graph/reconcile/preview")
+def admin_knowledge_graph_reconciliation_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _knowledge_graph(settings).preview_reconciliation(request)
+
+
+@app.get("/admin/knowledge-graph/export")
+def admin_knowledge_graph_export_endpoint(entity_id: str = Query(..., min_length=1, max_length=180), depth: int = Query(default=2, ge=0, le=12), as_of: str = Query(default="", max_length=120), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _knowledge_graph(settings).export_subgraph(entity_id, depth=depth, as_of=as_of)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/admin/knowledge-graph/platform-core-handoff")
+def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_length=1, max_length=180), depth: int = Query(default=2, ge=0, le=12), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _knowledge_graph(settings).platform_core_handoff(entity_id, depth=depth)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
 @app.get("/public/source-pages")

@@ -245,7 +245,7 @@ class Settings(BaseSettings):
     spatial_evidence_max_radius_km: float = Field(default=5000.0, ge=0.1, le=20000.0)
     spatial_evidence_max_proximity_km: float = Field(default=5000.0, ge=0.1, le=20000.0)
 
-    # Site Intelligence v2.18.0 — Statistical Harmonization and Comparable-Series Engine.
+    # Site Intelligence v2.19.0 — Statistical Harmonization and Comparable-Series Engine.
     # Source series, transformed series, and lineage receipts are writable runtime
     # state and may be redirected to durable storage. Release registries remain immutable.
     statistical_harmonization_enabled: bool = True
@@ -258,7 +258,7 @@ class Settings(BaseSettings):
     statistical_harmonization_max_records: int = Field(default=10000, ge=100, le=100000)
     statistical_harmonization_max_observations: int = Field(default=5000, ge=1, le=100000)
 
-    # Site Intelligence v2.18.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+    # Site Intelligence v2.19.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
     # Model cards and immutable policy registries ship with the release. Forecasts,
     # evaluations, warning rules, and warning events are writable runtime state.
     model_governance_enabled: bool = True
@@ -273,7 +273,7 @@ class Settings(BaseSettings):
     model_governance_max_records: int = Field(default=10000, ge=100, le=100000)
     model_governance_max_forecast_points: int = Field(default=5000, ge=1, le=100000)
 
-    # Site Intelligence v2.18.0 — Evidence Synthesis, Claims, and Contradiction Review.
+    # Site Intelligence v2.19.0 — Evidence Synthesis, Claims, and Contradiction Review.
     # Claims, evidence, reviews, syntheses, and uncertainty records are writable
     # runtime state. Immutable policy files ship with the release.
     evidence_synthesis_enabled: bool = True
@@ -286,6 +286,20 @@ class Settings(BaseSettings):
     evidence_synthesis_policy_path: str = "backend/data/evidence_synthesis_policy_v2180.json"
     evidence_synthesis_max_records: int = Field(default=10000, ge=100, le=100000)
     evidence_synthesis_max_excerpt_chars: int = Field(default=4000, ge=100, le=20000)
+
+    # Site Intelligence v2.19.0 — Cross-Domain Knowledge Graph and Relationship Explorer.
+    # Entity, relationship, and alias records are writable runtime state. Immutable
+    # policy and relationship registries ship with the release.
+    knowledge_graph_enabled: bool = True
+    knowledge_graph_root_path: str = "backend/data/knowledge_graph_v2190"
+    knowledge_graph_entities_path: str = "backend/data/knowledge_graph_v2190/entities_v2190.jsonl"
+    knowledge_graph_relationships_path: str = "backend/data/knowledge_graph_v2190/relationships_v2190.jsonl"
+    knowledge_graph_aliases_path: str = "backend/data/knowledge_graph_v2190/aliases_v2190.jsonl"
+    knowledge_graph_policy_path: str = "backend/data/knowledge_graph_policy_v2190.json"
+    knowledge_graph_relationship_registry_path: str = "backend/data/knowledge_graph_relationship_registry_v2190.json"
+    knowledge_graph_max_records: int = Field(default=20000, ge=100, le=200000)
+    knowledge_graph_max_traversal_depth: int = Field(default=6, ge=1, le=12)
+    knowledge_graph_max_results: int = Field(default=1000, ge=10, le=10000)
 
 
     # Sustainable Development Data Connectors v1.14.1.

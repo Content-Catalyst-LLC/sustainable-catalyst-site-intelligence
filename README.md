@@ -1,7 +1,23 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.18.0 — Evidence Synthesis, Claims, and Contradiction Review
+**Current release:** v2.19.0 — Cross-Domain Knowledge Graph and Relationship Explorer
 
+
+
+## v2.19.0 — Cross-Domain Knowledge Graph and Relationship Explorer
+
+- Typed countries, regions, organizations, sources, indicators, events, documents, models, claims, datasets, publications, methodologies, workspaces, places, programs, and policies.
+- Versioned entity and relationship records with SHA-256 integrity receipts.
+- Alias and external-identifier registration with ambiguity-preserving resolution.
+- Human-reviewed reconciliation previews with no automatic entity merging.
+- Evidence-backed relationships with confidence labels, temporal validity, and preserved source/target direction.
+- Bounded graph traversal, entity neighborhoods, relationship filtering, and shortest-path exploration.
+- Public-safe diagnostics for orphans, dangling edges, unsupported edges, and alias collisions.
+- Read-only JSON/CSV graph exports and Platform Core handoff packets.
+- Public workspace: `/app/?view=graph`.
+- Public endpoints: `/public/knowledge-graph`, `/public/knowledge-graph/entities`, `/public/knowledge-graph/relationships`, `/public/knowledge-graph/traverse`, `/public/knowledge-graph/path`, and `/public/knowledge-graph/export`.
+- WordPress shortcodes: `[sc_public_relationship_explorer]` and `[sc_knowledge_graph_control_center]`.
+- Graph connectivity never establishes causation, importance, risk, or operational priority.
 
 ## v2.18.0 — Evidence Synthesis, Claims, and Contradiction Review
 

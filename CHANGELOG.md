@@ -1,3 +1,13 @@
+## 2.19.0 — Cross-Domain Knowledge Graph and Relationship Explorer
+
+- Added typed cross-domain entity and relationship records with SHA-256 integrity receipts.
+- Added aliases, external identifiers, exact resolution, ambiguity reporting, and human-review reconciliation previews.
+- Added evidence-backed, confidence-labeled, time-bounded relationships without automatic causal inference.
+- Added entity detail, relationship filtering, bounded traversal, shortest paths, diagnostics, graph exports, and read-only Platform Core handoffs.
+- Added public and administrator APIs, a dedicated `/app/?view=graph` workspace, and WordPress relationship-explorer surfaces.
+- Added governance controls against automatic merges, hidden evidence, individual tracking, social scoring, targeting, and military operational use.
+- Excluded all writable entity, relationship, and alias state from immutable release artifacts.
+
 ## 2.18.0 — Evidence Synthesis, Claims, and Contradiction Review
 
 - Added structured claim, evidence, review, synthesis, and uncertainty records.

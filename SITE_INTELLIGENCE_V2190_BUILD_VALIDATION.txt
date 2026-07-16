@@ -1,0 +1,31 @@
+SITE INTELLIGENCE v2.19.0 BUILD VALIDATION
+
+Release: Cross-Domain Knowledge Graph and Relationship Explorer
+Base release: v2.18.0
+
+VALIDATED
+- 478 backend tests passed.
+- v2.19.0 release contract passed.
+- Python application and release scripts compile successfully.
+- Public application, Relationships workspace, service worker, and WordPress JavaScript syntax passed.
+- WordPress PHP syntax passed.
+- JSON and webmanifest parsing passed.
+- Backend, public app, offline shell, service worker, WordPress plugin, README, changelog, release metadata, and observatory ledger report v2.19.0.
+- Typed entity, alias, external-identifier, relationship, traversal, path, diagnostics, export, and reconciliation-preview workflows are available.
+- Public routes expose approved public entities and approved evidence-backed public relationships only.
+- Administrative routes preserve entity registration, alias registration, relationship registration, diagnostics, reconciliation previews, exports, and Platform Core handoffs behind the existing API-token boundary.
+- Relationships preserve direction, confidence metadata, evidence/source references, temporal validity, human-review status, and SHA-256 integrity.
+- Graph traversal is depth- and result-bounded.
+- Writable graph, evidence, model, harmonization, spatial, historical, connector, cache, quarantine, and queue state is excluded from the immutable release.
+
+GOVERNANCE BOUNDARIES
+- No causation inferred from graph proximity, sequence, path length, degree, or centrality.
+- No automatic entity merging or silent identifier reconciliation.
+- No unsupported public relationship without evidence/source references and human approval.
+- No individual tracking, surveillance, social scoring, military targeting, or autonomous consequential decision.
+- Platform Core handoff remains read-only and does not claim successful remote ingestion.
+
+DEPLOYMENT
+- File-backed zero-cost operation remains supported.
+- Persistent production graph records require a durable configured storage path.
+- Deploy the backend before installing the v2.19.0 WordPress plugin to preserve version parity.

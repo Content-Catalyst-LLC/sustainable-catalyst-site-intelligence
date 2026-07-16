@@ -5,11 +5,11 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_release_contract_files_and_markers():
     checks = {
-        "backend/app/version.py": ['APP_VERSION = "2.18.0"', 'RELEASE_NAME = "Evidence Synthesis, Claims, and Contradiction Review"'],
+        "backend/app/version.py": ['APP_VERSION = "2.19.0"', 'RELEASE_NAME = "Cross-Domain Knowledge Graph and Relationship Explorer"'],
         "backend/app/config.py": ["evidence_synthesis_enabled", "evidence_synthesis_claims_path", "evidence_synthesis_syntheses_path"],
-        "backend/app/evidence_synthesis_v2180.py": ['RELEASE_VERSION = "2.18.0"', "def register_claim(", "def add_evidence(", "def contradiction_review(", "def synthesize("],
+        "backend/app/evidence_synthesis_v2180.py": ['RELEASE_VERSION = "2.19.0"', "def register_claim(", "def add_evidence(", "def contradiction_review(", "def synthesize("],
         "backend/app/main.py": ['"/public/evidence-synthesis"', '"/public/claims"', '"/admin/evidence-synthesis/control-center"', '"/admin/evidence-synthesis/handoff"'],
-        "backend/data/evidence_synthesis_policy_v2180.json": ['"version": "2.18.0"', "No fabricated evidence", "No suppression of conflicting evidence"],
+        "backend/data/evidence_synthesis_policy_v2180.json": ['"version": "2.19.0"', "No fabricated evidence", "No suppression of conflicting evidence"],
     }
     for relative, markers in checks.items():
         text = (ROOT / relative).read_text(encoding="utf-8")
@@ -36,7 +36,7 @@ def test_public_app_wordpress_and_offline_contract():
 def test_release_docs_and_governance_manifest():
     import json
     manifest = json.loads((ROOT / "docs/RELEASE_MANIFEST_V2180.json").read_text(encoding="utf-8"))
-    assert manifest["release"] == "2.18.0"
+    assert manifest["release"] == "2.19.0"
     assert manifest["fabricated_evidence_allowed"] is False
     assert manifest["hidden_contradictions_allowed"] is False
     assert manifest["human_review_required"] is True

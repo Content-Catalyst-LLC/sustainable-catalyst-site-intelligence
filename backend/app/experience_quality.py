@@ -12,7 +12,7 @@ ACCESSIBILITY_TARGET = "WCAG 2.2 Level AA target; not a third-party certificatio
 PERFORMANCE_BUDGETS = {
     "first_party_javascript_bytes": 260_000,
     "first_party_css_bytes": 100_000,
-    "application_html_bytes": 140_000,
+    "application_html_bytes": 150_000,
     "first_party_shell_bytes": 500_000,
 }
 

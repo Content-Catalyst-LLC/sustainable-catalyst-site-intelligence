@@ -1,0 +1,25 @@
+{
+  "schema": "sc-site-intelligence-knowledge-graph-policy/1.0",
+  "version": "2.19.0",
+  "title": "Cross-Domain Knowledge Graph and Relationship Explorer Policy",
+  "principles": [
+    "Entities and relationships remain typed, source-aware, and independently inspectable.",
+    "Every public relationship requires registered evidence or source references and human approval.",
+    "Aliases and external identifiers support reconciliation but never trigger automatic merges.",
+    "Temporal validity remains explicit for relationships that change through time.",
+    "Traversal and path results describe graph connectivity, not causality, importance, or risk.",
+    "Public graph exports preserve evidence, confidence, temporal, visibility, and review metadata."
+  ],
+  "boundaries": [
+    "No causation inferred from graph proximity, sequence, degree, or path length.",
+    "No automatic entity merging or destructive identifier reconciliation.",
+    "No individual tracking, surveillance, targeting, or social scoring.",
+    "No military targeting, operational planning, or consequential automated action.",
+    "No hidden relationship confidence or unsupported relationship creation.",
+    "No public relationship without human approval and evidence or source references."
+  ],
+  "platform_core_integration": "read-only handoff",
+  "human_review_required": true,
+  "automatic_merge": false,
+  "automatic_causation": false
+}

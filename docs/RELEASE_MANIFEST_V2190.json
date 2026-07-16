@@ -1,0 +1,52 @@
+{
+  "schema": "sc-site-intelligence-release-manifest/1.0",
+  "release": "2.19.0",
+  "title": "Cross-Domain Knowledge Graph and Relationship Explorer",
+  "base_release": "2.18.0",
+  "graph_schema": "sc-site-intelligence-knowledge-graph/1.0",
+  "entity_schema": "sc-site-intelligence-graph-entity/1.0",
+  "relationship_schema": "sc-site-intelligence-graph-relationship/1.0",
+  "alias_schema": "sc-site-intelligence-graph-alias/1.0",
+  "digest_algorithm": "sha256",
+  "human_review_required": true,
+  "relationship_evidence_required": true,
+  "public_relationship_approval_required": true,
+  "temporal_relationships_supported": true,
+  "automatic_causation": false,
+  "automatic_entity_merge": false,
+  "individual_tracking": false,
+  "social_scoring": false,
+  "military_targeting": false,
+  "automatic_consequential_decision": false,
+  "platform_core_write_performed": false,
+  "paid_database_required": false,
+  "persistent_disk_recommended": true,
+  "public_endpoints": [
+    "/public/knowledge-graph",
+    "/public/knowledge-graph/methodology",
+    "/public/knowledge-graph/diagnostics",
+    "/public/knowledge-graph/entities",
+    "/public/knowledge-graph/entities/{entity_id}",
+    "/public/knowledge-graph/relationships",
+    "/public/knowledge-graph/resolve",
+    "/public/knowledge-graph/traverse",
+    "/public/knowledge-graph/path",
+    "/public/knowledge-graph/export"
+  ],
+  "private_endpoints": [
+    "/admin/knowledge-graph/control-center",
+    "/admin/knowledge-graph/entities/register",
+    "/admin/knowledge-graph/aliases/register",
+    "/admin/knowledge-graph/relationships/register",
+    "/admin/knowledge-graph/reconcile/preview",
+    "/admin/knowledge-graph/export",
+    "/admin/knowledge-graph/platform-core-handoff"
+  ],
+  "shortcodes": [
+    "[sc_public_relationship_explorer]",
+    "[sc_knowledge_graph_control_center]"
+  ],
+  "runtime_paths_excluded_from_release": [
+    "backend/data/knowledge_graph_v2190/"
+  ]
+}
