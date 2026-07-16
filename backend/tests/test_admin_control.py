@@ -10,7 +10,7 @@ def test_admin_overview_endpoint_available_in_dev():
     assert response.status_code == 200
     data = response.json()
     assert data['ok'] is True
-    assert data['version'] == '2.8.0'
+    assert data['version'] == '2.9.0'
     assert data['totals']['modules'] >= 1
     assert data['totals']['shortcodes'] >= 1
 

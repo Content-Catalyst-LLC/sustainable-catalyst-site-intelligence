@@ -48,7 +48,7 @@
   }
 
   const state = {map:null,base:null,imagery:null,markers:null,heat:null,layers:null,events:null,country:"KEN",route:"overview"};
-  const APP_VERSION="2.8.0";
+  const APP_VERSION="2.9.0";
   const SAVED_VIEW_SCHEMA="sc-saved-view/1.0";
   const SAVED_VIEW_STORAGE_KEY="sc_site_intelligence_saved_views_v1";
   const SAVED_VIEW_LIMIT=50;
@@ -154,6 +154,7 @@
       resources:["TRADE, ENERGY, AND RESOURCE SECURITY OBSERVATORY","Official resource and dependency evidence","Trace trade, energy, food, water, materials, and transition records while preserving units, periods, counterpart context, and methodological limits."],
       dossiers:["UNIFIED COUNTRY AND REGIONAL INTELLIGENCE DOSSIERS","Cross-domain country and regional evidence","Combine public conditions, indicators, economics, law, science, humanitarian evidence, and resource context without collapsing them into a score or ranking."],
       alerts:["ALERTS, MONITORING, AND LIVE INTELLIGENCE STREAMS","Watch public evidence across domains","Use reconnecting source-aware streams, browser-local rules, source freshness monitoring, and deterministic digests without server-side profiling or automated risk decisions."],
+      scenarios:["COMPARATIVE INTELLIGENCE AND SCENARIO STUDIO","Compare evidence and test assumptions","Build multi-geography indicator baskets, inspect compatibility, apply transparent arithmetic scenarios, review correlation, and export reproducible packets without rankings or forecasts."],
       observatory:["AUDITABLE PUBLIC OBSERVATORY","Evidence, lineage, and integrity","Inspect registered public evidence records, source and methodology lineage, canonical digests, release history, and verification boundaries."],
       launch:["PUBLIC LAUNCH AND PORTFOLIO","Site Intelligence","Explore the public product, technical architecture, responsible-use boundaries, and launch materials."],
       overview:["LIVE INTELLIGENCE WORKSPACE","Climate and Human Vulnerability","Satellite context, natural events, environmental pressure, and country evidence in one navigable view."],
@@ -1146,6 +1147,7 @@
     resources:{label:"Trade, Energy, and Resource Security",keys:["family","source_id","geography_code","counterpart_code","indicator_code","query","mapLat","mapLng","mapZoom"]},
     dossiers:{label:"Unified Country and Regional Dossiers",keys:["dossierMode","country","compare","region","mapLat","mapLng","mapZoom"]},
     alerts:{label:"Alerts, Monitoring, and Live Streams",keys:["alertFamily","alertCountry","alertSource","alertFreshness","alertQuery"]},
+    scenarios:{label:"Comparative Intelligence and Scenario Studio",keys:["scenarioGeographies","scenarioIndicators","scenarioDomain","scenarioStart","scenarioEnd"]},
     observatory:{label:"Auditable Public Observatory",keys:[]},
     overview:{label:"Overview",keys:["country","imageryLayer","imageryDate","mapLat","mapLng","mapZoom"]},
     earth:{label:"Earth Observation",keys:["earthLayer","dateA","dateB","opacity","swipe","mapLat","mapLng","mapZoom"]},
@@ -1172,6 +1174,7 @@
     if(route==="resources")return window.SCResourcesV260?.status?.().map||null;
     if(route==="dossiers")return window.SCDossiersV270?.status?.().map||null;
     if(route==="alerts")return null;
+    if(route==="scenarios")return null;
     if(route==="overview")return state.map;
     if(route==="earth")return earthState.mapA;
     if(route==="country")return globalCountryState.overviewMap;
@@ -1197,6 +1200,7 @@
     if(route==="resources")values={family:qs("#resourceFamily")?.value||"",source_id:qs("#resourceSource")?.value||"",geography_code:qs("#resourceCountry")?.value||"",counterpart_code:qs("#resourceCounterpart")?.value||"",indicator_code:qs("#resourceIndicator")?.value||"",query:qs("#resourceSearch")?.value?.trim?.()||""};
     if(route==="dossiers")values={dossierMode:qs("#dossierMode")?.value||"country",country:qs("#dossierCountry")?.value||"",compare:qs("#dossierCompare")?.value||"",region:qs("#dossierRegion")?.value||""};
     if(route==="alerts")values={alertFamily:qs("#alertsFamily")?.value||"",alertCountry:qs("#alertsCountry")?.value||"",alertSource:qs("#alertsSource")?.value||"",alertFreshness:qs("#alertsFreshness")?.value||"",alertQuery:qs("#alertsQuery")?.value?.trim?.()||""};
+    if(route==="scenarios")values={scenarioGeographies:qs("#scenarioGeographies")?.value||"",scenarioIndicators:qs("#scenarioIndicators")?.value||"",scenarioDomain:qs("#scenarioDomain")?.value||"",scenarioStart:qs("#scenarioStart")?.value||"",scenarioEnd:qs("#scenarioEnd")?.value||""};
     if(route==="overview")values={country:state.country,imageryLayer:qs(".layer-tab.active")?.dataset.layer||"true-color",imageryDate:qs("#dateSelect").value};
     if(route==="earth")values={earthLayer:qs("#earthLayerSelect").value,dateA:qs("#earthDateA").value,dateB:qs("#earthDateB").value,opacity:qs("#earthOpacity").value,swipe:qs("#earthSwipe").value};
     if(route==="country")values={country:globalCountryState.activeCode||state.country,trend:qs("#globalTrendSelect").value};
@@ -1353,6 +1357,7 @@
     if(route!=="resources")window.SCResourcesV260?.close?.();
     if(route!=="dossiers")window.SCDossiersV270?.close?.();
     if(route!=="alerts")window.SCAlertsV280?.close?.();
+    if(route!=="scenarios")window.SCScenariosV290?.close?.();
     if(route==="global"){
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
       closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
@@ -1408,6 +1413,13 @@
       closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
       closePublicLaunchPortfolio();closeAuditablePublicObservatory();
       await window.SCAlertsV280?.open?.();return;
+    }
+    if(route==="scenarios"){
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
+      closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
+      closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
+      closePublicLaunchPortfolio();closeAuditablePublicObservatory();
+      await window.SCScenariosV290?.open?.();return;
     }
     if(route!=="launch")closePublicLaunchPortfolio();
     if(route!=="observatory")closeAuditablePublicObservatory();

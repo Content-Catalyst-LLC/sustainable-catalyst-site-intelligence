@@ -32,6 +32,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         {"id": "humanitarian_conflict_displacement", "label": "Humanitarian, Conflict, and Displacement Observatory is available", "status": "pass", "detail": "Public live events and Core records are combined without fabricated crisis records, hidden credentials, or automatic legal, protection, eligibility, or severity conclusions.", "action": "Verify /app/?view=humanitarian, filters, map, timeline, records, CSV export, and unavailable state."},
         {"id": "unified_dossiers", "label": "Unified Country and Regional Intelligence Dossiers are available", "status": "pass", "detail": "Country and regional dossiers compose public conditions, indicators, economics, law, science, humanitarian evidence, and resource records while preserving evidence classes and source states.", "action": "Verify /app/?view=dossiers for a country, region, and two-country coverage comparison."},
         {"id": "alerts_monitoring", "label": "Alerts, Monitoring, and Live Intelligence Streams are available", "status": "pass", "detail": "Reconnectable public stream snapshots, browser-local rules, stateless matching, source-watch states, and deterministic digests are available without server-side user tracking.", "action": "Verify /app/?view=alerts, create a local rule, reconnect the stream, inspect source watch, and generate a digest."},
+        {"id": "comparative_scenario_studio", "label": "Comparative Intelligence and Scenario Studio is available", "status": "pass", "detail": "Multi-geography comparison, compatibility warnings, transparent arithmetic scenarios, peer context, correlation review, and reproducible packets are available without rankings or forecasts.", "action": "Verify /app/?view=scenarios, run a comparison, apply a transparent adjustment, review a correlation, and export a packet."},
         {"id": "platform_core", "label": "Platform Core remains optional and free-source governed", "status": "pass", "detail": "Public routes degrade cleanly and do not require a paid provider or expose Core credentials.", "action": "Configure only the scoped Core public-read key in the Site Intelligence backend."},
         {"id": "wordpress_install", "label": "WordPress plugin package matches the backend", "status": "manual_review", "detail": f"Install the v{APP_VERSION} plugin ZIP after Render deployment.", "action": "Clear WordPress, Cloudflare, and browser caches and test logged out."},
         {"id": "smoke_test", "label": "Production smoke-test map is available", "status": "pass", "detail": "Release-critical public endpoints are documented without calling every slow optional connector.", "action": "Run the smoke-test endpoint after deployment."},
@@ -49,7 +50,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Checklist",
         "summary": RELEASE_NAME,
-        "release_stage": "v2.8.0_alerts_monitoring_live_intelligence_streams",
+        "release_stage": "v2.9.0_comparative_intelligence_scenario_studio",
         "status": "launch_ready_with_manual_review" if counts["fail"] == 0 else "needs_fix",
         "score": score,
         "counts": counts,
@@ -95,11 +96,11 @@ def release_public_summary(settings: Settings) -> Dict[str, Any]:
 
 def release_metadata() -> Dict[str, str]:
     return {
-        "seo_title": "Site Intelligence: Alerts, Monitoring, and Live Intelligence Streams",
+        "seo_title": "Site Intelligence: Comparative Intelligence and Scenario Studio",
         "page_title": "Site Intelligence",
         "excerpt": "Sustainable Catalyst Site Intelligence provides source-aware live streams, browser-local alert rules, source monitoring, deterministic digests, and unified cross-domain intelligence workspaces.",
         "meta_description": "Monitor source-aware public intelligence streams, create browser-local alert rules, review stale sources, and generate deterministic cross-domain digests.",
-        "social_description": "Source-aware live intelligence streams, browser-local alert rules, source monitoring, digests, and cross-domain country intelligence.",
+        "social_description": "Source-aware comparative intelligence, transparent scenarios, correlation review, peer context, and reproducible evidence packets.",
     }
 
 
@@ -114,6 +115,8 @@ def smoke_test(settings: Settings) -> Dict[str, Any]:
         {"path": "/public/alerts-monitoring", "scope": "public", "critical": True, "expected": "alerts and monitoring workspace profile"},
         {"path": "/public/live-intelligence-stream?country=KEN&limit=10", "scope": "public", "critical": True, "expected": "sanitized reconnectable stream snapshot or explicit unavailable state"},
         {"path": "/public/alerts-monitoring/diagnostics", "scope": "public", "critical": True, "expected": "public-safe monitoring diagnostics"},
+        {"path": "/public/comparative-scenario-studio", "scope": "public", "critical": True, "expected": "comparative scenario workspace profile"},
+        {"path": "/public/comparative-scenario-studio/diagnostics", "scope": "public", "critical": True, "expected": "public-safe comparison and scenario diagnostics"},
         {"path": "/public/economics-sustainability", "scope": "public", "critical": True, "expected": "economics workspace profile and Core state"},
         {"path": "/public/economics-sustainability/records?limit=10", "scope": "public", "critical": True, "expected": "sanitized official economic records or explicit empty state"},
         {"path": "/public/international-law-observatory", "scope": "public", "critical": True, "expected": "international-law workspace profile and Core state"},
@@ -170,7 +173,7 @@ def release_status(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Status",
         "summary": RELEASE_NAME,
-        "release_stage": "v2.8.0_alerts_monitoring_live_intelligence_streams",
+        "release_stage": "v2.9.0_comparative_intelligence_scenario_studio",
         "release_status": checklist["status"],
         "release_score": checklist["score"],
         "public_shortcode": "[sc_site_intelligence_app height=\"1000\"]",

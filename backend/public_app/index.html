@@ -24,6 +24,7 @@
   <link rel="stylesheet" href="/app/assets/resources-v260.css?v=2.6.0">
   <link rel="stylesheet" href="/app/assets/dossiers-v270.css?v=2.7.0">
   <link rel="stylesheet" href="/app/assets/alerts-v280.css?v=2.8.0">
+  <link rel="stylesheet" href="/app/assets/scenarios-v290.css?v=2.9.0">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to intelligence workspace</a>
@@ -74,6 +75,7 @@
         <button class="nav-item" type="button" data-route="resources"><span>Resources</span><small>Trade, energy, and security</small></button>
         <button class="nav-item" type="button" data-route="dossiers"><span>Dossiers</span><small>Countries and regions</small></button>
         <button class="nav-item" type="button" data-route="alerts"><span>Alerts</span><small>Monitoring and streams</small></button>
+        <button class="nav-item" type="button" data-route="scenarios"><span>Scenarios</span><small>Compare and explore</small></button>
         <button class="nav-item" type="button" data-route="earth"><span>Earth</span><small>Satellite comparison</small></button>
         <button class="nav-item" type="button" data-route="country"><span>Country</span><small>Place-based evidence</small></button>
         <button class="nav-item" type="button" data-route="events"><span>Events</span><small>Live event intelligence</small></button>
@@ -1108,6 +1110,31 @@
         <section class="alerts-boundaries"><article><p class="eyebrow">NOT AN EMERGENCY SERVICE</p><h3>Verify urgent information with official authorities</h3><p>Stream records may be delayed, incomplete, revised, or unavailable. This interface does not dispatch responders or replace official warning systems.</p></article><article><p class="eyebrow">NO HIDDEN PROFILE</p><h3>Rules stay browser-local</h3><p>The backend receives rules only for stateless evaluation and does not create user accounts, subscriptions, personal profiles, or server-side monitoring histories.</p></article><article><p class="eyebrow">NO AUTOMATED JUDGMENT</p><h3>Matches are prompts for review</h3><p>A match does not establish severity, causality, legal responsibility, investment relevance, eligibility, sanctions exposure, or national-security risk.</p></article></section>
       </section>
 
+      <section id="scenarioStudio" class="scenario-studio" hidden aria-busy="false">
+        <div class="scenario-hero">
+          <div><p class="eyebrow">ALIGN · COMPARE · TEST · DOCUMENT</p><h2>Compare published evidence and test transparent assumptions</h2><p>Build multi-country indicator baskets, inspect compatibility warnings, apply explicit arithmetic scenarios, review correlation without causal claims, and export reproducible comparison packets.</p><div class="scenario-actions"><button id="scenarioRun" class="earth-primary-button" type="button">Run comparison</button><button id="scenarioShare" class="ghost-button" type="button">Copy scenario view</button><button id="scenarioPacket" class="ghost-button" type="button">Download packet</button></div></div>
+          <aside><span class="public-beta-badge public-release-badge">Transparent scenarios</span><strong>No forecast or ranking</strong><p>Scenario values are user-defined transformations of published baselines. Units, periods, sources, frequency, price basis, and adjustment states remain visible.</p></aside>
+        </div>
+        <div id="scenarioStatus" class="scenario-status" data-state="loading" role="status" aria-live="polite"><i></i><span>Preparing comparison studio</span></div>
+        <div class="scenario-controls">
+          <label>Geographies<input id="scenarioGeographies" type="text" maxlength="120" value="KEN,GHA" placeholder="KEN,GHA,NGA"></label>
+          <label>Indicators<input id="scenarioIndicators" type="text" maxlength="500" placeholder="NY.GDP.MKTP.CD,SP.POP.TOTL"></label>
+          <label>Domain<select id="scenarioDomain"><option value="">All supported domains</option><option value="economics">Economics</option><option value="labour">Labour</option><option value="finance">Finance</option><option value="sustainability">Sustainability</option><option value="trade">Trade</option><option value="energy">Energy</option><option value="food-agriculture">Food and agriculture</option><option value="water">Water</option><option value="materials">Materials</option></select></label>
+          <label>Start period<input id="scenarioStart" type="text" maxlength="20" placeholder="2015"></label>
+          <label>End period<input id="scenarioEnd" type="text" maxlength="20" placeholder="2025"></label>
+        </div>
+        <div class="scenario-metrics"><article><span>Geographies</span><strong id="scenarioGeoCount">—</strong><small>Compared subjects</small></article><article><span>Indicators</span><strong id="scenarioIndicatorCount">—</strong><small>Aligned baskets</small></article><article><span>Compatible rows</span><strong id="scenarioCompatibleCount">—</strong><small>Direct difference eligible</small></article><article><span>Warnings</span><strong id="scenarioWarningCount">—</strong><small>Review before interpretation</small></article></div>
+        <div class="scenario-primary-grid">
+          <article class="scenario-panel"><div class="scenario-panel-head"><div><p class="eyebrow">COMPARISON MATRIX</p><h3>Published values with compatibility context</h3></div></div><div id="scenarioMatrix" class="scenario-matrix"></div></article>
+          <article class="scenario-panel"><div class="scenario-panel-head"><div><p class="eyebrow">REGIONAL PEERS</p><h3>Catalog-based peer context</h3></div><button id="scenarioLoadPeers" class="ghost-button" type="button">Load peers</button></div><div id="scenarioPeers" class="scenario-peers"><p>Peer groups use the normalized Site Intelligence country catalog and do not imply political alignment or rank.</p></div></article>
+        </div>
+        <div class="scenario-secondary-grid">
+          <article class="scenario-panel"><div class="scenario-panel-head"><div><p class="eyebrow">TRANSPARENT SCENARIO</p><h3>Apply one explicit adjustment</h3></div></div><div class="scenario-adjustment"><label>Indicator code<input id="scenarioAdjustIndicator" maxlength="160" placeholder="NY.GDP.MKTP.CD"></label><label>Geography<input id="scenarioAdjustGeography" maxlength="20" placeholder="KEN"></label><label>Mode<select id="scenarioAdjustMode"><option value="percent">Percent change</option><option value="absolute">Absolute change</option></select></label><label>Value<input id="scenarioAdjustValue" type="number" step="any" value="10"></label><button id="scenarioApply" class="earth-primary-button" type="button">Apply scenario</button></div><div id="scenarioResults" class="scenario-results"><p>No scenario has been applied.</p></div></article>
+          <article class="scenario-panel"><div class="scenario-panel-head"><div><p class="eyebrow">CORRELATION REVIEW</p><h3>Overlapping periods, not causation</h3></div></div><div class="scenario-correlation-controls"><label>Geography<input id="scenarioCorrelationGeography" maxlength="20" value="KEN"></label><label>Indicator X<input id="scenarioCorrelationX" maxlength="160"></label><label>Indicator Y<input id="scenarioCorrelationY" maxlength="160"></label><button id="scenarioCorrelate" class="earth-primary-button" type="button">Review correlation</button></div><div id="scenarioCorrelation" class="scenario-correlation"><p>Choose two indicators with at least three overlapping numeric periods.</p></div></article>
+        </div>
+        <section class="scenario-boundaries"><article><p class="eyebrow">NO SILENT NORMALIZATION</p><h3>Unlike values remain unlike</h3><p>Direct differences are withheld when units, frequencies, price bases, or seasonal adjustments conflict.</p></article><article><p class="eyebrow">NO PREDICTION</p><h3>Scenarios are arithmetic assumptions</h3><p>A scenario is not a probability, forecast, causal model, investment signal, policy recommendation, or stress-test certification.</p></article><article><p class="eyebrow">REPRODUCIBLE PACKETS</p><h3>Filters and assumptions travel with the output</h3><p>Export packets include selected geographies, indicators, source records, warnings, adjustments, responsible-use notes, and an integrity digest.</p></article></section>
+      </section>
+
       <section id="routePanel" class="route-panel" hidden></section>
 
       <section id="globalCountryExplorer" class="global-country-explorer" hidden>
@@ -1256,5 +1283,6 @@
   <script src="/app/assets/resources-v260.js?v=2.6.0" defer></script>
   <script src="/app/assets/dossiers-v270.js?v=2.7.0" defer></script>
   <script src="/app/assets/alerts-v280.js?v=2.8.0" defer></script>
+  <script src="/app/assets/scenarios-v290.js?v=2.9.0" defer></script>
 </body>
 </html>

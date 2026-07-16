@@ -4387,6 +4387,62 @@ def public_alerts_monitoring_diagnostics(settings: Settings = Depends(get_settin
     from .alerts_monitoring_live_streams import build_monitoring_diagnostics
     return build_monitoring_diagnostics(settings)
 
+# Site Intelligence v2.9.0 — Comparative Intelligence and Scenario Studio
+@app.get("/public/comparative-scenario-studio")
+def public_comparative_scenario_studio(settings: Settings = Depends(get_settings)):
+    from .comparative_scenario_studio_v290 import build_studio_overview
+    return build_studio_overview(settings)
+
+@app.get("/public/comparative-scenario-studio/facets")
+def public_comparative_scenario_facets(limit: int = Query(default=400, ge=20, le=500), settings: Settings = Depends(get_settings)):
+    from .comparative_scenario_studio_v290 import build_studio_facets
+    return build_studio_facets(settings, limit=limit)
+
+@app.post("/public/comparative-scenario-studio/compare")
+def public_comparative_scenario_compare(payload: dict[str, Any] = Body(default_factory=dict), settings: Settings = Depends(get_settings)):
+    from .comparative_scenario_studio_v290 import build_comparison_matrix
+    try:
+        return build_comparison_matrix(settings, geographies=payload.get("geographies"), indicators=payload.get("indicators"), domains=payload.get("domains"), start=str(payload.get("start") or ""), end=str(payload.get("end") or ""), limit=max(50, min(int(payload.get("limit") or 400), 500)))
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+@app.get("/public/comparative-scenario-studio/peers")
+def public_comparative_scenario_peers(geography: str = Query(..., min_length=2, max_length=20), region: str = Query(default="", max_length=160), settings: Settings = Depends(get_settings)):
+    from .comparative_scenario_studio_v290 import build_peer_group
+    try:
+        return build_peer_group(settings, geography=geography, region=region)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+@app.post("/public/comparative-scenario-studio/scenario")
+def public_comparative_scenario_transform(payload: dict[str, Any] = Body(default_factory=dict), settings: Settings = Depends(get_settings)):
+    from .comparative_scenario_studio_v290 import build_transparent_scenario
+    try:
+        return build_transparent_scenario(settings, geographies=payload.get("geographies"), indicators=payload.get("indicators"), domains=payload.get("domains"), adjustments=payload.get("adjustments"), start=str(payload.get("start") or ""), end=str(payload.get("end") or ""))
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+@app.post("/public/comparative-scenario-studio/correlation")
+def public_comparative_scenario_correlation(payload: dict[str, Any] = Body(default_factory=dict), settings: Settings = Depends(get_settings)):
+    from .comparative_scenario_studio_v290 import build_correlation_review
+    try:
+        return build_correlation_review(settings, geography=str(payload.get("geography") or ""), indicator_x=str(payload.get("indicator_x") or ""), indicator_y=str(payload.get("indicator_y") or ""), limit=max(3, min(int(payload.get("limit") or 200), 300)))
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+@app.post("/public/comparative-scenario-studio/packet")
+def public_comparative_scenario_packet(payload: dict[str, Any] = Body(default_factory=dict), settings: Settings = Depends(get_settings)):
+    from .comparative_scenario_studio_v290 import build_comparison_packet
+    try:
+        return build_comparison_packet(settings, payload=payload)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+@app.get("/public/comparative-scenario-studio/diagnostics")
+def public_comparative_scenario_diagnostics(settings: Settings = Depends(get_settings)):
+    from .comparative_scenario_studio_v290 import build_studio_diagnostics
+    return build_studio_diagnostics(settings)
+
 # Site Intelligence standalone public application.
 from pathlib import Path as _Path
 PUBLIC_APP_DIR = _Path(__file__).resolve().parent.parent / "public_app"

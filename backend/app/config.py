@@ -154,6 +154,14 @@ class Settings(BaseSettings):
     alerts_stream_max_signals: int = Field(default=180, ge=20, le=400)
     alerts_stale_source_hours: int = Field(default=72, ge=6, le=8760)
 
+    # Site Intelligence v2.9.0 — Comparative Intelligence and Scenario Studio.
+    # Comparisons retain source units and methodological distinctions. Scenario
+    # transformations are user-defined arithmetic, not forecasts or causal models.
+    comparative_scenario_studio_enabled: bool = True
+    comparative_scenario_max_geographies: int = Field(default=5, ge=2, le=6)
+    comparative_scenario_max_indicators: int = Field(default=12, ge=1, le=16)
+    comparative_scenario_max_records: int = Field(default=400, ge=50, le=500)
+
 
     # Sustainable Development Data Connectors v1.14.1.
     sustainable_development_connectors_enabled: bool = True

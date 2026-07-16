@@ -1,0 +1,3 @@
+# Site Intelligence v2.9.0 — Comparative Intelligence and Scenario Studio
+
+The studio aligns published public values across multiple geographies while retaining units, periods, frequencies, price bases, seasonal adjustments, source identity, and missing-data states. Direct differences are withheld when compatibility fails. Scenarios are explicit arithmetic transformations and are not forecasts, probabilities, recommendations, or causal models. Correlation requires overlapping numeric periods and does not establish causation. Export packets preserve filters, assumptions, warnings, source records, responsible-use boundaries, and a SHA-256 integrity digest.

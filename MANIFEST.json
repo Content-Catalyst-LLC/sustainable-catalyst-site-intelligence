@@ -1,1449 +1,1502 @@
 {
-  "release": "2.8.0",
-  "name": "Sustainable Catalyst Site Intelligence",
-  "release_name": "Alerts, Monitoring, and Live Intelligence Streams",
-  "generated_at": "2026-07-15T23:20:45.332765+00:00",
-  "file_count": 288,
+  "schema": "sc-site-intelligence-repository-manifest/1.0",
+  "release": "2.9.0",
+  "file_count": 299,
   "files": [
     {
       "path": ".gitignore",
-      "bytes": 129,
+      "size": 129,
       "sha256": "b4d5b1f11b737e60e2b574f6acd851b5fbeef3f3bc2367024e6992640328fdd7"
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 47637,
-      "sha256": "53fab3cf0df23aeb3e75c68919c05d30dd397c6212bee721331404a390b8be70"
+      "size": 48280,
+      "sha256": "8cd13714227619a7a0c90da49925b6ea3c1d2d5a60f08b1bf6d81aba78e8f9a8"
     },
     {
       "path": "LICENSE",
-      "bytes": 1077,
+      "size": 1077,
       "sha256": "86f5ca4e2be25260a0e60361d3d42dc1daed4177ef9cab593f00563c3efb0c80"
     },
     {
       "path": "README.md",
-      "bytes": 28815,
-      "sha256": "40af5077b2ed5093d6f33fee8a381d7ad3ca44ad19452cf37ff3a50f3ee7b4d3"
+      "size": 29323,
+      "sha256": "0961a2132a7eeced392f554d3f2154c6673c6c8aafeaadc7f2d7a6aa445b1173"
     },
     {
       "path": "RELEASE_NOTES_SITE_INTELLIGENCE_V250.md",
-      "bytes": 2520,
+      "size": 2520,
       "sha256": "dba80a9ea09b1ecc2c591fae34ef063da5437de524847aa9d51e5cbf9e6967c5"
     },
     {
       "path": "RELEASE_NOTES_SITE_INTELLIGENCE_V260.md",
-      "bytes": 1728,
+      "size": 1728,
       "sha256": "71e9d1f361c1336061911c807689c5bf31fb55e6bace9414c898e3a1b9269858"
     },
     {
       "path": "RELEASE_NOTES_SITE_INTELLIGENCE_V270.md",
-      "bytes": 1244,
+      "size": 1244,
       "sha256": "5f1dc16f320af465d4798ac66d8a67eedbf0cf60ef1b437c9576733a49f040fa"
     },
     {
       "path": "RELEASE_NOTES_SITE_INTELLIGENCE_V280.md",
-      "bytes": 842,
+      "size": 842,
       "sha256": "0c1bae0d3efb47d24c7f4c2f313b9b6bbdd4d57587a4a0c01981e0e4c5fa57e1"
     },
     {
+      "path": "RELEASE_NOTES_SITE_INTELLIGENCE_V290.md",
+      "size": 854,
+      "sha256": "645fe6d165af934dc5840c58d206be62edadec2c05e5a4c2ddb35e7a938e1718"
+    },
+    {
       "path": "SITE_INTELLIGENCE_V250_INSTALL_AND_TEST.md",
-      "bytes": 1192,
+      "size": 1192,
       "sha256": "9b73660b28b74b2cca01e7ebe9dfa85060f7825a07547848c8883c7f7c3b2aa7"
     },
     {
       "path": "SITE_INTELLIGENCE_V260_INSTALL_AND_TEST.md",
-      "bytes": 989,
+      "size": 989,
       "sha256": "7a2a82075b416111a4a7bf502607459d785f7cb8a4e244618818de3042facbfd"
     },
     {
       "path": "SITE_INTELLIGENCE_V260_TERMINAL_COMMANDS.txt",
-      "bytes": 379,
+      "size": 379,
       "sha256": "dac34cdf098e64eb6b355533410ade22f9752898d4c4347f2e9a366ec682c94e"
     },
     {
       "path": "SITE_INTELLIGENCE_V270_INSTALL_AND_TEST.md",
-      "bytes": 704,
+      "size": 704,
       "sha256": "1f560f3c87f1e7310933bd5c65901762f5bad30e52992fc892fa82c9a071a0fe"
     },
     {
       "path": "SITE_INTELLIGENCE_V270_TERMINAL_COMMANDS.txt",
-      "bytes": 229,
+      "size": 229,
       "sha256": "9d4d3e39f0ff71eb2cb8c5ba2dc0909807f03e21dd987a2a26d8d603d5d5f098"
     },
     {
       "path": "SITE_INTELLIGENCE_V280_INSTALL_AND_TEST.md",
-      "bytes": 586,
+      "size": 586,
       "sha256": "c253e04a1d0ca723cefa27c4de7a740f20a0df274b1b339481e3a311e7dc29fa"
     },
     {
       "path": "SITE_INTELLIGENCE_V280_TERMINAL_COMMANDS.txt",
-      "bytes": 122,
+      "size": 122,
       "sha256": "8b3b9c23092258a2e4d5bf0f766d38ee5b8cb39fcec02ab97a417fb36c1865c0"
     },
     {
+      "path": "SITE_INTELLIGENCE_V290_BUILD_VALIDATION.txt",
+      "size": 1678,
+      "sha256": "e406212a3db045e786213bbe285852edf42e5d441930d3292805096dd37cecff"
+    },
+    {
+      "path": "SITE_INTELLIGENCE_V290_INSTALL_AND_TEST.md",
+      "size": 490,
+      "sha256": "3441fac7c4124efb677266bccb501c64187db99eea758d16c3936d06a61d52d7"
+    },
+    {
+      "path": "SITE_INTELLIGENCE_V290_TERMINAL_COMMANDS.txt",
+      "size": 122,
+      "sha256": "47926b043c57db33ecc3b945b8278f775d174c509c83b97288fc11cd65190fc0"
+    },
+    {
       "path": "backend/.env.example",
-      "bytes": 5487,
-      "sha256": "2292ee4cd9ae205a8f71955442703cabf6cd99fe58ed3cc2544521b56d5a7a9c"
+      "size": 5744,
+      "sha256": "190688a53df287b67fe75522a733deca70e50796b4233be68be454618e3e3356"
     },
     {
       "path": "backend/.python-version",
-      "bytes": 8,
+      "size": 8,
       "sha256": "43fd694bd564dd2215f51a6b23f6a3712834850225e629d7781c81c71076092d"
     },
     {
       "path": "backend/app/__init__.py",
-      "bytes": 54,
+      "size": 54,
       "sha256": "33da3c45488d66c95a4020a798efb169796fdb9a3bdddb5be3cb1a29c63efbfb"
     },
     {
       "path": "backend/app/admin_control.py",
-      "bytes": 48265,
-      "sha256": "eededddfe103a54a9541a67e93b40ffc886a240b875d64e203e6a8c591bd7fa7"
+      "size": 48893,
+      "sha256": "1d6445c8fc78cfce5a6c069d4ddb5ada5e6f28de1b733dfca098ac40a656575f"
     },
     {
       "path": "backend/app/ai_briefs.py",
-      "bytes": 17264,
+      "size": 17264,
       "sha256": "64e43d48c4aad7859dc51469c9ac1eeed93451aa1e44015004f209f94cfbe8b1"
     },
     {
       "path": "backend/app/alerts_monitoring_live_streams.py",
-      "bytes": 30053,
+      "size": 30053,
       "sha256": "1fa2d77a5023bcb3065e99094ff1ada63adbd653bc75c988f3221f0cfdd9df0b"
     },
     {
       "path": "backend/app/auditable_public_observatory.py",
-      "bytes": 33949,
-      "sha256": "7cc10ef93c64bee7a86cc93a6dff300295e872c19a52f752208531177e6510f3"
+      "size": 35435,
+      "sha256": "1854b997df2b37072b705b58dffacbd89ad3774a0c393e5dd98a210d0f0ea10a"
     },
     {
       "path": "backend/app/build_info.py",
-      "bytes": 970,
+      "size": 970,
       "sha256": "8a4fc2ebc92ee3725f1d8ccea77fc79479ad99844adbd98f06e02a3316849a9c"
     },
     {
       "path": "backend/app/comparative_intelligence.py",
-      "bytes": 44533,
+      "size": 44533,
       "sha256": "4e00828a5966624a4a063eb2064acbdc6ae55654700984f3aa23a6737588df9d"
     },
     {
+      "path": "backend/app/comparative_scenario_studio_v290.py",
+      "size": 26630,
+      "sha256": "a43f107406d8570de5f1fb57c9a3e0e251359db6ab20a4c19f3ae414e58c7b56"
+    },
+    {
       "path": "backend/app/config.py",
-      "bytes": 9963,
-      "sha256": "fdd7a9b13b0d05561b74204996dede657207801793864b4a85cd23ce3a26992f"
+      "size": 10494,
+      "sha256": "64a2066b6fdedc5c236ff6c2e87c35a99c4598bc3db7bba1a5fcb37a2ddc48b4"
     },
     {
       "path": "backend/app/conflict_human_security.py",
-      "bytes": 13028,
+      "size": 13028,
       "sha256": "7626d28a7d3fbf2dff849743d9035aaf1223d345889c0a4ef2c1988e6885bcfe"
     },
     {
       "path": "backend/app/connectors/__init__.py",
-      "bytes": 82,
+      "size": 82,
       "sha256": "65ef54f2a84fe24a4ed956adf2d174d0cb3c169fbe74d9459d42f1a8140b247c"
     },
     {
       "path": "backend/app/connectors/advanced_external.py",
-      "bytes": 27904,
+      "size": 27904,
       "sha256": "a76b2ef0d619fde0ad1f2092d762ce7ed5ca7405429d779db7da57ea34f835d7"
     },
     {
       "path": "backend/app/connectors/external_data.py",
-      "bytes": 29917,
+      "size": 29917,
       "sha256": "c70b5880ce1539f01b22134e9e09ad03ceef6bf7d8d873688cefd403fb8240ef"
     },
     {
       "path": "backend/app/country_cache.py",
-      "bytes": 5077,
+      "size": 5077,
       "sha256": "70f1558a53d144859de972b2c88fc485b14bc7542bf463852d519bcc65f6b116"
     },
     {
       "path": "backend/app/cross_domain_dashboard_studio.py",
-      "bytes": 16944,
+      "size": 16944,
       "sha256": "a60307b4814156b6165721aacdbd0dcd2459fc639bba626cbf1fd37b41a6c140"
     },
     {
       "path": "backend/app/earth_observation_studio.py",
-      "bytes": 11032,
+      "size": 11032,
       "sha256": "94a03aedfb5e2e320b15ba3efef1c64314e573b8231d147e3f30ad1034b77da0"
     },
     {
       "path": "backend/app/economics_markets_sustainability.py",
-      "bytes": 25154,
+      "size": 25154,
       "sha256": "2c7d19a5231e6b28d55357d9f45aaf6012f863dc081ae060981f6ecc88624b5b"
     },
     {
       "path": "backend/app/events.py",
-      "bytes": 13511,
+      "size": 13511,
       "sha256": "bb85fe7ce95b96f6d1c367af36bd535abd7bf5c6acbff95939635d15d0773bfd"
     },
     {
       "path": "backend/app/experience_quality.py",
-      "bytes": 7485,
+      "size": 7485,
       "sha256": "bb8b21be817a96a4f844dd91ba53035deea04bd7d5816466d5b75590841dd31c"
     },
     {
       "path": "backend/app/ga4_client.py",
-      "bytes": 6316,
+      "size": 6316,
       "sha256": "243ca5a714ebf80b7e8d7a5945e7a397ce083a6d33d569fc3e3daeccfc238c26"
     },
     {
       "path": "backend/app/geospatial_intelligence.py",
-      "bytes": 11652,
+      "size": 11652,
       "sha256": "003db2c43416fc474013981dad20b74b7619e9dce06ae019c76323f4decd00e5"
     },
     {
       "path": "backend/app/global_conditions_observatory.py",
-      "bytes": 17713,
+      "size": 17713,
       "sha256": "1e8114420411d40a1bf565a5da674cff079e2508365e335713aaeca72fab23f5"
     },
     {
       "path": "backend/app/human_development_intelligence.py",
-      "bytes": 13391,
+      "size": 13391,
       "sha256": "40798a504cd58621b252889c1c686f44dfbbb10e9ad0d267d0142bdfd22f10e0"
     },
     {
       "path": "backend/app/humanitarian_conflict_displacement_observatory.py",
-      "bytes": 18856,
+      "size": 18856,
       "sha256": "91fcd7106e2c082c476ac93e108aaa2854fac69aea97cc6928646a001ab071f5"
     },
     {
       "path": "backend/app/humanitarian_intelligence.py",
-      "bytes": 9923,
+      "size": 9923,
       "sha256": "b304b7a52552560e7de121295f04147e2a0c22f62a0f8ac1470e732d44b7923f"
     },
     {
       "path": "backend/app/indexing_intelligence.py",
-      "bytes": 21902,
+      "size": 21902,
       "sha256": "da6a34be85fdb0c2b9bc4f5616b81fd4f981a722bba72b7a1f2b40d0c537287a"
     },
     {
       "path": "backend/app/international_law_governance.py",
-      "bytes": 15338,
+      "size": 15338,
       "sha256": "4cd80e90d4cadf2e8e6e9d175496860ae9379398818e2a0d07782ab2ea17c347"
     },
     {
       "path": "backend/app/international_law_observatory.py",
-      "bytes": 26616,
+      "size": 26616,
       "sha256": "362e96c4a0acdbfeadf436404fd9150fff4c9de88b7b6a9224bcb6bbec2ab9fe"
     },
     {
       "path": "backend/app/live_country_intelligence.py",
-      "bytes": 31038,
+      "size": 31038,
       "sha256": "66ab37eb88b999253dc6d4279e1666f27e1aac32683591fbc91ff80eac6090a9"
     },
     {
       "path": "backend/app/main.py",
-      "bytes": 191651,
-      "sha256": "5495dc4c0e01d5617e3db6474df37af7d991a047fd0d707be340b5f9fd302e30"
+      "size": 195486,
+      "sha256": "de6e44272b3bf3a61b003eae9d9a4bd27941177bb2a8cbc1e2578abc7fbfb4da"
     },
     {
       "path": "backend/app/metrics.py",
-      "bytes": 11441,
+      "size": 11441,
       "sha256": "4053674c062a8590e8c9eff037ed63bcb335cfd156de33b24b5b1c778579cd9e"
     },
     {
       "path": "backend/app/models.py",
-      "bytes": 5788,
+      "size": 5788,
       "sha256": "e33eb3fc9c4da46c8f4a5217d5ba0a66607c3d1559a3ea77034edf14b9931694"
     },
     {
       "path": "backend/app/planetary_boundaries_observatory.py",
-      "bytes": 14327,
+      "size": 14327,
       "sha256": "5c61990bbe7a13d43fb0dbf99084f83a1de41ee5d4ef970d7f5bc7e0f386dc29"
     },
     {
       "path": "backend/app/platform_core_integration.py",
-      "bytes": 13637,
+      "size": 13637,
       "sha256": "0c76d56750f075e116fb54a1294631c02ddd8aa6bf00960dc6da9f4ab017ca21"
     },
     {
       "path": "backend/app/public_api_sources.py",
-      "bytes": 15441,
+      "size": 15441,
       "sha256": "c0c7588e2f2f50c912d90a4bbb33e267d3e8442e0c77fa67eb5f17259d8c7e7b"
     },
     {
       "path": "backend/app/public_briefing_export_studio.py",
-      "bytes": 50037,
+      "size": 50037,
       "sha256": "2ed709323f9fd2680b0f67a757d60ef93eef8ec5abe50930c10b700c0556c30e"
     },
     {
       "path": "backend/app/public_dashboard.py",
-      "bytes": 14069,
+      "size": 14069,
       "sha256": "9c7099d6d8a84c617c059aee18c6875fb97608154d949672ceb771e4de211591"
     },
     {
       "path": "backend/app/public_dashboard_launch_polish.py",
-      "bytes": 5024,
+      "size": 5024,
       "sha256": "ac3c8dfeb433a883d53aab6b5da55b797850abe7cd16d53f7a0b6c207e2467e6"
     },
     {
       "path": "backend/app/public_export_reliability.py",
-      "bytes": 1873,
+      "size": 1873,
       "sha256": "8c7a5004a9199617c489a572a29615d5ddff8dfd000579034ba4eb68782893d6"
     },
     {
       "path": "backend/app/public_indicator_charts.py",
-      "bytes": 14199,
+      "size": 14199,
       "sha256": "2761fceb4d38a65b01c310b6a899940c72a1db79eeae2b7aa2e60d982e0dcffe"
     },
     {
       "path": "backend/app/public_launch_portfolio.py",
-      "bytes": 15351,
-      "sha256": "9babedff08abb7de8e8011178c557a131474c9bb4028ae3d61d1f86ce304b19e"
+      "size": 15679,
+      "sha256": "a4ff266fdec909207d19ffd9592bc639363a814c76790af343c0f8f9bc7896d5"
     },
     {
       "path": "backend/app/public_live_connectors.py",
-      "bytes": 24220,
+      "size": 24220,
       "sha256": "787ab536f62f29f72688ee82cf72b6fce0af8c928fc553013b3bf9317245fbe0"
     },
     {
       "path": "backend/app/public_page_builder.py",
-      "bytes": 17813,
+      "size": 17813,
       "sha256": "89882490f6805d6bbeb15470a18f663a5227d94204d6a676de7b2f94eda7cf6b"
     },
     {
       "path": "backend/app/public_source_briefs_exports.py",
-      "bytes": 19478,
+      "size": 19478,
       "sha256": "c9a4f0e320276c5645b7b09e97857d76a13ef35dde5f213a7aa4ec2b23ab6782"
     },
     {
       "path": "backend/app/public_source_pages.py",
-      "bytes": 15090,
+      "size": 15090,
       "sha256": "c0f5079a626a60bf7c80dbbdde7a6e787af3068a5ef768b50d722688f2a5f282"
     },
     {
       "path": "backend/app/public_topic_dashboards.py",
-      "bytes": 23065,
+      "size": 23065,
       "sha256": "35ab51934f7428968360cb198c73e45959d301abf206beb34d8221eb4615fd0c"
     },
     {
       "path": "backend/app/publishing_intelligence.py",
-      "bytes": 23317,
+      "size": 23317,
       "sha256": "0aa9f20314b795570890982bc325442aa5cb2a5afcaeca1d3c58f8f1e65fb058"
     },
     {
       "path": "backend/app/recommendations.py",
-      "bytes": 3417,
+      "size": 3417,
       "sha256": "9924ba47a8059198d00e75506c381deb8f0c6bd01c6532933e1a28e496dad342"
     },
     {
       "path": "backend/app/registry.py",
-      "bytes": 11791,
+      "size": 11791,
       "sha256": "3f76c2145b89276461386f5a9bfdd277692519a742b521f8f32b2b093d3b8855"
     },
     {
       "path": "backend/app/release.py",
-      "bytes": 20491,
-      "sha256": "5c1ca028a241101360e565945202d7a50fcf44e86fa78d6b85caaaf2b79195dd"
+      "size": 21267,
+      "sha256": "3d9f93e7936eb7932a9ce8f237b4572ca950190addd3f241108f90cdfbefe4bc"
     },
     {
       "path": "backend/app/report_generator.py",
-      "bytes": 18424,
+      "size": 18424,
       "sha256": "7e970a9a760a3da70854ff32beebef9a341be04a8e8c158a74e3a1065e34baa9"
     },
     {
       "path": "backend/app/sample_data.py",
-      "bytes": 2516,
+      "size": 2516,
       "sha256": "b37e8e542ef7ef863e8572464ce69f9ccd91d0816d23763d644dab7735c1fe0d"
     },
     {
       "path": "backend/app/saved_views.py",
-      "bytes": 19118,
+      "size": 19118,
       "sha256": "a30ec98ffc1cdb857079c8c4c7b8e0bc1def3dc11519fcde757ff9eb58bbc945"
     },
     {
       "path": "backend/app/scientific_earth_systems_observatory.py",
-      "bytes": 35305,
+      "size": 35305,
       "sha256": "d8e4300c5a4535c8421bb03c6c3ad3d4f84e025e390b24a9ae63b1e8c5676b7c"
     },
     {
       "path": "backend/app/search_console.py",
-      "bytes": 18800,
+      "size": 18800,
       "sha256": "d7827717ce841966fd983b2e6d538dc683782242bc15a0af2b5f49766b73765e"
     },
     {
       "path": "backend/app/seo_intelligence.py",
-      "bytes": 18216,
+      "size": 18216,
       "sha256": "83a93eb17143927023b929a0e0bcd8d5e1be7cdd4db85123956fa35fff0d70ad"
     },
     {
       "path": "backend/app/source_methodology_studio.py",
-      "bytes": 45927,
+      "size": 45927,
       "sha256": "e7a6c951a0577dda8bb846bd094c6c7afdfaf70a1c6ec99b4c93fcfb2a12a285"
     },
     {
       "path": "backend/app/sustainable_development_connectors.py",
-      "bytes": 30959,
+      "size": 30959,
       "sha256": "09755ac27d0c26a01bee0727cb073ad370dff0e3e2d72f5291f6cbf4dedafedc"
     },
     {
       "path": "backend/app/thematic_intelligence_dashboards.py",
-      "bytes": 40140,
+      "size": 40140,
       "sha256": "ce30030104fa6966d1d4a6ab1195b451613c6ddb99785fa9f22ae1dbf2da599c"
     },
     {
       "path": "backend/app/trade_energy_resource_security_observatory.py",
-      "bytes": 18055,
+      "size": 18055,
       "sha256": "3cdfea03dacce530e10191d7ebe977f1b2b476ace7080ae932571e3c1eee7cca"
     },
     {
       "path": "backend/app/unified_country_regional_dossiers.py",
-      "bytes": 26164,
+      "size": 26164,
       "sha256": "1ea9f63d761bfa51d466c5a7f25136e34724c7848ad74266cf3ff1dbde80daa4"
     },
     {
       "path": "backend/app/unified_live_events.py",
-      "bytes": 24975,
+      "size": 24975,
       "sha256": "44fd74ee558592e1cb414f302cd7615eac1130185aafcd7489e76dafabd466ea"
     },
     {
       "path": "backend/app/version.py",
-      "bytes": 164,
-      "sha256": "c3ba241f18d450203413f3090066f78608b6bc633d6054bbf4c7f86d8ba5fead"
+      "size": 159,
+      "sha256": "44822669b5dcb7418a299f602207d8d803516ab0de95831c3a72e7c15705218d"
     },
     {
       "path": "backend/data/external_connectors.seed.json",
-      "bytes": 9293,
+      "size": 9293,
       "sha256": "0c1b69bd3abe3333a86be208f838a6035a2b14e3a2863287f02954e303b37ea9"
     },
     {
       "path": "backend/data/site_registry.seed.json",
-      "bytes": 23979,
+      "size": 23979,
       "sha256": "cc448f2e80fc71286f489b169288367cbc78fe3619d71fb180779d9295c8cac1"
     },
     {
       "path": "backend/public_app/assets/alerts-v280.css",
-      "bytes": 5133,
+      "size": 5133,
       "sha256": "19d6b75f04a93e20a9647799d0230b153b4f3a1727deaf39810a6bc029f522a6"
     },
     {
       "path": "backend/public_app/assets/alerts-v280.js",
-      "bytes": 11204,
+      "size": 11204,
       "sha256": "78d5158293372224605b71c43c54fe4b601ac20ad266985568b4140c306a5ef5"
     },
     {
       "path": "backend/public_app/assets/app.css",
-      "bytes": 99372,
+      "size": 99372,
       "sha256": "d52a16d722f56923671ad611be850e4f9a242bcee1cf8e3be9ed5c975fd08ce6"
     },
     {
       "path": "backend/public_app/assets/app.js",
-      "bytes": 163507,
-      "sha256": "d1e446f7cc7e584abf3f9397bf0289e448c86f7b531f1cb266ab4d1462a17c7c"
+      "size": 164769,
+      "sha256": "5ac4b8c829a486909093c9ad9c30b0bffce56f5095b0d06df0782ae3edb89bc9"
     },
     {
       "path": "backend/public_app/assets/dossiers-v270.css",
-      "bytes": 3888,
+      "size": 3888,
       "sha256": "f8b05af41ebd01f848a6c581cccb7684a789717acf241b68cd9791b82a038f73"
     },
     {
       "path": "backend/public_app/assets/dossiers-v270.js",
-      "bytes": 9306,
+      "size": 9306,
       "sha256": "751bfa302620f4530799fc578b49271b06dcb91453490697d5ffe95f69b96dfd"
     },
     {
       "path": "backend/public_app/assets/economics-v220.css",
-      "bytes": 8582,
+      "size": 8582,
       "sha256": "4df26a610d1eed74d125504cc0ccad16736a80cf5e29730c346dedf19c9e01b9"
     },
     {
       "path": "backend/public_app/assets/economics-v220.js",
-      "bytes": 19964,
+      "size": 19964,
       "sha256": "3957795ebb00bf4e900ff52ddf429a7e71cc364f326e35cf5de5dd5960369a9e"
     },
     {
       "path": "backend/public_app/assets/global-conditions-v210.css",
-      "bytes": 2914,
+      "size": 2914,
       "sha256": "1b49ffa8f8aee81ac539bafde907ee9814695aa016491daed65ff1b30fe7dedb"
     },
     {
       "path": "backend/public_app/assets/global-conditions-v210.js",
-      "bytes": 12915,
+      "size": 12915,
       "sha256": "90206957977901d251d643476efcc105cc8bf270a56c41b496b968a2f5e7b6d5"
     },
     {
       "path": "backend/public_app/assets/humanitarian-v250.css",
-      "bytes": 3681,
+      "size": 3681,
       "sha256": "03662d1b6e63b109960c13c25a7aa50422c42345b9e765ddb49b9104719252c5"
     },
     {
       "path": "backend/public_app/assets/humanitarian-v250.js",
-      "bytes": 6444,
+      "size": 6444,
       "sha256": "c60f3433ea3cb4abd34d416a51bc74a7960e7be97bf04b636a30c2cb452d140a"
     },
     {
       "path": "backend/public_app/assets/law-v230.css",
-      "bytes": 8854,
+      "size": 8854,
       "sha256": "f0146bcf87ae94fbcb6b94c7f5c98dafe451a4794ff0e77a36fb49cfc5439e9e"
     },
     {
       "path": "backend/public_app/assets/law-v230.js",
-      "bytes": 14101,
+      "size": 14101,
       "sha256": "cc1a11ceec7afded5fca4207660276402922930c2685284ec7bf161c3b4fd6bc"
     },
     {
       "path": "backend/public_app/assets/resources-v260.css",
-      "bytes": 2994,
+      "size": 2994,
       "sha256": "06444d8ff9cf774869d71fef484626969940835c80f352c0a1354aae8a76c81b"
     },
     {
       "path": "backend/public_app/assets/resources-v260.js",
-      "bytes": 7963,
+      "size": 7963,
       "sha256": "cef3f81cf07aa050810b9e0d932b25d71edff1ea70f067380db1609360184d2c"
     },
     {
+      "path": "backend/public_app/assets/scenarios-v290.css",
+      "size": 4673,
+      "sha256": "76a0831f070d54b95b15e2326939783a01ed5d1418cdfd8649f8b553f068f36a"
+    },
+    {
+      "path": "backend/public_app/assets/scenarios-v290.js",
+      "size": 8474,
+      "sha256": "fc770559ca74a9d20f96c615ebd478fc4bb0bdb620a2ac4c98f48afafc85b238"
+    },
+    {
       "path": "backend/public_app/assets/science-v240.css",
-      "bytes": 6565,
+      "size": 6565,
       "sha256": "1a336fd5d1e629f25ea1e728e2a1a5be524e21aa1b01260aaf31ec4dbf528d93"
     },
     {
       "path": "backend/public_app/assets/science-v240.js",
-      "bytes": 15860,
+      "size": 15860,
       "sha256": "2009df7fe9d882cf3dd886e805784ff50486047b9d3cea74aca61f7e545f208f"
     },
     {
       "path": "backend/public_app/index.html",
-      "bytes": 106865,
-      "sha256": "95d28c23f41cc7d7054bd59a88cb0a35b67abbea09a3e5c705fd8b9f2092199a"
+      "size": 113174,
+      "sha256": "20ec4500c16ffecc7516388e95bd54e39213dbfd16de3e2698e176c6701e327b"
     },
     {
       "path": "backend/render.yaml",
-      "bytes": 2373,
-      "sha256": "11bc823ea69b184aacfe81dea71360a8b132e8a6f23b067951f4ee6554e2a01a"
+      "size": 2600,
+      "sha256": "95e7ef1526fa98073fc1bae6208dbe72112a1792571a440fd7ad1a6230d3990b"
     },
     {
       "path": "backend/requirements-dev.txt",
-      "bytes": 106,
+      "size": 106,
       "sha256": "53ce87e2b9ba12211b7c5b399f7538a1ff4009a142cb76bd3dbc99d72c1a667d"
     },
     {
       "path": "backend/requirements.txt",
-      "bytes": 193,
+      "size": 193,
       "sha256": "bffe0888e7d32e75ffa9b05aee6f221299136a087d9249e4d7db1e47eca82884"
     },
     {
       "path": "backend/tests/test_accessibility_performance_mobile_v1240.py",
-      "bytes": 6613,
-      "sha256": "d1c1efe30abfb32cb1ea8645047e843814a8ee6a1fffa306803c76c012dc34fd"
+      "size": 6613,
+      "sha256": "63101f959b3bfc935a0b74d9d60276f1bbe1744ddfde8b50702d5f82056b47ff"
     },
     {
       "path": "backend/tests/test_admin_control.py",
-      "bytes": 1547,
-      "sha256": "317f2259562c4a950c8fbaa72c97f9a504dd7ab8dc70265d24a09bee63a07873"
+      "size": 1547,
+      "sha256": "b7a12ff997ec2e04dcd4b26b2cedee9c7cc3b6a3772d91904734e782c377650e"
     },
     {
       "path": "backend/tests/test_admin_stabilization_v091.py",
-      "bytes": 830,
-      "sha256": "41179ac44f255a433543d888aed81f790aa8b6d9a325802eb051a08ff6adcee3"
+      "size": 830,
+      "sha256": "91afe3b592d3b093f9a7a1047332ce667446af01ec86775ccfb4bbc62a4ec80e"
     },
     {
       "path": "backend/tests/test_advanced_external_connectors.py",
-      "bytes": 1466,
+      "size": 1466,
       "sha256": "83456e8ef7a1bc36ddb6a9c40f2808cf8f8fc2ce4a150b6d78fe7cbbe193da92"
     },
     {
       "path": "backend/tests/test_ai_brief_endpoints.py",
-      "bytes": 626,
+      "size": 626,
       "sha256": "9190689c3dd92668c133f1b2f2486d72f125a983f212a9cb2ab34f8b49d99114"
     },
     {
       "path": "backend/tests/test_ai_briefs.py",
-      "bytes": 1895,
+      "size": 1895,
       "sha256": "173ab496dade1669ac363126ecf7082d86c69a4ec2dc5377e4fa47d7cd9ae219"
     },
     {
       "path": "backend/tests/test_ai_public_dashboard_brief_patch.py",
-      "bytes": 596,
+      "size": 596,
       "sha256": "7e389a1ebc1641d5dec081d2a6bfe346ba892f30e5dd1b31234d569ce57fc223"
     },
     {
       "path": "backend/tests/test_alerts_monitoring_live_streams_v280.py",
-      "bytes": 6582,
-      "sha256": "14614f05fab8bb479f4ef5ef2b429ebe0ec818797a1576de99d9c09a2d1d7f11"
+      "size": 6582,
+      "sha256": "9da567128c23ec2cca9d90a40b6e17bb5acac1212fdc8d79e22b72acc82f9b05"
     },
     {
       "path": "backend/tests/test_auditable_public_observatory_v200.py",
-      "bytes": 10862,
-      "sha256": "fbb6905b91200c909e51c1fc18dbc3aa60276409e3527f146f22a6278eca161d"
+      "size": 10852,
+      "sha256": "7cc9e40bd10322cee16b4e5488579ecfc0b75abf896b6945eda449d02246722b"
     },
     {
       "path": "backend/tests/test_backend_compatibility_cache_reliability_v1201.py",
-      "bytes": 1790,
-      "sha256": "1511fec54c4594a5d8b0b2941e38d349d54aec789a10d845798d6f1e9240740b"
+      "size": 1790,
+      "sha256": "8de2c6867ed19123916774d05566b885ab7508c62c54756d393f644c71adfdd9"
     },
     {
       "path": "backend/tests/test_comparative_intelligence_v1190.py",
-      "bytes": 7584,
-      "sha256": "0f36d85d5262c7046d08634d6f7c645e19be53430b2e6b7f539554ffd2d598e7"
+      "size": 7584,
+      "sha256": "c6752ba0543c32407836e234a15f6edfa5763f10c990eb8172782049a5a69460"
+    },
+    {
+      "path": "backend/tests/test_comparative_scenario_studio_v290.py",
+      "size": 6529,
+      "sha256": "87d27d1eca46c007aeeca110541aee1fc88f28237549cf7f7f79acb5385c2446"
     },
     {
       "path": "backend/tests/test_comparison_reliability_v1191.py",
-      "bytes": 11022,
-      "sha256": "9ce73d0d13186a527dff71cf31995f12bd4374aeb9792791654b4a09ccf625e7"
+      "size": 11022,
+      "sha256": "e37336c552114977501aa39153e9d688bc4545ce62dea25667114f207e4a7042"
     },
     {
       "path": "backend/tests/test_conflict_human_security_v1110.py",
-      "bytes": 1501,
+      "size": 1501,
       "sha256": "137ef3962a8de965cb0c4e3ca17b511fb9c30cffbf2a5118d4a03c34c234d8cd"
     },
     {
       "path": "backend/tests/test_cross_domain_dashboard_studio_v1120.py",
-      "bytes": 1376,
-      "sha256": "f50df3aed2cffea7eccdad352f8ddc277e9cb3811c1255160b80f92d5bddd3a9"
+      "size": 1376,
+      "sha256": "8f3e74184662a9df660f56197ac1f0f209cc9943debd0cd2a442a8405c1b7ad4"
     },
     {
       "path": "backend/tests/test_dashboard_launch_polish_v1121.py",
-      "bytes": 850,
-      "sha256": "851769009acb3b6a67f98d16785a388883e2c6f372b2fcd1f60d6291c3cee3b7"
+      "size": 850,
+      "sha256": "92b369718fc5b28bf216195d90d0e980a134bb790e141d0d165296f41b5c49f7"
     },
     {
       "path": "backend/tests/test_earth_observation_reliability_v1161.py",
-      "bytes": 993,
-      "sha256": "82e78be377e15e45c0b56473d00b6fe971ac5408ae8f9f56b2e5b50c0078ecb6"
+      "size": 993,
+      "sha256": "c996df692693396b2b53f13658562a04f36b5447e2c6a4eb7f3b3f6738117a1e"
     },
     {
       "path": "backend/tests/test_earth_observation_studio_v1160.py",
-      "bytes": 1895,
-      "sha256": "a36168642944093283c3b340429258cb2b27352a2cdffedb1462a7b5dc1627b8"
+      "size": 1895,
+      "sha256": "dfcbb58d27209cc565f595541d9a240bc460faa140ea042af6bb99c156ed8f05"
     },
     {
       "path": "backend/tests/test_economics_markets_sustainability_v220.py",
-      "bytes": 5436,
-      "sha256": "1bdde6b680e3ade0f9e85dc78c1cb49bfe26447721c26042f92ff8ed61e5e5db"
+      "size": 5436,
+      "sha256": "66852647f698f3ea3f3768d2ff3de4dfd2ada7610eea5c3384a590210b1997b6"
     },
     {
       "path": "backend/tests/test_events.py",
-      "bytes": 1141,
+      "size": 1141,
       "sha256": "a0559e60d1430ab45f0713266f2cb12f310647138eda10d370722093032de22b"
     },
     {
       "path": "backend/tests/test_external_connectors.py",
-      "bytes": 1537,
+      "size": 1537,
       "sha256": "6809e04462d4ca58d6f704d4b1047f1e4d3e25307a360a3b298d8a44386bb4a4"
     },
     {
       "path": "backend/tests/test_geospatial_intelligence_v130.py",
-      "bytes": 951,
-      "sha256": "58f04f68e6dc5b3aa589941a9f12edb539b40ddd2f8c881eb153064688a94ce3"
+      "size": 951,
+      "sha256": "2b314cc7f3f603039c3bdc2a858cb536c9373aa0fb6669cf5922799d937d41bf"
     },
     {
       "path": "backend/tests/test_global_conditions_observatory_v210.py",
-      "bytes": 2850,
+      "size": 2850,
       "sha256": "2554f101db2113a3859f7dbe415f962a8334ebe0de32fb5aed398414c1c07bac"
     },
     {
       "path": "backend/tests/test_global_country_intelligence_v1180.py",
-      "bytes": 2235,
-      "sha256": "10dea2ef670e530f7c0e70f356e6b8187e9cdb216672a0bcdc8f50b9af5bcf61"
+      "size": 2235,
+      "sha256": "4de713ec785b5a22cb9e0d343c766c0f46cee805d40a0e216528d27336c64966"
     },
     {
       "path": "backend/tests/test_global_country_reliability_v1183.py",
-      "bytes": 4765,
-      "sha256": "f442a1348cdbca5cec6c284126baaa19034e873d13f41659b0ddb2ddf91ce8dd"
+      "size": 4765,
+      "sha256": "b8b32bcd70c354521747ceaa6cf41ad0ca2c3ec24f3b162db3c69f3c383fcf7c"
     },
     {
       "path": "backend/tests/test_human_development_intelligence_v190.py",
-      "bytes": 1743,
+      "size": 1743,
       "sha256": "81506a00f867628605883251775e8401c2b8581ddefa7128c95f0a1e07299b3e"
     },
     {
       "path": "backend/tests/test_humanitarian_conflict_displacement_observatory_v250.py",
-      "bytes": 5636,
-      "sha256": "08d8c3ce039a3ae1a1a14705ac2baf5f2cddb2492d844a9176d38e550f27faed"
+      "size": 5636,
+      "sha256": "7032544d5c9fe55bf8f59b55b0270f02dfdc0fc4df0eee8b3808f86e39aaed27"
     },
     {
       "path": "backend/tests/test_humanitarian_intelligence_v180.py",
-      "bytes": 818,
+      "size": 818,
       "sha256": "0c63782e673806bd9ab4f68406acf027b34670eab09e7c4c9bd6f3d5dcf5867e"
     },
     {
       "path": "backend/tests/test_indexing_intelligence.py",
-      "bytes": 1755,
+      "size": 1755,
       "sha256": "d43c667f6290a42cfddaee453ee7e2291eeb9e3f850415614fd1b90786c33ead"
     },
     {
       "path": "backend/tests/test_international_law_governance_v1100.py",
-      "bytes": 1784,
+      "size": 1784,
       "sha256": "aab2b324536dc9202e50c820cd6ba5fd5711e8aaef84d4bbae1708762cf0d002"
     },
     {
       "path": "backend/tests/test_international_law_observatory_v230.py",
-      "bytes": 7690,
-      "sha256": "66f6b2d35bb2f9be2b98d494a5f41f801a393b305664a16229898fc5438ffd96"
+      "size": 7690,
+      "sha256": "8d207151792d6a16721808735695826600f365fb2d423850771c539b5f6c46a3"
     },
     {
       "path": "backend/tests/test_live_country_intelligence_v1150.py",
-      "bytes": 2055,
-      "sha256": "200fdc13c55a4ae3410071244585f953b9f84bbd4953fe92c503ee381c497847"
+      "size": 2055,
+      "sha256": "096fd8da566bcfd4215f728d5fd029052460b956d3bd0231f9df6c015fc17b83"
     },
     {
       "path": "backend/tests/test_live_data_rendering_v1125.py",
-      "bytes": 1239,
-      "sha256": "422b0fdb128b6e44cc8246f9c0f42f531ae142987566ad1270f2dc8ebb1aa38d"
+      "size": 1239,
+      "sha256": "2befcdbfa9639cfe5a68c1a633d318714d6e42b4441f1fb3654c04d68e332afe"
     },
     {
       "path": "backend/tests/test_metrics.py",
-      "bytes": 906,
+      "size": 906,
       "sha256": "b4f677099d48aaa0abf5041c872f896023d23014c412846db0722ca6f48564bd"
     },
     {
       "path": "backend/tests/test_planetary_boundaries_observatory_v170.py",
-      "bytes": 1486,
+      "size": 1486,
       "sha256": "65f17407fd106dd7eb65363fe448e9814d1ee5e0d1dd399658ced781f2e60c7e"
     },
     {
       "path": "backend/tests/test_platform_core_integration_v1151.py",
-      "bytes": 3784,
-      "sha256": "965b491510908dd8043eb17b04e8af80550dcdea0d8eee32ee251d21e8540776"
+      "size": 3784,
+      "sha256": "f996f0dd15196dcf649bb7c9cc9f50fa60f97d866dd6981098a1e8e16ecbf0b9"
     },
     {
       "path": "backend/tests/test_public_api_source_layer_v120.py",
-      "bytes": 2547,
+      "size": 2547,
       "sha256": "52f8a397dea04eb86bc5e250ad1c7b320b49952ec61d7f94626692696cc3216f"
     },
     {
       "path": "backend/tests/test_public_briefing_export_studio_v1200.py",
-      "bytes": 16197,
-      "sha256": "f8aa6e3392285c51933ce4155118c70f74a421b9e6525585fa349f45a43ef09c"
+      "size": 16197,
+      "sha256": "29dcb79003ebba70d34f634a85ea3c1f4aebce45f37958895d71614caf7f4a23"
     },
     {
       "path": "backend/tests/test_public_climate_summary.py",
-      "bytes": 450,
+      "size": 450,
       "sha256": "2ee94829c06638b6096a4d24299027de99d1136ab2f7426682f6bff9b4cb708a"
     },
     {
       "path": "backend/tests/test_public_connector_reliability_v131.py",
-      "bytes": 2209,
-      "sha256": "e56df723fd9afae55aeeb9fe3b6941b40816bfdaaf50ee5e28583dc98567ce09"
+      "size": 2209,
+      "sha256": "70643abe6eafd534140139b75fe0281dc13afcf2a37242749c2bd1f0fdb2c7f9"
     },
     {
       "path": "backend/tests/test_public_dashboard.py",
-      "bytes": 1348,
+      "size": 1348,
       "sha256": "d497dc1f2bd96994352db0bc5cb8ffbe80f3a3443006b815f35a37be46d2eb20"
     },
     {
       "path": "backend/tests/test_public_feed_notice_removal_v1181.py",
-      "bytes": 640,
-      "sha256": "64692b4caf5f1b54d591ae9705fa2f5cf19c974857b6f67956dce4f9bda82648"
+      "size": 640,
+      "sha256": "2e8246e304bc8734919d7b8cac15df0efb76435cb0a6bb6b4351ac5c44d3c312"
     },
     {
       "path": "backend/tests/test_public_indicator_charts_v140.py",
-      "bytes": 2285,
-      "sha256": "94ab1e754be6f6c9526fba8c150f0cd18730faf657ab7de4098f7cc4e6f60736"
+      "size": 2285,
+      "sha256": "2dc427c91a9963aafa023b6ec5e4606feea631b91e35602bc8878179a50e282e"
     },
     {
       "path": "backend/tests/test_public_interface_redesign_v1126.py",
-      "bytes": 594,
+      "size": 594,
       "sha256": "832275c1ea600b3e823df27192399170e0ade5b8c9e58ae914a67e39a58d5e77"
     },
     {
       "path": "backend/tests/test_public_landing_and_fast_climate.py",
-      "bytes": 845,
+      "size": 845,
       "sha256": "c4b292e4574e2dbe968fa56451231c9ea20ec2273828b9bab6113e02f18918a3"
     },
     {
       "path": "backend/tests/test_public_launch_hardening_v1152.py",
-      "bytes": 916,
-      "sha256": "9c5ae101b6a5d36f2871b819772c92865e2df580861f62daba3799fd3851e47e"
+      "size": 916,
+      "sha256": "d7300403f72ebd7576b8bb63c370b6396f7b3a9a9292f03473627349a64cf069"
     },
     {
       "path": "backend/tests/test_public_launch_portfolio_v1250.py",
-      "bytes": 5977,
-      "sha256": "320b1baed8547415d0fd08349a4354d9d721ca3b02e06cedda2cb60fd020ec36"
+      "size": 5977,
+      "sha256": "b3a50384f796a4f598015ceda8c716f01efd5f38bcf7b78f69c781e4ae4a6940"
     },
     {
       "path": "backend/tests/test_public_live_connectors_v130.py",
-      "bytes": 2652,
-      "sha256": "c28267a46a4832d842f8a3a17377d47117343db176a57e88d55ecb147afd8faf"
+      "size": 2652,
+      "sha256": "bbb07b420258ec05c048f2a666d544a4898ada72f40c92badc592d9f16c4b4ba"
     },
     {
       "path": "backend/tests/test_public_page_builder_v100.py",
-      "bytes": 2135,
-      "sha256": "ceff95837568d8a197519fd9a43ad039d159a6bc30696a9ec697bf8be060c734"
+      "size": 2135,
+      "sha256": "82ce686a5fed9ade8cb74d6f701ab096bd26668444c0fa6a49224f9a4b9a9f79"
     },
     {
       "path": "backend/tests/test_public_shortcode_visual_alignment_v101.py",
-      "bytes": 841,
-      "sha256": "5f41811c1a651d9abc4fe5f8c4ee2037356efa96e92f5b24f3a08a5ebbd57ddb"
+      "size": 841,
+      "sha256": "a36534d7935687255a831e706de47276eb780b034bc0154b23afb29623faa97e"
     },
     {
       "path": "backend/tests/test_public_source_aware_briefs_exports_v150.py",
-      "bytes": 2788,
-      "sha256": "bb2433c6cabdc3bbd957765b81dc76902b4a0b3440c05d7fa0743d171af94fdc"
+      "size": 2788,
+      "sha256": "0e7cd8ea9163407c99bd9e29d6630417808473756a5b74c9c4f98e8d3200b12f"
     },
     {
       "path": "backend/tests/test_public_source_pages_v121.py",
-      "bytes": 2072,
+      "size": 2072,
       "sha256": "3ec8c026d7b49ccc386b8f12724f39309a7b78244046d844ce4e8daff9d644cc"
     },
     {
       "path": "backend/tests/test_public_topic_dashboards_v110.py",
-      "bytes": 1851,
+      "size": 1851,
       "sha256": "e46bfd34e9842f62c21b5858838b9154fb8a33f4d3cba8fba66b8b6672f0c309"
     },
     {
       "path": "backend/tests/test_public_topic_navigation_v111.py",
-      "bytes": 2077,
+      "size": 2077,
       "sha256": "f42153563c021aac8f0e273730892eada459a9241ce6e7f9b54767cdaa5713fd"
     },
     {
       "path": "backend/tests/test_public_visual_qa_v101.py",
-      "bytes": 2097,
-      "sha256": "17c59efa7b68fd4b488605ce8ccdec41f5f8fc65b778eddb14e79fe51963a71c"
+      "size": 2097,
+      "sha256": "8d9cb2fedb93356065bceebe7b9cfd6e5cde25d5636e5b417dba525425969773"
     },
     {
       "path": "backend/tests/test_publishing_intelligence.py",
-      "bytes": 1693,
+      "size": 1693,
       "sha256": "69c98b593709b65d41ee45a499eb57c1e2651d0b62ed1dd13a81a687e6be7d4c"
     },
     {
       "path": "backend/tests/test_registry_mapping.py",
-      "bytes": 1984,
+      "size": 1984,
       "sha256": "5a7955cf582efec2559bb0cf71a6eeddc52072b7d7f64684e8c8e1eca58ad593"
     },
     {
       "path": "backend/tests/test_release_v100.py",
-      "bytes": 2476,
-      "sha256": "a973b9f53a713b86e95437b3c65b5dd227d307501f3157c87013a09e14648826"
+      "size": 2473,
+      "sha256": "4697175b56f5806430ffff447c5868af69d7c648fd71b1795c74a75a35897d5f"
     },
     {
       "path": "backend/tests/test_report_export_manifest.py",
-      "bytes": 471,
+      "size": 471,
       "sha256": "52017e207a426fa936051f4d9cb84742ccf2e766dd232b5b5f97eec7cf2e006f"
     },
     {
       "path": "backend/tests/test_report_generator.py",
-      "bytes": 1133,
+      "size": 1133,
       "sha256": "d04c4c75630e80ac2e90e4b440742aecd67b50d1f1cdc250b81a2893ebfc5dfd"
     },
     {
       "path": "backend/tests/test_saved_views_shareable_research_paths_v1230.py",
-      "bytes": 8378,
-      "sha256": "bcd1a52f01415151d499ce93fcb04893f42ef5a2946706ae530c34109126a768"
+      "size": 8378,
+      "sha256": "bd2253acdc39c48c15cf41339b0bd4d513a32d4bde66629176a192707760fd2c"
     },
     {
       "path": "backend/tests/test_scientific_earth_systems_observatory_v240.py",
-      "bytes": 9788,
-      "sha256": "580ca7991a9178a79ee4f1f3e493c3003c0c0425a576a1df022fd839b2f78d65"
+      "size": 9788,
+      "sha256": "6b25666c4f25eed58f4c8a03ea5f8158dae9e8d21628d2489304420395ed498b"
     },
     {
       "path": "backend/tests/test_search_console.py",
-      "bytes": 1624,
+      "size": 1624,
       "sha256": "5786d2d67976199f05cdbf6d024518e979a42710a7c6954c94027c0959a16bfa"
     },
     {
       "path": "backend/tests/test_seo_intelligence.py",
-      "bytes": 1995,
+      "size": 1995,
       "sha256": "befe7978832d5b44a69ecb2989c65ea7014d705293f71d852aa09c5d86e77264"
     },
     {
       "path": "backend/tests/test_source_methodology_studio_v1220.py",
-      "bytes": 10652,
-      "sha256": "ff58eea7b37048dee66bc524bf111dca7582725462ba1f1d5f41b30b7b22cc24"
+      "size": 10652,
+      "sha256": "551f61cc373049194d8a265a725b63fe4b7dc5bc63c760b91bf5c4dc7a58d6e0"
     },
     {
       "path": "backend/tests/test_standalone_public_app_v140.py",
-      "bytes": 728,
-      "sha256": "211304b5843fea9314ba6747aef01e9d35e9fa363b6976b47d1959465ee1cd3f"
+      "size": 728,
+      "sha256": "6989959efaa64846c8905f4163dab4d5d21c014ec8253bae9b59daa09cc1601c"
     },
     {
       "path": "backend/tests/test_sustainable_development_connectors_v160.py",
-      "bytes": 1122,
+      "size": 1122,
       "sha256": "3591855c03e281d2ff880133dcbb950f85b73723dcd7d7bd98713eab1b06d968"
     },
     {
       "path": "backend/tests/test_sustainable_development_reliability_v161.py",
-      "bytes": 1759,
+      "size": 1759,
       "sha256": "b3e6d7ac27c831ab43d12f79d0bba0b3df67b9f3590c2ef5416ce4f710305fd6"
     },
     {
       "path": "backend/tests/test_thematic_intelligence_dashboards_v1210.py",
-      "bytes": 12079,
-      "sha256": "bb828e875d59f60dcd04e40e8b0094c019092706f07660e1f0a3303621772576"
+      "size": 12079,
+      "sha256": "f0a8c9830484be3079b0d5a5fd741ecf1ac7fc784ee58502994695d238ade466"
     },
     {
       "path": "backend/tests/test_trade_energy_resource_security_observatory_v260.py",
-      "bytes": 4449,
-      "sha256": "f30413b749d409ea241c075cc5a2609bf0c6b951d11f980a2d153f5ac8ed94a3"
+      "size": 4449,
+      "sha256": "348788f4b3b10c9232a83393cd28ea8ca6367f6bb29aaf806bc8336eae262832"
     },
     {
       "path": "backend/tests/test_unified_country_regional_dossiers_v270.py",
-      "bytes": 9200,
-      "sha256": "f878f15b72cb0de70d558edfd3f20c1a48601f99bc03d13f418f94eae500e5b4"
+      "size": 9200,
+      "sha256": "ce92420297ed9fc9de4e17b3f13981aea3b2bcf8689f2d72d10fc57031f2b936"
     },
     {
       "path": "backend/tests/test_unified_live_events_v1170.py",
-      "bytes": 1952,
-      "sha256": "a886e906cdc1f769570ba151ca9e488957522598764c21d725ef1f6cdccf30f7"
+      "size": 1952,
+      "sha256": "7b978177d6605f1e0f6a0dbf1554e30736acc362d0663177ce5d0ac55beff4e1"
     },
     {
       "path": "backend/tests/test_visual_foundation_v1141.py",
-      "bytes": 747,
-      "sha256": "483904d05811fbbea35fae267699d331d2a0af862ddb90d7caa57dc9b1889095"
+      "size": 747,
+      "sha256": "a29ca988c75c8a3cf0d82b0f5c16b9c9391333e0d08b4efaf2ae28c232fbbb39"
     },
     {
       "path": "backend/tests/test_wordpress_skeleton_loader_patch_v1182.py",
-      "bytes": 857,
-      "sha256": "0201f175d34be85af1b72095bc9bc71910bfd1ee5e59c5ba4c1015234307ece7"
+      "size": 857,
+      "sha256": "e99e4c689b504238e462fd22c0e410a5cc4ae24291ca14f4c6da4afc246b1a81"
     },
     {
       "path": "docs/ACCESSIBILITY_PERFORMANCE_MOBILE_V1240.md",
-      "bytes": 2492,
+      "size": 2492,
       "sha256": "4f00abaf32a7da56f41c3ff2b68407a77b661b6b70c050e0f23d4153a7a154a4"
     },
     {
       "path": "docs/ADMIN_CONTROL_PLANE.md",
-      "bytes": 946,
+      "size": 946,
       "sha256": "8276f3b9d3df254b4cdae7ed2cdba5da48da782ae7b0bde9978c8e2daf81ece9"
     },
     {
       "path": "docs/ADMIN_UX_STABILIZATION.md",
-      "bytes": 567,
+      "size": 567,
       "sha256": "d12029c8fa1223b3d9a1c8fe8d79c4f038913cf385a919f26a7c610ea821df0d"
     },
     {
       "path": "docs/ADVANCED_EXTERNAL_CONNECTORS.md",
-      "bytes": 729,
+      "size": 729,
       "sha256": "8b2cfcdfba608546d579067076ba2e4d4995c8f9212344b4a0659614e0157835"
     },
     {
       "path": "docs/AI_ASSISTED_BRIEFS.md",
-      "bytes": 718,
+      "size": 718,
       "sha256": "98a612252f2924254d6787ec428864ed7f0a23946e9aae617bffeb81c2340959"
     },
     {
       "path": "docs/AUDITABLE_PUBLIC_OBSERVATORY_V200.md",
-      "bytes": 2435,
+      "size": 2435,
       "sha256": "314e3be2028fd7c08f9f60699163f5138f919c5b7a21e77089f0777c2e6123be"
     },
     {
       "path": "docs/BACKEND_COMPATIBILITY_ADMIN_CACHE_RELIABILITY_V1201.md",
-      "bytes": 1147,
+      "size": 1147,
       "sha256": "f349ccaa88060fc77b3c7db02b62ce1f9e1cf4bb982741232e9b408a4e0a43a9"
     },
     {
       "path": "docs/COMPARATIVE_INTELLIGENCE_BRIEFING_STUDIO_V1190.md",
-      "bytes": 2630,
+      "size": 2630,
       "sha256": "38b59416c6d77a6141b275c99ab132afad390870fd783e021bf3852d25285736"
     },
     {
       "path": "docs/COMPARISON_RELIABILITY_PATCH_V1191.md",
-      "bytes": 2265,
+      "size": 2265,
       "sha256": "6e2b5dfad0760670894eddd5f0513a50d33d213bc8554dbb76a9c96ab751ad1f"
     },
     {
       "path": "docs/CONFLICT_DISPLACEMENT_HUMAN_SECURITY.md",
-      "bytes": 1021,
+      "size": 1021,
       "sha256": "de3f619a5fe754ce661cd58d5f7ac8f9da7b7a0396b781fa091ba779a8ce89ed"
     },
     {
       "path": "docs/CONNECTOR_RELIABILITY_AND_PUBLIC_STATUS_POLISH.md",
-      "bytes": 1832,
+      "size": 1832,
       "sha256": "7207788d164da001d47fe3344554a8e24d69da2f85d34ab46a93d71f99054636"
     },
     {
       "path": "docs/CROSS_DOMAIN_DASHBOARD_STUDIO.md",
-      "bytes": 1383,
+      "size": 1383,
       "sha256": "81097afbfa0a9d4a23826cb7fed629ef5047101c7a98a6693be03cff0f0c441c"
     },
     {
       "path": "docs/EARTH_OBSERVATION_RELIABILITY_V1161.md",
-      "bytes": 306,
+      "size": 306,
       "sha256": "0a4a06991c8e5bef814d4d5b71c9b3107afd7401d938faad579bbfba6a5c5a7c"
     },
     {
       "path": "docs/EARTH_OBSERVATION_STUDIO_V1160.md",
-      "bytes": 899,
+      "size": 899,
       "sha256": "e285c4f49965bb9eab3aa3731e645aac0a5964df25e1af0bd5c2da9726c32f4b"
     },
     {
       "path": "docs/EVENT_TRACKING.md",
-      "bytes": 1452,
+      "size": 1452,
       "sha256": "a2b8b0b572cf70709e9c12d09417789b88b5dd16062c83707bedc8271e56fbd6"
     },
     {
       "path": "docs/EXTERNAL_CONNECTORS.md",
-      "bytes": 1383,
+      "size": 1383,
       "sha256": "0babb031cfe8081127add88c457b2ece5d469bf6c33e5ecb75ea507375d40d2c"
     },
     {
       "path": "docs/GA4_SETUP.md",
-      "bytes": 2171,
+      "size": 2171,
       "sha256": "00869df033157e510419e243d307388049dfc36e3740fca6846bd5272e57bae3"
     },
     {
       "path": "docs/GEOSPATIAL_INTELLIGENCE_SATELLITE_LIVE_VISUALIZATION_V130.md",
-      "bytes": 623,
+      "size": 623,
       "sha256": "bd26299458a6423415380bafa1f49b2994c4bb00356efcac79c37b879b5d6497"
     },
     {
       "path": "docs/GLOBAL_COUNTRY_INTELLIGENCE_V1180.md",
-      "bytes": 784,
+      "size": 784,
       "sha256": "c17995ea5bd950960ce7f1386705269bcbf51f14ddd8bac55064b3c1df39ce54"
     },
     {
       "path": "docs/GLOBAL_COUNTRY_RELIABILITY_DATA_COVERAGE_RELEASE_INTEGRITY_V1183.md",
-      "bytes": 2423,
+      "size": 2423,
       "sha256": "8ed6d5eec5431d2a09d4e50a4e846631ebf7040ba475764fd22793377876a065"
     },
     {
       "path": "docs/HUMAN_DEVELOPMENT_AND_SOCIAL_CONDITIONS.md",
-      "bytes": 814,
+      "size": 814,
       "sha256": "afd1f66953b1c9710ba26cad624bcb4dc84fdd3ccd5387bec7052ff0b8104ee2"
     },
     {
       "path": "docs/IMMERSIVE_VISUAL_SYSTEM_V1141.md",
-      "bytes": 915,
+      "size": 915,
       "sha256": "a9a6c37e24db0258dd38fd6ee0b6ccffc117ab0314adcc0bb5da3c3041fa1712"
     },
     {
       "path": "docs/INDEXING_INTELLIGENCE.md",
-      "bytes": 2033,
+      "size": 2033,
       "sha256": "c8d7b29f43ba40a18281a2c8a4b6f5571a4fa8e2456cfe0823e37242f009f19c"
     },
     {
       "path": "docs/INTERNATIONAL_LAW_AND_GLOBAL_GOVERNANCE_MONITOR.md",
-      "bytes": 882,
+      "size": 882,
       "sha256": "5495e3fff880fa7e5103629d921b815551e71430d8b224a37fe428ae2cb0e126"
     },
     {
       "path": "docs/LAUNCH_MATERIALS_V1250.md",
-      "bytes": 2644,
+      "size": 2644,
       "sha256": "9d442fa8576dca7007d7def5f57fb2fe350ee8a2218302b9a7e2ec86351d94c0"
     },
     {
       "path": "docs/LIVE_COUNTRY_INTELLIGENCE_V1150.md",
-      "bytes": 928,
+      "size": 928,
       "sha256": "5e290fbbdc6084e21686e371a88c325f8866196b633095b9fb4c6a0876448cac"
     },
     {
       "path": "docs/LIVE_DATA_RENDERING_PUBLIC_DASHBOARD_REPAIR_V1125.md",
-      "bytes": 686,
+      "size": 686,
       "sha256": "d390ba976ef00799c9bfaf3e0491269fda15b1cdb2a346b3591660551b9954f2"
     },
     {
       "path": "docs/LIVE_DISASTER_DISPLACEMENT_HUMANITARIAN_INTELLIGENCE.md",
-      "bytes": 447,
+      "size": 447,
       "sha256": "c023256d311b690b05dd4424eee70bb6fddbc1cd894bed83321cf2b0080cbf8f"
     },
     {
       "path": "docs/METRICS_MODEL.md",
-      "bytes": 1580,
+      "size": 1580,
       "sha256": "5bdbf1b215201ef15901f9059caa4f091b262ea52e1854ef1ed6c9e6a4ffbec2"
     },
     {
       "path": "docs/PLATFORM_CORE_INTEGRATION_EVIDENCE_LINEAGE_V1151.md",
-      "bytes": 1667,
+      "size": 1667,
       "sha256": "4375ea4af0b7e42cd6b98c60fbc7ffe8b44f0dd7b6f3848221a07fbbe58ee33e"
     },
     {
       "path": "docs/PUBLIC_API_SOURCE_EXPANSION.md",
-      "bytes": 2142,
+      "size": 2142,
       "sha256": "0c869bc86138156c4418169b214b58660c6749c55a79be94a4942499e3b07fa8"
     },
     {
       "path": "docs/PUBLIC_BRIEFING_EXPORT_STUDIO_V1200.md",
-      "bytes": 7378,
+      "size": 7378,
       "sha256": "305626f01bd12949e8c8ec61205fe5031e15ee861346e668d36676815f12f05d"
     },
     {
       "path": "docs/PUBLIC_DASHBOARD_LAUNCH_POLISH_V1121.md",
-      "bytes": 719,
+      "size": 719,
       "sha256": "7d2b6217df42b21a2a2680bda703572a2fec16e5a25b77b1cd295c0dd31d61c7"
     },
     {
       "path": "docs/PUBLIC_DASHBOARD_VISUAL_QA.md",
-      "bytes": 630,
+      "size": 630,
       "sha256": "9ee70b4991d5fc13ef6544fa335ad22965613aa6f798f96e6d83011aa53a2529"
     },
     {
       "path": "docs/PUBLIC_FEED_NOTICE_REMOVAL_V1181.md",
-      "bytes": 428,
+      "size": 428,
       "sha256": "6f4a34055c170e73435063556dcac614d21d2aab11547cd8eeafa4124fb53b33"
     },
     {
       "path": "docs/PUBLIC_FLAGSHIP_PAGE_BUILDER.md",
-      "bytes": 899,
+      "size": 899,
       "sha256": "9f9922e884f1275316ad555adc6df7db1a1853f351ce74648a6582d091603fd9"
     },
     {
       "path": "docs/PUBLIC_FLAGSHIP_RELEASE.md",
-      "bytes": 1404,
+      "size": 1404,
       "sha256": "279d7ae493fcd42ad32093f34e4ee377fca651c441df054a893ecbd1eee199f7"
     },
     {
       "path": "docs/PUBLIC_INDICATOR_DASHBOARDS_AND_CHARTS.md",
-      "bytes": 1211,
+      "size": 1211,
       "sha256": "3c56340f1bc4f753335867b4f351f5700941195c59ee7a78110d2c186e384c0b"
     },
     {
       "path": "docs/PUBLIC_INTERFACE_REDESIGN_V1126.md",
-      "bytes": 565,
+      "size": 565,
       "sha256": "46d8296a70a693e10bea119e04df7e55b36f8b97c07a2ca3be003e247fd9ebfb"
     },
     {
       "path": "docs/PUBLIC_LAUNCH_HARDENING_V1152.md",
-      "bytes": 400,
+      "size": 400,
       "sha256": "8200bec0179ce5a8f279c4b234a8bca7b491786bbdb169f1aa5c791fb2a067e5"
     },
     {
       "path": "docs/PUBLIC_LAUNCH_PORTFOLIO_V1250.md",
-      "bytes": 1856,
+      "size": 1856,
       "sha256": "e5ef8cb7922d2ffeb83aedbfeeb073f7b080585896082a9e2576510c33687bc6"
     },
     {
       "path": "docs/PUBLIC_LIVE_CONNECTORS.md",
-      "bytes": 1453,
+      "size": 1453,
       "sha256": "03e437d02ee9f1ac7d874e8230c6d53dbb7983b0cdab989de226a02d23eb9bbc"
     },
     {
       "path": "docs/PUBLIC_SHORTCODE_VISUAL_ALIGNMENT.md",
-      "bytes": 1142,
+      "size": 1142,
       "sha256": "a5685337abc01ed0b07bd69fa228aa432fa5cce5c8860ed1ea8d36fdbee88572"
     },
     {
       "path": "docs/PUBLIC_SOURCE_PAGES_AND_INDICATOR_POLISH.md",
-      "bytes": 1546,
+      "size": 1546,
       "sha256": "813d097c0b4c3aa67a30a7cf6702d0bbc8f8c4eabace0119598a0389755061a6"
     },
     {
       "path": "docs/PUBLIC_TOPIC_DASHBOARDS.md",
-      "bytes": 1153,
+      "size": 1153,
       "sha256": "3533a029d6d29466c7f3ff3cf88dd176c7f2dc66a4df1607c53636b86ca88384"
     },
     {
       "path": "docs/PUBLIC_TOPIC_PAGE_TEMPLATES_AND_NAVIGATION.md",
-      "bytes": 2514,
+      "size": 2514,
       "sha256": "eb0ecbff386533571b3a99b413c603c6bcb438599079b6191eff13823ab44d41"
     },
     {
       "path": "docs/PUBLISHING_INTELLIGENCE.md",
-      "bytes": 1586,
+      "size": 1586,
       "sha256": "04fdc1873c0ee390410964d35874f19c04789a9a44f8e8c9e93ef56925328f5d"
     },
     {
       "path": "docs/RELEASE_MANIFEST_V1183.json",
-      "bytes": 926,
+      "size": 926,
       "sha256": "2072c346a1f9ac4addc94e201e934ea2896b0a7441ff6edc2320ac5bd17d5d97"
     },
     {
       "path": "docs/RELEASE_MANIFEST_V1190.json",
-      "bytes": 712,
+      "size": 712,
       "sha256": "99efa57d405f0e7d17393eac52ff6f568f0db74efb6028939e6a9b8c12a84367"
     },
     {
       "path": "docs/RELEASE_MANIFEST_V1191.json",
-      "bytes": 982,
+      "size": 982,
       "sha256": "bc627b1540390f8745fbeddec8be9bdc92dc58640f4dc2b4969295b8a6554e67"
     },
     {
       "path": "docs/RELEASE_MANIFEST_V1200.json",
-      "bytes": 1301,
+      "size": 1301,
       "sha256": "2319d6405673f9c58a62f08211eace153726ca5ea6dcbb023e5bd65cffd2b51e"
     },
     {
       "path": "docs/RELEASE_MANIFEST_V1201.json",
-      "bytes": 600,
+      "size": 600,
       "sha256": "f15d8a7681f45288e6666f57136942577f27cc850c50eb32e23e23eefd0dcbd6"
     },
     {
       "path": "docs/RELEASE_MANIFEST_V1210.json",
-      "bytes": 986,
+      "size": 986,
       "sha256": "6bcec4ab8d5db1c2d64042ebc197368adc47b156f521d4439d2745f24130e1bb"
     },
     {
       "path": "docs/RELEASE_MANIFEST_V1220.json",
-      "bytes": 1222,
+      "size": 1222,
       "sha256": "f261a7c686b7d344dadbb63acf3178b55510881c56bc724b3406d3a7b87c4da5"
     },
     {
       "path": "docs/RELEASE_MANIFEST_V1230.json",
-      "bytes": 1199,
+      "size": 1199,
       "sha256": "9c87ceab471171c18662ff1fe6a78ab8d28a407aa12fc8f9eb1dc8c83edddb00"
     },
     {
       "path": "docs/RELEASE_MANIFEST_V1240.json",
-      "bytes": 1021,
+      "size": 1021,
       "sha256": "611a90569dea92ff717d9f53a5c043ebaa54c1b3a77ed35c934c7ee2de0a2d98"
     },
     {
       "path": "docs/RELEASE_MANIFEST_V1250.json",
-      "bytes": 1181,
+      "size": 1181,
       "sha256": "3b7bbbcadaf01444074aeb62d470ea8c2f5685fa49f2ded9fe8f91d6e670290d"
     },
     {
       "path": "docs/RELEASE_MANIFEST_V200.json",
-      "bytes": 1587,
+      "size": 1587,
       "sha256": "14539cce4bd5400795aae94436bf74aa9e114c4380b34374646598f0673f256f"
     },
     {
       "path": "docs/RELEASE_MANIFEST_V210.json",
-      "bytes": 1076,
+      "size": 1076,
       "sha256": "30eefe629da0980066a1c47a98ddd1033c102b55788153eb4b2c76dcf950f24b"
     },
     {
       "path": "docs/RELEASE_MANIFEST_V220.json",
-      "bytes": 848,
+      "size": 848,
       "sha256": "97475a43f550bd25dd83b96c3542737d8c98c46bebb7abd53c137327b472e812"
     },
     {
       "path": "docs/RELEASE_MANIFEST_V230.json",
-      "bytes": 1112,
+      "size": 1112,
       "sha256": "581bbdeff491ff87a319ba7256c1281230c2301f7a8859584dd09c5d84a6c354"
     },
     {
       "path": "docs/RELEASE_MANIFEST_V240.json",
-      "bytes": 745,
+      "size": 745,
       "sha256": "f6fcfd7413ffbb2e875bd696a33dd66bf2196baf0701d58ab3c65d66a5a5b1ba"
     },
     {
       "path": "docs/RELEASE_MANIFEST_V250.json",
-      "bytes": 1297,
+      "size": 1297,
       "sha256": "4549221a121a2a7b544de7dd4a3f0ab838d5216c2c7cbbde65bcf234038af9c5"
     },
     {
       "path": "docs/RELEASE_MANIFEST_V260.json",
-      "bytes": 903,
+      "size": 903,
       "sha256": "e04d0305c7616826dc80ca0605ba647c746cf19d1028e4c2921d8dff45fd5c93"
     },
     {
       "path": "docs/RELEASE_MANIFEST_V270.json",
-      "bytes": 890,
+      "size": 890,
       "sha256": "d676688cbd6bb909052d358f82ebb1f8f061eefcfa2b38f5cf5b111a76fd42e8"
     },
     {
       "path": "docs/RELEASE_MANIFEST_V280.json",
-      "bytes": 1063,
+      "size": 1063,
       "sha256": "694a539bc8ed9f41cebd3a1e9d609531db95857474711d947d692c96be056103"
     },
     {
+      "path": "docs/RELEASE_MANIFEST_V290.json",
+      "size": 543,
+      "sha256": "53a8c3c21a4c86907fb8ffb93cdb52751946187be5fca4af9e0306d2c5d85565"
+    },
+    {
       "path": "docs/RELEASE_NOTES_V230.md",
-      "bytes": 2394,
+      "size": 2394,
       "sha256": "58cdfad585341feb1b05713bc8f28ad0121f6039e33121c502f74e72e7362bf7"
     },
     {
       "path": "docs/RELEASE_NOTES_V240.md",
-      "bytes": 3177,
+      "size": 3177,
       "sha256": "2f30a89edf53d97d57f8e197060e29e4a601098fefdf7f21099cfe4b65f67d90"
     },
     {
       "path": "docs/REPORT_GENERATOR.md",
-      "bytes": 647,
+      "size": 647,
       "sha256": "99e60b73164362a93ade6c75109e434dfa951da59b9d26df6febde302115753d"
     },
     {
       "path": "docs/SAVED_VIEWS_SHAREABLE_RESEARCH_PATHS_V1230.md",
-      "bytes": 4912,
+      "size": 4912,
       "sha256": "61822ba06be0a0a7e804f765d6787487ead57cb6ae5395b8e3898e6d21a0e54e"
     },
     {
       "path": "docs/SEARCH_CONSOLE_SETUP.md",
-      "bytes": 976,
+      "size": 976,
       "sha256": "174069f3d48a2095b586a9fb37ad52c1d95b798bf8e499c35c1a5ef7acf8a1e4"
     },
     {
       "path": "docs/SEO_INTELLIGENCE.md",
-      "bytes": 880,
+      "size": 880,
       "sha256": "0b20f86c458bc4b8ce724ca45b1d0b1fa206ec3a50b6d8f9f4d7dd3cc5d710c5"
     },
     {
       "path": "docs/SOURCE_AND_METHODOLOGY_STUDIO_V1220.md",
-      "bytes": 5670,
+      "size": 5670,
       "sha256": "937e133a7a85caf9e1913817a121343746dafdea48c7fe45a90605711bfb5e17"
     },
     {
       "path": "docs/SOURCE_AWARE_BRIEFS_AND_DASHBOARD_EXPORTS.md",
-      "bytes": 1285,
+      "size": 1285,
       "sha256": "c8fea84081d2aab8069d69ef3be2dbd017a3925cfff8109a1eccdf0582bb03cf"
     },
     {
       "path": "docs/STANDALONE_PUBLIC_INTELLIGENCE_APP_V140.md",
-      "bytes": 960,
+      "size": 960,
       "sha256": "a8823211e08d831f23673b8f95f7575ef8564907b24ba527dbf17819f277a94a"
     },
     {
       "path": "docs/SUSTAINABLE_DEVELOPMENT_CONNECTOR_RELIABILITY_V161.md",
-      "bytes": 688,
+      "size": 688,
       "sha256": "2ef76b52bdc284381fd10d9c8e5b626e11d8e0e5083bb8ef9c9b78f0519d9516"
     },
     {
       "path": "docs/SUSTAINABLE_DEVELOPMENT_DATA_CONNECTORS.md",
-      "bytes": 1022,
+      "size": 1022,
       "sha256": "cccb88d16cb94c70aa8310bbd99307b9a0af92e665dcb75accdb203bfb9ec6d7"
     },
     {
       "path": "docs/THEMATIC_INTELLIGENCE_DASHBOARDS_V1210.md",
-      "bytes": 2269,
+      "size": 2269,
       "sha256": "e7be7ef4016408a3d13e95eac1b73632ab63bb9075e546b0560e0f8e3dbc0c19"
     },
     {
       "path": "docs/UNIFIED_LIVE_EVENT_INTELLIGENCE_V1170.md",
-      "bytes": 666,
+      "size": 666,
       "sha256": "b4f70a3bfeb4e8a5b049fba86fb84c31531c15b4a175bfd8b67c4cc908bd0918"
     },
     {
       "path": "docs/V210_GLOBAL_CONDITIONS_LIVE_MAP_OBSERVATORY.md",
-      "bytes": 1580,
+      "size": 1580,
       "sha256": "87da9f09e4bdc1c01edf12235c7ba3d309342d7027e9137641b5b70867c104ef"
     },
     {
       "path": "docs/V220_ECONOMICS_MARKETS_SUSTAINABILITY_SIGNALS.md",
-      "bytes": 2750,
+      "size": 2750,
       "sha256": "0df8d8fbffd46c244da40ad45f9621fc82ca4da1302cc8cefdc958aca8112ede"
     },
     {
       "path": "docs/V230_INTERNATIONAL_LAW_GLOBAL_GOVERNANCE_OBSERVATORY.md",
-      "bytes": 2324,
+      "size": 2324,
       "sha256": "bad0c777368ac536f15664ffd9852d56b81c5783eaddcb432c5753301add9fae"
     },
     {
       "path": "docs/V240_SCIENTIFIC_EARTH_SYSTEMS_OBSERVATORY.md",
-      "bytes": 1117,
+      "size": 1117,
       "sha256": "f48cee92e9325611e1f59c3707fcea9812627aab52d4bb3b35923242acce38f5"
     },
     {
       "path": "docs/V260_TRADE_ENERGY_RESOURCE_SECURITY_OBSERVATORY.md",
-      "bytes": 481,
+      "size": 481,
       "sha256": "f374c07c61bff6e2b172501263d0e95c61dc114022f8dcf6ca226ea7dfc0d1cd"
     },
     {
       "path": "docs/V270_UNIFIED_COUNTRY_REGIONAL_INTELLIGENCE_DOSSIERS.md",
-      "bytes": 1041,
+      "size": 1041,
       "sha256": "986998c78a5c179b7c14ef6819caf1c1fc4d1fb66ea20f332e38fb621db3c14e"
     },
     {
       "path": "docs/V280_ALERTS_MONITORING_LIVE_INTELLIGENCE_STREAMS.md",
-      "bytes": 1129,
+      "size": 1129,
       "sha256": "66467d97e599284a552c703fb7653cf1d52852cf6f027db50e3e2d8a6a07f128"
     },
     {
+      "path": "docs/V290_COMPARATIVE_INTELLIGENCE_SCENARIO_STUDIO.md",
+      "size": 665,
+      "sha256": "6c916861abfba4e3c3137b5c3fb995cd128120fe857c7bd2e9bf40410c34e4dd"
+    },
+    {
       "path": "docs/WORDPRESS_SKELETON_LOADER_COMPLETION_PATCH_V1182.md",
-      "bytes": 733,
+      "size": 733,
       "sha256": "31c2bb0f69dae40a4afa4f061e2e2e4683f35f6f07f494abc64c61e4b39194eb"
     },
     {
       "path": "render.yaml",
-      "bytes": 2373,
-      "sha256": "11bc823ea69b184aacfe81dea71360a8b132e8a6f23b067951f4ee6554e2a01a"
+      "size": 2600,
+      "sha256": "95e7ef1526fa98073fc1bae6208dbe72112a1792571a440fd7ad1a6230d3990b"
     },
     {
       "path": "scripts/push_site_intelligence_v0_1_0_to_github.sh",
-      "bytes": 933,
+      "size": 933,
       "sha256": "0fe6d2f61a4f6f276a76e5e3545f797f4f0b38c1387fdfe8be0e4094b02c311a"
     },
     {
       "path": "scripts/run_backend.sh",
-      "bytes": 238,
+      "size": 238,
       "sha256": "d8e57a3b3fe468a095114792d71f04e5a72f908132072de45e08341f0a7f1584"
     },
     {
       "path": "scripts/test_backend.sh",
-      "bytes": 193,
+      "size": 193,
       "sha256": "f122f73a9736a4efad0babf3a91f25c8be65c14902287b6dd8319fbe6a7df611"
     },
     {
       "path": "scripts/validate_release_v1_19_0.sh",
-      "bytes": 3883,
+      "size": 3883,
       "sha256": "015d48e2707bab67a3afd6c8c30cb13939f7e0ec040128c16015f9f084a94260"
     },
     {
       "path": "scripts/validate_release_v1_19_1.sh",
-      "bytes": 4705,
+      "size": 4705,
       "sha256": "5f7c432b20b498858418cf14956981f6faf39f6e79ec0a299f15e12a6edbec61"
     },
     {
       "path": "scripts/validate_release_v1_20_0.sh",
-      "bytes": 5469,
+      "size": 5469,
       "sha256": "b3ff13457f236e45da3d037f4c015a4d4c6af68eeb5f474d2d0cf5b8f799724f"
     },
     {
       "path": "scripts/validate_release_v1_20_1.sh",
-      "bytes": 3715,
+      "size": 3715,
       "sha256": "706174e9f6eb1bf277ba11fb2808ac282a96c96be3790c255cc3606affd8a12b"
     },
     {
       "path": "scripts/validate_release_v1_21_0.sh",
-      "bytes": 4628,
+      "size": 4628,
       "sha256": "102ed511a721829bd5324fc851ece74d322758a447a04cd785725bcc483dbe6f"
     },
     {
       "path": "scripts/validate_release_v1_22_0.sh",
-      "bytes": 5108,
+      "size": 5108,
       "sha256": "9e7279f4deb74e670e91a73637141d9266448c17a6eaa00425a0951300b639ed"
     },
     {
       "path": "scripts/validate_release_v1_23_0.sh",
-      "bytes": 5448,
+      "size": 5448,
       "sha256": "42e15b16a1870d5369a681c40aa92e82f143747347c3a2077bebd75fef5045b3"
     },
     {
       "path": "scripts/validate_release_v1_24_0.sh",
-      "bytes": 6061,
+      "size": 6061,
       "sha256": "cbf6e3200e6dc22248c9b60efc2747e066cca25800e6296a6948e548b5355c86"
     },
     {
       "path": "scripts/validate_release_v1_25_0.sh",
-      "bytes": 5472,
+      "size": 5472,
       "sha256": "4071067075e1bd6acf4dd317cf688b9a38e4af2f5609b5143e8c7041414e6c57"
     },
     {
       "path": "scripts/validate_release_v2_0_0.sh",
-      "bytes": 6567,
+      "size": 6567,
       "sha256": "94021e52fbc2a82d7409a0c6203c2dca80d013a73ba3a9a188b45f12c92c1bc7"
     },
     {
       "path": "scripts/validate_v210_release.py",
-      "bytes": 2361,
+      "size": 2361,
       "sha256": "01b5d33c1b510149334bb428e26bd3ad4f4c22e801a922080fbf08c4bcf10121"
     },
     {
       "path": "scripts/validate_v220_release.py",
-      "bytes": 2237,
+      "size": 2237,
       "sha256": "313dde9bd8a54a80ddac009d7fd09da5fc395b37cae8ae5a0a3af42e7c03e290"
     },
     {
       "path": "scripts/validate_v230_release.py",
-      "bytes": 2339,
+      "size": 2339,
       "sha256": "5081f1913e8e541a896b449be4d6c2afa21fe92d3aa4684b190d14c520b4830d"
     },
     {
       "path": "scripts/validate_v240_release.py",
-      "bytes": 2309,
+      "size": 2309,
       "sha256": "faee856b4bc75dd2e165d8d0000ff63e97339b9fe6360a1f92b40bc7cbb93edc"
     },
     {
       "path": "scripts/validate_v250_release.py",
-      "bytes": 2660,
+      "size": 2660,
       "sha256": "a3fc9b66755bfe8d98a21393e36ffa09421d119a8fb052410c678a84d925a224"
     },
     {
       "path": "scripts/validate_v260_release.py",
-      "bytes": 2364,
+      "size": 2364,
       "sha256": "d6371777b0dbbd0521f9819c0eaffc4f46dd28158d0293cf1b48806cf71481a6"
     },
     {
       "path": "scripts/validate_v270_release.py",
-      "bytes": 2381,
+      "size": 2381,
       "sha256": "1cc1f8cee9b499b717fe4e8b8f3c3a15e1e827cf528c202533eeff16e9c39f24"
     },
     {
       "path": "scripts/validate_v280_release.py",
-      "bytes": 2380,
+      "size": 2380,
       "sha256": "d1eaf87bdf8560b675e6f3d51194d18cb14350b2742fcc6a2b4008e6b4a7b12f"
     },
     {
+      "path": "scripts/validate_v290_release.py",
+      "size": 2416,
+      "sha256": "40e96d982d28a51ec75bbe1ac7e240f0eaf06fd153219a24c9b008af06f43ef6"
+    },
+    {
       "path": "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.css",
-      "bytes": 50500,
+      "size": 50500,
       "sha256": "6b669993421a439920289fb4e7357c612a83b00320674f66f1d99ae82932bf7f"
     },
     {
       "path": "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js",
-      "bytes": 202051,
+      "size": 202051,
       "sha256": "d9193eec80e95a1711e0a106d840122ef4b67fdb80adfd0d7e3ad48fa86a3653"
     },
     {
       "path": "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php",
-      "bytes": 259194,
-      "sha256": "700afb60df9335867dfa37eff7f87c8ba899767f88e61c2e1601c562a79ddb95"
+      "size": 260269,
+      "sha256": "a6ca156fccdc97c2a626e473a0da8a0f4f0d4ddf6f2d9c8761b0d8333dabfedd"
     }
   ]
 }

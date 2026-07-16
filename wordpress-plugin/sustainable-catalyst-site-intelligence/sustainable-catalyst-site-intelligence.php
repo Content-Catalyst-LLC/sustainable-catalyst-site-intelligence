@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 2.8.0
+ * Version: 2.9.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '2.8.0';
+    const VERSION = '2.9.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -4482,3 +4482,17 @@ add_shortcode('sc_alerts_monitoring_live_intelligence', 'scsi_alerts_monitoring_
 
 register_activation_hook(__FILE__, ['SC_Site_Intelligence_Plugin', 'activate']);
 new SC_Site_Intelligence_Plugin();
+
+
+// Site Intelligence v2.9.0 Comparative Intelligence and Scenario Studio shortcode
+if (!function_exists('scsi_comparative_scenario_studio_shortcode_v290')) {
+    function scsi_comparative_scenario_studio_shortcode_v290($atts = []) {
+        $atts = shortcode_atts(['height' => '1550'], $atts, 'sc_comparative_intelligence_scenario_studio');
+        $height = max(800, min(2400, intval($atts['height'])));
+        $backend = function_exists('scsi_backend_url') ? scsi_backend_url() : get_option('scsi_backend_url', '');
+        if (!$backend) return '<div class="scsi-notice">Site Intelligence backend is not configured.</div>';
+        $src = esc_url(rtrim($backend, '/') . '/app/?view=scenarios');
+        return '<div class="scsi-embed scsi-scenario-studio"><iframe title="Comparative Intelligence and Scenario Studio" src="' . $src . '" style="width:100%;height:' . esc_attr($height) . 'px;border:0" loading="lazy" allowfullscreen></iframe></div>';
+    }
+}
+add_shortcode('sc_comparative_intelligence_scenario_studio', 'scsi_comparative_scenario_studio_shortcode_v290');

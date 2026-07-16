@@ -1,10 +1,17 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.8.0 — Alerts, Monitoring, and Live Intelligence Streams
+**Current release:** v2.9.0 — Comparative Intelligence and Scenario Studio
 
 
 
 
+
+
+## v2.9.0 — Comparative Intelligence and Scenario Studio
+
+Site Intelligence v2.9.0 adds `/app/?view=scenarios` for multi-geography indicator baskets, compatibility review, catalog-based regional peers, transparent arithmetic scenarios, correlation review, and reproducible comparison packets. It does not silently normalize incompatible values, rank countries, forecast outcomes, infer causation, or require paid data services.
+
+WordPress embed: `[sc_comparative_intelligence_scenario_studio height="1550"]`.
 
 ## v2.8.0 — Alerts, Monitoring, and Live Intelligence Streams
 

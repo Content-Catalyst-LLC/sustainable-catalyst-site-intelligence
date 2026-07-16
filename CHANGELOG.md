@@ -1,3 +1,13 @@
+## 2.9.0 — Comparative Intelligence and Scenario Studio
+
+- Added multi-geography indicator baskets and explicit compatibility warnings.
+- Added catalog-based regional peer context without rankings.
+- Added transparent percentage and absolute scenarios over compatible published baselines.
+- Added correlation review with overlapping-period and no-causation safeguards.
+- Added reproducible JSON comparison packets with SHA-256 integrity digests.
+- Added `/app/?view=scenarios` and `[sc_comparative_intelligence_scenario_studio]`.
+- Preserved the free-data, no-fabrication, no-silent-normalization, no-ranking, and no-forecast architecture.
+
 ## 2.8.0 — Alerts, Monitoring, and Live Intelligence Streams
 
 - Added reconnectable public server-sent intelligence snapshots.
