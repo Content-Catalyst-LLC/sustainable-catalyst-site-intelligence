@@ -1,0 +1,10 @@
+{
+  "schema": "sc-site-intelligence-geography-compatibility/1.0",
+  "version": "2.16.0",
+  "compatibility_rules": [
+    {"id":"same-code-level-definition","status":"comparable","description":"Code, geographic level, and definition version match."},
+    {"id":"same-code-level-revised-definition","status":"review","description":"Code and level match but boundary or statistical definition versions differ."},
+    {"id":"different-level","status":"not-directly-comparable","description":"National, regional, urban, and local records must not be treated as interchangeable."},
+    {"id":"aggregate-versus-component","status":"review","description":"Aggregate areas require an explicit aggregation method and coverage disclosure."}
+  ]
+}

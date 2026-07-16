@@ -56,6 +56,7 @@ from .public_api_sources import (
 from .connector_operations_v2130 import ConnectorOperationsCenter
 from .historical_archive_v2140 import HistoricalArchiveCenter
 from .spatial_evidence_v2150 import SpatialEvidenceStudio
+from .statistical_harmonization_v2160 import StatisticalHarmonizationEngine
 from .public_live_connectors import (
     public_connector_status as build_public_connector_status,
     public_cache_status as build_public_cache_status,
@@ -2205,6 +2206,148 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown spatial record: {exc.args[0]}") from exc
     except ValueError as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+
+# Site Intelligence v2.16.0 — Statistical Harmonization and Comparable-Series Engine.
+def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
+    if not settings.statistical_harmonization_enabled:
+        raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
+    return StatisticalHarmonizationEngine(settings)
+
+
+@app.get("/public/harmonization")
+def public_harmonization_summary_endpoint(settings: Settings = Depends(get_settings)):
+    return _harmonization(settings).public_summary()
+
+
+@app.get("/public/harmonization/standards")
+def public_harmonization_standards_endpoint(settings: Settings = Depends(get_settings)):
+    return _harmonization(settings).standards()
+
+
+@app.get("/public/harmonization/methodology")
+def public_harmonization_methodology_endpoint(settings: Settings = Depends(get_settings)):
+    return _harmonization(settings).methodology()
+
+
+@app.get("/public/harmonization/series")
+def public_harmonization_series_endpoint(settings: Settings = Depends(get_settings)):
+    return _harmonization(settings).series(public=True)
+
+
+@app.get("/public/harmonization/series/{series_id}")
+def public_harmonization_series_detail_endpoint(
+    series_id: str, version_id: str = Query(default="", max_length=180), settings: Settings = Depends(get_settings)
+):
+    try:
+        return _harmonization(settings).series_detail(series_id, version_id, public=True)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown or non-public comparable series: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+
+@app.post("/public/harmonization/compare")
+def public_harmonization_compare_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings)):
+    try:
+        return _harmonization(settings).compare(request, public=True)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown or non-public comparable series: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/public/harmonization/export")
+def public_harmonization_export_endpoint(
+    series_id: str = Query(..., min_length=2, max_length=120),
+    version_id: str = Query(default="", max_length=180),
+    settings: Settings = Depends(get_settings),
+):
+    try:
+        return _harmonization(settings).export(series_id, version_id, public=True)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown or non-public comparable series: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+
+@app.get("/public/harmonization/diagnostics")
+def public_harmonization_diagnostics_endpoint(settings: Settings = Depends(get_settings)):
+    return _harmonization(settings).diagnostics(public=True)
+
+
+@app.get("/admin/harmonization/control-center")
+def admin_harmonization_control_center_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _harmonization(settings).control_center()
+
+
+@app.get("/admin/harmonization/series")
+def admin_harmonization_series_endpoint(
+    latest_only: bool = Query(default=True), settings: Settings = Depends(get_settings), _: None = Depends(require_token)
+):
+    return _harmonization(settings).series(latest_only=latest_only)
+
+
+@app.post("/admin/harmonization/series/register")
+def admin_harmonization_register_endpoint(
+    request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)
+):
+    try:
+        return _harmonization(settings).register_series(request)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/admin/harmonization/transform")
+def admin_harmonization_transform_endpoint(
+    request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)
+):
+    try:
+        return _harmonization(settings).transform(request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.post("/admin/harmonization/compare")
+def admin_harmonization_compare_endpoint(
+    request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)
+):
+    try:
+        return _harmonization(settings).compare(request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/admin/harmonization/export")
+def admin_harmonization_export_endpoint(
+    series_id: str = Query(..., min_length=2, max_length=120),
+    version_id: str = Query(default="", max_length=180),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    try:
+        return _harmonization(settings).export(series_id, version_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+
+@app.get("/admin/harmonization/workbench-handoff")
+def admin_harmonization_workbench_handoff_endpoint(
+    series_id: str = Query(..., min_length=2, max_length=120),
+    version_id: str = Query(default="", max_length=180),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    try:
+        return _harmonization(settings).workbench_handoff(series_id, version_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
 @app.get("/public/source-pages")

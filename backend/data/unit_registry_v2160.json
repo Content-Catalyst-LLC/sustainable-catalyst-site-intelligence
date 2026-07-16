@@ -1,0 +1,30 @@
+{
+  "schema": "sc-site-intelligence-unit-registry/1.0",
+  "version": "2.16.0",
+  "units": [
+    {"code":"count","label":"Count","dimension":"count","factor_to_base":1.0,"offset_to_base":0.0},
+    {"code":"ratio","label":"Ratio","dimension":"ratio","factor_to_base":1.0,"offset_to_base":0.0},
+    {"code":"percent","label":"Percent","dimension":"ratio","factor_to_base":0.01,"offset_to_base":0.0},
+    {"code":"index","label":"Index","dimension":"index","factor_to_base":1.0,"offset_to_base":0.0},
+    {"code":"m","label":"Metre","dimension":"length","factor_to_base":1.0,"offset_to_base":0.0},
+    {"code":"km","label":"Kilometre","dimension":"length","factor_to_base":1000.0,"offset_to_base":0.0},
+    {"code":"g","label":"Gram","dimension":"mass","factor_to_base":0.001,"offset_to_base":0.0},
+    {"code":"kg","label":"Kilogram","dimension":"mass","factor_to_base":1.0,"offset_to_base":0.0},
+    {"code":"t","label":"Metric tonne","dimension":"mass","factor_to_base":1000.0,"offset_to_base":0.0},
+    {"code":"J","label":"Joule","dimension":"energy","factor_to_base":1.0,"offset_to_base":0.0},
+    {"code":"kWh","label":"Kilowatt-hour","dimension":"energy","factor_to_base":3600000.0,"offset_to_base":0.0},
+    {"code":"C","label":"Degrees Celsius","dimension":"temperature","factor_to_base":1.0,"offset_to_base":273.15},
+    {"code":"K","label":"Kelvin","dimension":"temperature","factor_to_base":1.0,"offset_to_base":0.0},
+    {"code":"currency","label":"Currency value","dimension":"currency","factor_to_base":1.0,"offset_to_base":0.0}
+  ],
+  "currencies": [
+    {"code":"USD","label":"United States dollar"},
+    {"code":"EUR","label":"Euro"},
+    {"code":"GBP","label":"Pound sterling"},
+    {"code":"JPY","label":"Japanese yen"},
+    {"code":"KES","label":"Kenyan shilling"},
+    {"code":"GHS","label":"Ghanaian cedi"},
+    {"code":"INR","label":"Indian rupee"},
+    {"code":"BRL","label":"Brazilian real"}
+  ]
+}

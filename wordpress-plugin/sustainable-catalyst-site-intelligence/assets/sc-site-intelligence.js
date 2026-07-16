@@ -2599,6 +2599,7 @@
       'connector-operations': '/public-connector-operations',
       'temporal-intelligence': '/public-temporal-intelligence',
       'spatial-evidence': '/public-spatial-evidence',
+      'comparable-series': '/public-comparable-series',
       'cache-status': '/public-cache-status',
       'source-freshness': '/public-source-freshness',
       'connector-reliability': '/public-connector-reliability',

@@ -1,6 +1,22 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.15.0 — Geospatial Analysis and Spatial Evidence Studio
+**Current release:** v2.16.0 — Statistical Harmonization and Comparable-Series Engine
+
+## v2.16.0 — Statistical Harmonization and Comparable-Series Engine
+
+Site Intelligence v2.16.0 adds an explicit, auditable statistical transformation layer for public and administrative series. It registers raw source series with units, currencies, price bases, reporting frequencies, geographic definitions, observation periods, missing-data classes, and source methodology; applies only requested transformations; and preserves digest-linked lineage from the original values to every reviewed output.
+
+The engine supports dimensional unit conversion, per-capita normalization with supplied denominators, monthly and quarterly period alignment with declared aggregation, supplied-rate currency conversion, supplied-deflator constant-price adjustment, index rebasing, comparable-series diagnostics, raw-versus-transformed views, CSV/JSON exports, and read-only Workbench handoff packets. It does not silently impute values, select exchange rates, normalize geography, manufacture equivalence, create composite scores, or rank countries.
+
+Public workspace: `/app/?view=harmonization`
+
+Public endpoints: `/public/harmonization`, `/public/harmonization/standards`, `/public/harmonization/methodology`, `/public/harmonization/series`, `/public/harmonization/compare`, and `/public/harmonization/export`
+
+Private control center: `/admin/harmonization/control-center`
+
+Command-line utility: `python scripts/statistical_harmonization_v2160.py summary`
+
+WordPress shortcodes: `[sc_public_comparable_series]` and `[sc_statistical_harmonization_control_center]`
 
 ## v2.15.0 — Geospatial Analysis and Spatial Evidence Studio
 

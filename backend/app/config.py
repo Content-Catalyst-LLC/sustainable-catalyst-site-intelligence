@@ -245,6 +245,19 @@ class Settings(BaseSettings):
     spatial_evidence_max_radius_km: float = Field(default=5000.0, ge=0.1, le=20000.0)
     spatial_evidence_max_proximity_km: float = Field(default=5000.0, ge=0.1, le=20000.0)
 
+    # Site Intelligence v2.16.0 — Statistical Harmonization and Comparable-Series Engine.
+    # Source series, transformed series, and lineage receipts are writable runtime
+    # state and may be redirected to durable storage. Release registries remain immutable.
+    statistical_harmonization_enabled: bool = True
+    statistical_harmonization_root_path: str = "backend/data/statistical_harmonization_v2160"
+    statistical_harmonization_series_index_path: str = "backend/data/statistical_harmonization_v2160/series_index_v2160.jsonl"
+    statistical_harmonization_lineage_path: str = "backend/data/statistical_harmonization_v2160/transformation_lineage_v2160.jsonl"
+    statistical_harmonization_policy_path: str = "backend/data/statistical_harmonization_policy_v2160.json"
+    statistical_harmonization_unit_registry_path: str = "backend/data/unit_registry_v2160.json"
+    statistical_harmonization_geography_registry_path: str = "backend/data/geography_compatibility_registry_v2160.json"
+    statistical_harmonization_max_records: int = Field(default=10000, ge=100, le=100000)
+    statistical_harmonization_max_observations: int = Field(default=5000, ge=1, le=100000)
+
 
     # Sustainable Development Data Connectors v1.14.1.
     sustainable_development_connectors_enabled: bool = True

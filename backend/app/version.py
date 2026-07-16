@@ -1,4 +1,4 @@
-APP_VERSION = "2.15.0"
+APP_VERSION = "2.16.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Geospatial Analysis and Spatial Evidence Studio"
+RELEASE_NAME = "Statistical Harmonization and Comparable-Series Engine"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

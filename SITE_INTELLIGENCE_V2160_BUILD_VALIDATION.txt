@@ -1,0 +1,15 @@
+Site Intelligence v2.16.0 — Build Validation
+
+Backend tests: 442 passed
+Release contract: passed
+Python compilation: passed
+JavaScript syntax: passed
+Service-worker syntax: passed
+WordPress PHP syntax: passed
+JSON/webmanifest parsing: passed
+YAML parsing: passed when PyYAML is available
+HTTPX2/FastAPI TestClient preflight: passed with FastAPI 0.139.1, Starlette 1.3.1, and HTTPX2 2.7.0
+Immutable release manifest: 398 files verified before and after testing
+Installer rehearsal: completed through packaging and clean local commit in a disposable Git repository with pushing disabled
+Runtime state excluded: harmonization, historical archive, spatial evidence, connector state/history/quarantine, country cache, Platform Core queue
+Git authentication: noninteractive GitHub CLI or SSH

@@ -1,0 +1,43 @@
+{
+  "schema": "sc-site-intelligence-release-manifest/1.0",
+  "release": "2.16.0",
+  "title": "Statistical Harmonization and Comparable-Series Engine",
+  "base_release": "2.15.0",
+  "harmonization_schema": "sc-site-intelligence-statistical-harmonization/1.0",
+  "series_schema": "sc-site-intelligence-comparable-series/1.0",
+  "lineage_schema": "sc-site-intelligence-transformation-lineage/1.0",
+  "comparability_schema": "sc-site-intelligence-comparability-diagnostic/1.0",
+  "digest_algorithm": "sha256",
+  "silent_normalization": false,
+  "silent_imputation": false,
+  "implicit_exchange_rates": false,
+  "automatic_rankings": false,
+  "raw_values_preserved": true,
+  "paid_database_required": false,
+  "persistent_disk_recommended": true,
+  "public_endpoints": [
+    "/public/harmonization",
+    "/public/harmonization/standards",
+    "/public/harmonization/methodology",
+    "/public/harmonization/series",
+    "/public/harmonization/compare",
+    "/public/harmonization/export",
+    "/public/harmonization/diagnostics"
+  ],
+  "private_endpoints": [
+    "/admin/harmonization/control-center",
+    "/admin/harmonization/series",
+    "/admin/harmonization/series/register",
+    "/admin/harmonization/transform",
+    "/admin/harmonization/compare",
+    "/admin/harmonization/export",
+    "/admin/harmonization/workbench-handoff"
+  ],
+  "shortcodes": [
+    "[sc_public_comparable_series]",
+    "[sc_statistical_harmonization_control_center]"
+  ],
+  "runtime_paths_excluded_from_release": [
+    "backend/data/statistical_harmonization_v2160/"
+  ]
+}

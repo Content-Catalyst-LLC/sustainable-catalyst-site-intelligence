@@ -1,0 +1,30 @@
+{
+  "schema": "sc-site-intelligence-statistical-harmonization/1.0",
+  "version": "2.16.0",
+  "title": "Statistical Harmonization and Comparable-Series Engine",
+  "capabilities": [
+    "Explicit unit conversion with dimensional checks",
+    "Per-capita and population-normalized transformations with supplied denominators",
+    "Reporting-period alignment with explicit sum, mean, or latest aggregation",
+    "Currency conversion using supplied, cited period-specific rates",
+    "Constant-price adjustment using supplied deflators and declared base years",
+    "Index rebasing with a visible base period",
+    "Geographic-definition compatibility checks",
+    "Missing-data classification without silent imputation",
+    "Raw-versus-transformed views and reproducible transformation lineage",
+    "Comparable-series diagnostics and Workbench handoff packets"
+  ],
+  "boundaries": [
+    "No silent normalization, unit conversion, inflation adjustment, or missing-value imputation.",
+    "No proprietary country ranking or composite score is created.",
+    "Currency and price transformations require explicit rates, deflators, sources, and price-basis metadata.",
+    "Geographic similarity does not establish identical statistical coverage or methodology.",
+    "Transformation receipts support research and review; they do not certify official statistical equivalence."
+  ],
+  "silent_normalization": false,
+  "silent_imputation": false,
+  "automatic_rankings": false,
+  "implicit_exchange_rates": false,
+  "raw_values_preserved": true,
+  "human_review_required": true
+}

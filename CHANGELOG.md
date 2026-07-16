@@ -1,3 +1,14 @@
+## 2.16.0 — Statistical Harmonization and Comparable-Series Engine
+
+- Added source-preserving statistical series registration with explicit units, currencies, price bases, frequencies, geography definitions, missing-data classes, and methodology.
+- Added dimensional unit conversion, denominator-aware per-capita transformation, explicit period aggregation, supplied-rate currency conversion, supplied-deflator constant-price adjustment, and index rebasing.
+- Added raw-versus-transformed views and SHA-256-linked transformation lineage receipts.
+- Added comparable-series diagnostics for units, currency, price basis, frequency, geography, definition versions, and observed-period overlap.
+- Added JSON and CSV evidence exports plus read-only Workbench handoff packets.
+- Added `/app/?view=harmonization`, `[sc_public_comparable_series]`, and the administrator-only `[sc_statistical_harmonization_control_center]`.
+- Prohibited silent normalization, hidden imputation, implicit exchange rates, composite scores, rankings, and unsupported equivalence claims.
+- Kept the engine dependency-light and file-backed, with writable series and lineage state excluded from immutable releases.
+
 ## 2.15.0 — Geospatial Analysis and Spatial Evidence Studio
 
 - Added validated WGS84 bounding-box, polygon, and radius areas of interest.
