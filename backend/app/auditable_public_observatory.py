@@ -98,6 +98,12 @@ PUBLIC_WORKSPACES: list[dict[str, str]] = [
         "summary": "Publish versioned read-only records, portable iframe manifests, and public institutional presentation metadata while preserving source attribution and credential boundaries.",
     },
     {
+        "id": "experience",
+        "title": "Offline, Mobile, Accessibility, and Performance",
+        "route": "/app/?view=experience",
+        "summary": "Inspect the installable application shell, browser-local offline behavior, low-bandwidth controls, accessibility contracts, and first-party performance budgets.",
+    },
+    {
         "id": "earth",
         "title": "Earth Observation Studio",
         "route": "/app/?view=earth",
@@ -297,6 +303,20 @@ AUDIT_ARTIFACTS: list[dict[str, Any]] = [
         ],
     },
     {
+        "id": "offline-mobile-accessibility-performance",
+        "title": "Offline, Mobile, Accessibility, and Performance",
+        "artifact_type": "workspace",
+        "route": "/app/?view=experience",
+        "schema": "sc-site-intelligence-offline-mobile-accessibility-performance/1.0",
+        "source_ids": [],
+        "methodology_ids": ["delivery-states", "cache-behavior", "missing-values"],
+        "verification_level": "application-shell-accessibility-and-budget-contract-linked",
+        "limitations": [
+            "Offline caches can become stale and external maps or imagery may still require a network connection.",
+            "Automated accessibility diagnostics are not a formal WCAG certification or a substitute for assistive-technology review.",
+        ],
+    },
+    {
         "id": "earth-observation",
         "title": "Earth Observation Studio",
         "artifact_type": "workspace",
@@ -407,6 +427,7 @@ RELEASE_LEDGER = [
     {"version": "2.9.0", "title": "Comparative Intelligence and Scenario Studio", "audit_contribution": "Multi-geography indicator alignment, explicit compatibility warnings, transparent arithmetic scenarios, correlation review, peer context, reproducible packets, and no-ranking/no-forecast safeguards."},
     {"version": "2.10.0", "title": "Research Paths, Saved Investigations, and Briefing Workflows", "audit_contribution": "Browser-local investigations, explicit evidence classes, notes, checkpoints, saved public views, briefing packet integrity, structured product handoffs, and no hosted profile or automatic claim generation."},
     {"version": "2.11.0", "title": "Public Data API, Embeds, and Institutional Integration", "audit_contribution": "Versioned read-only API discovery, sanitized workspace records, portable iframe manifests, institutional presentation metadata, credential non-disclosure, and source-preserving integration boundaries."},
+    {"version": "2.12.0", "title": "Offline, Mobile, Accessibility, and Performance", "audit_contribution": "Installable application shell, bounded browser-local cache plan, offline fallback, low-bandwidth controls, accessibility contracts, first-party performance budgets, and explicit no-certification/no-freshness-guarantee boundaries."},
 ]
 
 

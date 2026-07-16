@@ -1,11 +1,20 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.11.0 — Public Data API, Embeds, and Institutional Integration
+**Current release:** v2.12.0 — Offline, Mobile, Accessibility, and Performance
 
 
 
 
 
+
+
+## v2.12.0 — Offline, Mobile, Accessibility, and Performance
+
+Site Intelligence v2.12.0 adds an installable web application manifest, browser service worker, offline fallback page, bounded browser-local cache policy, low-bandwidth controls, mobile-safe delivery, accessibility contracts, first-party performance budgets, and a dedicated `/app/?view=experience` workspace. Cached records retain stale-state warnings, external maps and imagery may remain network-dependent, and automated diagnostics do not claim formal accessibility certification.
+
+Public route: `/app/?view=experience`
+
+WordPress shortcode: `[sc_offline_mobile_accessibility_performance height="1500"]`
 
 ## v2.11.0 — Public Data API, Embeds, and Institutional Integration
 

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 2.11.0
+ * Version: 2.12.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '2.11.0';
+    const VERSION = '2.12.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -4527,7 +4527,7 @@ add_shortcode('sc_public_data_api_integration', 'scsi_public_data_api_integratio
 if (!function_exists('scsi_site_intelligence_embed_shortcode_v2110')) {
     function scsi_site_intelligence_embed_shortcode_v2110($atts = []) {
         $atts = shortcode_atts(['view' => 'overview', 'height' => '900', 'theme' => 'system', 'chrome' => 'compact', 'institution' => ''], $atts, 'sc_site_intelligence_embed');
-        $allowed_views = ['overview','global','economics','law','science','humanitarian','resources','dossiers','alerts','scenarios','research','integration','earth','country','events','compare','thematic','briefing','sources','saved','observatory','launch'];
+        $allowed_views = ['overview','global','economics','law','science','humanitarian','resources','dossiers','alerts','scenarios','research','integration','experience','earth','country','events','compare','thematic','briefing','sources','saved','observatory','launch'];
         $view = sanitize_key($atts['view']);
         if (!in_array($view, $allowed_views, true)) $view = 'overview';
         $theme = in_array($atts['theme'], ['system','light','dark'], true) ? $atts['theme'] : 'system';
@@ -4543,3 +4543,16 @@ if (!function_exists('scsi_site_intelligence_embed_shortcode_v2110')) {
 }
 add_shortcode('sc_site_intelligence_embed', 'scsi_site_intelligence_embed_shortcode_v2110');
 
+
+
+if (!function_exists('scsi_offline_mobile_accessibility_performance_shortcode_v2120')) {
+    function scsi_offline_mobile_accessibility_performance_shortcode_v2120($atts = []) {
+        $atts = shortcode_atts(['height' => '1500'], $atts, 'sc_offline_mobile_accessibility_performance');
+        $backend = get_option('scsi_backend_url', '');
+        if (!$backend) return '<div class="scsi-notice">Configure the Site Intelligence backend URL before embedding Offline, Mobile, Accessibility, and Performance.</div>';
+        $height = max(700, min(2400, intval($atts['height'])));
+        $src = esc_url(rtrim($backend, '/') . '/app/?view=experience');
+        return '<div class="scsi-embed scsi-offline-experience"><iframe title="Offline, Mobile, Accessibility, and Performance" src="' . $src . '" style="width:100%;height:' . esc_attr($height) . 'px;border:0" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="clipboard-write; fullscreen"></iframe></div>';
+    }
+}
+add_shortcode('sc_offline_mobile_accessibility_performance', 'scsi_offline_mobile_accessibility_performance_shortcode_v2120');

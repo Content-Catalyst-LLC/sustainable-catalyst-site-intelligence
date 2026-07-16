@@ -29,6 +29,8 @@
     heightFrame=requestAnimationFrame(()=>{heightFrame=0;window.parent?.postMessage({type:"scsi-height",height:Math.max(document.body.scrollHeight,document.documentElement.scrollHeight)},"*")});
   }
   const reducedMotion=window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches===true;
+  if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("/app/service-worker.js",{scope:"/app/"}).catch(()=>{}),{once:true})}
+  if(navigator.connection?.saveData||localStorage.getItem("scsi_experience_v2120")?.includes('"lowBandwidth":true'))document.documentElement.dataset.lowBandwidth="1";
   let html2CanvasPromise=null;
   function loadScriptOnce(src,globalName){
     if(globalName&&typeof window[globalName]==="function")return Promise.resolve(window[globalName]);
@@ -48,7 +50,7 @@
   }
 
   const state = {map:null,base:null,imagery:null,markers:null,heat:null,layers:null,events:null,country:"KEN",route:"overview"};
-  const APP_VERSION="2.11.0";
+  const APP_VERSION="2.12.0";
   const SAVED_VIEW_SCHEMA="sc-saved-view/1.0";
   const SAVED_VIEW_STORAGE_KEY="sc_site_intelligence_saved_views_v1";
   const SAVED_VIEW_LIMIT=50;
@@ -157,6 +159,7 @@
       scenarios:["COMPARATIVE INTELLIGENCE AND SCENARIO STUDIO","Compare evidence and test assumptions","Build multi-geography indicator baskets, inspect compatibility, apply transparent arithmetic scenarios, review correlation, and export reproducible packets without rankings or forecasts."],
       research:["RESEARCH PATHS, SAVED INVESTIGATIONS, AND BRIEFING WORKFLOWS","Organize evidence into reviewable research","Create browser-local investigations, capture evidence and public views, preserve notes and checkpoints, and export briefing or product handoff packets without a hosted profile."],
       integration:["PUBLIC DATA API, EMBEDS, AND INSTITUTIONAL INTEGRATION","Reuse public intelligence safely","Discover versioned read-only endpoints, portable embeds, and institutional presentation metadata while preserving attribution and credentials."],
+      experience:["OFFLINE, MOBILE, ACCESSIBILITY, AND PERFORMANCE","Resilient public intelligence delivery","Install the application shell, reduce network demand, inspect accessibility contracts, and review first-party performance budgets without a hosted profile."],
       observatory:["AUDITABLE PUBLIC OBSERVATORY","Evidence, lineage, and integrity","Inspect registered public evidence records, source and methodology lineage, canonical digests, release history, and verification boundaries."],
       launch:["PUBLIC LAUNCH AND PORTFOLIO","Site Intelligence","Explore the public product, technical architecture, responsible-use boundaries, and launch materials."],
       overview:["LIVE INTELLIGENCE WORKSPACE","Climate and Human Vulnerability","Satellite context, natural events, environmental pressure, and country evidence in one navigable view."],
@@ -1363,6 +1366,7 @@
     if(route!=="scenarios")window.SCScenariosV290?.close?.();
     if(route!=="research")window.SCResearchV2100?.close?.();
     if(route!=="integration")window.SCIntegrationV2110?.close?.();
+    if(route!=="experience")window.SCExperienceV2120?.close?.();
     if(route==="global"){
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
       closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
@@ -1439,6 +1443,13 @@
       closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
       closePublicLaunchPortfolio();closeAuditablePublicObservatory();
       await window.SCIntegrationV2110?.open?.();return;
+    }
+    if(route==="experience"){
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
+      closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
+      closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
+      closePublicLaunchPortfolio();closeAuditablePublicObservatory();
+      await window.SCExperienceV2120?.open?.();return;
     }
     if(route!=="launch")closePublicLaunchPortfolio();
     if(route!=="observatory")closeAuditablePublicObservatory();

@@ -35,6 +35,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         {"id": "comparative_scenario_studio", "label": "Comparative Intelligence and Scenario Studio is available", "status": "pass", "detail": "Multi-geography comparison, compatibility warnings, transparent arithmetic scenarios, peer context, correlation review, and reproducible packets are available without rankings or forecasts.", "action": "Verify /app/?view=scenarios, run a comparison, apply a transparent adjustment, review a correlation, and export a packet."},
         {"id": "research_workflows", "label": "Research Paths and Briefing Workflows are available", "status": "pass", "detail": "Browser-local investigations, evidence sets, notes, checkpoints, briefing packets, and structured handoffs are available without hosted profiles.", "action": "Verify /app/?view=research, create an investigation, capture evidence, export JSON, and generate a briefing packet."},
         {"id": "public_data_api_integration", "label": "Public Data API, Embeds, and Institutional Integration are available", "status": "pass", "detail": "Versioned read-only endpoints, workspace manifests, sanitized record collections, portable embeds, and public institutional presentation metadata are available without provider credential exposure.", "action": "Verify /app/?view=integration, /api/public/v1/catalog, one records endpoint, and a generated embed manifest."},
+        {"id": "offline_mobile_accessibility_performance", "label": "Offline, mobile, accessibility, and performance controls are available", "status": "pass", "detail": "The installable application shell, offline fallback, browser-local low-bandwidth preference, accessibility contracts, and public first-party performance budgets are available without server-side user tracking.", "action": "Verify /app/?view=experience, /app/manifest.webmanifest, /app/service-worker.js, and /public/offline-experience/diagnostics."},
         {"id": "platform_core", "label": "Platform Core remains optional and free-source governed", "status": "pass", "detail": "Public routes degrade cleanly and do not require a paid provider or expose Core credentials.", "action": "Configure only the scoped Core public-read key in the Site Intelligence backend."},
         {"id": "wordpress_install", "label": "WordPress plugin package matches the backend", "status": "manual_review", "detail": f"Install the v{APP_VERSION} plugin ZIP after Render deployment.", "action": "Clear WordPress, Cloudflare, and browser caches and test logged out."},
         {"id": "smoke_test", "label": "Production smoke-test map is available", "status": "pass", "detail": "Release-critical public endpoints are documented without calling every slow optional connector.", "action": "Run the smoke-test endpoint after deployment."},
@@ -52,7 +53,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Checklist",
         "summary": RELEASE_NAME,
-        "release_stage": "v2.11.0_public_data_api_embeds_institutional_integration",
+        "release_stage": "v2.12.0_offline_mobile_accessibility_performance",
         "status": "launch_ready_with_manual_review" if counts["fail"] == 0 else "needs_fix",
         "score": score,
         "counts": counts,
@@ -98,11 +99,11 @@ def release_public_summary(settings: Settings) -> Dict[str, Any]:
 
 def release_metadata() -> Dict[str, str]:
     return {
-        "seo_title": "Site Intelligence: Public Data API, Embeds, and Institutional Integration",
+        "seo_title": "Site Intelligence: Offline, Mobile, Accessibility, and Performance",
         "page_title": "Site Intelligence",
-        "excerpt": "Sustainable Catalyst Site Intelligence now exposes a versioned read-only public API, portable embed manifests, and institutional presentation metadata while preserving source attribution and credential boundaries.",
-        "meta_description": "Reuse source-aware Site Intelligence records through versioned public endpoints, portable embeds, and institutional integration metadata without exposing provider credentials.",
-        "social_description": "Versioned public data endpoints, portable Site Intelligence embeds, and source-preserving institutional integration.",
+        "excerpt": "Sustainable Catalyst Site Intelligence now supports an installable application shell, browser-local offline fallback, low-bandwidth controls, accessibility contracts, and public performance budgets.",
+        "meta_description": "Use Site Intelligence with offline fallback, mobile-safe navigation, accessibility-focused delivery, low-bandwidth controls, and transparent first-party performance budgets.",
+        "social_description": "Installable, mobile-safe, accessibility-focused Site Intelligence with offline fallback and transparent performance budgets.",
     }
 
 
@@ -125,6 +126,9 @@ def smoke_test(settings: Settings) -> Dict[str, Any]:
         {"path": "/api/public/v1/catalog", "scope": "public", "critical": True, "expected": "versioned public workspace and format catalog"},
         {"path": "/api/public/v1/workspaces/economics/records?limit=5", "scope": "public", "critical": True, "expected": "sanitized public records or explicit empty integration state"},
         {"path": "/api/public/v1/embed?view=economics&chrome=compact", "scope": "public", "critical": True, "expected": "portable read-only iframe manifest"},
+        {"path": "/public/offline-experience", "scope": "public", "critical": True, "expected": "offline, mobile, accessibility, and performance workspace profile"},
+        {"path": "/public/offline-experience/diagnostics", "scope": "public", "critical": True, "expected": "public-safe PWA, cache, accessibility, and performance diagnostics"},
+        {"path": "/app/manifest.webmanifest", "scope": "public", "critical": True, "expected": "installable application manifest"},
         {"path": "/public/economics-sustainability", "scope": "public", "critical": True, "expected": "economics workspace profile and Core state"},
         {"path": "/public/economics-sustainability/records?limit=10", "scope": "public", "critical": True, "expected": "sanitized official economic records or explicit empty state"},
         {"path": "/public/international-law-observatory", "scope": "public", "critical": True, "expected": "international-law workspace profile and Core state"},
@@ -182,7 +186,7 @@ def release_status(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Status",
         "summary": RELEASE_NAME,
-        "release_stage": "v2.11.0_public_data_api_embeds_institutional_integration",
+        "release_stage": "v2.12.0_offline_mobile_accessibility_performance",
         "release_status": checklist["status"],
         "release_score": checklist["score"],
         "public_shortcode": "[sc_site_intelligence_app height=\"1000\"]",

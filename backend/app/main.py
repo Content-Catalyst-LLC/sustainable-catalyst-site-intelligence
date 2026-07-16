@@ -336,7 +336,12 @@ async def public_experience_headers(request, call_next):
     response.headers.setdefault("Vary", "Accept-Encoding")
 
     path = request.url.path
-    if path.startswith("/app/assets/"):
+    if path == "/app/service-worker.js":
+        response.headers.setdefault("Cache-Control", "no-cache, no-store, must-revalidate")
+        response.headers.setdefault("Service-Worker-Allowed", "/app/")
+    elif path in {"/app/manifest.webmanifest", "/app/offline.html"}:
+        response.headers.setdefault("Cache-Control", "public, max-age=300, stale-while-revalidate=86400")
+    elif path.startswith("/app/assets/"):
         response.headers.setdefault("Cache-Control", "public, max-age=300, stale-while-revalidate=86400")
     elif path == "/app" or path.startswith("/app/"):
         response.headers.setdefault("Cache-Control", "no-cache")
@@ -4597,11 +4602,50 @@ def public_data_api_diagnostics(settings: Settings = Depends(get_settings)):
     from .public_data_api_embeds_v2110 import build_diagnostics
     return build_diagnostics(settings)
 
+
+# Site Intelligence v2.12.0 — Offline, Mobile, Accessibility, and Performance.
+@app.get("/public/offline-experience")
+def offline_experience(settings: Settings = Depends(get_settings)):
+    from .offline_mobile_accessibility_performance_v2120 import build_overview
+    return build_overview(settings)
+
+@app.get("/public/offline-experience/cache-plan")
+def offline_experience_cache_plan(settings: Settings = Depends(get_settings)):
+    from .offline_mobile_accessibility_performance_v2120 import build_cache_plan
+    return build_cache_plan(settings)
+
+@app.get("/public/offline-experience/accessibility")
+def offline_experience_accessibility(settings: Settings = Depends(get_settings)):
+    from .offline_mobile_accessibility_performance_v2120 import build_accessibility
+    return build_accessibility(settings)
+
+@app.get("/public/offline-experience/performance")
+def offline_experience_performance(settings: Settings = Depends(get_settings)):
+    from .offline_mobile_accessibility_performance_v2120 import build_performance
+    return build_performance(settings)
+
+@app.get("/public/offline-experience/diagnostics")
+def offline_experience_diagnostics(settings: Settings = Depends(get_settings)):
+    from .offline_mobile_accessibility_performance_v2120 import build_diagnostics
+    return build_diagnostics(settings)
+
 # Site Intelligence standalone public application.
 from pathlib import Path as _Path
 PUBLIC_APP_DIR = _Path(__file__).resolve().parent.parent / "public_app"
 if PUBLIC_APP_DIR.exists():
     app.mount("/app/assets", StaticFiles(directory=str(PUBLIC_APP_DIR / "assets")), name="site-intelligence-app-assets")
+
+    @app.get("/app/manifest.webmanifest", include_in_schema=False)
+    def standalone_manifest():
+        return FileResponse(str(PUBLIC_APP_DIR / "manifest.webmanifest"), media_type="application/manifest+json")
+
+    @app.get("/app/service-worker.js", include_in_schema=False)
+    def standalone_service_worker():
+        return FileResponse(str(PUBLIC_APP_DIR / "service-worker.js"), media_type="application/javascript")
+
+    @app.get("/app/offline.html", include_in_schema=False)
+    def standalone_offline_page():
+        return FileResponse(str(PUBLIC_APP_DIR / "offline.html"), media_type="text/html")
 
     @app.get("/app", include_in_schema=False)
     @app.get("/app/", include_in_schema=False)

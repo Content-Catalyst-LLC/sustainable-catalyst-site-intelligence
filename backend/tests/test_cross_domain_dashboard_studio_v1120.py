@@ -8,7 +8,7 @@ def test_dashboard_directory_and_manifest():
     response = client.get('/public/dashboard-studio')
     assert response.status_code == 200
     body = response.json()
-    assert body['version'] == '2.11.0'
+    assert body['version'] == '2.12.0'
     assert len(body['dashboards']) >= 4
     assert client.get('/public/dashboard-studio/manifest').status_code == 200
 

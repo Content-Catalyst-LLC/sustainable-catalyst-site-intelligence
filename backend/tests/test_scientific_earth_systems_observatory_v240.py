@@ -192,7 +192,7 @@ def test_public_interface_wordpress_and_release_contract():
     assert 'id="scienceStudio"' in html
     assert "SCScienceV240" in js
     assert ".science-studio" in css
-    assert 'const APP_VERSION="2.11.0"' in app_js
-    assert "Version: 2.11.0" in php
+    assert 'const APP_VERSION="2.12.0"' in app_js
+    assert "Version: 2.12.0" in php
     assert "sc_scientific_earth_systems_observatory" in php
     assert "No silent scientific inference" in html

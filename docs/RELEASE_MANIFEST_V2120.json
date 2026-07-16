@@ -1,0 +1,36 @@
+{
+  "version": "2.12.0",
+  "release": "Offline, Mobile, Accessibility, and Performance",
+  "route": "/app/?view=experience",
+  "shortcodes": [
+    "[sc_offline_mobile_accessibility_performance height=\"1500\"]",
+    "[sc_site_intelligence_embed view=\"experience\" height=\"1000\"]"
+  ],
+  "public_endpoints": [
+    "/public/offline-experience",
+    "/public/offline-experience/cache-plan",
+    "/public/offline-experience/accessibility",
+    "/public/offline-experience/performance",
+    "/public/offline-experience/diagnostics"
+  ],
+  "pwa": {
+    "manifest": "/app/manifest.webmanifest",
+    "service_worker": "/app/service-worker.js",
+    "offline_fallback": "/app/offline.html",
+    "scope": "/app/"
+  },
+  "offline_storage": "browser-local",
+  "offline_freshness_guaranteed": false,
+  "accessibility_target": "WCAG 2.2 Level AA target; not a third-party certification",
+  "accessibility_certification": "none",
+  "server_user_tracking": false,
+  "paid_api_required": false,
+  "workspace_count": 21,
+  "auditable_artifact_count": 20,
+  "performance_budgets": {
+    "first_party_javascript_bytes": 260000,
+    "first_party_css_bytes": 100000,
+    "application_html_bytes": 140000,
+    "first_party_shell_bytes": 500000
+  }
+}

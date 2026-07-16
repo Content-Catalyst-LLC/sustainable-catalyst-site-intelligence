@@ -1,3 +1,13 @@
+## 2.12.0 — Offline, Mobile, Accessibility, and Performance
+
+- Added an installable web application manifest and browser service worker.
+- Added a network-first navigation strategy with an explicit offline fallback page.
+- Added bounded browser-local JSON and application-shell caching with user clear controls.
+- Added browser-local low-bandwidth mode and Save-Data detection.
+- Added public accessibility, performance-budget, cache-plan, and diagnostics endpoints.
+- Added the `/app/?view=experience` workspace and WordPress embed shortcode.
+- Preserved explicit stale-state, no-certification, no-freshness-guarantee, and external-tile limitations.
+
 ## 2.11.0 — Public Data API, Embeds, and Institutional Integration
 
 - Added the versioned read-only `/api/public/v1` namespace.

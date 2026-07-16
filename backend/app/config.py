@@ -184,6 +184,15 @@ class Settings(BaseSettings):
     institution_contact: str = ""
     institution_accent: str = "#8b1e3f"
 
+    # Site Intelligence v2.12.0 — Offline, Mobile, Accessibility, and Performance.
+    # Offline data and preferences remain browser-local. Cached responses must
+    # retain stale-state labels and never become a substitute for live sources.
+    offline_experience_enabled: bool = True
+    service_worker_enabled: bool = True
+    offline_cache_max_entries: int = Field(default=120, ge=20, le=500)
+    offline_cache_ttl_hours: int = Field(default=24, ge=1, le=168)
+    low_bandwidth_default: bool = False
+
 
     # Sustainable Development Data Connectors v1.14.1.
     sustainable_development_connectors_enabled: bool = True

@@ -5,8 +5,12 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="dark light">
   <meta name="theme-color" content="#111111">
-  <title>Sustainable Catalyst Site Intelligence | Public Data API, Embeds, and Institutional Integration</title>
-  <meta name="description" content="Source-aware live intelligence streams, browser-local alert rules, source monitoring, country dossiers, economics, law, science, humanitarian evidence, and resource systems.">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="/app/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/app/assets/icon-192.png">
+  <title>Sustainable Catalyst Site Intelligence | Offline, Mobile, Accessibility, and Performance</title>
+  <meta name="description" content="Installable, mobile-safe, accessibility-focused Site Intelligence with offline fallback, low-bandwidth controls, and transparent performance budgets.">
   <meta property="og:title" content="Sustainable Catalyst Site Intelligence">
   <meta property="og:description" content="Public evidence, source lineage, Earth observation, country intelligence, live events, and verifiable research paths.">
   <meta property="og:type" content="website">
@@ -27,6 +31,7 @@
   <link rel="stylesheet" href="/app/assets/scenarios-v290.css?v=2.9.0">
   <link rel="stylesheet" href="/app/assets/research-v2100.css?v=2.10.0">
   <link rel="stylesheet" href="/app/assets/integration-v2110.css?v=2.11.0">
+  <link rel="stylesheet" href="/app/assets/experience-v2120.css?v=2.12.0">
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to intelligence workspace</a>
@@ -80,6 +85,7 @@
         <button class="nav-item" type="button" data-route="scenarios"><span>Scenarios</span><small>Compare and explore</small></button>
         <button class="nav-item" type="button" data-route="research"><span>Research paths</span><small>Investigations and briefs</small></button>
         <button class="nav-item" type="button" data-route="integration"><span>API &amp; embeds</span><small>Institutional integration</small></button>
+        <button class="nav-item" type="button" data-route="experience"><span>Offline &amp; access</span><small>Mobile and performance</small></button>
         <button class="nav-item" type="button" data-route="earth"><span>Earth</span><small>Satellite comparison</small></button>
         <button class="nav-item" type="button" data-route="country"><span>Country</span><small>Place-based evidence</small></button>
         <button class="nav-item" type="button" data-route="events"><span>Events</span><small>Live event intelligence</small></button>
@@ -167,13 +173,13 @@
           </div>
           <div class="launch-release-card" aria-label="Public release status">
             <span>PUBLIC RELEASE</span>
-            <strong id="launchPortfolioVersion">v2.3.0</strong>
+            <strong id="launchPortfolioVersion">v2.12.0</strong>
             <small>Source-aware observatory · MIT licensed</small>
           </div>
         </div>
 
         <div class="launch-proof-grid" aria-label="Portfolio summary">
-          <article><span>Research workspaces</span><strong id="launchWorkspaceCount">10</strong><small>One coherent public application</small></article>
+          <article><span>Research workspaces</span><strong id="launchWorkspaceCount">21</strong><small>One coherent public application</small></article>
           <article><span>Evidence model</span><strong>Source-aware</strong><small>Dates, units, states, and limits visible</small></article>
           <article><span>Persistence</span><strong>Browser-local</strong><small>No hosted user-profile requirement</small></article>
           <article><span>Platform Core</span><strong>Optional</strong><small>Public reading remains independent</small></article>
@@ -1159,6 +1165,20 @@
         <section class="integration-boundaries"><article><p class="eyebrow">READ ONLY</p><h3>No provider credentials</h3><p>Published endpoints expose sanitized public records and never reveal upstream API keys, private configuration, or raw internal ingestion metadata.</p></article><article><p class="eyebrow">SOURCE PRESERVING</p><h3>Branding does not rewrite evidence</h3><p>Institutional presentation settings cannot alter source attribution, licenses, dates, units, quality states, or methodological warnings.</p></article><article><p class="eyebrow">NO USER TRACKING</p><h3>Portable public views</h3><p>Embed manifests do not create a Site Intelligence account or hosted research profile. Local browser features remain local unless explicitly exported.</p></article></section>
       </section>
 
+
+      <section id="offlineExperienceStudio" class="offline-experience-studio" hidden aria-busy="false">
+        <div class="experience-hero">
+          <article class="experience-card"><p class="eyebrow">OFFLINE · MOBILE · ACCESSIBILITY · PERFORMANCE</p><h2>Resilient public intelligence</h2><p id="experienceSummary">Install the application shell, reduce network demand, inspect accessibility contracts, and review first-party performance budgets without creating a hosted user profile.</p><div class="experience-actions"><button id="experienceInstall" class="earth-primary-button" type="button">Installation help</button><button id="experienceClearCache" class="ghost-button" type="button">Clear offline cache</button></div><p id="experienceInstallHelp" class="experience-note" hidden>Use the browser’s Install App or Add to Home Screen command when it is available.</p></article>
+          <article class="experience-status-card"><span id="experienceConnectionStatus" class="experience-status">Checking connection</span><p>Release <strong id="experienceVersion">v2.12.0</strong></p><p>PWA shell <strong id="experiencePwaState">Checking</strong></p><p>First-party shell <strong id="experienceShellBytes" class="experience-metric">—</strong> bytes</p><p>Cache cap <strong id="experienceCacheEntries">—</strong> entries</p></article>
+        </div>
+        <div class="experience-grid">
+          <article class="experience-control"><h3>Browser-local controls</h3><label><span>Low-bandwidth mode</span><input id="experienceLowBandwidth" type="checkbox"></label><label><span>Offline application shell</span><input id="experienceOfflineEnabled" type="checkbox" checked></label><p class="experience-note">Low-bandwidth mode suppresses optional motion and presentation-heavy behavior. It does not alter source values.</p></article>
+          <article class="experience-card"><h3>Accessibility contracts</h3><ul id="experienceAccessibilityList" class="experience-list"><li>Loading checklist…</li></ul></article>
+          <article class="experience-card"><h3>Performance budgets</h3><ul id="experiencePerformanceList" class="experience-list"><li>Loading budgets…</li></ul></article>
+        </div>
+        <article class="experience-card"><h3>Offline cache behavior</h3><ul id="experienceCacheList" class="experience-list"><li>Loading cache plan…</li></ul><p class="experience-note">Cached records can become stale. External maps, imagery, and third-party libraries may require a network connection.</p></article>
+      </section>
+
       <section id="researchWorkflowStudio" class="research-workflow-studio" hidden aria-busy="false">
         <div class="research-hero">
           <div><p class="eyebrow">RESEARCH PATHS, SAVED INVESTIGATIONS, AND BRIEFING WORKFLOWS</p><h2>Turn public evidence into a reviewable research process</h2><p>Keep investigations, notes, evidence sets, checkpoints, and briefing packets in this browser. Export or hand off records only when you choose.</p></div>
@@ -1351,5 +1371,6 @@
   <script src="/app/assets/scenarios-v290.js?v=2.9.0" defer></script>
   <script src="/app/assets/research-v2100.js?v=2.10.0" defer></script>
   <script src="/app/assets/integration-v2110.js?v=2.11.0" defer></script>
+  <script src="/app/assets/experience-v2120.js?v=2.12.0" defer></script>
 </body>
 </html>

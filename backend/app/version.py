@@ -1,4 +1,4 @@
-APP_VERSION = "2.11.0"
+APP_VERSION = "2.12.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Public Data API, Embeds, and Institutional Integration"
+RELEASE_NAME = "Offline, Mobile, Accessibility, and Performance"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

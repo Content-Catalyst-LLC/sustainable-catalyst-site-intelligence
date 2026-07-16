@@ -743,3 +743,5 @@ body.portfolio-route .map-panel,body.portfolio-route .metric-grid,body.portfolio
 .observatory-ledger-row span{font-weight:700}.observatory-ledger-row small{color:var(--muted);line-height:1.45}
 @media(max-width:760px){.observatory-audit-grid{grid-template-columns:1fr}.observatory-ledger-row{grid-template-columns:64px 1fr}.observatory-ledger-row small{grid-column:1/-1}.observatory-audit-meta a{margin-left:0;width:100%}}
 @media(forced-colors:active){.observatory-audit-card,.observatory-audit-card code{border:1px solid CanvasText}}
+
+html[data-low-bandwidth="1"] .orbital-glow,html[data-low-bandwidth="1"] .launch-orbit,html[data-low-bandwidth="1"] .map-vignette{display:none!important}html[data-low-bandwidth="1"] *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}html[data-low-bandwidth="1"] .reveal-grid,html[data-low-bandwidth="1"] .panel{content-visibility:auto}

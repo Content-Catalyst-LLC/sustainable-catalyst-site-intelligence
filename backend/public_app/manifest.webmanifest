@@ -1,0 +1,31 @@
+{
+  "name": "Sustainable Catalyst Site Intelligence",
+  "short_name": "Site Intelligence",
+  "description": "Source-aware global intelligence workspaces with browser-local offline support.",
+  "id": "/app/",
+  "start_url": "/app/",
+  "scope": "/app/",
+  "display": "standalone",
+  "background_color": "#05070a",
+  "theme_color": "#111111",
+  "orientation": "any",
+  "categories": [
+    "education",
+    "productivity",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "/app/assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/app/assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

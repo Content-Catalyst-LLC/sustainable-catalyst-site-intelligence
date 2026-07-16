@@ -1,4 +1,4 @@
-"""Public Data API, Embeds, and Institutional Integration for v2.11.0.
+"""Public Data API, Embeds, and Institutional Integration for v2.12.0.
 
 The module exposes a versioned, read-only API catalog over existing public Site
 Intelligence workspaces. It does not expose provider credentials, raw private
@@ -13,7 +13,7 @@ import re
 from typing import Any, Callable, Mapping
 from urllib.parse import urlencode
 
-VERSION = "2.11.0"
+VERSION = "2.12.0"
 API_VERSION = "v1"
 RELEASE_SCHEMA = "sc-site-intelligence-public-api-integration/1.0"
 CATALOG_SCHEMA = "sc-site-intelligence-public-api-catalog/1.0"
@@ -32,6 +32,7 @@ WORKSPACES: tuple[dict[str, Any], ...] = (
     {"id":"scenarios","title":"Comparative Intelligence and Scenario Studio","view":"scenarios","record_endpoint":"","formats":["json"],"domains":["comparison","scenario"]},
     {"id":"research","title":"Research Paths, Saved Investigations, and Briefing Workflows","view":"research","record_endpoint":"","formats":["json"],"domains":["research-workflow"]},
     {"id":"integration","title":"Public Data API, Embeds, and Institutional Integration","view":"integration","record_endpoint":"","formats":["json","html"],"domains":["integration"]},
+    {"id":"experience","title":"Offline, Mobile, Accessibility, and Performance","view":"experience","record_endpoint":"","formats":["json","html"],"domains":["delivery","accessibility","performance"]},
 )
 WORKSPACE_MAP = {item["id"]: item for item in WORKSPACES}
 ALLOWED_THEMES = {"system", "light", "dark"}
