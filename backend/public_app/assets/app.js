@@ -23,7 +23,7 @@
     }
     throw last;
   }
-  const APP_VERSION="2.22.0";
+  const APP_VERSION="2.23.0";
   let heightFrame=0;
   function documentHeight(){
     const body=document.body,root=document.documentElement;
@@ -1413,6 +1413,7 @@
     if(route!=="publishing")window.SCIntelligencePublishingV2200?.close?.();
     if(route!=="monitoring")window.SCScheduledMonitoringV2210?.close?.();
     if(route!=="workspaces")window.SCInstitutionalWorkspacesV2220?.close?.();
+    if(route!=="workflows")window.SCCrossPlatformWorkflowsV2230?.close?.();
     if(route==="global"){
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
       closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
@@ -1538,6 +1539,13 @@
       closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
       closePublicLaunchPortfolio();closeAuditablePublicObservatory();
       await window.SCScheduledMonitoringV2210?.open?.();return;
+    }
+    if(route==="workflows"){
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
+      closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
+      closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
+      closePublicLaunchPortfolio();closeAuditablePublicObservatory();
+      await window.SCCrossPlatformWorkflowsV2230?.open?.();return;
     }
     if(route==="workspaces"){
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
@@ -1700,5 +1708,5 @@ document.head.appendChild(visualStyle);
 
 window.addEventListener("load",reportHeight,{once:true});window.addEventListener("resize",reportHeight,{passive:true});window.visualViewport?.addEventListener("resize",reportHeight,{passive:true});window.addEventListener("message",event=>{if(event.data?.type==="SC_SI_REQUEST_HEIGHT")reportHeight()});if("ResizeObserver" in window)new ResizeObserver(reportHeight).observe(document.body);
 
-/* v2.22.0 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v2.22.0 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v2.23.0 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v2.23.0 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

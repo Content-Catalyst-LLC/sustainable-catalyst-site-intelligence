@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 2.22.0
+ * Version: 2.23.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '2.22.0';
+    const VERSION = '2.23.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -98,6 +98,8 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_public_institutional_workspaces', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_institutional_workspace', [$this, 'institutional_workspace_shortcode']);
         add_shortcode('sc_institutional_workspaces_control_center', [$this, 'institutional_workspaces_control_center_shortcode']);
+        add_shortcode('sc_public_cross_platform_workflows', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_cross_platform_workflows_control_center', [$this, 'cross_platform_workflows_control_center_shortcode']);
         add_shortcode('sc_scheduled_monitoring_control_center', [$this, 'scheduled_monitoring_control_center_shortcode']);
         add_shortcode('sc_public_intelligence_feed', [$this, 'public_intelligence_feed_shortcode']);
         add_shortcode('sc_public_cache_status', [$this, 'public_connector_panel_shortcode']);
@@ -816,6 +818,11 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-institutional-workspaces', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_institutional_workspaces'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-cross-platform-workflows', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_cross_platform_workflows'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/public-cache-status', [
@@ -1875,6 +1882,7 @@ final class SC_Site_Intelligence_Plugin {
             'relationship_explorer' => 'public/knowledge-graph',
             'monitoring_digests' => 'public/scheduled-monitoring',
             'institutional_workspaces' => 'public/institutional-workspaces',
+            'cross_platform_workflows' => 'public/cross-platform-workflows',
             'cache_status' => 'public/connectors/cache',
             'source_freshness' => 'public/connectors/freshness',
             'connector_reliability' => 'public/connectors/reliability',
@@ -1906,6 +1914,7 @@ final class SC_Site_Intelligence_Plugin {
     public function rest_public_relationship_explorer(WP_REST_Request $request) { return $this->rest_public_connector_panel('relationship_explorer'); }
     public function rest_public_monitoring_digests(WP_REST_Request $request) { return $this->rest_public_connector_panel('monitoring_digests'); }
     public function rest_public_institutional_workspaces(WP_REST_Request $request) { return $this->rest_public_connector_panel('institutional_workspaces'); }
+    public function rest_public_cross_platform_workflows(WP_REST_Request $request) { return $this->rest_public_connector_panel('cross_platform_workflows'); }
     public function rest_public_cache_status(WP_REST_Request $request) { return $this->rest_public_connector_panel('cache_status'); }
     public function rest_public_source_freshness(WP_REST_Request $request) { return $this->rest_public_connector_panel('source_freshness'); }
     public function rest_public_connector_reliability(WP_REST_Request $request) { return $this->rest_public_connector_panel('connector_reliability'); }
@@ -3272,6 +3281,7 @@ final class SC_Site_Intelligence_Plugin {
             'sc_public_intelligence_publications' => ['intelligence-publications', 'Intelligence Publishing and Story Map Studio', 'Human-reviewed public intelligence publications, story maps, timelines, charts, evidence blocks, methodology, and immutable version history.'],
             'sc_public_monitoring_digests' => ['monitoring-digests', 'Scheduled Monitoring, Digests, and Public Intelligence Feeds', 'Human-reviewed daily and weekly digests, deduplicated alert evidence, and JSON, RSS, and Atom feeds without hosted subscriber profiles.'],
             'sc_public_institutional_workspaces' => ['institutional-workspaces', 'Institutional Workspaces, Collaboration, and Review', 'Human-published institutional workspace summaries and public source collections without exposing members, assignments, comments, review notes, or activity logs.'],
+            'sc_public_cross_platform_workflows' => ['cross-platform-workflows', 'Typed Cross-Platform Intelligence Workflows', 'Public route contracts, required fields, platforms, and responsible-use boundaries without exposing packet payloads, receipts, retries, or linkbacks.'],
             'sc_public_cache_status' => ['cache-status', 'Public Cache Status', 'Cache TTL, stale-safe display, and public source refresh policy.'],
             'sc_public_source_freshness' => ['source-freshness', 'Public Source Freshness', 'Freshness labels for public source families and connector panels.'],
             'sc_public_connector_reliability' => ['connector-reliability', 'Connector Reliability Summary', 'Public display reliability, recovery guidance, and degraded/fallback-safe source labels.'],
@@ -4793,6 +4803,26 @@ final class SC_Site_Intelligence_Plugin {
             <p class="scsi-muted">Member identities, assignments, comments, review notes, and private evidence are not included in this public view.</p>
         </section>
         <?php return ob_get_clean();
+    }
+
+
+    public function cross_platform_workflows_control_center_shortcode($atts = []) {
+        if (!current_user_can('manage_options')) { return ''; }
+        $data = $this->backend_request('admin/cross-platform-workflows/control-center');
+        if (is_wp_error($data)) { return '<section class="scsi-card"><p class="scsi-eyebrow">Cross-Platform Workflows</p><h2>Control Center unavailable</h2><p class="scsi-muted">' . esc_html($data->get_error_message()) . '</p></section>'; }
+        $summary = isset($data['diagnostics']['summary']) && is_array($data['diagnostics']['summary']) ? $data['diagnostics']['summary'] : [];
+        $routes = isset($data['routes']) && is_array($data['routes']) ? $data['routes'] : [];
+        $packets = isset($data['packets']) && is_array($data['packets']) ? $data['packets'] : [];
+        ob_start(); ?>
+        <section class="scsi-card scsi-cross-platform-workflows-control-center">
+            <p class="scsi-eyebrow">Private Admin Workspace · v<?php echo esc_html(self::VERSION); ?></p>
+            <h2>Typed Cross-Platform Intelligence Workflows</h2>
+            <p class="scsi-muted">Validate portable packets, inspect receipts and linkbacks, review failed handoffs, and prepare bounded retries across Workbench, Decision Studio, Research Librarian, Knowledge Library, Research Lab, Platform Core, and Site Intelligence.</p>
+            <div class="scsi-grid scsi-public-connector-health-grid"><?php foreach (['route_count'=>'Routes','platform_count'=>'Platforms','packet_count'=>'Packets','receipt_count'=>'Receipts','attempt_count'=>'Attempts','failed_queue_count'=>'Failed'] as $key=>$label): ?><div class="scsi-stat"><span><?php echo esc_html($label); ?></span><strong><?php echo esc_html((string)($summary[$key]??0)); ?></strong></div><?php endforeach; ?></div>
+            <?php if (!empty($routes)): ?><h3>Typed route registry</h3><?php foreach (array_slice($routes,0,20) as $item): ?><div class="scsi-page-row"><strong><?php echo esc_html((string)($item['source_platform']??'')); ?> → <?php echo esc_html((string)($item['target_platform']??'')); ?></strong><small><?php echo esc_html((string)($item['packet_type']??'')); ?> · <?php echo esc_html(implode(', ',(array)($item['required_payload_fields']??[]))); ?></small></div><?php endforeach; ?><?php endif; ?>
+            <?php if (!empty($packets)): ?><h3>Recent packet register</h3><?php foreach (array_slice($packets,0,15) as $item): ?><div class="scsi-page-row"><strong><?php echo esc_html((string)($item['title']??$item['packet_id']??'Packet')); ?></strong><small><?php echo esc_html((string)($item['status']??'draft')); ?> · <?php echo esc_html((string)($item['route_id']??'')); ?></small></div><?php endforeach; ?><?php endif; ?>
+            <p class="scsi-muted">Packet creation, export, or queueing does not prove remote delivery. Platform Core or a separately configured adapter must deliver the packet and return an explicit receipt.</p>
+        </section><?php return ob_get_clean();
     }
 
     public function scheduled_monitoring_control_center_shortcode($atts = []) {

@@ -2603,6 +2603,7 @@
       'model-forecasts': '/public-model-forecasts',
       'monitoring-digests': '/public-monitoring-digests',
       'institutional-workspaces': '/public-institutional-workspaces',
+      'cross-platform-workflows': '/public-cross-platform-workflows',
       'cache-status': '/public-cache-status',
       'source-freshness': '/public-source-freshness',
       'connector-reliability': '/public-connector-reliability',

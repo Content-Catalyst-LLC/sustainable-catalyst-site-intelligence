@@ -1,0 +1,32 @@
+Sustainable Catalyst Site Intelligence v2.23.0 Build Validation
+
+Release: Typed Cross-Platform Intelligence Workflows
+
+Validated capabilities:
+- 12 registered typed routes across 7 platforms
+- Required-field, route-direction, payload-size, and provenance validation
+- SHA-256 packet, receipt, attempt, queue, linkback, and export integrity
+- Incoming and outgoing packet workflows
+- Explicit accepted/completed/rejected/failed receipts
+- Bounded attempts and human-confirmed retries
+- Public route-only boundary and private operational history
+- Platform Core orchestration envelope without remote-write claims
+- Public app and WordPress surfaces
+
+Regression result: 528 tests passed.
+Release manifest, syntax, package integrity, and runtime-state exclusions are validated by the installer.
+
+Final validation:
+- 528 backend tests passed
+- 502 immutable files verified
+- 639 unique application HTML IDs
+- Python, JavaScript, service-worker, PHP, JSON, and webmanifest checks passed
+- Writable packet, receipt, attempt, linkback, queue, workspace, monitoring, publishing, graph, evidence, model, harmonization, spatial, archive, connector, cache, quarantine, and queue state excluded
+
+Installer rehearsal:
+- Packaged 502-file manifest verified before installation
+- FastAPI/Starlette/HTTPX2 TestClient preflight passed
+- 528 tests passed in the installed disposable checkout
+- The execution wrapper stopped after pytest output
+- Release contract, syntax, 639 unique IDs, post-test manifest, WordPress ZIP, and clean Git commit were completed directly in the same checkout
+

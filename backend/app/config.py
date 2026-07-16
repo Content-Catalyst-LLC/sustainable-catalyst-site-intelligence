@@ -245,7 +245,7 @@ class Settings(BaseSettings):
     spatial_evidence_max_radius_km: float = Field(default=5000.0, ge=0.1, le=20000.0)
     spatial_evidence_max_proximity_km: float = Field(default=5000.0, ge=0.1, le=20000.0)
 
-    # Site Intelligence v2.22.0 — Statistical Harmonization and Comparable-Series Engine.
+    # Site Intelligence v2.23.0 — Statistical Harmonization and Comparable-Series Engine.
     # Source series, transformed series, and lineage receipts are writable runtime
     # state and may be redirected to durable storage. Release registries remain immutable.
     statistical_harmonization_enabled: bool = True
@@ -258,7 +258,7 @@ class Settings(BaseSettings):
     statistical_harmonization_max_records: int = Field(default=10000, ge=100, le=100000)
     statistical_harmonization_max_observations: int = Field(default=5000, ge=1, le=100000)
 
-    # Site Intelligence v2.22.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+    # Site Intelligence v2.23.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
     # Model cards and immutable policy registries ship with the release. Forecasts,
     # evaluations, warning rules, and warning events are writable runtime state.
     model_governance_enabled: bool = True
@@ -273,7 +273,7 @@ class Settings(BaseSettings):
     model_governance_max_records: int = Field(default=10000, ge=100, le=100000)
     model_governance_max_forecast_points: int = Field(default=5000, ge=1, le=100000)
 
-    # Site Intelligence v2.22.0 — Evidence Synthesis, Claims, and Contradiction Review.
+    # Site Intelligence v2.23.0 — Evidence Synthesis, Claims, and Contradiction Review.
     # Claims, evidence, reviews, syntheses, and uncertainty records are writable
     # runtime state. Immutable policy files ship with the release.
     evidence_synthesis_enabled: bool = True
@@ -287,7 +287,7 @@ class Settings(BaseSettings):
     evidence_synthesis_max_records: int = Field(default=10000, ge=100, le=100000)
     evidence_synthesis_max_excerpt_chars: int = Field(default=4000, ge=100, le=20000)
 
-    # Site Intelligence v2.22.0 — Intelligence Publishing and Story Map Studio.
+    # Site Intelligence v2.23.0 — Intelligence Publishing and Story Map Studio.
     # Entity, relationship, and alias records are writable runtime state. Immutable
     # policy and relationship registries ship with the release.
     knowledge_graph_enabled: bool = True
@@ -302,7 +302,7 @@ class Settings(BaseSettings):
     knowledge_graph_max_results: int = Field(default=1000, ge=10, le=10000)
 
 
-    # Site Intelligence v2.22.0 — Intelligence Publishing and Story Map Studio.
+    # Site Intelligence v2.23.0 — Intelligence Publishing and Story Map Studio.
     # Publication projects, blocks, reviews, and immutable published versions are
     # writable runtime state. Policy files ship with the immutable release.
     intelligence_publishing_enabled: bool = True
@@ -316,7 +316,7 @@ class Settings(BaseSettings):
     intelligence_publishing_max_blocks: int = Field(default=250, ge=1, le=2000)
     intelligence_publishing_max_block_chars: int = Field(default=100000, ge=1000, le=1000000)
 
-    # Site Intelligence v2.22.0 — Scheduled Monitoring, Digests, and Public Intelligence Feeds.
+    # Site Intelligence v2.23.0 — Scheduled Monitoring, Digests, and Public Intelligence Feeds.
     # Monitor definitions, checks, alerts, digests, delivery receipts, and feed
     # definitions are writable runtime state. The policy file is immutable.
     scheduled_monitoring_enabled: bool = True
@@ -334,7 +334,7 @@ class Settings(BaseSettings):
     scheduled_monitoring_email_enabled: bool = False
     scheduled_monitoring_webhook_enabled: bool = False
 
-    # Site Intelligence v2.22.0 — Institutional Workspaces, Collaboration, and Review.
+    # Site Intelligence v2.23.0 — Institutional Workspaces, Collaboration, and Review.
     # Roles and permissions are enforced inside token-protected administrative APIs,
     # but this release does not provision accounts or replace an identity provider.
     # All writable workspace state is excluded from immutable release packages.
@@ -354,6 +354,25 @@ class Settings(BaseSettings):
     institutional_workspaces_max_comments: int = Field(default=50000, ge=100, le=500000)
     institutional_workspaces_default_retention_days: int = Field(default=365, ge=30, le=3650)
 
+
+
+    # Site Intelligence v2.23.0 — Typed Cross-Platform Intelligence Workflows.
+    # Packets, receipts, delivery attempts, linkbacks, and retry records are writable
+    # runtime state. This release validates and records handoffs but does not perform
+    # remote writes or replace Platform Core orchestration.
+    cross_platform_workflows_enabled: bool = True
+    cross_platform_workflows_root_path: str = "backend/data/cross_platform_workflows_v2230"
+    cross_platform_workflows_packets_path: str = "backend/data/cross_platform_workflows_v2230/packets_v2230.jsonl"
+    cross_platform_workflows_receipts_path: str = "backend/data/cross_platform_workflows_v2230/receipts_v2230.jsonl"
+    cross_platform_workflows_attempts_path: str = "backend/data/cross_platform_workflows_v2230/attempts_v2230.jsonl"
+    cross_platform_workflows_linkbacks_path: str = "backend/data/cross_platform_workflows_v2230/linkbacks_v2230.jsonl"
+    cross_platform_workflows_queue_path: str = "backend/data/cross_platform_workflows_v2230/recovery_queue_v2230.jsonl"
+    cross_platform_workflows_policy_path: str = "backend/data/cross_platform_workflow_policy_v2230.json"
+    cross_platform_workflows_registry_path: str = "backend/data/cross_platform_workflow_registry_v2230.json"
+    cross_platform_workflows_max_records: int = Field(default=30000, ge=100, le=300000)
+    cross_platform_workflows_max_attempts: int = Field(default=5, ge=1, le=20)
+    cross_platform_workflows_retry_delay_seconds: int = Field(default=300, ge=10, le=86400)
+    cross_platform_workflows_max_payload_bytes: int = Field(default=2000000, ge=1000, le=20000000)
 
     # Sustainable Development Data Connectors v1.14.1.
     sustainable_development_connectors_enabled: bool = True

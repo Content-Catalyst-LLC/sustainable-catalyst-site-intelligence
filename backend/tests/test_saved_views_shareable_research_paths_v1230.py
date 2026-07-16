@@ -19,7 +19,7 @@ client = TestClient(app)
 def valid_manifest(**overrides):
     manifest = {
         "schema": SCHEMA_VERSION,
-        "application_version": "2.22.0",
+        "application_version": "2.23.0",
         "id": "sv-test-123456",
         "name": "Kenya climate investigation",
         "view": "thematic",
@@ -88,7 +88,7 @@ def test_duplicate_comparison_country_is_rejected():
 def test_legacy_manifest_migrates_to_current_schema():
     legacy = {
         "schema": "sc-saved-view/0.9",
-        "application_version": "2.22.0",
+        "application_version": "2.23.0",
         "id": "sv-legacy-123456",
         "title": "Legacy source research",
         "route": "sources",
@@ -177,8 +177,8 @@ def test_wordpress_saved_views_shortcode_contract():
 
     root = Path(__file__).resolve().parents[2]
     php = (root / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text(encoding="utf-8")
-    assert "Version: 2.22.0" in php
-    assert "const VERSION = '2.22.0';" in php
+    assert "Version: 2.23.0" in php
+    assert "const VERSION = '2.23.0';" in php
     assert "add_shortcode('sc_saved_research_views'" in php
     assert "public function saved_research_views_shortcode" in php
     assert "/app/?view=saved" in php

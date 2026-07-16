@@ -11,9 +11,9 @@ from app.public_live_connectors import (
 
 
 def test_connector_reliability_payload_is_public_safe():
-    data = public_connector_reliability(Settings(version="2.22.0", external_live=True, public_connector_live_checks=True))
+    data = public_connector_reliability(Settings(version="2.23.0", external_live=True, public_connector_live_checks=True))
     assert data["ok"] is True
-    assert data["version_scope"] == "v2.22.0"
+    assert data["version_scope"] == "v2.23.0"
     assert data["recommended_shortcode"] == "[sc_public_connector_reliability]"
     assert data["score"] >= 70
     assert data["reliability_counts"]["healthy"] >= 4
@@ -22,15 +22,15 @@ def test_connector_reliability_payload_is_public_safe():
 
 
 def test_connector_status_now_includes_reliability_counts():
-    data = public_connector_status(Settings(version="2.22.0", external_live=True, public_connector_live_checks=True))
-    assert data["version_scope"] == "v2.22.0"
+    data = public_connector_status(Settings(version="2.23.0", external_live=True, public_connector_live_checks=True))
+    assert data["version_scope"] == "v2.23.0"
     assert "reliability_score" in data
     assert "reliability_counts" in data
     assert any(item["reliability_level"] == "healthy" for item in data["status_cards"])
 
 
 def test_status_polish_payload_contains_display_guidance_and_hidden_fields():
-    data = public_connector_status_polish(Settings(version="2.22.0"))
+    data = public_connector_status_polish(Settings(version="2.23.0"))
     assert data["ok"] is True
     assert data["recommended_shortcode"] == "[sc_public_connector_status_polish]"
     assert any("[sc_public_connector_status]" in item for item in data["display_guidance"])
@@ -38,9 +38,9 @@ def test_status_polish_payload_contains_display_guidance_and_hidden_fields():
 
 
 def test_admin_diagnostics_includes_recovery_queue_without_secrets():
-    settings = Settings(version="2.22.0", eia_api_key="secret-value", epa_aqs_key="secret-value", epa_aqs_email="ops@example.com")
+    settings = Settings(version="2.23.0", eia_api_key="secret-value", epa_aqs_key="secret-value", epa_aqs_email="ops@example.com")
     data = admin_connector_diagnostics(settings)
-    assert data["version_scope"] == "v2.22.0"
+    assert data["version_scope"] == "v2.23.0"
     assert "recovery_queue" in data
     assert "secret-value" not in str(data)
 

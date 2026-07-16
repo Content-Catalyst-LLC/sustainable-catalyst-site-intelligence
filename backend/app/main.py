@@ -63,6 +63,7 @@ from .knowledge_graph_v2190 import KnowledgeGraphExplorer
 from .intelligence_publishing_v2200 import IntelligencePublishingStudio
 from .scheduled_monitoring_v2210 import ScheduledMonitoringCenter
 from .institutional_workspaces_v2220 import InstitutionalWorkspaceCenter
+from .cross_platform_workflows_v2230 import CrossPlatformWorkflowCenter
 from .public_live_connectors import (
     public_connector_status as build_public_connector_status,
     public_cache_status as build_public_cache_status,
@@ -2214,7 +2215,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v2.22.0 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v2.23.0 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -2356,7 +2357,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.22.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v2.23.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -2473,7 +2474,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.22.0 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v2.23.0 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -2595,7 +2596,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v2.22.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v2.23.0 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -2731,7 +2732,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.22.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v2.23.0 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -5906,6 +5907,123 @@ def public_data_api_root(settings: Settings = Depends(get_settings)):
 def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     from .public_data_api_embeds_v2110 import build_catalog
     return build_catalog(settings)
+
+
+# Site Intelligence v2.23.0 — Typed Cross-Platform Intelligence Workflows.
+def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
+    if not settings.cross_platform_workflows_enabled:
+        raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
+    return CrossPlatformWorkflowCenter(settings)
+
+
+def _workflow_actor(request: dict[str, Any]) -> tuple[str, str]:
+    return str(request.get("actor_role") or "administrator"), str(request.get("actor_id") or "system")
+
+
+@app.get("/public/cross-platform-workflows")
+def public_cross_platform_workflows_endpoint(settings: Settings = Depends(get_settings)):
+    return _cross_platform_workflows(settings).public_summary()
+
+
+@app.get("/public/cross-platform-workflows/diagnostics")
+def public_cross_platform_workflows_diagnostics_endpoint(settings: Settings = Depends(get_settings)):
+    return _cross_platform_workflows(settings).diagnostics(public=True)
+
+
+@app.get("/admin/cross-platform-workflows/control-center")
+def admin_cross_platform_workflows_control_center_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _cross_platform_workflows(settings).control_center()
+
+
+@app.post("/admin/cross-platform-workflows/packets")
+def admin_cross_platform_workflow_create_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    role, actor = _workflow_actor(request)
+    try:
+        return _cross_platform_workflows(settings).create_packet(request, role, actor)
+    except (ValueError, PermissionError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/cross-platform-workflows/incoming")
+def admin_cross_platform_workflow_incoming_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    role, actor = _workflow_actor(request)
+    try:
+        return _cross_platform_workflows(settings).ingest_incoming(request, role, actor)
+    except (ValueError, PermissionError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/admin/cross-platform-workflows/packets/{packet_id}/validate")
+def admin_cross_platform_workflow_validate_endpoint(packet_id: str, settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _cross_platform_workflows(settings).validate_packet(packet_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Packet not found.") from exc
+
+
+@app.get("/admin/cross-platform-workflows/packets/{packet_id}/dispatch-preview")
+def admin_cross_platform_workflow_dispatch_preview_endpoint(packet_id: str, settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _cross_platform_workflows(settings).dispatch_preview(packet_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Packet not found.") from exc
+
+
+@app.post("/admin/cross-platform-workflows/packets/{packet_id}/queue")
+def admin_cross_platform_workflow_queue_endpoint(packet_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _cross_platform_workflows(settings).queue_packet(packet_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Packet not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/cross-platform-workflows/packets/{packet_id}/receipts")
+def admin_cross_platform_workflow_receipt_endpoint(packet_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _cross_platform_workflows(settings).record_receipt(packet_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Packet not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/admin/cross-platform-workflows/packets/{packet_id}/retry-preview")
+def admin_cross_platform_workflow_retry_preview_endpoint(packet_id: str, settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _cross_platform_workflows(settings).retry_preview(packet_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Packet not found.") from exc
+
+
+@app.post("/admin/cross-platform-workflows/packets/{packet_id}/retry")
+def admin_cross_platform_workflow_retry_endpoint(packet_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _cross_platform_workflows(settings).retry_failed(packet_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Packet not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/cross-platform-workflows/packets/{packet_id}/linkbacks")
+def admin_cross_platform_workflow_linkback_endpoint(packet_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _cross_platform_workflows(settings).add_linkback(packet_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Packet not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/admin/cross-platform-workflows/packets/{packet_id}/export")
+def admin_cross_platform_workflow_export_endpoint(packet_id: str, settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        body = _cross_platform_workflows(settings).export_packet(packet_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Packet not found.") from exc
+    return Response(content=body, media_type="application/json", headers={"Content-Disposition": f'attachment; filename="cross-platform-packet-{packet_id}.json"', "X-SC-Site-Intelligence-Version": APP_VERSION})
 
 @app.get("/api/public/v1/workspaces")
 def public_data_api_workspaces(settings: Settings = Depends(get_settings)):

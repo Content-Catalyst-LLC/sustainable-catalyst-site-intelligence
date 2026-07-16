@@ -1,0 +1,12 @@
+(() => {
+  const VERSION="2.23.0", API=window.SC_SITE_INTELLIGENCE_API||window.location.origin;
+  const qs=s=>document.querySelector(s), esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+  const state={loaded:false,routes:[],diagnostics:null};
+  async function get(path){const r=await fetch(`${API}${path}`,{headers:{Accept:"application/json"}});if(!r.ok)throw new Error(`${r.status} ${path}`);return r.json()}
+  function routeCard(item){return `<article class="workflow-route-card"><span>${esc(item.source_platform)} → ${esc(item.target_platform)}</span><strong>${esc(item.packet_type)}</strong><p>${esc(item.description||"")}</p><small>${esc((item.required_payload_fields||[]).join(" · "))}</small></article>`}
+  function render(){const d=state.diagnostics?.summary||{};qs("#workflowRouteCount").textContent=state.routes.length;qs("#workflowPlatformCount").textContent=state.diagnostics?.summary?.platform_count??7;qs("#workflowRemoteWrite").textContent=state.diagnostics?.automatic_remote_write?"Enabled":"Not performed";qs("#workflowBroker").textContent=state.diagnostics?.persistent_message_broker_included?"Included":"External";qs("#workflowRouteList").innerHTML=state.routes.map(routeCard).join("")||"<p>No workflow routes are registered.</p>";qs("#crossPlatformWorkflowStatus").textContent="Typed workflow contracts loaded. Packet payloads, receipts, retries, and linkbacks remain private."}
+  async function load(){const p=qs("#crossPlatformWorkflowStudio");if(!p)return;p.setAttribute("aria-busy","true");try{const [summary,diagnostics]=await Promise.all([get("/public/cross-platform-workflows"),get("/public/cross-platform-workflows/diagnostics")]);state.routes=summary.routes||[];state.diagnostics=diagnostics||{};state.loaded=true;render()}catch(e){qs("#crossPlatformWorkflowStatus").textContent="Cross-platform workflow contracts could not be refreshed.";console.warn(e)}finally{p.setAttribute("aria-busy","false");window.parent?.postMessage({type:"scsi-height",height:document.documentElement.scrollHeight,version:VERSION},"*")}}
+  function open(){const p=qs("#crossPlatformWorkflowStudio");if(!p)return;p.hidden=false;if(!state.loaded)load()}
+  function close(){const p=qs("#crossPlatformWorkflowStudio");if(p)p.hidden=true}
+  window.SCCrossPlatformWorkflowsV2230={open,close,status:()=>({version:VERSION,loaded:state.loaded,routes:state.routes.length})};
+})();

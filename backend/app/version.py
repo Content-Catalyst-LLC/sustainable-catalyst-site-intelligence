@@ -1,4 +1,4 @@
-APP_VERSION = "2.22.0"
+APP_VERSION = "2.23.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Institutional Workspaces, Collaboration, and Review"
+RELEASE_NAME = "Typed Cross-Platform Intelligence Workflows"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

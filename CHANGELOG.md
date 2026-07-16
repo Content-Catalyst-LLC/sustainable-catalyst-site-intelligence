@@ -1,12 +1,13 @@
-## 2.22.0 — Institutional Workspaces, Collaboration, and Review
+## 2.23.0 — Typed Cross-Platform Intelligence Workflows
 
-- Added shared institutional workspaces with private, unlisted, and public visibility.
-- Added analyst, reviewer, publisher, and administrator roles with explicit permission contracts.
-- Added assignments, comments, review notes, evidence approval decisions, shared source collections, and activity receipts.
-- Added human-gated publication, public-safe workspace summaries, and strict member/private-record boundaries.
-- Added preview-first retention, explicit confirmed cleanup, institutional branding, and JSON/ZIP workspace archives.
-- Added public and administrator APIs, a dedicated Workspaces application view, and WordPress public/admin shortcodes.
-- Preserved account-free public access and explicitly avoided identity-provider, automatic-publication, social-scoring, and remote-write claims.
+- Added twelve typed bidirectional routes across Site Intelligence, Workbench, Decision Studio, Research Librarian, Knowledge Library, Research Lab, and Platform Core.
+- Added required-field validation, packet provenance, SHA-256 integrity receipts, explicit workflow IDs, and portable JSON exports.
+- Added incoming-packet acceptance, external acceptance/completion/rejection/failure receipts, linkbacks, and status updates.
+- Added bounded delivery attempts, failed-handoff recovery queues, retry previews, and human-confirmed retries.
+- Added public route methodology and private packet, receipt, attempt, linkback, and recovery operations.
+- Added a dedicated Workflows application workspace and WordPress public/admin shortcodes.
+- Preserved the boundary that packet creation, export, queueing, or linkback registration does not prove remote delivery.
+- Kept Platform Core as the preferred persistent orchestration layer without falsely claiming it is connected or provisioning accounts.
 
 ## 2.21.0 — Scheduled Monitoring, Digests, and Public Intelligence Feeds
 

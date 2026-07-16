@@ -1,0 +1,169 @@
+{
+  "platforms": [
+    "decision-studio",
+    "knowledge-library",
+    "platform-core",
+    "research-lab",
+    "research-librarian",
+    "site-intelligence",
+    "workbench"
+  ],
+  "release_version": "2.23.0",
+  "routes": [
+    {
+      "description": "Send evidence-linked datasets, questions, assumptions, and units to Workbench.",
+      "packet_type": "analytical_packet",
+      "required_payload_fields": [
+        "title",
+        "question",
+        "datasets"
+      ],
+      "route_id": "site-intelligence-to-workbench-analysis",
+      "source_platform": "site-intelligence",
+      "target_platform": "workbench",
+      "validation_schema": "sc-cross-platform-intelligence-packet/1.0"
+    },
+    {
+      "description": "Return calculated evidence with methods, units, assumptions, and reproducibility references.",
+      "packet_type": "calculated_evidence",
+      "required_payload_fields": [
+        "title",
+        "method",
+        "results"
+      ],
+      "route_id": "workbench-to-site-intelligence-evidence",
+      "source_platform": "workbench",
+      "target_platform": "site-intelligence",
+      "validation_schema": "sc-cross-platform-intelligence-packet/1.0"
+    },
+    {
+      "description": "Send source-aware scenarios, uncertainties, and evidence into Decision Studio.",
+      "packet_type": "scenario_decision_packet",
+      "required_payload_fields": [
+        "title",
+        "scenarios",
+        "evidence_ids"
+      ],
+      "route_id": "site-intelligence-to-decision-studio-scenario",
+      "source_platform": "site-intelligence",
+      "target_platform": "decision-studio",
+      "validation_schema": "sc-cross-platform-intelligence-packet/1.0"
+    },
+    {
+      "description": "Return decision assumptions, selected options, and monitored outcomes.",
+      "packet_type": "decision_assumption_outcome",
+      "required_payload_fields": [
+        "decision_id",
+        "assumptions",
+        "outcomes"
+      ],
+      "route_id": "decision-studio-to-site-intelligence-outcome",
+      "source_platform": "decision-studio",
+      "target_platform": "site-intelligence",
+      "validation_schema": "sc-cross-platform-intelligence-packet/1.0"
+    },
+    {
+      "description": "Send bounded research questions and current evidence gaps.",
+      "packet_type": "research_question",
+      "required_payload_fields": [
+        "question",
+        "scope"
+      ],
+      "route_id": "site-intelligence-to-research-librarian-question",
+      "source_platform": "site-intelligence",
+      "target_platform": "research-librarian",
+      "validation_schema": "sc-cross-platform-intelligence-packet/1.0"
+    },
+    {
+      "description": "Return source and reading recommendations without claiming automatic ingestion.",
+      "packet_type": "source_recommendations",
+      "required_payload_fields": [
+        "question_id",
+        "sources"
+      ],
+      "route_id": "research-librarian-to-site-intelligence-sources",
+      "source_platform": "research-librarian",
+      "target_platform": "site-intelligence",
+      "validation_schema": "sc-cross-platform-intelligence-packet/1.0"
+    },
+    {
+      "description": "Prepare publication and archival metadata for Knowledge Library.",
+      "packet_type": "publication_archive",
+      "required_payload_fields": [
+        "title",
+        "publication_id",
+        "source_ids"
+      ],
+      "route_id": "site-intelligence-to-knowledge-library-publication",
+      "source_platform": "site-intelligence",
+      "target_platform": "knowledge-library",
+      "validation_schema": "sc-cross-platform-intelligence-packet/1.0"
+    },
+    {
+      "description": "Return document evidence and citations to Site Intelligence.",
+      "packet_type": "document_evidence",
+      "required_payload_fields": [
+        "document_id",
+        "title",
+        "evidence"
+      ],
+      "route_id": "knowledge-library-to-site-intelligence-document",
+      "source_platform": "knowledge-library",
+      "target_platform": "site-intelligence",
+      "validation_schema": "sc-cross-platform-intelligence-packet/1.0"
+    },
+    {
+      "description": "Send datasets, observations, methods, and provenance to Research Lab.",
+      "packet_type": "dataset_observation_package",
+      "required_payload_fields": [
+        "title",
+        "dataset_refs",
+        "methods"
+      ],
+      "route_id": "site-intelligence-to-research-lab-dataset",
+      "source_platform": "site-intelligence",
+      "target_platform": "research-lab",
+      "validation_schema": "sc-cross-platform-intelligence-packet/1.0"
+    },
+    {
+      "description": "Return experiment, calibration, and observation results with provenance.",
+      "packet_type": "experiment_result",
+      "required_payload_fields": [
+        "run_id",
+        "dataset_id",
+        "results"
+      ],
+      "route_id": "research-lab-to-site-intelligence-result",
+      "source_platform": "research-lab",
+      "target_platform": "site-intelligence",
+      "validation_schema": "sc-cross-platform-intelligence-packet/1.0"
+    },
+    {
+      "description": "Prepare a workflow registration envelope for Platform Core orchestration.",
+      "packet_type": "workflow_registration",
+      "required_payload_fields": [
+        "workflow_id",
+        "route_id",
+        "packet_sha256"
+      ],
+      "route_id": "site-intelligence-to-platform-core-registration",
+      "source_platform": "site-intelligence",
+      "target_platform": "platform-core",
+      "validation_schema": "sc-cross-platform-intelligence-packet/1.0"
+    },
+    {
+      "description": "Return orchestration status and receipt references.",
+      "packet_type": "workflow_status",
+      "required_payload_fields": [
+        "workflow_id",
+        "status",
+        "receipt_id"
+      ],
+      "route_id": "platform-core-to-site-intelligence-status",
+      "source_platform": "platform-core",
+      "target_platform": "site-intelligence",
+      "validation_schema": "sc-cross-platform-intelligence-packet/1.0"
+    }
+  ],
+  "schema": "sc-cross-platform-workflow-registry/1.0"
+}

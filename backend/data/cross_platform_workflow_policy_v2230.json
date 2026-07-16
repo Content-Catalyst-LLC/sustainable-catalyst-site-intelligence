@@ -1,0 +1,21 @@
+{
+  "account_provisioning": false,
+  "automatic_remote_write": false,
+  "automatic_retry": false,
+  "autonomous_consequential_actions": false,
+  "individual_tracking": false,
+  "persistent_message_broker_included": false,
+  "platform_core_preferred_orchestrator": true,
+  "principles": [
+    "Every handoff uses a registered source, target, packet type, and required payload contract.",
+    "Every packet carries provenance and a SHA-256 integrity receipt.",
+    "Remote delivery is never inferred from packet creation, export, queueing, or linkback registration.",
+    "External platforms return explicit acceptance, completion, rejection, or failure receipts.",
+    "Retries are bounded, human-confirmed, and never automatic in the file-backed mode.",
+    "Public APIs expose route methodology only; payloads and operational history remain private."
+  ],
+  "public_packet_payloads": false,
+  "release_version": "2.23.0",
+  "schema": "sc-cross-platform-workflow-policy/1.0",
+  "title": "Typed Cross-Platform Intelligence Workflows"
+}

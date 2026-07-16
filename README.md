@@ -1,8 +1,18 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.22.0 — Institutional Workspaces, Collaboration, and Review
+**Current release:** v2.23.0 — Typed Cross-Platform Intelligence Workflows
 
-## v2.22.0 — Institutional Workspaces, Collaboration, and Review
+## v2.23.0 — Typed Cross-Platform Intelligence Workflows
+### v2.23.0 workflow layer
+
+- Public route registry: `/public/cross-platform-workflows`
+- Public governance diagnostics: `/public/cross-platform-workflows/diagnostics`
+- Private operations: `/admin/cross-platform-workflows/control-center`
+- Public application: `/app/?view=workflows`
+- WordPress: `[sc_public_cross_platform_workflows]` and `[sc_cross_platform_workflows_control_center]`
+
+Packets are typed, provenance-linked, digest-verified, and receipt-driven. Creating, exporting, or queueing a packet never claims remote delivery. Platform Core or a separately configured adapter must perform delivery and return an explicit receipt.
+
 
 This release adds optional shared institutional workspaces while preserving the public, account-free Site Intelligence experience. It introduces explicit analyst, reviewer, publisher, and administrator roles; assignments; comments and review notes; evidence approval; shared source collections; activity receipts; preview-first retention; institutional branding; and exportable workspace archives. It does not provision accounts, replace an identity provider, expose private collaboration records, or publish evidence automatically.
 
