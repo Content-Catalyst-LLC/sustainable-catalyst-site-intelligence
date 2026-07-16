@@ -1,0 +1,20 @@
+Sustainable Catalyst Site Intelligence v2.24.0
+Open Standards, Federation, and Institutional Data Exchange
+
+Validation summary
+- 541 backend tests passed.
+- v2.24.0 release contract passed.
+- Python syntax passed.
+- JSON and webmanifest parsing passed.
+- Public application JavaScript passed Node syntax checks.
+- Federation application JavaScript passed Node syntax checks.
+- Service-worker JavaScript passed Node syntax checks.
+- WordPress JavaScript passed Node syntax checks.
+- WordPress PHP syntax passed.
+- 649 application HTML IDs were unique.
+- DCAT-compatible JSON-LD, GeoJSON, and CSV catalog exports were tested.
+- Signed-manifest validation, tamper detection, trust blocking, import preview, quarantine, and human-confirmed acceptance were tested.
+- Public responses exclude private records, trust policies, import receipts, and signing keys.
+- Writable federation and inherited runtime state is excluded from the immutable package.
+- Full installer rehearsal completed against a disposable v2.23.0 Git origin with pushing disabled.
+- Installer rehearsal verified the 517-file package, HTTPX2/TestClient preflight, all 541 tests, release contracts, syntax checks, post-test manifest integrity, WordPress packaging, and a clean v2.24.0 commit.

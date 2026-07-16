@@ -34,6 +34,6 @@ def test_interface_wordpress_and_release_contract():
     root=Path(__file__).resolve().parents[2];html=(root/'backend/public_app/index.html').read_text();js=(root/'backend/public_app/assets/resources-v260.js').read_text();css=(root/'backend/public_app/assets/resources-v260.css').read_text();app_js=(root/'backend/public_app/assets/app.js').read_text();php=(root/'wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php').read_text()
     assert 'data-route="resources"' in html and 'id="resourceStudio"' in html
     assert 'SCResourcesV260' in js and '.resource-studio' in css
-    assert 'const APP_VERSION="2.23.0"' in app_js
-    assert 'Version: 2.23.0' in php and 'sc_trade_energy_resource_security_observatory' in php
+    assert 'const APP_VERSION="2.24.0"' in app_js
+    assert 'Version: 2.24.0' in php and 'sc_trade_energy_resource_security_observatory' in php
     assert 'No proprietary security score' in html

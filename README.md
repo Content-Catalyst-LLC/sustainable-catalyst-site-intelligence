@@ -1,6 +1,21 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.23.0 — Typed Cross-Platform Intelligence Workflows
+**Current release:** v2.24.0 — Open Standards, Federation, and Institutional Data Exchange
+
+
+## v2.24.0 — Open Standards, Federation, and Institutional Data Exchange
+
+Site Intelligence v2.24.0 adds a standards-based institutional exchange layer for public datasets, publications, services, models, evidence packages, and spatial layers. It provides DCAT-compatible JSON-LD catalogs, PROV-compatible provenance, GeoJSON and CSV exports, machine-readable licenses, explicit hosted/mirrored/referenced states, signed federation manifests, local trust policies, import previews, quarantine receipts, and human-confirmed acceptance records.
+
+- Public workspace: `/app/?view=federation`
+- Public exchange summary: `/public/institutional-data-exchange`
+- Public catalog: `/public/institutional-data-exchange/catalog?format=jsonld`
+- Public diagnostics: `/public/institutional-data-exchange/diagnostics`
+- Admin control center: `/admin/institutional-data-exchange/control-center`
+- Public shortcode: `[sc_public_institutional_data_exchange]`
+- Admin shortcode: `[sc_institutional_data_exchange_control_center]`
+
+Remote catalogs are never fetched or imported automatically. A signature demonstrates package integrity only when a trusted verification key is configured; it does not independently prove institutional identity. Private trust policies, import receipts, signing keys, and unpublished records remain outside public responses.
 
 ## v2.23.0 — Typed Cross-Platform Intelligence Workflows
 ### v2.23.0 workflow layer

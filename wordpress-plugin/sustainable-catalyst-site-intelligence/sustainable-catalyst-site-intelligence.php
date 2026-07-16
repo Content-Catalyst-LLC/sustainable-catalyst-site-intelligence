@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 2.23.0
+ * Version: 2.24.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '2.23.0';
+    const VERSION = '2.24.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -100,6 +100,8 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_institutional_workspaces_control_center', [$this, 'institutional_workspaces_control_center_shortcode']);
         add_shortcode('sc_public_cross_platform_workflows', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_cross_platform_workflows_control_center', [$this, 'cross_platform_workflows_control_center_shortcode']);
+        add_shortcode('sc_public_institutional_data_exchange', [$this, 'public_connector_panel_shortcode']);
+        add_shortcode('sc_institutional_data_exchange_control_center', [$this, 'institutional_data_exchange_control_center_shortcode']);
         add_shortcode('sc_scheduled_monitoring_control_center', [$this, 'scheduled_monitoring_control_center_shortcode']);
         add_shortcode('sc_public_intelligence_feed', [$this, 'public_intelligence_feed_shortcode']);
         add_shortcode('sc_public_cache_status', [$this, 'public_connector_panel_shortcode']);
@@ -823,6 +825,11 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/public-cross-platform-workflows', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_public_cross_platform_workflows'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/public-institutional-data-exchange', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_public_institutional_data_exchange'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/public-cache-status', [
@@ -1883,6 +1890,7 @@ final class SC_Site_Intelligence_Plugin {
             'monitoring_digests' => 'public/scheduled-monitoring',
             'institutional_workspaces' => 'public/institutional-workspaces',
             'cross_platform_workflows' => 'public/cross-platform-workflows',
+            'institutional_data_exchange' => 'public/institutional-data-exchange',
             'cache_status' => 'public/connectors/cache',
             'source_freshness' => 'public/connectors/freshness',
             'connector_reliability' => 'public/connectors/reliability',
@@ -1915,6 +1923,7 @@ final class SC_Site_Intelligence_Plugin {
     public function rest_public_monitoring_digests(WP_REST_Request $request) { return $this->rest_public_connector_panel('monitoring_digests'); }
     public function rest_public_institutional_workspaces(WP_REST_Request $request) { return $this->rest_public_connector_panel('institutional_workspaces'); }
     public function rest_public_cross_platform_workflows(WP_REST_Request $request) { return $this->rest_public_connector_panel('cross_platform_workflows'); }
+    public function rest_public_institutional_data_exchange(WP_REST_Request $request) { return $this->rest_public_connector_panel('institutional_data_exchange'); }
     public function rest_public_cache_status(WP_REST_Request $request) { return $this->rest_public_connector_panel('cache_status'); }
     public function rest_public_source_freshness(WP_REST_Request $request) { return $this->rest_public_connector_panel('source_freshness'); }
     public function rest_public_connector_reliability(WP_REST_Request $request) { return $this->rest_public_connector_panel('connector_reliability'); }
@@ -3282,6 +3291,7 @@ final class SC_Site_Intelligence_Plugin {
             'sc_public_monitoring_digests' => ['monitoring-digests', 'Scheduled Monitoring, Digests, and Public Intelligence Feeds', 'Human-reviewed daily and weekly digests, deduplicated alert evidence, and JSON, RSS, and Atom feeds without hosted subscriber profiles.'],
             'sc_public_institutional_workspaces' => ['institutional-workspaces', 'Institutional Workspaces, Collaboration, and Review', 'Human-published institutional workspace summaries and public source collections without exposing members, assignments, comments, review notes, or activity logs.'],
             'sc_public_cross_platform_workflows' => ['cross-platform-workflows', 'Typed Cross-Platform Intelligence Workflows', 'Public route contracts, required fields, platforms, and responsible-use boundaries without exposing packet payloads, receipts, retries, or linkbacks.'],
+            'sc_public_institutional_data_exchange' => ['institutional-data-exchange', 'Open Standards, Federation, and Institutional Data Exchange', 'Public institutions, DCAT-compatible records, licenses, provenance, distributions, signed-manifest metadata, and explicit hosted, mirrored, or referenced states without exposing trust policies or private imports.'],
             'sc_public_cache_status' => ['cache-status', 'Public Cache Status', 'Cache TTL, stale-safe display, and public source refresh policy.'],
             'sc_public_source_freshness' => ['source-freshness', 'Public Source Freshness', 'Freshness labels for public source families and connector panels.'],
             'sc_public_connector_reliability' => ['connector-reliability', 'Connector Reliability Summary', 'Public display reliability, recovery guidance, and degraded/fallback-safe source labels.'],
@@ -4822,6 +4832,27 @@ final class SC_Site_Intelligence_Plugin {
             <?php if (!empty($routes)): ?><h3>Typed route registry</h3><?php foreach (array_slice($routes,0,20) as $item): ?><div class="scsi-page-row"><strong><?php echo esc_html((string)($item['source_platform']??'')); ?> → <?php echo esc_html((string)($item['target_platform']??'')); ?></strong><small><?php echo esc_html((string)($item['packet_type']??'')); ?> · <?php echo esc_html(implode(', ',(array)($item['required_payload_fields']??[]))); ?></small></div><?php endforeach; ?><?php endif; ?>
             <?php if (!empty($packets)): ?><h3>Recent packet register</h3><?php foreach (array_slice($packets,0,15) as $item): ?><div class="scsi-page-row"><strong><?php echo esc_html((string)($item['title']??$item['packet_id']??'Packet')); ?></strong><small><?php echo esc_html((string)($item['status']??'draft')); ?> · <?php echo esc_html((string)($item['route_id']??'')); ?></small></div><?php endforeach; ?><?php endif; ?>
             <p class="scsi-muted">Packet creation, export, or queueing does not prove remote delivery. Platform Core or a separately configured adapter must deliver the packet and return an explicit receipt.</p>
+        </section><?php return ob_get_clean();
+    }
+
+    public function institutional_data_exchange_control_center_shortcode($atts = []) {
+        if (!current_user_can('manage_options')) { return ''; }
+        $data = $this->backend_request('admin/institutional-data-exchange/control-center');
+        if (is_wp_error($data)) { return '<section class="scsi-card"><p class="scsi-eyebrow">Institutional Data Exchange</p><h2>Control Center unavailable</h2><p class="scsi-muted">' . esc_html($data->get_error_message()) . '</p></section>'; }
+        $summary = isset($data['diagnostics']['summary']) && is_array($data['diagnostics']['summary']) ? $data['diagnostics']['summary'] : [];
+        $institutions = isset($data['institutions']) && is_array($data['institutions']) ? $data['institutions'] : [];
+        $records = isset($data['records']) && is_array($data['records']) ? $data['records'] : [];
+        $imports = isset($data['imports']) && is_array($data['imports']) ? $data['imports'] : [];
+        ob_start(); ?>
+        <section class="scsi-card scsi-institutional-data-exchange-control-center">
+            <p class="scsi-eyebrow">Private Admin Workspace · v<?php echo esc_html(self::VERSION); ?></p>
+            <h2>Open Standards, Federation, and Institutional Data Exchange</h2>
+            <p class="scsi-muted">Manage institutions, DCAT-compatible records, licenses, provenance, distributions, signed manifests, trust policies, import previews, quarantine receipts, and explicit hosted, mirrored, or referenced records.</p>
+            <div class="scsi-grid scsi-public-connector-health-grid"><?php foreach (['institution_count'=>'Institutions','record_count'=>'Records','manifest_count'=>'Manifests','import_count'=>'Imports','trust_policy_count'=>'Trust policies','quarantined_import_count'=>'Quarantined'] as $key=>$label): ?><div class="scsi-stat"><span><?php echo esc_html($label); ?></span><strong><?php echo esc_html((string)($summary[$key]??0)); ?></strong></div><?php endforeach; ?></div>
+            <?php if (!empty($institutions)): ?><h3>Institution registry</h3><?php foreach (array_slice($institutions,0,15) as $item): ?><div class="scsi-page-row"><strong><?php echo esc_html((string)($item['name']??$item['institution_id']??'Institution')); ?></strong><small><?php echo esc_html((string)($item['visibility']??'private')); ?> · <?php echo esc_html((string)($item['status']??'active')); ?></small></div><?php endforeach; ?><?php endif; ?>
+            <?php if (!empty($records)): ?><h3>Exchange records</h3><?php foreach (array_slice($records,0,15) as $item): ?><div class="scsi-page-row"><strong><?php echo esc_html((string)($item['title']??$item['record_id']??'Record')); ?></strong><small><?php echo esc_html((string)($item['record_type']??'dataset')); ?> · <?php echo esc_html((string)($item['hosting_mode']??'referenced')); ?> · <?php echo esc_html((string)($item['license']??'license not supplied')); ?></small></div><?php endforeach; ?><?php endif; ?>
+            <?php if (!empty($imports)): ?><h3>Recent import receipts</h3><?php foreach (array_slice($imports,0,10) as $item): ?><div class="scsi-page-row"><strong><?php echo esc_html((string)($item['manifest_id']??$item['import_id']??'Import')); ?></strong><small><?php echo esc_html((string)($item['status']??'preview')); ?> · <?php echo esc_html((string)($item['record_count']??0)); ?> records</small></div><?php endforeach; ?><?php endif; ?>
+            <p class="scsi-muted">Remote catalogs are never fetched or imported automatically. Signatures attest integrity only when a trusted verification key is configured and do not independently prove institutional identity.</p>
         </section><?php return ob_get_clean();
     }
 

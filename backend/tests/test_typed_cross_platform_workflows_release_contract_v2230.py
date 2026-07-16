@@ -4,12 +4,12 @@ ROOT=Path(__file__).resolve().parents[2]
 
 def test_release_contract_markers():
     checks={
-      "backend/app/version.py":["2.23.0","Typed Cross-Platform Intelligence Workflows"],
+      "backend/app/version.py":["2.24.0","Open Standards, Federation, and Institutional Data Exchange"],
       "backend/app/cross_platform_workflows_v2230.py":["class CrossPlatformWorkflowCenter","def create_packet(","def record_receipt(","def retry_failed(","def add_linkback("],
       "backend/public_app/index.html":["data-route=\"workflows\"","id=\"crossPlatformWorkflowStudio\""],
       "backend/public_app/service-worker.js":["/app/assets/workflows-v2230.js","/app/assets/workflows-v2230.css"],
-      "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php":["Version: 2.23.0","sc_public_cross_platform_workflows","sc_cross_platform_workflows_control_center"],
-      "README.md":["Current release:** v2.23.0 — Typed Cross-Platform Intelligence Workflows"],
+      "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php":["Version: 2.24.0","sc_public_cross_platform_workflows","sc_cross_platform_workflows_control_center"],
+      "README.md":["Current release:** v2.24.0 — Open Standards, Federation, and Institutional Data Exchange"],
     }
     for rel,markers in checks.items():
       text=(ROOT/rel).read_text()

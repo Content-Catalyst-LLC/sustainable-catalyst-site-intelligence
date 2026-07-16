@@ -64,6 +64,7 @@ from .intelligence_publishing_v2200 import IntelligencePublishingStudio
 from .scheduled_monitoring_v2210 import ScheduledMonitoringCenter
 from .institutional_workspaces_v2220 import InstitutionalWorkspaceCenter
 from .cross_platform_workflows_v2230 import CrossPlatformWorkflowCenter
+from .federation_exchange_v2240 import InstitutionalDataExchange
 from .public_live_connectors import (
     public_connector_status as build_public_connector_status,
     public_cache_status as build_public_cache_status,
@@ -2215,7 +2216,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v2.23.0 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v2.24.0 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -2357,7 +2358,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.23.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v2.24.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -2474,7 +2475,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.23.0 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v2.24.0 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -2596,7 +2597,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v2.23.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v2.24.0 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -2732,7 +2733,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.23.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v2.24.0 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -5909,7 +5910,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v2.23.0 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v2.24.0 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -6141,6 +6142,96 @@ def offline_experience_diagnostics(settings: Settings = Depends(get_settings)):
 def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     from .offline_mobile_accessibility_performance_v2120 import build_reliability
     return build_reliability(settings)
+
+
+# Site Intelligence v2.24.0 — Open Standards, Federation, and Institutional Data Exchange.
+def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
+    if not settings.federation_exchange_enabled:
+        raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
+    return InstitutionalDataExchange(settings)
+
+
+@app.get("/public/institutional-data-exchange")
+def public_institutional_data_exchange_endpoint(settings: Settings = Depends(get_settings)):
+    return _federation_exchange(settings).public_summary()
+
+
+@app.get("/public/institutional-data-exchange/diagnostics")
+def public_institutional_data_exchange_diagnostics_endpoint(settings: Settings = Depends(get_settings)):
+    return _federation_exchange(settings).diagnostics(public=True)
+
+
+@app.get("/public/institutional-data-exchange/catalog")
+def public_institutional_catalog_export_endpoint(format: str = Query(default="jsonld", pattern="^(json|jsonld|dcat|geojson|csv)$"), settings: Settings = Depends(get_settings)):
+    try:
+        body = _federation_exchange(settings).export_catalog(format, public_only=True)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+    media = "application/ld+json" if format in {"json", "jsonld", "dcat"} else ("application/geo+json" if format == "geojson" else "text/csv")
+    return Response(content=body, media_type=media, headers={"Content-Disposition": f'attachment; filename="site-intelligence-catalog-v2240.{"jsonld" if format in {"json","jsonld","dcat"} else format}"'})
+
+
+@app.get("/admin/institutional-data-exchange/control-center")
+def admin_institutional_data_exchange_control_center_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _federation_exchange(settings).control_center()
+
+
+@app.post("/admin/institutional-data-exchange/institutions")
+def admin_federation_register_institution_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _federation_exchange(settings).register_institution(request)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/institutional-data-exchange/records")
+def admin_federation_register_record_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _federation_exchange(settings).register_record(request)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/institutional-data-exchange/trust/{institution_id}")
+def admin_federation_set_trust_endpoint(institution_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _federation_exchange(settings).set_trust_policy(institution_id, request)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/institutional-data-exchange/manifests/{institution_id}")
+def admin_federation_build_manifest_endpoint(institution_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _federation_exchange(settings).build_manifest(institution_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Institution not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/institutional-data-exchange/manifests/{manifest_id}/publish")
+def admin_federation_publish_manifest_endpoint(manifest_id: str, request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _federation_exchange(settings).publish_manifest(manifest_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Manifest not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/institutional-data-exchange/import-preview")
+def admin_federation_import_preview_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    manifest = request.get("manifest")
+    return _federation_exchange(settings).import_preview(manifest, request.get("institution_id"), request.get("verification_key"))
+
+
+@app.post("/admin/institutional-data-exchange/imports")
+def admin_federation_accept_import_endpoint(request: dict = Body(default={}), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _federation_exchange(settings).accept_import(request.get("manifest"), request)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 # Site Intelligence standalone public application.
 from pathlib import Path as _Path

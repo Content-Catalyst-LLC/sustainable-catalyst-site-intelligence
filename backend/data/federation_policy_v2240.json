@@ -1,0 +1,21 @@
+{
+  "schema": "sc-institutional-federation-policy/1.0",
+  "version": "2.24.0",
+  "automatic_import": false,
+  "automatic_remote_fetch": false,
+  "automatic_remote_write": false,
+  "trust_policy_required": true,
+  "human_import_confirmation": true,
+  "signature_integrity_only": true,
+  "signature_proves_identity": false,
+  "public_private_records_exposed": false,
+  "individual_tracking": false,
+  "autonomous_consequential_actions": false,
+  "allowed_record_types": ["dataset", "publication", "service", "model", "evidence-package", "spatial-layer"],
+  "hosting_modes": ["hosted", "mirrored", "referenced"],
+  "notes": [
+    "A valid signature demonstrates integrity only when a trusted key is configured; it does not independently prove institutional identity.",
+    "Imported manifests are previewed and validated before a human-confirmed acceptance receipt is recorded.",
+    "Hosted, mirrored, and externally referenced records remain explicitly distinguishable."
+  ]
+}

@@ -142,6 +142,6 @@ def test_interface_wordpress_and_release_contract():
     php = (root / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
     assert 'data-route="alerts"' in html and 'id="alertsStudio"' in html
     assert "SCAlertsV280" in js and ".alerts-studio" in css
-    assert 'const APP_VERSION="2.23.0"' in app_js
-    assert "Version: 2.23.0" in php and "sc_alerts_monitoring_live_intelligence" in php
+    assert 'const APP_VERSION="2.24.0"' in app_js
+    assert "Version: 2.24.0" in php and "sc_alerts_monitoring_live_intelligence" in php
     assert "No server-side user tracking" in html

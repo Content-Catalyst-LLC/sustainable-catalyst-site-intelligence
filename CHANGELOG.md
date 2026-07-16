@@ -1,3 +1,15 @@
+## 2.24.0 — Open Standards, Federation, and Institutional Data Exchange
+
+- Added public institution and catalog registries for datasets, publications, services, models, evidence packages, and spatial layers.
+- Added DCAT-compatible JSON-LD, PROV-compatible provenance, GeoJSON, CSV, machine-readable licensing, and distribution metadata.
+- Added explicit hosted, mirrored, and externally referenced record modes.
+- Added signed federation manifests using SHA-256 and HMAC-SHA256 integrity receipts.
+- Added institution-level trust policies, expected signing-key IDs, allowed record types, and allowed hosting modes.
+- Added preview-first manifest validation, duplicate detection, quarantine receipts, and human-confirmed import acceptance.
+- Added public-safe federation summaries and catalogs while keeping trust policies, import receipts, signing keys, and private records protected.
+- Added the Federation public application workspace and WordPress public/admin shortcodes.
+- Preserved boundaries against automatic remote fetching, automatic imports, institutional identity claims, private-record exposure, individual tracking, and autonomous consequential actions.
+
 ## 2.23.0 — Typed Cross-Platform Intelligence Workflows
 
 - Added twelve typed bidirectional routes across Site Intelligence, Workbench, Decision Studio, Research Librarian, Knowledge Library, Research Lab, and Platform Core.

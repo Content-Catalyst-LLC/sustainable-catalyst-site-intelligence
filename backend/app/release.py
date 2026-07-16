@@ -47,6 +47,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         {"id": "scheduled_monitoring_digests_public_feeds", "label": "Scheduled Monitoring, Digests, and Public Intelligence Feeds are available", "status": "pass", "detail": "Reusable monitor definitions, explicit due-job checks, deterministic alert fingerprints, duplicate suppression, human-reviewed daily and weekly digests, JSON/RSS/Atom feeds, quiet periods, delivery receipts, and optional disabled-by-default adapters are available without hosted subscriber profiles or emergency authority.", "action": "Verify /public/scheduled-monitoring, /public/intelligence-digests, /public/intelligence-feeds, and the token-protected /admin/scheduled-monitoring/control-center and /admin/scheduled-monitoring/run-due?dry_run=true."},
         {"id": "institutional_workspaces_collaboration_review", "label": "Institutional Workspaces, Collaboration, and Review are available", "status": "pass", "detail": "Optional shared workspaces support explicit roles, assignments, comments, evidence review, source collections, activity receipts, preview-first retention, and public-safe publication summaries without requiring public accounts or claiming an identity provider.", "action": "Verify /app/?view=workspaces, /public/institutional-workspaces, /public/institutional-workspaces/diagnostics, and the token-protected /admin/institutional-workspaces/control-center."},
         {"id": "typed_cross_platform_intelligence_workflows", "label": "Typed Cross-Platform Intelligence Workflows are available", "status": "pass", "detail": "Registered bidirectional packet routes, required-field validation, provenance, receipts, linkbacks, bounded retry records, and Platform Core orchestration envelopes are available without claiming automatic remote delivery or account provisioning.", "action": "Verify /app/?view=workflows, /public/cross-platform-workflows, /public/cross-platform-workflows/diagnostics, and the token-protected /admin/cross-platform-workflows/control-center."},
+        {"id": "open_standards_federation_exchange", "label": "Open Standards, Federation, and Institutional Data Exchange are available", "status": "pass", "detail": "DCAT-compatible JSON-LD catalogs, PROV-compatible lineage, GeoJSON and CSV exports, explicit licenses and hosting modes, signed manifests, trust policies, and preview-first imports are available without automatic remote fetching or institutional identity claims.", "action": "Verify /app/?view=federation, /public/institutional-data-exchange, /public/institutional-data-exchange/catalog, and the token-protected /admin/institutional-data-exchange/control-center."},
         {"id": "platform_core", "label": "Platform Core remains optional and free-source governed", "status": "pass", "detail": "Public routes degrade cleanly and do not require a paid provider or expose Core credentials.", "action": "Configure only the scoped Core public-read key in the Site Intelligence backend."},
         {"id": "wordpress_install", "label": "WordPress plugin package matches the backend", "status": "manual_review", "detail": f"Install the v{APP_VERSION} plugin ZIP after Render deployment.", "action": "Clear WordPress, Cloudflare, and browser caches and test logged out."},
         {"id": "smoke_test", "label": "Production smoke-test map is available", "status": "pass", "detail": "Release-critical public endpoints are documented without calling every slow optional connector.", "action": "Run the smoke-test endpoint after deployment."},
@@ -64,7 +65,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Checklist",
         "summary": RELEASE_NAME,
-        "release_stage": "v2.23.0_typed_cross_platform_intelligence_workflows",
+        "release_stage": "v2.24.0_typed_cross_platform_intelligence_workflows",
         "status": "launch_ready_with_manual_review" if counts["fail"] == 0 else "needs_fix",
         "score": score,
         "counts": counts,
@@ -190,6 +191,9 @@ def smoke_test(settings: Settings) -> Dict[str, Any]:
         {"path": "/public/intelligence-digests", "scope": "public", "critical": True, "expected": "human-approved public daily and weekly digests"},
         {"path": "/public/intelligence-feeds", "scope": "public", "critical": True, "expected": "public JSON, RSS, and Atom feed directory without subscriber profiles"},
         {"path": "/admin/scheduled-monitoring/control-center", "scope": "private/admin", "critical": True, "expected": "monitor definitions, due checks, alerts, digests, deliveries, and feed controls"},
+        {"path": "/public/institutional-data-exchange", "scope": "public", "critical": True, "expected": "public institutions, catalog records, manifests, standards, and governance boundaries"},
+        {"path": "/public/institutional-data-exchange/catalog?format=jsonld", "scope": "public", "critical": True, "expected": "DCAT-compatible JSON-LD public catalog"},
+        {"path": "/admin/institutional-data-exchange/control-center", "scope": "private/admin", "critical": True, "expected": "institutions, records, manifests, trust policies, imports, and diagnostics"},
         {"path": "/release/status", "scope": "private/admin", "critical": True, "expected": "release status"},
     ]
     return {
@@ -213,6 +217,7 @@ def smoke_test(settings: Settings) -> Dict[str, Any]:
             'curl "https://sustainable-catalyst-site-intelligence.onrender.com/public/model-governance"',
             'curl "https://sustainable-catalyst-site-intelligence.onrender.com/public/knowledge-graph"',
             'curl "https://sustainable-catalyst-site-intelligence.onrender.com/public/scheduled-monitoring"',
+            'curl "https://sustainable-catalyst-site-intelligence.onrender.com/public/institutional-data-exchange"',
         ],
         "wordpress_checks": [
             "Confirm [sc_site_intelligence_app height=\"1000\"] renders while logged out.",
@@ -231,7 +236,7 @@ def release_status(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Status",
         "summary": RELEASE_NAME,
-        "release_stage": "v2.23.0_typed_cross_platform_intelligence_workflows",
+        "release_stage": "v2.24.0_typed_cross_platform_intelligence_workflows",
         "release_status": checklist["status"],
         "release_score": checklist["score"],
         "public_shortcode": "[sc_site_intelligence_app height=\"1000\"]",

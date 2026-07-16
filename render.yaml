@@ -94,7 +94,7 @@ services:
 # SC_SI_LOW_BANDWIDTH_DEFAULT=false
 
 
-# v2.23.0 optional institutional workspace persistence values:
+# v2.22.0 optional institutional workspace persistence values:
 # SC_SI_INSTITUTIONAL_WORKSPACES_ENABLED=true
 # SC_SI_INSTITUTIONAL_WORKSPACES_ROOT_PATH=/var/data/institutional-workspaces
 # SC_SI_INSTITUTIONAL_WORKSPACES_WORKSPACES_PATH=/var/data/institutional-workspaces/workspaces_v2220.jsonl
@@ -105,3 +105,14 @@ services:
 # SC_SI_INSTITUTIONAL_WORKSPACES_COLLECTIONS_PATH=/var/data/institutional-workspaces/source_collections_v2220.jsonl
 # SC_SI_INSTITUTIONAL_WORKSPACES_ACTIVITY_PATH=/var/data/institutional-workspaces/activity_v2220.jsonl
 # SC_SI_INSTITUTIONAL_WORKSPACES_RETENTION_PATH=/var/data/institutional-workspaces/retention_v2220.jsonl
+
+# v2.24.0 optional federation exchange persistence and signing values:
+# SC_SI_FEDERATION_EXCHANGE_ENABLED=true
+# SC_SI_FEDERATION_ROOT_PATH=/var/data/federation-exchange
+# SC_SI_FEDERATION_INSTITUTIONS_PATH=/var/data/federation-exchange/institutions_v2240.jsonl
+# SC_SI_FEDERATION_RECORDS_PATH=/var/data/federation-exchange/records_v2240.jsonl
+# SC_SI_FEDERATION_MANIFESTS_PATH=/var/data/federation-exchange/manifests_v2240.jsonl
+# SC_SI_FEDERATION_IMPORTS_PATH=/var/data/federation-exchange/imports_v2240.jsonl
+# SC_SI_FEDERATION_TRUST_PATH=/var/data/federation-exchange/trust_v2240.jsonl
+# SC_SI_FEDERATION_SIGNING_KEY=
+# SC_SI_FEDERATION_SIGNING_KEY_ID=
