@@ -23,7 +23,7 @@
     }
     throw last;
   }
-  const APP_VERSION="2.25.0";
+  const APP_VERSION="3.0.0";
   let heightFrame=0;
   function documentHeight(){
     const body=document.body,root=document.documentElement;
@@ -175,6 +175,7 @@
   }
   function routeMeta(route){
     return {
+      platform:["CONNECTED PUBLIC INTELLIGENCE AND EVIDENCE PLATFORM","One public discovery and provenance layer","Search across countries, regions, events, indicators, datasets, sources, claims, models, investigations, publications, and workflows while preserving evidence type, lineage, uncertainty, and public/private boundaries."],
       global:["GLOBAL CONDITIONS AND LIVE MAP OBSERVATORY","Global public conditions","Explore Core-powered geographic records, source-aware observations, existing Site Intelligence events, and Earth-observation context in one map."],
       economics:["ECONOMICS, MARKETS, AND SUSTAINABILITY SIGNALS","Official economic conditions","Explore source-aware macroeconomic, labour, trade, energy, agriculture, demographic, company-filing, and sustainability records without hiding reporting frequency or methodological limits."],
       law:["INTERNATIONAL LAW AND GLOBAL GOVERNANCE OBSERVATORY","Official legal and governance records","Explore treaties, resolutions, judicial material, human-rights recommendations, reports, and codification work without flattening authority, procedure, or legal effect."],
@@ -1191,6 +1192,7 @@
     alerts:{label:"Alerts, Monitoring, and Live Streams",keys:["alertFamily","alertCountry","alertSource","alertFreshness","alertQuery"]},
     scenarios:{label:"Comparative Intelligence and Scenario Studio",keys:["scenarioGeographies","scenarioIndicators","scenarioDomain","scenarioStart","scenarioEnd"]},
     research:{label:"Research Paths and Investigations",keys:[]},
+    platform:{label:"Connected Public Intelligence",keys:["q","record_type"]},
     observatory:{label:"Auditable Public Observatory",keys:[]},
     overview:{label:"Overview",keys:["country","imageryLayer","imageryDate","mapLat","mapLng","mapZoom"]},
     earth:{label:"Earth Observation",keys:["earthLayer","dateA","dateB","opacity","swipe","mapLat","mapLng","mapZoom"]},
@@ -1420,6 +1422,14 @@
     if(route!=="workflows")window.SCCrossPlatformWorkflowsV2230?.close?.();
     if(route!=="federation")window.SCInstitutionalFederationV2240?.close?.();
     if(route!=="governance")window.SCProductionGovernanceV2250?.close?.();
+    if(route!=="platform")window.SCConnectedPlatformV300?.close?.();
+    if(route==="platform"){
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
+      closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
+      closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
+      closePublicLaunchPortfolio();closeAuditablePublicObservatory();
+      await window.SCConnectedPlatformV300?.open?.();return;
+    }
     if(route==="global"){
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
       closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
@@ -1728,5 +1738,5 @@ document.head.appendChild(visualStyle);
 
 window.addEventListener("load",reportHeight,{once:true});window.addEventListener("resize",reportHeight,{passive:true});window.visualViewport?.addEventListener("resize",reportHeight,{passive:true});window.addEventListener("message",event=>{if(event.data?.type==="SC_SI_REQUEST_HEIGHT")reportHeight()});if("ResizeObserver" in window)new ResizeObserver(reportHeight).observe(document.body);
 
-/* v2.25.0 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v2.25.0 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v3.0.0 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v3.0.0 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

@@ -1,11 +1,26 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v2.25.0 — Security, Privacy, Governance, and Production Scale
+**Current release:** v3.0.0 — Connected Public Intelligence and Evidence Platform
 
 
-## v2.25.0 — Security, Privacy, Governance, and Production Scale
+## v3.0.0 — Connected Public Intelligence and Evidence Platform
 
-Site Intelligence v2.25.0 adds a production control plane around the existing public observatory. It provides versioned SQLite migrations, scoped API keys stored only as hashes, hash-chained audit events, privacy-request tracking, preview-first retention, digest-verified backups, a persistent bounded job queue, deployment receipts, production diagnostics, and a synthetic load probe.
+Site Intelligence v3.0.0 unifies the public observatories, source and methodology records, historical archive, spatial evidence, comparable series, model governance, claims and contradiction review, knowledge graph, publishing, monitoring, institutional workspaces, cross-platform workflows, federation, and production governance into one connected public discovery layer.
+
+Public users can search countries, regions, events, indicators, datasets, sources, claims, models, investigations, publications, and workflow routes without creating an account. Results preserve record type, source, route, provenance receipts, uncertainty, and responsible-use boundaries. Search relevance is not treated as truth, authority, causation, importance, endorsement, or risk.
+
+Primary v3 endpoints:
+
+- `/public/connected-intelligence`
+- `/public/connected-intelligence/search?q=...`
+- `/public/connected-intelligence/context/{record_id}`
+- `/public/connected-intelligence/provenance/{record_id}`
+- `/public/connected-intelligence/lifecycle`
+- `/public/connected-intelligence/diagnostics`
+- `/admin/connected-intelligence/control-center`
+
+
+Site Intelligence v3.0.0 adds a production control plane around the existing public observatory. It provides versioned SQLite migrations, scoped API keys stored only as hashes, hash-chained audit events, privacy-request tracking, preview-first retention, digest-verified backups, a persistent bounded job queue, deployment receipts, production diagnostics, and a synthetic load probe.
 
 - Public workspace: `/app/?view=governance`
 - Public summary: `/public/production-governance`

@@ -1,4 +1,8 @@
-## 2.25.0 — Security, Privacy, Governance, and Production Scale
+## 3.0.0 — Connected Public Intelligence and Evidence Platform
+
+- Unified public search across countries, regions, events, indicators, datasets, sources, claims, models, investigations, publications, and workflow routes.
+- Added shared record context, provenance chains, source-to-publication lifecycle views, JSON/CSV exports, and a dedicated Connected Platform workspace.
+- Preserved account-free public access, private-record exclusion, human review, conflicting evidence, and explicit no-causation/no-hidden-ranking/no-remote-delivery boundaries.
 
 - Added versioned SQLite schema migrations and production storage diagnostics.
 - Added scoped API keys stored as SHA-256 hashes and displayed only once.

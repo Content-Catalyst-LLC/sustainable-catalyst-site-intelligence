@@ -1,0 +1,23 @@
+{
+  "schema": "sc-connected-public-intelligence-policy/1.0",
+  "version": "3.0.0",
+  "title": "Connected Public Intelligence and Evidence Platform",
+  "public_index": {
+    "sources": ["public-safe static registries", "approved public runtime records"],
+    "private_records_excluded": true,
+    "credentials_excluded": true,
+    "account_required": false,
+    "persistent_search_cluster_claimed": false
+  },
+  "governance": {
+    "search_relevance_is_evidence_quality": false,
+    "graph_proximity_implies_causation": false,
+    "conflicting_evidence_preserved": true,
+    "human_review_required_for_public_claims": true,
+    "automatic_remote_delivery_claimed": false,
+    "automatic_publication_claimed": false,
+    "individual_tracking_allowed": false,
+    "hidden_ranking_allowed": false
+  },
+  "lifecycle": ["source", "ingest", "archive", "harmonize", "analyze", "review", "publish", "monitor", "exchange"]
+}

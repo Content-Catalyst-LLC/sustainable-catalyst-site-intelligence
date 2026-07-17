@@ -13,7 +13,7 @@ from uuid import uuid4
 
 from .config import Settings
 
-RELEASE_VERSION = "2.25.0"
+RELEASE_VERSION = "3.0.0"
 SCHEMA_VERSION = "sc-site-intelligence-institutional-workspaces/1.0"
 WORKSPACE_SCHEMA = "sc-site-intelligence-shared-workspace/1.0"
 MEMBER_SCHEMA = "sc-site-intelligence-workspace-member/1.0"

@@ -1,4 +1,4 @@
-APP_VERSION = "2.25.0"
+APP_VERSION = "3.0.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Security, Privacy, Governance, and Production Scale"
+RELEASE_NAME = "Connected Public Intelligence and Evidence Platform"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

@@ -66,6 +66,7 @@ from .institutional_workspaces_v2220 import InstitutionalWorkspaceCenter
 from .cross_platform_workflows_v2230 import CrossPlatformWorkflowCenter
 from .federation_exchange_v2240 import InstitutionalDataExchange
 from .production_governance_v2250 import ProductionGovernanceCenter, SlidingWindowRateLimiter
+from .connected_public_intelligence_v300 import ConnectedPublicIntelligencePlatform
 from .public_live_connectors import (
     public_connector_status as build_public_connector_status,
     public_cache_status as build_public_cache_status,
@@ -2220,7 +2221,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v2.25.0 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v3.0.0 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -2362,7 +2363,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.25.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v3.0.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -2479,7 +2480,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.25.0 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v3.0.0 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -2601,7 +2602,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v2.25.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v3.0.0 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -2737,7 +2738,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v2.25.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v3.0.0 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -5914,7 +5915,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v2.25.0 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v3.0.0 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -6148,7 +6149,7 @@ def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     return build_reliability(settings)
 
 
-# Site Intelligence v2.25.0 — Open Standards, Federation, and Institutional Data Exchange.
+# Site Intelligence v3.0.0 — Open Standards, Federation, and Institutional Data Exchange.
 def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
     if not settings.federation_exchange_enabled:
         raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
@@ -6238,7 +6239,7 @@ def admin_federation_accept_import_endpoint(request: dict = Body(default={}), se
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-# Site Intelligence v2.25.0 — Security, Privacy, Governance, and Production Scale.
+# Site Intelligence v3.0.0 — Security, Privacy, Governance, and Production Scale.
 def _production_governance(settings: Settings) -> ProductionGovernanceCenter:
     if not settings.production_governance_enabled:
         raise HTTPException(status_code=503, detail="Production governance is disabled.")
@@ -6386,6 +6387,66 @@ def admin_production_governance_deployment_endpoint(request: dict = Body(default
 @app.get("/admin/production-governance/load-probe")
 def admin_production_governance_load_probe_endpoint(requests: int = Query(default=250, ge=1, le=5000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return _production_governance(settings).load_probe(requests)
+
+# Site Intelligence v3.0.0 — Connected Public Intelligence and Evidence Platform.
+def _connected_platform(settings: Settings) -> ConnectedPublicIntelligencePlatform:
+    if not settings.connected_platform_enabled:
+        raise HTTPException(status_code=404, detail="Connected platform is disabled.")
+    return ConnectedPublicIntelligencePlatform(settings)
+
+
+@app.get("/public/connected-intelligence")
+def public_connected_intelligence_endpoint(settings: Settings = Depends(get_settings)):
+    return _connected_platform(settings).overview()
+
+
+@app.get("/public/connected-intelligence/search")
+def public_connected_intelligence_search_endpoint(q: str = Query(default="", max_length=240), record_type: str = Query(default="", max_length=80), limit: int = Query(default=25, ge=1, le=100), settings: Settings = Depends(get_settings)):
+    return _connected_platform(settings).search(q, record_type=record_type, limit=limit)
+
+
+@app.get("/public/connected-intelligence/context/{record_id:path}")
+def public_connected_intelligence_context_endpoint(record_id: str, settings: Settings = Depends(get_settings)):
+    try:
+        return _connected_platform(settings).context(record_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Connected intelligence record not found.") from exc
+
+
+@app.get("/public/connected-intelligence/provenance/{record_id:path}")
+def public_connected_intelligence_provenance_endpoint(record_id: str, settings: Settings = Depends(get_settings)):
+    try:
+        return _connected_platform(settings).provenance(record_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Connected intelligence record not found.") from exc
+
+
+@app.get("/public/connected-intelligence/lifecycle")
+def public_connected_intelligence_lifecycle_endpoint(settings: Settings = Depends(get_settings)):
+    return _connected_platform(settings).lifecycle()
+
+
+@app.get("/public/connected-intelligence/diagnostics")
+def public_connected_intelligence_diagnostics_endpoint(settings: Settings = Depends(get_settings)):
+    return _connected_platform(settings).diagnostics()
+
+
+@app.get("/public/connected-intelligence/export")
+def public_connected_intelligence_export_endpoint(q: str = Query(default="", max_length=240), format: str = Query(default="json", pattern="^(json|csv)$"), limit: int = Query(default=100, ge=1, le=100), settings: Settings = Depends(get_settings)):
+    body, media_type = _connected_platform(settings).export(q, format_name=format, limit=limit)
+    suffix = "csv" if format == "csv" else "json"
+    return Response(content=body, media_type=media_type, headers={"Content-Disposition": f'attachment; filename="connected-intelligence-{APP_VERSION}.{suffix}"', "X-SC-Site-Intelligence-Version": APP_VERSION})
+
+
+@app.get("/admin/connected-intelligence/control-center")
+def admin_connected_intelligence_control_center_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _connected_platform(settings).control_center()
+
+
+@app.post("/admin/connected-intelligence/reindex-preview")
+def admin_connected_intelligence_reindex_preview_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    center = _connected_platform(settings)
+    return {"ok": True, "version": APP_VERSION, "preview": True, "write_performed": False, "record_count": len(center.records()), "diagnostics": center.diagnostics()}
 
 # Site Intelligence standalone public application.
 from pathlib import Path as _Path

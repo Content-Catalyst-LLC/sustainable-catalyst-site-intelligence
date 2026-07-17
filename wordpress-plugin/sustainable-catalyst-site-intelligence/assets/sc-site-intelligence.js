@@ -2606,6 +2606,7 @@
       'cross-platform-workflows': '/public-cross-platform-workflows',
       'institutional-data-exchange': '/public-institutional-data-exchange',
       'production-governance': '/public-production-governance',
+      'connected-intelligence': '/connected-public-intelligence',
       'cache-status': '/public-cache-status',
       'source-freshness': '/public-source-freshness',
       'connector-reliability': '/public-connector-reliability',

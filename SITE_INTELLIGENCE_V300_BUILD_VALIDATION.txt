@@ -1,0 +1,22 @@
+Site Intelligence v3.0.0 — Connected Public Intelligence and Evidence Platform
+
+Validation summary
+- Backend regression suite: 568 tests passed
+- Immutable release manifest: 545 files verified
+- Public application HTML IDs: 670 unique IDs with no duplicates
+- Unified public search, context, provenance, lifecycle, diagnostics, and JSON/CSV exports validated
+- Public application Connected Platform workspace validated
+- WordPress public and administrator shortcodes validated
+- FastAPI, Starlette, and HTTPX2 TestClient compatibility retained
+- Python compilation and syntax passed
+- Application and service-worker JavaScript syntax passed
+- WordPress JavaScript and PHP syntax passed
+- JSON and webmanifest parsing passed
+- Writable runtime state excluded from the immutable package
+
+Responsible-use validation
+- Account-free public access preserved
+- Private runtime records and credentials excluded
+- Human approval and contradiction visibility preserved
+- Search relevance is not treated as truth, authority, importance, causation, endorsement, or risk
+- No persistent search-cluster, automatic-publication, or automatic-remote-delivery claim

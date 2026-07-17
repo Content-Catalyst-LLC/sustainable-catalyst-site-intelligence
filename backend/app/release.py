@@ -15,6 +15,7 @@ def _now() -> str:
 def release_checklist(settings: Settings) -> Dict[str, Any]:
     checks = [
         {"id": "canonical_version", "label": f"Backend version is v{APP_VERSION}", "status": "pass" if settings.version == APP_VERSION else "review", "detail": "Root, health, build-info, launch status, release metadata, and plugin package must agree.", "action": f"Confirm the deployed root endpoint reports {APP_VERSION}."},
+        {"id": "connected_public_intelligence", "label": "Connected Public Intelligence and Evidence Platform is available", "status": "pass", "detail": "One public-safe discovery layer connects countries, events, indicators, datasets, sources, claims, models, investigations, publications, workspaces, and workflow routes while preserving provenance and public/private boundaries.", "action": "Verify /public/connected-intelligence, unified search, context, provenance, lifecycle, diagnostics, and /app/?view=platform."},
         {"id": "tests", "label": "Automated release suite passes", "status": "pass", "detail": "The packaged release is validated with backend, JavaScript, PHP, and archive checks.", "action": "Do not deploy a package with a failing release test."},
         {"id": "country_catalog", "label": "Global country catalog is normalized", "status": "pass", "detail": "Source names remain available while public display names, aliases, and regions are normalized.", "action": "Verify the catalog and search endpoints after deployment."},
         {"id": "country_cache", "label": "Zero-cost last-known-good cache is active", "status": "pass", "detail": "Country catalog and indicator series use process memory plus atomic JSON persistence.", "action": "Verify cache state through public-safe country diagnostics."},
@@ -66,7 +67,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Checklist",
         "summary": RELEASE_NAME,
-        "release_stage": "v2.25.0_security_privacy_governance_production_scale",
+        "release_stage": "v3.0.0_security_privacy_governance_production_scale",
         "status": "launch_ready_with_manual_review" if counts["fail"] == 0 else "needs_fix",
         "score": score,
         "counts": counts,
@@ -237,7 +238,7 @@ def release_status(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Status",
         "summary": RELEASE_NAME,
-        "release_stage": "v2.25.0_security_privacy_governance_production_scale",
+        "release_stage": "v3.0.0_security_privacy_governance_production_scale",
         "release_status": checklist["status"],
         "release_score": checklist["score"],
         "public_shortcode": "[sc_site_intelligence_app height=\"1000\"]",
