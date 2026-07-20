@@ -7,7 +7,7 @@ client = TestClient(app)
 def test_root_reports_v1182():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json()["version"] == "3.1.1"
+    assert response.json()["version"] == "3.1.2"
 
 def test_wordpress_loader_cleanup_present():
     base = Path(__file__).resolve().parents[2] / "wordpress-plugin" / "sustainable-catalyst-site-intelligence"

@@ -1,0 +1,32 @@
+Site Intelligence v3.1.2 — Navigation Surface Harmony and Signal Expansion
+
+Validation completed: 2026-07-20
+
+PASS: 576-test backend regression suite.
+PASS: v3.1.2 focused Live Intelligence contracts.
+PASS: Python syntax and import compilation.
+PASS: PHP syntax for the WordPress plugin.
+PASS: JavaScript syntax for the WordPress ticker and public application assets.
+PASS: JSON and webmanifest parsing.
+PASS: WordPress/backend version parity at 3.1.2.
+PASS: Electronic ticker hover, focus, and manual pause contracts retained.
+PASS: Default signal limit expanded to 16; configurable maximum expanded to 24.
+PASS: Three-signal-per-source cap and category-balanced selection.
+PASS: Demonstration records and sample connector values remain excluded.
+PASS: Periodic World Bank indicators require explicit data-year labels.
+PASS: Astra/theme navigation and breadcrumb styling is not overridden.
+PASS: Legacy parchment body class and CSS selectors removed.
+PASS: Repository runtime state removed before packaging.
+
+Live collectors available when configured and reachable:
+- NOAA / National Weather Service
+- USGS Earthquake Hazards Program
+- NASA EONET
+- ReliefWeb
+- NASA POWER
+- OpenAlex
+- World Bank
+
+Public data remains cache-safe and source-attributed. Upstream availability and
+freshness vary by provider. No fabricated values are substituted when a live or
+cached source is unavailable.

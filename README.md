@@ -1,12 +1,12 @@
 # Sustainable Catalyst Site Intelligence
 
-## v3.1.1 — Live Intelligence Content and Interface Repair
+## v3.1.2 — Navigation Surface Harmony and Signal Expansion
 
-Repairs the electronic ticker interaction and changes the homepage feed from an operational-status strip into a useful public-interest signal board. The release summarizes verified USGS earthquake records, NASA EONET natural events, ReliefWeb humanitarian reports, and live-or-cached NOAA/NWS weather context while suppressing demonstration fixtures and sample connector values.
+Expands the electronic Live Intelligence board from a small event/status feed into a balanced public-interest signal layer. The ticker can now combine verified USGS, NASA EONET, ReliefWeb, NOAA/NWS, NASA POWER, OpenAlex, and World Bank context, with a 16-signal default, 24-signal ceiling, per-source caps, category rotation, duplicate suppression, explicit data-year labels, and one quiet platform-confidence item.
 
-The automatic ticker can now follow Astra's configured breadcrumb hook and render immediately after the breadcrumb. A fallback below-header placement and shortcode-only mode remain available. The release also adds a warm parchment treatment for the utility navigation and breadcrumb area, explicit JavaScript hover/focus pausing, stronger cached-feed continuity, and one quiet platform-confidence item rather than a feed dominated by diagnostics.
+The WordPress plugin no longer applies custom colors to Astra utility navigation or breadcrumb surfaces. Existing theme and Astra defaults remain in control. Automatic placement below the configured breadcrumb, below-header fallback, shortcode-only mode, hover/focus pause, manual pause, source attribution, freshness labels, and cached-feed continuity remain available.
 
-**Current release:** v3.1.1 — Connected Public Intelligence and Evidence Platform
+**Current release:** v3.1.2 — Connected Public Intelligence and Evidence Platform
 
 
 ## v3.0.0 — Connected Public Intelligence and Evidence Platform

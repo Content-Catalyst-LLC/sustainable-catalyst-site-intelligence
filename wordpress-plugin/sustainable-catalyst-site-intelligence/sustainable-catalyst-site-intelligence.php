@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.1.1
+ * Version: 3.1.2
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.1.1';
+    const VERSION = '3.1.2';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -251,9 +251,8 @@ final class SC_Site_Intelligence_Plugin {
             'show_top_live_intelligence' => '1',
             'live_intelligence_scope' => 'homepage',
             'live_intelligence_placement' => 'below_breadcrumb',
-            'live_intelligence_parchment_navigation' => '1',
             'live_intelligence_selected_pages' => '',
-            'live_intelligence_limit' => '8',
+            'live_intelligence_limit' => '16',
             'live_intelligence_speed' => '42',
             'live_intelligence_duplicate_protection' => '1',
             'live_intelligence_show_sources' => '1',
@@ -275,6 +274,18 @@ final class SC_Site_Intelligence_Plugin {
         $installed = sanitize_text_field((string) get_option(self::INSTALLED_VERSION_OPTION, ''));
         if ($installed === self::VERSION) {
             return;
+        }
+
+        // v3.1.2 leaves Astra/theme navigation and breadcrumb colors untouched.
+        // Expand only installations still using the old eight-signal default;
+        // preserve any explicit administrator choice.
+        $stored_options = get_option(self::OPTION_KEY, []);
+        if (is_array($stored_options)) {
+            unset($stored_options['live_intelligence_parchment_navigation']);
+            if (!isset($stored_options['live_intelligence_limit']) || (string) $stored_options['live_intelligence_limit'] === '8') {
+                $stored_options['live_intelligence_limit'] = '16';
+            }
+            update_option(self::OPTION_KEY, $stored_options, false);
         }
 
         self::clear_all_build_info_cache();
@@ -528,10 +539,9 @@ final class SC_Site_Intelligence_Plugin {
         $output['live_intelligence_scope'] = in_array($scope, ['homepage', 'selected', 'entire_site'], true) ? $scope : 'homepage';
         $placement = isset($input['live_intelligence_placement']) ? sanitize_key($input['live_intelligence_placement']) : $defaults['live_intelligence_placement'];
         $output['live_intelligence_placement'] = in_array($placement, ['below_breadcrumb', 'below_header', 'shortcode_only'], true) ? $placement : 'below_breadcrumb';
-        $output['live_intelligence_parchment_navigation'] = !empty($input['live_intelligence_parchment_navigation']) ? '1' : '0';
         $selected = isset($input['live_intelligence_selected_pages']) ? sanitize_text_field($input['live_intelligence_selected_pages']) : '';
         $output['live_intelligence_selected_pages'] = implode(',', array_filter(array_map('absint', preg_split('/[\s,]+/', $selected))));
-        $output['live_intelligence_limit'] = (string) max(1, min(20, absint($input['live_intelligence_limit'] ?? 8)));
+        $output['live_intelligence_limit'] = (string) max(1, min(24, absint($input['live_intelligence_limit'] ?? 16)));
         $output['live_intelligence_speed'] = (string) max(18, min(120, absint($input['live_intelligence_speed'] ?? 42)));
         $output['live_intelligence_duplicate_protection'] = !empty($input['live_intelligence_duplicate_protection']) ? '1' : '0';
         $output['live_intelligence_show_sources'] = !empty($input['live_intelligence_show_sources']) ? '1' : '0';
@@ -2364,7 +2374,7 @@ final class SC_Site_Intelligence_Plugin {
 
     public function rest_live_intelligence(WP_REST_Request $request) {
         $category = sanitize_key((string) $request->get_param('category'));
-        $limit = max(1, min(20, absint($request->get_param('limit') ?: 8)));
+        $limit = max(1, min(24, absint($request->get_param('limit') ?: 16)));
         $query = ['limit' => $limit];
         if ($category !== '') {
             $query['category'] = $category;
@@ -2399,9 +2409,6 @@ final class SC_Site_Intelligence_Plugin {
 
     public function live_intelligence_body_classes($classes) {
         $options = self::options();
-        if (($options['live_intelligence_parchment_navigation'] ?? '1') === '1') {
-            $classes[] = 'scsi-live-intelligence-parchment-navigation';
-        }
         if ($this->should_render_top_live_intelligence()) {
             $classes[] = 'scsi-live-intelligence-surface';
         }
@@ -2449,7 +2456,7 @@ final class SC_Site_Intelligence_Plugin {
         }
         $atts = shortcode_atts([
             'category' => '',
-            'limit' => (string) ($options['live_intelligence_limit'] ?? '8'),
+            'limit' => (string) ($options['live_intelligence_limit'] ?? '16'),
             'motion' => 'slow',
             'theme' => 'electronic',
             'placement' => 'content',
@@ -2458,7 +2465,7 @@ final class SC_Site_Intelligence_Plugin {
             'show_updated' => (string) ($options['live_intelligence_show_updated'] ?? '1'),
         ], $atts, 'sc_live_intelligence');
         $category = sanitize_key((string) $atts['category']);
-        $limit = max(1, min(20, absint($atts['limit'])));
+        $limit = max(1, min(24, absint($atts['limit'])));
         $motion = in_array($atts['motion'], ['slow', 'off'], true) ? $atts['motion'] : 'slow';
         $placement = $atts['placement'] === 'top' ? 'top' : 'content';
         $label = sanitize_text_field((string) $atts['label']);
@@ -2541,10 +2548,9 @@ final class SC_Site_Intelligence_Plugin {
                     <tr><th scope="row">Live Intelligence</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[enable_live_intelligence]" value="1" <?php checked($options['enable_live_intelligence'], '1'); ?> /> Enable the Live Intelligence service and shortcode.</label></td></tr>
                     <tr><th scope="row">Automatic electronic ticker</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[show_top_live_intelligence]" value="1" <?php checked($options['show_top_live_intelligence'], '1'); ?> /> Automatically place the black-and-green ticker using the selected location.</label></td></tr>
                     <tr><th scope="row"><label for="scsi_live_placement">Automatic placement</label></th><td><select id="scsi_live_placement" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_placement]"><option value="below_breadcrumb" <?php selected($options['live_intelligence_placement'], 'below_breadcrumb'); ?>>Below Astra breadcrumb</option><option value="below_header" <?php selected($options['live_intelligence_placement'], 'below_header'); ?>>Immediately below global header</option><option value="shortcode_only" <?php selected($options['live_intelligence_placement'], 'shortcode_only'); ?>>Disabled — shortcode only</option></select><p class="description">Below-breadcrumb placement follows Astra's configured breadcrumb hook and renders after the breadcrumb at a later priority.</p></td></tr>
-                    <tr><th scope="row">Navigation surface</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_parchment_navigation]" value="1" <?php checked($options['live_intelligence_parchment_navigation'], '1'); ?> /> Use the warm parchment treatment for the utility navigation and breadcrumb area.</label></td></tr>
                     <tr><th scope="row"><label for="scsi_live_scope">Top ticker scope</label></th><td><select id="scsi_live_scope" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_scope]"><option value="homepage" <?php selected($options['live_intelligence_scope'], 'homepage'); ?>>Homepage only</option><option value="selected" <?php selected($options['live_intelligence_scope'], 'selected'); ?>>Selected page IDs</option><option value="entire_site" <?php selected($options['live_intelligence_scope'], 'entire_site'); ?>>Entire site</option></select></td></tr>
                     <tr><th scope="row"><label for="scsi_live_pages">Selected page IDs</label></th><td><input id="scsi_live_pages" type="text" class="regular-text" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_selected_pages]" value="<?php echo esc_attr($options['live_intelligence_selected_pages']); ?>" placeholder="12, 84, 190" /><p class="description">Used only when the selected-page scope is active.</p></td></tr>
-                    <tr><th scope="row"><label for="scsi_live_limit">Ticker signals</label></th><td><input id="scsi_live_limit" type="number" min="1" max="20" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_limit]" value="<?php echo esc_attr($options['live_intelligence_limit']); ?>" /></td></tr>
+                    <tr><th scope="row"><label for="scsi_live_limit">Ticker signals</label></th><td><input id="scsi_live_limit" type="number" min="1" max="24" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_limit]" value="<?php echo esc_attr($options['live_intelligence_limit']); ?>" /></td></tr>
                     <tr><th scope="row"><label for="scsi_live_speed">Ticker cycle</label></th><td><input id="scsi_live_speed" type="number" min="18" max="120" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_speed]" value="<?php echo esc_attr($options['live_intelligence_speed']); ?>" /> seconds</td></tr>
                     <tr><th scope="row">Ticker details</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_duplicate_protection]" value="1" <?php checked($options['live_intelligence_duplicate_protection'], '1'); ?> /> Prevent automatic ticker when the page already contains the shortcode.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_sources]" value="1" <?php checked($options['live_intelligence_show_sources'], '1'); ?> /> Show sources.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_updated]" value="1" <?php checked($options['live_intelligence_show_updated'], '1'); ?> /> Show update time.</label></td></tr>
                 </table>

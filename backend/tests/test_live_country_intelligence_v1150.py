@@ -15,7 +15,7 @@ def fake_series(iso2, indicator_id, per_page=30):
 def test_root_reports_v1150():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json()["version"] == "3.1.1"
+    assert response.json()["version"] == "3.1.2"
 
 @patch("app.live_country_intelligence._world_bank_series", side_effect=fake_series)
 def test_country_indicators_live(mocked):

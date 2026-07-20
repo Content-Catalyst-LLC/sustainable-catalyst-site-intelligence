@@ -1810,20 +1810,6 @@
 @media(forced-colors:active){.scsi-live-intelligence{background:Canvas;color:CanvasText;border-color:CanvasText}.scsi-live-intelligence::before{display:none}.scsi-live-intelligence *{color:CanvasText!important;text-shadow:none!important}}
 
 
-/* v3.1.1 — Live Intelligence content and interface repair */
-.scsi-live-intelligence-parchment-navigation .ast-below-header-wrap,
-.scsi-live-intelligence-parchment-navigation .site-below-header-wrap,
-.scsi-live-intelligence-parchment-navigation .ast-breadcrumbs-wrapper,
-.scsi-live-intelligence-parchment-navigation .ast-breadcrumbs{background:#f2ede3!important;color:#27231f!important;border-color:#d7cec0!important}
-.scsi-live-intelligence-parchment-navigation .ast-below-header-wrap,
-.scsi-live-intelligence-parchment-navigation .site-below-header-wrap{border-bottom:1px solid #d7cec0!important;box-shadow:none!important}
-.scsi-live-intelligence-parchment-navigation .ast-below-header-wrap a,
-.scsi-live-intelligence-parchment-navigation .site-below-header-wrap a,
-.scsi-live-intelligence-parchment-navigation .ast-breadcrumbs-wrapper a,
-.scsi-live-intelligence-parchment-navigation .ast-breadcrumbs a{color:#3b3530!important}
-.scsi-live-intelligence-parchment-navigation .ast-below-header-wrap a:hover,
-.scsi-live-intelligence-parchment-navigation .site-below-header-wrap a:hover,
-.scsi-live-intelligence-parchment-navigation .ast-breadcrumbs-wrapper a:hover,
-.scsi-live-intelligence-parchment-navigation .ast-breadcrumbs a:hover{color:#7b213d!important}
+/* v3.1.2 — Live Intelligence signal expansion; theme navigation surfaces remain untouched */
 .scsi-live-intelligence.is-delayed .scsi-live-intelligence__lamp{animation:none;opacity:.72}
 .scsi-live-intelligence.is-delayed::after{content:"CACHED";position:absolute;right:52px;top:2px;font-size:.52rem;letter-spacing:.08em;color:#75b77c;z-index:3}

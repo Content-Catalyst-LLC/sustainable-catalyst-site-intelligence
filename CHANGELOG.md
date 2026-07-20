@@ -1,3 +1,15 @@
+## 3.1.2 — Navigation Surface Harmony and Signal Expansion
+
+- Removed the optional navigation and breadcrumb color override so Astra/theme defaults remain untouched.
+- Migrates only the obsolete parchment option; it does not impose replacement colors.
+- Expanded the default ticker capacity from 8 to 16 signals and the configurable ceiling from 20 to 24.
+- Added category-balanced selection and a three-signal-per-source cap.
+- Added strongest-earthquake, natural-event category, humanitarian coverage, NASA POWER, OpenAlex, and World Bank signal families when verified live/cached records are available.
+- Added explicit data-year language for periodic World Bank indicators.
+- Preserved demonstration/sample suppression, one platform-status item, shortcode placement, cached continuity, and hover/focus/manual pause behavior.
+- Added v3.1.2 signal-expansion and theme-surface contract tests.
+
+
 ## 3.1.1 — Live Intelligence Content and Interface Repair
 
 - Replaced connector-readiness diagnostics with verified public-interest event and weather summaries.

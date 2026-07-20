@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from app.config import get_settings
-import app.live_intelligence_v311 as live
+import app.live_intelligence_v312 as live
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -68,6 +68,9 @@ def _weather_payload():
 def test_feed_prioritizes_public_interest_signals(monkeypatch):
     monkeypatch.setattr(live, "unified_events", lambda **kwargs: _events_payload())
     monkeypatch.setattr(live.AdvancedExternalDataHub, "noaa_weather_climate", lambda self: _weather_payload())
+    monkeypatch.setattr(live, "_nasa_power_signals", lambda settings: ([], {"data_state": "test"}))
+    monkeypatch.setattr(live, "_openalex_signals", lambda settings: ([], {"data_state": "test"}))
+    monkeypatch.setattr(live, "_world_bank_signals", lambda settings: ([], {"data_state": "test"}))
     payload = live.build_live_intelligence(_settings(external_live=True), limit=8)
     labels = [item["label"] for item in payload["signals"]]
     values = " ".join(item["value"] for item in payload["signals"])
@@ -86,6 +89,9 @@ def test_sample_weather_values_are_suppressed(monkeypatch):
         "source": "sample", "live": False, "cache": {"status": "fallback"},
         "indicators": [{"label": "Active weather alerts", "value": 99, "unit": "alerts"}],
     })
+    monkeypatch.setattr(live, "_nasa_power_signals", lambda settings: ([], {"data_state": "test"}))
+    monkeypatch.setattr(live, "_openalex_signals", lambda settings: ([], {"data_state": "test"}))
+    monkeypatch.setattr(live, "_world_bank_signals", lambda settings: ([], {"data_state": "test"}))
     payload = live.build_live_intelligence(_settings(external_live=True), limit=20)
     assert all(item["signal_id"] != "weather.active-alerts" for item in payload["signals"])
 
@@ -98,4 +104,6 @@ def test_interface_contract_contains_hover_pause_and_breadcrumb_placement():
     assert "mouseenter" in js and "mouseleave" in js and "focusin" in js
     assert "live_intelligence_placement" in php
     assert "below_breadcrumb" in php and "astra_get_option('breadcrumb-position')" in php
-    assert "scsi-live-intelligence-parchment-navigation" in css
+    assert "scsi-live-intelligence-parchment-navigation" not in css
+    assert "Navigation surface" not in php
+    assert "$classes[] = 'scsi-live-intelligence-parchment-navigation'" not in php

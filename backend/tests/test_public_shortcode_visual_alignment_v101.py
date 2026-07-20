@@ -4,8 +4,8 @@ from pathlib import Path
 def test_plugin_version_is_110():
     plugin = Path(__file__).resolve().parents[2] / "wordpress-plugin" / "sustainable-catalyst-site-intelligence" / "sustainable-catalyst-site-intelligence.php"
     text = plugin.read_text()
-    assert "Version: 3.1.1" in text
-    assert "const VERSION = '3.1.1';" in text
+    assert "Version: 3.1.2" in text
+    assert "const VERSION = '3.1.2';" in text
 
 
 def test_public_shortcode_visual_alignment_css_present():
