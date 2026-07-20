@@ -1,0 +1,19 @@
+Site Intelligence v3.1.3 — Feed Selection and Placement Reliability Repair
+Build validation
+
+PASS: 580-test inherited and v3.1.3 regression suite.
+PASS: Focused feed selection, exclusion, per-source limit, REST endpoint, shortcode, and placement fallback contracts.
+PASS: WordPress/backend version parity at 3.1.3.
+PASS: Live Intelligence schema sc-site-intelligence-live-intelligence/1.3.
+PASS: Eight canonical feed IDs and seven-feed WordPress default selection.
+PASS: Platform status is optional in WordPress and disabled in the default saved feed set.
+PASS: Shortcode feeds, exclude, and max_per_source controls.
+PASS: Duplicate-safe below-breadcrumb content fallback and render guard.
+PASS: Existing Astra/theme navigation and breadcrumb colors remain untouched.
+PASS: Hover, keyboard-focus, and manual pause protections retained.
+PASS: Demonstration and sample connector values remain excluded.
+PASS: Python, JSON, webmanifest, JavaScript, PHP, and 670 unique HTML ID checks.
+PASS: macOS installer shell syntax.
+PASS: Immutable release manifest verification.
+
+PARTIAL: Installer dry run verified archive extraction, immutable manifest, local Git clone, repository overlay, and dependency bootstrap entry. The isolated dependency installation exceeded the execution window before the installer could rerun pytest; the same 580-test suite passed directly before packaging.

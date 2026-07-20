@@ -1,13 +1,12 @@
 # Sustainable Catalyst Site Intelligence
 
-## v3.1.2 — Navigation Surface Harmony and Signal Expansion
+## v3.1.3 — Feed Selection and Placement Reliability Repair
 
-Expands the electronic Live Intelligence board from a small event/status feed into a balanced public-interest signal layer. The ticker can now combine verified USGS, NASA EONET, ReliefWeb, NOAA/NWS, NASA POWER, OpenAlex, and World Bank context, with a 16-signal default, 24-signal ceiling, per-source caps, category rotation, duplicate suppression, explicit data-year labels, and one quiet platform-confidence item.
+Adds administrator feed checkboxes for NOAA/NWS, USGS, NASA EONET, ReliefWeb, NASA POWER, OpenAlex, World Bank, and optional platform status. The automatic ticker uses the saved feed set; individual shortcodes can include or exclude feeds and set a per-source repetition limit.
 
-The WordPress plugin no longer applies custom colors to Astra utility navigation or breadcrumb surfaces. Existing theme and Astra defaults remain in control. Automatic placement below the configured breadcrumb, below-header fallback, shortcode-only mode, hover/focus pause, manual pause, source attribution, freshness labels, and cached-feed continuity remain available.
+Below-breadcrumb placement now has a duplicate-safe content fallback for front pages and layouts where Astra does not emit the configured breadcrumb hook. The plugin continues to leave all navigation and breadcrumb colors to Astra and the active theme.
 
-**Current release:** v3.1.2 — Connected Public Intelligence and Evidence Platform
-
+**Current release:** v3.1.3 — Connected Public Intelligence and Evidence Platform
 
 ## v3.0.0 — Connected Public Intelligence and Evidence Platform
 

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.1.2
+ * Version: 3.1.3
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.1.2';
+    const VERSION = '3.1.3';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -22,6 +22,8 @@ final class SC_Site_Intelligence_Plugin {
     const BUILD_INFO_ERROR_TTL = 30;
     const LEGACY_SHORTCODE_REMOVAL_TARGET = 'fulfilled-in-2.0.0';
     const LEGACY_SHORTCODE_COMPATIBILITY = 'modern-workspace-aliases';
+
+    private $live_intelligence_rendered = false;
 
     public function __construct() {
         add_action('admin_menu', [$this, 'admin_menu']);
@@ -253,11 +255,62 @@ final class SC_Site_Intelligence_Plugin {
             'live_intelligence_placement' => 'below_breadcrumb',
             'live_intelligence_selected_pages' => '',
             'live_intelligence_limit' => '16',
+            'live_intelligence_feeds' => 'noaa_nws,usgs_earthquakes,nasa_eonet,reliefweb,nasa_power,openalex,world_bank',
+            'live_intelligence_max_per_source' => '2',
+            'live_intelligence_shortcode_overrides' => '1',
             'live_intelligence_speed' => '42',
             'live_intelligence_duplicate_protection' => '1',
             'live_intelligence_show_sources' => '1',
             'live_intelligence_show_updated' => '1',
         ];
+    }
+
+    private static function live_intelligence_feed_catalog() {
+        return [
+            'noaa_nws' => 'NOAA / National Weather Service',
+            'usgs_earthquakes' => 'USGS Earthquakes',
+            'nasa_eonet' => 'NASA EONET Natural Events',
+            'reliefweb' => 'ReliefWeb Humanitarian Reports',
+            'nasa_power' => 'NASA POWER Observations',
+            'openalex' => 'OpenAlex Research',
+            'world_bank' => 'World Bank Indicators',
+            'platform_status' => 'Site Intelligence Platform Status',
+        ];
+    }
+
+    private static function sanitize_live_intelligence_feeds($value, $use_defaults = true) {
+        $catalog = self::live_intelligence_feed_catalog();
+        $defaults = array_keys(array_filter($catalog, function ($label, $feed_id) {
+            return $feed_id !== 'platform_status';
+        }, ARRAY_FILTER_USE_BOTH));
+        if (is_string($value)) {
+            $value = preg_split('/[\s,;]+/', $value);
+        }
+        if (!is_array($value)) {
+            $value = [];
+        }
+        $aliases = [
+            'noaa' => 'noaa_nws', 'nws' => 'noaa_nws', 'weather' => 'noaa_nws',
+            'usgs' => 'usgs_earthquakes', 'earthquake' => 'usgs_earthquakes', 'earthquakes' => 'usgs_earthquakes',
+            'eonet' => 'nasa_eonet', 'humanitarian' => 'reliefweb',
+            'power' => 'nasa_power', 'research' => 'openalex',
+            'worldbank' => 'world_bank', 'development' => 'world_bank',
+            'platform' => 'platform_status', 'status' => 'platform_status',
+        ];
+        $clean = [];
+        foreach ($value as $candidate) {
+            $feed_id = sanitize_key(str_replace('-', '_', (string) $candidate));
+            if ($feed_id === 'all') {
+                return array_keys($catalog);
+            }
+            if (isset($aliases[$feed_id])) {
+                $feed_id = $aliases[$feed_id];
+            }
+            if (isset($catalog[$feed_id]) && !in_array($feed_id, $clean, true)) {
+                $clean[] = $feed_id;
+            }
+        }
+        return empty($clean) && $use_defaults ? $defaults : $clean;
     }
 
     public static function options() {
@@ -276,14 +329,22 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v3.1.2 leaves Astra/theme navigation and breadcrumb colors untouched.
-        // Expand only installations still using the old eight-signal default;
-        // preserve any explicit administrator choice.
+        // v3.1.3 preserves all existing theme, placement, and display choices.
+        // New feed controls are added only when they do not already exist.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
             unset($stored_options['live_intelligence_parchment_navigation']);
             if (!isset($stored_options['live_intelligence_limit']) || (string) $stored_options['live_intelligence_limit'] === '8') {
                 $stored_options['live_intelligence_limit'] = '16';
+            }
+            if (!isset($stored_options['live_intelligence_feeds'])) {
+                $stored_options['live_intelligence_feeds'] = self::defaults()['live_intelligence_feeds'];
+            }
+            if (!isset($stored_options['live_intelligence_max_per_source'])) {
+                $stored_options['live_intelligence_max_per_source'] = '2';
+            }
+            if (!isset($stored_options['live_intelligence_shortcode_overrides'])) {
+                $stored_options['live_intelligence_shortcode_overrides'] = '1';
             }
             update_option(self::OPTION_KEY, $stored_options, false);
         }
@@ -542,6 +603,10 @@ final class SC_Site_Intelligence_Plugin {
         $selected = isset($input['live_intelligence_selected_pages']) ? sanitize_text_field($input['live_intelligence_selected_pages']) : '';
         $output['live_intelligence_selected_pages'] = implode(',', array_filter(array_map('absint', preg_split('/[\s,]+/', $selected))));
         $output['live_intelligence_limit'] = (string) max(1, min(24, absint($input['live_intelligence_limit'] ?? 16)));
+        $feed_ids = self::sanitize_live_intelligence_feeds($input['live_intelligence_feeds'] ?? [], true);
+        $output['live_intelligence_feeds'] = implode(',', $feed_ids);
+        $output['live_intelligence_max_per_source'] = (string) max(1, min(5, absint($input['live_intelligence_max_per_source'] ?? 2)));
+        $output['live_intelligence_shortcode_overrides'] = !empty($input['live_intelligence_shortcode_overrides']) ? '1' : '0';
         $output['live_intelligence_speed'] = (string) max(18, min(120, absint($input['live_intelligence_speed'] ?? 42)));
         $output['live_intelligence_duplicate_protection'] = !empty($input['live_intelligence_duplicate_protection']) ? '1' : '0';
         $output['live_intelligence_show_sources'] = !empty($input['live_intelligence_show_sources']) ? '1' : '0';
@@ -562,6 +627,9 @@ final class SC_Site_Intelligence_Plugin {
             'args' => [
                 'category' => ['sanitize_callback' => 'sanitize_key'],
                 'limit' => ['sanitize_callback' => 'absint'],
+                'feeds' => ['sanitize_callback' => 'sanitize_text_field'],
+                'exclude' => ['sanitize_callback' => 'sanitize_text_field'],
+                'max_per_source' => ['sanitize_callback' => 'absint'],
             ],
         ]);
         register_rest_route(self::REST_NAMESPACE, '/dashboard', [
@@ -2375,9 +2443,19 @@ final class SC_Site_Intelligence_Plugin {
     public function rest_live_intelligence(WP_REST_Request $request) {
         $category = sanitize_key((string) $request->get_param('category'));
         $limit = max(1, min(24, absint($request->get_param('limit') ?: 16)));
-        $query = ['limit' => $limit];
+        $feeds = self::sanitize_live_intelligence_feeds((string) $request->get_param('feeds'), true);
+        $exclude = self::sanitize_live_intelligence_feeds((string) $request->get_param('exclude'), false);
+        $max_per_source = max(1, min(5, absint($request->get_param('max_per_source') ?: 2)));
+        $query = [
+            'limit' => $limit,
+            'feeds' => implode(',', $feeds),
+            'max_per_source' => $max_per_source,
+        ];
         if ($category !== '') {
             $query['category'] = $category;
+        }
+        if (!empty($exclude)) {
+            $query['exclude'] = implode(',', $exclude);
         }
         $result = $this->backend_request('public/live-intelligence?' . http_build_query($query));
         if (is_wp_error($result)) {
@@ -2393,18 +2471,32 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
+        if ($placement === 'below_header') {
+            add_action('astra_header_after', [$this, 'render_top_live_intelligence'], 30);
+            return;
+        }
+
         $hook = 'astra_header_after';
-        $priority = 5;
-        if ($placement === 'below_breadcrumb') {
-            $priority = 20;
-            if (function_exists('astra_get_option')) {
-                $breadcrumb_hook = sanitize_key((string) astra_get_option('breadcrumb-position'));
-                if ($breadcrumb_hook !== '' && $breadcrumb_hook !== 'none') {
-                    $hook = $breadcrumb_hook;
-                }
+        if (function_exists('astra_get_option')) {
+            $breadcrumb_hook = sanitize_key((string) astra_get_option('breadcrumb-position'));
+            if ($breadcrumb_hook !== '' && $breadcrumb_hook !== 'none') {
+                $hook = $breadcrumb_hook;
             }
         }
-        add_action($hook, [$this, 'render_top_live_intelligence'], $priority);
+        add_action($hook, [$this, 'render_top_live_intelligence'], 30);
+
+        // Astra intentionally does not attach an astra_entry_top breadcrumb to
+        // the front page. The content filter is a guarded last-resort fallback:
+        // it runs after breadcrumb/header hooks and cannot duplicate the ticker.
+        add_filter('the_content', [$this, 'inject_live_intelligence_content_fallback'], 1);
+    }
+
+    public function inject_live_intelligence_content_fallback($content) {
+        if ($this->live_intelligence_rendered || !is_main_query() || !in_the_loop() || !$this->should_render_top_live_intelligence()) {
+            return $content;
+        }
+        $this->live_intelligence_rendered = true;
+        return $this->live_intelligence_shortcode(['placement' => 'top']) . $content;
     }
 
     public function live_intelligence_body_classes($classes) {
@@ -2443,9 +2535,10 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function render_top_live_intelligence() {
-        if (!$this->should_render_top_live_intelligence()) {
+        if ($this->live_intelligence_rendered || !$this->should_render_top_live_intelligence()) {
             return;
         }
+        $this->live_intelligence_rendered = true;
         echo $this->live_intelligence_shortcode(['placement' => 'top']); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
     }
 
@@ -2457,6 +2550,9 @@ final class SC_Site_Intelligence_Plugin {
         $atts = shortcode_atts([
             'category' => '',
             'limit' => (string) ($options['live_intelligence_limit'] ?? '16'),
+            'feeds' => (string) ($options['live_intelligence_feeds'] ?? self::defaults()['live_intelligence_feeds']),
+            'exclude' => '',
+            'max_per_source' => (string) ($options['live_intelligence_max_per_source'] ?? '2'),
             'motion' => 'slow',
             'theme' => 'electronic',
             'placement' => 'content',
@@ -2466,6 +2562,15 @@ final class SC_Site_Intelligence_Plugin {
         ], $atts, 'sc_live_intelligence');
         $category = sanitize_key((string) $atts['category']);
         $limit = max(1, min(24, absint($atts['limit'])));
+        $allow_overrides = ($options['live_intelligence_shortcode_overrides'] ?? '1') === '1';
+        $feeds = self::sanitize_live_intelligence_feeds(
+            $allow_overrides ? (string) $atts['feeds'] : (string) ($options['live_intelligence_feeds'] ?? ''),
+            true
+        );
+        $exclude = $allow_overrides ? self::sanitize_live_intelligence_feeds((string) $atts['exclude'], false) : [];
+        $max_per_source = max(1, min(5, absint(
+            $allow_overrides ? $atts['max_per_source'] : ($options['live_intelligence_max_per_source'] ?? '2')
+        )));
         $motion = in_array($atts['motion'], ['slow', 'off'], true) ? $atts['motion'] : 'slow';
         $placement = $atts['placement'] === 'top' ? 'top' : 'content';
         $label = sanitize_text_field((string) $atts['label']);
@@ -2473,10 +2578,10 @@ final class SC_Site_Intelligence_Plugin {
         $classes = 'scsi-live-intelligence scsi-live-intelligence--electronic scsi-live-intelligence--' . $placement;
         ob_start();
         ?>
-        <section class="<?php echo esc_attr($classes); ?>" data-scsi-live-intelligence data-category="<?php echo esc_attr($category); ?>" data-limit="<?php echo esc_attr((string) $limit); ?>" data-motion="<?php echo esc_attr($motion); ?>" data-show-sources="<?php echo esc_attr((string) $atts['show_sources']); ?>" data-show-updated="<?php echo esc_attr((string) $atts['show_updated']); ?>" style="--scsi-live-duration:<?php echo esc_attr((string) $speed); ?>s" aria-label="<?php echo esc_attr($label); ?>">
+        <section class="<?php echo esc_attr($classes); ?>" data-scsi-live-intelligence data-category="<?php echo esc_attr($category); ?>" data-limit="<?php echo esc_attr((string) $limit); ?>" data-feeds="<?php echo esc_attr(implode(',', $feeds)); ?>" data-exclude="<?php echo esc_attr(implode(',', $exclude)); ?>" data-max-per-source="<?php echo esc_attr((string) $max_per_source); ?>" data-motion="<?php echo esc_attr($motion); ?>" data-show-sources="<?php echo esc_attr((string) $atts['show_sources']); ?>" data-show-updated="<?php echo esc_attr((string) $atts['show_updated']); ?>" style="--scsi-live-duration:<?php echo esc_attr((string) $speed); ?>s" aria-label="<?php echo esc_attr($label); ?>">
             <div class="scsi-live-intelligence__label"><span class="scsi-live-intelligence__lamp" aria-hidden="true"></span><strong><?php echo esc_html(strtoupper($label)); ?></strong></div>
             <div class="scsi-live-intelligence__viewport" aria-live="polite" aria-busy="true">
-                <div class="scsi-live-intelligence__track"><span class="scsi-live-intelligence__connecting">CONNECTING TO PUBLIC INTELLIGENCE API…</span></div>
+                <div class="scsi-live-intelligence__track"><span class="scsi-live-intelligence__connecting">CONNECTING TO SELECTED PUBLIC INTELLIGENCE FEEDS…</span></div>
             </div>
             <button class="scsi-live-intelligence__pause" type="button" aria-pressed="false" aria-label="Pause Live Intelligence ticker"><span aria-hidden="true">Ⅱ</span></button>
         </section>
@@ -2547,10 +2652,21 @@ final class SC_Site_Intelligence_Plugin {
                     </tr>
                     <tr><th scope="row">Live Intelligence</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[enable_live_intelligence]" value="1" <?php checked($options['enable_live_intelligence'], '1'); ?> /> Enable the Live Intelligence service and shortcode.</label></td></tr>
                     <tr><th scope="row">Automatic electronic ticker</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[show_top_live_intelligence]" value="1" <?php checked($options['show_top_live_intelligence'], '1'); ?> /> Automatically place the black-and-green ticker using the selected location.</label></td></tr>
-                    <tr><th scope="row"><label for="scsi_live_placement">Automatic placement</label></th><td><select id="scsi_live_placement" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_placement]"><option value="below_breadcrumb" <?php selected($options['live_intelligence_placement'], 'below_breadcrumb'); ?>>Below Astra breadcrumb</option><option value="below_header" <?php selected($options['live_intelligence_placement'], 'below_header'); ?>>Immediately below global header</option><option value="shortcode_only" <?php selected($options['live_intelligence_placement'], 'shortcode_only'); ?>>Disabled — shortcode only</option></select><p class="description">Below-breadcrumb placement follows Astra's configured breadcrumb hook and renders after the breadcrumb at a later priority.</p></td></tr>
+                    <tr><th scope="row"><label for="scsi_live_placement">Automatic placement</label></th><td><select id="scsi_live_placement" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_placement]"><option value="below_breadcrumb" <?php selected($options['live_intelligence_placement'], 'below_breadcrumb'); ?>>Below Astra breadcrumb</option><option value="below_header" <?php selected($options['live_intelligence_placement'], 'below_header'); ?>>Immediately below global header</option><option value="shortcode_only" <?php selected($options['live_intelligence_placement'], 'shortcode_only'); ?>>Disabled — shortcode only</option></select><p class="description">Below-breadcrumb placement follows Astra's configured hook and uses a guarded content fallback when that hook is unavailable on the homepage.</p></td></tr>
                     <tr><th scope="row"><label for="scsi_live_scope">Top ticker scope</label></th><td><select id="scsi_live_scope" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_scope]"><option value="homepage" <?php selected($options['live_intelligence_scope'], 'homepage'); ?>>Homepage only</option><option value="selected" <?php selected($options['live_intelligence_scope'], 'selected'); ?>>Selected page IDs</option><option value="entire_site" <?php selected($options['live_intelligence_scope'], 'entire_site'); ?>>Entire site</option></select></td></tr>
                     <tr><th scope="row"><label for="scsi_live_pages">Selected page IDs</label></th><td><input id="scsi_live_pages" type="text" class="regular-text" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_selected_pages]" value="<?php echo esc_attr($options['live_intelligence_selected_pages']); ?>" placeholder="12, 84, 190" /><p class="description">Used only when the selected-page scope is active.</p></td></tr>
                     <tr><th scope="row"><label for="scsi_live_limit">Ticker signals</label></th><td><input id="scsi_live_limit" type="number" min="1" max="24" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_limit]" value="<?php echo esc_attr($options['live_intelligence_limit']); ?>" /></td></tr>
+                    <tr>
+                        <th scope="row">Displayed feeds</th>
+                        <td>
+                            <?php foreach (self::live_intelligence_feed_catalog() as $feed_id => $feed_label) : ?>
+                                <label style="display:block;margin:.3rem 0;"><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_feeds][]" value="<?php echo esc_attr($feed_id); ?>" <?php checked(in_array($feed_id, self::sanitize_live_intelligence_feeds($options['live_intelligence_feeds'] ?? '', true), true)); ?> /> <?php echo esc_html($feed_label); ?></label>
+                            <?php endforeach; ?>
+                            <p class="description">The automatic ticker uses these saved feeds. Feed checkboxes do not change Astra, breadcrumb, or navigation styling.</p>
+                        </td>
+                    </tr>
+                    <tr><th scope="row"><label for="scsi_live_source_limit">Items per source</label></th><td><input id="scsi_live_source_limit" type="number" min="1" max="5" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_max_per_source]" value="<?php echo esc_attr($options['live_intelligence_max_per_source']); ?>" /><p class="description">Limits repetition while category balancing fills the remaining ticker positions.</p></td></tr>
+                    <tr><th scope="row">Shortcode feed overrides</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_shortcode_overrides]" value="1" <?php checked($options['live_intelligence_shortcode_overrides'], '1'); ?> /> Allow <code>feeds</code>, <code>exclude</code>, and <code>max_per_source</code> in individual shortcodes.</label></td></tr>
                     <tr><th scope="row"><label for="scsi_live_speed">Ticker cycle</label></th><td><input id="scsi_live_speed" type="number" min="18" max="120" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_speed]" value="<?php echo esc_attr($options['live_intelligence_speed']); ?>" /> seconds</td></tr>
                     <tr><th scope="row">Ticker details</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_duplicate_protection]" value="1" <?php checked($options['live_intelligence_duplicate_protection'], '1'); ?> /> Prevent automatic ticker when the page already contains the shortcode.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_sources]" value="1" <?php checked($options['live_intelligence_show_sources'], '1'); ?> /> Show sources.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_updated]" value="1" <?php checked($options['live_intelligence_show_updated'], '1'); ?> /> Show update time.</label></td></tr>
                 </table>
@@ -2558,7 +2674,7 @@ final class SC_Site_Intelligence_Plugin {
             </form>
             <hr />
             <h2>Shortcodes</h2>
-            <p><code>[sc_live_intelligence]</code> — electronic board; supports <code>category</code>, <code>limit</code>, and <code>motion="off"</code>.</p>
+            <p><code>[sc_live_intelligence]</code> — electronic board; supports <code>category</code>, <code>limit</code>, <code>feeds</code>, <code>exclude</code>, <code>max_per_source</code>, and <code>motion="off"</code>.</p>
             <p><code>[sc_site_intelligence_dashboard]</code></p>
             <p><code>[sc_site_intelligence_page]</code></p>
             <p><code>[sc_site_intelligence_unmapped]</code></p>

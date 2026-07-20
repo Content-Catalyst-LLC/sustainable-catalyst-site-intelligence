@@ -5,11 +5,11 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_release_contract_files_and_markers():
     checks = {
-        "backend/app/version.py": ['APP_VERSION = "3.1.2"', 'RELEASE_NAME = "Connected Public Intelligence and Evidence Platform"'],
+        "backend/app/version.py": ['APP_VERSION = "3.1.3"', 'RELEASE_NAME = "Connected Public Intelligence and Evidence Platform"'],
         "backend/app/config.py": ["evidence_synthesis_enabled", "evidence_synthesis_claims_path", "evidence_synthesis_syntheses_path"],
-        "backend/app/evidence_synthesis_v2180.py": ['RELEASE_VERSION = "3.1.2"', "def register_claim(", "def add_evidence(", "def contradiction_review(", "def synthesize("],
+        "backend/app/evidence_synthesis_v2180.py": ['RELEASE_VERSION = "3.1.3"', "def register_claim(", "def add_evidence(", "def contradiction_review(", "def synthesize("],
         "backend/app/main.py": ['"/public/evidence-synthesis"', '"/public/claims"', '"/admin/evidence-synthesis/control-center"', '"/admin/evidence-synthesis/handoff"'],
-        "backend/data/evidence_synthesis_policy_v2180.json": ['"version": "3.1.2"', "No fabricated evidence", "No suppression of conflicting evidence"],
+        "backend/data/evidence_synthesis_policy_v2180.json": ['"version": "3.1.3"', "No fabricated evidence", "No suppression of conflicting evidence"],
     }
     for relative, markers in checks.items():
         text = (ROOT / relative).read_text(encoding="utf-8")

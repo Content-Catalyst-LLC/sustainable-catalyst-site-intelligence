@@ -157,6 +157,6 @@ def test_public_interface_and_wordpress_contract():
     assert "SCLawV230" in js
     assert "legal advice" in html.lower()
     assert ".law-studio" in css
-    assert 'const APP_VERSION="3.1.2"' in app_js
-    assert "Version: 3.1.2" in php
+    assert 'const APP_VERSION="3.1.3"' in app_js
+    assert "Version: 3.1.3" in php
     assert "sc_international_law_governance_observatory" in php

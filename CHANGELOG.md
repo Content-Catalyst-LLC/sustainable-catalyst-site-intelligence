@@ -1,3 +1,15 @@
+## 3.1.3 — Feed Selection and Placement Reliability Repair
+
+- Added administrator feed checkboxes for seven public-data families and optional platform status.
+- Added canonical feed IDs, active/excluded feed reporting, and feed counts to the public ticker response.
+- Added `feeds`, `exclude`, and `max_per_source` controls to the public API and `[sc_live_intelligence]` shortcode.
+- Added governance to disable shortcode feed overrides and force the saved administrator feed set.
+- Changed the default repetition limit to two items per displayed source, configurable from one to five.
+- Added a duplicate-safe content fallback for homepage and page-builder layouts that do not emit Astra's configured breadcrumb hook.
+- Preserved existing navigation and breadcrumb colors under Astra/theme control.
+- Added v3.1.3 feed-selection, source-limit, endpoint, and placement-fallback contract tests.
+
+
 ## 3.1.2 — Navigation Surface Harmony and Signal Expansion
 
 - Removed the optional navigation and breadcrumb color override so Astra/theme defaults remain untouched.

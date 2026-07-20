@@ -3673,10 +3673,17 @@
       const pause = root.querySelector('.scsi-live-intelligence__pause');
       if (!viewport || !track || !cfg.restBase) return;
       const category = root.dataset.category || '';
-      const limit = Math.max(1, Math.min(20, Number(root.dataset.limit || 8)));
+      const limit = Math.max(1, Math.min(24, Number(root.dataset.limit || 16)));
+      const feeds = root.dataset.feeds || '';
+      const exclude = root.dataset.exclude || '';
+      const maxPerSource = Math.max(1, Math.min(5, Number(root.dataset.maxPerSource || 2)));
       const showSources = root.dataset.showSources !== '0';
       const showUpdated = root.dataset.showUpdated !== '0';
-      const endpoint = cfg.restBase + '/live-intelligence?limit=' + encodeURIComponent(limit) + (category ? '&category=' + encodeURIComponent(category) : '');
+      const params = new URLSearchParams({limit: String(limit), max_per_source: String(maxPerSource)});
+      if (category) params.set('category', category);
+      if (feeds) params.set('feeds', feeds);
+      if (exclude) params.set('exclude', exclude);
+      const endpoint = cfg.restBase + '/live-intelligence?' + params.toString();
       const relativeTime = function (value) {
         const stamp = Date.parse(value || '');
         if (!Number.isFinite(stamp)) return '';

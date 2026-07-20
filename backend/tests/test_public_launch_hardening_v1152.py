@@ -7,7 +7,7 @@ client = TestClient(app)
 def test_root_reports_v1152():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json()["version"] == "3.1.2"
+    assert response.json()["version"] == "3.1.3"
 
 def test_public_launch_status():
     response = client.get("/public/launch-status")

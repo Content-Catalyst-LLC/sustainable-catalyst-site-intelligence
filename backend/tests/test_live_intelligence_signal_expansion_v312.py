@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from app.config import get_settings
-import app.live_intelligence_v312 as live
+import app.live_intelligence_v313 as live
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -54,7 +54,7 @@ def test_expanded_feed_defaults_to_sixteen_and_balances_categories(monkeypatch):
     ], {"data_state": "test"}))
 
     payload = live.build_live_intelligence(_settings(external_live=True))
-    assert payload["schema"] == "sc-site-intelligence-live-intelligence/1.2"
+    assert payload["schema"] == "sc-site-intelligence-live-intelligence/1.3"
     assert payload["count"] >= 13
     assert payload["feed_state"]["default_signal_limit"] == 16
     assert payload["feed_state"]["platform_signal_count"] == 1

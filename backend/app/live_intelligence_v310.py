@@ -1,10 +1,13 @@
-"""Compatibility import for the v3.1.0 module name.
+"""Compatibility exports for the v3.1.0 Live Intelligence module.
 
-The active implementation moved to :mod:`live_intelligence_v312` in v3.1.2.
+The active implementation moved to :mod:`live_intelligence_v313` in v3.1.3.
 """
-from .live_intelligence_v312 import (  # noqa: F401
-    CATEGORY_ALIASES,
+from .live_intelligence_v313 import (  # noqa: F401
+    DEFAULT_FEEDS,
+    DEFAULT_MAX_SIGNALS_PER_SOURCE,
     DEFAULT_SIGNAL_LIMIT,
+    FEED_REGISTRY,
+    MAX_CONFIGURABLE_SIGNALS_PER_SOURCE,
     MAX_SIGNAL_LIMIT,
     SCHEMA_VERSION,
     build_live_intelligence,
