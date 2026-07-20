@@ -102,5 +102,5 @@ def test_public_routes_and_interface(monkeypatch):
     php = (root / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
     assert 'data-route="scenarios"' in html and 'id="scenarioStudio"' in html
     assert "SCScenariosV290" in js and ".scenario-studio" in css
-    assert 'const APP_VERSION="3.2.0"' in app_js
-    assert "Version: 3.2.0" in php and "sc_comparative_intelligence_scenario_studio" in php
+    assert 'const APP_VERSION="3.3.0"' in app_js
+    assert "Version: 3.3.0" in php and "sc_comparative_intelligence_scenario_studio" in php

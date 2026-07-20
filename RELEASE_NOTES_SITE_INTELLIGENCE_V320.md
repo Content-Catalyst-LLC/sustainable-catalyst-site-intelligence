@@ -1,8 +1,8 @@
-# Site Intelligence v3.2.0 — Signal Source Operations
+# Site Intelligence v3.3.0 — Signal Source Operations
 
 ## Summary
 
-v3.2.0 turns the Live Intelligence collectors into an inspectable source-operations system. It adds public-safe source metadata and a protected control center without replacing the established ticker, feed selection, placement, readability, or mobile navigation behavior.
+v3.3.0 turns the Live Intelligence collectors into an inspectable source-operations system. It adds public-safe source metadata and a protected control center without replacing the established ticker, feed selection, placement, readability, or mobile navigation behavior.
 
 ## Source registry
 

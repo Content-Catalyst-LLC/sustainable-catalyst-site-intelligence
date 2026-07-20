@@ -3683,6 +3683,8 @@
       const maxPerSource = Math.max(1, Math.min(5, Number(root.dataset.maxPerSource || 2)));
       const showSources = root.dataset.showSources !== '0';
       const showUpdated = root.dataset.showUpdated !== '0';
+      const showClusterSources = root.dataset.showClusterSources !== '0';
+      const showSelectionContext = root.dataset.selectionContext !== '0';
       const compactSources = root.dataset.compactSources !== '0';
       const textLimit = Math.max(48, Math.min(220, Number(root.dataset.textLimit || 120)));
       const mobileMode = ['rotator', 'marquee', 'hidden'].includes(root.dataset.mobileMode) ? root.dataset.mobileMode : 'rotator';
@@ -3720,12 +3722,17 @@
         const metadata = [];
         const sourceName = compactSources && signal.source_short_name ? signal.source_short_name : signal.source_name;
         if (showSources && sourceName) metadata.push(sourceName);
+        if (showClusterSources && Number(signal.cluster_source_count || 1) > 1) metadata.push(String(signal.cluster_source_count) + ' SOURCES');
         if (showUpdated && (signal.observed_at || signal.updated_at)) metadata.push(relativeTime(signal.observed_at || signal.updated_at));
         const href = signal.destination_url || '#';
         const categoryId = signal.category || 'signal';
         const categoryLabel = categoryLabels[categoryId] || categoryId.replace(/_/g, ' ');
         const fullValue = signal.value || 'AVAILABLE';
-        const title = signal.detail || fullValue || signal.label || '';
+        const reasons = Array.isArray(signal.selection_reasons) ? signal.selection_reasons.join('; ') : '';
+        const titleParts = [signal.detail || fullValue || signal.label || ''];
+        if (showSelectionContext && signal.development_state) titleParts.push('State: ' + signal.development_state);
+        if (showSelectionContext && reasons) titleParts.push('Selected because: ' + reasons);
+        const title = titleParts.filter(Boolean).join(' — ');
         const separator = includeSeparator ? '<span class="scsi-live-intelligence__separator" aria-hidden="true">◆</span>' : '';
         return '<a class="scsi-live-intelligence__signal" href="' + escapeHtml(href) + '" title="' + escapeHtml(title) + '" aria-label="' + escapeHtml(categoryLabel + ': ' + (signal.label || 'Live signal') + ': ' + fullValue) + '">' +
           '<span class="scsi-live-intelligence__category">' + escapeHtml(categoryLabel.toUpperCase()) + '</span>' +

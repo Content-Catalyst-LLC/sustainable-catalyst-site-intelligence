@@ -149,7 +149,7 @@ def test_public_api_exposes_only_published_workspace(tmp_path):
         create = client.post("/admin/institutional-workspaces", json={"workspace_id": "workspace:api", "title": "API workspace"})
         assert create.status_code == 200
         public = client.get("/public/institutional-workspaces").json()
-        assert public["version"] == "3.2.0"
+        assert public["version"] == "3.3.0"
         assert public["workspaces"] == []
         review = client.post("/admin/institutional-workspaces/workspace:api/evidence-reviews", json={"evidence_id": "evidence:1", "decision": "approved", "rationale": "Verified.", "public_eligible": True, "actor_role": "reviewer"})
         assert review.status_code == 200

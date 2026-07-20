@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.2.0
+ * Version: 3.3.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.2.0';
+    const VERSION = '3.3.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -275,6 +275,8 @@ final class SC_Site_Intelligence_Plugin {
             'live_intelligence_duplicate_protection' => '1',
             'live_intelligence_show_sources' => '1',
             'live_intelligence_show_updated' => '1',
+            'live_intelligence_show_cluster_sources' => '1',
+            'live_intelligence_selection_context' => '1',
         ];
     }
 
@@ -363,7 +365,7 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v3.2.0 preserves placement, feed, and theme choices while adding readability defaults.
+        // v3.3.0 preserves placement, feed, and theme choices while adding readability defaults.
         // The former 42-second default is migrated to the balanced 30-second preset.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
@@ -678,6 +680,8 @@ final class SC_Site_Intelligence_Plugin {
         $output['live_intelligence_duplicate_protection'] = !empty($input['live_intelligence_duplicate_protection']) ? '1' : '0';
         $output['live_intelligence_show_sources'] = !empty($input['live_intelligence_show_sources']) ? '1' : '0';
         $output['live_intelligence_show_updated'] = !empty($input['live_intelligence_show_updated']) ? '1' : '0';
+        $output['live_intelligence_show_cluster_sources'] = !empty($input['live_intelligence_show_cluster_sources']) ? '1' : '0';
+        $output['live_intelligence_selection_context'] = !empty($input['live_intelligence_selection_context']) ? '1' : '0';
 
         self::clear_backend_build_info_cache((string) ($current['backend_url'] ?? ''));
         self::clear_backend_build_info_cache((string) ($output['backend_url'] ?? ''));
@@ -720,6 +724,11 @@ final class SC_Site_Intelligence_Plugin {
                 'exclude' => ['sanitize_callback' => 'sanitize_text_field'],
                 'max_per_source' => ['sanitize_callback' => 'absint'],
             ],
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/ranking-policy', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_ranking_policy'],
+            'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/live-intelligence/sources', [
             'methods' => WP_REST_Server::READABLE,
@@ -2580,6 +2589,11 @@ final class SC_Site_Intelligence_Plugin {
         return rest_ensure_response($result);
     }
 
+    public function rest_live_intelligence_ranking_policy(WP_REST_Request $request) {
+        $result = $this->backend_request('public/live-intelligence/ranking-policy');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
     public function rest_live_intelligence_sources(WP_REST_Request $request) {
         $refresh = sanitize_text_field((string) $request->get_param('refresh'));
         $endpoint = 'public/live-intelligence/sources' . ($refresh !== '' ? '?refresh=' . rawurlencode($refresh) : '');
@@ -2726,6 +2740,8 @@ final class SC_Site_Intelligence_Plugin {
             'label' => 'Live Intelligence',
             'show_sources' => (string) ($options['live_intelligence_show_sources'] ?? '1'),
             'show_updated' => (string) ($options['live_intelligence_show_updated'] ?? '1'),
+            'show_cluster_sources' => (string) ($options['live_intelligence_show_cluster_sources'] ?? '1'),
+            'selection_context' => (string) ($options['live_intelligence_selection_context'] ?? '1'),
         ], $atts, 'sc_live_intelligence');
         $category = sanitize_key((string) $atts['category']);
         $limit = max(1, min(24, absint($atts['limit'])));
@@ -2752,7 +2768,7 @@ final class SC_Site_Intelligence_Plugin {
         $classes = 'scsi-live-intelligence scsi-live-intelligence--electronic scsi-live-intelligence--' . $placement . ' scsi-live-intelligence--spacing-' . $spacing;
         ob_start();
         ?>
-        <section class="<?php echo esc_attr($classes); ?>" data-scsi-live-intelligence data-category="<?php echo esc_attr($category); ?>" data-limit="<?php echo esc_attr((string) $limit); ?>" data-feeds="<?php echo esc_attr(implode(',', $feeds)); ?>" data-exclude="<?php echo esc_attr(implode(',', $exclude)); ?>" data-max-per-source="<?php echo esc_attr((string) $max_per_source); ?>" data-motion="<?php echo esc_attr($motion); ?>" data-mobile-mode="<?php echo esc_attr($mobile_mode); ?>" data-mobile-interval="<?php echo esc_attr((string) $mobile_interval); ?>" data-show-sources="<?php echo esc_attr((string) $atts['show_sources']); ?>" data-show-updated="<?php echo esc_attr((string) $atts['show_updated']); ?>" data-compact-sources="<?php echo esc_attr($compact_sources); ?>" data-text-limit="<?php echo esc_attr((string) $text_limit); ?>" data-category-labels="<?php echo esc_attr(wp_json_encode($category_labels)); ?>" style="--scsi-live-duration:<?php echo esc_attr((string) $speed); ?>s;--scsi-live-mobile-duration:<?php echo esc_attr((string) $mobile_speed); ?>s" aria-label="<?php echo esc_attr($label); ?>">
+        <section class="<?php echo esc_attr($classes); ?>" data-scsi-live-intelligence data-category="<?php echo esc_attr($category); ?>" data-limit="<?php echo esc_attr((string) $limit); ?>" data-feeds="<?php echo esc_attr(implode(',', $feeds)); ?>" data-exclude="<?php echo esc_attr(implode(',', $exclude)); ?>" data-max-per-source="<?php echo esc_attr((string) $max_per_source); ?>" data-motion="<?php echo esc_attr($motion); ?>" data-mobile-mode="<?php echo esc_attr($mobile_mode); ?>" data-mobile-interval="<?php echo esc_attr((string) $mobile_interval); ?>" data-show-sources="<?php echo esc_attr((string) $atts['show_sources']); ?>" data-show-updated="<?php echo esc_attr((string) $atts['show_updated']); ?>" data-show-cluster-sources="<?php echo esc_attr((string) $atts['show_cluster_sources']); ?>" data-selection-context="<?php echo esc_attr((string) $atts['selection_context']); ?>" data-compact-sources="<?php echo esc_attr($compact_sources); ?>" data-text-limit="<?php echo esc_attr((string) $text_limit); ?>" data-category-labels="<?php echo esc_attr(wp_json_encode($category_labels)); ?>" style="--scsi-live-duration:<?php echo esc_attr((string) $speed); ?>s;--scsi-live-mobile-duration:<?php echo esc_attr((string) $mobile_speed); ?>s" aria-label="<?php echo esc_attr($label); ?>">
             <div class="scsi-live-intelligence__label"><span class="scsi-live-intelligence__lamp" aria-hidden="true"></span><strong><?php echo esc_html(strtoupper($label)); ?></strong></div>
             <div class="scsi-live-intelligence__viewport" aria-live="polite" aria-busy="true">
                 <div class="scsi-live-intelligence__track"><span class="scsi-live-intelligence__connecting">CONNECTING TO SELECTED PUBLIC INTELLIGENCE FEEDS…</span></div>
@@ -2859,7 +2875,8 @@ final class SC_Site_Intelligence_Plugin {
                         <?php endforeach; ?>
                         <p class="description">The default economic category is “Economy, Energy &amp; Resources.” Internal category IDs and API contracts remain stable.</p>
                     </td></tr>
-                    <tr><th scope="row">Ticker details</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_duplicate_protection]" value="1" <?php checked($options['live_intelligence_duplicate_protection'], '1'); ?> /> Prevent automatic ticker when the page already contains the shortcode.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_sources]" value="1" <?php checked($options['live_intelligence_show_sources'], '1'); ?> /> Show sources.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_updated]" value="1" <?php checked($options['live_intelligence_show_updated'], '1'); ?> /> Show update time.</label></td></tr>
+                    <tr><th scope="row">Ticker details</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_duplicate_protection]" value="1" <?php checked($options['live_intelligence_duplicate_protection'], '1'); ?> /> Prevent automatic ticker when the page already contains the shortcode.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_sources]" value="1" <?php checked($options['live_intelligence_show_sources'], '1'); ?> /> Show sources.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_updated]" value="1" <?php checked($options['live_intelligence_show_updated'], '1'); ?> /> Show update time.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_cluster_sources]" value="1" <?php checked($options['live_intelligence_show_cluster_sources'], '1'); ?> /> Show represented-source count for clustered events.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_selection_context]" value="1" <?php checked($options['live_intelligence_selection_context'], '1'); ?> /> Include development state and selection reasons in link tooltips.</label></td></tr>
+                    <tr><th scope="row">Clustering and ranking</th><td><p><strong>Conservative duplicate reduction is enabled by the backend.</strong> Signals are ranked for display relevance using significance, freshness, source priority, represented sources, and data-state penalties.</p><p><a href="<?php echo esc_url(rest_url(self::REST_NAMESPACE . '/live-intelligence/ranking-policy')); ?>" target="_blank" rel="noopener noreferrer">Open the public ranking policy</a></p><p class="description">Scores do not measure truth, danger, source accuracy, or institutional importance. Multiple sources do not automatically mean independent verification.</p></td></tr>
                 </table>
                 <h2>Live preview</h2>
                 <div id="scsi-live-admin-preview" class="scsi-live-admin-preview" aria-label="Live Intelligence settings preview">

@@ -1,10 +1,16 @@
 # Sustainable Catalyst Site Intelligence
 
-## v3.2.0 — Signal Source Operations
+## v3.3.0 — Event Clustering and Intelligence Ranking
+
+Site Intelligence v3.3.0 consolidates duplicate public-event reports into traceable canonical events and ranks ticker signals with explicit, public-safe selection reasons. Category diversity, source caps, source operations, mobile navigation, feed controls, and theme boundaries remain intact.
+
+**Current release:** v3.3.0 — Connected Public Intelligence and Evidence Platform
+
+## v3.3.0 — Signal Source Operations
 
 Adds a public-safe Live Intelligence source registry and a protected operations dashboard for source enablement, priority, refresh and cache policy, retrieval health, last-success tracking, rate use, failure history, manual tests, licensing, attribution, geographic and temporal coverage, and data-quality boundaries. Existing ticker feed selection, placement, readability, and mobile navigation remain intact.
 
-**Current release:** v3.2.0 — Connected Public Intelligence and Evidence Platform
+**Current release:** v3.3.0 — Connected Public Intelligence and Evidence Platform
 
 ## v3.1.5 — Mobile Navigation and Motion Repair
 
@@ -1012,6 +1018,6 @@ Public route: `/app/?view=economics`
 
 WordPress shortcode: `[sc_economics_sustainability_observatory height="1250"]`
 
-### v3.2.0 persistent source-operations state
+### v3.3.0 persistent source-operations state
 
 For durable source health and history across Render deploys, redirect `SC_SI_LIVE_SOURCE_OPERATIONS_STATE_PATH` and `SC_SI_LIVE_SOURCE_OPERATIONS_HISTORY_PATH` to the mounted persistent disk. The immutable registry remains in `backend/data/live_intelligence_source_registry_v320.json`. No provider credentials or full upstream payloads are written to these operational files.

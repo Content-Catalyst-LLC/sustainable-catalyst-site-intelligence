@@ -1,6 +1,13 @@
 # Changelog
 
-## 3.2.0 — Signal Source Operations
+## 3.3.0 — Event Clustering and Intelligence Ranking
+
+- Added conservative cross-source event clustering with canonical event records and source lineage.
+- Added transparent display-relevance scores, component breakdowns, development states, and selection reasons.
+- Added a public ranking-policy endpoint and preserved category diversity and source caps.
+- Preserved feed operations, mobile rotator controls, placement reliability, and Astra/theme styling boundaries.
+
+## 3.3.0 — Signal Source Operations
 
 - Added an eight-source Live Intelligence operations registry with public-safe rights, attribution, coverage, quality, cadence, cache, and rate metadata.
 - Added protected source configuration for enablement, priority, refresh minutes, and cache TTL.

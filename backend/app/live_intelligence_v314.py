@@ -1,4 +1,4 @@
-"""Selectable, balanced public-interest ticker feed for Site Intelligence v3.2.0.
+"""Selectable, balanced public-interest ticker feed for Site Intelligence v3.3.0.
 
 The feed combines verified public events, weather/environment observations,
 open-research metadata, and periodic development indicators. Administrators
@@ -20,6 +20,9 @@ from .connectors.external_data import ExternalDataHub
 from .unified_live_events import unified_events
 from .version import APP_VERSION, RELEASE_NAME
 from .live_intelligence_source_operations_v320 import LiveIntelligenceSourceOperations
+from .live_intelligence_clustering_v330 import (
+    cluster_event_records, ranking_policy, select_ranked_signals, SCHEMA_VERSION as CLUSTERING_SCHEMA_VERSION,
+)
 
 SCHEMA_VERSION = "sc-site-intelligence-live-intelligence/1.4"
 DEFAULT_SIGNAL_LIMIT = 16
@@ -146,8 +149,9 @@ def _event_signal(record: dict[str, Any], *, label: str, priority: int) -> dict[
     observed = str(record.get("observed_at") or record.get("updated_at") or _now())
     state = str(record.get("data_state") or "live")
     status = "stale" if state == "stale" else "current"
-    return _signal(
-        signal_id=f"event.{record.get('id')}",
+    cluster_id = str(record.get("cluster_id") or record.get("id") or "event")
+    signal = _signal(
+        signal_id=f"event.{cluster_id}",
         category="human_systems" if record.get("category") in {"humanitarian", "displacement", "conflict"} else "earth_systems",
         label=label,
         value=_clean(record.get("title") or record.get("summary") or "Verified public event", 150),
@@ -161,6 +165,16 @@ def _event_signal(record: dict[str, Any], *, label: str, priority: int) -> dict[
         priority=priority,
         data_state=state,
     )
+    signal.update({
+        "cluster_id": str(record.get("cluster_id") or ""),
+        "cluster_size": int(record.get("cluster_size") or 1),
+        "cluster_source_count": int(record.get("cluster_source_count") or 1),
+        "corroborating_sources": list(record.get("corroborating_sources") or [source]),
+        "cluster_confidence": float(record.get("cluster_confidence") or record.get("confidence") or 0.0),
+        "cluster_reason": _clean(record.get("cluster_reason") or "single verified source record", 180),
+        "cluster_source_urls": list(record.get("cluster_source_urls") or []),
+    })
+    return signal
 
 
 def _record_places(records: Iterable[dict[str, Any]]) -> list[str]:
@@ -193,6 +207,24 @@ def _event_signals(settings: Settings) -> tuple[list[dict[str, Any]], dict[str, 
         and not (item.get("metadata") or {}).get("fabricated_for_demo")
     ]
     records.sort(key=lambda item: str(item.get("observed_at") or item.get("updated_at") or ""), reverse=True)
+    raw_record_count = len(records)
+    if bool(getattr(settings, "live_intelligence_clustering_enabled", True)):
+        records, clustering = cluster_event_records(
+            records,
+            time_window_hours=int(getattr(settings, "live_intelligence_cluster_time_window_hours", 72)),
+            distance_km=float(getattr(settings, "live_intelligence_cluster_distance_km", 300.0)),
+            text_similarity=float(getattr(settings, "live_intelligence_cluster_text_similarity", 0.34)),
+        )
+    else:
+        clustering = {
+            "schema": CLUSTERING_SCHEMA_VERSION,
+            "version": APP_VERSION,
+            "enabled": False,
+            "input_records": len(records),
+            "canonical_events": len(records),
+            "duplicates_suppressed": 0,
+            "multi_source_clusters": 0,
+        }
     counts = Counter(str(item.get("category") or "other") for item in records)
     delivery = str(payload.get("delivery_state") or payload.get("data_state") or "unavailable")
     count_status = "stale" if delivery == "stale" else "current"
@@ -310,7 +342,9 @@ def _event_signals(settings: Settings) -> tuple[list[dict[str, Any]], dict[str, 
         "data_state": delivery,
         "source_states": payload.get("source_states") or {},
         "event_count": len(records),
+        "raw_event_count": raw_record_count,
         "category_counts": dict(counts),
+        "clustering": clustering,
     }
 
 
@@ -761,7 +795,11 @@ def build_live_intelligence(
         signal["source_priority"] = int(effective.get("priority", 50) or 50)
     if requested:
         all_signals = [item for item in all_signals if item["category"] == requested]
-    selected = _balanced_selection(all_signals, limit, max_per_source=max_per_source)
+    selected = (
+        select_ranked_signals(all_signals, limit, max_per_source=max_per_source)
+        if bool(getattr(settings, "live_intelligence_ranking_enabled", True))
+        else _balanced_selection(all_signals, limit, max_per_source=max_per_source)
+    )
     present_feeds = Counter(str(item.get("feed_id") or "unknown") for item in selected)
     if source_operations is not None and record_operations:
         collector_for_feed = {
@@ -803,6 +841,8 @@ def build_live_intelligence(
             "registry_url": "/public/live-intelligence/sources",
         }
 
+    ranking_scores = [int(item.get("selection_score") or 0) for item in selected]
+    cluster_signals = [item for item in selected if item.get("cluster_id")]
     feed_state.update({
         "useful_signal_count": len([item for item in selected if item["category"] != "platform"]),
         "platform_signal_count": len([item for item in selected if item["category"] == "platform"]),
@@ -814,6 +854,15 @@ def build_live_intelligence(
         "active_feeds": [feed_id for feed_id in FEED_REGISTRY if feed_id in active_feeds],
         "default_signal_limit": DEFAULT_SIGNAL_LIMIT,
         "maximum_signals_per_source": max(1, min(int(max_per_source), MAX_CONFIGURABLE_SIGNALS_PER_SOURCE)),
+        "ranking": {
+            "schema": CLUSTERING_SCHEMA_VERSION,
+            "selected_count": len(selected),
+            "highest_score": max(ranking_scores) if ranking_scores else 0,
+            "lowest_score": min(ranking_scores) if ranking_scores else 0,
+            "clustered_signal_count": len(cluster_signals),
+            "multi_source_signal_count": len([item for item in cluster_signals if int(item.get("cluster_source_count") or 1) > 1]),
+            "policy_url": "/public/live-intelligence/ranking-policy",
+        },
     })
     return {
         "ok": True,
@@ -840,6 +889,9 @@ def build_live_intelligence(
             "feed_selection_supported": True,
             "readability_controls_supported": True,
             "source_operations_supported": True,
+            "event_clustering_supported": True,
+            "transparent_ranking_supported": True,
+            "selection_reasons_supported": True,
             "category_labels": CATEGORY_LABELS,
             "default_desktop_cycle_seconds": 30,
             "default_mobile_cycle_seconds": 36,
@@ -849,10 +901,17 @@ def build_live_intelligence(
             "Only verified live, cached, or stale public-source records are summarized.",
             "Demonstration fallback records and sample connector values are excluded from the ticker.",
             "Periodic indicators display their data year and are not described as real-time measurements.",
+            "Clustering reduces duplicate presentation; it does not prove that a repeated report is accurate.",
+            "Selection scores rank display relevance and are not danger, truth, or institutional-importance scores.",
             "Signals are informational and do not replace official emergency, legal, medical, or financial guidance.",
         ],
     }
 
+
+
+def live_intelligence_ranking_policy() -> dict[str, Any]:
+    """Return the public explainability contract for clustering and ranking."""
+    return ranking_policy()
 
 def live_intelligence_status(settings: Settings) -> dict[str, Any]:
     payload = build_live_intelligence(settings, limit=MAX_SIGNAL_LIMIT)

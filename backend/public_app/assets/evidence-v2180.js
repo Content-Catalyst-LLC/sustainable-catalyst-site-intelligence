@@ -1,5 +1,5 @@
 (() => {
-  const VERSION="3.2.0", API=window.SC_SITE_INTELLIGENCE_API||window.location.origin;
+  const VERSION="3.3.0", API=window.SC_SITE_INTELLIGENCE_API||window.location.origin;
   const qs=s=>document.querySelector(s), esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
   const state={loaded:false,summary:null,claims:[]};
   async function get(path){const r=await fetch(`${API}${path}`,{headers:{Accept:"application/json"}});if(!r.ok)throw new Error(`${r.status} ${path}`);return r.json()}
