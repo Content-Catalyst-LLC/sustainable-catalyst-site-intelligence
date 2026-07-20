@@ -1,11 +1,15 @@
-## 3.1.0 — Live Intelligence Signal Layer
+## 3.1.1 — Live Intelligence Content and Interface Repair
 
-- Added `/public/live-intelligence` and `/public/live-intelligence/status`.
-- Added public-safe connector, index, monitoring, and platform signals.
-- Added `[sc_live_intelligence]` with category, limit, and motion controls.
-- Added optional Astra below-header placement with homepage, selected-page, or entire-site scope.
-- Added black electronic-board styling with green dot-matrix treatment, pause, hover/focus pause, reduced motion, and cached failure state.
-- Added duplicate protection and independent service/top-placement switches.
+- Replaced connector-readiness diagnostics with verified public-interest event and weather summaries.
+- Added latest earthquake, 14-day M4.5+ earthquake count, open natural-event, humanitarian-report, weather-alert, and short-term forecast signals.
+- Suppressed demonstration event fixtures and sample connector values from public ticker output.
+- Limited the operational platform signal to one quiet end-of-feed item.
+- Fixed hover and keyboard-focus pause with matching CSS specificity and explicit JavaScript state classes.
+- Preserved the last rendered feed during temporary refresh errors instead of immediately replacing it with an offline warning.
+- Added automatic placement below the Astra breadcrumb, below-header fallback, and shortcode-only mode.
+- Added optional parchment styling for Astra's utility navigation and breadcrumb surfaces.
+- Added v3.1.1 feed-content and interface contract tests.
+
 
 ## 3.0.0 — Connected Public Intelligence and Evidence Platform
 

@@ -1,10 +1,12 @@
 # Sustainable Catalyst Site Intelligence
 
-## v3.1.0 — Live Intelligence Signal Layer
+## v3.1.1 — Live Intelligence Content and Interface Repair
 
-Adds a public-safe electronic ticker feed, `[sc_live_intelligence]`, Astra below-header placement, WordPress visibility controls, cached proxy delivery, accessible pause controls, and reduced-motion behavior. The default homepage board is black with layered green dot-matrix styling.
+Repairs the electronic ticker interaction and changes the homepage feed from an operational-status strip into a useful public-interest signal board. The release summarizes verified USGS earthquake records, NASA EONET natural events, ReliefWeb humanitarian reports, and live-or-cached NOAA/NWS weather context while suppressing demonstration fixtures and sample connector values.
 
-**Current release:** v3.1.0 — Connected Public Intelligence and Evidence Platform
+The automatic ticker can now follow Astra's configured breadcrumb hook and render immediately after the breadcrumb. A fallback below-header placement and shortcode-only mode remain available. The release also adds a warm parchment treatment for the utility navigation and breadcrumb area, explicit JavaScript hover/focus pausing, stronger cached-feed continuity, and one quiet platform-confidence item rather than a feed dominated by diagnostics.
+
+**Current release:** v3.1.1 — Connected Public Intelligence and Evidence Platform
 
 
 ## v3.0.0 — Connected Public Intelligence and Evidence Platform

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.1.0
+ * Version: 3.1.1
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.1.0';
+    const VERSION = '3.1.1';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -31,7 +31,8 @@ final class SC_Site_Intelligence_Plugin {
         add_action('admin_notices', [$this, 'backend_version_notice']);
         add_action('rest_api_init', [$this, 'register_rest_routes']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_assets']);
-        add_action('astra_header_after', [$this, 'render_top_live_intelligence'], 5);
+        add_action('wp', [$this, 'register_live_intelligence_placement']);
+        add_filter('body_class', [$this, 'live_intelligence_body_classes']);
         add_shortcode('sc_live_intelligence', [$this, 'live_intelligence_shortcode']);
         add_shortcode('sc_site_intelligence_dashboard', [$this, 'dashboard_shortcode']);
         add_shortcode('sc_site_intelligence_page', [$this, 'page_shortcode']);
@@ -249,6 +250,8 @@ final class SC_Site_Intelligence_Plugin {
             'enable_live_intelligence' => '1',
             'show_top_live_intelligence' => '1',
             'live_intelligence_scope' => 'homepage',
+            'live_intelligence_placement' => 'below_breadcrumb',
+            'live_intelligence_parchment_navigation' => '1',
             'live_intelligence_selected_pages' => '',
             'live_intelligence_limit' => '8',
             'live_intelligence_speed' => '42',
@@ -523,6 +526,9 @@ final class SC_Site_Intelligence_Plugin {
         $output['show_top_live_intelligence'] = !empty($input['show_top_live_intelligence']) ? '1' : '0';
         $scope = isset($input['live_intelligence_scope']) ? sanitize_key($input['live_intelligence_scope']) : $defaults['live_intelligence_scope'];
         $output['live_intelligence_scope'] = in_array($scope, ['homepage', 'selected', 'entire_site'], true) ? $scope : 'homepage';
+        $placement = isset($input['live_intelligence_placement']) ? sanitize_key($input['live_intelligence_placement']) : $defaults['live_intelligence_placement'];
+        $output['live_intelligence_placement'] = in_array($placement, ['below_breadcrumb', 'below_header', 'shortcode_only'], true) ? $placement : 'below_breadcrumb';
+        $output['live_intelligence_parchment_navigation'] = !empty($input['live_intelligence_parchment_navigation']) ? '1' : '0';
         $selected = isset($input['live_intelligence_selected_pages']) ? sanitize_text_field($input['live_intelligence_selected_pages']) : '';
         $output['live_intelligence_selected_pages'] = implode(',', array_filter(array_map('absint', preg_split('/[\s,]+/', $selected))));
         $output['live_intelligence_limit'] = (string) max(1, min(20, absint($input['live_intelligence_limit'] ?? 8)));
@@ -2370,9 +2376,41 @@ final class SC_Site_Intelligence_Plugin {
         return rest_ensure_response($result);
     }
 
+    public function register_live_intelligence_placement() {
+        $options = self::options();
+        $placement = (string) ($options['live_intelligence_placement'] ?? 'below_breadcrumb');
+        if ($placement === 'shortcode_only') {
+            return;
+        }
+
+        $hook = 'astra_header_after';
+        $priority = 5;
+        if ($placement === 'below_breadcrumb') {
+            $priority = 20;
+            if (function_exists('astra_get_option')) {
+                $breadcrumb_hook = sanitize_key((string) astra_get_option('breadcrumb-position'));
+                if ($breadcrumb_hook !== '' && $breadcrumb_hook !== 'none') {
+                    $hook = $breadcrumb_hook;
+                }
+            }
+        }
+        add_action($hook, [$this, 'render_top_live_intelligence'], $priority);
+    }
+
+    public function live_intelligence_body_classes($classes) {
+        $options = self::options();
+        if (($options['live_intelligence_parchment_navigation'] ?? '1') === '1') {
+            $classes[] = 'scsi-live-intelligence-parchment-navigation';
+        }
+        if ($this->should_render_top_live_intelligence()) {
+            $classes[] = 'scsi-live-intelligence-surface';
+        }
+        return array_values(array_unique($classes));
+    }
+
     private function should_render_top_live_intelligence() {
         $options = self::options();
-        if ($options['enable_live_intelligence'] !== '1' || $options['show_top_live_intelligence'] !== '1') {
+        if ($options['enable_live_intelligence'] !== '1' || $options['show_top_live_intelligence'] !== '1' || ($options['live_intelligence_placement'] ?? 'below_breadcrumb') === 'shortcode_only') {
             return false;
         }
         if (is_admin() || wp_doing_ajax() || is_feed()) {
@@ -2501,7 +2539,9 @@ final class SC_Site_Intelligence_Plugin {
                         <td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[enable_dashboard]" value="1" <?php checked($options['enable_dashboard'], '1'); ?> /> Enable dashboard shortcodes.</label></td>
                     </tr>
                     <tr><th scope="row">Live Intelligence</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[enable_live_intelligence]" value="1" <?php checked($options['enable_live_intelligence'], '1'); ?> /> Enable the Live Intelligence service and shortcode.</label></td></tr>
-                    <tr><th scope="row">Top electronic ticker</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[show_top_live_intelligence]" value="1" <?php checked($options['show_top_live_intelligence'], '1'); ?> /> Show the black-and-green ticker immediately below the Astra navigation.</label></td></tr>
+                    <tr><th scope="row">Automatic electronic ticker</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[show_top_live_intelligence]" value="1" <?php checked($options['show_top_live_intelligence'], '1'); ?> /> Automatically place the black-and-green ticker using the selected location.</label></td></tr>
+                    <tr><th scope="row"><label for="scsi_live_placement">Automatic placement</label></th><td><select id="scsi_live_placement" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_placement]"><option value="below_breadcrumb" <?php selected($options['live_intelligence_placement'], 'below_breadcrumb'); ?>>Below Astra breadcrumb</option><option value="below_header" <?php selected($options['live_intelligence_placement'], 'below_header'); ?>>Immediately below global header</option><option value="shortcode_only" <?php selected($options['live_intelligence_placement'], 'shortcode_only'); ?>>Disabled — shortcode only</option></select><p class="description">Below-breadcrumb placement follows Astra's configured breadcrumb hook and renders after the breadcrumb at a later priority.</p></td></tr>
+                    <tr><th scope="row">Navigation surface</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_parchment_navigation]" value="1" <?php checked($options['live_intelligence_parchment_navigation'], '1'); ?> /> Use the warm parchment treatment for the utility navigation and breadcrumb area.</label></td></tr>
                     <tr><th scope="row"><label for="scsi_live_scope">Top ticker scope</label></th><td><select id="scsi_live_scope" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_scope]"><option value="homepage" <?php selected($options['live_intelligence_scope'], 'homepage'); ?>>Homepage only</option><option value="selected" <?php selected($options['live_intelligence_scope'], 'selected'); ?>>Selected page IDs</option><option value="entire_site" <?php selected($options['live_intelligence_scope'], 'entire_site'); ?>>Entire site</option></select></td></tr>
                     <tr><th scope="row"><label for="scsi_live_pages">Selected page IDs</label></th><td><input id="scsi_live_pages" type="text" class="regular-text" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_selected_pages]" value="<?php echo esc_attr($options['live_intelligence_selected_pages']); ?>" placeholder="12, 84, 190" /><p class="description">Used only when the selected-page scope is active.</p></td></tr>
                     <tr><th scope="row"><label for="scsi_live_limit">Ticker signals</label></th><td><input id="scsi_live_limit" type="number" min="1" max="20" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_limit]" value="<?php echo esc_attr($options['live_intelligence_limit']); ?>" /></td></tr>

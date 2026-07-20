@@ -1778,7 +1778,7 @@
 .scsi-institutional-data-exchange-control-center .scsi-page-row{border-left:3px solid rgba(92,160,112,.55)}
 
 
-/* v3.1.0 — Live Intelligence electronic ticker board */
+/* v3.1.1 — Live Intelligence electronic ticker board */
 .scsi-live-intelligence{--scsi-live-green:#8cff9a;--scsi-live-bright:#39ff64;--scsi-live-dim:#58b968;--scsi-live-duration:42s;position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) 48px;align-items:stretch;width:100%;min-height:52px;margin:0;background:#020403;color:var(--scsi-live-green);border-block:1px solid #163d20;overflow:hidden;isolation:isolate;font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;box-shadow:inset 0 1px 0 rgba(89,255,111,.08),inset 0 -1px 0 rgba(89,255,111,.06)}
 .scsi-live-intelligence::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.34;background-image:radial-gradient(circle at center,rgba(100,255,120,.17) 0 1px,transparent 1.2px);background-size:4px 4px;mix-blend-mode:screen}
 .scsi-live-intelligence--top{width:100vw;margin-inline:calc(50% - 50vw);border-radius:0}
@@ -1788,7 +1788,7 @@
 .scsi-live-intelligence__viewport{min-width:0;overflow:hidden;display:flex;align-items:center;mask-image:linear-gradient(90deg,transparent,#000 1.5rem,#000 calc(100% - 1.5rem),transparent)}
 .scsi-live-intelligence__track{display:flex;width:max-content;min-width:100%;align-items:center;white-space:nowrap;will-change:transform}
 .scsi-live-intelligence.is-ready:not(.is-paused) .scsi-live-intelligence__track{animation:scsi-live-scroll var(--scsi-live-duration) linear infinite}
-.scsi-live-intelligence:hover .scsi-live-intelligence__track,.scsi-live-intelligence:focus-within .scsi-live-intelligence__track{animation-play-state:paused}
+.scsi-live-intelligence.is-ready:hover .scsi-live-intelligence__track,.scsi-live-intelligence.is-ready:focus-within .scsi-live-intelligence__track,.scsi-live-intelligence.is-hover-paused .scsi-live-intelligence__track,.scsi-live-intelligence.is-focus-paused .scsi-live-intelligence__track{animation-play-state:paused!important}
 .scsi-live-intelligence__set{display:flex;align-items:center;flex:none;min-width:max-content;padding-inline:1.2rem}
 .scsi-live-intelligence__signal{display:inline-flex;align-items:baseline;gap:.5rem;color:var(--scsi-live-green)!important;text-decoration:none!important;padding:.7rem .3rem;text-shadow:0 0 5px rgba(112,255,129,.38)}
 .scsi-live-intelligence__signal:hover,.scsi-live-intelligence__signal:focus-visible{color:#c7ffd0!important;outline:1px solid var(--scsi-live-bright);outline-offset:2px}
@@ -1808,3 +1808,22 @@
 @media(max-width:760px){.scsi-live-intelligence{grid-template-columns:auto minmax(0,1fr) 44px;min-height:48px}.scsi-live-intelligence__label{padding:0 .7rem}.scsi-live-intelligence__label strong{font-size:.61rem;letter-spacing:.1em}.scsi-live-intelligence__signal{gap:.38rem}.scsi-live-intelligence__signal small{display:none}.scsi-live-intelligence__pause{width:44px;min-height:46px}}
 @media(prefers-reduced-motion:reduce){.scsi-live-intelligence__track,.scsi-live-intelligence__lamp,.scsi-live-intelligence__connecting{animation:none!important}.scsi-live-intelligence__viewport{overflow-x:auto;mask-image:none}.scsi-live-intelligence__set[aria-hidden="true"]{display:none}.scsi-live-intelligence__pause{display:none}}
 @media(forced-colors:active){.scsi-live-intelligence{background:Canvas;color:CanvasText;border-color:CanvasText}.scsi-live-intelligence::before{display:none}.scsi-live-intelligence *{color:CanvasText!important;text-shadow:none!important}}
+
+
+/* v3.1.1 — Live Intelligence content and interface repair */
+.scsi-live-intelligence-parchment-navigation .ast-below-header-wrap,
+.scsi-live-intelligence-parchment-navigation .site-below-header-wrap,
+.scsi-live-intelligence-parchment-navigation .ast-breadcrumbs-wrapper,
+.scsi-live-intelligence-parchment-navigation .ast-breadcrumbs{background:#f2ede3!important;color:#27231f!important;border-color:#d7cec0!important}
+.scsi-live-intelligence-parchment-navigation .ast-below-header-wrap,
+.scsi-live-intelligence-parchment-navigation .site-below-header-wrap{border-bottom:1px solid #d7cec0!important;box-shadow:none!important}
+.scsi-live-intelligence-parchment-navigation .ast-below-header-wrap a,
+.scsi-live-intelligence-parchment-navigation .site-below-header-wrap a,
+.scsi-live-intelligence-parchment-navigation .ast-breadcrumbs-wrapper a,
+.scsi-live-intelligence-parchment-navigation .ast-breadcrumbs a{color:#3b3530!important}
+.scsi-live-intelligence-parchment-navigation .ast-below-header-wrap a:hover,
+.scsi-live-intelligence-parchment-navigation .site-below-header-wrap a:hover,
+.scsi-live-intelligence-parchment-navigation .ast-breadcrumbs-wrapper a:hover,
+.scsi-live-intelligence-parchment-navigation .ast-breadcrumbs a:hover{color:#7b213d!important}
+.scsi-live-intelligence.is-delayed .scsi-live-intelligence__lamp{animation:none;opacity:.72}
+.scsi-live-intelligence.is-delayed::after{content:"CACHED";position:absolute;right:52px;top:2px;font-size:.52rem;letter-spacing:.08em;color:#75b77c;z-index:3}

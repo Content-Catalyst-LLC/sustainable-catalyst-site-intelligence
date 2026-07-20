@@ -3689,7 +3689,7 @@
       const itemHtml = function (signal) {
         const metadata = [];
         if (showSources && signal.source_name) metadata.push(signal.source_name);
-        if (showUpdated && signal.updated_at) metadata.push(relativeTime(signal.updated_at));
+        if (showUpdated && (signal.observed_at || signal.updated_at)) metadata.push(relativeTime(signal.observed_at || signal.updated_at));
         const href = signal.destination_url || '#';
         return '<a class="scsi-live-intelligence__signal" href="' + escapeHtml(href) + '" title="' + escapeHtml(signal.detail || signal.label || '') + '">' +
           '<span class="scsi-live-intelligence__category">' + escapeHtml((signal.category || 'signal').replace(/_/g, ' ').toUpperCase()) + '</span>' +
@@ -3702,17 +3702,34 @@
         if (!signals.length) throw new Error('No Live Intelligence signals are currently available.');
         const content = signals.map(itemHtml).join('');
         track.innerHTML = '<div class="scsi-live-intelligence__set">' + content + '</div><div class="scsi-live-intelligence__set" aria-hidden="true">' + content + '</div>';
+        root.classList.remove('has-error', 'is-delayed');
         root.classList.add('is-ready');
         viewport.setAttribute('aria-busy', 'false');
         if (root.dataset.motion === 'off') root.classList.add('is-paused');
       };
       const load = function () {
         fetchJson(endpoint).then(render).catch(function () {
-          track.innerHTML = '<span class="scsi-live-intelligence__connecting">LIVE INTELLIGENCE FEED TEMPORARILY UNAVAILABLE · CACHED SIGNALS WILL RETURN AUTOMATICALLY</span>';
           viewport.setAttribute('aria-busy', 'false');
+          if (root.classList.contains('is-ready')) {
+            root.classList.add('is-delayed');
+            return;
+          }
+          track.innerHTML = '<span class="scsi-live-intelligence__connecting">LIVE INTELLIGENCE FEED TEMPORARILY UNAVAILABLE · LAST VERIFIED SIGNALS WILL RETURN AUTOMATICALLY</span>';
           root.classList.add('has-error');
         });
       };
+      root.addEventListener('mouseenter', function () {
+        root.classList.add('is-hover-paused');
+      });
+      root.addEventListener('mouseleave', function () {
+        root.classList.remove('is-hover-paused');
+      });
+      root.addEventListener('focusin', function () {
+        root.classList.add('is-focus-paused');
+      });
+      root.addEventListener('focusout', function (event) {
+        if (!root.contains(event.relatedTarget)) root.classList.remove('is-focus-paused');
+      });
       if (pause) {
         pause.addEventListener('click', function () {
           const paused = root.classList.toggle('is-paused');
