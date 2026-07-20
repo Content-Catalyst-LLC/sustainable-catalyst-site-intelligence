@@ -34,7 +34,7 @@ for path in sorted(ROOT.rglob('*')):
     records.append({'path': rel.as_posix(), 'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest()})
 manifest = {
     'schema': 'sc-site-intelligence-release-manifest/1.0',
-    'release': '3.1.4',
+    'release': '3.1.5',
     'release_name': 'Readability and Taxonomy Controls',
     'file_count': len(records),
     'files': records,

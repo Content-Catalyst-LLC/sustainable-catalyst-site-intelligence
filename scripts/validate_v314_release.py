@@ -3,7 +3,7 @@ import json
 
 ROOT = Path(__file__).resolve().parents[1]
 checks = {
-    'backend/app/version.py': ['APP_VERSION = "3.1.4"', 'Connected Public Intelligence and Evidence Platform'],
+    'backend/app/version.py': ['APP_VERSION = "3.1.5"', 'Connected Public Intelligence and Evidence Platform'],
     'backend/app/live_intelligence_v314.py': [
         'SCHEMA_VERSION = "sc-site-intelligence-live-intelligence/1.4"',
         'CATEGORY_LABELS = {', 'SOURCE_SHORT_NAMES = {',
@@ -13,7 +13,7 @@ checks = {
     ],
     'backend/app/main.py': ['from .live_intelligence_v314 import build_live_intelligence, live_intelligence_status'],
     'wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php': [
-        'Version: 3.1.4', "const VERSION = '3.1.4';",
+        'Version: 3.1.5', "const VERSION = '3.1.5';",
         "'live_intelligence_speed_preset' => 'balanced'",
         "'live_intelligence_speed' => '30'", "'live_intelligence_mobile_speed' => '36'",
         "'live_intelligence_spacing' => 'balanced'", "'live_intelligence_text_limit' => '120'",
@@ -28,7 +28,7 @@ checks = {
         '--scsi-live-mobile-duration', 'scsi-live-intelligence--spacing-compact',
         'scsi-live-intelligence--spacing-spacious', 'text-overflow:ellipsis',
     ],
-    'README.md': ['v3.1.4 — Readability and Taxonomy Controls', 'Current release:** v3.1.4'],
+    'README.md': ['v3.1.5 — Readability and Taxonomy Controls', 'Current release:** v3.1.5'],
     'RELEASE_NOTES_SITE_INTELLIGENCE_V314.md': ['Economy, Energy & Resources', 'separate restore action'],
 }
 for rel, markers in checks.items():
@@ -59,4 +59,4 @@ if policy.get('default_desktop_cycle_seconds') != 30 or policy.get('default_mobi
     raise SystemExit('Default cycle policy mismatch.')
 if policy.get('economy_resources_default_label') != 'Economy, Energy & Resources':
     raise SystemExit('Economy taxonomy policy mismatch.')
-print('Site Intelligence v3.1.4 release contract passed.')
+print('Site Intelligence v3.1.5 release contract passed.')

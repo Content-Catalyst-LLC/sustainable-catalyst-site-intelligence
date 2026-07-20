@@ -1,0 +1,30 @@
+Sustainable Catalyst Site Intelligence v3.1.5
+Mobile Navigation and Motion Repair
+
+VALIDATION SUMMARY
+- Complete inherited regression suite: 588 passed
+- Focused v3.1.5 mobile contracts: 4 passed
+- PHP syntax: passed
+- JavaScript syntax: passed
+- Python syntax: passed
+- v3.1.5 release contract: passed
+- Immutable manifest: 602 files
+
+MOBILE REPAIR CONTRACT
+- Default mobile presentation: one-signal rotator
+- Previous / next buttons: included
+- Swipe navigation: included
+- Position counter: included
+- Auto-advance: 7 seconds by default
+- Pause integration: included
+- Reduced-motion auto-advance suppression: included
+- Desktop hover behavior gated to fine pointers: included
+- Hide-on-mobile setting: included
+- Desktop electronic marquee: preserved
+
+BOUNDARIES
+- Feed selection preserved
+- Placement controls preserved
+- Taxonomy controls preserved
+- Astra navigation and breadcrumb styles untouched
+- No browser API keys or raw upstream payloads exposed

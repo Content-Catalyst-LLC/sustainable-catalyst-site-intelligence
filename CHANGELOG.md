@@ -1,4 +1,9 @@
-## 3.1.4 — Readability and Taxonomy Controls
+## 3.1.5 — Mobile Navigation and Motion Repair
+
+- Added mobile signal rotator, previous/next controls, swipe gestures, position counter, auto-advance, reduced-motion handling, touch-hover repair, and a hide-on-mobile option.
+- Preserved desktop marquee, feed selection, placement, taxonomy, and theme styling boundaries.
+
+## 3.1.5 — Readability and Taxonomy Controls
 
 - Added relaxed, balanced, brisk, and custom electronic-board speed modes.
 - Added independent desktop and mobile ticker-cycle durations.

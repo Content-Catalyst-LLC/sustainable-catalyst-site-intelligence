@@ -3,7 +3,7 @@ from app.geospatial_intelligence import overview, layer_manifest, live_events, h
 def test_geospatial_overview_and_layers():
     data = overview()
     assert data["ok"] is True
-    assert data["version"] == "3.1.4"
+    assert data["version"] == "3.1.5"
     manifest = layer_manifest()
     assert len(manifest["satellite_layers"]) >= 4
     assert any(layer["kind"] == "heat" for layer in manifest["vector_layers"])

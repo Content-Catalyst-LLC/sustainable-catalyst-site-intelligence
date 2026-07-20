@@ -3671,6 +3671,10 @@
       const viewport = root.querySelector('.scsi-live-intelligence__viewport');
       const track = root.querySelector('.scsi-live-intelligence__track');
       const pause = root.querySelector('.scsi-live-intelligence__pause');
+      const mobileControls = root.querySelector('.scsi-live-intelligence__mobile-controls');
+      const previous = root.querySelector('.scsi-live-intelligence__previous');
+      const next = root.querySelector('.scsi-live-intelligence__next');
+      const position = root.querySelector('.scsi-live-intelligence__position');
       if (!viewport || !track || !cfg.restBase) return;
       const category = root.dataset.category || '';
       const limit = Math.max(1, Math.min(24, Number(root.dataset.limit || 16)));
@@ -3681,6 +3685,16 @@
       const showUpdated = root.dataset.showUpdated !== '0';
       const compactSources = root.dataset.compactSources !== '0';
       const textLimit = Math.max(48, Math.min(220, Number(root.dataset.textLimit || 120)));
+      const mobileMode = ['rotator', 'marquee', 'hidden'].includes(root.dataset.mobileMode) ? root.dataset.mobileMode : 'rotator';
+      const mobileInterval = Math.max(4, Math.min(30, Number(root.dataset.mobileInterval || 7))) * 1000;
+      const mobileQuery = window.matchMedia('(max-width: 760px)');
+      const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      let signals = [];
+      let currentIndex = 0;
+      let rotationTimer = 0;
+      let touchStartX = null;
+      let renderedMobile = null;
       let categoryLabels = {};
       try { categoryLabels = JSON.parse(root.dataset.categoryLabels || '{}'); } catch (error) { categoryLabels = {}; }
       const params = new URLSearchParams({limit: String(limit), max_per_source: String(maxPerSource)});
@@ -3702,7 +3716,7 @@
         if (clean.length <= maximum) return clean;
         return clean.slice(0, Math.max(1, maximum - 1)).trimEnd() + '…';
       };
-      const itemHtml = function (signal) {
+      const itemHtml = function (signal, includeSeparator) {
         const metadata = [];
         const sourceName = compactSources && signal.source_short_name ? signal.source_short_name : signal.source_name;
         if (showSources && sourceName) metadata.push(sourceName);
@@ -3712,17 +3726,63 @@
         const categoryLabel = categoryLabels[categoryId] || categoryId.replace(/_/g, ' ');
         const fullValue = signal.value || 'AVAILABLE';
         const title = signal.detail || fullValue || signal.label || '';
+        const separator = includeSeparator ? '<span class="scsi-live-intelligence__separator" aria-hidden="true">◆</span>' : '';
         return '<a class="scsi-live-intelligence__signal" href="' + escapeHtml(href) + '" title="' + escapeHtml(title) + '" aria-label="' + escapeHtml(categoryLabel + ': ' + (signal.label || 'Live signal') + ': ' + fullValue) + '">' +
           '<span class="scsi-live-intelligence__category">' + escapeHtml(categoryLabel.toUpperCase()) + '</span>' +
           '<span class="scsi-live-intelligence__name">' + escapeHtml(shorten(signal.label || 'LIVE SIGNAL', 72)) + '</span>' +
           '<strong class="scsi-live-intelligence__value">' + escapeHtml(shorten(fullValue, textLimit)) + '</strong>' +
-          (metadata.length ? '<small>' + escapeHtml(metadata.join(' · ')) + '</small>' : '') + '</a><span class="scsi-live-intelligence__separator" aria-hidden="true">◆</span>';
+          (metadata.length ? '<small>' + escapeHtml(metadata.join(' · ')) + '</small>' : '') + '</a>' + separator;
+      };
+      const isMobileRotator = function () {
+        return mobileQuery.matches && mobileMode === 'rotator';
+      };
+      const stopRotation = function () {
+        if (rotationTimer) window.clearInterval(rotationTimer);
+        rotationTimer = 0;
+      };
+      const updatePosition = function () {
+        if (position) position.textContent = signals.length ? (currentIndex + 1) + ' / ' + signals.length : '0 / 0';
+      };
+      const showMobileSignal = function (index, announce) {
+        if (!signals.length) return;
+        currentIndex = (index + signals.length) % signals.length;
+        track.innerHTML = '<div class="scsi-live-intelligence__mobile-signal">' + itemHtml(signals[currentIndex], false) + '</div>';
+        updatePosition();
+        if (announce) viewport.setAttribute('aria-label', 'Live Intelligence signal ' + (currentIndex + 1) + ' of ' + signals.length);
+      };
+      const startRotation = function () {
+        stopRotation();
+        if (!isMobileRotator() || reducedMotion.matches || root.classList.contains('is-paused') || signals.length < 2 || document.hidden) return;
+        rotationTimer = window.setInterval(function () { showMobileSignal(currentIndex + 1, false); }, mobileInterval);
+      };
+      const renderMode = function () {
+        if (!signals.length) return;
+        const mobile = mobileQuery.matches;
+        root.classList.toggle('is-mobile-rotator', mobile && mobileMode === 'rotator');
+        root.classList.toggle('is-mobile-marquee', mobile && mobileMode === 'marquee');
+        root.classList.toggle('is-mobile-hidden', mobile && mobileMode === 'hidden');
+        if (mobileMode === 'hidden' && mobile) {
+          stopRotation();
+          return;
+        }
+        if (isMobileRotator()) {
+          if (renderedMobile !== true) currentIndex = 0;
+          showMobileSignal(currentIndex, false);
+          if (mobileControls) mobileControls.hidden = false;
+          renderedMobile = true;
+          startRotation();
+          return;
+        }
+        stopRotation();
+        if (mobileControls) mobileControls.hidden = true;
+        const content = signals.map(function (signal) { return itemHtml(signal, true); }).join('');
+        track.innerHTML = '<div class="scsi-live-intelligence__set">' + content + '</div><div class="scsi-live-intelligence__set" aria-hidden="true">' + content + '</div>';
+        renderedMobile = false;
       };
       const render = function (data) {
-        const signals = Array.isArray(data.signals) ? data.signals : [];
+        signals = Array.isArray(data.signals) ? data.signals : [];
         if (!signals.length) throw new Error('No Live Intelligence signals are currently available.');
-        const content = signals.map(itemHtml).join('');
-        track.innerHTML = '<div class="scsi-live-intelligence__set">' + content + '</div><div class="scsi-live-intelligence__set" aria-hidden="true">' + content + '</div>';
+        renderMode();
         root.classList.remove('has-error', 'is-delayed');
         root.classList.add('is-ready');
         viewport.setAttribute('aria-busy', 'false');
@@ -3739,26 +3799,47 @@
           root.classList.add('has-error');
         });
       };
-      root.addEventListener('mouseenter', function () {
-        root.classList.add('is-hover-paused');
-      });
-      root.addEventListener('mouseleave', function () {
-        root.classList.remove('is-hover-paused');
-      });
+      if (finePointer.matches) {
+        root.addEventListener('mouseenter', function () { root.classList.add('is-hover-paused'); });
+        root.addEventListener('mouseleave', function () { root.classList.remove('is-hover-paused'); });
+      }
       root.addEventListener('focusin', function () {
         root.classList.add('is-focus-paused');
+        stopRotation();
       });
       root.addEventListener('focusout', function (event) {
-        if (!root.contains(event.relatedTarget)) root.classList.remove('is-focus-paused');
+        if (!root.contains(event.relatedTarget)) {
+          root.classList.remove('is-focus-paused');
+          startRotation();
+        }
       });
+      if (previous) previous.addEventListener('click', function () { showMobileSignal(currentIndex - 1, true); startRotation(); });
+      if (next) next.addEventListener('click', function () { showMobileSignal(currentIndex + 1, true); startRotation(); });
+      viewport.addEventListener('touchstart', function (event) {
+        if (!isMobileRotator() || !event.touches.length) return;
+        touchStartX = event.touches[0].clientX;
+        stopRotation();
+      }, {passive: true});
+      viewport.addEventListener('touchend', function (event) {
+        if (!isMobileRotator() || touchStartX === null || !event.changedTouches.length) return;
+        const distance = event.changedTouches[0].clientX - touchStartX;
+        touchStartX = null;
+        if (Math.abs(distance) >= 40) showMobileSignal(currentIndex + (distance < 0 ? 1 : -1), true);
+        startRotation();
+      }, {passive: true});
       if (pause) {
         pause.addEventListener('click', function () {
           const paused = root.classList.toggle('is-paused');
           pause.setAttribute('aria-pressed', paused ? 'true' : 'false');
           pause.setAttribute('aria-label', paused ? 'Resume Live Intelligence ticker' : 'Pause Live Intelligence ticker');
           pause.querySelector('span').textContent = paused ? '▶' : 'Ⅱ';
+          if (paused) stopRotation(); else startRotation();
         });
       }
+      const handleModeChange = function () { renderMode(); };
+      if (mobileQuery.addEventListener) mobileQuery.addEventListener('change', handleModeChange); else mobileQuery.addListener(handleModeChange);
+      if (reducedMotion.addEventListener) reducedMotion.addEventListener('change', startRotation); else reducedMotion.addListener(startRotation);
+      document.addEventListener('visibilitychange', function () { if (document.hidden) stopRotation(); else startRotation(); });
       load();
       window.setInterval(load, 300000);
     });

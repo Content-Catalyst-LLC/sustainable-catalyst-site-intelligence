@@ -1,10 +1,17 @@
 # Sustainable Catalyst Site Intelligence
 
-## v3.1.4 — Readability and Taxonomy Controls
+## v3.1.5 — Mobile Navigation and Motion Repair
+
+- Mobile defaults to a one-signal rotator with previous/next controls, swipe navigation, position counter, and seven-second auto-advance.
+- Reduced-motion users retain manual controls without automatic movement.
+- Touch devices no longer become stuck because of desktop hover-pause behavior.
+- Administrators may choose rotator, marquee, or hidden mobile presentation.
+
+## v3.1.5 — Readability and Taxonomy Controls
 
 Adds balanced, brisk, relaxed, and custom ticker-speed controls; independent desktop and mobile cycle durations; story-spacing modes; long-signal truncation; compact source labels; editable category names; a settings-page preview; and a readability-only reset action. The default economic taxonomy is **Economy, Energy & Resources**. Internal API category IDs remain stable, and Astra/theme navigation and breadcrumb styles remain untouched.
 
-**Current release:** v3.1.4 — Connected Public Intelligence and Evidence Platform
+**Current release:** v3.1.5 — Connected Public Intelligence and Evidence Platform
 
 ## v3.1.3 — Feed Selection and Placement Reliability Repair
 

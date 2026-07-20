@@ -1,4 +1,4 @@
-# Site Intelligence v3.1.4 — Readability and Taxonomy Controls
+# Site Intelligence v3.1.5 — Readability and Taxonomy Controls
 
 ## Purpose
 

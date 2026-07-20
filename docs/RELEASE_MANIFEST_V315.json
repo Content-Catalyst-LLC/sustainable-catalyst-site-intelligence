@@ -1,0 +1,28 @@
+{
+  "release": "3.1.5",
+  "title": "Mobile Navigation and Motion Repair",
+  "default_mobile_mode": "rotator",
+  "mobile_modes": [
+    "rotator",
+    "marquee",
+    "hidden"
+  ],
+  "default_mobile_interval_seconds": 7,
+  "minimum_mobile_interval_seconds": 4,
+  "maximum_mobile_interval_seconds": 30,
+  "previous_next_controls": true,
+  "swipe_navigation": true,
+  "position_counter": true,
+  "mobile_auto_advance": true,
+  "reduced_motion_disables_auto_advance": true,
+  "touch_hover_pause_prevented": true,
+  "mobile_hide_option": true,
+  "desktop_marquee_preserved": true,
+  "feed_selection_preserved": true,
+  "placement_settings_preserved": true,
+  "theme_navigation_styles_untouched": true,
+  "breadcrumb_styles_untouched": true,
+  "raw_upstream_payloads_exposed": false,
+  "browser_api_keys_exposed": false,
+  "automatic_interpretation": false
+}

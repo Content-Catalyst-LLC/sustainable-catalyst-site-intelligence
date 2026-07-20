@@ -26,7 +26,7 @@ COUNTRY = {
 def country_profile(_code: str):
     return {
         "ok": True,
-        "version": "3.1.4",
+        "version": "3.1.5",
         "generated_at": "2026-07-11T00:00:00+00:00",
         "country": COUNTRY,
         "data_state": "partial-live",
@@ -42,7 +42,7 @@ def country_profile(_code: str):
 def country_indicators(_code: str):
     return {
         "ok": True,
-        "version": "3.1.4",
+        "version": "3.1.5",
         "country": COUNTRY,
         "data_state": "partial-live",
         "indicators": [
@@ -102,7 +102,7 @@ def country_trends(_code: str):
     payload = country_indicators(_code)
     return {
         "ok": True,
-        "version": "3.1.4",
+        "version": "3.1.5",
         "country": COUNTRY,
         "data_state": "partial-live",
         "trends": [
@@ -125,7 +125,7 @@ def country_trends(_code: str):
 def unified_events(**_kwargs):
     return {
         "ok": True,
-        "version": "3.1.4",
+        "version": "3.1.5",
         "data_state": "partial-live",
         "count": 1,
         "source_states": {"usgs": "live", "reliefweb": "unavailable"},
@@ -188,7 +188,7 @@ def compare_countries(_country: str, _compare: str, **_kwargs):
     }
     return {
         "ok": True,
-        "version": "3.1.4",
+        "version": "3.1.5",
         "generated_at": "2026-07-11T00:00:00+00:00",
         "scope": {"primary_country": left, "comparison_country": right},
         "summary": {"primary_event_count": 1, "comparison_event_count": 0},
@@ -206,7 +206,7 @@ def compare_countries(_country: str, _compare: str, **_kwargs):
 def earth_manifest(*_args, **_kwargs):
     return {
         "ok": True,
-        "version": "3.1.4",
+        "version": "3.1.5",
         "title": "Sustainable Catalyst Earth Observation View",
         "view": {
             "layer_id": "true-color",
@@ -228,7 +228,7 @@ def earth_manifest(*_args, **_kwargs):
 def dashboard_export(_dashboard_id: str, country: str = ""):
     return {
         "ok": True,
-        "version": "3.1.4",
+        "version": "3.1.5",
         "dashboard": {
             "ok": True,
             "dashboard_id": "climate-human-vulnerability",
@@ -270,7 +270,7 @@ def install(monkeypatch):
 def test_v1200_directory_and_diagnostics_are_public_safe():
     directory = studio.briefing_directory()
     diagnostics = studio.briefing_diagnostics()
-    assert directory["version"] == "3.1.4"
+    assert directory["version"] == "3.1.5"
     assert {item["id"] for item in directory["brief_types"]} == {"country", "comparison", "event", "earth", "thematic"}
     assert directory["server_export_formats"] == ["json", "csv", "html"]
     assert directory["browser_export_formats"] == ["png"]
@@ -369,7 +369,7 @@ def test_v1200_api_endpoints_and_export_headers(monkeypatch):
     assert directory.status_code == 200
     brief = client.get("/public/briefing-studio/brief?type=country&country=KEN")
     assert brief.status_code == 200
-    assert brief.json()["version"] == "3.1.4"
+    assert brief.json()["version"] == "3.1.5"
     export = client.get("/public/briefing-studio/export?type=country&country=KEN&format=csv")
     assert export.status_code == 200
     assert export.headers["cache-control"] == "no-store"
@@ -393,5 +393,5 @@ def test_v1200_public_app_and_wordpress_contract():
     assert 'body.briefing-print-mode' in css
     assert "add_shortcode('sc_public_briefing_studio'" in php
     assert "public function public_briefing_studio_shortcode" in php
-    assert "Version: 3.1.4" in php
-    assert "const VERSION = '3.1.4';" in php
+    assert "Version: 3.1.5" in php
+    assert "const VERSION = '3.1.5';" in php
