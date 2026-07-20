@@ -1,6 +1,6 @@
 """Compatibility alias for the Site Intelligence v3.1.3 import path.
 
-The active implementation moved to :mod:`live_intelligence_v314` in v3.1.5.
+The active implementation moved to :mod:`live_intelligence_v314` in v3.2.0.
 The module alias keeps monkeypatching and legacy imports attached to the active
 implementation rather than to a detached wrapper namespace.
 """

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.1.5
+ * Version: 3.2.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.1.5';
+    const VERSION = '3.2.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -363,7 +363,7 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v3.1.5 preserves placement, feed, and theme choices while adding readability defaults.
+        // v3.2.0 preserves placement, feed, and theme choices while adding readability defaults.
         // The former 42-second default is migrated to the balanced 30-second preset.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
@@ -720,6 +720,33 @@ final class SC_Site_Intelligence_Plugin {
                 'exclude' => ['sanitize_callback' => 'sanitize_text_field'],
                 'max_per_source' => ['sanitize_callback' => 'absint'],
             ],
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/sources', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_sources'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/sources/(?P<feed_id>[a-z0-9_\-]+)', [
+            [
+                'methods' => WP_REST_Server::READABLE,
+                'callback' => [$this, 'rest_live_intelligence_source'],
+                'permission_callback' => '__return_true',
+            ],
+            [
+                'methods' => WP_REST_Server::EDITABLE,
+                'callback' => [$this, 'rest_live_intelligence_source_update'],
+                'permission_callback' => function () { return current_user_can('manage_options'); },
+            ],
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/sources/(?P<feed_id>[a-z0-9_\-]+)/test', [
+            'methods' => WP_REST_Server::CREATABLE,
+            'callback' => [$this, 'rest_live_intelligence_source_test'],
+            'permission_callback' => function () { return current_user_can('manage_options'); },
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/sources-history', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_source_history'],
+            'permission_callback' => function () { return current_user_can('manage_options'); },
         ]);
         register_rest_route(self::REST_NAMESPACE, '/dashboard', [
             'methods' => WP_REST_Server::READABLE,
@@ -2553,6 +2580,50 @@ final class SC_Site_Intelligence_Plugin {
         return rest_ensure_response($result);
     }
 
+    public function rest_live_intelligence_sources(WP_REST_Request $request) {
+        $refresh = sanitize_text_field((string) $request->get_param('refresh'));
+        $endpoint = 'public/live-intelligence/sources' . ($refresh !== '' ? '?refresh=' . rawurlencode($refresh) : '');
+        $result = $this->backend_request($endpoint);
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_source(WP_REST_Request $request) {
+        $feed_id = sanitize_key((string) $request->get_param('feed_id'));
+        $result = $this->backend_request('public/live-intelligence/sources/' . rawurlencode($feed_id));
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_source_update(WP_REST_Request $request) {
+        $feed_id = sanitize_key((string) $request->get_param('feed_id'));
+        $body = json_decode($request->get_body(), true);
+        if (!is_array($body)) { $body = []; }
+        $payload = [
+            'enabled' => !empty($body['enabled']),
+            'priority' => max(1, min(100, absint($body['priority'] ?? 50))),
+            'refresh_minutes' => max(5, min(10080, absint($body['refresh_minutes'] ?? 60))),
+            'cache_ttl_minutes' => max(1, min(10080, absint($body['cache_ttl_minutes'] ?? 60))),
+        ];
+        $result = $this->backend_request('admin/live-intelligence/sources/' . rawurlencode($feed_id), 'PATCH', $payload);
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_source_test(WP_REST_Request $request) {
+        $feed_id = sanitize_key((string) $request->get_param('feed_id'));
+        $body = json_decode($request->get_body(), true);
+        $live = is_array($body) && !empty($body['live']);
+        $result = $this->backend_request('admin/live-intelligence/sources/' . rawurlencode($feed_id) . '/test', 'POST', ['live' => $live]);
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_source_history(WP_REST_Request $request) {
+        $feed_id = sanitize_key((string) $request->get_param('feed_id'));
+        $limit = max(1, min(500, absint($request->get_param('limit') ?: 100)));
+        $query = ['limit' => $limit];
+        if ($feed_id !== '') { $query['feed_id'] = $feed_id; }
+        $result = $this->backend_request('admin/live-intelligence/sources/history?' . http_build_query($query));
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
     public function register_live_intelligence_placement() {
         $options = self::options();
         $placement = (string) ($options['live_intelligence_placement'] ?? 'below_breadcrumb');
@@ -2804,7 +2875,21 @@ final class SC_Site_Intelligence_Plugin {
                 <?php submit_button('Restore readability defaults', 'secondary', 'submit', false); ?>
                 <span class="description">Resets only speed, spacing, text length, compact source labels, and category names. Feed and placement settings are preserved.</span>
             </form>
+            <hr />
+            <section class="scsi-source-operations" aria-labelledby="scsi-source-operations-title">
+                <h2 id="scsi-source-operations-title">Signal source operations</h2>
+                <p>Inspect source freshness, retrieval health, licensing, coverage, rate usage, and last successful retrieval. Displayed-feed checkboxes above choose what visitors see; operational enablement below controls whether the backend collector may run.</p>
+                <div id="scsi-source-operations-summary" class="notice inline notice-info"><p>Loading Live Intelligence source operations…</p></div>
+                <div class="scsi-source-operations-table-wrap">
+                    <table class="widefat striped" id="scsi-source-operations-table">
+                        <thead><tr><th>Source</th><th>Health</th><th>Enabled</th><th>Priority</th><th>Refresh</th><th>Cache</th><th>Last success</th><th>Rights / coverage</th><th>Operations</th></tr></thead>
+                        <tbody><tr><td colspan="9">Loading source registry…</td></tr></tbody>
+                    </table>
+                </div>
+                <p class="description">Priority uses 1 as highest. Refresh and cache values are minutes. Live tests may contact the upstream provider; configuration checks do not.</p>
+            </section>
             <style>
+                .scsi-source-operations-table-wrap{overflow-x:auto;margin:1rem 0}.scsi-source-operations table{min-width:1180px}.scsi-source-operations td{vertical-align:top}.scsi-source-operations input[type=number]{width:84px}.scsi-source-operations .scsi-source-health{display:inline-block;padding:.2rem .5rem;border:1px solid #8c8f94;background:#f6f7f7;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}.scsi-source-operations .scsi-source-health--healthy{border-color:#00a32a;color:#006b1b;background:#edfaef}.scsi-source-operations .scsi-source-health--degraded,.scsi-source-operations .scsi-source-health--stale{border-color:#dba617;color:#6e5100;background:#fff8e5}.scsi-source-operations .scsi-source-health--disabled{opacity:.72}.scsi-source-operations .scsi-source-health--never_run{border-style:dashed}.scsi-source-operations .scsi-source-actions{display:flex;flex-wrap:wrap;gap:.35rem}.scsi-source-operations .scsi-source-meta{font-size:12px;color:#50575e;max-width:260px}.scsi-source-operations .scsi-source-result{display:block;margin-top:.35rem;font-size:12px}
                 .scsi-live-admin-preview{--preview-duration:30s;display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;overflow:hidden;background:#020403;color:#8cff9a;border:1px solid #163d20;min-height:52px;font-family:monospace;box-shadow:inset 0 1px 0 rgba(89,255,111,.08)}
                 .scsi-live-admin-preview__label{align-self:stretch;display:flex;align-items:center;padding:0 1rem;border-right:1px solid #214d29;color:#39ff64;font-weight:800;white-space:nowrap}
                 .scsi-live-admin-preview__track{display:block;width:max-content;white-space:nowrap;padding:0 1.2rem;animation:scsi-live-admin-preview-scroll var(--preview-duration) linear infinite;text-shadow:0 0 5px rgba(112,255,129,.38)}
@@ -2814,6 +2899,22 @@ final class SC_Site_Intelligence_Plugin {
                 @media(prefers-reduced-motion:reduce){.scsi-live-admin-preview__track{animation:none}}
             </style>
             <script>
+            (function(){
+                const table=document.getElementById('scsi-source-operations-table');
+                const summary=document.getElementById('scsi-source-operations-summary');
+                if(!table||!summary) return;
+                const base=<?php echo wp_json_encode(rest_url(self::REST_NAMESPACE . '/live-intelligence/sources')); ?>;
+                const nonce=<?php echo wp_json_encode(wp_create_nonce('wp_rest')); ?>;
+                const escapeHtml=(value)=>String(value??'').replace(/[&<>"']/g,(char)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
+                const humanTime=(value)=>{if(!value)return 'Never';const date=new Date(value);return Number.isNaN(date.getTime())?String(value):date.toLocaleString();};
+                const request=async(url,options={})=>{const headers=Object.assign({'Accept':'application/json','Content-Type':'application/json','X-WP-Nonce':nonce},options.headers||{});const response=await fetch(url,Object.assign({},options,{headers}));let payload={};try{payload=await response.json();}catch(error){payload={message:'Invalid server response'};}if(!response.ok){throw new Error(payload.message||payload.detail||('HTTP '+response.status));}return payload;};
+                const sourceRow=(source)=>{const effective=source.effective||{};const health=source.health||{};const runtime=source.runtime||{};const license=source.license||{};const coverage=source.coverage||{};const id=escapeHtml(source.feed_id);return `<tr data-feed-id="${id}"><td><strong>${escapeHtml(source.label)}</strong><div class="scsi-source-meta">${escapeHtml(source.provider)}<br><code>${id}</code></div></td><td><span class="scsi-source-health scsi-source-health--${escapeHtml(health.state||'never_run')}">${escapeHtml(health.state||'never run')}</span><div class="scsi-source-meta">${escapeHtml(health.freshness||'unknown')}${health.age_minutes===null||health.age_minutes===undefined?'':' · '+escapeHtml(health.age_minutes)+'m old'}<br>${escapeHtml(runtime.last_data_state||'unknown')} · ${escapeHtml(runtime.last_record_count||0)} records<br>${escapeHtml(runtime.requests_today||0)} requests today</div></td><td><label><input class="scsi-source-enabled" type="checkbox" ${effective.enabled?'checked':''}> Allow collector</label></td><td><input class="scsi-source-priority" type="number" min="1" max="100" value="${escapeHtml(effective.priority||50)}"></td><td><input class="scsi-source-refresh" type="number" min="5" max="10080" value="${escapeHtml(effective.refresh_minutes||60)}"> min</td><td><input class="scsi-source-cache" type="number" min="1" max="10080" value="${escapeHtml(effective.cache_ttl_minutes||60)}"> min</td><td>${escapeHtml(humanTime(runtime.last_success_at))}<div class="scsi-source-meta">Failures: ${escapeHtml(runtime.consecutive_failures||0)}<br>Last test: ${escapeHtml(runtime.last_test_status||'not run')}</div></td><td><div class="scsi-source-meta"><strong>${escapeHtml(license.name||'See source')}</strong><br>${escapeHtml(license.attribution||'')}<br>${escapeHtml(coverage.geographic||'')}<br>${escapeHtml(coverage.temporal||'')}</div></td><td><div class="scsi-source-actions"><button type="button" class="button scsi-source-save">Save</button><button type="button" class="button scsi-source-config-test">Check config</button><button type="button" class="button button-secondary scsi-source-live-test">Live test</button></div><span class="scsi-source-result" aria-live="polite"></span></td></tr>`;};
+                const render=payload=>{const values=payload.summary||{};summary.className='notice inline notice-info';summary.innerHTML=`<p><strong>${escapeHtml(payload.source_count||0)} registered sources</strong> · ${escapeHtml(values.enabled||0)} enabled · ${escapeHtml(values.healthy||0)} healthy · ${escapeHtml(values.degraded||0)} degraded · ${escapeHtml(values.stale||0)} stale · ${escapeHtml(values.due||0)} due</p>`;table.querySelector('tbody').innerHTML=(payload.sources||[]).map(sourceRow).join('')||'<tr><td colspan="9">No sources are registered.</td></tr>';};
+                const rowPayload=row=>({enabled:row.querySelector('.scsi-source-enabled').checked,priority:Number(row.querySelector('.scsi-source-priority').value||50),refresh_minutes:Number(row.querySelector('.scsi-source-refresh').value||60),cache_ttl_minutes:Number(row.querySelector('.scsi-source-cache').value||60)});
+                const setResult=(row,message,error=false)=>{const target=row.querySelector('.scsi-source-result');target.textContent=message;target.style.color=error?'#b32d2e':'#008a20';};
+                table.addEventListener('click',async event=>{const button=event.target.closest('button');if(!button)return;const row=button.closest('tr[data-feed-id]');if(!row)return;const id=row.dataset.feedId;button.disabled=true;setResult(row,'Working…');try{if(button.classList.contains('scsi-source-save')){await request(base+'/'+encodeURIComponent(id),{method:'POST',body:JSON.stringify(rowPayload(row))});setResult(row,'Saved.');}else{const live=button.classList.contains('scsi-source-live-test');const result=await request(base+'/'+encodeURIComponent(id)+'/test',{method:'POST',body:JSON.stringify({live})});setResult(row,result.message||'Test complete.',!result.ok);}const updated=await request(base+'?refresh='+Date.now());render(updated);}catch(error){setResult(row,error.message||'Operation failed.',true);}finally{button.disabled=false;}});
+                request(base+'?refresh='+Date.now()).then(render).catch(error=>{summary.className='notice inline notice-error';summary.innerHTML='<p><strong>Source operations unavailable.</strong> '+escapeHtml(error.message)+'</p>';table.querySelector('tbody').innerHTML='<tr><td colspan="9">Check the backend URL, API token, deployed version, and source-operations configuration.</td></tr>';});
+            })();
             (function(){
                 const preview=document.getElementById('scsi-live-admin-preview'); if(!preview) return;
                 const preset=document.getElementById('scsi_live_speed_preset');

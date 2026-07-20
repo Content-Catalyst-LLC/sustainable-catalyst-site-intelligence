@@ -1,0 +1,29 @@
+SITE INTELLIGENCE v3.2.0 BUILD VALIDATION
+Release: Signal Source Operations
+Date: 2026-07-20
+
+DIRECT RELEASE VALIDATION
+- Complete backend regression suite: 599 tests passed.
+- Focused v3.2.0 source-operations contracts: passed.
+- Version parity across backend, public application, policies, tests, and WordPress plugin: passed.
+- Python syntax parsing: passed.
+- JSON and webmanifest parsing: passed.
+- Public application HTML identifier uniqueness: 670 unique IDs passed.
+- JavaScript syntax checks: passed.
+- WordPress PHP syntax check: passed.
+- Writable source state and history excluded from the immutable release: passed.
+- Public source payload boundary contains no credentials or raw upstream response bodies: passed by contract tests.
+
+FUNCTIONAL COVERAGE
+- Eight-source Live Intelligence registry.
+- Public source registry and source-detail endpoints.
+- Protected source control center, source update, source history, and manual test endpoints.
+- Operational source enablement, priority, refresh policy, and cache policy.
+- Last-success, freshness, request-use, failure, and health tracking.
+- Source rights, attribution, coverage, and quality metadata.
+- WordPress source-operations dashboard and immediate cache refresh after source changes.
+- Existing ticker feed selection, desktop marquee, mobile rotator, shortcode, placement fallback, and theme-style boundaries preserved.
+
+INSTALLER VALIDATION
+- Shell syntax: passed.
+- Isolated installer dry run: passed through archive extraction, 614-file manifest verification, repository overlay, 599-test regression, release validation, JavaScript/PHP syntax checks, WordPress ZIP generation, and local Git commit creation.

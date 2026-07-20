@@ -13,7 +13,7 @@ from uuid import uuid4
 
 from .config import Settings
 
-RELEASE_VERSION = "3.1.5"
+RELEASE_VERSION = "3.2.0"
 SCHEMA_VERSION = "sc-site-intelligence-knowledge-graph/1.0"
 ENTITY_SCHEMA = "sc-site-intelligence-graph-entity/1.0"
 RELATIONSHIP_SCHEMA = "sc-site-intelligence-graph-relationship/1.0"

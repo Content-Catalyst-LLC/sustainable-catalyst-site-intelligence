@@ -1,3 +1,14 @@
+# Changelog
+
+## 3.2.0 — Signal Source Operations
+
+- Added an eight-source Live Intelligence operations registry with public-safe rights, attribution, coverage, quality, cadence, cache, and rate metadata.
+- Added protected source configuration for enablement, priority, refresh minutes, and cache TTL.
+- Added file-backed retrieval health, last-success, request-count, failure, and manual-test receipts.
+- Added public source-registry and protected control-center, history, update, and test endpoints.
+- Added a WordPress source-operations dashboard with save, configuration-check, and live-test controls.
+- Preserved feed selection, ticker placement, readability, mobile rotator, and Astra/theme styling boundaries.
+
 ## 3.1.5 — Mobile Navigation and Motion Repair
 
 - Added mobile signal rotator, previous/next controls, swipe gestures, position counter, auto-advance, reduced-motion handling, touch-hover repair, and a hide-on-mobile option.

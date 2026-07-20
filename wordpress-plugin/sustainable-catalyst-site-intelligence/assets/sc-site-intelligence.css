@@ -1811,11 +1811,11 @@
 @media(forced-colors:active){.scsi-live-intelligence{background:Canvas;color:CanvasText;border-color:CanvasText}.scsi-live-intelligence::before{display:none}.scsi-live-intelligence *{color:CanvasText!important;text-shadow:none!important}}
 
 
-/* v3.1.5 — Live Intelligence signal expansion; theme navigation surfaces remain untouched */
+/* v3.2.0 — Live Intelligence signal expansion; theme navigation surfaces remain untouched */
 .scsi-live-intelligence.is-delayed .scsi-live-intelligence__lamp{animation:none;opacity:.72}
 .scsi-live-intelligence.is-delayed::after{content:"CACHED";position:absolute;right:52px;top:2px;font-size:.52rem;letter-spacing:.08em;color:#75b77c;z-index:3}
 
-/* v3.1.5 — Live Intelligence readability and taxonomy controls */
+/* v3.2.0 — Live Intelligence readability and taxonomy controls */
 .scsi-live-intelligence{
   --scsi-live-mobile-duration:36s;
   --scsi-live-set-padding:1.2rem;
@@ -1851,7 +1851,7 @@
 }
 
 
-/* v3.1.5 — Live Intelligence mobile navigation and motion repair */
+/* v3.2.0 — Live Intelligence mobile navigation and motion repair */
 .scsi-live-intelligence__mobile-controls{display:none}
 @media(max-width:760px){
   .scsi-live-intelligence[data-mobile-mode="hidden"],.scsi-live-intelligence.is-mobile-hidden{display:none!important}

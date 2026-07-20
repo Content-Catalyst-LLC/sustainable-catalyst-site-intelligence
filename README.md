@@ -1,5 +1,11 @@
 # Sustainable Catalyst Site Intelligence
 
+## v3.2.0 — Signal Source Operations
+
+Adds a public-safe Live Intelligence source registry and a protected operations dashboard for source enablement, priority, refresh and cache policy, retrieval health, last-success tracking, rate use, failure history, manual tests, licensing, attribution, geographic and temporal coverage, and data-quality boundaries. Existing ticker feed selection, placement, readability, and mobile navigation remain intact.
+
+**Current release:** v3.2.0 — Connected Public Intelligence and Evidence Platform
+
 ## v3.1.5 — Mobile Navigation and Motion Repair
 
 - Mobile defaults to a one-signal rotator with previous/next controls, swipe navigation, position counter, and seven-second auto-advance.
@@ -10,8 +16,6 @@
 ## v3.1.5 — Readability and Taxonomy Controls
 
 Adds balanced, brisk, relaxed, and custom ticker-speed controls; independent desktop and mobile cycle durations; story-spacing modes; long-signal truncation; compact source labels; editable category names; a settings-page preview; and a readability-only reset action. The default economic taxonomy is **Economy, Energy & Resources**. Internal API category IDs remain stable, and Astra/theme navigation and breadcrumb styles remain untouched.
-
-**Current release:** v3.1.5 — Connected Public Intelligence and Evidence Platform
 
 ## v3.1.3 — Feed Selection and Placement Reliability Repair
 
@@ -1007,3 +1011,7 @@ Site Intelligence v2.2.0 adds a Core-backed public workspace for official econom
 Public route: `/app/?view=economics`
 
 WordPress shortcode: `[sc_economics_sustainability_observatory height="1250"]`
+
+### v3.2.0 persistent source-operations state
+
+For durable source health and history across Render deploys, redirect `SC_SI_LIVE_SOURCE_OPERATIONS_STATE_PATH` and `SC_SI_LIVE_SOURCE_OPERATIONS_HISTORY_PATH` to the mounted persistent disk. The immutable registry remains in `backend/data/live_intelligence_source_registry_v320.json`. No provider credentials or full upstream payloads are written to these operational files.

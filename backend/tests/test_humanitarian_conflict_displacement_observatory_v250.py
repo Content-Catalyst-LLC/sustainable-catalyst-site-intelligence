@@ -57,6 +57,6 @@ def test_public_interface_wordpress_and_release_contract():
     html=(root/"backend/public_app/index.html").read_text(); js=(root/"backend/public_app/assets/humanitarian-v250.js").read_text(); css=(root/"backend/public_app/assets/humanitarian-v250.css").read_text(); app_js=(root/"backend/public_app/assets/app.js").read_text(); php=(root/"wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
     assert 'data-route="humanitarian"' in html and 'id="humanitarianStudio"' in html
     assert "SCHumanitarianV250" in js and ".humanitarian-studio" in css
-    assert 'const APP_VERSION="3.1.5"' in app_js
-    assert "Version: 3.1.5" in php and "sc_humanitarian_conflict_displacement_observatory" in php
+    assert 'const APP_VERSION="3.2.0"' in app_js
+    assert "Version: 3.2.0" in php and "sc_humanitarian_conflict_displacement_observatory" in php
     assert "No fabricated crisis records" in html

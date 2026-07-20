@@ -1,4 +1,4 @@
-"""Selectable, balanced public-interest ticker feed for Site Intelligence v3.1.5.
+"""Selectable, balanced public-interest ticker feed for Site Intelligence v3.2.0.
 
 The feed combines verified public events, weather/environment observations,
 open-research metadata, and periodic development indicators. Administrators
@@ -19,6 +19,7 @@ from .connectors.advanced_external import AdvancedExternalDataHub
 from .connectors.external_data import ExternalDataHub
 from .unified_live_events import unified_events
 from .version import APP_VERSION, RELEASE_NAME
+from .live_intelligence_source_operations_v320 import LiveIntelligenceSourceOperations
 
 SCHEMA_VERSION = "sc-site-intelligence-live-intelligence/1.4"
 DEFAULT_SIGNAL_LIMIT = 16
@@ -615,7 +616,7 @@ def _apply_feed_selection(signals: Iterable[dict[str, Any]], active_feeds: set[s
 def _deduplicate(signals: Iterable[dict[str, Any]]) -> list[dict[str, Any]]:
     seen: set[str] = set()
     output: list[dict[str, Any]] = []
-    for signal in sorted(signals, key=lambda item: (int(item.get("priority", 50)), item.get("signal_id", ""))):
+    for signal in sorted(signals, key=lambda item: (int(item.get("priority", 50)), int(item.get("source_priority", 50)), item.get("signal_id", ""))):
         signal_id = str(signal.get("signal_id") or "")
         if not signal_id or signal_id in seen:
             continue
@@ -682,6 +683,7 @@ def build_live_intelligence(
     feeds: str | Iterable[str] | None = None,
     exclude: str | Iterable[str] | None = None,
     max_per_source: int = DEFAULT_MAX_SIGNALS_PER_SOURCE,
+    record_operations: bool = True,
 ) -> dict[str, Any]:
     generated_at = _now()
     requested = CATEGORY_ALIASES.get((category or "").strip().lower(), (category or "").strip().lower())
@@ -689,6 +691,20 @@ def build_live_intelligence(
     selected_feeds = _normalize_feed_ids(feeds, use_defaults=True)
     excluded_feeds = set(_normalize_feed_ids(exclude))
     active_feeds = {feed_id for feed_id in selected_feeds if feed_id not in excluded_feeds}
+
+    source_operations = None
+    source_configs: dict[str, dict[str, Any]] = {}
+    if bool(getattr(settings, "live_source_operations_enabled", True)):
+        try:
+            source_operations = LiveIntelligenceSourceOperations(settings)
+            source_configs = source_operations.effective_sources()
+            active_feeds = {
+                feed_id for feed_id in active_feeds
+                if bool((source_configs.get(feed_id, {}).get("effective") or {}).get("enabled", True))
+            }
+        except (OSError, ValueError):
+            source_operations = None
+            source_configs = {}
 
     collectors: dict[str, Any] = {}
     if requested != "platform":
@@ -739,10 +755,54 @@ def build_live_intelligence(
         ))
 
     all_signals = _apply_feed_selection(all_signals, active_feeds)
+    for signal in all_signals:
+        source_config = source_configs.get(str(signal.get("feed_id") or ""), {})
+        effective = source_config.get("effective") or {}
+        signal["source_priority"] = int(effective.get("priority", 50) or 50)
     if requested:
         all_signals = [item for item in all_signals if item["category"] == requested]
     selected = _balanced_selection(all_signals, limit, max_per_source=max_per_source)
     present_feeds = Counter(str(item.get("feed_id") or "unknown") for item in selected)
+    if source_operations is not None and record_operations:
+        collector_for_feed = {
+            "usgs_earthquakes": "events",
+            "nasa_eonet": "events",
+            "reliefweb": "events",
+            "noaa_nws": "weather",
+            "nasa_power": "nasa_power",
+            "openalex": "research",
+            "world_bank": "development",
+        }
+        generated_counts = Counter(str(item.get("feed_id") or "") for item in all_signals)
+        for feed_id in active_feeds:
+            if feed_id == "platform_status":
+                source_operations.record_result(feed_id, ok=True, data_state="current", record_count=generated_counts.get(feed_id, 0))
+                continue
+            collector_name = collector_for_feed.get(feed_id)
+            if collector_name not in collector_results:
+                continue
+            meta = collector_results[collector_name][1] or {}
+            data_state = str(meta.get("data_state") or "empty")
+            ok = data_state not in {"unavailable", "error"}
+            source_operations.record_result(
+                feed_id,
+                ok=ok,
+                data_state=data_state,
+                record_count=generated_counts.get(feed_id, 0),
+                error=str(meta.get("error") or "") if not ok else "",
+            )
+
+    operations_summary: dict[str, Any] = {"enabled": False}
+    if source_operations is not None:
+        source_registry = source_operations.registry(public=True)
+        operations_summary = {
+            "enabled": True,
+            "schema": source_registry["schema"],
+            "summary": source_registry["summary"],
+            "source_count": source_registry["source_count"],
+            "registry_url": "/public/live-intelligence/sources",
+        }
+
     feed_state.update({
         "useful_signal_count": len([item for item in selected if item["category"] != "platform"]),
         "platform_signal_count": len([item for item in selected if item["category"] == "platform"]),
@@ -768,6 +828,7 @@ def build_live_intelligence(
             for feed_id, metadata in FEED_REGISTRY.items()
         ],
         "feed_state": feed_state,
+        "source_operations": operations_summary,
         "display": {
             "label": "Live Intelligence",
             "theme": "electronic",
@@ -778,6 +839,7 @@ def build_live_intelligence(
             "theme_navigation_styles": "untouched",
             "feed_selection_supported": True,
             "readability_controls_supported": True,
+            "source_operations_supported": True,
             "category_labels": CATEGORY_LABELS,
             "default_desktop_cycle_seconds": 30,
             "default_mobile_cycle_seconds": 36,
