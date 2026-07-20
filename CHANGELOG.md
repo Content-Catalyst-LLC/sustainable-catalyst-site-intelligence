@@ -1,3 +1,16 @@
+## 3.1.4 — Readability and Taxonomy Controls
+
+- Added relaxed, balanced, brisk, and custom electronic-board speed modes.
+- Added independent desktop and mobile ticker-cycle durations.
+- Added compact, balanced, and spacious story-spacing modes.
+- Added configurable signal-text limits with ellipsis handling and full accessible labels.
+- Added compact source names including NOAA/NWS and USGS while retaining full source attribution in the API.
+- Added editable public category labels without changing canonical category IDs.
+- Renamed the default `economy_resources` display label to `Economy, Energy & Resources`.
+- Added a settings-page visual preview that does not call external APIs.
+- Added a readability-only restore-defaults action that preserves feeds, placement, and theme settings.
+- Preserved hover, focus, pause-button, reduced-motion, feed-selection, cache, and placement protections.
+
 ## 3.1.3 — Feed Selection and Placement Reliability Repair
 
 - Added administrator feed checkboxes for seven public-data families and optional platform status.

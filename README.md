@@ -1,12 +1,18 @@
 # Sustainable Catalyst Site Intelligence
 
+## v3.1.4 — Readability and Taxonomy Controls
+
+Adds balanced, brisk, relaxed, and custom ticker-speed controls; independent desktop and mobile cycle durations; story-spacing modes; long-signal truncation; compact source labels; editable category names; a settings-page preview; and a readability-only reset action. The default economic taxonomy is **Economy, Energy & Resources**. Internal API category IDs remain stable, and Astra/theme navigation and breadcrumb styles remain untouched.
+
+**Current release:** v3.1.4 — Connected Public Intelligence and Evidence Platform
+
 ## v3.1.3 — Feed Selection and Placement Reliability Repair
 
 Adds administrator feed checkboxes for NOAA/NWS, USGS, NASA EONET, ReliefWeb, NASA POWER, OpenAlex, World Bank, and optional platform status. The automatic ticker uses the saved feed set; individual shortcodes can include or exclude feeds and set a per-source repetition limit.
 
 Below-breadcrumb placement now has a duplicate-safe content fallback for front pages and layouts where Astra does not emit the configured breadcrumb hook. The plugin continues to leave all navigation and breadcrumb colors to Astra and the active theme.
 
-**Current release:** v3.1.3 — Connected Public Intelligence and Evidence Platform
+**Previous release:** v3.1.3 — Feed Selection and Placement Reliability Repair
 
 ## v3.0.0 — Connected Public Intelligence and Evidence Platform
 

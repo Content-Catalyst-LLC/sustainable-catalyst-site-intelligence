@@ -59,7 +59,7 @@ def test_named_feed_selection_and_exclusion(monkeypatch):
         exclude="platform",
         limit=16,
     )
-    assert payload["schema"] == "sc-site-intelligence-live-intelligence/1.3"
+    assert payload["schema"] == "sc-site-intelligence-live-intelligence/1.4"
     assert {item["feed_id"] for item in payload["signals"]} == {"usgs_earthquakes", "openalex"}
     assert payload["feed_state"]["active_feeds"] == ["usgs_earthquakes", "openalex"]
     assert payload["feed_state"]["excluded_feeds"] == ["platform_status"]

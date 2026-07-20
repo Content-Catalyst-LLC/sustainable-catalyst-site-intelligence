@@ -30,7 +30,7 @@ class Clock:
 def _settings(tmp_path: Path, **overrides) -> Settings:
     archive = tmp_path / "archive"
     values = {
-        "version": "3.1.3",
+        "version": "3.1.4",
         "historical_archive_policy_path": str(POLICY),
         "historical_archive_root_path": str(archive),
         "historical_archive_index_path": str(archive / "snapshot_index_v2140.jsonl"),
@@ -173,7 +173,7 @@ def test_public_summary_exposes_metadata_not_payload_bodies(tmp_path):
     center.capture_snapshot(dataset_id="summary", connector_id="gbif_biodiversity", payload={"source": "GBIF", "records": [{"species": "Example"}]})
     summary = center.public_summary()
     assert summary["schema"] == SCHEMA_VERSION
-    assert summary["version"] == "3.1.3"
+    assert summary["version"] == "3.1.4"
     assert summary["counts"]["snapshots"] == 1
     assert summary["recommended_shortcode"] == "[sc_public_temporal_intelligence]"
     assert '"payload":' not in json.dumps(summary)

@@ -3679,6 +3679,10 @@
       const maxPerSource = Math.max(1, Math.min(5, Number(root.dataset.maxPerSource || 2)));
       const showSources = root.dataset.showSources !== '0';
       const showUpdated = root.dataset.showUpdated !== '0';
+      const compactSources = root.dataset.compactSources !== '0';
+      const textLimit = Math.max(48, Math.min(220, Number(root.dataset.textLimit || 120)));
+      let categoryLabels = {};
+      try { categoryLabels = JSON.parse(root.dataset.categoryLabels || '{}'); } catch (error) { categoryLabels = {}; }
       const params = new URLSearchParams({limit: String(limit), max_per_source: String(maxPerSource)});
       if (category) params.set('category', category);
       if (feeds) params.set('feeds', feeds);
@@ -3693,15 +3697,25 @@
         const hours = Math.round(minutes / 60);
         return 'UPDATED ' + hours + 'H AGO';
       };
+      const shorten = function (value, maximum) {
+        const clean = String(value || '').replace(/\s+/g, ' ').trim();
+        if (clean.length <= maximum) return clean;
+        return clean.slice(0, Math.max(1, maximum - 1)).trimEnd() + '…';
+      };
       const itemHtml = function (signal) {
         const metadata = [];
-        if (showSources && signal.source_name) metadata.push(signal.source_name);
+        const sourceName = compactSources && signal.source_short_name ? signal.source_short_name : signal.source_name;
+        if (showSources && sourceName) metadata.push(sourceName);
         if (showUpdated && (signal.observed_at || signal.updated_at)) metadata.push(relativeTime(signal.observed_at || signal.updated_at));
         const href = signal.destination_url || '#';
-        return '<a class="scsi-live-intelligence__signal" href="' + escapeHtml(href) + '" title="' + escapeHtml(signal.detail || signal.label || '') + '">' +
-          '<span class="scsi-live-intelligence__category">' + escapeHtml((signal.category || 'signal').replace(/_/g, ' ').toUpperCase()) + '</span>' +
-          '<span class="scsi-live-intelligence__name">' + escapeHtml(signal.label || 'LIVE SIGNAL') + '</span>' +
-          '<strong class="scsi-live-intelligence__value">' + escapeHtml(signal.value || 'AVAILABLE') + '</strong>' +
+        const categoryId = signal.category || 'signal';
+        const categoryLabel = categoryLabels[categoryId] || categoryId.replace(/_/g, ' ');
+        const fullValue = signal.value || 'AVAILABLE';
+        const title = signal.detail || fullValue || signal.label || '';
+        return '<a class="scsi-live-intelligence__signal" href="' + escapeHtml(href) + '" title="' + escapeHtml(title) + '" aria-label="' + escapeHtml(categoryLabel + ': ' + (signal.label || 'Live signal') + ': ' + fullValue) + '">' +
+          '<span class="scsi-live-intelligence__category">' + escapeHtml(categoryLabel.toUpperCase()) + '</span>' +
+          '<span class="scsi-live-intelligence__name">' + escapeHtml(shorten(signal.label || 'LIVE SIGNAL', 72)) + '</span>' +
+          '<strong class="scsi-live-intelligence__value">' + escapeHtml(shorten(fullValue, textLimit)) + '</strong>' +
           (metadata.length ? '<small>' + escapeHtml(metadata.join(' · ')) + '</small>' : '') + '</a><span class="scsi-live-intelligence__separator" aria-hidden="true">◆</span>';
       };
       const render = function (data) {

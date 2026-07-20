@@ -1810,6 +1810,41 @@
 @media(forced-colors:active){.scsi-live-intelligence{background:Canvas;color:CanvasText;border-color:CanvasText}.scsi-live-intelligence::before{display:none}.scsi-live-intelligence *{color:CanvasText!important;text-shadow:none!important}}
 
 
-/* v3.1.3 — Live Intelligence signal expansion; theme navigation surfaces remain untouched */
+/* v3.1.4 — Live Intelligence signal expansion; theme navigation surfaces remain untouched */
 .scsi-live-intelligence.is-delayed .scsi-live-intelligence__lamp{animation:none;opacity:.72}
 .scsi-live-intelligence.is-delayed::after{content:"CACHED";position:absolute;right:52px;top:2px;font-size:.52rem;letter-spacing:.08em;color:#75b77c;z-index:3}
+
+/* v3.1.4 — Live Intelligence readability and taxonomy controls */
+.scsi-live-intelligence{
+  --scsi-live-mobile-duration:36s;
+  --scsi-live-set-padding:1.2rem;
+  --scsi-live-signal-gap:.5rem;
+  --scsi-live-signal-padding:.7rem .3rem;
+  --scsi-live-separator-padding:.95rem;
+}
+.scsi-live-intelligence--spacing-compact{
+  --scsi-live-set-padding:.8rem;
+  --scsi-live-signal-gap:.36rem;
+  --scsi-live-signal-padding:.62rem .18rem;
+  --scsi-live-separator-padding:.62rem;
+}
+.scsi-live-intelligence--spacing-spacious{
+  --scsi-live-set-padding:1.6rem;
+  --scsi-live-signal-gap:.68rem;
+  --scsi-live-signal-padding:.76rem .42rem;
+  --scsi-live-separator-padding:1.25rem;
+}
+.scsi-live-intelligence__set{padding-inline:var(--scsi-live-set-padding)}
+.scsi-live-intelligence__signal{gap:var(--scsi-live-signal-gap);padding:var(--scsi-live-signal-padding)}
+.scsi-live-intelligence__separator{padding-inline:var(--scsi-live-separator-padding)}
+.scsi-live-intelligence__category{max-width:15rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.scsi-live-intelligence__name{max-width:22rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.scsi-live-intelligence__value{display:inline-block;max-width:42rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;vertical-align:bottom}
+.scsi-live-intelligence__signal small{max-width:18rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:760px){
+  .scsi-live-intelligence.is-ready:not(.is-paused) .scsi-live-intelligence__track{animation-duration:var(--scsi-live-mobile-duration)}
+  .scsi-live-intelligence__category{max-width:10.5rem;font-size:.58rem}
+  .scsi-live-intelligence__name{max-width:12rem;font-size:.72rem}
+  .scsi-live-intelligence__value{max-width:20rem;font-size:.76rem}
+  .scsi-live-intelligence--spacing-spacious{--scsi-live-set-padding:1.1rem;--scsi-live-separator-padding:.9rem}
+}

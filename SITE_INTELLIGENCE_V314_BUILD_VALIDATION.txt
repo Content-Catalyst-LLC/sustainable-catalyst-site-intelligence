@@ -1,0 +1,24 @@
+Site Intelligence v3.1.4 — Readability and Taxonomy Controls
+Build validation
+
+PASS: 584-test inherited and v3.1.4 regression suite.
+PASS: Focused speed, mobile-cycle, spacing, truncation, compact-source, taxonomy, preview, and reset contracts.
+PASS: WordPress/backend version parity at 3.1.4.
+PASS: Live Intelligence schema sc-site-intelligence-live-intelligence/1.4.
+PASS: Relaxed, balanced, brisk, and custom speed controls.
+PASS: Independent desktop and mobile cycle durations.
+PASS: Compact, balanced, and spacious story-spacing modes.
+PASS: Configurable 48–220 character signal-text limit with ellipsis handling.
+PASS: Compact source names with full API attribution preserved.
+PASS: Editable category labels with canonical category IDs preserved.
+PASS: Default economy_resources label is Economy, Energy & Resources.
+PASS: Settings-page preview makes no external API request.
+PASS: Readability-only reset preserves feeds, placement, backend, scope, and theme choices.
+PASS: Hover, keyboard-focus, manual pause, and reduced-motion protections retained.
+PASS: Existing feed selection, cache continuity, and duplicate-safe placement retained.
+PASS: Astra/theme navigation and breadcrumb colors remain untouched.
+PASS: Python, JSON, webmanifest, JavaScript, PHP, and 670 unique HTML ID checks.
+PASS: Build-info and public Live Intelligence endpoint checks.
+PASS: macOS installer shell syntax.
+
+The release regression runner redirects writable state to an isolated runtime directory and disables external live calls for deterministic testing.

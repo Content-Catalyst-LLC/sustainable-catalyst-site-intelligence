@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.1.3
+ * Version: 3.1.4
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.1.3';
+    const VERSION = '3.1.4';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -30,6 +30,7 @@ final class SC_Site_Intelligence_Plugin {
         add_action('admin_init', [$this, 'register_settings']);
         add_action('admin_init', [$this, 'maybe_upgrade']);
         add_action('admin_post_scsi_refresh_backend_version', [$this, 'handle_refresh_backend_version']);
+        add_action('admin_post_scsi_reset_live_intelligence_readability', [$this, 'handle_reset_live_intelligence_readability']);
         add_action('admin_notices', [$this, 'backend_version_notice']);
         add_action('rest_api_init', [$this, 'register_rest_routes']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_assets']);
@@ -258,7 +259,17 @@ final class SC_Site_Intelligence_Plugin {
             'live_intelligence_feeds' => 'noaa_nws,usgs_earthquakes,nasa_eonet,reliefweb,nasa_power,openalex,world_bank',
             'live_intelligence_max_per_source' => '2',
             'live_intelligence_shortcode_overrides' => '1',
-            'live_intelligence_speed' => '42',
+            'live_intelligence_speed_preset' => 'balanced',
+            'live_intelligence_speed' => '30',
+            'live_intelligence_mobile_speed' => '36',
+            'live_intelligence_spacing' => 'balanced',
+            'live_intelligence_text_limit' => '120',
+            'live_intelligence_compact_sources' => '1',
+            'live_intelligence_category_earth_systems' => 'Earth Systems',
+            'live_intelligence_category_human_systems' => 'Human Systems',
+            'live_intelligence_category_research' => 'Science & Research',
+            'live_intelligence_category_economy_resources' => 'Economy, Energy & Resources',
+            'live_intelligence_category_platform' => 'Platform',
             'live_intelligence_duplicate_protection' => '1',
             'live_intelligence_show_sources' => '1',
             'live_intelligence_show_updated' => '1',
@@ -276,6 +287,27 @@ final class SC_Site_Intelligence_Plugin {
             'world_bank' => 'World Bank Indicators',
             'platform_status' => 'Site Intelligence Platform Status',
         ];
+    }
+
+    private static function live_intelligence_category_defaults() {
+        return [
+            'earth_systems' => 'Earth Systems',
+            'human_systems' => 'Human Systems',
+            'research' => 'Science & Research',
+            'economy_resources' => 'Economy, Energy & Resources',
+            'platform' => 'Platform',
+        ];
+    }
+
+    private static function live_intelligence_category_labels($options = null) {
+        $options = is_array($options) ? $options : self::options();
+        $labels = [];
+        foreach (self::live_intelligence_category_defaults() as $category_id => $default_label) {
+            $key = 'live_intelligence_category_' . $category_id;
+            $label = sanitize_text_field((string) ($options[$key] ?? $default_label));
+            $labels[$category_id] = $label !== '' ? $label : $default_label;
+        }
+        return $labels;
     }
 
     private static function sanitize_live_intelligence_feeds($value, $use_defaults = true) {
@@ -329,8 +361,8 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v3.1.3 preserves all existing theme, placement, and display choices.
-        // New feed controls are added only when they do not already exist.
+        // v3.1.4 preserves placement, feed, and theme choices while adding readability defaults.
+        // The former 42-second default is migrated to the balanced 30-second preset.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
             unset($stored_options['live_intelligence_parchment_navigation']);
@@ -345,6 +377,24 @@ final class SC_Site_Intelligence_Plugin {
             }
             if (!isset($stored_options['live_intelligence_shortcode_overrides'])) {
                 $stored_options['live_intelligence_shortcode_overrides'] = '1';
+            }
+            $readability_defaults = self::defaults();
+            if (!isset($stored_options['live_intelligence_speed_preset'])) {
+                $stored_options['live_intelligence_speed_preset'] = 'balanced';
+            }
+            if (!isset($stored_options['live_intelligence_speed']) || (string) $stored_options['live_intelligence_speed'] === '42') {
+                $stored_options['live_intelligence_speed'] = '30';
+            }
+            foreach (['live_intelligence_mobile_speed', 'live_intelligence_spacing', 'live_intelligence_text_limit', 'live_intelligence_compact_sources'] as $key) {
+                if (!isset($stored_options[$key])) {
+                    $stored_options[$key] = $readability_defaults[$key];
+                }
+            }
+            foreach (self::live_intelligence_category_defaults() as $category_id => $label) {
+                $key = 'live_intelligence_category_' . $category_id;
+                if (!isset($stored_options[$key])) {
+                    $stored_options[$key] = $label;
+                }
             }
             update_option(self::OPTION_KEY, $stored_options, false);
         }
@@ -607,7 +657,19 @@ final class SC_Site_Intelligence_Plugin {
         $output['live_intelligence_feeds'] = implode(',', $feed_ids);
         $output['live_intelligence_max_per_source'] = (string) max(1, min(5, absint($input['live_intelligence_max_per_source'] ?? 2)));
         $output['live_intelligence_shortcode_overrides'] = !empty($input['live_intelligence_shortcode_overrides']) ? '1' : '0';
-        $output['live_intelligence_speed'] = (string) max(18, min(120, absint($input['live_intelligence_speed'] ?? 42)));
+        $speed_preset = sanitize_key((string) ($input['live_intelligence_speed_preset'] ?? 'balanced'));
+        $output['live_intelligence_speed_preset'] = in_array($speed_preset, ['relaxed', 'balanced', 'brisk', 'custom'], true) ? $speed_preset : 'balanced';
+        $output['live_intelligence_speed'] = (string) max(16, min(120, absint($input['live_intelligence_speed'] ?? 30)));
+        $output['live_intelligence_mobile_speed'] = (string) max(18, min(140, absint($input['live_intelligence_mobile_speed'] ?? 36)));
+        $spacing = sanitize_key((string) ($input['live_intelligence_spacing'] ?? 'balanced'));
+        $output['live_intelligence_spacing'] = in_array($spacing, ['compact', 'balanced', 'spacious'], true) ? $spacing : 'balanced';
+        $output['live_intelligence_text_limit'] = (string) max(48, min(220, absint($input['live_intelligence_text_limit'] ?? 120)));
+        $output['live_intelligence_compact_sources'] = !empty($input['live_intelligence_compact_sources']) ? '1' : '0';
+        foreach (self::live_intelligence_category_defaults() as $category_id => $default_label) {
+            $key = 'live_intelligence_category_' . $category_id;
+            $label = sanitize_text_field((string) ($input[$key] ?? $default_label));
+            $output[$key] = $label !== '' ? $label : $default_label;
+        }
         $output['live_intelligence_duplicate_protection'] = !empty($input['live_intelligence_duplicate_protection']) ? '1' : '0';
         $output['live_intelligence_show_sources'] = !empty($input['live_intelligence_show_sources']) ? '1' : '0';
         $output['live_intelligence_show_updated'] = !empty($input['live_intelligence_show_updated']) ? '1' : '0';
@@ -617,6 +679,28 @@ final class SC_Site_Intelligence_Plugin {
         delete_option(self::BUILD_INFO_STATUS_OPTION);
 
         return $output;
+    }
+
+    public function handle_reset_live_intelligence_readability() {
+        if (!current_user_can('manage_options')) {
+            wp_die('You do not have permission to reset Live Intelligence readability settings.');
+        }
+        check_admin_referer('scsi_reset_live_intelligence_readability');
+        $options = self::options();
+        $defaults = self::defaults();
+        $keys = [
+            'live_intelligence_speed_preset', 'live_intelligence_speed', 'live_intelligence_mobile_speed',
+            'live_intelligence_spacing', 'live_intelligence_text_limit', 'live_intelligence_compact_sources',
+            'live_intelligence_category_earth_systems', 'live_intelligence_category_human_systems',
+            'live_intelligence_category_research', 'live_intelligence_category_economy_resources',
+            'live_intelligence_category_platform',
+        ];
+        foreach ($keys as $key) {
+            $options[$key] = $defaults[$key];
+        }
+        update_option(self::OPTION_KEY, $options, false);
+        wp_safe_redirect(add_query_arg(['page' => 'sc-site-intelligence', 'scsi_readability_reset' => '1'], admin_url('options-general.php')));
+        exit;
     }
 
     public function register_rest_routes() {
@@ -2555,6 +2639,11 @@ final class SC_Site_Intelligence_Plugin {
             'max_per_source' => (string) ($options['live_intelligence_max_per_source'] ?? '2'),
             'motion' => 'slow',
             'theme' => 'electronic',
+            'speed' => (string) ($options['live_intelligence_speed'] ?? '30'),
+            'mobile_speed' => (string) ($options['live_intelligence_mobile_speed'] ?? '36'),
+            'spacing' => (string) ($options['live_intelligence_spacing'] ?? 'balanced'),
+            'text_limit' => (string) ($options['live_intelligence_text_limit'] ?? '120'),
+            'compact_sources' => (string) ($options['live_intelligence_compact_sources'] ?? '1'),
             'placement' => 'content',
             'label' => 'Live Intelligence',
             'show_sources' => (string) ($options['live_intelligence_show_sources'] ?? '1'),
@@ -2574,11 +2663,16 @@ final class SC_Site_Intelligence_Plugin {
         $motion = in_array($atts['motion'], ['slow', 'off'], true) ? $atts['motion'] : 'slow';
         $placement = $atts['placement'] === 'top' ? 'top' : 'content';
         $label = sanitize_text_field((string) $atts['label']);
-        $speed = max(18, min(120, absint($options['live_intelligence_speed'] ?? 42)));
-        $classes = 'scsi-live-intelligence scsi-live-intelligence--electronic scsi-live-intelligence--' . $placement;
+        $speed = max(16, min(120, absint($atts['speed'])));
+        $mobile_speed = max(18, min(140, absint($atts['mobile_speed'])));
+        $spacing = in_array(sanitize_key((string) $atts['spacing']), ['compact', 'balanced', 'spacious'], true) ? sanitize_key((string) $atts['spacing']) : 'balanced';
+        $text_limit = max(48, min(220, absint($atts['text_limit'])));
+        $compact_sources = (string) $atts['compact_sources'] !== '0' ? '1' : '0';
+        $category_labels = self::live_intelligence_category_labels($options);
+        $classes = 'scsi-live-intelligence scsi-live-intelligence--electronic scsi-live-intelligence--' . $placement . ' scsi-live-intelligence--spacing-' . $spacing;
         ob_start();
         ?>
-        <section class="<?php echo esc_attr($classes); ?>" data-scsi-live-intelligence data-category="<?php echo esc_attr($category); ?>" data-limit="<?php echo esc_attr((string) $limit); ?>" data-feeds="<?php echo esc_attr(implode(',', $feeds)); ?>" data-exclude="<?php echo esc_attr(implode(',', $exclude)); ?>" data-max-per-source="<?php echo esc_attr((string) $max_per_source); ?>" data-motion="<?php echo esc_attr($motion); ?>" data-show-sources="<?php echo esc_attr((string) $atts['show_sources']); ?>" data-show-updated="<?php echo esc_attr((string) $atts['show_updated']); ?>" style="--scsi-live-duration:<?php echo esc_attr((string) $speed); ?>s" aria-label="<?php echo esc_attr($label); ?>">
+        <section class="<?php echo esc_attr($classes); ?>" data-scsi-live-intelligence data-category="<?php echo esc_attr($category); ?>" data-limit="<?php echo esc_attr((string) $limit); ?>" data-feeds="<?php echo esc_attr(implode(',', $feeds)); ?>" data-exclude="<?php echo esc_attr(implode(',', $exclude)); ?>" data-max-per-source="<?php echo esc_attr((string) $max_per_source); ?>" data-motion="<?php echo esc_attr($motion); ?>" data-show-sources="<?php echo esc_attr((string) $atts['show_sources']); ?>" data-show-updated="<?php echo esc_attr((string) $atts['show_updated']); ?>" data-compact-sources="<?php echo esc_attr($compact_sources); ?>" data-text-limit="<?php echo esc_attr((string) $text_limit); ?>" data-category-labels="<?php echo esc_attr(wp_json_encode($category_labels)); ?>" style="--scsi-live-duration:<?php echo esc_attr((string) $speed); ?>s;--scsi-live-mobile-duration:<?php echo esc_attr((string) $mobile_speed); ?>s" aria-label="<?php echo esc_attr($label); ?>">
             <div class="scsi-live-intelligence__label"><span class="scsi-live-intelligence__lamp" aria-hidden="true"></span><strong><?php echo esc_html(strtoupper($label)); ?></strong></div>
             <div class="scsi-live-intelligence__viewport" aria-live="polite" aria-busy="true">
                 <div class="scsi-live-intelligence__track"><span class="scsi-live-intelligence__connecting">CONNECTING TO SELECTED PUBLIC INTELLIGENCE FEEDS…</span></div>
@@ -2667,14 +2761,68 @@ final class SC_Site_Intelligence_Plugin {
                     </tr>
                     <tr><th scope="row"><label for="scsi_live_source_limit">Items per source</label></th><td><input id="scsi_live_source_limit" type="number" min="1" max="5" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_max_per_source]" value="<?php echo esc_attr($options['live_intelligence_max_per_source']); ?>" /><p class="description">Limits repetition while category balancing fills the remaining ticker positions.</p></td></tr>
                     <tr><th scope="row">Shortcode feed overrides</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_shortcode_overrides]" value="1" <?php checked($options['live_intelligence_shortcode_overrides'], '1'); ?> /> Allow <code>feeds</code>, <code>exclude</code>, and <code>max_per_source</code> in individual shortcodes.</label></td></tr>
-                    <tr><th scope="row"><label for="scsi_live_speed">Ticker cycle</label></th><td><input id="scsi_live_speed" type="number" min="18" max="120" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_speed]" value="<?php echo esc_attr($options['live_intelligence_speed']); ?>" /> seconds</td></tr>
+                    <tr><th scope="row"><label for="scsi_live_speed_preset">Ticker speed</label></th><td><select id="scsi_live_speed_preset" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_speed_preset]"><option value="relaxed" <?php selected($options['live_intelligence_speed_preset'], 'relaxed'); ?>>Relaxed — 42s desktop / 48s mobile</option><option value="balanced" <?php selected($options['live_intelligence_speed_preset'], 'balanced'); ?>>Balanced — 30s desktop / 36s mobile</option><option value="brisk" <?php selected($options['live_intelligence_speed_preset'], 'brisk'); ?>>Brisk — 24s desktop / 30s mobile</option><option value="custom" <?php selected($options['live_intelligence_speed_preset'], 'custom'); ?>>Custom</option></select><p class="description">Lower cycle times move the board faster. Hover, keyboard focus, reduced-motion preferences, and the pause button continue to stop movement.</p></td></tr>
+                    <tr><th scope="row"><label for="scsi_live_speed">Custom cycle</label></th><td><input id="scsi_live_speed" type="number" min="16" max="120" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_speed]" value="<?php echo esc_attr($options['live_intelligence_speed']); ?>" /> seconds desktop &nbsp; <input id="scsi_live_mobile_speed" type="number" min="18" max="140" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_mobile_speed]" value="<?php echo esc_attr($options['live_intelligence_mobile_speed']); ?>" /> seconds mobile</td></tr>
+                    <tr><th scope="row"><label for="scsi_live_spacing">Story spacing</label></th><td><select id="scsi_live_spacing" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_spacing]"><option value="compact" <?php selected($options['live_intelligence_spacing'], 'compact'); ?>>Compact</option><option value="balanced" <?php selected($options['live_intelligence_spacing'], 'balanced'); ?>>Balanced</option><option value="spacious" <?php selected($options['live_intelligence_spacing'], 'spacious'); ?>>Spacious</option></select></td></tr>
+                    <tr><th scope="row"><label for="scsi_live_text_limit">Maximum signal text</label></th><td><input id="scsi_live_text_limit" type="number" min="48" max="220" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_text_limit]" value="<?php echo esc_attr($options['live_intelligence_text_limit']); ?>" /> characters<p class="description">Long headlines are shortened with an ellipsis; the full description remains available in the link title.</p></td></tr>
+                    <tr><th scope="row">Source labels</th><td><label><input id="scsi_live_compact_sources" type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_compact_sources]" value="1" <?php checked($options['live_intelligence_compact_sources'], '1'); ?> /> Use compact source names such as NOAA/NWS and USGS.</label></td></tr>
+                    <tr><th scope="row">Category taxonomy</th><td>
+                        <?php foreach (self::live_intelligence_category_defaults() as $category_id => $default_label) : $category_key = 'live_intelligence_category_' . $category_id; ?>
+                            <label style="display:grid;grid-template-columns:180px minmax(220px,420px);gap:.75rem;align-items:center;margin:.45rem 0;"><code><?php echo esc_html($category_id); ?></code><input class="regular-text scsi-live-taxonomy-input" data-category="<?php echo esc_attr($category_id); ?>" type="text" name="<?php echo esc_attr(self::OPTION_KEY); ?>[<?php echo esc_attr($category_key); ?>]" value="<?php echo esc_attr($options[$category_key]); ?>" placeholder="<?php echo esc_attr($default_label); ?>" /></label>
+                        <?php endforeach; ?>
+                        <p class="description">The default economic category is “Economy, Energy &amp; Resources.” Internal category IDs and API contracts remain stable.</p>
+                    </td></tr>
                     <tr><th scope="row">Ticker details</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_duplicate_protection]" value="1" <?php checked($options['live_intelligence_duplicate_protection'], '1'); ?> /> Prevent automatic ticker when the page already contains the shortcode.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_sources]" value="1" <?php checked($options['live_intelligence_show_sources'], '1'); ?> /> Show sources.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_updated]" value="1" <?php checked($options['live_intelligence_show_updated'], '1'); ?> /> Show update time.</label></td></tr>
                 </table>
+                <h2>Live preview</h2>
+                <div id="scsi-live-admin-preview" class="scsi-live-admin-preview" aria-label="Live Intelligence settings preview">
+                    <span class="scsi-live-admin-preview__label">● LIVE INTELLIGENCE</span>
+                    <span class="scsi-live-admin-preview__track"><span data-preview-category="earth_systems">EARTH SYSTEMS</span> · LATEST EARTHQUAKE · M5.2 NEAR SAMPLE REGION · <small data-preview-source="USGS Earthquake Hazards Program">USGS</small> ◆ <span data-preview-category="economy_resources">ECONOMY, ENERGY &amp; RESOURCES</span> · RENEWABLE ENERGY SHARE · DATA YEAR 2023 · <small data-preview-source="World Bank">WORLD BANK</small></span>
+                </div>
+                <p class="description">The preview reflects speed, spacing, taxonomy, source-name, and signal-length controls. It does not call external APIs.</p>
                 <?php submit_button(); ?>
             </form>
+            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="margin-top:.5rem;">
+                <input type="hidden" name="action" value="scsi_reset_live_intelligence_readability" />
+                <?php wp_nonce_field('scsi_reset_live_intelligence_readability'); ?>
+                <?php submit_button('Restore readability defaults', 'secondary', 'submit', false); ?>
+                <span class="description">Resets only speed, spacing, text length, compact source labels, and category names. Feed and placement settings are preserved.</span>
+            </form>
+            <style>
+                .scsi-live-admin-preview{--preview-duration:30s;display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;overflow:hidden;background:#020403;color:#8cff9a;border:1px solid #163d20;min-height:52px;font-family:monospace;box-shadow:inset 0 1px 0 rgba(89,255,111,.08)}
+                .scsi-live-admin-preview__label{align-self:stretch;display:flex;align-items:center;padding:0 1rem;border-right:1px solid #214d29;color:#39ff64;font-weight:800;white-space:nowrap}
+                .scsi-live-admin-preview__track{display:block;width:max-content;white-space:nowrap;padding:0 1.2rem;animation:scsi-live-admin-preview-scroll var(--preview-duration) linear infinite;text-shadow:0 0 5px rgba(112,255,129,.38)}
+                .scsi-live-admin-preview__track span{font-size:.72rem;letter-spacing:.08em;color:#58b968}.scsi-live-admin-preview__track small{color:#72c77d}
+                .scsi-live-admin-preview[data-spacing="compact"] .scsi-live-admin-preview__track{word-spacing:.05rem}.scsi-live-admin-preview[data-spacing="spacious"] .scsi-live-admin-preview__track{word-spacing:.42rem}
+                @keyframes scsi-live-admin-preview-scroll{from{transform:translateX(0)}to{transform:translateX(-28%)}}
+                @media(prefers-reduced-motion:reduce){.scsi-live-admin-preview__track{animation:none}}
+            </style>
+            <script>
+            (function(){
+                const preview=document.getElementById('scsi-live-admin-preview'); if(!preview) return;
+                const preset=document.getElementById('scsi_live_speed_preset');
+                const desktop=document.getElementById('scsi_live_speed'); const mobile=document.getElementById('scsi_live_mobile_speed');
+                const spacing=document.getElementById('scsi_live_spacing'); const limit=document.getElementById('scsi_live_text_limit');
+                const compact=document.getElementById('scsi_live_compact_sources');
+                const presetValues={relaxed:[42,48],balanced:[30,36],brisk:[24,30]};
+                const fullText='M5.2 earthquake reported near a sample region with verified public-source context';
+                function shorten(value,max){max=Math.max(48,Number(max||120));return value.length>max?value.slice(0,max-1).trimEnd()+'…':value;}
+                function update(){
+                    if(preset && presetValues[preset.value]){desktop.value=presetValues[preset.value][0];mobile.value=presetValues[preset.value][1];}
+                    preview.style.setProperty('--preview-duration',Math.max(16,Number(desktop.value||30))+'s');
+                    preview.dataset.spacing=spacing.value||'balanced';
+                    const value=preview.querySelector('.scsi-live-admin-preview__track');
+                    value.childNodes.forEach(function(node){if(node.nodeType===3 && node.textContent.includes('M5.2')) node.textContent=' · LATEST EARTHQUAKE · '+shorten(fullText,limit.value)+' · ';});
+                    document.querySelectorAll('.scsi-live-taxonomy-input').forEach(function(input){const target=preview.querySelector('[data-preview-category="'+input.dataset.category+'"]');if(target) target.textContent=(input.value||input.placeholder).toUpperCase();});
+                    preview.querySelectorAll('[data-preview-source]').forEach(function(source){source.textContent=compact.checked?(source.dataset.previewSource.indexOf('USGS')!==-1?'USGS':'WORLD BANK'):source.dataset.previewSource.toUpperCase();});
+                }
+                [preset,desktop,mobile,spacing,limit,compact].forEach(function(el){if(el) el.addEventListener('input',function(){if((el===desktop||el===mobile)&&preset)preset.value='custom';update();});});
+                document.querySelectorAll('.scsi-live-taxonomy-input').forEach(function(el){el.addEventListener('input',update);}); update();
+            })();
+            </script>
             <hr />
             <h2>Shortcodes</h2>
-            <p><code>[sc_live_intelligence]</code> — electronic board; supports <code>category</code>, <code>limit</code>, <code>feeds</code>, <code>exclude</code>, <code>max_per_source</code>, and <code>motion="off"</code>.</p>
+            <p><code>[sc_live_intelligence]</code> — electronic board; supports <code>category</code>, <code>limit</code>, <code>feeds</code>, <code>exclude</code>, <code>max_per_source</code>, <code>speed</code>, <code>mobile_speed</code>, <code>spacing</code>, <code>text_limit</code>, and <code>motion="off"</code>.</p>
             <p><code>[sc_site_intelligence_dashboard]</code></p>
             <p><code>[sc_site_intelligence_page]</code></p>
             <p><code>[sc_site_intelligence_unmapped]</code></p>
