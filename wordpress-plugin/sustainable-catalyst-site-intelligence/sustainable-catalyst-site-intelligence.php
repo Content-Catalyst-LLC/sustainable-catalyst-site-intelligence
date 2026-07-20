@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.0.0
+ * Version: 3.1.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.0.0';
+    const VERSION = '3.1.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -31,6 +31,8 @@ final class SC_Site_Intelligence_Plugin {
         add_action('admin_notices', [$this, 'backend_version_notice']);
         add_action('rest_api_init', [$this, 'register_rest_routes']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_assets']);
+        add_action('astra_header_after', [$this, 'render_top_live_intelligence'], 5);
+        add_shortcode('sc_live_intelligence', [$this, 'live_intelligence_shortcode']);
         add_shortcode('sc_site_intelligence_dashboard', [$this, 'dashboard_shortcode']);
         add_shortcode('sc_site_intelligence_page', [$this, 'page_shortcode']);
         add_shortcode('sc_site_intelligence_unmapped', [$this, 'unmapped_shortcode']);
@@ -244,6 +246,15 @@ final class SC_Site_Intelligence_Plugin {
             'api_token' => '',
             'enable_event_bridge' => '1',
             'enable_dashboard' => '1',
+            'enable_live_intelligence' => '1',
+            'show_top_live_intelligence' => '1',
+            'live_intelligence_scope' => 'homepage',
+            'live_intelligence_selected_pages' => '',
+            'live_intelligence_limit' => '8',
+            'live_intelligence_speed' => '42',
+            'live_intelligence_duplicate_protection' => '1',
+            'live_intelligence_show_sources' => '1',
+            'live_intelligence_show_updated' => '1',
         ];
     }
 
@@ -508,6 +519,17 @@ final class SC_Site_Intelligence_Plugin {
         $output['api_token'] = isset($input['api_token']) ? sanitize_text_field($input['api_token']) : $defaults['api_token'];
         $output['enable_event_bridge'] = !empty($input['enable_event_bridge']) ? '1' : '0';
         $output['enable_dashboard'] = !empty($input['enable_dashboard']) ? '1' : '0';
+        $output['enable_live_intelligence'] = !empty($input['enable_live_intelligence']) ? '1' : '0';
+        $output['show_top_live_intelligence'] = !empty($input['show_top_live_intelligence']) ? '1' : '0';
+        $scope = isset($input['live_intelligence_scope']) ? sanitize_key($input['live_intelligence_scope']) : $defaults['live_intelligence_scope'];
+        $output['live_intelligence_scope'] = in_array($scope, ['homepage', 'selected', 'entire_site'], true) ? $scope : 'homepage';
+        $selected = isset($input['live_intelligence_selected_pages']) ? sanitize_text_field($input['live_intelligence_selected_pages']) : '';
+        $output['live_intelligence_selected_pages'] = implode(',', array_filter(array_map('absint', preg_split('/[\s,]+/', $selected))));
+        $output['live_intelligence_limit'] = (string) max(1, min(20, absint($input['live_intelligence_limit'] ?? 8)));
+        $output['live_intelligence_speed'] = (string) max(18, min(120, absint($input['live_intelligence_speed'] ?? 42)));
+        $output['live_intelligence_duplicate_protection'] = !empty($input['live_intelligence_duplicate_protection']) ? '1' : '0';
+        $output['live_intelligence_show_sources'] = !empty($input['live_intelligence_show_sources']) ? '1' : '0';
+        $output['live_intelligence_show_updated'] = !empty($input['live_intelligence_show_updated']) ? '1' : '0';
 
         self::clear_backend_build_info_cache((string) ($current['backend_url'] ?? ''));
         self::clear_backend_build_info_cache((string) ($output['backend_url'] ?? ''));
@@ -517,6 +539,15 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function register_rest_routes() {
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence'],
+            'permission_callback' => '__return_true',
+            'args' => [
+                'category' => ['sanitize_callback' => 'sanitize_key'],
+                'limit' => ['sanitize_callback' => 'absint'],
+            ],
+        ]);
         register_rest_route(self::REST_NAMESPACE, '/dashboard', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_dashboard'],
@@ -2325,6 +2356,89 @@ final class SC_Site_Intelligence_Plugin {
         return rest_ensure_response($result);
     }
 
+    public function rest_live_intelligence(WP_REST_Request $request) {
+        $category = sanitize_key((string) $request->get_param('category'));
+        $limit = max(1, min(20, absint($request->get_param('limit') ?: 8)));
+        $query = ['limit' => $limit];
+        if ($category !== '') {
+            $query['category'] = $category;
+        }
+        $result = $this->backend_request('public/live-intelligence?' . http_build_query($query));
+        if (is_wp_error($result)) {
+            return $result;
+        }
+        return rest_ensure_response($result);
+    }
+
+    private function should_render_top_live_intelligence() {
+        $options = self::options();
+        if ($options['enable_live_intelligence'] !== '1' || $options['show_top_live_intelligence'] !== '1') {
+            return false;
+        }
+        if (is_admin() || wp_doing_ajax() || is_feed()) {
+            return false;
+        }
+        $scope = (string) ($options['live_intelligence_scope'] ?? 'homepage');
+        if ($scope === 'homepage' && !is_front_page()) {
+            return false;
+        }
+        if ($scope === 'selected') {
+            $selected = array_filter(array_map('absint', explode(',', (string) ($options['live_intelligence_selected_pages'] ?? ''))));
+            if (!in_array(get_queried_object_id(), $selected, true)) {
+                return false;
+            }
+        }
+        if (($options['live_intelligence_duplicate_protection'] ?? '1') === '1') {
+            global $post;
+            if ($post instanceof WP_Post && has_shortcode((string) $post->post_content, 'sc_live_intelligence')) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function render_top_live_intelligence() {
+        if (!$this->should_render_top_live_intelligence()) {
+            return;
+        }
+        echo $this->live_intelligence_shortcode(['placement' => 'top']); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    }
+
+    public function live_intelligence_shortcode($atts = []) {
+        $options = self::options();
+        if (($options['enable_live_intelligence'] ?? '1') !== '1') {
+            return '';
+        }
+        $atts = shortcode_atts([
+            'category' => '',
+            'limit' => (string) ($options['live_intelligence_limit'] ?? '8'),
+            'motion' => 'slow',
+            'theme' => 'electronic',
+            'placement' => 'content',
+            'label' => 'Live Intelligence',
+            'show_sources' => (string) ($options['live_intelligence_show_sources'] ?? '1'),
+            'show_updated' => (string) ($options['live_intelligence_show_updated'] ?? '1'),
+        ], $atts, 'sc_live_intelligence');
+        $category = sanitize_key((string) $atts['category']);
+        $limit = max(1, min(20, absint($atts['limit'])));
+        $motion = in_array($atts['motion'], ['slow', 'off'], true) ? $atts['motion'] : 'slow';
+        $placement = $atts['placement'] === 'top' ? 'top' : 'content';
+        $label = sanitize_text_field((string) $atts['label']);
+        $speed = max(18, min(120, absint($options['live_intelligence_speed'] ?? 42)));
+        $classes = 'scsi-live-intelligence scsi-live-intelligence--electronic scsi-live-intelligence--' . $placement;
+        ob_start();
+        ?>
+        <section class="<?php echo esc_attr($classes); ?>" data-scsi-live-intelligence data-category="<?php echo esc_attr($category); ?>" data-limit="<?php echo esc_attr((string) $limit); ?>" data-motion="<?php echo esc_attr($motion); ?>" data-show-sources="<?php echo esc_attr((string) $atts['show_sources']); ?>" data-show-updated="<?php echo esc_attr((string) $atts['show_updated']); ?>" style="--scsi-live-duration:<?php echo esc_attr((string) $speed); ?>s" aria-label="<?php echo esc_attr($label); ?>">
+            <div class="scsi-live-intelligence__label"><span class="scsi-live-intelligence__lamp" aria-hidden="true"></span><strong><?php echo esc_html(strtoupper($label)); ?></strong></div>
+            <div class="scsi-live-intelligence__viewport" aria-live="polite" aria-busy="true">
+                <div class="scsi-live-intelligence__track"><span class="scsi-live-intelligence__connecting">CONNECTING TO PUBLIC INTELLIGENCE API…</span></div>
+            </div>
+            <button class="scsi-live-intelligence__pause" type="button" aria-pressed="false" aria-label="Pause Live Intelligence ticker"><span aria-hidden="true">Ⅱ</span></button>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
     public function settings_page() {
         if (!current_user_can('manage_options')) {
             return;
@@ -2386,11 +2500,19 @@ final class SC_Site_Intelligence_Plugin {
                         <th scope="row">Shortcode Dashboard</th>
                         <td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[enable_dashboard]" value="1" <?php checked($options['enable_dashboard'], '1'); ?> /> Enable dashboard shortcodes.</label></td>
                     </tr>
+                    <tr><th scope="row">Live Intelligence</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[enable_live_intelligence]" value="1" <?php checked($options['enable_live_intelligence'], '1'); ?> /> Enable the Live Intelligence service and shortcode.</label></td></tr>
+                    <tr><th scope="row">Top electronic ticker</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[show_top_live_intelligence]" value="1" <?php checked($options['show_top_live_intelligence'], '1'); ?> /> Show the black-and-green ticker immediately below the Astra navigation.</label></td></tr>
+                    <tr><th scope="row"><label for="scsi_live_scope">Top ticker scope</label></th><td><select id="scsi_live_scope" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_scope]"><option value="homepage" <?php selected($options['live_intelligence_scope'], 'homepage'); ?>>Homepage only</option><option value="selected" <?php selected($options['live_intelligence_scope'], 'selected'); ?>>Selected page IDs</option><option value="entire_site" <?php selected($options['live_intelligence_scope'], 'entire_site'); ?>>Entire site</option></select></td></tr>
+                    <tr><th scope="row"><label for="scsi_live_pages">Selected page IDs</label></th><td><input id="scsi_live_pages" type="text" class="regular-text" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_selected_pages]" value="<?php echo esc_attr($options['live_intelligence_selected_pages']); ?>" placeholder="12, 84, 190" /><p class="description">Used only when the selected-page scope is active.</p></td></tr>
+                    <tr><th scope="row"><label for="scsi_live_limit">Ticker signals</label></th><td><input id="scsi_live_limit" type="number" min="1" max="20" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_limit]" value="<?php echo esc_attr($options['live_intelligence_limit']); ?>" /></td></tr>
+                    <tr><th scope="row"><label for="scsi_live_speed">Ticker cycle</label></th><td><input id="scsi_live_speed" type="number" min="18" max="120" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_speed]" value="<?php echo esc_attr($options['live_intelligence_speed']); ?>" /> seconds</td></tr>
+                    <tr><th scope="row">Ticker details</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_duplicate_protection]" value="1" <?php checked($options['live_intelligence_duplicate_protection'], '1'); ?> /> Prevent automatic ticker when the page already contains the shortcode.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_sources]" value="1" <?php checked($options['live_intelligence_show_sources'], '1'); ?> /> Show sources.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_updated]" value="1" <?php checked($options['live_intelligence_show_updated'], '1'); ?> /> Show update time.</label></td></tr>
                 </table>
                 <?php submit_button(); ?>
             </form>
             <hr />
             <h2>Shortcodes</h2>
+            <p><code>[sc_live_intelligence]</code> — electronic board; supports <code>category</code>, <code>limit</code>, and <code>motion="off"</code>.</p>
             <p><code>[sc_site_intelligence_dashboard]</code></p>
             <p><code>[sc_site_intelligence_page]</code></p>
             <p><code>[sc_site_intelligence_unmapped]</code></p>

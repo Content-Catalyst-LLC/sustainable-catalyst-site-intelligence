@@ -1,0 +1,19 @@
+{
+  "release": "3.1.0",
+  "title": "Live Intelligence Signal Layer",
+  "schema": "sc-site-intelligence-release/3.1",
+  "public_safe_signal_contract": true,
+  "shortcode_available": true,
+  "astra_below_header_optional": true,
+  "top_ticker_default_scope": "homepage",
+  "top_ticker_can_be_disabled": true,
+  "duplicate_protection": true,
+  "source_attribution_required": true,
+  "freshness_required": true,
+  "reduced_motion_supported": true,
+  "raw_upstream_payloads_exposed": false,
+  "browser_api_keys_exposed": false,
+  "automatic_interpretation": false,
+  "sticky_ticker_default": false,
+  "sitewide_default": false
+}

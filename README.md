@@ -1,6 +1,10 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v3.0.0 — Connected Public Intelligence and Evidence Platform
+## v3.1.0 — Live Intelligence Signal Layer
+
+Adds a public-safe electronic ticker feed, `[sc_live_intelligence]`, Astra below-header placement, WordPress visibility controls, cached proxy delivery, accessible pause controls, and reduced-motion behavior. The default homepage board is black with layered green dot-matrix styling.
+
+**Current release:** v3.1.0 — Connected Public Intelligence and Evidence Platform
 
 
 ## v3.0.0 — Connected Public Intelligence and Evidence Platform

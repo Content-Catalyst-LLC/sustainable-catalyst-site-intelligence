@@ -1,3 +1,12 @@
+## 3.1.0 — Live Intelligence Signal Layer
+
+- Added `/public/live-intelligence` and `/public/live-intelligence/status`.
+- Added public-safe connector, index, monitoring, and platform signals.
+- Added `[sc_live_intelligence]` with category, limit, and motion controls.
+- Added optional Astra below-header placement with homepage, selected-page, or entire-site scope.
+- Added black electronic-board styling with green dot-matrix treatment, pause, hover/focus pause, reduced motion, and cached failure state.
+- Added duplicate protection and independent service/top-placement switches.
+
 ## 3.0.0 — Connected Public Intelligence and Evidence Platform
 
 - Unified public search across countries, regions, events, indicators, datasets, sources, claims, models, investigations, publications, and workflow routes.

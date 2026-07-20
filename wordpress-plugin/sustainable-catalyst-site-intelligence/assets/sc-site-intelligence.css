@@ -1776,3 +1776,35 @@
 
 /* v3.0.0 — open standards, federation, and institutional data exchange */
 .scsi-institutional-data-exchange-control-center .scsi-page-row{border-left:3px solid rgba(92,160,112,.55)}
+
+
+/* v3.1.0 — Live Intelligence electronic ticker board */
+.scsi-live-intelligence{--scsi-live-green:#8cff9a;--scsi-live-bright:#39ff64;--scsi-live-dim:#58b968;--scsi-live-duration:42s;position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) 48px;align-items:stretch;width:100%;min-height:52px;margin:0;background:#020403;color:var(--scsi-live-green);border-block:1px solid #163d20;overflow:hidden;isolation:isolate;font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;box-shadow:inset 0 1px 0 rgba(89,255,111,.08),inset 0 -1px 0 rgba(89,255,111,.06)}
+.scsi-live-intelligence::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.34;background-image:radial-gradient(circle at center,rgba(100,255,120,.17) 0 1px,transparent 1.2px);background-size:4px 4px;mix-blend-mode:screen}
+.scsi-live-intelligence--top{width:100vw;margin-inline:calc(50% - 50vw);border-radius:0}
+.scsi-live-intelligence__label{display:flex;align-items:center;gap:.6rem;padding:0 1rem;background:#050906;border-right:1px solid #214d29;white-space:nowrap;z-index:2;box-shadow:10px 0 24px rgba(0,0,0,.75)}
+.scsi-live-intelligence__label strong{font-size:.72rem;line-height:1;letter-spacing:.16em;color:var(--scsi-live-bright);text-shadow:0 0 6px rgba(57,255,100,.64),0 0 16px rgba(57,255,100,.2)}
+.scsi-live-intelligence__lamp{width:8px;height:8px;border-radius:50%;background:var(--scsi-live-bright);box-shadow:0 0 5px var(--scsi-live-bright),0 0 14px rgba(57,255,100,.8);animation:scsi-live-pulse 1.8s steps(2,end) infinite}
+.scsi-live-intelligence__viewport{min-width:0;overflow:hidden;display:flex;align-items:center;mask-image:linear-gradient(90deg,transparent,#000 1.5rem,#000 calc(100% - 1.5rem),transparent)}
+.scsi-live-intelligence__track{display:flex;width:max-content;min-width:100%;align-items:center;white-space:nowrap;will-change:transform}
+.scsi-live-intelligence.is-ready:not(.is-paused) .scsi-live-intelligence__track{animation:scsi-live-scroll var(--scsi-live-duration) linear infinite}
+.scsi-live-intelligence:hover .scsi-live-intelligence__track,.scsi-live-intelligence:focus-within .scsi-live-intelligence__track{animation-play-state:paused}
+.scsi-live-intelligence__set{display:flex;align-items:center;flex:none;min-width:max-content;padding-inline:1.2rem}
+.scsi-live-intelligence__signal{display:inline-flex;align-items:baseline;gap:.5rem;color:var(--scsi-live-green)!important;text-decoration:none!important;padding:.7rem .3rem;text-shadow:0 0 5px rgba(112,255,129,.38)}
+.scsi-live-intelligence__signal:hover,.scsi-live-intelligence__signal:focus-visible{color:#c7ffd0!important;outline:1px solid var(--scsi-live-bright);outline-offset:2px}
+.scsi-live-intelligence__category{font-size:.64rem;letter-spacing:.11em;color:var(--scsi-live-dim)}
+.scsi-live-intelligence__name{font-size:.78rem;letter-spacing:.045em}
+.scsi-live-intelligence__value{font-size:.82rem;letter-spacing:.055em;color:var(--scsi-live-bright);font-weight:800}
+.scsi-live-intelligence__signal small{font-size:.62rem;color:#72c77d;letter-spacing:.035em}
+.scsi-live-intelligence__separator{display:inline-block;padding:0 .95rem;color:#2a8739;font-size:.54rem;text-shadow:0 0 5px rgba(57,255,100,.45)}
+.scsi-live-intelligence__connecting{display:block;padding:0 1.5rem;font-size:.72rem;letter-spacing:.1em;color:var(--scsi-live-dim);animation:scsi-live-flicker 1.2s steps(2,end) infinite}
+.scsi-live-intelligence__pause{appearance:none;display:grid;place-items:center;width:48px;min-height:50px;padding:0;border:0;border-left:1px solid #214d29;background:#050906;color:var(--scsi-live-bright);font:700 .8rem/1 monospace;cursor:pointer;z-index:2;text-shadow:0 0 7px rgba(57,255,100,.65)}
+.scsi-live-intelligence__pause:hover,.scsi-live-intelligence__pause:focus-visible{background:#0b160d;outline:2px solid var(--scsi-live-bright);outline-offset:-3px}
+.scsi-live-intelligence.is-paused .scsi-live-intelligence__track{animation-play-state:paused!important}
+.scsi-live-intelligence.has-error{--scsi-live-green:#d8b96b;--scsi-live-bright:#ffd36a;--scsi-live-dim:#ae914e}
+@keyframes scsi-live-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes scsi-live-pulse{0%,70%{opacity:1}71%,100%{opacity:.42}}
+@keyframes scsi-live-flicker{0%,80%{opacity:1}81%,100%{opacity:.58}}
+@media(max-width:760px){.scsi-live-intelligence{grid-template-columns:auto minmax(0,1fr) 44px;min-height:48px}.scsi-live-intelligence__label{padding:0 .7rem}.scsi-live-intelligence__label strong{font-size:.61rem;letter-spacing:.1em}.scsi-live-intelligence__signal{gap:.38rem}.scsi-live-intelligence__signal small{display:none}.scsi-live-intelligence__pause{width:44px;min-height:46px}}
+@media(prefers-reduced-motion:reduce){.scsi-live-intelligence__track,.scsi-live-intelligence__lamp,.scsi-live-intelligence__connecting{animation:none!important}.scsi-live-intelligence__viewport{overflow-x:auto;mask-image:none}.scsi-live-intelligence__set[aria-hidden="true"]{display:none}.scsi-live-intelligence__pause{display:none}}
+@media(forced-colors:active){.scsi-live-intelligence{background:Canvas;color:CanvasText;border-color:CanvasText}.scsi-live-intelligence::before{display:none}.scsi-live-intelligence *{color:CanvasText!important;text-shadow:none!important}}

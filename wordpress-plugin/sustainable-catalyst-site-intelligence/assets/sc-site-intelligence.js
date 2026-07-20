@@ -3666,10 +3666,71 @@
     }, {passive: true});
   }
 
+  function setupLiveIntelligence() {
+    document.querySelectorAll('[data-scsi-live-intelligence]').forEach(function (root) {
+      const viewport = root.querySelector('.scsi-live-intelligence__viewport');
+      const track = root.querySelector('.scsi-live-intelligence__track');
+      const pause = root.querySelector('.scsi-live-intelligence__pause');
+      if (!viewport || !track || !cfg.restBase) return;
+      const category = root.dataset.category || '';
+      const limit = Math.max(1, Math.min(20, Number(root.dataset.limit || 8)));
+      const showSources = root.dataset.showSources !== '0';
+      const showUpdated = root.dataset.showUpdated !== '0';
+      const endpoint = cfg.restBase + '/live-intelligence?limit=' + encodeURIComponent(limit) + (category ? '&category=' + encodeURIComponent(category) : '');
+      const relativeTime = function (value) {
+        const stamp = Date.parse(value || '');
+        if (!Number.isFinite(stamp)) return '';
+        const minutes = Math.max(0, Math.round((Date.now() - stamp) / 60000));
+        if (minutes < 1) return 'UPDATED NOW';
+        if (minutes < 60) return 'UPDATED ' + minutes + 'M AGO';
+        const hours = Math.round(minutes / 60);
+        return 'UPDATED ' + hours + 'H AGO';
+      };
+      const itemHtml = function (signal) {
+        const metadata = [];
+        if (showSources && signal.source_name) metadata.push(signal.source_name);
+        if (showUpdated && signal.updated_at) metadata.push(relativeTime(signal.updated_at));
+        const href = signal.destination_url || '#';
+        return '<a class="scsi-live-intelligence__signal" href="' + escapeHtml(href) + '" title="' + escapeHtml(signal.detail || signal.label || '') + '">' +
+          '<span class="scsi-live-intelligence__category">' + escapeHtml((signal.category || 'signal').replace(/_/g, ' ').toUpperCase()) + '</span>' +
+          '<span class="scsi-live-intelligence__name">' + escapeHtml(signal.label || 'LIVE SIGNAL') + '</span>' +
+          '<strong class="scsi-live-intelligence__value">' + escapeHtml(signal.value || 'AVAILABLE') + '</strong>' +
+          (metadata.length ? '<small>' + escapeHtml(metadata.join(' · ')) + '</small>' : '') + '</a><span class="scsi-live-intelligence__separator" aria-hidden="true">◆</span>';
+      };
+      const render = function (data) {
+        const signals = Array.isArray(data.signals) ? data.signals : [];
+        if (!signals.length) throw new Error('No Live Intelligence signals are currently available.');
+        const content = signals.map(itemHtml).join('');
+        track.innerHTML = '<div class="scsi-live-intelligence__set">' + content + '</div><div class="scsi-live-intelligence__set" aria-hidden="true">' + content + '</div>';
+        root.classList.add('is-ready');
+        viewport.setAttribute('aria-busy', 'false');
+        if (root.dataset.motion === 'off') root.classList.add('is-paused');
+      };
+      const load = function () {
+        fetchJson(endpoint).then(render).catch(function () {
+          track.innerHTML = '<span class="scsi-live-intelligence__connecting">LIVE INTELLIGENCE FEED TEMPORARILY UNAVAILABLE · CACHED SIGNALS WILL RETURN AUTOMATICALLY</span>';
+          viewport.setAttribute('aria-busy', 'false');
+          root.classList.add('has-error');
+        });
+      };
+      if (pause) {
+        pause.addEventListener('click', function () {
+          const paused = root.classList.toggle('is-paused');
+          pause.setAttribute('aria-pressed', paused ? 'true' : 'false');
+          pause.setAttribute('aria-label', paused ? 'Resume Live Intelligence ticker' : 'Pause Live Intelligence ticker');
+          pause.querySelector('span').textContent = paused ? '▶' : 'Ⅱ';
+        });
+      }
+      load();
+      window.setInterval(load, 300000);
+    });
+  }
+
   function init() {
     setupActivePageLinks();
     setupLaunchActions();
     setupResponsiveEmbeds();
+    setupLiveIntelligence();
     fetchDashboards();
     initGeospatialExtras();
   }
