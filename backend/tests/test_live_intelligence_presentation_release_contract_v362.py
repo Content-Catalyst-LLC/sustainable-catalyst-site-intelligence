@@ -8,9 +8,9 @@ def test_v362_release_contract_files_and_markers():
     checks = {
         "backend/app/live_intelligence_presentation_v362.py": ["PRESENTATION_SCHEMA", "presentation_policy", "animated_viewport_live_region"],
         "backend/app/main.py": ["/public/live-intelligence/presentation-policy", "public_live_intelligence_presentation_policy_endpoint"],
-        "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": ["Version: 3.7.2", "live_intelligence_reduced_motion_mode", "data-scsi-live-announcer"],
+        "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": ["Version: 3.8.0", "live_intelligence_reduced_motion_mode", "data-scsi-live-announcer"],
         "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js": ["renderStatic", "renderStacked", "signalAccessibleText", "ArrowRight"],
-        "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.css": ["v3.7.2 — Live Intelligence presentation", "is-mobile-stacked", "min-height:44px"],
+        "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.css": ["v3.8.0 — Live Intelligence presentation", "is-mobile-stacked", "min-height:44px"],
         "docs/V362_LIVE_INTELLIGENCE_PRESENTATION_ACCESSIBILITY.md": ["Motion is optional", "Screen-reader announcements"],
     }
     for relative, markers in checks.items():

@@ -1,6 +1,33 @@
 # Sustainable Catalyst Site Intelligence
 
-## v3.7.2 — Analytics and Public-Value Measurement
+## v3.8.0 — Connected Live Intelligence Surface
+
+- Reuses one canonical Live Intelligence signal contract across eight bounded public surfaces.
+- Adds homepage, static strip, channel, publication, Knowledge Library, Advisory, Lab, and public-safe external embed profiles.
+- Preserves source, observation time, freshness, lineage, evidence, rotation, accessibility, and privacy controls on every surface.
+- Prevents separate per-product ingestion pipelines, arbitrary signal injection, advertising, affiliate promotions, and freshness-rule bypasses.
+- Adds surface-specific family filters, destination allowlists, presentation defaults, limits, placement guidance, and WordPress shortcode presets.
+- Keeps external embeds free of administrative routes, private operational metadata, and browser-visible API credentials.
+
+Primary v3.8.0 routes:
+
+- `GET /public/live-intelligence/surfaces`
+- `GET /public/live-intelligence/surface-policy`
+- `GET /public/live-intelligence/surfaces/{surface_id}`
+- `GET /public/live-intelligence/surfaces/{surface_id}/feed`
+- `GET /public/live-intelligence/embed-manifest`
+
+WordPress presets:
+
+- `[sc_live_intelligence_static]`
+- `[sc_live_intelligence_channel channel="weather-climate"]`
+- `[sc_live_intelligence_publication]`
+- `[sc_live_intelligence_library]`
+- `[sc_live_intelligence_advisory]`
+- `[sc_live_intelligence_lab]`
+- `[sc_live_intelligence_embed]`
+
+## v3.8.0 — Analytics and Public-Value Measurement
 
 - Measures component and signal impressions, evidence and source opens, workspace, map, and Decision Studio handoffs.
 - Reports engagement by family, freshness, destination, viewport, motion mode, delivery state, and source.
@@ -10,7 +37,7 @@
 - Rejects IP addresses, cookies, visitor or session IDs, user agents, referrers, page paths, URLs, free text, and arbitrary metadata.
 - Keeps click-through rate subordinate to evidence discovery, accessibility, and delivery quality.
 
-Primary v3.7.2 routes:
+Primary v3.8.0 routes:
 
 - `POST /public/live-intelligence/analytics/events`
 - `GET /public/live-intelligence/analytics-policy`
@@ -18,7 +45,7 @@ Primary v3.7.2 routes:
 - `GET /public/live-intelligence/analytics/source-reliability`
 - `GET /admin/live-intelligence/analytics`
 
-## v3.7.2 — Signal Relevance and Rotation Intelligence
+## v3.8.0 — Signal Relevance and Rotation Intelligence
 
 - Selects homepage signals from a larger validated candidate pool before applying the requested display limit.
 - Returns transparent freshness, source-health, public-relevance, editorial, diversity, and repetition components.
@@ -28,7 +55,7 @@ Primary v3.7.2 routes:
 - Adds public rotation policy/status routes and protected rotation administration routes.
 - Preserves v3.7.0 gateway destinations, v3.6.2 accessibility controls, and v3.6.1 reliability.
 
-Primary v3.7.2 routes:
+Primary v3.8.0 routes:
 
 - `/public/live-intelligence/homepage`
 - `/public/live-intelligence/rotation-policy`
@@ -36,7 +63,7 @@ Primary v3.7.2 routes:
 - `/admin/live-intelligence/rotation`
 - `/admin/live-intelligence/rotation/signals/{signal_id}`
 
-## v3.7.2 — Homepage Intelligence Gateway
+## v3.8.0 — Homepage Intelligence Gateway
 
 - Adds a bounded homepage feed with an eight-signal default and twelve-signal maximum.
 - Enriches every signal with a public family, structured geography, formatted value, and responsible-use metadata.
@@ -49,7 +76,7 @@ Primary v3.7.2 routes:
 
 Site Intelligence v3.6.2 adds a governed presentation layer to the validated Live Intelligence feed. Administrators can choose a slow moving ticker, a fully static strip, or a manual signal viewer. Reduced-motion visitors automatically receive a static or manual experience, and mobile visitors may use a rotator, stacked cards, a marquee, or a hidden surface.
 
-**Current release:** v3.7.2 — Connected Public Intelligence and Evidence Platform
+**Current release:** v3.8.0 — Connected Public Intelligence and Evidence Platform
 
 Primary v3.6.2 routes:
 
@@ -70,11 +97,11 @@ The WordPress surface adds maximum-visible-signal controls, dedicated assistive 
 
 The v3.6.1 validation, explicit freshness states, malformed-record isolation, duplicate and expired-signal suppression, same-query last-known-good recovery, public status contract, and WordPress proxy-cache boundaries remain active beneath the v3.6.2 presentation layer.
 
-### v3.7.2 — Topic and Regional Channels
+### v3.8.0 — Topic and Regional Channels
 
 The v3.5.0 channel directory, topic and regional filters, country routing, source selection, and honest empty-result policy remain version-aligned and active in v3.6.2.
 
-### v3.7.2 — Signal Context and Drill-Down
+### v3.8.0 — Signal Context and Drill-Down
 
 The v3.4.0 context, evidence, source-lineage, map, Decision Studio, ranking-explanation, and responsible-use capability remains version-aligned and active in v3.6.2.
 

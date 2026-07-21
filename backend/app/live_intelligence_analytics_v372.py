@@ -1,4 +1,4 @@
-"""Privacy-preserving public-value analytics for Live Intelligence v3.7.2.
+"""Privacy-preserving public-value analytics for Live Intelligence v3.8.0.
 
 The analytics layer stores aggregate counters only. It rejects identity, session,
 network, referrer, free-text, and full-URL fields; it never writes raw events.
@@ -35,7 +35,7 @@ VALID_EVENT_TYPES = {
     "reduced_motion_use",
     "manual_control_use",
 }
-VALID_SURFACES = {"homepage", "feed", "channel", "signal_context", "unknown"}
+VALID_SURFACES = {"homepage", "feed", "static_strip", "channel", "publication", "library", "advisory", "lab", "external_embed", "signal_context", "unknown"}
 VALID_VIEWPORTS = {"desktop", "mobile", "tablet", "unknown"}
 VALID_MOTION_MODES = {"standard", "reduced", "static", "manual", "unknown"}
 VALID_DELIVERY_STATES = {

@@ -16,7 +16,7 @@ SCHEMA_VERSION = "sc-site-intelligence-historical-archive/1.0"
 SNAPSHOT_SCHEMA = "sc-site-intelligence-dataset-snapshot/1.0"
 CHANGE_SCHEMA = "sc-site-intelligence-temporal-change/1.0"
 REVISION_SCHEMA = "sc-site-intelligence-source-revision/1.0"
-RELEASE_VERSION = "3.7.2"
+RELEASE_VERSION = "3.8.0"
 
 _LOCK = threading.RLock()
 _SECRET_FRAGMENTS = (
@@ -882,7 +882,7 @@ class HistoricalArchiveCenter:
             "governance": [
                 "Accepted connector payloads are sanitized, size-limited, canonicalized, and SHA-256 digested before archival.",
                 "Duplicate payloads are deduplicated unless an administrator explicitly forces a snapshot.",
-                "Restoration is preview-only in v3.7.2; no endpoint overwrites live application state.",
+                "Restoration is preview-only in v3.8.0; no endpoint overwrites live application state.",
                 "The file-backed default requires a persistent disk path for history to survive ephemeral host replacement.",
             ],
         }

@@ -1,0 +1,28 @@
+{
+  "schema": "sc-site-intelligence-release-governance/1.0",
+  "version": "3.8.0",
+  "release": "Connected Live Intelligence Surface",
+  "surface_count": 8,
+  "single_canonical_signal_contract": true,
+  "separate_ingestion_per_surface": false,
+  "freshness_rules_bypassable": false,
+  "source_lineage_preserved": true,
+  "observation_values_rewritten_by_surface": false,
+  "private_metadata_exposed": false,
+  "api_credentials_in_browser": false,
+  "arbitrary_signal_injection": false,
+  "advertising_or_affiliate_signals": false,
+  "external_embed_requires_approved_surface": true,
+  "aggregate_analytics_only": true,
+  "individual_user_tracking": false,
+  "supported_surfaces": [
+    "homepage",
+    "static_strip",
+    "channel",
+    "publication",
+    "library",
+    "advisory",
+    "lab",
+    "external_embed"
+  ]
+}

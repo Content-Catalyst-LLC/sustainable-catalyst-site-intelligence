@@ -3682,7 +3682,8 @@
       const position = root.querySelector('.scsi-live-intelligence__position');
       if (!viewport || !track || !cfg.restBase) return;
 
-      const surface = root.dataset.surface === 'homepage' ? 'homepage' : 'feed';
+      const allowedSurfaces = ['feed', 'homepage', 'static_strip', 'channel', 'publication', 'library', 'advisory', 'lab', 'external_embed'];
+      const surface = allowedSurfaces.includes(root.dataset.surface) ? root.dataset.surface : 'feed';
       const category = root.dataset.category || '';
       const channel = root.dataset.channel || 'global';
       const region = root.dataset.region || '';
@@ -3729,7 +3730,7 @@
       if (country) params.set('country', country);
       if (feeds) params.set('feeds', feeds);
       if (exclude) params.set('exclude', exclude);
-      const endpointPath = surface === 'homepage' ? '/live-intelligence/homepage' : '/live-intelligence';
+      const endpointPath = surface === 'homepage' ? '/live-intelligence/homepage' : (surface === 'feed' ? '/live-intelligence' : '/live-intelligence/surfaces/' + encodeURIComponent(surface) + '/feed');
       const endpoint = cfg.restBase + endpointPath + '?' + params.toString();
       const analyticsEndpoint = cfg.restBase + '/live-intelligence/analytics/events';
       const analyticsViewport = function () {

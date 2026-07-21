@@ -1,6 +1,16 @@
 # Changelog
 
-## 3.7.2 — Signal Relevance and Rotation Intelligence
+## 3.8.0 — Connected Live Intelligence Surface
+
+- Added one governed surface registry for homepage, static, channel, publication, Library, Advisory, Lab, and external embed use.
+- Added public surface directory, policy, definition, feed, and embed-manifest endpoints.
+- Added family and destination allowlists without changing source observations or freshness states.
+- Added WordPress surface presets and a shared proxy path rather than separate product-specific tickers.
+- Extended aggregate-only analytics dimensions to the new surfaces without visitor profiling.
+- Prohibited advertising, affiliate signals, private metadata, arbitrary injection, and freshness-rule bypasses.
+- Preserved reliability, accessibility, rotation, evidence, source operations, and homepage gateway behavior.
+
+## 3.8.0 — Signal Relevance and Rotation Intelligence
 
 - Added a public-safe relevance and rotation policy over validated Live Intelligence signals.
 - Added family, geography, and source diversity adjustments with transparent reasons.
@@ -9,7 +19,7 @@
 - Added public policy/status routes, protected administration routes, and WordPress proxy support.
 - Preserved source observations, evidence, freshness, reliability, accessibility, and human publication control.
 
-## 3.7.2 — Homepage Intelligence Gateway
+## 3.8.0 — Homepage Intelligence Gateway
 
 - Added `/public/live-intelligence/homepage` and `/public/live-intelligence/gateway-policy`.
 - Added eight governed signal families, structured geography, and canonical primary/secondary destinations.

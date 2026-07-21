@@ -140,7 +140,7 @@ def test_rotation_policy_endpoint_is_public_and_bounded():
     assert response.status_code == 200
     payload = response.json()
     assert payload["schema"] == ROTATION_SCHEMA_VERSION
-    assert payload["version"] == "3.7.2"
+    assert payload["version"] == "3.8.0"
     assert payload["governance"]["human_approval_required_for_override"] is True
     assert payload["history"]["individual_user_tracking"] is False
 

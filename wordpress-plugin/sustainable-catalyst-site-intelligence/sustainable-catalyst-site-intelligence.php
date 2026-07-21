@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.7.2
+ * Version: 3.8.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.7.2';
+    const VERSION = '3.8.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -40,6 +40,13 @@ final class SC_Site_Intelligence_Plugin {
         add_action('wp', [$this, 'register_live_intelligence_placement']);
         add_filter('body_class', [$this, 'live_intelligence_body_classes']);
         add_shortcode('sc_live_intelligence', [$this, 'live_intelligence_shortcode']);
+        add_shortcode('sc_live_intelligence_static', [$this, 'live_intelligence_static_shortcode']);
+        add_shortcode('sc_live_intelligence_channel', [$this, 'live_intelligence_channel_shortcode']);
+        add_shortcode('sc_live_intelligence_publication', [$this, 'live_intelligence_publication_shortcode']);
+        add_shortcode('sc_live_intelligence_library', [$this, 'live_intelligence_library_shortcode']);
+        add_shortcode('sc_live_intelligence_advisory', [$this, 'live_intelligence_advisory_shortcode']);
+        add_shortcode('sc_live_intelligence_lab', [$this, 'live_intelligence_lab_shortcode']);
+        add_shortcode('sc_live_intelligence_embed', [$this, 'live_intelligence_embed_shortcode']);
         add_shortcode('sc_site_intelligence_dashboard', [$this, 'dashboard_shortcode']);
         add_shortcode('sc_site_intelligence_page', [$this, 'page_shortcode']);
         add_shortcode('sc_site_intelligence_unmapped', [$this, 'unmapped_shortcode']);
@@ -407,7 +414,7 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v3.7.2 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
+        // v3.8.0 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
         // Existing moving tickers remain moving unless an administrator selects static or manual presentation.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
@@ -816,6 +823,42 @@ final class SC_Site_Intelligence_Plugin {
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_live_intelligence_gateway_policy'],
             'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/surfaces', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_surfaces'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/surface-policy', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_surface_policy'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/surfaces/(?P<surface_id>[a-z0-9_\-]+)/feed', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_surface_feed'],
+            'permission_callback' => '__return_true',
+            'args' => [
+                'category' => ['sanitize_callback' => 'sanitize_key'],
+                'limit' => ['sanitize_callback' => 'absint'],
+                'feeds' => ['sanitize_callback' => 'sanitize_text_field'],
+                'exclude' => ['sanitize_callback' => 'sanitize_text_field'],
+                'max_per_source' => ['sanitize_callback' => 'absint'],
+                'channel' => ['sanitize_callback' => 'sanitize_title'],
+                'region' => ['sanitize_callback' => 'sanitize_text_field'],
+                'country' => ['sanitize_callback' => 'sanitize_text_field'],
+            ],
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/surfaces/(?P<surface_id>[a-z0-9_\-]+)', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_surface'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/embed-manifest', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_embed_manifest'],
+            'permission_callback' => '__return_true',
+            'args' => ['surface' => ['sanitize_callback' => 'sanitize_key']],
         ]);
         register_rest_route(self::REST_NAMESPACE, '/live-intelligence/rotation-policy', [
             'methods' => WP_REST_Server::READABLE,
@@ -2749,6 +2792,8 @@ final class SC_Site_Intelligence_Plugin {
         $region = sanitize_text_field((string) $request->get_param('region'));
         $country = sanitize_text_field((string) $request->get_param('country'));
         $surface = sanitize_key((string) $request->get_param('surface'));
+        $valid_surfaces = ['feed', 'homepage', 'static_strip', 'channel', 'publication', 'library', 'advisory', 'lab', 'external_embed'];
+        if (!in_array($surface, $valid_surfaces, true)) { $surface = 'feed'; }
         $query = [
             'limit' => $limit,
             'feeds' => implode(',', $feeds),
@@ -2763,7 +2808,7 @@ final class SC_Site_Intelligence_Plugin {
         if (!empty($exclude)) {
             $query['exclude'] = implode(',', $exclude);
         }
-        $backend_path = $surface === 'homepage' ? 'public/live-intelligence/homepage' : 'public/live-intelligence';
+        $backend_path = $surface === 'homepage' ? 'public/live-intelligence/homepage' : ($surface === 'feed' ? 'public/live-intelligence' : 'public/live-intelligence/surfaces/' . rawurlencode($surface) . '/feed');
         $result = $this->backend_request($backend_path . '?' . http_build_query($query));
         if (is_wp_error($result)) {
             return $result;
@@ -2783,6 +2828,33 @@ final class SC_Site_Intelligence_Plugin {
 
     public function rest_live_intelligence_gateway_policy(WP_REST_Request $request) {
         $result = $this->backend_request('public/live-intelligence/gateway-policy');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_surfaces(WP_REST_Request $request) {
+        $result = $this->backend_request('public/live-intelligence/surfaces');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_surface_policy(WP_REST_Request $request) {
+        $result = $this->backend_request('public/live-intelligence/surface-policy');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_surface(WP_REST_Request $request) {
+        $surface_id = sanitize_key((string) $request->get_param('surface_id'));
+        $result = $this->backend_request('public/live-intelligence/surfaces/' . rawurlencode($surface_id));
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_surface_feed(WP_REST_Request $request) {
+        $request->set_param('surface', sanitize_key((string) $request->get_param('surface_id')));
+        return $this->rest_live_intelligence($request);
+    }
+
+    public function rest_live_intelligence_embed_manifest(WP_REST_Request $request) {
+        $surface = sanitize_key((string) ($request->get_param('surface') ?: 'external_embed'));
+        $result = $this->backend_request('public/live-intelligence/embed-manifest?surface=' . rawurlencode($surface));
         return is_wp_error($result) ? $result : rest_ensure_response($result);
     }
 
@@ -3195,7 +3267,9 @@ final class SC_Site_Intelligence_Plugin {
             'refresh_seconds' => (string) ($options['live_intelligence_refresh_seconds'] ?? '300'),
         ], $atts, 'sc_live_intelligence');
         $category = sanitize_key((string) $atts['category']);
-        $surface = sanitize_key((string) $atts['surface']) === 'homepage' ? 'homepage' : 'feed';
+        $surface = sanitize_key((string) $atts['surface']);
+        $valid_surfaces = ['feed', 'homepage', 'static_strip', 'channel', 'publication', 'library', 'advisory', 'lab', 'external_embed'];
+        if (!in_array($surface, $valid_surfaces, true)) { $surface = 'feed'; }
         $channel = self::sanitize_live_intelligence_channel((string) $atts['channel']);
         $region = sanitize_text_field((string) $atts['region']);
         $country = sanitize_text_field((string) $atts['country']);
@@ -3231,7 +3305,7 @@ final class SC_Site_Intelligence_Plugin {
         $refresh_seconds = max(60, min(1800, absint($atts['refresh_seconds'])));
         $context_base = trailingslashit(home_url('/live-intelligence/signal/'));
         $category_labels = self::live_intelligence_category_labels($options);
-        $classes = 'scsi-live-intelligence scsi-live-intelligence--electronic scsi-live-intelligence--' . $placement . ' scsi-live-intelligence--spacing-' . $spacing . ' scsi-live-intelligence--presentation-' . $presentation;
+        $classes = 'scsi-live-intelligence scsi-live-intelligence--electronic scsi-live-intelligence--' . $placement . ' scsi-live-intelligence--spacing-' . $spacing . ' scsi-live-intelligence--presentation-' . $presentation . ' scsi-live-intelligence--surface-' . $surface;
         ob_start();
         ?>
         <section class="<?php echo esc_attr($classes); ?>" data-scsi-live-intelligence data-presentation="<?php echo esc_attr($presentation); ?>" data-reduced-motion="<?php echo esc_attr($reduced_motion_mode); ?>" data-max-visible="<?php echo esc_attr((string) $max_visible); ?>" data-announcement-mode="<?php echo esc_attr($announcement_mode); ?>" data-surface="<?php echo esc_attr($surface); ?>" data-category="<?php echo esc_attr($category); ?>" data-channel="<?php echo esc_attr($channel); ?>" data-region="<?php echo esc_attr($region); ?>" data-country="<?php echo esc_attr($country); ?>" data-limit="<?php echo esc_attr((string) $limit); ?>" data-feeds="<?php echo esc_attr(implode(',', $feeds)); ?>" data-exclude="<?php echo esc_attr(implode(',', $exclude)); ?>" data-max-per-source="<?php echo esc_attr((string) $max_per_source); ?>" data-motion="<?php echo esc_attr($motion); ?>" data-mobile-mode="<?php echo esc_attr($mobile_mode); ?>" data-mobile-interval="<?php echo esc_attr((string) $mobile_interval); ?>" data-show-sources="<?php echo esc_attr((string) $atts['show_sources']); ?>" data-show-updated="<?php echo esc_attr((string) $atts['show_updated']); ?>" data-show-cluster-sources="<?php echo esc_attr((string) $atts['show_cluster_sources']); ?>" data-selection-context="<?php echo esc_attr((string) $atts['selection_context']); ?>" data-detail-links="<?php echo esc_attr($detail_links); ?>" data-show-freshness="<?php echo esc_attr($show_freshness); ?>" data-refresh-seconds="<?php echo esc_attr((string) $refresh_seconds); ?>" data-context-base="<?php echo esc_url($context_base); ?>" data-compact-sources="<?php echo esc_attr($compact_sources); ?>" data-text-limit="<?php echo esc_attr((string) $text_limit); ?>" data-category-labels="<?php echo esc_attr(wp_json_encode($category_labels)); ?>" style="--scsi-live-duration:<?php echo esc_attr((string) $speed); ?>s;--scsi-live-mobile-duration:<?php echo esc_attr((string) $mobile_speed); ?>s" aria-label="<?php echo esc_attr($label); ?>">
@@ -3250,6 +3324,34 @@ final class SC_Site_Intelligence_Plugin {
         </section>
         <?php
         return ob_get_clean();
+    }
+
+    public function live_intelligence_static_shortcode($atts = []) {
+        return $this->live_intelligence_shortcode(array_merge(['surface' => 'static_strip', 'presentation' => 'static', 'motion' => 'off', 'mobile_mode' => 'stacked', 'limit' => '6', 'max_visible' => '8'], is_array($atts) ? $atts : []));
+    }
+
+    public function live_intelligence_channel_shortcode($atts = []) {
+        return $this->live_intelligence_shortcode(array_merge(['surface' => 'channel', 'presentation' => 'manual', 'reduced_motion' => 'manual', 'limit' => '10', 'max_visible' => '12'], is_array($atts) ? $atts : []));
+    }
+
+    public function live_intelligence_publication_shortcode($atts = []) {
+        return $this->live_intelligence_shortcode(array_merge(['surface' => 'publication', 'presentation' => 'static', 'motion' => 'off', 'mobile_mode' => 'stacked', 'limit' => '3', 'max_visible' => '5', 'label' => 'Related Intelligence'], is_array($atts) ? $atts : []));
+    }
+
+    public function live_intelligence_library_shortcode($atts = []) {
+        return $this->live_intelligence_shortcode(array_merge(['surface' => 'library', 'presentation' => 'manual', 'reduced_motion' => 'manual', 'mobile_mode' => 'stacked', 'limit' => '6', 'max_visible' => '8', 'label' => 'Research Signals'], is_array($atts) ? $atts : []));
+    }
+
+    public function live_intelligence_advisory_shortcode($atts = []) {
+        return $this->live_intelligence_shortcode(array_merge(['surface' => 'advisory', 'presentation' => 'static', 'motion' => 'off', 'mobile_mode' => 'stacked', 'limit' => '4', 'max_visible' => '6', 'label' => 'Advisory Context'], is_array($atts) ? $atts : []));
+    }
+
+    public function live_intelligence_lab_shortcode($atts = []) {
+        return $this->live_intelligence_shortcode(array_merge(['surface' => 'lab', 'presentation' => 'manual', 'reduced_motion' => 'manual', 'mobile_mode' => 'stacked', 'limit' => '8', 'max_visible' => '12', 'label' => 'Lab Observations'], is_array($atts) ? $atts : []));
+    }
+
+    public function live_intelligence_embed_shortcode($atts = []) {
+        return $this->live_intelligence_shortcode(array_merge(['surface' => 'external_embed', 'presentation' => 'static', 'motion' => 'off', 'mobile_mode' => 'stacked', 'limit' => '6', 'max_visible' => '8'], is_array($atts) ? $atts : []));
     }
 
     public function settings_page() {
@@ -3434,7 +3536,7 @@ final class SC_Site_Intelligence_Plugin {
             </script>
             <hr />
             <h2>Shortcodes</h2>
-            <p><code>[sc_live_intelligence]</code> — electronic board; supports <code>channel</code>, <code>region</code>, <code>country</code>, <code>category</code>, <code>limit</code>, <code>feeds</code>, <code>exclude</code>, <code>max_per_source</code>, <code>speed</code>, <code>mobile_speed</code>, <code>mobile_mode</code>, <code>mobile_interval</code>, <code>spacing</code>, <code>text_limit</code>, <code>detail_links</code>, <code>surface="homepage"</code>, and <code>motion="off"</code>.</p>
+            <p><code>[sc_live_intelligence]</code> — governed signal surface; supports <code>channel</code>, <code>region</code>, <code>country</code>, <code>category</code>, <code>limit</code>, <code>feeds</code>, <code>exclude</code>, <code>max_per_source</code>, presentation controls, and <code>surface</code> values <code>homepage</code>, <code>static_strip</code>, <code>channel</code>, <code>publication</code>, <code>library</code>, <code>advisory</code>, <code>lab</code>, or <code>external_embed</code>. Preset aliases: <code>[sc_live_intelligence_static]</code>, <code>[sc_live_intelligence_channel]</code>, <code>[sc_live_intelligence_publication]</code>, <code>[sc_live_intelligence_library]</code>, <code>[sc_live_intelligence_advisory]</code>, <code>[sc_live_intelligence_lab]</code>, and <code>[sc_live_intelligence_embed]</code>.</p>
             <p><code>[sc_site_intelligence_dashboard]</code></p>
             <p><code>[sc_site_intelligence_page]</code></p>
             <p><code>[sc_site_intelligence_unmapped]</code></p>

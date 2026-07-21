@@ -1,6 +1,6 @@
-# Site Intelligence v3.7.2 — Analytics and Public-Value Measurement
+# Site Intelligence v3.8.0 — Analytics and Public-Value Measurement
 
-Site Intelligence v3.7.2 measures whether Live Intelligence helps visitors reach evidence, sources, maps, Site Intelligence workspaces, and Decision Studio without building visitor profiles.
+Site Intelligence v3.8.0 measures whether Live Intelligence helps visitors reach evidence, sources, maps, Site Intelligence workspaces, and Decision Studio without building visitor profiles.
 
 ## Delivered
 

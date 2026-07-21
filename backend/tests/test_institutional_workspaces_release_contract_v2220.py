@@ -6,11 +6,11 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_release_contract_markers():
     checks = {
-        "backend/app/version.py": ['APP_VERSION = "3.7.2"', 'RELEASE_NAME = "Connected Public Intelligence and Evidence Platform"'],
-        "backend/app/institutional_workspaces_v2220.py": ['RELEASE_VERSION = "3.7.2"', "def create_workspace(", "def add_member(", "def review_evidence(", "def export_workspace("],
+        "backend/app/version.py": ['APP_VERSION = "3.8.0"', 'RELEASE_NAME = "Connected Public Intelligence and Evidence Platform"'],
+        "backend/app/institutional_workspaces_v2220.py": ['RELEASE_VERSION = "3.8.0"', "def create_workspace(", "def add_member(", "def review_evidence(", "def export_workspace("],
         "backend/public_app/index.html": ['data-route="workspaces"', 'id="institutionalWorkspaceStudio"'],
-        "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": ['Version: 3.7.2', 'sc_public_institutional_workspaces', 'sc_institutional_workspaces_control_center'],
-        "README.md": ["Current release:** v3.7.2 — Connected Public Intelligence and Evidence Platform"],
+        "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": ['Version: 3.8.0', 'sc_public_institutional_workspaces', 'sc_institutional_workspaces_control_center'],
+        "README.md": ["Current release:** v3.8.0 — Connected Public Intelligence and Evidence Platform"],
     }
     for relative, markers in checks.items():
         text = (ROOT / relative).read_text(encoding="utf-8")
@@ -33,7 +33,7 @@ def test_governance_manifest_blocks_unsafe_claims():
 def test_service_worker_and_app_include_workspace_assets():
     sw = (ROOT / "backend/public_app/service-worker.js").read_text(encoding="utf-8")
     app = (ROOT / "backend/public_app/assets/app.js").read_text(encoding="utf-8")
-    assert 'const RELEASE="3.7.2"' in sw
+    assert 'const RELEASE="3.8.0"' in sw
     assert '"/app/assets/workspaces-v2220.css"' in sw
     assert '"/app/assets/workspaces-v2220.js"' in sw
     assert "window.SCInstitutionalWorkspacesV2220" in app

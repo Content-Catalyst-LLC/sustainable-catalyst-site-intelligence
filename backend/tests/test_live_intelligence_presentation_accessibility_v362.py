@@ -12,7 +12,7 @@ client = TestClient(app)
 def test_public_presentation_policy_contract():
     payload = presentation_policy()
     assert payload["schema"] == "sc-site-intelligence-live-intelligence-presentation/1.0"
-    assert payload["version"] == "3.7.2"
+    assert payload["version"] == "3.8.0"
     assert payload["supported_presentations"] == ["ticker", "static", "manual"]
     assert payload["supported_mobile_presentations"] == ["rotator", "stacked", "marquee", "hidden"]
     assert payload["motion"]["reduced_motion_default"] == "static"
@@ -25,7 +25,7 @@ def test_public_presentation_policy_contract():
 def test_public_presentation_policy_endpoint():
     response = client.get("/public/live-intelligence/presentation-policy")
     assert response.status_code == 200
-    assert response.json()["version"] == "3.7.2"
+    assert response.json()["version"] == "3.8.0"
 
 
 def test_wordpress_presentation_controls_and_no_js_fallback():
@@ -75,7 +75,7 @@ def test_frontend_supports_static_manual_stacked_and_bounded_announcements():
 def test_css_supports_static_manual_stacked_zoom_and_forced_colors():
     css = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.css").read_text(encoding="utf-8")
     for marker in [
-        "v3.7.2 — Live Intelligence presentation",
+        "v3.8.0 — Live Intelligence presentation",
         ".scsi-live-intelligence.is-static-mode",
         ".scsi-live-intelligence.is-manual-mode",
         ".scsi-live-intelligence.is-mobile-stacked",
