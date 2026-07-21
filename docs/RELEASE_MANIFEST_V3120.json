@@ -1,0 +1,24 @@
+{
+  "schema": "sc-site-intelligence-release-governance/1.0",
+  "version": "3.12.0",
+  "release": "Publication Adapters, Institutional Handoffs, and Release Governance",
+  "approved_editorial_workspace_required": true,
+  "release_validation_required": true,
+  "separate_release_approval_required": true,
+  "supported_adapters": [
+    "publications",
+    "knowledge_library",
+    "decision_studio",
+    "wordpress_package",
+    "download"
+  ],
+  "package_checksums_required": true,
+  "manual_handoff_receipts_retained": true,
+  "evidence_mutation_allowed": false,
+  "automatic_publication": false,
+  "automatic_wordpress_write": false,
+  "institutional_write_performed": false,
+  "credentials_stored": false,
+  "recipient_identities_stored": false,
+  "advertising_or_affiliate_content": false
+}

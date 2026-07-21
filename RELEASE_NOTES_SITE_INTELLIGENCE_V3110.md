@@ -1,6 +1,6 @@
-# Site Intelligence v3.11.0 — Editorial Workspace, Review Queues, and Publication Orchestration
+# Site Intelligence v3.12.0 — Editorial Workspace, Review Queues, and Publication Orchestration
 
-Site Intelligence v3.11.0 extends source-linked Live Intelligence briefings with a governed editorial workspace.
+Site Intelligence v3.12.0 extends source-linked Live Intelligence briefings with a governed editorial workspace.
 
 ## Delivered
 

@@ -4207,10 +4207,44 @@
     });
   }
 
+  function setupLiveIntelligencePublicationReleases() {
+    document.querySelectorAll('[data-scsi-live-publication-releases]').forEach(function (root) {
+      const output = root.querySelector('.scsi-live-publication-releases__output');
+      const policyEndpoint = root.dataset.policyEndpoint || '';
+      const adaptersEndpoint = root.dataset.adaptersEndpoint || '';
+      const statusEndpoint = root.dataset.statusEndpoint || '';
+      if (!output || !policyEndpoint || !adaptersEndpoint || !statusEndpoint) return;
+      Promise.all([fetchJson(policyEndpoint), fetchJson(adaptersEndpoint), fetchJson(statusEndpoint)]).then(function (responses) {
+        const policy = responses[0] || {};
+        const catalog = responses[1] || {};
+        const status = responses[2] || {};
+        const counts = status.status_counts || {};
+        const metrics = [
+          ['Release packages', status.release_count || 0],
+          ['Validated', counts.validated || 0],
+          ['Approved', status.approved_count || 0],
+          ['Manual handoffs', status.handoff_count || 0],
+          ['Adapters', (catalog.adapters || []).length || status.adapter_count || 0]
+        ];
+        output.innerHTML = '<div class="scsi-live-subscriptions__grid">' + metrics.map(function (item) {
+          return '<article class="scsi-live-subscriptions__item"><p class="scsi-live-subscriptions__meta">RELEASE GOVERNANCE</p><h3>' + escapeHtml(String(item[1])) + '</h3><p>' + escapeHtml(item[0]) + '</p></article>';
+        }).join('') + '</div>' +
+          '<p class="scsi-live-subscriptions__tags"><span>Package checksums</span><span>Separate release approval</span><span>Manual destination handoff</span><span>No destination write</span></p>';
+        output.setAttribute('aria-busy', 'false');
+        const muted = root.querySelector('.scsi-muted');
+        if (muted) muted.textContent = policy.principle || 'Checksum-verified release packages with controlled manual handoffs.';
+      }).catch(function () {
+        output.innerHTML = '<p class="scsi-live-subscriptions__empty">Publication release status is temporarily unavailable.</p>';
+        output.setAttribute('aria-busy', 'false');
+      });
+    });
+  }
+
   function init() {
     setupActivePageLinks();
     setupLiveIntelligenceSubscriptions();
     setupLiveIntelligenceEditorial();
+    setupLiveIntelligencePublicationReleases();
     setupLaunchActions();
     setupResponsiveEmbeds();
     setupLiveIntelligence();

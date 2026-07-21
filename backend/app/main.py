@@ -104,6 +104,10 @@ from .live_intelligence_briefings_v3100 import (
 from .live_intelligence_editorial_workspace_v3110 import (
     LiveIntelligenceEditorialWorkspace, editorial_workspace_policy as live_intelligence_editorial_policy,
 )
+from .live_intelligence_publication_releases_v3120 import (
+    LiveIntelligencePublicationReleaseCenter, adapter_catalog as live_intelligence_publication_adapter_catalog,
+    publication_release_policy as live_intelligence_publication_release_policy,
+)
 from .live_intelligence_source_operations_v320 import LiveIntelligenceSourceOperations
 from .live_intelligence_context_v340 import (
     build_signal_context, build_signal_evidence, context_policy as live_signal_context_policy,
@@ -2263,7 +2267,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.11.0 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v3.12.0 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -2405,7 +2409,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.11.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v3.12.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -2522,7 +2526,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.11.0 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v3.12.0 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -2644,7 +2648,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.11.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v3.12.0 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -2780,7 +2784,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.11.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v3.12.0 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -5957,7 +5961,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v3.11.0 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v3.12.0 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -6191,7 +6195,7 @@ def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     return build_reliability(settings)
 
 
-# Site Intelligence v3.11.0 — Open Standards, Federation, and Institutional Data Exchange.
+# Site Intelligence v3.12.0 — Open Standards, Federation, and Institutional Data Exchange.
 def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
     if not settings.federation_exchange_enabled:
         raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
@@ -6281,7 +6285,7 @@ def admin_federation_accept_import_endpoint(request: dict = Body(default={}), se
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.11.0 — Security, Privacy, Governance, and Production Scale.
+# Site Intelligence v3.12.0 — Security, Privacy, Governance, and Production Scale.
 def _production_governance(settings: Settings) -> ProductionGovernanceCenter:
     if not settings.production_governance_enabled:
         raise HTTPException(status_code=503, detail="Production governance is disabled.")
@@ -6430,7 +6434,7 @@ def admin_production_governance_deployment_endpoint(request: dict = Body(default
 def admin_production_governance_load_probe_endpoint(requests: int = Query(default=250, ge=1, le=5000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return _production_governance(settings).load_probe(requests)
 
-# Site Intelligence v3.11.0 — Connected Live Intelligence Surface.
+# Site Intelligence v3.12.0 — Connected Live Intelligence Surface.
 def _connected_platform(settings: Settings) -> ConnectedPublicIntelligencePlatform:
     if not settings.connected_platform_enabled:
         raise HTTPException(status_code=404, detail="Connected platform is disabled.")
@@ -6673,6 +6677,16 @@ def _live_intelligence_editorial(settings: Settings) -> LiveIntelligenceEditoria
     if not settings.live_intelligence_editorial_enabled:
         raise HTTPException(status_code=404, detail="Live Intelligence editorial workspaces are disabled.")
     return LiveIntelligenceEditorialWorkspace(settings, briefing_center=_live_intelligence_briefings(settings))
+
+
+def _live_intelligence_publication_releases(settings: Settings) -> LiveIntelligencePublicationReleaseCenter:
+    if not settings.live_intelligence_publication_releases_enabled:
+        raise HTTPException(status_code=404, detail="Live Intelligence publication releases are disabled.")
+    briefings = _live_intelligence_briefings(settings)
+    editorial = LiveIntelligenceEditorialWorkspace(settings, briefing_center=briefings)
+    return LiveIntelligencePublicationReleaseCenter(
+        settings, editorial_center=editorial, briefing_center=briefings,
+    )
 
 
 @app.get("/public/live-intelligence/surfaces")
@@ -6923,6 +6937,89 @@ def admin_live_intelligence_editorial_history_endpoint(
     settings: Settings = Depends(get_settings), _: None = Depends(require_token),
 ):
     return {"ok": True, "version": APP_VERSION, "history": _live_intelligence_editorial(settings).history(workspace_id, limit=limit)}
+
+
+@app.get("/public/live-intelligence/publication-releases/policy")
+def public_live_intelligence_publication_release_policy_endpoint():
+    return live_intelligence_publication_release_policy()
+
+
+@app.get("/public/live-intelligence/publication-releases/adapters")
+def public_live_intelligence_publication_release_adapters_endpoint():
+    return live_intelligence_publication_adapter_catalog()
+
+
+@app.get("/public/live-intelligence/publication-releases/status")
+def public_live_intelligence_publication_release_status_endpoint(settings: Settings = Depends(get_settings)):
+    return _live_intelligence_publication_releases(settings).status()
+
+
+@app.get("/admin/live-intelligence/publication-releases")
+def admin_live_intelligence_publication_releases_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _live_intelligence_publication_releases(settings).control_center()
+
+
+@app.post("/admin/live-intelligence/publication-releases/prepare")
+def admin_live_intelligence_publication_release_prepare_endpoint(request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _live_intelligence_publication_releases(settings).prepare(request)
+    except (KeyError, ValueError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/admin/live-intelligence/publication-releases/{release_id}")
+def admin_live_intelligence_publication_release_endpoint(release_id: str, settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return {"ok": True, "version": APP_VERSION, "release": _live_intelligence_publication_releases(settings).release(release_id)}
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Publication release not found.") from exc
+
+
+@app.post("/admin/live-intelligence/publication-releases/{release_id}/validate")
+def admin_live_intelligence_publication_release_validate_endpoint(release_id: str, request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _live_intelligence_publication_releases(settings).validate(release_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Publication release not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/live-intelligence/publication-releases/{release_id}/approve")
+def admin_live_intelligence_publication_release_approve_endpoint(release_id: str, request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _live_intelligence_publication_releases(settings).approve(release_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Publication release not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/live-intelligence/publication-releases/{release_id}/handoffs")
+def admin_live_intelligence_publication_release_handoff_endpoint(release_id: str, request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _live_intelligence_publication_releases(settings).create_handoff(release_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Publication release not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/admin/live-intelligence/publication-releases/{release_id}/package")
+def admin_live_intelligence_publication_release_package_endpoint(release_id: str, format: str = Query(default="json", pattern="^(json|markdown)$"), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        media_type, body = _live_intelligence_publication_releases(settings).package_payload(release_id, format)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Publication release not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    suffix = "json" if format == "json" else "md"
+    return Response(content=body, media_type=media_type, headers={"Content-Disposition": f'attachment; filename="live-intelligence-publication-release-{release_id}.{suffix}"', "X-SC-Site-Intelligence-Version": APP_VERSION})
+
+
+@app.get("/admin/live-intelligence/publication-releases/{release_id}/history")
+def admin_live_intelligence_publication_release_history_endpoint(release_id: str, limit: int = Query(default=200, ge=1, le=1000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return {"ok": True, "version": APP_VERSION, "history": _live_intelligence_publication_releases(settings).history(release_id, limit)}
 
 
 @app.get("/public/live-intelligence/subscriptions/policy")

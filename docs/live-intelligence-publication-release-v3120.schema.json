@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Live Intelligence Publication Release",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "release_id",
+    "workspace_id",
+    "status",
+    "payload_sha256",
+    "packages"
+  ],
+  "properties": {
+    "release_id": {
+      "type": "string"
+    },
+    "workspace_id": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "prepared",
+        "validated",
+        "validation_failed",
+        "approved",
+        "handoff_ready"
+      ]
+    },
+    "payload_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "packages": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "automatic_wordpress_write": {
+      "const": false
+    },
+    "institutional_write_performed": {
+      "const": false
+    }
+  }
+}

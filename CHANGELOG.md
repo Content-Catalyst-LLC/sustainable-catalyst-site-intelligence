@@ -1,6 +1,6 @@
 # Changelog
 
-## 3.11.0 — Editorial Workspace, Review Queues, and Publication Orchestration
+## 3.12.0 — Editorial Workspace, Review Queues, and Publication Orchestration
 
 - Added editorial assignments and review queues over source-linked Live Intelligence briefings.
 - Added copy-only revisions with immutable evidence, claim-source links, values, chronology, and provenance.
@@ -9,7 +9,7 @@
 - Added public aggregate workflow policy/status routes and a read-only WordPress governance surface.
 - Prohibited automatic publication, automatic WordPress writes, recipient identity storage, and adapter writes.
 
-## 3.11.0 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
+## 3.12.0 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
 
 - Added source-linked editorial drafts from canonical signals, reviewed alerts, and approved digests.
 - Added deterministic claims, evidence, chronology, limitations, JSON and Markdown packages.
@@ -965,3 +965,12 @@
 ## v0.9.0 — Admin Registry Manager and Source Control Tools
 
 - Added registry manager, source manager, module manager, shortcode catalog, visibility matrix, source-control guidance, and admin overview.
+
+
+## 3.12.0
+
+- Added governed publication release candidates and adapter-specific packages.
+- Added evidence, content, workspace, payload, package, and release checksum validation.
+- Added separate release approval and manual handoff receipts.
+- Added public policy, adapter catalog, aggregate status, protected administration, and WordPress governance surface.
+- Preserved no-write, no-credential, no-recipient-identity, and no-automatic-publication boundaries.

@@ -2,7 +2,7 @@
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = {
-    "backend/app/version.py": ['APP_VERSION = "3.11.0"'],
+    "backend/app/version.py": ['APP_VERSION = "3.12.0"'],
     "backend/app/live_intelligence_subscriptions_v390.py": [
         "POLICY_SCHEMA_VERSION", "WATCHLIST_SCHEMA_VERSION", "ALERT_SCHEMA_VERSION",
         "DIGEST_SCHEMA_VERSION", "HANDOFF_SCHEMA_VERSION", "class LiveIntelligenceSubscriptionCenter",
@@ -30,19 +30,19 @@ REQUIRED = {
         "SC_SI_LIVE_INTELLIGENCE_SUBSCRIPTION_HANDOFFS_PATH",
     ],
     "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": [
-        "Version: 3.11.0", "sc_live_intelligence_watchlists", "sc_live_intelligence_alerts",
+        "Version: 3.12.0", "sc_live_intelligence_watchlists", "sc_live_intelligence_alerts",
         "sc_live_intelligence_digests", "rest_live_intelligence_subscription_policy",
         "rest_live_intelligence_subscription_feed", "performs no direct email delivery",
     ],
     "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js": [
         "setupLiveIntelligenceSubscriptions", "scsi-live-subscriptions", "feed_urls",
     ],
-    "README.md": ["v3.11.0 — Signal Subscriptions, Alerts, and Scheduled Intelligence"],
+    "README.md": ["v3.12.0 — Signal Subscriptions, Alerts, and Scheduled Intelligence"],
     "RELEASE_NOTES_SITE_INTELLIGENCE_V390.md": [
         "Signal Subscriptions, Alerts, and Scheduled Intelligence", "subscriber profiles", "provider-neutral",
     ],
     "docs/RELEASE_MANIFEST_V390.json": [
-        '"version": "3.11.0"', '"subscriber_profiles_stored": false',
+        '"version": "3.12.0"', '"subscriber_profiles_stored": false',
         '"automatic_publication": false', '"direct_email_delivery": false',
     ],
     "docs/live-intelligence-watchlist-v390.schema.json": ["Live Intelligence Watchlist", "numeric_above"],
@@ -55,4 +55,4 @@ for relative, needles in REQUIRED.items():
     for needle in needles:
         if needle not in text:
             raise SystemExit(f"Missing {needle!r} in {relative}")
-print("Site Intelligence v3.11.0 release contract passed.")
+print("Site Intelligence v3.12.0 release contract passed.")

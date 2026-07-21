@@ -1,0 +1,51 @@
+Sustainable Catalyst Site Intelligence v3.12.0
+Publication Adapters, Institutional Handoffs, and Release Governance
+Build validation report
+
+Release status: PASS
+
+Implemented capabilities
+- Approved editorial workspaces become immutable publication release candidates.
+- Adapter-specific packages for Publications, Knowledge Library, Decision Studio, WordPress manual import, and download.
+- Evidence, content, workspace, payload, package, release, event, and handoff checksums.
+- Validation gates detect evidence drift, workspace changes, content changes, and package integrity failures.
+- Separate release approval from preparation and validation.
+- Public, unlisted, and internal visibility metadata with optional embargo timestamps.
+- JSON and Markdown package exports.
+- Manual handoff receipts that perform no destination write.
+- Public policy, adapter catalog, aggregate status, protected administration, and read-only WordPress governance surface.
+- No automatic publication, automatic WordPress write, institutional adapter write, credential storage, webhook delivery, or recipient identity storage.
+
+Regression validation
+- 718 backend tests passed.
+- v3.11.0 compatibility and chained release contracts passed.
+- v3.12.0 release contract passed.
+
+Static integrity validation
+- 174 Python files parsed successfully.
+- 93 JSON files validated successfully.
+- 1 webmanifest validated successfully.
+- 670 unique HTML IDs verified.
+- 27 JavaScript files parsed successfully.
+- WordPress PHP entry point passed php -l.
+
+Release integrity
+- Immutable manifest release: 3.12.0.
+- Immutable manifest file count: 758.
+- Repository ZIP integrity: PASS.
+- WordPress ZIP integrity: PASS.
+
+Deployment status
+- Built and locally validated only.
+- Not pushed to GitHub.
+- Not deployed to Render.
+- Not installed in WordPress.
+
+Installer rehearsal
+- Repository ZIP checksum verified.
+- Release overlay verified against the 758-file immutable manifest.
+- 718-test regression suite passed inside the installed checkout.
+- Python, JSON, webmanifest, HTML ID, JavaScript, and PHP checks passed.
+- WordPress package rebuilt and verified.
+- Disposable local Git commit created successfully.
+- Push disabled; no GitHub repository was modified.
