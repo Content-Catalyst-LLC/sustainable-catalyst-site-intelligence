@@ -1,0 +1,50 @@
+Sustainable Catalyst Site Intelligence v3.11.0
+Editorial Workspace, Review Queues, and Publication Orchestration
+Build validation report
+
+Release status: PASS
+
+Implemented capabilities
+- Role-based editorial assignments using handles and role labels rather than contact records.
+- Revision history for title, deck, executive summary, key observations, and limitations.
+- Immutable canonical evidence, claim-source links, observations, chronology, and provenance.
+- Drafting, in-review, changes-requested, approved, and rejected workflow states.
+- Separation-of-duty validation for final approval.
+- Provider-neutral orchestration manifests for Publications, Knowledge Library, Decision Studio, and download workflows.
+- Public aggregate editorial policy/status routes and protected administrative workflow routes.
+- Read-only WordPress editorial-governance shortcode and proxy routes.
+- No automatic publication, WordPress write-back, adapter write, evidence mutation, or recipient identity storage.
+
+Regression validation
+- 707 backend tests passed.
+- v3.10.0 compatibility and release contract passed.
+- v3.11.0 release contract passed.
+
+Static integrity validation
+- 171 Python files parsed successfully.
+- 91 JSON files validated successfully.
+- 1 webmanifest validated successfully.
+- 670 unique HTML IDs verified.
+- 27 JavaScript files parsed successfully.
+- WordPress PHP entry point passed php -l.
+
+Release integrity
+- Immutable manifest release: 3.11.0.
+- Immutable manifest file count: 745.
+- Repository ZIP integrity: PASS.
+- WordPress ZIP integrity: PASS.
+
+Deployment status
+- Built and locally validated only.
+- Not pushed to GitHub.
+- Not deployed to Render.
+- Not installed in WordPress.
+
+Installer rehearsal
+- Repository ZIP checksum verified.
+- Release overlay verified against the 745-file immutable manifest.
+- 707-test regression suite passed inside the installed checkout.
+- Python, JSON, webmanifest, HTML ID, JavaScript, and PHP checks passed.
+- WordPress package rebuilt and verified.
+- Disposable local Git commit created successfully.
+- Push disabled; no GitHub repository was modified.

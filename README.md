@@ -1,6 +1,31 @@
 # Sustainable Catalyst Site Intelligence
 
-## v3.10.0 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
+## v3.11.0 — Editorial Workspace, Review Queues, and Publication Orchestration
+
+- Adds role-based assignments, review queues, change requests, and retained revision history for Live Intelligence briefings.
+- Allows editorial refinement of title, deck, summary, observations, and limitations while keeping evidence, claim-source links, values, chronology, and provenance immutable.
+- Requires separation of duties for final approval.
+- Produces provider-neutral publication orchestration manifests for Publications, Knowledge Library, Decision Studio, and downloads.
+- Performs no automatic publication, no automatic WordPress write, and no publication-adapter write.
+
+Primary v3.11.0 routes:
+
+- `GET /public/live-intelligence/editorial/policy`
+- `GET /public/live-intelligence/editorial/status`
+- `GET /admin/live-intelligence/editorial`
+- `POST /admin/live-intelligence/editorial/workspaces`
+- `POST /admin/live-intelligence/editorial/workspaces/{workspace_id}/assign`
+- `POST /admin/live-intelligence/editorial/workspaces/{workspace_id}/revisions`
+- `POST /admin/live-intelligence/editorial/workspaces/{workspace_id}/submit`
+- `POST /admin/live-intelligence/editorial/workspaces/{workspace_id}/review`
+- `POST /admin/live-intelligence/editorial/workspaces/{workspace_id}/orchestrate`
+- `GET /admin/live-intelligence/editorial/workspaces/{workspace_id}/history`
+
+WordPress public governance surface:
+
+- `[sc_live_intelligence_editorial_workspace]`
+
+## v3.11.0 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
 
 - Converts canonical signals, reviewed alerts, and approved digests into source-linked editorial drafts.
 - Adds deterministic claims, evidence, chronology, limitations, and source packages without autonomous interpretation.
@@ -8,7 +33,7 @@
 - Adds public JSON and Markdown packages plus provider-neutral Library, Publications, Decision Studio, and download handoffs.
 - Performs no automatic publication, no automatic WordPress write, no fabricated sourcing, and no unsupported causal inference.
 
-Primary v3.10.0 routes:
+Primary v3.11.0 routes:
 
 - `GET /public/live-intelligence/briefings/policy`
 - `GET /public/live-intelligence/briefings/templates`
@@ -24,7 +49,7 @@ WordPress public surface:
 
 - `[sc_live_intelligence_briefings]`
 
-## v3.10.0 — Signal Subscriptions, Alerts, and Scheduled Intelligence
+## v3.11.0 — Signal Subscriptions, Alerts, and Scheduled Intelligence
 
 - Adds governed public and private watchlists over the canonical Live Intelligence signal contract.
 - Supports deterministic family, source, freshness, geography, destination, text, and numeric-threshold rules.
@@ -34,7 +59,7 @@ WordPress public surface:
 - Stores no subscriber profiles, recipient identities, email addresses, cookies, IP addresses, or session identifiers.
 - Performs no direct email delivery, webhook calls, automatic publication, or emergency dispatch.
 
-Primary v3.10.0 routes:
+Primary v3.11.0 routes:
 
 - `GET /public/live-intelligence/subscriptions/policy`
 - `GET /public/live-intelligence/subscriptions/preferences`
@@ -53,7 +78,7 @@ WordPress public surfaces:
 - `[sc_live_intelligence_alerts]`
 - `[sc_live_intelligence_digests]`
 
-## v3.10.0 — Connected Live Intelligence Surface
+## v3.11.0 — Connected Live Intelligence Surface
 
 - Reuses one canonical Live Intelligence signal contract across eight bounded public surfaces.
 - Adds homepage, static strip, channel, publication, Knowledge Library, Advisory, Lab, and public-safe external embed profiles.
@@ -62,7 +87,7 @@ WordPress public surfaces:
 - Adds surface-specific family filters, destination allowlists, presentation defaults, limits, placement guidance, and WordPress shortcode presets.
 - Keeps external embeds free of administrative routes, private operational metadata, and browser-visible API credentials.
 
-Primary v3.10.0 routes:
+Primary v3.11.0 routes:
 
 - `GET /public/live-intelligence/surfaces`
 - `GET /public/live-intelligence/surface-policy`
@@ -80,7 +105,7 @@ WordPress presets:
 - `[sc_live_intelligence_lab]`
 - `[sc_live_intelligence_embed]`
 
-## v3.10.0 — Analytics and Public-Value Measurement
+## v3.11.0 — Analytics and Public-Value Measurement
 
 - Measures component and signal impressions, evidence and source opens, workspace, map, and Decision Studio handoffs.
 - Reports engagement by family, freshness, destination, viewport, motion mode, delivery state, and source.
@@ -90,7 +115,7 @@ WordPress presets:
 - Rejects IP addresses, cookies, visitor or session IDs, user agents, referrers, page paths, URLs, free text, and arbitrary metadata.
 - Keeps click-through rate subordinate to evidence discovery, accessibility, and delivery quality.
 
-Primary v3.10.0 routes:
+Primary v3.11.0 routes:
 
 - `POST /public/live-intelligence/analytics/events`
 - `GET /public/live-intelligence/analytics-policy`
@@ -98,7 +123,7 @@ Primary v3.10.0 routes:
 - `GET /public/live-intelligence/analytics/source-reliability`
 - `GET /admin/live-intelligence/analytics`
 
-## v3.10.0 — Signal Relevance and Rotation Intelligence
+## v3.11.0 — Signal Relevance and Rotation Intelligence
 
 - Selects homepage signals from a larger validated candidate pool before applying the requested display limit.
 - Returns transparent freshness, source-health, public-relevance, editorial, diversity, and repetition components.
@@ -108,7 +133,7 @@ Primary v3.10.0 routes:
 - Adds public rotation policy/status routes and protected rotation administration routes.
 - Preserves v3.7.0 gateway destinations, v3.6.2 accessibility controls, and v3.6.1 reliability.
 
-Primary v3.10.0 routes:
+Primary v3.11.0 routes:
 
 - `/public/live-intelligence/homepage`
 - `/public/live-intelligence/rotation-policy`
@@ -116,7 +141,7 @@ Primary v3.10.0 routes:
 - `/admin/live-intelligence/rotation`
 - `/admin/live-intelligence/rotation/signals/{signal_id}`
 
-## v3.10.0 — Homepage Intelligence Gateway
+## v3.11.0 — Homepage Intelligence Gateway
 
 - Adds a bounded homepage feed with an eight-signal default and twelve-signal maximum.
 - Enriches every signal with a public family, structured geography, formatted value, and responsible-use metadata.
@@ -129,9 +154,9 @@ Primary v3.10.0 routes:
 
 Site Intelligence v3.6.2 adds a governed presentation layer to the validated Live Intelligence feed. Administrators can choose a slow moving ticker, a fully static strip, or a manual signal viewer. Reduced-motion visitors automatically receive a static or manual experience, and mobile visitors may use a rotator, stacked cards, a marquee, or a hidden surface.
 
-**Current release:** v3.10.0 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
+**Current release:** v3.11.0 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
 
-Platform foundation — **Current release:** v3.10.0 — Connected Public Intelligence and Evidence Platform
+Platform foundation — **Current release:** v3.11.0 — Connected Public Intelligence and Evidence Platform
 
 Primary v3.6.2 routes:
 
@@ -152,11 +177,11 @@ The WordPress surface adds maximum-visible-signal controls, dedicated assistive 
 
 The v3.6.1 validation, explicit freshness states, malformed-record isolation, duplicate and expired-signal suppression, same-query last-known-good recovery, public status contract, and WordPress proxy-cache boundaries remain active beneath the v3.6.2 presentation layer.
 
-### v3.10.0 — Topic and Regional Channels
+### v3.11.0 — Topic and Regional Channels
 
 The v3.5.0 channel directory, topic and regional filters, country routing, source selection, and honest empty-result policy remain version-aligned and active in v3.6.2.
 
-### v3.10.0 — Signal Context and Drill-Down
+### v3.11.0 — Signal Context and Drill-Down
 
 The v3.4.0 context, evidence, source-lineage, map, Decision Studio, ranking-explanation, and responsible-use capability remains version-aligned and active in v3.6.2.
 

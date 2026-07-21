@@ -101,6 +101,9 @@ from .live_intelligence_briefings_v3100 import (
     LiveIntelligenceBriefingCenter, briefing_policy as live_intelligence_briefing_policy,
     briefing_templates as live_intelligence_briefing_templates,
 )
+from .live_intelligence_editorial_workspace_v3110 import (
+    LiveIntelligenceEditorialWorkspace, editorial_workspace_policy as live_intelligence_editorial_policy,
+)
 from .live_intelligence_source_operations_v320 import LiveIntelligenceSourceOperations
 from .live_intelligence_context_v340 import (
     build_signal_context, build_signal_evidence, context_policy as live_signal_context_policy,
@@ -2260,7 +2263,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.10.0 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v3.11.0 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -2402,7 +2405,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.10.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v3.11.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -2519,7 +2522,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.10.0 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v3.11.0 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -2641,7 +2644,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.10.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v3.11.0 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -2777,7 +2780,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.10.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v3.11.0 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -5954,7 +5957,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v3.10.0 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v3.11.0 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -6188,7 +6191,7 @@ def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     return build_reliability(settings)
 
 
-# Site Intelligence v3.10.0 — Open Standards, Federation, and Institutional Data Exchange.
+# Site Intelligence v3.11.0 — Open Standards, Federation, and Institutional Data Exchange.
 def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
     if not settings.federation_exchange_enabled:
         raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
@@ -6278,7 +6281,7 @@ def admin_federation_accept_import_endpoint(request: dict = Body(default={}), se
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.10.0 — Security, Privacy, Governance, and Production Scale.
+# Site Intelligence v3.11.0 — Security, Privacy, Governance, and Production Scale.
 def _production_governance(settings: Settings) -> ProductionGovernanceCenter:
     if not settings.production_governance_enabled:
         raise HTTPException(status_code=503, detail="Production governance is disabled.")
@@ -6427,7 +6430,7 @@ def admin_production_governance_deployment_endpoint(request: dict = Body(default
 def admin_production_governance_load_probe_endpoint(requests: int = Query(default=250, ge=1, le=5000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return _production_governance(settings).load_probe(requests)
 
-# Site Intelligence v3.10.0 — Connected Live Intelligence Surface.
+# Site Intelligence v3.11.0 — Connected Live Intelligence Surface.
 def _connected_platform(settings: Settings) -> ConnectedPublicIntelligencePlatform:
     if not settings.connected_platform_enabled:
         raise HTTPException(status_code=404, detail="Connected platform is disabled.")
@@ -6666,6 +6669,12 @@ def _live_intelligence_briefings(settings: Settings) -> LiveIntelligenceBriefing
     )
 
 
+def _live_intelligence_editorial(settings: Settings) -> LiveIntelligenceEditorialWorkspace:
+    if not settings.live_intelligence_editorial_enabled:
+        raise HTTPException(status_code=404, detail="Live Intelligence editorial workspaces are disabled.")
+    return LiveIntelligenceEditorialWorkspace(settings, briefing_center=_live_intelligence_briefings(settings))
+
+
 @app.get("/public/live-intelligence/surfaces")
 def public_live_intelligence_surfaces_endpoint():
     return live_intelligence_surface_directory()
@@ -6811,6 +6820,109 @@ def admin_live_intelligence_briefing_handoff_endpoint(
         raise HTTPException(status_code=404, detail="Live Intelligence briefing not found.") from exc
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/public/live-intelligence/editorial/policy")
+def public_live_intelligence_editorial_policy_endpoint():
+    return live_intelligence_editorial_policy()
+
+
+@app.get("/public/live-intelligence/editorial/status")
+def public_live_intelligence_editorial_status_endpoint(settings: Settings = Depends(get_settings)):
+    return _live_intelligence_editorial(settings).status()
+
+
+@app.get("/admin/live-intelligence/editorial")
+def admin_live_intelligence_editorial_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _live_intelligence_editorial(settings).control_center()
+
+
+@app.post("/admin/live-intelligence/editorial/workspaces")
+def admin_live_intelligence_editorial_workspace_create_endpoint(
+    request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token),
+):
+    try:
+        return _live_intelligence_editorial(settings).create_workspace(request)
+    except (ValueError, KeyError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/admin/live-intelligence/editorial/workspaces/{workspace_id}")
+def admin_live_intelligence_editorial_workspace_endpoint(
+    workspace_id: str, settings: Settings = Depends(get_settings), _: None = Depends(require_token),
+):
+    try:
+        return {"ok": True, "version": APP_VERSION, "workspace": _live_intelligence_editorial(settings).workspace(workspace_id)}
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Editorial workspace not found.") from exc
+
+
+@app.post("/admin/live-intelligence/editorial/workspaces/{workspace_id}/assign")
+def admin_live_intelligence_editorial_assign_endpoint(
+    workspace_id: str, request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token),
+):
+    try:
+        return _live_intelligence_editorial(settings).assign(workspace_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Editorial workspace not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/live-intelligence/editorial/workspaces/{workspace_id}/revisions")
+def admin_live_intelligence_editorial_revision_endpoint(
+    workspace_id: str, request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token),
+):
+    try:
+        return _live_intelligence_editorial(settings).add_revision(workspace_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Editorial workspace not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/live-intelligence/editorial/workspaces/{workspace_id}/submit")
+def admin_live_intelligence_editorial_submit_endpoint(
+    workspace_id: str, request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token),
+):
+    try:
+        return _live_intelligence_editorial(settings).submit_for_review(workspace_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Editorial workspace not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/live-intelligence/editorial/workspaces/{workspace_id}/review")
+def admin_live_intelligence_editorial_review_endpoint(
+    workspace_id: str, request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token),
+):
+    try:
+        return _live_intelligence_editorial(settings).review(workspace_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Editorial workspace not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/live-intelligence/editorial/workspaces/{workspace_id}/orchestrate")
+def admin_live_intelligence_editorial_orchestrate_endpoint(
+    workspace_id: str, request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token),
+):
+    try:
+        return _live_intelligence_editorial(settings).orchestrate(workspace_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Editorial workspace or briefing not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/admin/live-intelligence/editorial/workspaces/{workspace_id}/history")
+def admin_live_intelligence_editorial_history_endpoint(
+    workspace_id: str, limit: int = Query(default=200, ge=1, le=1000),
+    settings: Settings = Depends(get_settings), _: None = Depends(require_token),
+):
+    return {"ok": True, "version": APP_VERSION, "history": _live_intelligence_editorial(settings).history(workspace_id, limit=limit)}
 
 
 @app.get("/public/live-intelligence/subscriptions/policy")

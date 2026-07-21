@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/live-intelligence-editorial-workspace-v3110.schema.json",
+  "title": "Live Intelligence Editorial Workspace",
+  "type": "object",
+  "required": ["schema", "workspace_id", "briefing_id", "status", "content", "immutable_source_digest", "revision_number"],
+  "properties": {
+    "schema": {"const": "sc-site-intelligence-editorial-workspace/1.0"},
+    "workspace_id": {"type": "string", "minLength": 1},
+    "briefing_id": {"type": "string", "minLength": 1},
+    "status": {"enum": ["drafting", "in_review", "changes_requested", "approved", "rejected"]},
+    "assigned_role": {"enum": ["author", "editor", "fact_checker", "legal_reviewer", "publisher"]},
+    "revision_number": {"type": "integer", "minimum": 0},
+    "immutable_source_digest": {"type": "string", "minLength": 64, "maxLength": 64},
+    "content": {
+      "type": "object",
+      "properties": {
+        "title": {"type": "string"},
+        "deck": {"type": "string"},
+        "executive_summary": {"type": "string"},
+        "key_observations": {"type": "array", "items": {"type": "string"}},
+        "limitations": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "publication_ready": {"type": "boolean"},
+    "automatic_publication": {"const": false},
+    "automatic_wordpress_write": {"const": false}
+  }
+}

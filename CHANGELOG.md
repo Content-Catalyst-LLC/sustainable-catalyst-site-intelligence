@@ -1,6 +1,15 @@
 # Changelog
 
-## 3.10.0 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
+## 3.11.0 — Editorial Workspace, Review Queues, and Publication Orchestration
+
+- Added editorial assignments and review queues over source-linked Live Intelligence briefings.
+- Added copy-only revisions with immutable evidence, claim-source links, values, chronology, and provenance.
+- Added change-request, rejection, approval, and separation-of-duty gates.
+- Added provider-neutral Publications, Knowledge Library, Decision Studio, and download orchestration manifests.
+- Added public aggregate workflow policy/status routes and a read-only WordPress governance surface.
+- Prohibited automatic publication, automatic WordPress writes, recipient identity storage, and adapter writes.
+
+## 3.11.0 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
 
 - Added source-linked editorial drafts from canonical signals, reviewed alerts, and approved digests.
 - Added deterministic claims, evidence, chronology, limitations, JSON and Markdown packages.

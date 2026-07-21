@@ -7,7 +7,7 @@ client = TestClient(app)
 def test_root_reports_v1141():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json()["version"] == "3.10.0"
+    assert response.json()["version"] == "3.11.0"
 
 def test_visual_system_assets_present():
     base = Path(__file__).resolve().parents[1] / "public_app"

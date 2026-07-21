@@ -4176,9 +4176,41 @@
     });
   }
 
+  function setupLiveIntelligenceEditorial() {
+    document.querySelectorAll('[data-scsi-live-editorial]').forEach(function (root) {
+      const output = root.querySelector('.scsi-live-editorial__output');
+      const policyEndpoint = root.dataset.policyEndpoint || '';
+      const statusEndpoint = root.dataset.statusEndpoint || '';
+      if (!output || !policyEndpoint || !statusEndpoint) return;
+      Promise.all([fetchJson(policyEndpoint), fetchJson(statusEndpoint)]).then(function (responses) {
+        const policy = responses[0] || {};
+        const status = responses[1] || {};
+        const counts = status.status_counts || {};
+        const metrics = [
+          ['Drafting', counts.drafting || 0],
+          ['In review', counts.in_review || 0],
+          ['Changes requested', counts.changes_requested || 0],
+          ['Publication ready', status.publication_ready_count || 0],
+          ['Orchestrations', status.orchestration_count || 0]
+        ];
+        output.innerHTML = '<div class="scsi-live-subscriptions__grid">' + metrics.map(function (item) {
+          return '<article class="scsi-live-subscriptions__item"><p class="scsi-live-subscriptions__meta">EDITORIAL PIPELINE</p><h3>' + escapeHtml(String(item[1])) + '</h3><p>' + escapeHtml(item[0]) + '</p></article>';
+        }).join('') + '</div>' +
+          '<p class="scsi-live-subscriptions__tags"><span>Human approval required</span><span>Separation of duties</span><span>Immutable evidence</span><span>No automatic WordPress write</span></p>';
+        output.setAttribute('aria-busy', 'false');
+        const muted = root.querySelector('.scsi-muted');
+        if (muted) muted.textContent = policy.principle || 'Accountable editorial review with source-bound evidence.';
+      }).catch(function () {
+        output.innerHTML = '<p class="scsi-live-subscriptions__empty">Editorial workflow status is temporarily unavailable.</p>';
+        output.setAttribute('aria-busy', 'false');
+      });
+    });
+  }
+
   function init() {
     setupActivePageLinks();
     setupLiveIntelligenceSubscriptions();
+    setupLiveIntelligenceEditorial();
     setupLaunchActions();
     setupResponsiveEmbeds();
     setupLiveIntelligence();

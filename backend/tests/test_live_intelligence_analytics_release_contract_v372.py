@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_v372_release_contract_markers():
     requirements = {
-        "backend/app/version.py": ['APP_VERSION = "3.10.0"'],
+        "backend/app/version.py": ['APP_VERSION = "3.11.0"'],
         "backend/app/config.py": [
             "live_intelligence_analytics_enabled", "live_intelligence_analytics_state_path",
             "live_intelligence_analytics_retention_days", "live_intelligence_analytics_max_signal_buckets",
@@ -26,19 +26,19 @@ def test_v372_release_contract_markers():
             "/admin/live-intelligence/analytics", '"aggregate_counters_only": True',
         ],
         "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": [
-            "Version: 3.10.0", "rest_live_intelligence_analytics_events",
+            "Version: 3.11.0", "rest_live_intelligence_analytics_events",
             "rest_live_intelligence_analytics_summary", "rest_live_intelligence_analytics_source_reliability",
         ],
         "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js": [
             "sendLiveAnalytics", "signal_impression", "feed_load_failure", "reduced_motion_use",
             "Live Intelligence uses its own aggregate-only telemetry contract",
         ],
-        "README.md": ["v3.10.0 — Analytics and Public-Value Measurement"],
+        "README.md": ["v3.11.0 — Analytics and Public-Value Measurement"],
         "RELEASE_NOTES_SITE_INTELLIGENCE_V372.md": [
             "Analytics and Public-Value Measurement", "Raw events are never stored",
         ],
         "docs/RELEASE_MANIFEST_V372.json": [
-            '"version": "3.10.0"', '"raw_events_stored": false',
+            '"version": "3.11.0"', '"raw_events_stored": false',
             '"individual_user_tracking": false', '"click_through_rate_only": false',
         ],
     }

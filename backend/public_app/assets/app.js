@@ -23,7 +23,7 @@
     }
     throw last;
   }
-  const APP_VERSION="3.10.0";
+  const APP_VERSION="3.11.0";
   let heightFrame=0;
   function documentHeight(){
     const body=document.body,root=document.documentElement;
@@ -1738,5 +1738,5 @@ document.head.appendChild(visualStyle);
 
 window.addEventListener("load",reportHeight,{once:true});window.addEventListener("resize",reportHeight,{passive:true});window.visualViewport?.addEventListener("resize",reportHeight,{passive:true});window.addEventListener("message",event=>{if(event.data?.type==="SC_SI_REQUEST_HEIGHT")reportHeight()});if("ResizeObserver" in window)new ResizeObserver(reportHeight).observe(document.body);
 
-/* v3.10.0 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v3.10.0 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v3.11.0 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v3.11.0 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

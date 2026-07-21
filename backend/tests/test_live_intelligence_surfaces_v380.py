@@ -98,7 +98,7 @@ def test_external_embed_preserves_source_and_freshness_contracts():
 
 def test_surface_policy_discloses_canonical_contracts_and_boundaries():
     policy = surface_policy()
-    assert policy["version"] == "3.10.0"
+    assert policy["version"] == "3.11.0"
     assert policy["canonical_contracts"]["freshness_status"] == "/public/live-intelligence/status"
     assert any("may not rewrite" in item for item in policy["boundaries"])
     assert any("Advertising" in item for item in policy["boundaries"])
@@ -134,7 +134,7 @@ def test_surface_feed_endpoint_reuses_gateway_and_rotation(monkeypatch, tmp_path
         live_intelligence_analytics_state_path=str(tmp_path / "analytics.json"),
     )
     monkeypatch.setattr(main, "build_live_intelligence", lambda *args, **kwargs: {
-        "ok": True, "version": "3.10.0", "signals": [sample_signal("event.research", "science_environment")],
+        "ok": True, "version": "3.11.0", "signals": [sample_signal("event.research", "science_environment")],
         "display": {}, "boundaries": [],
     })
     monkeypatch.setattr(main, "apply_live_intelligence_rotation_policy", lambda payload, *args, **kwargs: payload)

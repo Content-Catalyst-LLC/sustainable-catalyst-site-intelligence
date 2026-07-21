@@ -6,11 +6,11 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_release_contract_files_and_markers():
     checks = {
-        "backend/app/version.py": ['APP_VERSION = "3.10.0"', 'RELEASE_NAME = "Connected Public Intelligence and Evidence Platform"'],
+        "backend/app/version.py": ['APP_VERSION = "3.11.0"', 'RELEASE_NAME = "Connected Public Intelligence and Evidence Platform"'],
         "backend/app/config.py": ["intelligence_publishing_enabled", "intelligence_publishing_projects_path", "intelligence_publishing_versions_path"],
-        "backend/app/intelligence_publishing_v2200.py": ['RELEASE_VERSION = "3.10.0"', "def create_project(", "def add_block(", "def decide_review(", "def publish_project(", "def story_map(", "def export_publication(", "def wordpress_handoff("],
+        "backend/app/intelligence_publishing_v2200.py": ['RELEASE_VERSION = "3.11.0"', "def create_project(", "def add_block(", "def decide_review(", "def publish_project(", "def story_map(", "def export_publication(", "def wordpress_handoff("],
         "backend/app/main.py": ['"/public/intelligence-publishing"', '"/public/intelligence-publications"', '"/admin/intelligence-publishing/control-center"', '"/admin/intelligence-publishing/projects/{project_id}/publish"'],
-        "backend/data/intelligence_publishing_policy_v2200.json": ['"version": "3.10.0"', "human editorial approval", "does not establish causation", "read-only"],
+        "backend/data/intelligence_publishing_policy_v2200.json": ['"version": "3.11.0"', "human editorial approval", "does not establish causation", "read-only"],
     }
     for relative, markers in checks.items():
         text = (ROOT / relative).read_text(encoding="utf-8")

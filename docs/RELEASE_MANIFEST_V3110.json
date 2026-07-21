@@ -1,0 +1,20 @@
+{
+  "schema": "sc-site-intelligence-release-governance/1.0",
+  "version": "3.11.0",
+  "release": "Editorial Workspace, Review Queues, and Publication Orchestration",
+  "source_linked_briefings": true,
+  "editorial_assignments": true,
+  "revision_history_retained": true,
+  "separation_of_duties": true,
+  "supported_roles": ["author", "editor", "fact_checker", "legal_reviewer", "publisher"],
+  "supported_adapters": ["publications", "knowledge_library", "decision_studio", "download"],
+  "editable_fields": ["title", "deck", "executive_summary", "key_observations", "limitations"],
+  "evidence_mutation_allowed": false,
+  "claim_source_mutation_allowed": false,
+  "automatic_publication": false,
+  "automatic_wordpress_write": false,
+  "adapter_write_performed": false,
+  "recipient_identities_stored": false,
+  "provider_neutral_orchestration": true,
+  "advertising_or_affiliate_content": false
+}
