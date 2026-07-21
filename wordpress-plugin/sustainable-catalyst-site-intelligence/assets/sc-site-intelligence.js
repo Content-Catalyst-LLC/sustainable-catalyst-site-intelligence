@@ -4310,6 +4310,42 @@
     });
   }
 
+  function setupLiveIntelligencePublicArchive() {
+    document.querySelectorAll('[data-scsi-live-public-archive]').forEach(function (root) {
+      const output = root.querySelector('.scsi-live-public-archive__output');
+      const policyEndpoint = root.dataset.policyEndpoint || '';
+      const statusEndpoint = root.dataset.statusEndpoint || '';
+      const recordsEndpoint = root.dataset.recordsEndpoint || '';
+      if (!output || !policyEndpoint || !statusEndpoint || !recordsEndpoint) return;
+      Promise.all([fetchJson(policyEndpoint), fetchJson(statusEndpoint), fetchJson(recordsEndpoint)]).then(function (responses) {
+        const policy = responses[0] || {};
+        const status = responses[1] || {};
+        const archive = responses[2] || {};
+        const metrics = [
+          ['Public archive records', status.public_archive_record_count || 0],
+          ['Publication releases', status.publication_release_count || 0],
+          ['Change notices', status.public_change_notice_count || 0],
+          ['Public briefings', status.public_briefing_count || 0]
+        ];
+        const records = (archive.records || []).slice(0, 4);
+        output.innerHTML = '<div class="scsi-live-subscriptions__grid">' + metrics.map(function (item) {
+          return '<article class="scsi-live-subscriptions__item"><p class="scsi-live-subscriptions__meta">PUBLIC RECORD ARCHIVE</p><h3>' + escapeHtml(String(item[1])) + '</h3><p>' + escapeHtml(item[0]) + '</p></article>';
+        }).join('') + '</div>' +
+          '<p class="scsi-live-subscriptions__tags"><span>Append-only ledger</span><span>Checksum-bound records</span><span>Provenance chain</span><span>No remote deposit</span></p>' +
+          (records.length ? '<div class="scsi-live-subscriptions__list">' + records.map(function (record) {
+            return '<article class="scsi-live-subscriptions__item"><p class="scsi-live-subscriptions__meta">' + escapeHtml(String(record.source_type || 'public record').replaceAll('_', ' ').toUpperCase()) + '</p><h3>' + escapeHtml(record.title || 'Archived public record') + '</h3><p>' + escapeHtml(record.preservation_note || '') + '</p></article>';
+          }).join('') + '</div>' : '<p class="scsi-live-subscriptions__empty">No approved public archive records have been published.</p>');
+        output.setAttribute('aria-busy', 'false');
+        const muted = root.querySelector('.scsi-muted');
+        if (muted) muted.textContent = policy.principle || 'Append-only public record preservation with inspectable provenance.';
+      }).catch(function () {
+        output.innerHTML = '<p class="scsi-live-subscriptions__empty">Public archive status is temporarily unavailable.</p>';
+        output.setAttribute('aria-busy', 'false');
+      });
+    });
+  }
+
+
   function init() {
     setupActivePageLinks();
     setupLiveIntelligenceSubscriptions();
@@ -4317,6 +4353,7 @@
     setupLiveIntelligencePublicationReleases();
     setupLiveIntelligenceReleaseOperations();
     setupLiveIntelligenceChangeHistory();
+    setupLiveIntelligencePublicArchive();
     setupLaunchActions();
     setupResponsiveEmbeds();
     setupLiveIntelligence();

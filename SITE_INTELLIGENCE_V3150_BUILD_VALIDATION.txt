@@ -1,0 +1,45 @@
+Sustainable Catalyst Site Intelligence v3.15.0
+Public Record Archive, Provenance Ledger, and Long-Term Preservation
+Build validation date: 2026-07-21
+
+RESULT: PASS
+
+Feature validation
+- Approved-public-source gating: PASS
+- Public-safe canonical source snapshots: PASS
+- Source drift detection: PASS
+- Source and archive-record SHA-256 checksums: PASS
+- Append-only archive chain linkage: PASS
+- Preservation manifests and retention classes: PASS
+- Separate preparation, verification, and approval roles: PASS
+- JSON and Markdown preservation packages: PASS
+- Manual institutional custody handoffs: PASS
+- Identity and credential rejection: PASS
+- Read-only public archive routes: PASS
+- WordPress public archive surface: PASS
+
+Regression validation
+- Complete backend suite: 750 passed
+- Installer integration gate: 40 passed
+- Current v3.15.0 release contract: PASS
+
+Static integrity
+- Python files parsed: 328
+- JSON files validated: 97
+- Unique public-app HTML IDs: 672
+- JavaScript files syntax-checked: 27
+- WordPress PHP syntax: PASS
+- Repository ZIP integrity: PASS
+- WordPress ZIP integrity: PASS
+- Disposable installer Git commit: PASS
+- GitHub push performed: NO
+
+Governance boundaries verified
+- Source record mutation: NO
+- Archive record deletion: NO
+- Destination write: NO
+- Remote institutional deposit: NO
+- Automatic publication: NO
+- Credentials stored: NO
+- Recipient identities stored: NO
+- Advertising or affiliate content: NO

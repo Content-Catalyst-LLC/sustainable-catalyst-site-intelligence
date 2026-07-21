@@ -1,0 +1,23 @@
+{
+  "schema": "sc-site-intelligence-public-archive-governance/1.0",
+  "version": "3.15.0",
+  "release": "Public Record Archive, Provenance Ledger, and Long-Term Preservation",
+  "approved_public_source_required": true,
+  "separate_verification_required": true,
+  "separate_archive_approval_required": true,
+  "append_only_ledger": true,
+  "source_checksum_required": true,
+  "record_checksum_required": true,
+  "chain_checksum_required": true,
+  "preservation_manifest_required": true,
+  "retention_class_required": true,
+  "json_and_markdown_packages": true,
+  "manual_custody_receipts_retained": true,
+  "source_record_mutated": false,
+  "archive_record_deleted": false,
+  "destination_write_performed": false,
+  "remote_deposit_performed": false,
+  "credentials_stored": false,
+  "recipient_identities_stored": false,
+  "advertising_or_affiliate_content": false
+}

@@ -5,7 +5,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_v3110_release_contract():
     requirements = {
-        "backend/app/version.py": ['APP_VERSION = "3.14.0"'],
+        "backend/app/version.py": ['APP_VERSION = "3.15.0"'],
         "backend/app/live_intelligence_editorial_workspace_v3110.py": [
             "POLICY_SCHEMA_VERSION", "WORKSPACE_SCHEMA_VERSION", "REVISION_SCHEMA_VERSION",
             "ORCHESTRATION_SCHEMA_VERSION", "class LiveIntelligenceEditorialWorkspace",
@@ -23,15 +23,15 @@ def test_v3110_release_contract():
             "live_intelligence_editorial_orchestration_path", "live_intelligence_editorial_require_separation_of_duties",
         ],
         "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": [
-            "Version: 3.14.0", "sc_live_intelligence_editorial_workspace",
+            "Version: 3.15.0", "sc_live_intelligence_editorial_workspace",
             "rest_live_intelligence_editorial_policy", "rest_live_intelligence_editorial_status",
         ],
-        "README.md": ["v3.14.0 — Editorial Workspace, Review Queues, and Publication Orchestration"],
+        "README.md": ["v3.15.0 — Editorial Workspace, Review Queues, and Publication Orchestration"],
         "RELEASE_NOTES_SITE_INTELLIGENCE_V3110.md": [
             "Editorial Workspace", "separation of duties", "revision history", "provider-neutral",
         ],
         "docs/RELEASE_MANIFEST_V3110.json": [
-            '"version": "3.14.0"', '"automatic_publication": false',
+            '"version": "3.15.0"', '"automatic_publication": false',
             '"automatic_wordpress_write": false', '"evidence_mutation_allowed": false',
         ],
     }

@@ -1,6 +1,6 @@
 """Governed editorial workspaces for Live Intelligence briefings.
 
-Site Intelligence v3.14.0 adds assignment, revision history, separation-of-duty
+Site Intelligence v3.15.0 adds assignment, revision history, separation-of-duty
 review gates, and provider-neutral publication orchestration. Editorial changes
 may refine explanatory copy, but cannot rewrite canonical evidence, claim-source
 links, observed values, or provenance. No adapter write is performed here.

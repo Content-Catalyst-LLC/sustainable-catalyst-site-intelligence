@@ -1,6 +1,6 @@
 {
   "schema": "sc-site-intelligence-knowledge-graph-registry/1.0",
-  "version": "3.14.0",
+  "version": "3.15.0",
   "entity_types": ["country", "region", "organization", "source", "indicator", "event", "document", "model", "claim", "dataset", "publication", "methodology", "workspace", "place", "program", "policy"],
   "relationship_types": [
     {"id": "located_in", "label": "Located in", "directed": true, "inverse": "contains", "evidence_required": true, "causal": false},

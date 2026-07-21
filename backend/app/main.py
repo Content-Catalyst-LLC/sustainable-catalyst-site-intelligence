@@ -114,6 +114,9 @@ from .live_intelligence_release_operations_v3130 import (
 from .live_intelligence_change_history_v3140 import (
     LiveIntelligenceChangeHistoryCenter, change_history_policy as live_intelligence_change_history_policy,
 )
+from .live_intelligence_public_archive_v3150 import (
+    LiveIntelligencePublicArchive, public_archive_policy as live_intelligence_public_archive_policy,
+)
 from .live_intelligence_source_operations_v320 import LiveIntelligenceSourceOperations
 from .live_intelligence_context_v340 import (
     build_signal_context, build_signal_evidence, context_policy as live_signal_context_policy,
@@ -2273,7 +2276,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.14.0 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v3.15.0 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -2415,7 +2418,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.14.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v3.15.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -2532,7 +2535,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.14.0 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v3.15.0 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -2654,7 +2657,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.14.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v3.15.0 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -2790,7 +2793,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.14.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v3.15.0 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -5967,7 +5970,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v3.14.0 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v3.15.0 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -6201,7 +6204,7 @@ def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     return build_reliability(settings)
 
 
-# Site Intelligence v3.14.0 — Open Standards, Federation, and Institutional Data Exchange.
+# Site Intelligence v3.15.0 — Open Standards, Federation, and Institutional Data Exchange.
 def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
     if not settings.federation_exchange_enabled:
         raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
@@ -6291,7 +6294,7 @@ def admin_federation_accept_import_endpoint(request: dict = Body(default={}), se
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.14.0 — Security, Privacy, Governance, and Production Scale.
+# Site Intelligence v3.15.0 — Security, Privacy, Governance, and Production Scale.
 def _production_governance(settings: Settings) -> ProductionGovernanceCenter:
     if not settings.production_governance_enabled:
         raise HTTPException(status_code=503, detail="Production governance is disabled.")
@@ -6440,7 +6443,7 @@ def admin_production_governance_deployment_endpoint(request: dict = Body(default
 def admin_production_governance_load_probe_endpoint(requests: int = Query(default=250, ge=1, le=5000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return _production_governance(settings).load_probe(requests)
 
-# Site Intelligence v3.14.0 — Connected Live Intelligence Surface.
+# Site Intelligence v3.15.0 — Connected Live Intelligence Surface.
 def _connected_platform(settings: Settings) -> ConnectedPublicIntelligencePlatform:
     if not settings.connected_platform_enabled:
         raise HTTPException(status_code=404, detail="Connected platform is disabled.")
@@ -6710,6 +6713,20 @@ def _live_intelligence_change_history(settings: Settings) -> LiveIntelligenceCha
     operations = LiveIntelligenceReleaseOperationsCenter(settings, publication_center=publications)
     return LiveIntelligenceChangeHistoryCenter(
         settings, release_operations_center=operations, publication_center=publications,
+    )
+
+
+def _live_intelligence_public_archive(settings: Settings) -> LiveIntelligencePublicArchive:
+    if not settings.live_intelligence_public_archive_enabled:
+        raise HTTPException(status_code=404, detail="Live Intelligence public archive is disabled.")
+    publications = _live_intelligence_publication_releases(settings)
+    briefings = _live_intelligence_briefings(settings)
+    operations = LiveIntelligenceReleaseOperationsCenter(settings, publication_center=publications)
+    change_history = LiveIntelligenceChangeHistoryCenter(
+        settings, release_operations_center=operations, publication_center=publications,
+    )
+    return LiveIntelligencePublicArchive(
+        settings, publication_center=publications, change_history_center=change_history, briefing_center=briefings,
     )
 
 
@@ -7232,6 +7249,104 @@ def admin_live_intelligence_change_history_handoff_endpoint(notice_id: str, requ
 @app.get("/admin/live-intelligence/change-history/{entity_id}/history")
 def admin_live_intelligence_change_history_events_endpoint(entity_id: str, limit: int = Query(default=200, ge=1, le=1000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return {"ok": True, "version": APP_VERSION, "history": _live_intelligence_change_history(settings).history(entity_id, limit)}
+
+
+@app.get("/public/live-intelligence/archive/policy")
+def public_live_intelligence_archive_policy_endpoint():
+    return live_intelligence_public_archive_policy()
+
+
+@app.get("/public/live-intelligence/archive/status")
+def public_live_intelligence_archive_status_endpoint(settings: Settings = Depends(get_settings)):
+    return _live_intelligence_public_archive(settings).status()
+
+
+@app.get("/public/live-intelligence/archive")
+def public_live_intelligence_archive_endpoint(
+    limit: int = Query(default=50, ge=1, le=500),
+    settings: Settings = Depends(get_settings),
+):
+    rows = _live_intelligence_public_archive(settings).records(public=True, limit=limit)
+    return {"ok": True, "version": APP_VERSION, "count": len(rows), "records": rows, "append_only_ledger": True}
+
+
+@app.get("/public/live-intelligence/archive/{archive_id}")
+def public_live_intelligence_archive_record_endpoint(archive_id: str, settings: Settings = Depends(get_settings)):
+    try:
+        record = _live_intelligence_public_archive(settings).record(archive_id, public=True)
+        verification = _live_intelligence_public_archive(settings).verify_public_record(archive_id)
+        return {"ok": True, "version": APP_VERSION, "record": record, "verification": verification}
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Public archive record not found.") from exc
+
+
+@app.get("/public/live-intelligence/archive/sources/{source_id:path}")
+def public_live_intelligence_archive_lineage_endpoint(source_id: str, settings: Settings = Depends(get_settings)):
+    return _live_intelligence_public_archive(settings).public_lineage(source_id)
+
+
+@app.get("/admin/live-intelligence/archive")
+def admin_live_intelligence_archive_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    center = _live_intelligence_public_archive(settings)
+    return {"ok": True, "version": APP_VERSION, "status": center.status(), "records": center.records(limit=500)}
+
+
+@app.post("/admin/live-intelligence/archive/records")
+def admin_live_intelligence_archive_create_endpoint(request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _live_intelligence_public_archive(settings).create_record(request)
+    except (KeyError, ValueError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/live-intelligence/archive/records/{archive_id}/verify")
+def admin_live_intelligence_archive_verify_endpoint(archive_id: str, request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _live_intelligence_public_archive(settings).verify_record(archive_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Archive record not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/live-intelligence/archive/records/{archive_id}/approve")
+def admin_live_intelligence_archive_approve_endpoint(archive_id: str, request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _live_intelligence_public_archive(settings).approve_record(archive_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Archive record not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/admin/live-intelligence/archive/records/{archive_id}/package")
+def admin_live_intelligence_archive_package_endpoint(
+    archive_id: str, format: str = Query(default="json", pattern="^(json|markdown)$"),
+    settings: Settings = Depends(get_settings), _: None = Depends(require_token),
+):
+    try:
+        media_type, body = _live_intelligence_public_archive(settings).package_payload(archive_id, format)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Archive record not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    suffix = "json" if format == "json" else "md"
+    return Response(content=body, media_type=media_type, headers={"Content-Disposition": f'attachment; filename="live-intelligence-public-archive-{archive_id}.{suffix}"', "X-SC-Site-Intelligence-Version": APP_VERSION})
+
+
+@app.post("/admin/live-intelligence/archive/records/{archive_id}/handoffs")
+def admin_live_intelligence_archive_handoff_endpoint(archive_id: str, request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _live_intelligence_public_archive(settings).create_handoff(archive_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Archive record not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/admin/live-intelligence/archive/{entity_id}/history")
+def admin_live_intelligence_archive_history_endpoint(entity_id: str, limit: int = Query(default=200, ge=1, le=1000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return {"ok": True, "version": APP_VERSION, "history": _live_intelligence_public_archive(settings).history(entity_id, limit)}
 
 
 @app.get("/public/live-intelligence/subscriptions/policy")

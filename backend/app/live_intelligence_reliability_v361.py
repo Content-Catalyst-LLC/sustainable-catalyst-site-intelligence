@@ -1,6 +1,6 @@
 """Reliability, freshness, and last-known-good delivery for Live Intelligence.
 
-Site Intelligence v3.14.0 keeps the v3.5.0 channel and ranking engine intact and
+Site Intelligence v3.15.0 keeps the v3.5.0 channel and ranking engine intact and
 adds a public-safe reliability boundary around it. The boundary validates each
 signal, assigns explicit freshness states, suppresses expired observations, and
 recovers only from a last-known-good payload created for the same query.

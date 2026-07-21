@@ -1,3 +1,12 @@
+# v3.15.0 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
+
+- Added checksum-bound archival records for approved public releases, notices, and briefings.
+- Added append-only provenance-chain links and preservation manifests.
+- Added retention classes, source-drift verification, and separation-of-duty approval.
+- Added JSON/Markdown packages and manual institutional custody handoffs.
+- Added read-only public archive and WordPress surfaces.
+- Preserved no-delete, no-write, no-remote-deposit, and no-identity-storage boundaries.
+
 # Changelog
 
 ## 3.13.0 — Release Monitoring, Rollback, and Post-Publication Governance
@@ -985,7 +994,7 @@
 - Added public policy, adapter catalog, aggregate status, protected administration, and WordPress governance surface.
 - Preserved no-write, no-credential, no-recipient-identity, and no-automatic-publication boundaries.
 
-## 3.14.0
+## 3.15.0
 
 - Added append-only public correction, clarification, replacement, retraction, and rollback notices.
 - Added release lineage linking affected and replacement release checksums.

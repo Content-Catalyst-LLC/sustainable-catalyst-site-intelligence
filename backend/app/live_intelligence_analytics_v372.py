@@ -1,4 +1,4 @@
-"""Privacy-preserving public-value analytics for Live Intelligence v3.14.0.
+"""Privacy-preserving public-value analytics for Live Intelligence v3.15.0.
 
 The analytics layer stores aggregate counters only. It rejects identity, session,
 network, referrer, free-text, and full-URL fields; it never writes raw events.

@@ -46,7 +46,7 @@ def signal(signal_id="signal.one", *, age_minutes=5, source_name="Public Source"
 def payload(signals=None, **extra):
     result = {
         "ok": True,
-        "version": "3.14.0",
+        "version": "3.15.0",
         "schema": "sc-site-intelligence-live-intelligence/1.4",
         "generated_at": NOW.isoformat(),
         "category": "all",
@@ -155,7 +155,7 @@ def test_status_contract_exposes_health_without_cache_path(tmp_path, monkeypatch
 def test_public_status_route_uses_reliability_contract(monkeypatch):
     monkeypatch.setattr(main, "live_intelligence_status", lambda settings: {
         "ok": True,
-        "version": "3.14.0",
+        "version": "3.15.0",
         "schema": reliability.RELIABILITY_SCHEMA_VERSION,
         "service": "available",
         "signal_count": 3,
