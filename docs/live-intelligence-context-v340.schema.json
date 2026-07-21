@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/live-intelligence-context-v340.schema.json",
+  "title": "Site Intelligence Live Signal Context v3.4.0",
+  "type": "object",
+  "required": ["ok", "version", "schema", "generated_at", "signal", "sources", "timeline", "location", "methodology", "evidence", "boundaries"],
+  "properties": {
+    "ok": {"const": true},
+    "version": {"type": "string"},
+    "schema": {"const": "sc-site-intelligence-live-signal-context/1.0"},
+    "generated_at": {"type": "string"},
+    "signal": {"type": "object"},
+    "sources": {"type": "array", "items": {"type": "object"}},
+    "timeline": {"type": "array", "items": {"type": "object"}},
+    "location": {"type": "object"},
+    "related_routes": {"type": "array", "items": {"type": "object"}},
+    "related_research": {"type": "array", "items": {"type": "object"}},
+    "methodology": {"type": "object"},
+    "actions": {"type": "object"},
+    "evidence": {"type": "object"},
+    "boundaries": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.3.0
+ * Version: 3.4.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.3.0';
+    const VERSION = '3.4.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -34,6 +34,9 @@ final class SC_Site_Intelligence_Plugin {
         add_action('admin_notices', [$this, 'backend_version_notice']);
         add_action('rest_api_init', [$this, 'register_rest_routes']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue_assets']);
+        add_action('init', [$this, 'register_live_intelligence_rewrite']);
+        add_filter('query_vars', [$this, 'live_intelligence_query_vars']);
+        add_action('template_redirect', [$this, 'render_live_intelligence_signal_page']);
         add_action('wp', [$this, 'register_live_intelligence_placement']);
         add_filter('body_class', [$this, 'live_intelligence_body_classes']);
         add_shortcode('sc_live_intelligence', [$this, 'live_intelligence_shortcode']);
@@ -277,6 +280,7 @@ final class SC_Site_Intelligence_Plugin {
             'live_intelligence_show_updated' => '1',
             'live_intelligence_show_cluster_sources' => '1',
             'live_intelligence_selection_context' => '1',
+            'live_intelligence_detail_links' => '1',
         ];
     }
 
@@ -357,6 +361,8 @@ final class SC_Site_Intelligence_Plugin {
         self::clear_all_build_info_cache();
         delete_option(self::BUILD_INFO_STATUS_OPTION);
         update_option(self::INSTALLED_VERSION_OPTION, self::VERSION, false);
+        add_rewrite_rule('^live-intelligence/signal/([^/]+)/?$', 'index.php?scsi_live_signal=$matches[1]', 'top');
+        flush_rewrite_rules(false);
     }
 
     public function maybe_upgrade() {
@@ -365,7 +371,7 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v3.3.0 preserves placement, feed, and theme choices while adding readability defaults.
+        // v3.4.0 preserves placement, feed, readability, mobile, and theme choices while adding public signal context.
         // The former 42-second default is migrated to the balanced 30-second preset.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
@@ -400,12 +406,16 @@ final class SC_Site_Intelligence_Plugin {
                     $stored_options[$key] = $label;
                 }
             }
+            if (!isset($stored_options['live_intelligence_detail_links'])) {
+                $stored_options['live_intelligence_detail_links'] = '1';
+            }
             update_option(self::OPTION_KEY, $stored_options, false);
         }
 
         self::clear_all_build_info_cache();
         delete_option(self::BUILD_INFO_STATUS_OPTION);
         update_option(self::INSTALLED_VERSION_OPTION, self::VERSION, false);
+        flush_rewrite_rules(false);
     }
 
     private static function build_info_cache_key($backend) {
@@ -682,6 +692,7 @@ final class SC_Site_Intelligence_Plugin {
         $output['live_intelligence_show_updated'] = !empty($input['live_intelligence_show_updated']) ? '1' : '0';
         $output['live_intelligence_show_cluster_sources'] = !empty($input['live_intelligence_show_cluster_sources']) ? '1' : '0';
         $output['live_intelligence_selection_context'] = !empty($input['live_intelligence_selection_context']) ? '1' : '0';
+        $output['live_intelligence_detail_links'] = !empty($input['live_intelligence_detail_links']) ? '1' : '0';
 
         self::clear_backend_build_info_cache((string) ($current['backend_url'] ?? ''));
         self::clear_backend_build_info_cache((string) ($output['backend_url'] ?? ''));
@@ -728,6 +739,21 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/live-intelligence/ranking-policy', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_live_intelligence_ranking_policy'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/context-policy', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_context_policy'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/signals/(?P<signal_id>[^/]+)', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_signal_context'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/signals/(?P<signal_id>[^/]+)/evidence', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_signal_evidence'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/live-intelligence/sources', [
@@ -2594,6 +2620,23 @@ final class SC_Site_Intelligence_Plugin {
         return is_wp_error($result) ? $result : rest_ensure_response($result);
     }
 
+    public function rest_live_intelligence_context_policy(WP_REST_Request $request) {
+        $result = $this->backend_request('public/live-intelligence/context-policy');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_signal_context(WP_REST_Request $request) {
+        $signal_id = sanitize_text_field(rawurldecode((string) $request->get_param('signal_id')));
+        $result = $this->backend_request('public/live-intelligence/signals/' . rawurlencode($signal_id));
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_signal_evidence(WP_REST_Request $request) {
+        $signal_id = sanitize_text_field(rawurldecode((string) $request->get_param('signal_id')));
+        $result = $this->backend_request('public/live-intelligence/signals/' . rawurlencode($signal_id) . '/evidence');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
     public function rest_live_intelligence_sources(WP_REST_Request $request) {
         $refresh = sanitize_text_field((string) $request->get_param('refresh'));
         $endpoint = 'public/live-intelligence/sources' . ($refresh !== '' ? '?refresh=' . rawurlencode($refresh) : '');
@@ -2638,6 +2681,160 @@ final class SC_Site_Intelligence_Plugin {
         return is_wp_error($result) ? $result : rest_ensure_response($result);
     }
 
+    public function register_live_intelligence_rewrite() {
+        add_rewrite_rule('^live-intelligence/signal/([^/]+)/?$', 'index.php?scsi_live_signal=$matches[1]', 'top');
+    }
+
+    public function live_intelligence_query_vars($vars) {
+        $vars[] = 'scsi_live_signal';
+        return array_values(array_unique($vars));
+    }
+
+    private function live_signal_context_link($signal_id) {
+        return home_url('/live-intelligence/signal/' . rawurlencode((string) $signal_id) . '/');
+    }
+
+    private function live_signal_external_link($url, $label, $class = '') {
+        $url = esc_url((string) $url);
+        if ($url === '') {
+            return '';
+        }
+        return '<a class="' . esc_attr($class) . '" href="' . $url . '" target="_blank" rel="noopener noreferrer">' . esc_html($label) . '</a>';
+    }
+
+    public function render_live_intelligence_signal_page() {
+        $raw_signal_id = (string) get_query_var('scsi_live_signal');
+        if ($raw_signal_id === '') {
+            return;
+        }
+        $signal_id = sanitize_text_field(rawurldecode($raw_signal_id));
+        $context = $this->backend_request('public/live-intelligence/signals/' . rawurlencode($signal_id));
+        if (is_wp_error($context) || !is_array($context) || empty($context['signal'])) {
+            status_header(503);
+            nocache_headers();
+            get_header();
+            echo '<main id="primary" class="site-main scsi-live-signal-context"><article class="scsi-live-signal-context__panel"><p class="scsi-eyebrow">Live Intelligence</p><h1>Signal context temporarily unavailable</h1><p>The ticker signal is no longer in the current feed or the Site Intelligence backend could not be reached. The original source may still be available from the ticker after the feed refreshes.</p><p><a class="scsi-live-signal-button" href="' . esc_url(home_url('/')) . '">Return to Sustainable Catalyst</a></p></article></main>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            get_footer();
+            exit;
+        }
+
+        status_header(200);
+        nocache_headers();
+        global $wp_query;
+        if ($wp_query instanceof WP_Query) {
+            $wp_query->is_404 = false;
+        }
+
+        $signal = is_array($context['signal'] ?? null) ? $context['signal'] : [];
+        $classification = is_array($context['classification'] ?? null) ? $context['classification'] : [];
+        $selection = is_array($context['selection'] ?? null) ? $context['selection'] : [];
+        $location = is_array($context['location'] ?? null) ? $context['location'] : [];
+        $methodology = is_array($context['methodology'] ?? null) ? $context['methodology'] : [];
+        $actions = is_array($context['actions'] ?? null) ? $context['actions'] : [];
+        $headline = sanitize_text_field((string) ($context['headline'] ?? $signal['value'] ?? $signal['label'] ?? 'Live Intelligence signal'));
+        $summary = sanitize_textarea_field((string) ($context['summary'] ?? ''));
+        $category_labels = self::live_intelligence_category_labels();
+        $category_id = sanitize_key((string) ($classification['category'] ?? $signal['category'] ?? 'platform'));
+        $category_label = sanitize_text_field((string) ($category_labels[$category_id] ?? ucwords(str_replace('_', ' ', $category_id))));
+        $evidence_url = rest_url(self::REST_NAMESPACE . '/live-intelligence/signals/' . rawurlencode($signal_id) . '/evidence');
+        $site_intelligence_url = home_url('/platform/site-intelligence/?signal=' . rawurlencode($signal_id));
+        $decision_studio_url = home_url('/platform/decision-studio/?source=live-intelligence&signal=' . rawurlencode($signal_id));
+        $source_url = esc_url((string) ($actions['source_url'] ?? $signal['source_url'] ?? $signal['destination_url'] ?? ''));
+
+        get_header();
+        ?>
+        <main id="primary" class="site-main scsi-live-signal-context">
+            <article class="scsi-live-signal-context__panel">
+                <nav class="scsi-live-signal-context__breadcrumb" aria-label="Live Intelligence breadcrumb">
+                    <a href="<?php echo esc_url(home_url('/')); ?>">Home</a><span aria-hidden="true">/</span><a href="<?php echo esc_url(home_url('/platform/site-intelligence/')); ?>">Site Intelligence</a><span aria-hidden="true">/</span><span aria-current="page">Signal context</span>
+                </nav>
+                <p class="scsi-eyebrow">Live Intelligence · <?php echo esc_html($category_label); ?></p>
+                <h1><?php echo esc_html($headline); ?></h1>
+                <?php if ($summary !== '') : ?><p class="scsi-live-signal-context__summary"><?php echo esc_html($summary); ?></p><?php endif; ?>
+                <div class="scsi-live-signal-context__actions" aria-label="Signal actions">
+                    <?php if ($source_url !== '') : ?><a class="scsi-live-signal-button" href="<?php echo esc_url($source_url); ?>" target="_blank" rel="noopener noreferrer">Open primary source</a><?php endif; ?>
+                    <a class="scsi-live-signal-button" href="<?php echo esc_url($site_intelligence_url); ?>">Open in Site Intelligence</a>
+                    <a class="scsi-live-signal-button" href="<?php echo esc_url($decision_studio_url); ?>">Send to Decision Studio</a>
+                    <a class="scsi-live-signal-button" href="<?php echo esc_url($evidence_url); ?>" target="_blank" rel="noopener noreferrer">Open evidence record</a>
+                </div>
+
+                <div class="scsi-live-signal-context__grid">
+                    <section>
+                        <p class="scsi-eyebrow">Classification</p>
+                        <dl>
+                            <div><dt>Category</dt><dd><?php echo esc_html($category_label); ?></dd></div>
+                            <div><dt>Feed</dt><dd><?php echo esc_html((string) ($classification['feed_id'] ?? '')); ?></dd></div>
+                            <div><dt>Status</dt><dd><?php echo esc_html((string) ($classification['status'] ?? '')); ?></dd></div>
+                            <div><dt>Data state</dt><dd><?php echo esc_html((string) ($classification['data_state'] ?? '')); ?></dd></div>
+                            <div><dt>Development state</dt><dd><?php echo esc_html((string) ($classification['development_state'] ?? '')); ?></dd></div>
+                        </dl>
+                    </section>
+                    <section>
+                        <p class="scsi-eyebrow">Why it appeared</p>
+                        <p><strong>Rank <?php echo esc_html((string) ($selection['rank'] ?? '')); ?></strong> · display-relevance score <?php echo esc_html((string) ($selection['score'] ?? '')); ?></p>
+                        <?php if (!empty($selection['reasons']) && is_array($selection['reasons'])) : ?><ul><?php foreach ($selection['reasons'] as $reason) : ?><li><?php echo esc_html((string) $reason); ?></li><?php endforeach; ?></ul><?php endif; ?>
+                        <p class="description">The score ranks display relevance. It does not measure truth, danger, accuracy, or institutional importance.</p>
+                    </section>
+                </div>
+
+                <section class="scsi-live-signal-context__section">
+                    <p class="scsi-eyebrow">Sources and lineage</p>
+                    <h2>Source records represented by this signal</h2>
+                    <ul class="scsi-live-signal-context__list">
+                        <?php foreach ((array) ($context['sources'] ?? []) as $source) : if (!is_array($source)) { continue; } ?>
+                            <li><strong><?php echo esc_html((string) ($source['name'] ?? 'Public source')); ?></strong><?php if (!empty($source['url'])) : ?> · <a href="<?php echo esc_url((string) $source['url']); ?>" target="_blank" rel="noopener noreferrer">open record</a><?php endif; ?><br /><small><?php echo esc_html((string) ($source['role'] ?? 'represented')); ?> source; independent verification is not claimed.</small></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </section>
+
+                <section class="scsi-live-signal-context__section">
+                    <p class="scsi-eyebrow">Timeline</p>
+                    <h2>Observed, updated, and selected</h2>
+                    <ol class="scsi-live-signal-context__timeline">
+                        <?php foreach ((array) ($context['timeline'] ?? []) as $event) : if (!is_array($event)) { continue; } ?>
+                            <li><strong><?php echo esc_html((string) ($event['label'] ?? $event['state'] ?? 'Update')); ?></strong><time datetime="<?php echo esc_attr((string) ($event['timestamp'] ?? '')); ?>"><?php echo esc_html((string) ($event['timestamp'] ?? '')); ?></time></li>
+                        <?php endforeach; ?>
+                    </ol>
+                </section>
+
+                <?php if (!empty($location['available'])) : ?>
+                    <section class="scsi-live-signal-context__section">
+                        <p class="scsi-eyebrow">Map context</p>
+                        <h2><?php echo esc_html((string) ($location['label'] ?? 'Source location')); ?></h2>
+                        <?php if (!empty($location['map_url'])) : ?><p><a href="<?php echo esc_url((string) $location['map_url']); ?>" target="_blank" rel="noopener noreferrer">Open source coordinates in OpenStreetMap</a></p><?php endif; ?>
+                        <p class="description"><?php echo esc_html((string) ($location['precision_note'] ?? 'Source coordinates may be approximate.')); ?></p>
+                    </section>
+                <?php endif; ?>
+
+                <div class="scsi-live-signal-context__grid">
+                    <section>
+                        <p class="scsi-eyebrow">Continue the investigation</p>
+                        <h2>Related Site Intelligence workspaces</h2>
+                        <ul><?php foreach ((array) ($context['related_routes'] ?? []) as $route) : if (!is_array($route)) { continue; } ?><li><a href="<?php echo esc_url((string) ($route['url'] ?? '#')); ?>"><?php echo esc_html((string) ($route['label'] ?? 'Workspace')); ?></a><br /><small><?php echo esc_html((string) ($route['description'] ?? '')); ?></small></li><?php endforeach; ?></ul>
+                    </section>
+                    <section>
+                        <p class="scsi-eyebrow">Related research</p>
+                        <h2>Current feed term matches</h2>
+                        <?php if (!empty($context['related_research'])) : ?><ul><?php foreach ((array) $context['related_research'] as $research) : if (!is_array($research)) { continue; } ?><li><?php if (!empty($research['url'])) : ?><a href="<?php echo esc_url((string) $research['url']); ?>" target="_blank" rel="noopener noreferrer"><?php echo esc_html((string) ($research['title'] ?? 'Research record')); ?></a><?php else : ?><?php echo esc_html((string) ($research['title'] ?? 'Research record')); ?><?php endif; ?><br /><small><?php echo esc_html((string) ($research['relationship_note'] ?? '')); ?></small></li><?php endforeach; ?></ul><?php else : ?><p>No term-overlap research signal was selected in the current feed.</p><?php endif; ?>
+                    </section>
+                </div>
+
+                <section class="scsi-live-signal-context__section">
+                    <p class="scsi-eyebrow">Method and limitations</p>
+                    <h2>How this context was assembled</h2>
+                    <p><?php echo esc_html((string) ($methodology['ranking'] ?? '')); ?></p>
+                    <?php if (!empty($methodology['limitations']) && is_array($methodology['limitations'])) : ?><ul><?php foreach ($methodology['limitations'] as $limitation) : ?><li><?php echo esc_html((string) $limitation); ?></li><?php endforeach; ?></ul><?php endif; ?>
+                    <?php if (!empty($context['boundaries']) && is_array($context['boundaries'])) : ?><div class="scsi-live-signal-context__boundary"><strong>Responsible-use boundaries</strong><ul><?php foreach ($context['boundaries'] as $boundary) : ?><li><?php echo esc_html((string) $boundary); ?></li><?php endforeach; ?></ul></div><?php endif; ?>
+                </section>
+
+                <p class="scsi-live-signal-context__identifier">Signal ID: <code><?php echo esc_html($signal_id); ?></code> · Context generated <?php echo esc_html((string) ($context['generated_at'] ?? '')); ?></p>
+            </article>
+        </main>
+        <?php
+        get_footer();
+        exit;
+    }
+
     public function register_live_intelligence_placement() {
         $options = self::options();
         $placement = (string) ($options['live_intelligence_placement'] ?? 'below_breadcrumb');
@@ -2677,6 +2874,9 @@ final class SC_Site_Intelligence_Plugin {
         $options = self::options();
         if ($this->should_render_top_live_intelligence()) {
             $classes[] = 'scsi-live-intelligence-surface';
+        }
+        if ((string) get_query_var('scsi_live_signal') !== '') {
+            $classes[] = 'scsi-live-signal-page';
         }
         return array_values(array_unique($classes));
     }
@@ -2742,6 +2942,7 @@ final class SC_Site_Intelligence_Plugin {
             'show_updated' => (string) ($options['live_intelligence_show_updated'] ?? '1'),
             'show_cluster_sources' => (string) ($options['live_intelligence_show_cluster_sources'] ?? '1'),
             'selection_context' => (string) ($options['live_intelligence_selection_context'] ?? '1'),
+            'detail_links' => (string) ($options['live_intelligence_detail_links'] ?? '1'),
         ], $atts, 'sc_live_intelligence');
         $category = sanitize_key((string) $atts['category']);
         $limit = max(1, min(24, absint($atts['limit'])));
@@ -2764,11 +2965,13 @@ final class SC_Site_Intelligence_Plugin {
         $spacing = in_array(sanitize_key((string) $atts['spacing']), ['compact', 'balanced', 'spacious'], true) ? sanitize_key((string) $atts['spacing']) : 'balanced';
         $text_limit = max(48, min(220, absint($atts['text_limit'])));
         $compact_sources = (string) $atts['compact_sources'] !== '0' ? '1' : '0';
+        $detail_links = (string) $atts['detail_links'] !== '0' ? '1' : '0';
+        $context_base = trailingslashit(home_url('/live-intelligence/signal/'));
         $category_labels = self::live_intelligence_category_labels($options);
         $classes = 'scsi-live-intelligence scsi-live-intelligence--electronic scsi-live-intelligence--' . $placement . ' scsi-live-intelligence--spacing-' . $spacing;
         ob_start();
         ?>
-        <section class="<?php echo esc_attr($classes); ?>" data-scsi-live-intelligence data-category="<?php echo esc_attr($category); ?>" data-limit="<?php echo esc_attr((string) $limit); ?>" data-feeds="<?php echo esc_attr(implode(',', $feeds)); ?>" data-exclude="<?php echo esc_attr(implode(',', $exclude)); ?>" data-max-per-source="<?php echo esc_attr((string) $max_per_source); ?>" data-motion="<?php echo esc_attr($motion); ?>" data-mobile-mode="<?php echo esc_attr($mobile_mode); ?>" data-mobile-interval="<?php echo esc_attr((string) $mobile_interval); ?>" data-show-sources="<?php echo esc_attr((string) $atts['show_sources']); ?>" data-show-updated="<?php echo esc_attr((string) $atts['show_updated']); ?>" data-show-cluster-sources="<?php echo esc_attr((string) $atts['show_cluster_sources']); ?>" data-selection-context="<?php echo esc_attr((string) $atts['selection_context']); ?>" data-compact-sources="<?php echo esc_attr($compact_sources); ?>" data-text-limit="<?php echo esc_attr((string) $text_limit); ?>" data-category-labels="<?php echo esc_attr(wp_json_encode($category_labels)); ?>" style="--scsi-live-duration:<?php echo esc_attr((string) $speed); ?>s;--scsi-live-mobile-duration:<?php echo esc_attr((string) $mobile_speed); ?>s" aria-label="<?php echo esc_attr($label); ?>">
+        <section class="<?php echo esc_attr($classes); ?>" data-scsi-live-intelligence data-category="<?php echo esc_attr($category); ?>" data-limit="<?php echo esc_attr((string) $limit); ?>" data-feeds="<?php echo esc_attr(implode(',', $feeds)); ?>" data-exclude="<?php echo esc_attr(implode(',', $exclude)); ?>" data-max-per-source="<?php echo esc_attr((string) $max_per_source); ?>" data-motion="<?php echo esc_attr($motion); ?>" data-mobile-mode="<?php echo esc_attr($mobile_mode); ?>" data-mobile-interval="<?php echo esc_attr((string) $mobile_interval); ?>" data-show-sources="<?php echo esc_attr((string) $atts['show_sources']); ?>" data-show-updated="<?php echo esc_attr((string) $atts['show_updated']); ?>" data-show-cluster-sources="<?php echo esc_attr((string) $atts['show_cluster_sources']); ?>" data-selection-context="<?php echo esc_attr((string) $atts['selection_context']); ?>" data-detail-links="<?php echo esc_attr($detail_links); ?>" data-context-base="<?php echo esc_url($context_base); ?>" data-compact-sources="<?php echo esc_attr($compact_sources); ?>" data-text-limit="<?php echo esc_attr((string) $text_limit); ?>" data-category-labels="<?php echo esc_attr(wp_json_encode($category_labels)); ?>" style="--scsi-live-duration:<?php echo esc_attr((string) $speed); ?>s;--scsi-live-mobile-duration:<?php echo esc_attr((string) $mobile_speed); ?>s" aria-label="<?php echo esc_attr($label); ?>">
             <div class="scsi-live-intelligence__label"><span class="scsi-live-intelligence__lamp" aria-hidden="true"></span><strong><?php echo esc_html(strtoupper($label)); ?></strong></div>
             <div class="scsi-live-intelligence__viewport" aria-live="polite" aria-busy="true">
                 <div class="scsi-live-intelligence__track"><span class="scsi-live-intelligence__connecting">CONNECTING TO SELECTED PUBLIC INTELLIGENCE FEEDS…</span></div>
@@ -2875,7 +3078,7 @@ final class SC_Site_Intelligence_Plugin {
                         <?php endforeach; ?>
                         <p class="description">The default economic category is “Economy, Energy &amp; Resources.” Internal category IDs and API contracts remain stable.</p>
                     </td></tr>
-                    <tr><th scope="row">Ticker details</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_duplicate_protection]" value="1" <?php checked($options['live_intelligence_duplicate_protection'], '1'); ?> /> Prevent automatic ticker when the page already contains the shortcode.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_sources]" value="1" <?php checked($options['live_intelligence_show_sources'], '1'); ?> /> Show sources.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_updated]" value="1" <?php checked($options['live_intelligence_show_updated'], '1'); ?> /> Show update time.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_cluster_sources]" value="1" <?php checked($options['live_intelligence_show_cluster_sources'], '1'); ?> /> Show represented-source count for clustered events.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_selection_context]" value="1" <?php checked($options['live_intelligence_selection_context'], '1'); ?> /> Include development state and selection reasons in link tooltips.</label></td></tr>
+                    <tr><th scope="row">Ticker details</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_duplicate_protection]" value="1" <?php checked($options['live_intelligence_duplicate_protection'], '1'); ?> /> Prevent automatic ticker when the page already contains the shortcode.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_sources]" value="1" <?php checked($options['live_intelligence_show_sources'], '1'); ?> /> Show sources.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_updated]" value="1" <?php checked($options['live_intelligence_show_updated'], '1'); ?> /> Show update time.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_cluster_sources]" value="1" <?php checked($options['live_intelligence_show_cluster_sources'], '1'); ?> /> Show represented-source count for clustered events.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_selection_context]" value="1" <?php checked($options['live_intelligence_selection_context'], '1'); ?> /> Include development state and selection reasons in link tooltips.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_detail_links]" value="1" <?php checked($options['live_intelligence_detail_links'], '1'); ?> /> Open ticker signals in public context and evidence pages before sending visitors to the original source.</label></td></tr>
                     <tr><th scope="row">Clustering and ranking</th><td><p><strong>Conservative duplicate reduction is enabled by the backend.</strong> Signals are ranked for display relevance using significance, freshness, source priority, represented sources, and data-state penalties.</p><p><a href="<?php echo esc_url(rest_url(self::REST_NAMESPACE . '/live-intelligence/ranking-policy')); ?>" target="_blank" rel="noopener noreferrer">Open the public ranking policy</a></p><p class="description">Scores do not measure truth, danger, source accuracy, or institutional importance. Multiple sources do not automatically mean independent verification.</p></td></tr>
                 </table>
                 <h2>Live preview</h2>
@@ -2956,7 +3159,7 @@ final class SC_Site_Intelligence_Plugin {
             </script>
             <hr />
             <h2>Shortcodes</h2>
-            <p><code>[sc_live_intelligence]</code> — electronic board; supports <code>category</code>, <code>limit</code>, <code>feeds</code>, <code>exclude</code>, <code>max_per_source</code>, <code>speed</code>, <code>mobile_speed</code>, <code>mobile_mode</code>, <code>mobile_interval</code>, <code>spacing</code>, <code>text_limit</code>, and <code>motion="off"</code>.</p>
+            <p><code>[sc_live_intelligence]</code> — electronic board; supports <code>category</code>, <code>limit</code>, <code>feeds</code>, <code>exclude</code>, <code>max_per_source</code>, <code>speed</code>, <code>mobile_speed</code>, <code>mobile_mode</code>, <code>mobile_interval</code>, <code>spacing</code>, <code>text_limit</code>, <code>detail_links</code>, and <code>motion="off"</code>.</p>
             <p><code>[sc_site_intelligence_dashboard]</code></p>
             <p><code>[sc_site_intelligence_page]</code></p>
             <p><code>[sc_site_intelligence_unmapped]</code></p>

@@ -1,6 +1,6 @@
 """Compatibility exports for the v3.1.0 Live Intelligence module.
 
-The active implementation moved to :mod:`live_intelligence_v313` in v3.3.0.
+The active implementation moved to :mod:`live_intelligence_v313` in v3.4.0.
 """
 from .live_intelligence_v313 import (  # noqa: F401
     DEFAULT_FEEDS,

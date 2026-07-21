@@ -3685,6 +3685,8 @@
       const showUpdated = root.dataset.showUpdated !== '0';
       const showClusterSources = root.dataset.showClusterSources !== '0';
       const showSelectionContext = root.dataset.selectionContext !== '0';
+      const detailLinks = root.dataset.detailLinks !== '0';
+      const contextBase = String(root.dataset.contextBase || '');
       const compactSources = root.dataset.compactSources !== '0';
       const textLimit = Math.max(48, Math.min(220, Number(root.dataset.textLimit || 120)));
       const mobileMode = ['rotator', 'marquee', 'hidden'].includes(root.dataset.mobileMode) ? root.dataset.mobileMode : 'rotator';
@@ -3724,7 +3726,8 @@
         if (showSources && sourceName) metadata.push(sourceName);
         if (showClusterSources && Number(signal.cluster_source_count || 1) > 1) metadata.push(String(signal.cluster_source_count) + ' SOURCES');
         if (showUpdated && (signal.observed_at || signal.updated_at)) metadata.push(relativeTime(signal.observed_at || signal.updated_at));
-        const href = signal.destination_url || '#';
+        const contextHref = detailLinks && contextBase && signal.signal_id ? contextBase + encodeURIComponent(signal.signal_id) + '/' : '';
+        const href = contextHref || signal.destination_url || signal.context_view_url || '#';
         const categoryId = signal.category || 'signal';
         const categoryLabel = categoryLabels[categoryId] || categoryId.replace(/_/g, ' ');
         const fullValue = signal.value || 'AVAILABLE';
@@ -3734,7 +3737,7 @@
         if (showSelectionContext && reasons) titleParts.push('Selected because: ' + reasons);
         const title = titleParts.filter(Boolean).join(' — ');
         const separator = includeSeparator ? '<span class="scsi-live-intelligence__separator" aria-hidden="true">◆</span>' : '';
-        return '<a class="scsi-live-intelligence__signal" href="' + escapeHtml(href) + '" title="' + escapeHtml(title) + '" aria-label="' + escapeHtml(categoryLabel + ': ' + (signal.label || 'Live signal') + ': ' + fullValue) + '">' +
+        return '<a class="scsi-live-intelligence__signal" data-scsi-event="sc_live_intelligence_context_open" data-scsi-signal-id="' + escapeHtml(signal.signal_id || '') + '" href="' + escapeHtml(href) + '" title="' + escapeHtml(title) + '" aria-label="' + escapeHtml(categoryLabel + ': ' + (signal.label || 'Live signal') + ': ' + fullValue) + '">' +
           '<span class="scsi-live-intelligence__category">' + escapeHtml(categoryLabel.toUpperCase()) + '</span>' +
           '<span class="scsi-live-intelligence__name">' + escapeHtml(shorten(signal.label || 'LIVE SIGNAL', 72)) + '</span>' +
           '<strong class="scsi-live-intelligence__value">' + escapeHtml(shorten(fullValue, textLimit)) + '</strong>' +

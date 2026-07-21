@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.4.0 — Signal Context and Drill-Down
+
+- Added public signal-context, evidence-record, context-policy, and standalone detail-view endpoints.
+- Added source lineage, observed/updated/selected timelines, source-coordinate map links, ranking explanations, related workspace routes, and bounded research suggestions.
+- Added SHA-256 canonical evidence digests that verify packet integrity without claiming factual truth.
+- Added WordPress signal-detail routes under `/live-intelligence/signal/{signal_id}/` with source, Site Intelligence, Decision Studio, and evidence actions.
+- Added an administrator control to keep ticker links on original sources or route them through public context pages.
+- Preserved feed selection, source operations, event clustering, ranking, mobile navigation, placement reliability, and Astra/theme styling boundaries.
+
 ## 3.3.0 — Event Clustering and Intelligence Ranking
 
 - Added conservative cross-source event clustering with canonical event records and source lineage.

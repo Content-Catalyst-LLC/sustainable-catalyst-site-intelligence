@@ -28,7 +28,7 @@ class Clock:
 def _settings(tmp_path: Path, **overrides) -> Settings:
     root = tmp_path / "spatial"
     values = {
-        "version": "3.3.0",
+        "version": "3.4.0",
         "spatial_evidence_policy_path": str(POLICY),
         "spatial_evidence_layer_catalog_path": str(CATALOG),
         "spatial_evidence_root_path": str(root),
@@ -164,7 +164,7 @@ def test_public_summary_and_methodology_expose_safety_boundaries(tmp_path):
     summary = studio.public_summary()
     methodology = studio.methodology()
     assert summary["schema"] == SCHEMA_VERSION
-    assert summary["version"] == "3.3.0"
+    assert summary["version"] == "3.4.0"
     assert summary["recommended_shortcode"] == "[sc_public_spatial_evidence]"
     assert methodology["privacy"]["individual_tracking"] is False
     assert methodology["coordinate_reference_system"] == "WGS84 / EPSG:4326 only"

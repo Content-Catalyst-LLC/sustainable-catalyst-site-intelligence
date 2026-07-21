@@ -1883,3 +1883,147 @@
   .scsi-live-intelligence.is-mobile-rotator .scsi-live-intelligence__pause{display:none}
   .scsi-live-intelligence.is-mobile-rotator{grid-template-columns:1fr;grid-template-areas:"label" "viewport" "controls"}
 }
+
+/* Site Intelligence v3.4.0 — Live Intelligence signal context pages. */
+.scsi-live-signal-context {
+  width: min(1120px, calc(100% - 2rem));
+  margin: 2rem auto 4rem;
+}
+
+.scsi-live-signal-context__panel {
+  background: #fff;
+  border: 1px solid rgba(20, 20, 20, .16);
+  box-shadow: 0 18px 48px rgba(20, 20, 20, .08);
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+}
+
+.scsi-live-signal-context__breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+  align-items: center;
+  margin: 0 0 1.5rem;
+  font-size: .82rem;
+}
+
+.scsi-live-signal-context__summary {
+  max-width: 78ch;
+  font-size: clamp(1rem, 1.35vw, 1.16rem);
+  line-height: 1.72;
+}
+
+.scsi-live-signal-context__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .65rem;
+  margin: 1.4rem 0 2rem;
+}
+
+.scsi-live-signal-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: .68rem .9rem;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.scsi-live-signal-button:hover,
+.scsi-live-signal-button:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
+
+.scsi-live-signal-context__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.scsi-live-signal-context__grid > section,
+.scsi-live-signal-context__section {
+  border: 1px solid rgba(20, 20, 20, .14);
+  background: rgba(248, 248, 245, .72);
+  padding: 1.1rem;
+  margin: 1rem 0;
+}
+
+.scsi-live-signal-context dl {
+  margin: 0;
+}
+
+.scsi-live-signal-context dl > div {
+  display: grid;
+  grid-template-columns: minmax(8rem, .7fr) minmax(0, 1.3fr);
+  gap: .75rem;
+  padding: .5rem 0;
+  border-bottom: 1px solid rgba(20, 20, 20, .09);
+}
+
+.scsi-live-signal-context dt {
+  font-weight: 700;
+}
+
+.scsi-live-signal-context dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.scsi-live-signal-context__list,
+.scsi-live-signal-context__timeline {
+  display: grid;
+  gap: .75rem;
+}
+
+.scsi-live-signal-context__timeline time {
+  display: block;
+  color: rgba(20, 20, 20, .68);
+  font-size: .85rem;
+  overflow-wrap: anywhere;
+}
+
+.scsi-live-signal-context__boundary {
+  margin-top: 1rem;
+  border-left: 4px solid currentColor;
+  padding: .9rem 1rem;
+  background: #fff;
+}
+
+.scsi-live-signal-context__identifier {
+  margin-top: 2rem;
+  font-size: .78rem;
+  color: rgba(20, 20, 20, .68);
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 760px) {
+  .scsi-live-signal-context {
+    width: min(100% - 1rem, 1120px);
+    margin-top: 1rem;
+  }
+
+  .scsi-live-signal-context__panel {
+    padding: 1rem;
+  }
+
+  .scsi-live-signal-context__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .scsi-live-signal-context dl > div {
+    grid-template-columns: 1fr;
+    gap: .15rem;
+  }
+
+  .scsi-live-signal-context__actions {
+    display: grid;
+  }
+
+  .scsi-live-signal-button {
+    width: 100%;
+  }
+}

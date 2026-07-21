@@ -1,16 +1,29 @@
 # Sustainable Catalyst Site Intelligence
 
+## v3.4.0 — Signal Context and Drill-Down
+
+Site Intelligence v3.4.0 turns each Live Intelligence ticker item into a traceable research entry point. Public signal pages preserve source lineage, timestamps, location precision, ranking explanations, related workspace routes, term-overlap research suggestions, responsible-use boundaries, and downloadable SHA-256 evidence records. Ticker, source-operation, clustering, mobile, placement, and theme behavior remain intact.
+
+**Current release:** v3.4.0 — Connected Public Intelligence and Evidence Platform
+
+Primary v3.4.0 routes:
+
+- `/public/live-intelligence/signals/{signal_id}`
+- `/public/live-intelligence/signals/{signal_id}/evidence`
+- `/public/live-intelligence/signals/{signal_id}/view`
+- `/public/live-intelligence/context-policy`
+
 ## v3.3.0 — Event Clustering and Intelligence Ranking
 
 Site Intelligence v3.3.0 consolidates duplicate public-event reports into traceable canonical events and ranks ticker signals with explicit, public-safe selection reasons. Category diversity, source caps, source operations, mobile navigation, feed controls, and theme boundaries remain intact.
 
-**Current release:** v3.3.0 — Connected Public Intelligence and Evidence Platform
+**Previous release:** v3.3.0 — Connected Public Intelligence and Evidence Platform
 
 ## v3.3.0 — Signal Source Operations
 
 Adds a public-safe Live Intelligence source registry and a protected operations dashboard for source enablement, priority, refresh and cache policy, retrieval health, last-success tracking, rate use, failure history, manual tests, licensing, attribution, geographic and temporal coverage, and data-quality boundaries. Existing ticker feed selection, placement, readability, and mobile navigation remain intact.
 
-**Current release:** v3.3.0 — Connected Public Intelligence and Evidence Platform
+**Previous release:** v3.3.0 — Connected Public Intelligence and Evidence Platform
 
 ## v3.1.5 — Mobile Navigation and Motion Repair
 

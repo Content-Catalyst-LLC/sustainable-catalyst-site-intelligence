@@ -1,4 +1,4 @@
-"""Selectable, balanced public-interest ticker feed for Site Intelligence v3.3.0.
+"""Selectable, balanced public-interest ticker feed for Site Intelligence v3.4.0.
 
 The feed combines verified public events, weather/environment observations,
 open-research metadata, and periodic development indicators. Administrators
@@ -23,6 +23,7 @@ from .live_intelligence_source_operations_v320 import LiveIntelligenceSourceOper
 from .live_intelligence_clustering_v330 import (
     cluster_event_records, ranking_policy, select_ranked_signals, SCHEMA_VERSION as CLUSTERING_SCHEMA_VERSION,
 )
+from .live_intelligence_context_v340 import enrich_signal_links
 
 SCHEMA_VERSION = "sc-site-intelligence-live-intelligence/1.4"
 DEFAULT_SIGNAL_LIMIT = 16
@@ -173,6 +174,14 @@ def _event_signal(record: dict[str, Any], *, label: str, priority: int) -> dict[
         "cluster_confidence": float(record.get("cluster_confidence") or record.get("confidence") or 0.0),
         "cluster_reason": _clean(record.get("cluster_reason") or "single verified source record", 180),
         "cluster_source_urls": list(record.get("cluster_source_urls") or []),
+        "cluster_member_ids": list(record.get("cluster_member_ids") or []),
+        "event_category": _clean(record.get("category"), 80),
+        "coordinates": list(record.get("coordinates") or [])[:2],
+        "location_label": _clean(record.get("location_label") or (record.get("metadata") or {}).get("location"), 160),
+        "country": _clean(record.get("country") or (record.get("metadata") or {}).get("country"), 100),
+        "country_code": _clean(record.get("country_code") or (record.get("metadata") or {}).get("country_code"), 12).upper(),
+        "region": _clean(record.get("region") or (record.get("metadata") or {}).get("region"), 100),
+        "magnitude": record.get("magnitude"),
     })
     return signal
 
@@ -800,6 +809,7 @@ def build_live_intelligence(
         if bool(getattr(settings, "live_intelligence_ranking_enabled", True))
         else _balanced_selection(all_signals, limit, max_per_source=max_per_source)
     )
+    selected = enrich_signal_links(selected)
     present_feeds = Counter(str(item.get("feed_id") or "unknown") for item in selected)
     if source_operations is not None and record_operations:
         collector_for_feed = {
@@ -892,6 +902,11 @@ def build_live_intelligence(
             "event_clustering_supported": True,
             "transparent_ranking_supported": True,
             "selection_reasons_supported": True,
+            "signal_context_supported": True,
+            "signal_evidence_download_supported": True,
+            "signal_timeline_supported": True,
+            "signal_map_context_supported": True,
+            "decision_studio_handoff_supported": True,
             "category_labels": CATEGORY_LABELS,
             "default_desktop_cycle_seconds": 30,
             "default_mobile_cycle_seconds": 36,
