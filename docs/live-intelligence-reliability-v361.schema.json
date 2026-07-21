@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/live-intelligence-reliability-v361.schema.json",
+  "title": "Site Intelligence Live Intelligence Reliability v3.6.1",
+  "type": "object",
+  "required": ["ok", "version", "reliability_schema", "signals", "delivery", "feed_state"],
+  "properties": {
+    "ok": {"type": "boolean"},
+    "version": {"const": "3.6.1"},
+    "reliability_schema": {"const": "sc-site-intelligence-live-intelligence-reliability/1.0"},
+    "signals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["signal_id", "label", "value", "source_name", "freshness_state", "validation_state"],
+        "properties": {
+          "signal_id": {"type": "string", "minLength": 1},
+          "label": {"type": "string", "minLength": 1},
+          "value": {"type": "string", "minLength": 1},
+          "source_name": {"type": "string", "minLength": 1},
+          "freshness_state": {"enum": ["live", "recently_updated", "delayed", "stale", "historical", "unknown"]},
+          "validation_state": {"const": "valid"}
+        }
+      }
+    },
+    "delivery": {
+      "type": "object",
+      "required": ["state", "label", "last_known_good", "served_at"],
+      "properties": {
+        "state": {"enum": ["live", "recently_updated", "delayed", "stale", "historical", "empty", "unavailable"]},
+        "label": {"type": "string"},
+        "last_known_good": {"type": "boolean"},
+        "cache_age_seconds": {"type": "integer", "minimum": 0},
+        "served_at": {"type": "string"}
+      }
+    },
+    "feed_state": {"type": "object"}
+  }
+}

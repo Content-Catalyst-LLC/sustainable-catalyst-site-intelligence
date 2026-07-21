@@ -1,23 +1,36 @@
 # Sustainable Catalyst Site Intelligence
 
-## v3.5.0 — Topic and Regional Channels
+## v3.6.1 — Live Intelligence Reliability and Freshness
 
-Site Intelligence v3.5.0 adds reusable global, topic, regional, and country-filtered Live Intelligence channels. The channel layer preserves source controls, clustering, ranking, signal context, evidence records, mobile navigation, placement reliability, caching, and Astra/theme boundaries. Empty geographic matches remain empty rather than silently falling back to unrelated global data.
+Site Intelligence v3.6.1 begins production hardening of the Live Intelligence homepage ticker. It validates each public signal, assigns explicit freshness states, isolates malformed and duplicate records, suppresses expired observations, and recovers from a last-known-good payload only when the entire query fingerprint matches.
 
-**Current release:** v3.5.0 — Connected Public Intelligence and Evidence Platform
+**Current release:** v3.6.1 — Connected Public Intelligence and Evidence Platform
 
-Primary v3.5.0 routes:
+Primary v3.6.1 routes:
 
+- `/public/live-intelligence`
+- `/public/live-intelligence/status`
 - `/public/live-intelligence/channels`
-- `/public/live-intelligence/channel-policy`
-- `/public/live-intelligence/channels/{channel_id}`
 - `/public/live-intelligence/channels/{channel_id}/feed`
+- `/public/live-intelligence/signals/{signal_id}`
+
+The WordPress ticker adds controlled refresh, bounded proxy caching, explicit delivery labels, and graceful unavailable states while preserving source operations, channels, clustering, ranking, context pages, evidence records, mobile controls, reduced motion, keyboard pause, Astra navigation, and breadcrumb styling.
+
+## Preserved Live Intelligence foundations
+
+### v3.6.1 — Topic and Regional Channels
+
+The v3.5.0 channel directory, topic and regional filters, country routing, and honest empty-result policy remain version-aligned and active beneath the v3.6.1 reliability boundary.
+
+### v3.6.1 — Signal Context and Drill-Down
+
+The v3.4.0 context, evidence, source-lineage, map, Decision Studio, and responsible-use capability remains version-aligned and active in v3.6.1.
 
 ## Previous release notes
 
-### v3.5.0 — Signal Context and Drill-Down
+### v3.5.0 — Topic and Regional Channels
 
-The v3.4.0 signal-context capability remains preserved and version-aligned in v3.5.0.
+The v3.5.0 channel directory, topic and regional filters, country routing, and honest empty-result policy remain the active routing foundation beneath v3.6.1.
 
 ## v3.4.0 — Signal Context and Drill-Down
 

@@ -7,11 +7,11 @@ client = TestClient(app)
 
 
 def test_v300_version_and_release_name():
-    assert APP_VERSION == "3.5.0"
+    assert APP_VERSION == "3.6.1"
     assert RELEASE_NAME == "Connected Public Intelligence and Evidence Platform"
     build = client.get("/public/build-info")
     assert build.status_code == 200
-    assert build.json()["version"] == "3.5.0"
+    assert build.json()["version"] == "3.6.1"
     assert build.json()["release_name"] == RELEASE_NAME
 
 
@@ -19,7 +19,7 @@ def test_connected_platform_overview_is_public_and_account_free():
     response = client.get("/public/connected-intelligence")
     assert response.status_code == 200
     payload = response.json()
-    assert payload["version"] == "3.5.0"
+    assert payload["version"] == "3.6.1"
     assert payload["record_count"] >= 50
     assert payload["public_access_requires_account"] is False
     assert payload["governance"]["private_runtime_records_exposed"] is False

@@ -39,6 +39,8 @@ _RUNTIME_FILES = [
     "live_intelligence_source_operations_state_v320.json",
     "live_intelligence_source_operations_state_v320.json.tmp",
     "live_intelligence_source_operations_history_v320.jsonl",
+    "live_intelligence_last_known_good_v361.json",
+    "live_intelligence_last_known_good_v361.json.tmp",
 ]
 
 

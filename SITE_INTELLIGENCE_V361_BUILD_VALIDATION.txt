@@ -1,0 +1,23 @@
+Site Intelligence v3.6.1 — Live Intelligence Reliability and Freshness
+Build validation completed: July 20, 2026 (America/Chicago)
+
+PASS: Full backend regression suite — 635 tests.
+PASS: Focused reliability suite — freshness classification, malformed-record isolation, duplicate suppression, expired-signal suppression, same-query last-known-good recovery, cross-query isolation, honest geographic empty results, and public status contract.
+PASS: Release contract — Site Intelligence v3.6.1 markers and policy boundaries.
+PASS: Python syntax for backend application and release scripts.
+PASS: JSON and webmanifest parsing.
+PASS: JavaScript syntax for the public app, service worker, and WordPress ticker.
+PASS: PHP syntax for the WordPress plugin.
+PASS: WordPress ticker delivery badge, controlled refresh, proxy timeout, fresh-cache, stale-cache, reduced-motion, keyboard-pause, and mobile controls.
+PASS: Astra navigation and breadcrumb styling boundaries remain untouched.
+PASS: Immutable release manifest — 661 packaged source files before final report digest refresh.
+
+Release boundaries:
+- Freshness is a timing classification, not a truth or accuracy certification.
+- Last-known-good data is reused only for an identical query fingerprint.
+- Empty region and country results remain empty.
+- Missing or failed values are not converted to zero or fabricated replacements.
+- No API keys or private cache paths are exposed to browser JavaScript or public status responses.
+
+Environment note:
+The release was validated in the build container with Python 3.13, Node.js, and PHP. Live activation on the user's Render and WordPress environments remains a deployment step.

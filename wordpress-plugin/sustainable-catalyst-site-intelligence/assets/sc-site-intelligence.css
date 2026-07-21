@@ -1813,7 +1813,7 @@
 
 /* v3.3.0 — Live Intelligence signal expansion; theme navigation surfaces remain untouched */
 .scsi-live-intelligence.is-delayed .scsi-live-intelligence__lamp{animation:none;opacity:.72}
-.scsi-live-intelligence.is-delayed::after{content:"CACHED";position:absolute;right:52px;top:2px;font-size:.52rem;letter-spacing:.08em;color:#75b77c;z-index:3}
+.scsi-live-intelligence.is-delayed::after{content:none}
 
 /* v3.3.0 — Live Intelligence readability and taxonomy controls */
 .scsi-live-intelligence{
@@ -1884,7 +1884,7 @@
   .scsi-live-intelligence.is-mobile-rotator{grid-template-columns:1fr;grid-template-areas:"label" "viewport" "controls"}
 }
 
-/* Site Intelligence v3.5.0 — Live Intelligence signal context pages. */
+/* Site Intelligence v3.6.1 — Live Intelligence signal context pages. */
 .scsi-live-signal-context {
   width: min(1120px, calc(100% - 2rem));
   margin: 2rem auto 4rem;
@@ -2027,3 +2027,18 @@
     width: 100%;
   }
 }
+
+
+/* v3.6.1 — Live Intelligence delivery, freshness, and failure-state presentation. */
+.scsi-live-intelligence__label{flex-wrap:wrap;align-content:center;row-gap:.24rem}
+.scsi-live-intelligence__delivery{display:inline-flex;align-items:center;min-height:18px;padding:.12rem .38rem;border:1px solid rgba(140,255,154,.3);border-radius:999px;color:var(--scsi-live-dim);font-size:.52rem;font-weight:700;line-height:1;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
+.scsi-live-intelligence[data-delivery-state="live"] .scsi-live-intelligence__delivery,.scsi-live-intelligence[data-delivery-state="recently_updated"] .scsi-live-intelligence__delivery{border-color:rgba(140,255,154,.38);color:var(--scsi-live-green)}
+.scsi-live-intelligence[data-delivery-state="delayed"] .scsi-live-intelligence__delivery,.scsi-live-intelligence[data-delivery-state="stale"] .scsi-live-intelligence__delivery{border-color:rgba(255,211,106,.48);color:#ffd36a}
+.scsi-live-intelligence[data-delivery-state="empty"] .scsi-live-intelligence__delivery,.scsi-live-intelligence[data-delivery-state="unavailable"] .scsi-live-intelligence__delivery{border-color:rgba(216,185,107,.48);color:#d8b96b}
+.scsi-live-intelligence[data-delivery-state="delayed"],.scsi-live-intelligence[data-delivery-state="stale"],.scsi-live-intelligence[data-delivery-state="empty"],.scsi-live-intelligence[data-delivery-state="unavailable"]{--scsi-live-green:#d8b96b;--scsi-live-bright:#ffd36a;--scsi-live-dim:#ae914e}
+.scsi-live-intelligence__signal[data-freshness-state="delayed"],.scsi-live-intelligence__signal[data-freshness-state="stale"]{text-decoration-style:dotted!important}
+.scsi-live-intelligence__signal[data-freshness-state="historical"]{opacity:.82}
+.scsi-live-intelligence__signal[data-freshness-state="unknown"] small{font-style:italic}
+@media(max-width:920px){.scsi-live-intelligence__delivery{display:none}}
+@media(prefers-reduced-motion:reduce){.scsi-live-intelligence__delivery{display:inline-flex}.scsi-live-intelligence__lamp{box-shadow:none}}
+@media(forced-colors:active){.scsi-live-intelligence__delivery{border-color:CanvasText;color:CanvasText}}

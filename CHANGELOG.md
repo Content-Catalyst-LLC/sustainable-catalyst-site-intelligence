@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.6.1 — Live Intelligence Reliability and Freshness
+
+- Added explicit signal freshness and delivery states.
+- Added signal validation, malformed-record isolation, duplicate suppression, and expired-observation suppression.
+- Added atomic same-query last-known-good recovery and a public health endpoint.
+- Added WordPress proxy cache controls, controlled browser refresh, and delivery-state presentation.
+- Preserved channel honesty, source lineage, clustering, ranking, context, evidence, motion, mobile, and theme boundaries.
+- Stabilized an older time-sensitive ranking regression fixture.
+
 ## 3.5.0 — Topic and Regional Channels
 
 - Added a public channel directory and channel methodology endpoint.

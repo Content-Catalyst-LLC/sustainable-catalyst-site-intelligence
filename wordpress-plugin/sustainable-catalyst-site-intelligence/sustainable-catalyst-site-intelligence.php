@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.5.0
+ * Version: 3.6.1
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.5.0';
+    const VERSION = '3.6.1';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -284,6 +284,11 @@ final class SC_Site_Intelligence_Plugin {
             'live_intelligence_show_cluster_sources' => '1',
             'live_intelligence_selection_context' => '1',
             'live_intelligence_detail_links' => '1',
+            'live_intelligence_show_freshness' => '1',
+            'live_intelligence_refresh_seconds' => '300',
+            'live_intelligence_proxy_timeout_seconds' => '15',
+            'live_intelligence_proxy_cache_seconds' => '120',
+            'live_intelligence_proxy_stale_hours' => '24',
         ];
     }
 
@@ -398,7 +403,7 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v3.5.0 preserves placement, feed, readability, mobile, context, and theme choices while adding topic and regional channels.
+        // v3.6.1 preserves all v3.6.1 choices while adding explicit freshness and reliability controls.
         // The former 42-second default is migrated to the balanced 30-second preset.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
@@ -723,6 +728,11 @@ final class SC_Site_Intelligence_Plugin {
         $output['live_intelligence_show_cluster_sources'] = !empty($input['live_intelligence_show_cluster_sources']) ? '1' : '0';
         $output['live_intelligence_selection_context'] = !empty($input['live_intelligence_selection_context']) ? '1' : '0';
         $output['live_intelligence_detail_links'] = !empty($input['live_intelligence_detail_links']) ? '1' : '0';
+        $output['live_intelligence_show_freshness'] = !empty($input['live_intelligence_show_freshness']) ? '1' : '0';
+        $output['live_intelligence_refresh_seconds'] = (string) max(60, min(1800, absint($input['live_intelligence_refresh_seconds'] ?? 300)));
+        $output['live_intelligence_proxy_timeout_seconds'] = (string) max(3, min(30, absint($input['live_intelligence_proxy_timeout_seconds'] ?? 15)));
+        $output['live_intelligence_proxy_cache_seconds'] = (string) max(30, min(900, absint($input['live_intelligence_proxy_cache_seconds'] ?? 120)));
+        $output['live_intelligence_proxy_stale_hours'] = (string) max(1, min(168, absint($input['live_intelligence_proxy_stale_hours'] ?? 24)));
 
         self::clear_backend_build_info_cache((string) ($current['backend_url'] ?? ''));
         self::clear_backend_build_info_cache((string) ($output['backend_url'] ?? ''));
@@ -768,6 +778,11 @@ final class SC_Site_Intelligence_Plugin {
                 'region' => ['sanitize_callback' => 'sanitize_text_field'],
                 'country' => ['sanitize_callback' => 'sanitize_text_field'],
             ],
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/status', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_status'],
+            'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/live-intelligence/ranking-policy', [
             'methods' => WP_REST_Server::READABLE,
@@ -1504,6 +1519,10 @@ final class SC_Site_Intelligence_Plugin {
         $url = untrailingslashit($options['backend_url']) . '/' . ltrim($endpoint, '/');
         $method = strtoupper($method);
         $is_cacheable = ($method === 'GET' && is_null($body));
+        $is_live_intelligence = strpos(ltrim((string) $endpoint, '/'), 'public/live-intelligence') === 0;
+        $request_timeout = $is_live_intelligence ? max(3, min(30, absint($options['live_intelligence_proxy_timeout_seconds'] ?? 15))) : 45;
+        $fresh_ttl = $is_live_intelligence ? max(30, min(900, absint($options['live_intelligence_proxy_cache_seconds'] ?? 120))) : 5 * MINUTE_IN_SECONDS;
+        $stale_ttl = $is_live_intelligence ? max(HOUR_IN_SECONDS, min(7 * DAY_IN_SECONDS, absint($options['live_intelligence_proxy_stale_hours'] ?? 24) * HOUR_IN_SECONDS)) : 6 * HOUR_IN_SECONDS;
         $cache_hash = md5($url);
         $fresh_key = 'scsi_fresh_' . $cache_hash;
         $stale_key = 'scsi_stale_' . $cache_hash;
@@ -1511,9 +1530,11 @@ final class SC_Site_Intelligence_Plugin {
         if ($is_cacheable) {
             $fresh = get_transient($fresh_key);
             if (is_array($fresh)) {
+                $cached_at = strtotime((string) ($fresh['_scsi_proxy_cache']['cached_at'] ?? ''));
                 $fresh['_scsi_delivery'] = [
                     'mode' => 'cache',
                     'freshness' => 'fresh',
+                    'cache_age_seconds' => $cached_at ? max(0, time() - $cached_at) : null,
                 ];
                 return $fresh;
             }
@@ -1521,7 +1542,7 @@ final class SC_Site_Intelligence_Plugin {
 
         $args = [
             'method' => $method,
-            'timeout' => 45,
+            'timeout' => $request_timeout,
             'redirection' => 3,
             'headers' => [
                 'Accept' => 'application/json',
@@ -1541,9 +1562,11 @@ final class SC_Site_Intelligence_Plugin {
             if ($is_cacheable) {
                 $stale = get_transient($stale_key);
                 if (is_array($stale)) {
+                    $cached_at = strtotime((string) ($stale['_scsi_proxy_cache']['cached_at'] ?? ''));
                     $stale['_scsi_delivery'] = [
                         'mode' => 'stale_cache',
                         'freshness' => 'stale',
+                        'cache_age_seconds' => $cached_at ? max(0, time() - $cached_at) : null,
                         'reason' => sanitize_text_field($response->get_error_message()),
                     ];
                     return $stale;
@@ -1559,9 +1582,11 @@ final class SC_Site_Intelligence_Plugin {
             if ($is_cacheable) {
                 $stale = get_transient($stale_key);
                 if (is_array($stale)) {
+                    $cached_at = strtotime((string) ($stale['_scsi_proxy_cache']['cached_at'] ?? ''));
                     $stale['_scsi_delivery'] = [
                         'mode' => 'stale_cache',
                         'freshness' => 'stale',
+                        'cache_age_seconds' => $cached_at ? max(0, time() - $cached_at) : null,
                         'reason' => 'Origin returned HTTP ' . intval($code),
                     ];
                     return $stale;
@@ -1585,8 +1610,13 @@ final class SC_Site_Intelligence_Plugin {
 
         $result = is_array($payload) ? $payload : ['ok' => true, 'raw' => $raw_body];
         if ($is_cacheable) {
-            set_transient($fresh_key, $result, 5 * MINUTE_IN_SECONDS);
-            set_transient($stale_key, $result, 6 * HOUR_IN_SECONDS);
+            $result['_scsi_proxy_cache'] = [
+                'cached_at' => gmdate('c'),
+                'fresh_ttl_seconds' => $fresh_ttl,
+                'stale_ttl_seconds' => $stale_ttl,
+            ];
+            set_transient($fresh_key, $result, $fresh_ttl);
+            set_transient($stale_key, $result, $stale_ttl);
         }
         $result['_scsi_delivery'] = [
             'mode' => 'origin',
@@ -2669,6 +2699,11 @@ final class SC_Site_Intelligence_Plugin {
         return rest_ensure_response($result);
     }
 
+    public function rest_live_intelligence_status(WP_REST_Request $request) {
+        $result = $this->backend_request('public/live-intelligence/status');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
     public function rest_live_intelligence_ranking_policy(WP_REST_Request $request) {
         $result = $this->backend_request('public/live-intelligence/ranking-policy');
         return is_wp_error($result) ? $result : rest_ensure_response($result);
@@ -3016,6 +3051,8 @@ final class SC_Site_Intelligence_Plugin {
             'show_cluster_sources' => (string) ($options['live_intelligence_show_cluster_sources'] ?? '1'),
             'selection_context' => (string) ($options['live_intelligence_selection_context'] ?? '1'),
             'detail_links' => (string) ($options['live_intelligence_detail_links'] ?? '1'),
+            'show_freshness' => (string) ($options['live_intelligence_show_freshness'] ?? '1'),
+            'refresh_seconds' => (string) ($options['live_intelligence_refresh_seconds'] ?? '300'),
         ], $atts, 'sc_live_intelligence');
         $category = sanitize_key((string) $atts['category']);
         $channel = self::sanitize_live_intelligence_channel((string) $atts['channel']);
@@ -3042,13 +3079,15 @@ final class SC_Site_Intelligence_Plugin {
         $text_limit = max(48, min(220, absint($atts['text_limit'])));
         $compact_sources = (string) $atts['compact_sources'] !== '0' ? '1' : '0';
         $detail_links = (string) $atts['detail_links'] !== '0' ? '1' : '0';
+        $show_freshness = (string) $atts['show_freshness'] !== '0' ? '1' : '0';
+        $refresh_seconds = max(60, min(1800, absint($atts['refresh_seconds'])));
         $context_base = trailingslashit(home_url('/live-intelligence/signal/'));
         $category_labels = self::live_intelligence_category_labels($options);
         $classes = 'scsi-live-intelligence scsi-live-intelligence--electronic scsi-live-intelligence--' . $placement . ' scsi-live-intelligence--spacing-' . $spacing;
         ob_start();
         ?>
-        <section class="<?php echo esc_attr($classes); ?>" data-scsi-live-intelligence data-category="<?php echo esc_attr($category); ?>" data-channel="<?php echo esc_attr($channel); ?>" data-region="<?php echo esc_attr($region); ?>" data-country="<?php echo esc_attr($country); ?>" data-limit="<?php echo esc_attr((string) $limit); ?>" data-feeds="<?php echo esc_attr(implode(',', $feeds)); ?>" data-exclude="<?php echo esc_attr(implode(',', $exclude)); ?>" data-max-per-source="<?php echo esc_attr((string) $max_per_source); ?>" data-motion="<?php echo esc_attr($motion); ?>" data-mobile-mode="<?php echo esc_attr($mobile_mode); ?>" data-mobile-interval="<?php echo esc_attr((string) $mobile_interval); ?>" data-show-sources="<?php echo esc_attr((string) $atts['show_sources']); ?>" data-show-updated="<?php echo esc_attr((string) $atts['show_updated']); ?>" data-show-cluster-sources="<?php echo esc_attr((string) $atts['show_cluster_sources']); ?>" data-selection-context="<?php echo esc_attr((string) $atts['selection_context']); ?>" data-detail-links="<?php echo esc_attr($detail_links); ?>" data-context-base="<?php echo esc_url($context_base); ?>" data-compact-sources="<?php echo esc_attr($compact_sources); ?>" data-text-limit="<?php echo esc_attr((string) $text_limit); ?>" data-category-labels="<?php echo esc_attr(wp_json_encode($category_labels)); ?>" style="--scsi-live-duration:<?php echo esc_attr((string) $speed); ?>s;--scsi-live-mobile-duration:<?php echo esc_attr((string) $mobile_speed); ?>s" aria-label="<?php echo esc_attr($label); ?>">
-            <div class="scsi-live-intelligence__label"><span class="scsi-live-intelligence__lamp" aria-hidden="true"></span><strong><?php echo esc_html(strtoupper($label)); ?></strong></div>
+        <section class="<?php echo esc_attr($classes); ?>" data-scsi-live-intelligence data-category="<?php echo esc_attr($category); ?>" data-channel="<?php echo esc_attr($channel); ?>" data-region="<?php echo esc_attr($region); ?>" data-country="<?php echo esc_attr($country); ?>" data-limit="<?php echo esc_attr((string) $limit); ?>" data-feeds="<?php echo esc_attr(implode(',', $feeds)); ?>" data-exclude="<?php echo esc_attr(implode(',', $exclude)); ?>" data-max-per-source="<?php echo esc_attr((string) $max_per_source); ?>" data-motion="<?php echo esc_attr($motion); ?>" data-mobile-mode="<?php echo esc_attr($mobile_mode); ?>" data-mobile-interval="<?php echo esc_attr((string) $mobile_interval); ?>" data-show-sources="<?php echo esc_attr((string) $atts['show_sources']); ?>" data-show-updated="<?php echo esc_attr((string) $atts['show_updated']); ?>" data-show-cluster-sources="<?php echo esc_attr((string) $atts['show_cluster_sources']); ?>" data-selection-context="<?php echo esc_attr((string) $atts['selection_context']); ?>" data-detail-links="<?php echo esc_attr($detail_links); ?>" data-show-freshness="<?php echo esc_attr($show_freshness); ?>" data-refresh-seconds="<?php echo esc_attr((string) $refresh_seconds); ?>" data-context-base="<?php echo esc_url($context_base); ?>" data-compact-sources="<?php echo esc_attr($compact_sources); ?>" data-text-limit="<?php echo esc_attr((string) $text_limit); ?>" data-category-labels="<?php echo esc_attr(wp_json_encode($category_labels)); ?>" style="--scsi-live-duration:<?php echo esc_attr((string) $speed); ?>s;--scsi-live-mobile-duration:<?php echo esc_attr((string) $mobile_speed); ?>s" aria-label="<?php echo esc_attr($label); ?>">
+            <div class="scsi-live-intelligence__label"><span class="scsi-live-intelligence__lamp" aria-hidden="true"></span><strong><?php echo esc_html(strtoupper($label)); ?></strong><span class="scsi-live-intelligence__delivery" data-scsi-live-delivery aria-live="polite">Connecting</span></div>
             <div class="scsi-live-intelligence__viewport" aria-live="polite" aria-busy="true">
                 <div class="scsi-live-intelligence__track"><span class="scsi-live-intelligence__connecting">CONNECTING TO SELECTED PUBLIC INTELLIGENCE FEEDS…</span></div>
             </div>
@@ -3158,6 +3197,9 @@ final class SC_Site_Intelligence_Plugin {
                         <p class="description">The default economic category is “Economy, Energy &amp; Resources.” Internal category IDs and API contracts remain stable.</p>
                     </td></tr>
                     <tr><th scope="row">Ticker details</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_duplicate_protection]" value="1" <?php checked($options['live_intelligence_duplicate_protection'], '1'); ?> /> Prevent automatic ticker when the page already contains the shortcode.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_sources]" value="1" <?php checked($options['live_intelligence_show_sources'], '1'); ?> /> Show sources.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_updated]" value="1" <?php checked($options['live_intelligence_show_updated'], '1'); ?> /> Show update time.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_cluster_sources]" value="1" <?php checked($options['live_intelligence_show_cluster_sources'], '1'); ?> /> Show represented-source count for clustered events.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_selection_context]" value="1" <?php checked($options['live_intelligence_selection_context'], '1'); ?> /> Include development state and selection reasons in link tooltips.</label><br /><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_detail_links]" value="1" <?php checked($options['live_intelligence_detail_links'], '1'); ?> /> Open ticker signals in public context and evidence pages before sending visitors to the original source.</label></td></tr>
+                    <tr><th scope="row">Freshness labels</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_freshness]" value="1" <?php checked($options['live_intelligence_show_freshness'], '1'); ?> /> Show explicit Live, Recently updated, Delayed, Stale, or Historical metadata supplied by the backend.</label></td></tr>
+                    <tr><th scope="row"><label for="scsi_live_refresh_seconds">Browser refresh interval</label></th><td><input id="scsi_live_refresh_seconds" type="number" min="60" max="1800" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_refresh_seconds]" value="<?php echo esc_attr($options['live_intelligence_refresh_seconds']); ?>" /> seconds<p class="description">The browser requests the WordPress proxy at this interval. Upstream API calls remain server-side and cached.</p></td></tr>
+                    <tr><th scope="row">WordPress reliability proxy</th><td><input type="number" min="3" max="30" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_proxy_timeout_seconds]" value="<?php echo esc_attr($options['live_intelligence_proxy_timeout_seconds']); ?>" /> second timeout &nbsp; <input type="number" min="30" max="900" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_proxy_cache_seconds]" value="<?php echo esc_attr($options['live_intelligence_proxy_cache_seconds']); ?>" /> second fresh cache &nbsp; <input type="number" min="1" max="168" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_proxy_stale_hours]" value="<?php echo esc_attr($options['live_intelligence_proxy_stale_hours']); ?>" /> hour stale retention<p class="description">A stale proxy response is clearly marked and is never presented as current.</p></td></tr>
                     <tr><th scope="row">Clustering and ranking</th><td><p><strong>Conservative duplicate reduction is enabled by the backend.</strong> Signals are ranked for display relevance using significance, freshness, source priority, represented sources, and data-state penalties.</p><p><a href="<?php echo esc_url(rest_url(self::REST_NAMESPACE . '/live-intelligence/ranking-policy')); ?>" target="_blank" rel="noopener noreferrer">Open the public ranking policy</a></p><p class="description">Scores do not measure truth, danger, source accuracy, or institutional importance. Multiple sources do not automatically mean independent verification.</p></td></tr>
                 </table>
                 <h2>Live preview</h2>

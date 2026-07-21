@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from pathlib import Path
 
 from app.config import get_settings
@@ -66,6 +67,9 @@ def _weather_payload():
 
 
 def test_feed_prioritizes_public_interest_signals(monkeypatch):
+    original_selector = live.base.select_ranked_signals
+    fixed_now = datetime(2026, 7, 20, 15, 0, tzinfo=timezone.utc)
+    monkeypatch.setattr(live.base, "select_ranked_signals", lambda signals, limit, max_per_source: original_selector(signals, limit, max_per_source=max_per_source, now=fixed_now))
     monkeypatch.setattr(live, "unified_events", lambda **kwargs: _events_payload())
     monkeypatch.setattr(live.AdvancedExternalDataHub, "noaa_weather_climate", lambda self: _weather_payload())
     monkeypatch.setattr(live, "_nasa_power_signals", lambda settings: ([], {"data_state": "test"}))

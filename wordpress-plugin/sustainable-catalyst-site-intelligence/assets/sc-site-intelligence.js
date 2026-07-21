@@ -3671,11 +3671,13 @@
       const viewport = root.querySelector('.scsi-live-intelligence__viewport');
       const track = root.querySelector('.scsi-live-intelligence__track');
       const pause = root.querySelector('.scsi-live-intelligence__pause');
+      const deliveryOutput = root.querySelector('[data-scsi-live-delivery]');
       const mobileControls = root.querySelector('.scsi-live-intelligence__mobile-controls');
       const previous = root.querySelector('.scsi-live-intelligence__previous');
       const next = root.querySelector('.scsi-live-intelligence__next');
       const position = root.querySelector('.scsi-live-intelligence__position');
       if (!viewport || !track || !cfg.restBase) return;
+
       const category = root.dataset.category || '';
       const channel = root.dataset.channel || 'global';
       const region = root.dataset.region || '';
@@ -3686,12 +3688,14 @@
       const maxPerSource = Math.max(1, Math.min(5, Number(root.dataset.maxPerSource || 2)));
       const showSources = root.dataset.showSources !== '0';
       const showUpdated = root.dataset.showUpdated !== '0';
+      const showFreshness = root.dataset.showFreshness !== '0';
       const showClusterSources = root.dataset.showClusterSources !== '0';
       const showSelectionContext = root.dataset.selectionContext !== '0';
       const detailLinks = root.dataset.detailLinks !== '0';
       const contextBase = String(root.dataset.contextBase || '');
       const compactSources = root.dataset.compactSources !== '0';
       const textLimit = Math.max(48, Math.min(220, Number(root.dataset.textLimit || 120)));
+      const refreshInterval = Math.max(60, Math.min(1800, Number(root.dataset.refreshSeconds || 300))) * 1000;
       const mobileMode = ['rotator', 'marquee', 'hidden'].includes(root.dataset.mobileMode) ? root.dataset.mobileMode : 'rotator';
       const mobileInterval = Math.max(4, Math.min(30, Number(root.dataset.mobileInterval || 7))) * 1000;
       const mobileQuery = window.matchMedia('(max-width: 760px)');
@@ -3704,6 +3708,7 @@
       let renderedMobile = null;
       let categoryLabels = {};
       try { categoryLabels = JSON.parse(root.dataset.categoryLabels || '{}'); } catch (error) { categoryLabels = {}; }
+
       const params = new URLSearchParams({limit: String(limit), max_per_source: String(maxPerSource)});
       if (category) params.set('category', category);
       if (channel) params.set('channel', channel);
@@ -3712,6 +3717,7 @@
       if (feeds) params.set('feeds', feeds);
       if (exclude) params.set('exclude', exclude);
       const endpoint = cfg.restBase + '/live-intelligence?' + params.toString();
+
       const relativeTime = function (value) {
         const stamp = Date.parse(value || '');
         if (!Number.isFinite(stamp)) return '';
@@ -3719,18 +3725,34 @@
         if (minutes < 1) return 'UPDATED NOW';
         if (minutes < 60) return 'UPDATED ' + minutes + 'M AGO';
         const hours = Math.round(minutes / 60);
-        return 'UPDATED ' + hours + 'H AGO';
+        if (hours < 48) return 'UPDATED ' + hours + 'H AGO';
+        return 'UPDATED ' + Math.round(hours / 24) + 'D AGO';
       };
       const shorten = function (value, maximum) {
         const clean = String(value || '').replace(/\s+/g, ' ').trim();
         if (clean.length <= maximum) return clean;
         return clean.slice(0, Math.max(1, maximum - 1)).trimEnd() + '…';
       };
+      const normalizeDeliveryState = function (data) {
+        const delivery = data && data.delivery ? data.delivery : {};
+        const proxy = data && data._scsi_delivery ? data._scsi_delivery : {};
+        if (proxy.mode === 'stale_cache') return 'stale';
+        const state = String(delivery.state || proxy.freshness || 'live').toLowerCase().replace(/\s+/g, '_');
+        return ['live', 'recently_updated', 'delayed', 'stale', 'historical', 'empty', 'unavailable'].includes(state) ? state : 'live';
+      };
+      const setDeliveryState = function (state, label) {
+        root.dataset.deliveryState = state;
+        root.classList.toggle('is-delayed', state === 'delayed' || state === 'stale');
+        root.classList.toggle('has-error', state === 'unavailable');
+        root.classList.toggle('is-empty', state === 'empty');
+        if (deliveryOutput) deliveryOutput.textContent = String(label || state.replace(/_/g, ' ')).toUpperCase();
+      };
       const itemHtml = function (signal, includeSeparator) {
         const metadata = [];
         const sourceName = compactSources && signal.source_short_name ? signal.source_short_name : signal.source_name;
         if (showSources && sourceName) metadata.push(sourceName);
         if (showClusterSources && Number(signal.cluster_source_count || 1) > 1) metadata.push(String(signal.cluster_source_count) + ' SOURCES');
+        if (showFreshness && signal.freshness_label) metadata.push(String(signal.freshness_label).toUpperCase());
         if (showUpdated && (signal.observed_at || signal.updated_at)) metadata.push(relativeTime(signal.observed_at || signal.updated_at));
         const contextHref = detailLinks && contextBase && signal.signal_id ? contextBase + encodeURIComponent(signal.signal_id) + '/' : '';
         const href = contextHref || signal.destination_url || signal.context_view_url || '#';
@@ -3739,11 +3761,12 @@
         const fullValue = signal.value || 'AVAILABLE';
         const reasons = Array.isArray(signal.selection_reasons) ? signal.selection_reasons.join('; ') : '';
         const titleParts = [signal.detail || fullValue || signal.label || ''];
+        if (signal.freshness_label) titleParts.push('Freshness: ' + signal.freshness_label);
         if (showSelectionContext && signal.development_state) titleParts.push('State: ' + signal.development_state);
         if (showSelectionContext && reasons) titleParts.push('Selected because: ' + reasons);
         const title = titleParts.filter(Boolean).join(' — ');
         const separator = includeSeparator ? '<span class="scsi-live-intelligence__separator" aria-hidden="true">◆</span>' : '';
-        return '<a class="scsi-live-intelligence__signal" data-scsi-event="sc_live_intelligence_context_open" data-scsi-signal-id="' + escapeHtml(signal.signal_id || '') + '" href="' + escapeHtml(href) + '" title="' + escapeHtml(title) + '" aria-label="' + escapeHtml(categoryLabel + ': ' + (signal.label || 'Live signal') + ': ' + fullValue) + '">' +
+        return '<a class="scsi-live-intelligence__signal" data-scsi-event="sc_live_intelligence_context_open" data-scsi-signal-id="' + escapeHtml(signal.signal_id || '') + '" data-freshness-state="' + escapeHtml(signal.freshness_state || 'unknown') + '" href="' + escapeHtml(href) + '" title="' + escapeHtml(title) + '" aria-label="' + escapeHtml(categoryLabel + ': ' + (signal.label || 'Live signal') + ': ' + fullValue + (signal.freshness_label ? '. ' + signal.freshness_label : '')) + '">' +
           '<span class="scsi-live-intelligence__category">' + escapeHtml(categoryLabel.toUpperCase()) + '</span>' +
           '<span class="scsi-live-intelligence__name">' + escapeHtml(shorten(signal.label || 'LIVE SIGNAL', 72)) + '</span>' +
           '<strong class="scsi-live-intelligence__value">' + escapeHtml(shorten(fullValue, textLimit)) + '</strong>' +
@@ -3795,26 +3818,49 @@
         track.innerHTML = '<div class="scsi-live-intelligence__set">' + content + '</div><div class="scsi-live-intelligence__set" aria-hidden="true">' + content + '</div>';
         renderedMobile = false;
       };
+      const renderEmpty = function (data) {
+        signals = [];
+        stopRotation();
+        if (mobileControls) mobileControls.hidden = true;
+        updatePosition();
+        const delivery = data && data.delivery ? data.delivery : {};
+        const state = normalizeDeliveryState(data);
+        const label = delivery.label || (state === 'empty' ? 'No matching public signals' : 'Temporarily unavailable');
+        track.innerHTML = '<span class="scsi-live-intelligence__connecting">' + escapeHtml(String(label).toUpperCase()) + '</span>';
+        root.classList.remove('is-ready');
+        setDeliveryState(state === 'live' ? 'empty' : state, label);
+        viewport.setAttribute('aria-busy', 'false');
+      };
       const render = function (data) {
-        signals = Array.isArray(data.signals) ? data.signals : [];
-        if (!signals.length) throw new Error('No Live Intelligence signals are currently available.');
+        signals = Array.isArray(data.signals) ? data.signals.filter(function (signal) { return signal && signal.validation_state !== 'invalid'; }) : [];
+        if (!signals.length) {
+          renderEmpty(data);
+          return;
+        }
         renderMode();
-        root.classList.remove('has-error', 'is-delayed');
+        const state = normalizeDeliveryState(data);
+        const delivery = data.delivery || {};
+        const label = delivery.label || (state === 'stale' ? 'Cached' : state.replace(/_/g, ' '));
+        root.classList.remove('has-error', 'is-empty');
         root.classList.add('is-ready');
+        setDeliveryState(state, label);
         viewport.setAttribute('aria-busy', 'false');
         if (root.dataset.motion === 'off') root.classList.add('is-paused');
       };
       const load = function () {
+        viewport.setAttribute('aria-busy', 'true');
         fetchJson(endpoint).then(render).catch(function () {
           viewport.setAttribute('aria-busy', 'false');
           if (root.classList.contains('is-ready')) {
-            root.classList.add('is-delayed');
+            setDeliveryState('delayed', 'Refresh delayed');
             return;
           }
-          track.innerHTML = '<span class="scsi-live-intelligence__connecting">LIVE INTELLIGENCE FEED TEMPORARILY UNAVAILABLE · LAST VERIFIED SIGNALS WILL RETURN AUTOMATICALLY</span>';
-          root.classList.add('has-error');
+          signals = [];
+          track.innerHTML = '<span class="scsi-live-intelligence__connecting">LIVE INTELLIGENCE TEMPORARILY UNAVAILABLE</span>';
+          setDeliveryState('unavailable', 'Unavailable');
         });
       };
+
       if (finePointer.matches) {
         root.addEventListener('mouseenter', function () { root.classList.add('is-hover-paused'); });
         root.addEventListener('mouseleave', function () { root.classList.remove('is-hover-paused'); });
@@ -3848,7 +3894,8 @@
           const paused = root.classList.toggle('is-paused');
           pause.setAttribute('aria-pressed', paused ? 'true' : 'false');
           pause.setAttribute('aria-label', paused ? 'Resume Live Intelligence ticker' : 'Pause Live Intelligence ticker');
-          pause.querySelector('span').textContent = paused ? '▶' : 'Ⅱ';
+          const icon = pause.querySelector('span');
+          if (icon) icon.textContent = paused ? '▶' : 'Ⅱ';
           if (paused) stopRotation(); else startRotation();
         });
       }
@@ -3857,7 +3904,7 @@
       if (reducedMotion.addEventListener) reducedMotion.addEventListener('change', startRotation); else reducedMotion.addListener(startRotation);
       document.addEventListener('visibilitychange', function () { if (document.hidden) stopRotation(); else startRotation(); });
       load();
-      window.setInterval(load, 300000);
+      window.setInterval(load, refreshInterval);
     });
   }
 

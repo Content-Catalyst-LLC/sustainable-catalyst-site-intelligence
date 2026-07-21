@@ -6,11 +6,11 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_release_contract_files_and_markers():
     checks = {
-        "backend/app/version.py": ['APP_VERSION = "3.5.0"', 'RELEASE_NAME = "Connected Public Intelligence and Evidence Platform"'],
+        "backend/app/version.py": ['APP_VERSION = "3.6.1"', 'RELEASE_NAME = "Connected Public Intelligence and Evidence Platform"'],
         "backend/app/config.py": ["scheduled_monitoring_enabled", "scheduled_monitoring_monitors_path", "scheduled_monitoring_digests_path", "scheduled_monitoring_feeds_path"],
-        "backend/app/scheduled_monitoring_v2210.py": ['RELEASE_VERSION = "3.5.0"', "def save_monitor(", "def check_monitor(", "def run_due(", "def generate_digest(", "def feed_payload(", "def deliver_digest("],
+        "backend/app/scheduled_monitoring_v2210.py": ['RELEASE_VERSION = "3.6.1"', "def save_monitor(", "def check_monitor(", "def run_due(", "def generate_digest(", "def feed_payload(", "def deliver_digest("],
         "backend/app/main.py": ['"/public/scheduled-monitoring"', '"/public/intelligence-digests"', '"/public/intelligence-feeds/{feed_id}"', '"/admin/scheduled-monitoring/run-due"'],
-        "backend/data/scheduled_monitoring_policy_v2210.json": ['"version": "3.5.0"', "Duplicate alerts", "human explicitly approves", "disabled by default"],
+        "backend/data/scheduled_monitoring_policy_v2210.json": ['"version": "3.6.1"', "Duplicate alerts", "human explicitly approves", "disabled by default"],
     }
     for relative, markers in checks.items():
         text = (ROOT / relative).read_text(encoding="utf-8")
@@ -36,7 +36,7 @@ def test_public_app_wordpress_and_offline_contract():
 
 def test_governance_policy_boundaries():
     policy = json.loads((ROOT / "backend/data/scheduled_monitoring_policy_v2210.json").read_text(encoding="utf-8"))
-    assert policy["version"] == "3.5.0"
+    assert policy["version"] == "3.6.1"
     assert policy["prohibited"]["automatic_emergency_dispatch"] is True
     assert policy["prohibited"]["individual_tracking"] is True
     assert policy["prohibited"]["automatic_publication"] is True
