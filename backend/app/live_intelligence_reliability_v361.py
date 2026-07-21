@@ -1,6 +1,6 @@
 """Reliability, freshness, and last-known-good delivery for Live Intelligence.
 
-Site Intelligence v3.6.2 keeps the v3.5.0 channel and ranking engine intact and
+Site Intelligence v3.7.0 keeps the v3.5.0 channel and ranking engine intact and
 adds a public-safe reliability boundary around it. The boundary validates each
 signal, assigns explicit freshness states, suppresses expired observations, and
 recovers only from a last-known-good payload created for the same query.
@@ -17,6 +17,7 @@ from typing import Any, Iterable, Mapping
 from .config import Settings
 from .version import APP_VERSION
 from . import live_intelligence_channels_v350 as base
+from .live_intelligence_gateway_v370 import apply_gateway_policy
 
 RELIABILITY_SCHEMA_VERSION = "sc-site-intelligence-live-intelligence-reliability/1.0"
 VALID_FRESHNESS_STATES = {
@@ -365,11 +366,11 @@ def build_live_intelligence(
     country: str = "",
 ) -> dict[str, Any]:
     if not bool(settings.live_intelligence_reliability_enabled):
-        return base.build_live_intelligence(
+        return apply_gateway_policy(base.build_live_intelligence(
             settings, category=category, limit=limit, feeds=feeds, exclude=exclude,
             max_per_source=max_per_source, record_operations=record_operations,
             channel=channel, region=region, country=country,
-        )
+        ))
 
     parameters = _parameters(
         category=category, limit=limit, feeds=feeds, exclude=exclude,
@@ -390,7 +391,7 @@ def build_live_intelligence(
                 store.put(key, reliable)
             reliable["delivery"]["query_fingerprint"] = key[:16]
             reliable["delivery"]["origin"] = "current_request"
-            return reliable
+            return apply_gateway_policy(reliable)
         origin_error = "origin_returned_no_usable_signals"
     except KeyError:
         raise
@@ -413,7 +414,7 @@ def build_live_intelligence(
         })
         recovered["ok"] = True
         recovered["feed_state"]["reliability"]["recovered_from_last_known_good"] = True
-        return recovered
+        return apply_gateway_policy(recovered)
 
     empty = {
         "ok": True,
@@ -457,7 +458,7 @@ def build_live_intelligence(
             "No signal values are fabricated when current and same-query last-known-good data are unavailable."
         ],
     }
-    return empty
+    return apply_gateway_policy(empty)
 
 
 def build_channel_feed(settings: Settings, channel_id: str, **kwargs: Any) -> dict[str, Any]:

@@ -1,0 +1,18 @@
+{
+  "schema": "sc-site-intelligence-release-governance/1.0",
+  "version": "3.7.0",
+  "release": "Homepage Intelligence Gateway",
+  "default_homepage_signal_limit": 8,
+  "maximum_homepage_signal_limit": 12,
+  "signal_family_count": 8,
+  "primary_context_before_source": true,
+  "structured_geography": true,
+  "source_and_freshness_required": true,
+  "automatic_emergency_publication": false,
+  "automatic_causation": false,
+  "fabricated_signal_values": false,
+  "full_application_boot_required": false,
+  "sticky_homepage_ticker": false,
+  "human_controlled_publication": true,
+  "wordpress_public_context_route": true
+}

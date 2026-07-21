@@ -3679,6 +3679,7 @@
       const position = root.querySelector('.scsi-live-intelligence__position');
       if (!viewport || !track || !cfg.restBase) return;
 
+      const surface = root.dataset.surface === 'homepage' ? 'homepage' : 'feed';
       const category = root.dataset.category || '';
       const channel = root.dataset.channel || 'global';
       const region = root.dataset.region || '';
@@ -3722,7 +3723,8 @@
       if (country) params.set('country', country);
       if (feeds) params.set('feeds', feeds);
       if (exclude) params.set('exclude', exclude);
-      const endpoint = cfg.restBase + '/live-intelligence?' + params.toString();
+      const endpointPath = surface === 'homepage' ? '/live-intelligence/homepage' : '/live-intelligence';
+      const endpoint = cfg.restBase + endpointPath + '?' + params.toString();
 
       const relativeTime = function (value) {
         const stamp = Date.parse(value || '');
@@ -3759,13 +3761,14 @@
       const signalAccessibleText = function (signal, index) {
         const sourceName = compactSources && signal.source_short_name ? signal.source_short_name : signal.source_name;
         const categoryId = signal.category || 'signal';
-        const categoryLabel = categoryLabels[categoryId] || categoryId.replace(/_/g, ' ');
+        const categoryLabel = signal.family_label || categoryLabels[categoryId] || categoryId.replace(/_/g, ' ');
         const parts = [];
         if (Number.isInteger(index)) parts.push('Signal ' + (index + 1) + ' of ' + signals.length);
         parts.push(categoryLabel);
         parts.push(signal.label || 'Live signal');
         parts.push(signal.value || 'Available');
         if (showSources && sourceName) parts.push('Source ' + sourceName);
+        if (signal.geography_label && signal.geography_label !== 'Global') parts.push('Geography ' + signal.geography_label);
         if (showFreshness && signal.freshness_label) parts.push(signal.freshness_label);
         if (showUpdated && (signal.observed_at || signal.updated_at)) parts.push(relativeTime(signal.observed_at || signal.updated_at).replace(/^UPDATED /, 'Updated '));
         return parts.filter(Boolean).join('. ');
@@ -3787,18 +3790,21 @@
         if (showFreshness && signal.freshness_label) metadata.push(String(signal.freshness_label).toUpperCase());
         if (showUpdated && (signal.observed_at || signal.updated_at)) metadata.push(relativeTime(signal.observed_at || signal.updated_at));
         const contextHref = detailLinks && contextBase && signal.signal_id ? contextBase + encodeURIComponent(signal.signal_id) + '/' : '';
-        const href = contextHref || signal.destination_url || signal.context_view_url || '#';
+        const primaryDestination = signal.primary_destination && typeof signal.primary_destination === 'object' ? signal.primary_destination : {};
+        const primaryHref = primaryDestination.type === 'signal_context' ? contextHref : (primaryDestination.url || '');
+        const href = primaryHref || contextHref || signal.destination_url || signal.context_view_url || '#';
         const categoryId = signal.category || 'signal';
-        const categoryLabel = categoryLabels[categoryId] || categoryId.replace(/_/g, ' ');
+        const categoryLabel = signal.family_label || categoryLabels[categoryId] || categoryId.replace(/_/g, ' ');
         const fullValue = signal.value || 'AVAILABLE';
         const reasons = Array.isArray(signal.selection_reasons) ? signal.selection_reasons.join('; ') : '';
         const titleParts = [signal.detail || fullValue || signal.label || ''];
         if (signal.freshness_label) titleParts.push('Freshness: ' + signal.freshness_label);
         if (showSelectionContext && signal.development_state) titleParts.push('State: ' + signal.development_state);
         if (showSelectionContext && reasons) titleParts.push('Selected because: ' + reasons);
+        if (primaryDestination.label) titleParts.push(primaryDestination.label);
         const title = titleParts.filter(Boolean).join(' — ');
         const separator = includeSeparator ? '<span class="scsi-live-intelligence__separator" aria-hidden="true">◆</span>' : '';
-        return '<a class="scsi-live-intelligence__signal" data-scsi-event="sc_live_intelligence_context_open" data-scsi-signal-id="' + escapeHtml(signal.signal_id || '') + '" data-freshness-state="' + escapeHtml(signal.freshness_state || 'unknown') + '" href="' + escapeHtml(href) + '" title="' + escapeHtml(title) + '" aria-label="' + escapeHtml(signalAccessibleText(signal, Number.isInteger(index) ? index : null)) + '">' +
+        return '<a class="scsi-live-intelligence__signal" data-scsi-event="sc_live_intelligence_context_open" data-scsi-signal-id="' + escapeHtml(signal.signal_id || '') + '" data-freshness-state="' + escapeHtml(signal.freshness_state || 'unknown') + '" data-signal-family="' + escapeHtml(signal.signal_family || '') + '" data-destination-type="' + escapeHtml(primaryDestination.type || '') + '" href="' + escapeHtml(href) + '" title="' + escapeHtml(title) + '" aria-label="' + escapeHtml(signalAccessibleText(signal, Number.isInteger(index) ? index : null)) + '">' +
           '<span class="scsi-live-intelligence__category">' + escapeHtml(categoryLabel.toUpperCase()) + '</span>' +
           '<span class="scsi-live-intelligence__name">' + escapeHtml(shorten(signal.label || 'LIVE SIGNAL', 72)) + '</span>' +
           '<strong class="scsi-live-intelligence__value">' + escapeHtml(shorten(fullValue, textLimit)) + '</strong>' +

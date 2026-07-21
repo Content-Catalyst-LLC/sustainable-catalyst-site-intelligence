@@ -1,15 +1,26 @@
 # Sustainable Catalyst Site Intelligence
 
+## v3.7.0 — Homepage Intelligence Gateway
+
+- Adds a bounded homepage feed with an eight-signal default and twelve-signal maximum.
+- Enriches every signal with a public family, structured geography, formatted value, and responsible-use metadata.
+- Adds a transparent destination hierarchy spanning signal context, Site Intelligence, evidence, maps, Decision Studio, and primary sources.
+- Adds WordPress gateway routing and keeps backend-relative context links behind the WordPress public surface.
+- Preserves v3.6.2 reliability, reduced-motion behavior, mobile controls, ranking, channels, and source operations.
+
+
 ## v3.6.2 — Live Intelligence Presentation, Motion, and Accessibility Controls
 
 Site Intelligence v3.6.2 adds a governed presentation layer to the validated Live Intelligence feed. Administrators can choose a slow moving ticker, a fully static strip, or a manual signal viewer. Reduced-motion visitors automatically receive a static or manual experience, and mobile visitors may use a rotator, stacked cards, a marquee, or a hidden surface.
 
-**Current release:** v3.6.2 — Connected Public Intelligence and Evidence Platform
+**Current release:** v3.7.0 — Connected Public Intelligence and Evidence Platform
 
 Primary v3.6.2 routes:
 
 - `/public/live-intelligence`
 - `/public/live-intelligence/status`
+- `/public/live-intelligence/homepage`
+- `/public/live-intelligence/gateway-policy`
 - `/public/live-intelligence/presentation-policy`
 - `/public/live-intelligence/channels`
 - `/public/live-intelligence/channels/{channel_id}/feed`
@@ -23,11 +34,11 @@ The WordPress surface adds maximum-visible-signal controls, dedicated assistive 
 
 The v3.6.1 validation, explicit freshness states, malformed-record isolation, duplicate and expired-signal suppression, same-query last-known-good recovery, public status contract, and WordPress proxy-cache boundaries remain active beneath the v3.6.2 presentation layer.
 
-### v3.6.2 — Topic and Regional Channels
+### v3.7.0 — Topic and Regional Channels
 
 The v3.5.0 channel directory, topic and regional filters, country routing, source selection, and honest empty-result policy remain version-aligned and active in v3.6.2.
 
-### v3.6.2 — Signal Context and Drill-Down
+### v3.7.0 — Signal Context and Drill-Down
 
 The v3.4.0 context, evidence, source-lineage, map, Decision Studio, ranking-explanation, and responsible-use capability remains version-aligned and active in v3.6.2.
 

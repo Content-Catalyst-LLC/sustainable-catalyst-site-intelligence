@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.7.0 — Homepage Intelligence Gateway
+
+- Added `/public/live-intelligence/homepage` and `/public/live-intelligence/gateway-policy`.
+- Added eight governed signal families, structured geography, and canonical primary/secondary destinations.
+- Added a homepage-specific WordPress proxy route and automatic top-surface eight-signal preset.
+- Updated ticker links to follow gateway destinations while retaining the local WordPress context-page route.
+- Preserved all v3.6.2 accessibility, motion, reliability, and source-governance behavior.
+
 ## 3.6.2 — Live Intelligence Presentation, Motion, and Accessibility Controls
 
 - Added moving ticker, fully static, and manual previous/next presentation modes.
