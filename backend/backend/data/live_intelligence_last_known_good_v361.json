@@ -1,0 +1,909 @@
+{
+  "entries": {
+    "1a66b26b531d65c15587c493d04002c1e0e50ef58d655d0d508f48984eaf95a6": {
+      "payload": {
+        "boundaries": [
+          "Only verified live, cached, or stale public-source records are summarized.",
+          "Demonstration fallback records and sample connector values are excluded from the ticker.",
+          "Periodic indicators display their data year and are not described as real-time measurements.",
+          "Clustering reduces duplicate presentation; it does not prove that a repeated report is accurate.",
+          "Selection scores rank display relevance and are not danger, truth, or institutional-importance scores.",
+          "Signals are informational and do not replace official emergency, legal, medical, or financial guidance.",
+          "Channel filters use explicit source metadata and do not infer missing geography from coordinates.",
+          "An empty topic, region, or country channel remains empty rather than falling back to unrelated global signals.",
+          "A cached payload is reused only for the same channel, geography, source selection, and limit query.",
+          "Expired or malformed signals are withheld rather than converted to zero or fabricated replacement values.",
+          "Freshness labels describe delivery timing and do not certify accuracy, importance, or completeness."
+        ],
+        "category": "platform",
+        "channel": {
+          "categories": [],
+          "country_parameter_supported": true,
+          "description": "Balanced public-interest signals across all enabled sources and categories.",
+          "feed_url": "/public/live-intelligence/channels/global/feed",
+          "feeds": [],
+          "id": "global",
+          "kind": "global",
+          "label": "Global Intelligence",
+          "region": "global",
+          "region_parameter_supported": true,
+          "shortcode": "[sc_live_intelligence channel=\"global\"]"
+        },
+        "channel_directory_url": "/public/live-intelligence/channels",
+        "channel_filter": {
+          "channel_id": "global",
+          "channel_kind": "global",
+          "channel_label": "Global Intelligence",
+          "country": "",
+          "input_count": 1,
+          "matched_count": 1,
+          "region": "global",
+          "silent_global_fallback": false
+        },
+        "channel_policy_url": "/public/live-intelligence/channel-policy",
+        "count": 1,
+        "delivery": {
+          "cache_age_seconds": 0,
+          "generated_at": "2026-07-21T11:38:09.983441+00:00",
+          "label": "Live",
+          "last_known_good": false,
+          "served_at": "2026-07-21T11:38:09.984737+00:00",
+          "state": "live"
+        },
+        "display": {
+          "category_labels": {
+            "earth_systems": "Earth Systems",
+            "economy_resources": "Economy, Energy & Resources",
+            "human_systems": "Human Systems",
+            "platform": "Platform",
+            "research": "Science & Research"
+          },
+          "channel_registry_url": "/public/live-intelligence/channels",
+          "channel_shortcodes_supported": true,
+          "country_channel_filter_supported": true,
+          "decision_studio_handoff_supported": true,
+          "default_desktop_cycle_seconds": 30,
+          "default_mobile_cycle_seconds": 36,
+          "default_motion": "slow",
+          "default_signal_text_limit": 120,
+          "event_clustering_supported": true,
+          "expired_signal_suppression_supported": true,
+          "explicit_freshness_states_supported": true,
+          "feed_selection_supported": true,
+          "freshness_required": true,
+          "hover_pause_required": true,
+          "label": "Live Intelligence",
+          "last_known_good_delivery_supported": true,
+          "malformed_signal_isolation_supported": true,
+          "partial_feed_rendering_supported": true,
+          "readability_controls_supported": true,
+          "selection_reasons_supported": true,
+          "signal_context_supported": true,
+          "signal_evidence_download_supported": true,
+          "signal_map_context_supported": true,
+          "signal_timeline_supported": true,
+          "source_attribution_required": true,
+          "source_operations_supported": true,
+          "theme": "electronic",
+          "theme_navigation_styles": "untouched",
+          "topic_regional_channels_supported": true,
+          "transparent_ranking_supported": true
+        },
+        "feed_state": {
+          "active_feeds": [
+            "noaa_nws",
+            "usgs_earthquakes",
+            "nasa_eonet",
+            "reliefweb",
+            "nasa_power",
+            "openalex",
+            "world_bank",
+            "platform_status"
+          ],
+          "category_counts": {
+            "platform": 1
+          },
+          "channel": {
+            "channel_id": "global",
+            "channel_kind": "global",
+            "channel_label": "Global Intelligence",
+            "country": "",
+            "input_count": 1,
+            "matched_count": 1,
+            "region": "global",
+            "silent_global_fallback": false
+          },
+          "default_signal_limit": 16,
+          "excluded_feeds": [],
+          "feed_counts": {
+            "platform_status": 1
+          },
+          "maximum_signals_per_source": 2,
+          "platform_signal_count": 1,
+          "ranking": {
+            "clustered_signal_count": 0,
+            "highest_score": 30,
+            "lowest_score": 30,
+            "multi_source_signal_count": 0,
+            "policy_url": "/public/live-intelligence/ranking-policy",
+            "schema": "sc-site-intelligence-event-clustering-ranking/1.0",
+            "selected_count": 1
+          },
+          "reliability": {
+            "duplicate_signals_suppressed": 0,
+            "expired_signals_suppressed": 0,
+            "freshness_counts": {
+              "live": 1
+            },
+            "input_signal_count": 1,
+            "partial_feed": false,
+            "rejected_signal_count": 0,
+            "rejection_counts": {},
+            "valid_signal_count": 1
+          },
+          "requested_feeds": [
+            "noaa_nws",
+            "usgs_earthquakes",
+            "nasa_eonet",
+            "reliefweb",
+            "nasa_power",
+            "openalex",
+            "world_bank",
+            "platform_status"
+          ],
+          "source_counts": {
+            "Sustainable Catalyst": 1
+          },
+          "useful_signal_count": 0
+        },
+        "feeds": [
+          {
+            "category": "earth_systems",
+            "enabled": true,
+            "id": "noaa_nws",
+            "label": "NOAA / National Weather Service",
+            "signal_count": 0
+          },
+          {
+            "category": "earth_systems",
+            "enabled": true,
+            "id": "usgs_earthquakes",
+            "label": "USGS Earthquakes",
+            "signal_count": 0
+          },
+          {
+            "category": "earth_systems",
+            "enabled": true,
+            "id": "nasa_eonet",
+            "label": "NASA EONET Natural Events",
+            "signal_count": 0
+          },
+          {
+            "category": "human_systems",
+            "enabled": true,
+            "id": "reliefweb",
+            "label": "ReliefWeb Humanitarian Reports",
+            "signal_count": 0
+          },
+          {
+            "category": "earth_systems",
+            "enabled": true,
+            "id": "nasa_power",
+            "label": "NASA POWER Observations",
+            "signal_count": 0
+          },
+          {
+            "category": "research",
+            "enabled": true,
+            "id": "openalex",
+            "label": "OpenAlex Research",
+            "signal_count": 0
+          },
+          {
+            "category": "economy_resources",
+            "enabled": true,
+            "id": "world_bank",
+            "label": "World Bank Indicators",
+            "signal_count": 0
+          },
+          {
+            "category": "platform",
+            "enabled": true,
+            "id": "platform_status",
+            "label": "Site Intelligence Platform Status",
+            "signal_count": 1
+          }
+        ],
+        "generated_at": "2026-07-21T11:38:09.983441+00:00",
+        "ok": true,
+        "reliability_schema": "sc-site-intelligence-live-intelligence-reliability/1.0",
+        "schema": "sc-site-intelligence-live-intelligence/1.4",
+        "signals": [
+          {
+            "category": "platform",
+            "channel_ids": [
+              "global"
+            ],
+            "channel_match_reasons": [
+              "global channel"
+            ],
+            "context_available": true,
+            "context_url": "/public/live-intelligence/signals/platform.site-intelligence-api",
+            "context_view_url": "/public/live-intelligence/signals/platform.site-intelligence-api/view",
+            "data_state": "current",
+            "destination_url": "/platform/site-intelligence/",
+            "detail": "Connected Public Intelligence and Evidence Platform",
+            "development_state": "reference",
+            "evidence_url": "/public/live-intelligence/signals/platform.site-intelligence-api/evidence",
+            "feed_id": "platform_status",
+            "freshness_age_seconds": 0,
+            "freshness_label": "Live",
+            "freshness_state": "live",
+            "freshness_timestamp": "2026-07-21T11:38:09.983441+00:00",
+            "label": "SITE INTELLIGENCE",
+            "observed_at": "2026-07-21T11:38:09.983441+00:00",
+            "priority": 900,
+            "ranking_components": {
+              "corroboration": 0,
+              "freshness": 25,
+              "severity": 3,
+              "signal_priority": 0,
+              "source_priority": 2,
+              "state_penalty": 0
+            },
+            "selection_rank": 1,
+            "selection_reasons": [
+              "observed within 3 hours"
+            ],
+            "selection_score": 30,
+            "severity": "informational",
+            "signal_id": "platform.site-intelligence-api",
+            "source_name": "Sustainable Catalyst",
+            "source_priority": 90,
+            "source_short_name": "Sustainable Catalyst",
+            "source_url": "",
+            "status": "current",
+            "unit": "",
+            "updated_at": "2026-07-21T11:38:09.983441+00:00",
+            "validation_state": "valid",
+            "value": "v3.10.0 CONNECTED"
+          }
+        ],
+        "source_operations": {
+          "enabled": true,
+          "registry_url": "/public/live-intelligence/sources",
+          "schema": "sc-site-intelligence-live-source-operations/1.0",
+          "source_count": 8,
+          "summary": {
+            "degraded": 0,
+            "disabled": 0,
+            "due": 7,
+            "enabled": 8,
+            "healthy": 1,
+            "never_run": 7,
+            "stale": 0
+          }
+        },
+        "version": "3.10.0"
+      },
+      "saved_at": "2026-07-21T11:38:09.985207+00:00",
+      "signal_count": 1
+    },
+    "c10191fc365e6f4d4757985c49685e638e33e91d078f2fb36224fcbfd2699e3b": {
+      "payload": {
+        "boundaries": [
+          "Only verified live, cached, or stale public-source records are summarized.",
+          "Demonstration fallback records and sample connector values are excluded from the ticker.",
+          "Periodic indicators display their data year and are not described as real-time measurements.",
+          "Clustering reduces duplicate presentation; it does not prove that a repeated report is accurate.",
+          "Selection scores rank display relevance and are not danger, truth, or institutional-importance scores.",
+          "Signals are informational and do not replace official emergency, legal, medical, or financial guidance.",
+          "Channel filters use explicit source metadata and do not infer missing geography from coordinates.",
+          "An empty topic, region, or country channel remains empty rather than falling back to unrelated global signals.",
+          "A cached payload is reused only for the same channel, geography, source selection, and limit query.",
+          "Expired or malformed signals are withheld rather than converted to zero or fabricated replacement values.",
+          "Freshness labels describe delivery timing and do not certify accuracy, importance, or completeness."
+        ],
+        "category": "all",
+        "channel": {
+          "categories": [],
+          "country_parameter_supported": true,
+          "description": "Balanced public-interest signals across all enabled sources and categories.",
+          "feed_url": "/public/live-intelligence/channels/global/feed",
+          "feeds": [],
+          "id": "global",
+          "kind": "global",
+          "label": "Global Intelligence",
+          "region": "global",
+          "region_parameter_supported": true,
+          "shortcode": "[sc_live_intelligence channel=\"global\"]"
+        },
+        "channel_directory_url": "/public/live-intelligence/channels",
+        "channel_filter": {
+          "channel_id": "global",
+          "channel_kind": "global",
+          "channel_label": "Global Intelligence",
+          "country": "",
+          "input_count": 1,
+          "matched_count": 1,
+          "region": "global",
+          "silent_global_fallback": false
+        },
+        "channel_policy_url": "/public/live-intelligence/channel-policy",
+        "count": 1,
+        "delivery": {
+          "cache_age_seconds": 0,
+          "generated_at": "2026-07-21T11:38:09.990798+00:00",
+          "label": "Live",
+          "last_known_good": false,
+          "served_at": "2026-07-21T11:38:15.004938+00:00",
+          "state": "live"
+        },
+        "display": {
+          "category_labels": {
+            "earth_systems": "Earth Systems",
+            "economy_resources": "Economy, Energy & Resources",
+            "human_systems": "Human Systems",
+            "platform": "Platform",
+            "research": "Science & Research"
+          },
+          "channel_registry_url": "/public/live-intelligence/channels",
+          "channel_shortcodes_supported": true,
+          "country_channel_filter_supported": true,
+          "decision_studio_handoff_supported": true,
+          "default_desktop_cycle_seconds": 30,
+          "default_mobile_cycle_seconds": 36,
+          "default_motion": "slow",
+          "default_signal_text_limit": 120,
+          "event_clustering_supported": true,
+          "expired_signal_suppression_supported": true,
+          "explicit_freshness_states_supported": true,
+          "feed_selection_supported": true,
+          "freshness_required": true,
+          "hover_pause_required": true,
+          "label": "Live Intelligence",
+          "last_known_good_delivery_supported": true,
+          "malformed_signal_isolation_supported": true,
+          "partial_feed_rendering_supported": true,
+          "readability_controls_supported": true,
+          "selection_reasons_supported": true,
+          "signal_context_supported": true,
+          "signal_evidence_download_supported": true,
+          "signal_map_context_supported": true,
+          "signal_timeline_supported": true,
+          "source_attribution_required": true,
+          "source_operations_supported": true,
+          "theme": "electronic",
+          "theme_navigation_styles": "untouched",
+          "topic_regional_channels_supported": true,
+          "transparent_ranking_supported": true
+        },
+        "feed_state": {
+          "active_feeds": [
+            "noaa_nws",
+            "usgs_earthquakes",
+            "nasa_eonet",
+            "reliefweb",
+            "nasa_power",
+            "openalex",
+            "world_bank",
+            "platform_status"
+          ],
+          "category_counts": {
+            "platform": 1
+          },
+          "channel": {
+            "channel_id": "global",
+            "channel_kind": "global",
+            "channel_label": "Global Intelligence",
+            "country": "",
+            "input_count": 1,
+            "matched_count": 1,
+            "region": "global",
+            "silent_global_fallback": false
+          },
+          "default_signal_limit": 16,
+          "development": {
+            "data_state": "unavailable",
+            "errors": [
+              "SP.POP.GROW:URLError",
+              "EG.FEC.RNEW.ZS:URLError"
+            ],
+            "indicator_count": 0
+          },
+          "events": {
+            "category_counts": {},
+            "clustering": {
+              "boundaries": [
+                "Clustering reduces duplicate presentation and is not proof that an event description is accurate.",
+                "Events are never merged solely because they share a broad category.",
+                "Canonical selection retains links to all represented source records when available."
+              ],
+              "canonical_events": 0,
+              "duplicates_suppressed": 0,
+              "input_records": 0,
+              "multi_source_clusters": 0,
+              "policy": {
+                "distance_km": 300.0,
+                "text_similarity": 0.34,
+                "time_window_hours": 72
+              },
+              "schema": "sc-site-intelligence-event-clustering-ranking/1.0",
+              "source_counts": {},
+              "version": "3.10.0"
+            },
+            "data_state": "unavailable",
+            "event_count": 0,
+            "raw_event_count": 0,
+            "source_states": {
+              "nasa-eonet": "live",
+              "reliefweb": "live",
+              "usgs": "live"
+            }
+          },
+          "excluded_feeds": [],
+          "feed_counts": {
+            "platform_status": 1
+          },
+          "maximum_signals_per_source": 2,
+          "nasa_power": {
+            "cache_status": "fallback",
+            "data_state": "fallback-suppressed"
+          },
+          "platform_signal_count": 1,
+          "ranking": {
+            "clustered_signal_count": 0,
+            "highest_score": 30,
+            "lowest_score": 30,
+            "multi_source_signal_count": 0,
+            "policy_url": "/public/live-intelligence/ranking-policy",
+            "schema": "sc-site-intelligence-event-clustering-ranking/1.0",
+            "selected_count": 1
+          },
+          "reliability": {
+            "duplicate_signals_suppressed": 0,
+            "expired_signals_suppressed": 0,
+            "freshness_counts": {
+              "live": 1
+            },
+            "input_signal_count": 1,
+            "partial_feed": false,
+            "rejected_signal_count": 0,
+            "rejection_counts": {},
+            "valid_signal_count": 1
+          },
+          "requested_feeds": [
+            "noaa_nws",
+            "usgs_earthquakes",
+            "nasa_eonet",
+            "reliefweb",
+            "nasa_power",
+            "openalex",
+            "world_bank",
+            "platform_status"
+          ],
+          "research": {
+            "data_state": "unavailable",
+            "error": "URLError"
+          },
+          "source_counts": {
+            "Sustainable Catalyst": 1
+          },
+          "useful_signal_count": 0,
+          "weather": {
+            "cache_status": "fallback",
+            "data_state": "fallback-suppressed"
+          }
+        },
+        "feeds": [
+          {
+            "category": "earth_systems",
+            "enabled": true,
+            "id": "noaa_nws",
+            "label": "NOAA / National Weather Service",
+            "signal_count": 0
+          },
+          {
+            "category": "earth_systems",
+            "enabled": true,
+            "id": "usgs_earthquakes",
+            "label": "USGS Earthquakes",
+            "signal_count": 0
+          },
+          {
+            "category": "earth_systems",
+            "enabled": true,
+            "id": "nasa_eonet",
+            "label": "NASA EONET Natural Events",
+            "signal_count": 0
+          },
+          {
+            "category": "human_systems",
+            "enabled": true,
+            "id": "reliefweb",
+            "label": "ReliefWeb Humanitarian Reports",
+            "signal_count": 0
+          },
+          {
+            "category": "earth_systems",
+            "enabled": true,
+            "id": "nasa_power",
+            "label": "NASA POWER Observations",
+            "signal_count": 0
+          },
+          {
+            "category": "research",
+            "enabled": true,
+            "id": "openalex",
+            "label": "OpenAlex Research",
+            "signal_count": 0
+          },
+          {
+            "category": "economy_resources",
+            "enabled": true,
+            "id": "world_bank",
+            "label": "World Bank Indicators",
+            "signal_count": 0
+          },
+          {
+            "category": "platform",
+            "enabled": true,
+            "id": "platform_status",
+            "label": "Site Intelligence Platform Status",
+            "signal_count": 1
+          }
+        ],
+        "generated_at": "2026-07-21T11:38:09.990798+00:00",
+        "ok": true,
+        "reliability_schema": "sc-site-intelligence-live-intelligence-reliability/1.0",
+        "schema": "sc-site-intelligence-live-intelligence/1.4",
+        "signals": [
+          {
+            "category": "platform",
+            "channel_ids": [
+              "global"
+            ],
+            "channel_match_reasons": [
+              "global channel"
+            ],
+            "context_available": true,
+            "context_url": "/public/live-intelligence/signals/platform.site-intelligence-api",
+            "context_view_url": "/public/live-intelligence/signals/platform.site-intelligence-api/view",
+            "data_state": "current",
+            "destination_url": "/platform/site-intelligence/",
+            "detail": "Connected Public Intelligence and Evidence Platform",
+            "development_state": "reference",
+            "evidence_url": "/public/live-intelligence/signals/platform.site-intelligence-api/evidence",
+            "feed_id": "platform_status",
+            "freshness_age_seconds": 5,
+            "freshness_label": "Live",
+            "freshness_state": "live",
+            "freshness_timestamp": "2026-07-21T11:38:09.990798+00:00",
+            "label": "SITE INTELLIGENCE",
+            "observed_at": "2026-07-21T11:38:09.990798+00:00",
+            "priority": 900,
+            "ranking_components": {
+              "corroboration": 0,
+              "freshness": 25,
+              "severity": 3,
+              "signal_priority": 0,
+              "source_priority": 2,
+              "state_penalty": 0
+            },
+            "selection_rank": 1,
+            "selection_reasons": [
+              "observed within 3 hours"
+            ],
+            "selection_score": 30,
+            "severity": "informational",
+            "signal_id": "platform.site-intelligence-api",
+            "source_name": "Sustainable Catalyst",
+            "source_priority": 90,
+            "source_short_name": "Sustainable Catalyst",
+            "source_url": "",
+            "status": "current",
+            "unit": "",
+            "updated_at": "2026-07-21T11:38:09.990798+00:00",
+            "validation_state": "valid",
+            "value": "v3.10.0 CONNECTED"
+          }
+        ],
+        "source_operations": {
+          "enabled": true,
+          "registry_url": "/public/live-intelligence/sources",
+          "schema": "sc-site-intelligence-live-source-operations/1.0",
+          "source_count": 8,
+          "summary": {
+            "degraded": 5,
+            "disabled": 0,
+            "due": 0,
+            "enabled": 8,
+            "healthy": 3,
+            "never_run": 0,
+            "stale": 0
+          }
+        },
+        "version": "3.10.0"
+      },
+      "saved_at": "2026-07-21T11:38:15.005370+00:00",
+      "signal_count": 1
+    },
+    "fee6e18c25e0c12e62aa9c4d2ddc342efa79d5680c914df433a8b77cdfd88d79": {
+      "payload": {
+        "boundaries": [
+          "Only verified live, cached, or stale public-source records are summarized.",
+          "Demonstration fallback records and sample connector values are excluded from the ticker.",
+          "Periodic indicators display their data year and are not described as real-time measurements.",
+          "Clustering reduces duplicate presentation; it does not prove that a repeated report is accurate.",
+          "Selection scores rank display relevance and are not danger, truth, or institutional-importance scores.",
+          "Signals are informational and do not replace official emergency, legal, medical, or financial guidance.",
+          "Channel filters use explicit source metadata and do not infer missing geography from coordinates.",
+          "An empty topic, region, or country channel remains empty rather than falling back to unrelated global signals.",
+          "A cached payload is reused only for the same channel, geography, source selection, and limit query.",
+          "Expired or malformed signals are withheld rather than converted to zero or fabricated replacement values.",
+          "Freshness labels describe delivery timing and do not certify accuracy, importance, or completeness."
+        ],
+        "category": "all",
+        "channel": {
+          "categories": [],
+          "country_parameter_supported": true,
+          "description": "Balanced public-interest signals across all enabled sources and categories.",
+          "feed_url": "/public/live-intelligence/channels/global/feed",
+          "feeds": [],
+          "id": "global",
+          "kind": "global",
+          "label": "Global Intelligence",
+          "region": "global",
+          "region_parameter_supported": true,
+          "shortcode": "[sc_live_intelligence channel=\"global\"]"
+        },
+        "channel_directory_url": "/public/live-intelligence/channels",
+        "channel_filter": {
+          "channel_id": "global",
+          "channel_kind": "global",
+          "channel_label": "Global Intelligence",
+          "country": "",
+          "input_count": 1,
+          "matched_count": 1,
+          "region": "global",
+          "silent_global_fallback": false
+        },
+        "channel_policy_url": "/public/live-intelligence/channel-policy",
+        "count": 1,
+        "delivery": {
+          "cache_age_seconds": 0,
+          "generated_at": "2026-07-21T11:38:09.494894+00:00",
+          "label": "Live",
+          "last_known_good": false,
+          "served_at": "2026-07-21T11:38:09.496161+00:00",
+          "state": "live"
+        },
+        "display": {
+          "category_labels": {
+            "earth_systems": "Earth Systems",
+            "economy_resources": "Economy, Energy & Resources",
+            "human_systems": "Human Systems",
+            "platform": "Platform",
+            "research": "Science & Research"
+          },
+          "channel_registry_url": "/public/live-intelligence/channels",
+          "channel_shortcodes_supported": true,
+          "country_channel_filter_supported": true,
+          "decision_studio_handoff_supported": true,
+          "default_desktop_cycle_seconds": 30,
+          "default_mobile_cycle_seconds": 36,
+          "default_motion": "slow",
+          "default_signal_text_limit": 120,
+          "event_clustering_supported": true,
+          "expired_signal_suppression_supported": true,
+          "explicit_freshness_states_supported": true,
+          "feed_selection_supported": true,
+          "freshness_required": true,
+          "hover_pause_required": true,
+          "label": "Live Intelligence",
+          "last_known_good_delivery_supported": true,
+          "malformed_signal_isolation_supported": true,
+          "partial_feed_rendering_supported": true,
+          "readability_controls_supported": true,
+          "selection_reasons_supported": true,
+          "signal_context_supported": true,
+          "signal_evidence_download_supported": true,
+          "signal_map_context_supported": true,
+          "signal_timeline_supported": true,
+          "source_attribution_required": true,
+          "source_operations_supported": true,
+          "theme": "electronic",
+          "theme_navigation_styles": "untouched",
+          "topic_regional_channels_supported": true,
+          "transparent_ranking_supported": true
+        },
+        "feed_state": {
+          "active_feeds": [
+            "platform_status"
+          ],
+          "category_counts": {
+            "platform": 1
+          },
+          "channel": {
+            "channel_id": "global",
+            "channel_kind": "global",
+            "channel_label": "Global Intelligence",
+            "country": "",
+            "input_count": 1,
+            "matched_count": 1,
+            "region": "global",
+            "silent_global_fallback": false
+          },
+          "default_signal_limit": 16,
+          "excluded_feeds": [],
+          "feed_counts": {
+            "platform_status": 1
+          },
+          "maximum_signals_per_source": 1,
+          "platform_signal_count": 1,
+          "ranking": {
+            "clustered_signal_count": 0,
+            "highest_score": 30,
+            "lowest_score": 30,
+            "multi_source_signal_count": 0,
+            "policy_url": "/public/live-intelligence/ranking-policy",
+            "schema": "sc-site-intelligence-event-clustering-ranking/1.0",
+            "selected_count": 1
+          },
+          "reliability": {
+            "duplicate_signals_suppressed": 0,
+            "expired_signals_suppressed": 0,
+            "freshness_counts": {
+              "live": 1
+            },
+            "input_signal_count": 1,
+            "partial_feed": false,
+            "rejected_signal_count": 0,
+            "rejection_counts": {},
+            "valid_signal_count": 1
+          },
+          "requested_feeds": [
+            "platform_status"
+          ],
+          "source_counts": {
+            "Sustainable Catalyst": 1
+          },
+          "useful_signal_count": 0
+        },
+        "feeds": [
+          {
+            "category": "earth_systems",
+            "enabled": false,
+            "id": "noaa_nws",
+            "label": "NOAA / National Weather Service",
+            "signal_count": 0
+          },
+          {
+            "category": "earth_systems",
+            "enabled": false,
+            "id": "usgs_earthquakes",
+            "label": "USGS Earthquakes",
+            "signal_count": 0
+          },
+          {
+            "category": "earth_systems",
+            "enabled": false,
+            "id": "nasa_eonet",
+            "label": "NASA EONET Natural Events",
+            "signal_count": 0
+          },
+          {
+            "category": "human_systems",
+            "enabled": false,
+            "id": "reliefweb",
+            "label": "ReliefWeb Humanitarian Reports",
+            "signal_count": 0
+          },
+          {
+            "category": "earth_systems",
+            "enabled": false,
+            "id": "nasa_power",
+            "label": "NASA POWER Observations",
+            "signal_count": 0
+          },
+          {
+            "category": "research",
+            "enabled": false,
+            "id": "openalex",
+            "label": "OpenAlex Research",
+            "signal_count": 0
+          },
+          {
+            "category": "economy_resources",
+            "enabled": false,
+            "id": "world_bank",
+            "label": "World Bank Indicators",
+            "signal_count": 0
+          },
+          {
+            "category": "platform",
+            "enabled": true,
+            "id": "platform_status",
+            "label": "Site Intelligence Platform Status",
+            "signal_count": 1
+          }
+        ],
+        "generated_at": "2026-07-21T11:38:09.494894+00:00",
+        "ok": true,
+        "reliability_schema": "sc-site-intelligence-live-intelligence-reliability/1.0",
+        "schema": "sc-site-intelligence-live-intelligence/1.4",
+        "signals": [
+          {
+            "category": "platform",
+            "channel_ids": [
+              "global"
+            ],
+            "channel_match_reasons": [
+              "global channel"
+            ],
+            "context_available": true,
+            "context_url": "/public/live-intelligence/signals/platform.site-intelligence-api",
+            "context_view_url": "/public/live-intelligence/signals/platform.site-intelligence-api/view",
+            "data_state": "current",
+            "destination_url": "/platform/site-intelligence/",
+            "detail": "Connected Public Intelligence and Evidence Platform",
+            "development_state": "reference",
+            "evidence_url": "/public/live-intelligence/signals/platform.site-intelligence-api/evidence",
+            "feed_id": "platform_status",
+            "freshness_age_seconds": 0,
+            "freshness_label": "Live",
+            "freshness_state": "live",
+            "freshness_timestamp": "2026-07-21T11:38:09.494894+00:00",
+            "label": "SITE INTELLIGENCE",
+            "observed_at": "2026-07-21T11:38:09.494894+00:00",
+            "priority": 900,
+            "ranking_components": {
+              "corroboration": 0,
+              "freshness": 25,
+              "severity": 3,
+              "signal_priority": 0,
+              "source_priority": 2,
+              "state_penalty": 0
+            },
+            "selection_rank": 1,
+            "selection_reasons": [
+              "observed within 3 hours"
+            ],
+            "selection_score": 30,
+            "severity": "informational",
+            "signal_id": "platform.site-intelligence-api",
+            "source_name": "Sustainable Catalyst",
+            "source_priority": 90,
+            "source_short_name": "Sustainable Catalyst",
+            "source_url": "",
+            "status": "current",
+            "unit": "",
+            "updated_at": "2026-07-21T11:38:09.494894+00:00",
+            "validation_state": "valid",
+            "value": "v3.10.0 CONNECTED"
+          }
+        ],
+        "source_operations": {
+          "enabled": true,
+          "registry_url": "/public/live-intelligence/sources",
+          "schema": "sc-site-intelligence-live-source-operations/1.0",
+          "source_count": 8,
+          "summary": {
+            "degraded": 0,
+            "disabled": 0,
+            "due": 7,
+            "enabled": 8,
+            "healthy": 1,
+            "never_run": 7,
+            "stale": 0
+          }
+        },
+        "version": "3.10.0"
+      },
+      "saved_at": "2026-07-21T11:38:09.496667+00:00",
+      "signal_count": 1
+    }
+  },
+  "schema": "sc-site-intelligence-live-intelligence-reliability/1.0",
+  "updated_at": "2026-07-21T11:38:15.005499+00:00"
+}

@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.10.0 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
+
+- Added source-linked editorial drafts from canonical signals, reviewed alerts, and approved digests.
+- Added deterministic claims, evidence, chronology, limitations, JSON and Markdown packages.
+- Added documented human approval before public release and provider-neutral publication handoffs.
+- Added a public WordPress briefing panel while prohibiting automatic WordPress publication.
+- Explicitly prohibited fabricated sources, unsupported claims, autonomous interpretation, and automatic causal inference.
+
 ## 3.9.0 — Signal Subscriptions, Alerts, and Scheduled Intelligence
 
 - Added governed Live Intelligence watchlists and deterministic scheduled evaluation.

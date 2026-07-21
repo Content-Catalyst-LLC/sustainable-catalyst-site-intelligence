@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.9.0
+ * Version: 3.10.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.9.0';
+    const VERSION = '3.10.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -50,6 +50,7 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_live_intelligence_watchlists', [$this, 'live_intelligence_watchlists_shortcode']);
         add_shortcode('sc_live_intelligence_alerts', [$this, 'live_intelligence_alerts_shortcode']);
         add_shortcode('sc_live_intelligence_digests', [$this, 'live_intelligence_digests_shortcode']);
+        add_shortcode('sc_live_intelligence_briefings', [$this, 'live_intelligence_briefings_shortcode']);
         add_shortcode('sc_site_intelligence_dashboard', [$this, 'dashboard_shortcode']);
         add_shortcode('sc_site_intelligence_page', [$this, 'page_shortcode']);
         add_shortcode('sc_site_intelligence_unmapped', [$this, 'unmapped_shortcode']);
@@ -417,7 +418,7 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v3.9.0 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
+        // v3.10.0 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
         // Existing moving tickers remain moving unless an administrator selects static or manual presentation.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
@@ -862,6 +863,27 @@ final class SC_Site_Intelligence_Plugin {
             'callback' => [$this, 'rest_live_intelligence_embed_manifest'],
             'permission_callback' => '__return_true',
             'args' => ['surface' => ['sanitize_callback' => 'sanitize_key']],
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/briefings/policy', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_briefing_policy'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/briefings/templates', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_briefing_templates'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/briefings', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_briefings'],
+            'permission_callback' => '__return_true',
+            'args' => ['limit' => ['sanitize_callback' => 'absint']],
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/briefings/(?P<briefing_id>[a-z0-9_\-.:]+)', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_briefing'],
+            'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/live-intelligence/subscriptions/policy', [
             'methods' => WP_REST_Server::READABLE,
@@ -2902,6 +2924,47 @@ final class SC_Site_Intelligence_Plugin {
         return is_wp_error($result) ? $result : rest_ensure_response($result);
     }
 
+    public function rest_live_intelligence_briefing_policy(WP_REST_Request $request) {
+        $result = $this->backend_request('public/live-intelligence/briefings/policy');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_briefing_templates(WP_REST_Request $request) {
+        $result = $this->backend_request('public/live-intelligence/briefings/templates');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_briefings(WP_REST_Request $request) {
+        $limit = absint($request->get_param('limit')) ?: 20;
+        $result = $this->backend_request('public/live-intelligence/briefings?limit=' . min($limit, 100));
+        if (is_wp_error($result)) {
+            return $result;
+        }
+        $options = self::options();
+        $backend = untrailingslashit((string) ($options['backend_url'] ?? ''));
+        if ($backend !== '' && isset($result['briefings']) && is_array($result['briefings'])) {
+            foreach ($result['briefings'] as &$briefing) {
+                if (!isset($briefing['export_urls']) || !is_array($briefing['export_urls'])) {
+                    continue;
+                }
+                foreach ($briefing['export_urls'] as $format => $export_url) {
+                    $relative = (string) $export_url;
+                    if ($relative !== '' && strpos($relative, '/') === 0) {
+                        $briefing['export_urls'][$format] = esc_url_raw($backend . $relative);
+                    }
+                }
+            }
+            unset($briefing);
+        }
+        return rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_briefing(WP_REST_Request $request) {
+        $briefing_id = sanitize_text_field((string) $request->get_param('briefing_id'));
+        $result = $this->backend_request('public/live-intelligence/briefings/' . rawurlencode($briefing_id));
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
     public function rest_live_intelligence_subscription_policy(WP_REST_Request $request) {
         $result = $this->backend_request('public/live-intelligence/subscriptions/policy');
         return is_wp_error($result) ? $result : rest_ensure_response($result);
@@ -3460,16 +3523,18 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     private function live_intelligence_subscription_panel($kind, $atts = []) {
-        $kind = in_array($kind, ['watchlists', 'alerts', 'digests'], true) ? $kind : 'watchlists';
+        $kind = in_array($kind, ['watchlists', 'alerts', 'digests', 'briefings'], true) ? $kind : 'watchlists';
         $defaults = [
-            'limit' => $kind === 'digests' ? '12' : '20',
+            'limit' => in_array($kind, ['digests', 'briefings'], true) ? '12' : '20',
             'watchlist_id' => '',
-            'title' => $kind === 'watchlists' ? 'Live Intelligence Watchlists' : ($kind === 'alerts' ? 'Reviewed Live Intelligence Alerts' : 'Live Intelligence Digests'),
+            'title' => $kind === 'watchlists' ? 'Live Intelligence Watchlists' : ($kind === 'alerts' ? 'Reviewed Live Intelligence Alerts' : ($kind === 'digests' ? 'Live Intelligence Digests' : 'Live Intelligence Briefings')),
         ];
         $atts = shortcode_atts($defaults, is_array($atts) ? $atts : [], 'sc_live_intelligence_' . $kind);
         $limit = max(1, min(absint($atts['limit']), 100));
         $watchlist_id = sanitize_text_field((string) $atts['watchlist_id']);
-        $endpoint = rest_url(self::REST_NAMESPACE . '/live-intelligence/subscriptions/' . ($kind === 'watchlists' ? 'catalog' : $kind));
+        $endpoint = $kind === 'briefings'
+            ? rest_url(self::REST_NAMESPACE . '/live-intelligence/briefings')
+            : rest_url(self::REST_NAMESPACE . '/live-intelligence/subscriptions/' . ($kind === 'watchlists' ? 'catalog' : $kind));
         $params = ['limit' => $limit];
         if ($kind === 'alerts' && $watchlist_id !== '') { $params['watchlist_id'] = $watchlist_id; }
         if ($kind !== 'watchlists') { $endpoint = add_query_arg($params, $endpoint); }
@@ -3480,7 +3545,7 @@ final class SC_Site_Intelligence_Plugin {
             <h2><?php echo esc_html(sanitize_text_field((string) $atts['title'])); ?></h2>
             <p class="scsi-muted">Loading governed public intelligence…</p>
             <div class="scsi-live-subscriptions__output" aria-live="polite" aria-busy="true"></div>
-            <p class="scsi-live-subscriptions__boundary">Site Intelligence stores no subscriber profiles and performs no direct email delivery or automatic alert publication.</p>
+            <p class="scsi-live-subscriptions__boundary"><?php echo $kind === 'briefings' ? 'Briefings remain source-linked editorial artifacts. Site Intelligence performs no automatic interpretation, automatic WordPress publication, or unsupported claim generation.' : 'Site Intelligence stores no subscriber profiles and performs no direct email delivery or automatic alert publication.'; ?></p>
             <noscript><p><a href="<?php echo esc_url($endpoint); ?>">Open the public JSON endpoint.</a></p></noscript>
         </section>
         <?php
@@ -3497,6 +3562,10 @@ final class SC_Site_Intelligence_Plugin {
 
     public function live_intelligence_digests_shortcode($atts = []) {
         return $this->live_intelligence_subscription_panel('digests', $atts);
+    }
+
+    public function live_intelligence_briefings_shortcode($atts = []) {
+        return $this->live_intelligence_subscription_panel('briefings', $atts);
     }
 
     public function settings_page() {

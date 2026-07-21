@@ -4146,17 +4146,29 @@
           '<p>' + escapeHtml(item.summary || '') + '</p>' +
           '</article>';
       };
+      const briefingCard = function (item) {
+        const exports = item.export_urls || {};
+        const observations = Array.isArray(item.key_observations) ? item.key_observations.slice(0, 3) : [];
+        return '<article class="scsi-live-subscriptions__item scsi-live-subscriptions__item--briefing">' +
+          '<p class="scsi-live-subscriptions__meta">' + escapeHtml(String(item.briefing_type || 'signal').toUpperCase()) + ' · ' + escapeHtml(String(item.source_count || 0)) + ' linked sources</p>' +
+          '<h3>' + escapeHtml(item.title || 'Live Intelligence briefing') + '</h3>' +
+          (item.deck ? '<p><strong>' + escapeHtml(item.deck) + '</strong></p>' : '') +
+          '<p>' + escapeHtml(item.executive_summary || '') + '</p>' +
+          (observations.length ? '<ul class="scsi-live-subscriptions__observations">' + observations.map(function (value) { return '<li>' + escapeHtml(value) + '</li>'; }).join('') + '</ul>' : '') +
+          '<p class="scsi-live-subscriptions__actions">' + link(exports.markdown, 'Markdown package') + link(exports.json, 'JSON package') + '</p>' +
+          '</article>';
+      };
       fetchJson(endpoint).then(function (data) {
-        const items = kind === 'watchlists' ? (data.watchlists || []) : kind === 'alerts' ? (data.alerts || []) : (data.digests || []);
+        const items = kind === 'watchlists' ? (data.watchlists || []) : kind === 'alerts' ? (data.alerts || []) : kind === 'digests' ? (data.digests || []) : (data.briefings || []);
         if (!Array.isArray(items) || !items.length) {
           output.innerHTML = '<p class="scsi-live-subscriptions__empty">No reviewed public ' + escapeHtml(kind) + ' are available yet.</p>';
         } else {
-          const render = kind === 'watchlists' ? watchlistCard : kind === 'alerts' ? alertCard : digestCard;
+          const render = kind === 'watchlists' ? watchlistCard : kind === 'alerts' ? alertCard : kind === 'digests' ? digestCard : briefingCard;
           output.innerHTML = '<div class="scsi-live-subscriptions__grid">' + items.map(render).join('') + '</div>';
         }
         output.setAttribute('aria-busy', 'false');
         const muted = root.querySelector('.scsi-muted');
-        if (muted) muted.textContent = kind === 'watchlists' ? 'Published watch definitions with public feed access.' : kind === 'alerts' ? 'Human-reviewed matches only; no automatic emergency claims.' : 'Human-reviewed intelligence summaries prepared for public use.';
+        if (muted) muted.textContent = kind === 'watchlists' ? 'Published watch definitions with public feed access.' : kind === 'alerts' ? 'Human-reviewed matches only; no automatic emergency claims.' : kind === 'digests' ? 'Human-reviewed intelligence summaries prepared for public use.' : 'Source-linked briefings approved by an editor before publication.';
       }).catch(function () {
         output.innerHTML = '<p class="scsi-live-subscriptions__empty">Reviewed Live Intelligence is temporarily unavailable.</p>';
         output.setAttribute('aria-busy', 'false');

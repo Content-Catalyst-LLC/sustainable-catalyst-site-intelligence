@@ -1,0 +1,20 @@
+{
+  "schema": "sc-site-intelligence-release-governance/1.0",
+  "version": "3.10.0",
+  "release": "Live Intelligence Briefings, Narrative Context, and Publication Workflow",
+  "canonical_live_intelligence_signals": true,
+  "supported_briefing_types": ["signal", "alert", "digest", "channel", "regional"],
+  "supported_publication_formats": ["json", "markdown"],
+  "supported_handoff_adapters": ["knowledge_library", "publications", "decision_studio", "download"],
+  "source_links_required": true,
+  "human_review_required": true,
+  "automatic_publication": false,
+  "automatic_wordpress_write": false,
+  "autonomous_interpretation": false,
+  "fabricated_sources": false,
+  "unsupported_claims_allowed": false,
+  "automatic_causal_inference": false,
+  "recipient_identities_stored": false,
+  "provider_neutral_handoffs": true,
+  "advertising_or_affiliate_content": false
+}

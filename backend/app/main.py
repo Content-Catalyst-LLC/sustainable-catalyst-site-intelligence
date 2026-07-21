@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-from typing import Any, Optional
+from typing import Any, Mapping, Optional
 
 from fastapi import Body, Depends, FastAPI, Header, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -96,6 +96,10 @@ from .live_intelligence_surfaces_v380 import (
 from .live_intelligence_subscriptions_v390 import (
     LiveIntelligenceSubscriptionCenter, preference_manifest as live_intelligence_preference_manifest,
     subscription_policy as live_intelligence_subscription_policy,
+)
+from .live_intelligence_briefings_v3100 import (
+    LiveIntelligenceBriefingCenter, briefing_policy as live_intelligence_briefing_policy,
+    briefing_templates as live_intelligence_briefing_templates,
 )
 from .live_intelligence_source_operations_v320 import LiveIntelligenceSourceOperations
 from .live_intelligence_context_v340 import (
@@ -2256,7 +2260,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.9.0 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v3.10.0 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -2398,7 +2402,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.9.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v3.10.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -2515,7 +2519,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.9.0 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v3.10.0 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -2637,7 +2641,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.9.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v3.10.0 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -2773,7 +2777,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.9.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v3.10.0 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -5950,7 +5954,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v3.9.0 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v3.10.0 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -6184,7 +6188,7 @@ def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     return build_reliability(settings)
 
 
-# Site Intelligence v3.9.0 — Open Standards, Federation, and Institutional Data Exchange.
+# Site Intelligence v3.10.0 — Open Standards, Federation, and Institutional Data Exchange.
 def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
     if not settings.federation_exchange_enabled:
         raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
@@ -6274,7 +6278,7 @@ def admin_federation_accept_import_endpoint(request: dict = Body(default={}), se
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.9.0 — Security, Privacy, Governance, and Production Scale.
+# Site Intelligence v3.10.0 — Security, Privacy, Governance, and Production Scale.
 def _production_governance(settings: Settings) -> ProductionGovernanceCenter:
     if not settings.production_governance_enabled:
         raise HTTPException(status_code=503, detail="Production governance is disabled.")
@@ -6423,7 +6427,7 @@ def admin_production_governance_deployment_endpoint(request: dict = Body(default
 def admin_production_governance_load_probe_endpoint(requests: int = Query(default=250, ge=1, le=5000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return _production_governance(settings).load_probe(requests)
 
-# Site Intelligence v3.9.0 — Connected Live Intelligence Surface.
+# Site Intelligence v3.10.0 — Connected Live Intelligence Surface.
 def _connected_platform(settings: Settings) -> ConnectedPublicIntelligencePlatform:
     if not settings.connected_platform_enabled:
         raise HTTPException(status_code=404, detail="Connected platform is disabled.")
@@ -6633,6 +6637,35 @@ def _live_intelligence_subscriptions(settings: Settings) -> LiveIntelligenceSubs
     return LiveIntelligenceSubscriptionCenter(settings, signal_loader=load_signals)
 
 
+def _live_intelligence_briefings(settings: Settings) -> LiveIntelligenceBriefingCenter:
+    if not settings.live_intelligence_briefings_enabled:
+        raise HTTPException(status_code=404, detail="Live Intelligence briefings are disabled.")
+
+    subscriptions = _live_intelligence_subscriptions(settings)
+
+    def load_sources(request: Mapping[str, Any]):
+        if isinstance(request.get("signals"), list) and request.get("signals"):
+            return {"signals": []}
+        surface = str(request.get("surface") or "publication")
+        channel = str(request.get("channel") or "global")
+        region = str(request.get("region") or "")
+        country = str(request.get("country") or "")
+        payload = _connected_live_intelligence_surface_feed(
+            surface, category="", limit=24, feeds="", exclude="", max_per_source=5,
+            channel=channel, region=region, country=country, settings=settings,
+        )
+        signals = [row for row in payload.get("signals", []) if isinstance(row, Mapping)]
+        requested = {str(value) for value in request.get("signal_ids", []) if str(value).strip()} if isinstance(request.get("signal_ids"), list) else set()
+        if requested:
+            signals = [row for row in signals if str(row.get("signal_id") or row.get("event_id") or "") in requested]
+        limit = max(1, min(int(request.get("source_limit", 12)), 24))
+        return {"signals": signals[:limit]}
+
+    return LiveIntelligenceBriefingCenter(
+        settings, source_loader=load_sources, subscription_center=subscriptions,
+    )
+
+
 @app.get("/public/live-intelligence/surfaces")
 def public_live_intelligence_surfaces_endpoint():
     return live_intelligence_surface_directory()
@@ -6680,6 +6713,102 @@ def public_live_intelligence_embed_manifest_endpoint(surface: str = Query(defaul
         return live_intelligence_embed_manifest(surface)
     except KeyError as exc:
         raise HTTPException(status_code=404, detail="Live Intelligence surface not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/public/live-intelligence/briefings/policy")
+def public_live_intelligence_briefing_policy_endpoint():
+    return live_intelligence_briefing_policy()
+
+
+@app.get("/public/live-intelligence/briefings/templates")
+def public_live_intelligence_briefing_templates_endpoint():
+    return live_intelligence_briefing_templates()
+
+
+@app.get("/public/live-intelligence/briefings")
+def public_live_intelligence_briefings_endpoint(
+    limit: int = Query(default=20, ge=1, le=100),
+    settings: Settings = Depends(get_settings),
+):
+    rows = _live_intelligence_briefings(settings).briefings(public=True, limit=limit)
+    return {"ok": True, "version": APP_VERSION, "count": len(rows), "briefings": rows, "automatic_publication": False}
+
+
+@app.get("/public/live-intelligence/briefings/{briefing_id}")
+def public_live_intelligence_briefing_detail_endpoint(briefing_id: str, settings: Settings = Depends(get_settings)):
+    try:
+        return {"ok": True, "version": APP_VERSION, "briefing": _live_intelligence_briefings(settings)._briefing(briefing_id, public=True)}
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Published Live Intelligence briefing not found.") from exc
+
+
+@app.get("/public/live-intelligence/briefings/{briefing_id}/export")
+def public_live_intelligence_briefing_export_endpoint(
+    briefing_id: str, format: str = Query(default="json", pattern="^(json|markdown)$"),
+    settings: Settings = Depends(get_settings),
+):
+    try:
+        media_type, body = _live_intelligence_briefings(settings).package_payload(briefing_id, format, public=True)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Published Live Intelligence briefing not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    suffix = "json" if format == "json" else "md"
+    return Response(content=body, media_type=media_type, headers={"Content-Disposition": f'attachment; filename="live-intelligence-briefing-{briefing_id}.{suffix}"', "X-SC-Site-Intelligence-Version": APP_VERSION})
+
+
+@app.get("/admin/live-intelligence/briefings")
+def admin_live_intelligence_briefings_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _live_intelligence_briefings(settings).control_center()
+
+
+@app.post("/admin/live-intelligence/briefings/drafts")
+def admin_live_intelligence_briefing_draft_endpoint(
+    request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token),
+):
+    try:
+        return _live_intelligence_briefings(settings).create_draft(request)
+    except (KeyError, ValueError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/live-intelligence/briefings/{briefing_id}/review")
+def admin_live_intelligence_briefing_review_endpoint(
+    briefing_id: str, request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token),
+):
+    try:
+        return _live_intelligence_briefings(settings).review_briefing(briefing_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Live Intelligence briefing not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/admin/live-intelligence/briefings/{briefing_id}/export")
+def admin_live_intelligence_briefing_export_endpoint(
+    briefing_id: str, format: str = Query(default="json", pattern="^(json|markdown)$"),
+    settings: Settings = Depends(get_settings), _: None = Depends(require_token),
+):
+    try:
+        media_type, body = _live_intelligence_briefings(settings).package_payload(briefing_id, format, public=False)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Live Intelligence briefing not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    suffix = "json" if format == "json" else "md"
+    return Response(content=body, media_type=media_type, headers={"Content-Disposition": f'attachment; filename="live-intelligence-briefing-{briefing_id}.{suffix}"', "X-SC-Site-Intelligence-Version": APP_VERSION})
+
+
+@app.post("/admin/live-intelligence/briefings/{briefing_id}/handoff")
+def admin_live_intelligence_briefing_handoff_endpoint(
+    briefing_id: str, request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token),
+):
+    try:
+        return _live_intelligence_briefings(settings).create_handoff(briefing_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Live Intelligence briefing not found.") from exc
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
