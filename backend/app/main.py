@@ -108,6 +108,9 @@ from .live_intelligence_publication_releases_v3120 import (
     LiveIntelligencePublicationReleaseCenter, adapter_catalog as live_intelligence_publication_adapter_catalog,
     publication_release_policy as live_intelligence_publication_release_policy,
 )
+from .live_intelligence_release_operations_v3130 import (
+    LiveIntelligenceReleaseOperationsCenter, release_operations_policy as live_intelligence_release_operations_policy,
+)
 from .live_intelligence_source_operations_v320 import LiveIntelligenceSourceOperations
 from .live_intelligence_context_v340 import (
     build_signal_context, build_signal_evidence, context_policy as live_signal_context_policy,
@@ -2267,7 +2270,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.12.0 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v3.13.0 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -2409,7 +2412,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.12.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v3.13.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -2526,7 +2529,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.12.0 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v3.13.0 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -2648,7 +2651,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.12.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v3.13.0 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -2784,7 +2787,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.12.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v3.13.0 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -5961,7 +5964,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v3.12.0 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v3.13.0 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -6195,7 +6198,7 @@ def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     return build_reliability(settings)
 
 
-# Site Intelligence v3.12.0 — Open Standards, Federation, and Institutional Data Exchange.
+# Site Intelligence v3.13.0 — Open Standards, Federation, and Institutional Data Exchange.
 def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
     if not settings.federation_exchange_enabled:
         raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
@@ -6285,7 +6288,7 @@ def admin_federation_accept_import_endpoint(request: dict = Body(default={}), se
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.12.0 — Security, Privacy, Governance, and Production Scale.
+# Site Intelligence v3.13.0 — Security, Privacy, Governance, and Production Scale.
 def _production_governance(settings: Settings) -> ProductionGovernanceCenter:
     if not settings.production_governance_enabled:
         raise HTTPException(status_code=503, detail="Production governance is disabled.")
@@ -6434,7 +6437,7 @@ def admin_production_governance_deployment_endpoint(request: dict = Body(default
 def admin_production_governance_load_probe_endpoint(requests: int = Query(default=250, ge=1, le=5000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return _production_governance(settings).load_probe(requests)
 
-# Site Intelligence v3.12.0 — Connected Live Intelligence Surface.
+# Site Intelligence v3.13.0 — Connected Live Intelligence Surface.
 def _connected_platform(settings: Settings) -> ConnectedPublicIntelligencePlatform:
     if not settings.connected_platform_enabled:
         raise HTTPException(status_code=404, detail="Connected platform is disabled.")
@@ -6686,6 +6689,14 @@ def _live_intelligence_publication_releases(settings: Settings) -> LiveIntellige
     editorial = LiveIntelligenceEditorialWorkspace(settings, briefing_center=briefings)
     return LiveIntelligencePublicationReleaseCenter(
         settings, editorial_center=editorial, briefing_center=briefings,
+    )
+
+
+def _live_intelligence_release_operations(settings: Settings) -> LiveIntelligenceReleaseOperationsCenter:
+    if not settings.live_intelligence_release_operations_enabled:
+        raise HTTPException(status_code=404, detail="Live Intelligence release operations are disabled.")
+    return LiveIntelligenceReleaseOperationsCenter(
+        settings, publication_center=_live_intelligence_publication_releases(settings),
     )
 
 
@@ -7020,6 +7031,108 @@ def admin_live_intelligence_publication_release_package_endpoint(release_id: str
 @app.get("/admin/live-intelligence/publication-releases/{release_id}/history")
 def admin_live_intelligence_publication_release_history_endpoint(release_id: str, limit: int = Query(default=200, ge=1, le=1000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return {"ok": True, "version": APP_VERSION, "history": _live_intelligence_publication_releases(settings).history(release_id, limit)}
+
+
+@app.get("/public/live-intelligence/release-operations/policy")
+def public_live_intelligence_release_operations_policy_endpoint():
+    return live_intelligence_release_operations_policy()
+
+
+@app.get("/public/live-intelligence/release-operations/status")
+def public_live_intelligence_release_operations_status_endpoint(settings: Settings = Depends(get_settings)):
+    return _live_intelligence_release_operations(settings).status()
+
+
+@app.get("/public/live-intelligence/release-operations/corrections")
+def public_live_intelligence_release_operations_corrections_endpoint(limit: int = Query(default=50, ge=1, le=200), settings: Settings = Depends(get_settings)):
+    rows = _live_intelligence_release_operations(settings).public_corrections(limit)
+    return {"ok": True, "version": APP_VERSION, "count": len(rows), "corrections": rows, "destination_write_performed": False}
+
+
+@app.get("/admin/live-intelligence/release-operations")
+def admin_live_intelligence_release_operations_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return _live_intelligence_release_operations(settings).control_center()
+
+
+@app.post("/admin/live-intelligence/release-operations/deployments")
+def admin_live_intelligence_release_operations_deployment_endpoint(request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _live_intelligence_release_operations(settings).register_deployment(request)
+    except (KeyError, ValueError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/live-intelligence/release-operations/deployments/{deployment_id}/verify")
+def admin_live_intelligence_release_operations_verify_endpoint(deployment_id: str, request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _live_intelligence_release_operations(settings).verify_deployment(deployment_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Deployment receipt not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/live-intelligence/release-operations/issues")
+def admin_live_intelligence_release_operations_issue_endpoint(request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _live_intelligence_release_operations(settings).report_issue(request)
+    except (KeyError, ValueError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/live-intelligence/release-operations/issues/{issue_id}/corrections")
+def admin_live_intelligence_release_operations_correction_endpoint(issue_id: str, request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _live_intelligence_release_operations(settings).propose_correction(issue_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Post-publication issue not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/live-intelligence/release-operations/corrections/{correction_id}/approve")
+def admin_live_intelligence_release_operations_correction_approve_endpoint(correction_id: str, request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _live_intelligence_release_operations(settings).approve_correction(correction_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Correction package not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/live-intelligence/release-operations/deployments/{deployment_id}/rollbacks")
+def admin_live_intelligence_release_operations_rollback_endpoint(deployment_id: str, request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _live_intelligence_release_operations(settings).prepare_rollback(deployment_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Deployment receipt or target release not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/live-intelligence/release-operations/rollbacks/{rollback_id}/approve")
+def admin_live_intelligence_release_operations_rollback_approve_endpoint(rollback_id: str, request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _live_intelligence_release_operations(settings).approve_rollback(rollback_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Rollback package not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/live-intelligence/release-operations/{entity_type}/{entity_id}/handoffs")
+def admin_live_intelligence_release_operations_handoff_endpoint(entity_type: str, entity_id: str, request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _live_intelligence_release_operations(settings).create_handoff(entity_type, entity_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Release-operation entity not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/admin/live-intelligence/release-operations/{entity_id}/history")
+def admin_live_intelligence_release_operations_history_endpoint(entity_id: str, limit: int = Query(default=200, ge=1, le=1000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return {"ok": True, "version": APP_VERSION, "history": _live_intelligence_release_operations(settings).history(entity_id, limit)}
 
 
 @app.get("/public/live-intelligence/subscriptions/policy")

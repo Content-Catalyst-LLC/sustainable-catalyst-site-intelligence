@@ -1,0 +1,21 @@
+{
+  "schema": "sc-site-intelligence-release-operations-governance/1.0",
+  "version": "3.13.0",
+  "release": "Release Monitoring, Rollback, and Post-Publication Governance",
+  "approved_release_required": true,
+  "checksum_verification_required": true,
+  "human_verification_required": true,
+  "separate_correction_approval_required": true,
+  "separate_rollback_approval_required": true,
+  "public_corrections_require_approval": true,
+  "private_corrections_excluded_from_public_feed": true,
+  "manual_handoff_receipts_retained": true,
+  "network_fetch_performed": false,
+  "deployment_performed": false,
+  "rollback_performed": false,
+  "automatic_deletion": false,
+  "destination_write_performed": false,
+  "credentials_stored": false,
+  "recipient_identities_stored": false,
+  "advertising_or_affiliate_content": false
+}

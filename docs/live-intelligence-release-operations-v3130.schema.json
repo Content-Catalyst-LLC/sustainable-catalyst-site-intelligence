@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/live-intelligence-release-operations-v3130.schema.json",
+  "title": "Live Intelligence Release Operations",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "release_version", "entity_id", "entity_type", "state", "destination_write_performed"],
+  "properties": {
+    "schema": {"type": "string", "minLength": 1},
+    "release_version": {"type": "string", "const": "3.13.0"},
+    "entity_id": {"type": "string", "minLength": 1, "maxLength": 180},
+    "entity_type": {"enum": ["deployment", "issue", "correction", "rollback", "handoff"]},
+    "state": {"type": "string", "minLength": 1, "maxLength": 80},
+    "release_id": {"type": "string", "maxLength": 180},
+    "release_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "payload_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "package_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "human_review_required": {"type": "boolean"},
+    "network_fetch_performed": {"type": "boolean", "const": false},
+    "deployment_performed": {"type": "boolean", "const": false},
+    "rollback_performed": {"type": "boolean", "const": false},
+    "destination_write_performed": {"type": "boolean", "const": false}
+  }
+}

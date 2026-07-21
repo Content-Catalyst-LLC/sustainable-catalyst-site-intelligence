@@ -1,0 +1,39 @@
+Sustainable Catalyst Site Intelligence v3.13.0
+Release Monitoring, Rollback, and Post-Publication Governance
+Build validation date: 2026-07-21
+
+RESULT: PASS
+
+Product validation
+- Complete backend regression: 729 tests passed.
+- Focused v3.13.0 release-operations suite and release contract passed.
+- Chained historical/current release-contract validation passed.
+- Deployment receipts require approved publication releases.
+- Published-release verification checks release, payload, and adapter-package SHA-256 values.
+- Verification also requires destination accessibility, source links, freshness labels, and a correction path.
+- Credential-bearing payload fields and credential-bearing destination URLs are rejected.
+- Private correction records are excluded from the public correction feed.
+- Corrections and rollback packages require separation of duties.
+- Correction and rollback handoffs perform no destination write.
+
+Static integrity
+- 177 Python files parsed successfully.
+- 93 JSON files validated successfully.
+- 670 unique application HTML IDs verified.
+- 27 JavaScript files parsed successfully.
+- WordPress PHP syntax passed.
+- No test-generated writable state is included in the immutable release archive.
+
+Installer validation
+- Repository ZIP checksum verification passed.
+- Immutable release manifest verification passed before and after overlay.
+- Default installer integration gate: 21 tests passed.
+- Complete 729-test installer mode is available with SC_SI_FULL_TESTS=1.
+- WordPress plugin packaging and archive integrity passed.
+- Disposable local Git commit creation passed.
+- GitHub push was disabled; no remote repository was modified.
+
+Governance boundaries
+- No network verification is claimed or performed.
+- No deployment, rollback, deletion, WordPress write, or institutional destination write is performed.
+- No credentials, tokens, subscriber identities, or recipient data are stored.

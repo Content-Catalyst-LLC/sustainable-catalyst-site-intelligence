@@ -2043,7 +2043,7 @@
 @media(prefers-reduced-motion:reduce){.scsi-live-intelligence__delivery{display:inline-flex}.scsi-live-intelligence__lamp{box-shadow:none}}
 @media(forced-colors:active){.scsi-live-intelligence__delivery{border-color:CanvasText;color:CanvasText}}
 
-/* Site Intelligence v3.12.0 — Live Intelligence presentation, motion, and accessibility controls. */
+/* Site Intelligence v3.13.0 — Live Intelligence presentation, motion, and accessibility controls. */
 .scsi-live-intelligence [hidden]{display:none!important}
 .scsi-live-intelligence__announcer{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 .scsi-live-intelligence__noscript{grid-column:1/-1;margin:0;padding:.7rem 1rem;border-top:1px solid #214d29;background:#050906;color:var(--scsi-live-green);font-size:.72rem;line-height:1.5}
@@ -2103,13 +2103,13 @@
   .scsi-live-intelligence__controls button{border:1px solid ButtonText;background:ButtonFace;color:ButtonText;text-shadow:none}
 }
 
-/* v3.12.0 Homepage Intelligence Gateway */
+/* v3.13.0 Homepage Intelligence Gateway */
 .scsi-live-intelligence[data-surface="homepage"]{contain:layout paint;isolation:isolate}
 .scsi-live-intelligence[data-surface="homepage"] .scsi-live-intelligence__signal[data-destination-type="signal_context"]{cursor:pointer}
 .scsi-live-intelligence[data-surface="homepage"] .scsi-live-intelligence__signal[data-signal-family]{text-underline-offset:.22em}
 @media print{.scsi-live-intelligence[data-surface="homepage"]{position:static!important}.scsi-live-intelligence[data-surface="homepage"] .scsi-live-intelligence__pause,.scsi-live-intelligence[data-surface="homepage"] .scsi-live-intelligence__controls{display:none!important}}
 
-/* Site Intelligence v3.12.0 — connected Live Intelligence surfaces. */
+/* Site Intelligence v3.13.0 — connected Live Intelligence surfaces. */
 .scsi-live-intelligence--surface-static_strip,
 .scsi-live-intelligence--surface-publication,
 .scsi-live-intelligence--surface-library,
@@ -2142,7 +2142,7 @@
   display: none;
 }
 
-/* Site Intelligence v3.12.0 — reviewed Live Intelligence watchlists, alerts, digests, and source-linked briefings. */
+/* Site Intelligence v3.13.0 — reviewed Live Intelligence watchlists, alerts, digests, and source-linked briefings. */
 .scsi-live-subscriptions {
   --scsi-subscription-border: rgba(17, 24, 39, .16);
   overflow: hidden;

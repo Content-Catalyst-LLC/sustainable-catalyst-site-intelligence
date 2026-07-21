@@ -17,7 +17,7 @@ def _settings(**updates):
 def test_live_intelligence_contract_without_external_calls():
     payload = build_live_intelligence(_settings(external_live=False), limit=8)
     assert payload["ok"] is True
-    assert payload["version"] == "3.12.0"
+    assert payload["version"] == "3.13.0"
     assert payload["schema"] == "sc-site-intelligence-live-intelligence/1.4"
     assert 1 <= payload["count"] <= 8
     assert payload["feed_state"]["platform_signal_count"] == 1
@@ -34,7 +34,7 @@ def test_live_intelligence_endpoint_and_platform_filter():
     response = client.get("/public/live-intelligence?category=platform&limit=4")
     assert response.status_code == 200
     data = response.json()
-    assert data["version"] == "3.12.0"
+    assert data["version"] == "3.13.0"
     assert data["count"] == 1
     assert all(item["category"] == "platform" for item in data["signals"])
     status = client.get("/public/live-intelligence/status")

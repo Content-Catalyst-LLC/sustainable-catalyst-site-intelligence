@@ -4240,11 +4240,45 @@
     });
   }
 
+  function setupLiveIntelligenceReleaseOperations() {
+    document.querySelectorAll('[data-scsi-live-release-operations]').forEach(function (root) {
+      const output = root.querySelector('.scsi-live-release-operations__output');
+      const policyEndpoint = root.dataset.policyEndpoint || '';
+      const statusEndpoint = root.dataset.statusEndpoint || '';
+      const correctionsEndpoint = root.dataset.correctionsEndpoint || '';
+      if (!output || !policyEndpoint || !statusEndpoint || !correctionsEndpoint) return;
+      Promise.all([fetchJson(policyEndpoint), fetchJson(statusEndpoint), fetchJson(correctionsEndpoint)]).then(function (responses) {
+        const policy = responses[0] || {};
+        const status = responses[1] || {};
+        const corrections = responses[2] || {};
+        const metrics = [
+          ['Deployment receipts', status.deployment_count || 0],
+          ['Verified deployments', status.verified_deployment_count || 0],
+          ['Open issues', status.open_issue_count || 0],
+          ['Approved corrections', status.approved_correction_count || 0],
+          ['Approved rollbacks', status.approved_rollback_count || 0]
+        ];
+        output.innerHTML = '<div class="scsi-live-subscriptions__grid">' + metrics.map(function (item) {
+          return '<article class="scsi-live-subscriptions__item"><p class="scsi-live-subscriptions__meta">POST-PUBLICATION GOVERNANCE</p><h3>' + escapeHtml(String(item[1])) + '</h3><p>' + escapeHtml(item[0]) + '</p></article>';
+        }).join('') + '</div>' +
+          '<p class="scsi-live-subscriptions__tags"><span>Checksum verification</span><span>Human review</span><span>Manual correction handoff</span><span>No deployment or rollback write</span></p>' +
+          ((corrections.corrections || []).length ? '<p class="scsi-live-subscriptions__meta">Public correction notices: ' + escapeHtml(String(corrections.corrections.length)) + '</p>' : '');
+        output.setAttribute('aria-busy', 'false');
+        const muted = root.querySelector('.scsi-muted');
+        if (muted) muted.textContent = policy.principle || 'Verify releases and prepare controlled corrections without destination writes.';
+      }).catch(function () {
+        output.innerHTML = '<p class="scsi-live-subscriptions__empty">Release operations status is temporarily unavailable.</p>';
+        output.setAttribute('aria-busy', 'false');
+      });
+    });
+  }
+
   function init() {
     setupActivePageLinks();
     setupLiveIntelligenceSubscriptions();
     setupLiveIntelligenceEditorial();
     setupLiveIntelligencePublicationReleases();
+    setupLiveIntelligenceReleaseOperations();
     setupLaunchActions();
     setupResponsiveEmbeds();
     setupLiveIntelligence();

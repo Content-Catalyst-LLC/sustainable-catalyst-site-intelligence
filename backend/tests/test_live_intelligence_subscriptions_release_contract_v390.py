@@ -5,7 +5,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_v390_release_contract():
     requirements = {
-        "backend/app/version.py": ['APP_VERSION = "3.12.0"'],
+        "backend/app/version.py": ['APP_VERSION = "3.13.0"'],
         "backend/app/live_intelligence_subscriptions_v390.py": [
             "POLICY_SCHEMA_VERSION", "WATCHLIST_SCHEMA_VERSION", "ALERT_SCHEMA_VERSION",
             "class LiveIntelligenceSubscriptionCenter", "def subscription_policy(",
@@ -24,16 +24,16 @@ def test_v390_release_contract():
             "live_intelligence_subscription_handoffs_path", "live_intelligence_subscriptions_dedupe_hours",
         ],
         "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": [
-            "Version: 3.12.0", "sc_live_intelligence_watchlists", "sc_live_intelligence_alerts",
+            "Version: 3.13.0", "sc_live_intelligence_watchlists", "sc_live_intelligence_alerts",
             "sc_live_intelligence_digests", "rest_live_intelligence_subscription_policy",
         ],
-        "README.md": ["v3.12.0 — Signal Subscriptions, Alerts, and Scheduled Intelligence"],
+        "README.md": ["v3.13.0 — Signal Subscriptions, Alerts, and Scheduled Intelligence"],
         "RELEASE_NOTES_SITE_INTELLIGENCE_V390.md": [
             "Signal Subscriptions, Alerts, and Scheduled Intelligence", "subscriber profiles",
             "provider-neutral",
         ],
         "docs/RELEASE_MANIFEST_V390.json": [
-            '"version": "3.12.0"', '"subscriber_profiles_stored": false',
+            '"version": "3.13.0"', '"subscriber_profiles_stored": false',
             '"automatic_publication": false', '"direct_email_delivery": false',
         ],
     }
