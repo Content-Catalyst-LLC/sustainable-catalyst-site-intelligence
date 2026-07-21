@@ -1,30 +1,35 @@
 # Sustainable Catalyst Site Intelligence
 
-## v3.6.1 — Live Intelligence Reliability and Freshness
+## v3.6.2 — Live Intelligence Presentation, Motion, and Accessibility Controls
 
-Site Intelligence v3.6.1 begins production hardening of the Live Intelligence homepage ticker. It validates each public signal, assigns explicit freshness states, isolates malformed and duplicate records, suppresses expired observations, and recovers from a last-known-good payload only when the entire query fingerprint matches.
+Site Intelligence v3.6.2 adds a governed presentation layer to the validated Live Intelligence feed. Administrators can choose a slow moving ticker, a fully static strip, or a manual signal viewer. Reduced-motion visitors automatically receive a static or manual experience, and mobile visitors may use a rotator, stacked cards, a marquee, or a hidden surface.
 
-**Current release:** v3.6.1 — Connected Public Intelligence and Evidence Platform
+**Current release:** v3.6.2 — Connected Public Intelligence and Evidence Platform
 
-Primary v3.6.1 routes:
+Primary v3.6.2 routes:
 
 - `/public/live-intelligence`
 - `/public/live-intelligence/status`
+- `/public/live-intelligence/presentation-policy`
 - `/public/live-intelligence/channels`
 - `/public/live-intelligence/channels/{channel_id}/feed`
 - `/public/live-intelligence/signals/{signal_id}`
 
-The WordPress ticker adds controlled refresh, bounded proxy caching, explicit delivery labels, and graceful unavailable states while preserving source operations, channels, clustering, ranking, context pages, evidence records, mobile controls, reduced motion, keyboard pause, Astra navigation, and breadcrumb styling.
+The WordPress surface adds maximum-visible-signal controls, dedicated assistive announcements, arrow-key and Home/End navigation, 44-pixel controls, swipe navigation, no-JavaScript status access, forced-colors support, and responsive behavior at high zoom. Animated content is not a live region, and automatic rotation never creates repetitive screen-reader announcements.
 
 ## Preserved Live Intelligence foundations
 
-### v3.6.1 — Topic and Regional Channels
+### v3.6.2 — Live Intelligence Reliability and Freshness
 
-The v3.5.0 channel directory, topic and regional filters, country routing, and honest empty-result policy remain version-aligned and active beneath the v3.6.1 reliability boundary.
+The v3.6.1 validation, explicit freshness states, malformed-record isolation, duplicate and expired-signal suppression, same-query last-known-good recovery, public status contract, and WordPress proxy-cache boundaries remain active beneath the v3.6.2 presentation layer.
 
-### v3.6.1 — Signal Context and Drill-Down
+### v3.6.2 — Topic and Regional Channels
 
-The v3.4.0 context, evidence, source-lineage, map, Decision Studio, and responsible-use capability remains version-aligned and active in v3.6.1.
+The v3.5.0 channel directory, topic and regional filters, country routing, source selection, and honest empty-result policy remain version-aligned and active in v3.6.2.
+
+### v3.6.2 — Signal Context and Drill-Down
+
+The v3.4.0 context, evidence, source-lineage, map, Decision Studio, ranking-explanation, and responsible-use capability remains version-aligned and active in v3.6.2.
 
 ## Previous release notes
 

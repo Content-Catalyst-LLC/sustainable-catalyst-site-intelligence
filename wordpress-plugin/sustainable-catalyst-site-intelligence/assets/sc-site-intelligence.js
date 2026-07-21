@@ -3672,7 +3672,8 @@
       const track = root.querySelector('.scsi-live-intelligence__track');
       const pause = root.querySelector('.scsi-live-intelligence__pause');
       const deliveryOutput = root.querySelector('[data-scsi-live-delivery]');
-      const mobileControls = root.querySelector('.scsi-live-intelligence__mobile-controls');
+      const announcer = root.querySelector('[data-scsi-live-announcer]');
+      const controls = root.querySelector('.scsi-live-intelligence__controls');
       const previous = root.querySelector('.scsi-live-intelligence__previous');
       const next = root.querySelector('.scsi-live-intelligence__next');
       const position = root.querySelector('.scsi-live-intelligence__position');
@@ -3683,6 +3684,7 @@
       const region = root.dataset.region || '';
       const country = root.dataset.country || '';
       const limit = Math.max(1, Math.min(24, Number(root.dataset.limit || 16)));
+      const maxVisible = Math.max(1, Math.min(12, Number(root.dataset.maxVisible || 8)));
       const feeds = root.dataset.feeds || '';
       const exclude = root.dataset.exclude || '';
       const maxPerSource = Math.max(1, Math.min(5, Number(root.dataset.maxPerSource || 2)));
@@ -3696,7 +3698,10 @@
       const compactSources = root.dataset.compactSources !== '0';
       const textLimit = Math.max(48, Math.min(220, Number(root.dataset.textLimit || 120)));
       const refreshInterval = Math.max(60, Math.min(1800, Number(root.dataset.refreshSeconds || 300))) * 1000;
-      const mobileMode = ['rotator', 'marquee', 'hidden'].includes(root.dataset.mobileMode) ? root.dataset.mobileMode : 'rotator';
+      const presentation = ['ticker', 'static', 'manual'].includes(root.dataset.presentation) ? root.dataset.presentation : 'ticker';
+      const reducedMotionMode = ['static', 'manual'].includes(root.dataset.reducedMotion) ? root.dataset.reducedMotion : 'static';
+      const announcementMode = ['manual', 'status', 'off'].includes(root.dataset.announcementMode) ? root.dataset.announcementMode : 'manual';
+      const mobileMode = ['rotator', 'stacked', 'marquee', 'hidden'].includes(root.dataset.mobileMode) ? root.dataset.mobileMode : 'rotator';
       const mobileInterval = Math.max(4, Math.min(30, Number(root.dataset.mobileInterval || 7))) * 1000;
       const mobileQuery = window.matchMedia('(max-width: 760px)');
       const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
@@ -3705,7 +3710,8 @@
       let currentIndex = 0;
       let rotationTimer = 0;
       let touchStartX = null;
-      let renderedMobile = null;
+      let effectiveMode = 'ticker';
+      let lastDeliveryAnnouncement = '';
       let categoryLabels = {};
       try { categoryLabels = JSON.parse(root.dataset.categoryLabels || '{}'); } catch (error) { categoryLabels = {}; }
 
@@ -3740,14 +3746,40 @@
         const state = String(delivery.state || proxy.freshness || 'live').toLowerCase().replace(/\s+/g, '_');
         return ['live', 'recently_updated', 'delayed', 'stale', 'historical', 'empty', 'unavailable'].includes(state) ? state : 'live';
       };
+      const announce = function (message, kind) {
+        if (!announcer || announcementMode === 'off') return;
+        if (announcementMode === 'manual' && kind !== 'manual') return;
+        const text = String(message || '').trim();
+        if (!text) return;
+        if (kind === 'status' && text === lastDeliveryAnnouncement) return;
+        if (kind === 'status') lastDeliveryAnnouncement = text;
+        announcer.textContent = '';
+        window.requestAnimationFrame(function () { announcer.textContent = text; });
+      };
+      const signalAccessibleText = function (signal, index) {
+        const sourceName = compactSources && signal.source_short_name ? signal.source_short_name : signal.source_name;
+        const categoryId = signal.category || 'signal';
+        const categoryLabel = categoryLabels[categoryId] || categoryId.replace(/_/g, ' ');
+        const parts = [];
+        if (Number.isInteger(index)) parts.push('Signal ' + (index + 1) + ' of ' + signals.length);
+        parts.push(categoryLabel);
+        parts.push(signal.label || 'Live signal');
+        parts.push(signal.value || 'Available');
+        if (showSources && sourceName) parts.push('Source ' + sourceName);
+        if (showFreshness && signal.freshness_label) parts.push(signal.freshness_label);
+        if (showUpdated && (signal.observed_at || signal.updated_at)) parts.push(relativeTime(signal.observed_at || signal.updated_at).replace(/^UPDATED /, 'Updated '));
+        return parts.filter(Boolean).join('. ');
+      };
       const setDeliveryState = function (state, label) {
         root.dataset.deliveryState = state;
         root.classList.toggle('is-delayed', state === 'delayed' || state === 'stale');
         root.classList.toggle('has-error', state === 'unavailable');
         root.classList.toggle('is-empty', state === 'empty');
-        if (deliveryOutput) deliveryOutput.textContent = String(label || state.replace(/_/g, ' ')).toUpperCase();
+        const displayLabel = String(label || state.replace(/_/g, ' ')).toUpperCase();
+        if (deliveryOutput) deliveryOutput.textContent = displayLabel;
+        announce('Live Intelligence status: ' + displayLabel.toLowerCase() + '.', 'status');
       };
-      const itemHtml = function (signal, includeSeparator) {
+      const itemHtml = function (signal, includeSeparator, index) {
         const metadata = [];
         const sourceName = compactSources && signal.source_short_name ? signal.source_short_name : signal.source_name;
         if (showSources && sourceName) metadata.push(sourceName);
@@ -3766,14 +3798,18 @@
         if (showSelectionContext && reasons) titleParts.push('Selected because: ' + reasons);
         const title = titleParts.filter(Boolean).join(' — ');
         const separator = includeSeparator ? '<span class="scsi-live-intelligence__separator" aria-hidden="true">◆</span>' : '';
-        return '<a class="scsi-live-intelligence__signal" data-scsi-event="sc_live_intelligence_context_open" data-scsi-signal-id="' + escapeHtml(signal.signal_id || '') + '" data-freshness-state="' + escapeHtml(signal.freshness_state || 'unknown') + '" href="' + escapeHtml(href) + '" title="' + escapeHtml(title) + '" aria-label="' + escapeHtml(categoryLabel + ': ' + (signal.label || 'Live signal') + ': ' + fullValue + (signal.freshness_label ? '. ' + signal.freshness_label : '')) + '">' +
+        return '<a class="scsi-live-intelligence__signal" data-scsi-event="sc_live_intelligence_context_open" data-scsi-signal-id="' + escapeHtml(signal.signal_id || '') + '" data-freshness-state="' + escapeHtml(signal.freshness_state || 'unknown') + '" href="' + escapeHtml(href) + '" title="' + escapeHtml(title) + '" aria-label="' + escapeHtml(signalAccessibleText(signal, Number.isInteger(index) ? index : null)) + '">' +
           '<span class="scsi-live-intelligence__category">' + escapeHtml(categoryLabel.toUpperCase()) + '</span>' +
           '<span class="scsi-live-intelligence__name">' + escapeHtml(shorten(signal.label || 'LIVE SIGNAL', 72)) + '</span>' +
           '<strong class="scsi-live-intelligence__value">' + escapeHtml(shorten(fullValue, textLimit)) + '</strong>' +
           (metadata.length ? '<small>' + escapeHtml(metadata.join(' · ')) + '</small>' : '') + '</a>' + separator;
       };
-      const isMobileRotator = function () {
-        return mobileQuery.matches && mobileMode === 'rotator';
+      const resolveMode = function () {
+        if (reducedMotion.matches) return reducedMotionMode;
+        if (!mobileQuery.matches) return presentation;
+        if (presentation === 'static' || presentation === 'manual') return presentation;
+        if (mobileMode === 'marquee') return 'ticker';
+        return mobileMode;
       };
       const stopRotation = function () {
         if (rotationTimer) window.clearInterval(rotationTimer);
@@ -3782,46 +3818,72 @@
       const updatePosition = function () {
         if (position) position.textContent = signals.length ? (currentIndex + 1) + ' / ' + signals.length : '0 / 0';
       };
-      const showMobileSignal = function (index, announce) {
+      const updatePresentationClasses = function (mode) {
+        root.dataset.effectivePresentation = mode;
+        root.classList.toggle('is-static-mode', mode === 'static');
+        root.classList.toggle('is-manual-mode', mode === 'manual');
+        root.classList.toggle('is-mobile-rotator', mode === 'rotator');
+        root.classList.toggle('is-mobile-stacked', mode === 'stacked');
+        root.classList.toggle('is-mobile-marquee', mode === 'ticker' && mobileQuery.matches);
+        root.classList.toggle('is-mobile-hidden', mode === 'hidden');
+        root.classList.toggle('is-reduced-motion', reducedMotion.matches);
+        const usesSignalControls = mode === 'manual' || mode === 'rotator';
+        if (controls) controls.hidden = !usesSignalControls;
+        if (pause) pause.hidden = !(mode === 'ticker' || mode === 'rotator');
+      };
+      const showMobileSignal = function (index, shouldAnnounce) {
         if (!signals.length) return;
         currentIndex = (index + signals.length) % signals.length;
-        track.innerHTML = '<div class="scsi-live-intelligence__mobile-signal">' + itemHtml(signals[currentIndex], false) + '</div>';
+        track.innerHTML = '<div class="scsi-live-intelligence__current-signal">' + itemHtml(signals[currentIndex], false, currentIndex) + '</div>';
         updatePosition();
-        if (announce) viewport.setAttribute('aria-label', 'Live Intelligence signal ' + (currentIndex + 1) + ' of ' + signals.length);
+        if (shouldAnnounce) announce(signalAccessibleText(signals[currentIndex], currentIndex), 'manual');
       };
+      const showCurrentSignal = showMobileSignal;
       const startRotation = function () {
         stopRotation();
-        if (!isMobileRotator() || reducedMotion.matches || root.classList.contains('is-paused') || signals.length < 2 || document.hidden) return;
-        rotationTimer = window.setInterval(function () { showMobileSignal(currentIndex + 1, false); }, mobileInterval);
+        if (effectiveMode !== 'rotator' || reducedMotion.matches || root.classList.contains('is-paused') || root.classList.contains('is-focus-paused') || root.classList.contains('is-hover-paused') || signals.length < 2 || document.hidden) return;
+        rotationTimer = window.setInterval(function () { showCurrentSignal(currentIndex + 1, false); }, mobileInterval);
+      };
+      const renderTicker = function () {
+        const content = signals.map(function (signal, index) { return itemHtml(signal, true, index); }).join('');
+        track.innerHTML = '<div class="scsi-live-intelligence__set">' + content + '</div><div class="scsi-live-intelligence__set" aria-hidden="true">' + content + '</div>';
+      };
+      const renderStatic = function () {
+        const content = signals.map(function (signal, index) { return itemHtml(signal, index < signals.length - 1, index); }).join('');
+        track.innerHTML = '<div class="scsi-live-intelligence__set scsi-live-intelligence__static-set">' + content + '</div>';
+      };
+      const renderStacked = function () {
+        const content = signals.map(function (signal, index) { return '<div class="scsi-live-intelligence__stacked-signal">' + itemHtml(signal, false, index) + '</div>'; }).join('');
+        track.innerHTML = '<div class="scsi-live-intelligence__stacked-list">' + content + '</div>';
       };
       const renderMode = function () {
         if (!signals.length) return;
-        const mobile = mobileQuery.matches;
-        root.classList.toggle('is-mobile-rotator', mobile && mobileMode === 'rotator');
-        root.classList.toggle('is-mobile-marquee', mobile && mobileMode === 'marquee');
-        root.classList.toggle('is-mobile-hidden', mobile && mobileMode === 'hidden');
-        if (mobileMode === 'hidden' && mobile) {
-          stopRotation();
-          return;
-        }
-        if (isMobileRotator()) {
-          if (renderedMobile !== true) currentIndex = 0;
-          showMobileSignal(currentIndex, false);
-          if (mobileControls) mobileControls.hidden = false;
-          renderedMobile = true;
+        stopRotation();
+        effectiveMode = resolveMode();
+        updatePresentationClasses(effectiveMode);
+        if (effectiveMode === 'hidden') return;
+        if (effectiveMode === 'manual' || effectiveMode === 'rotator') {
+          if (currentIndex >= signals.length) currentIndex = 0;
+          showCurrentSignal(currentIndex, false);
           startRotation();
           return;
         }
-        stopRotation();
-        if (mobileControls) mobileControls.hidden = true;
-        const content = signals.map(function (signal) { return itemHtml(signal, true); }).join('');
-        track.innerHTML = '<div class="scsi-live-intelligence__set">' + content + '</div><div class="scsi-live-intelligence__set" aria-hidden="true">' + content + '</div>';
-        renderedMobile = false;
+        if (effectiveMode === 'stacked') {
+          renderStacked();
+          return;
+        }
+        if (effectiveMode === 'static') {
+          renderStatic();
+          return;
+        }
+        renderTicker();
       };
       const renderEmpty = function (data) {
         signals = [];
         stopRotation();
-        if (mobileControls) mobileControls.hidden = true;
+        updatePresentationClasses(resolveMode());
+        if (controls) controls.hidden = true;
+        if (pause) pause.hidden = true;
         updatePosition();
         const delivery = data && data.delivery ? data.delivery : {};
         const state = normalizeDeliveryState(data);
@@ -3832,11 +3894,14 @@
         viewport.setAttribute('aria-busy', 'false');
       };
       const render = function (data) {
-        signals = Array.isArray(data.signals) ? data.signals.filter(function (signal) { return signal && signal.validation_state !== 'invalid'; }) : [];
+        const previousSignalId = signals[currentIndex] && signals[currentIndex].signal_id ? signals[currentIndex].signal_id : '';
+        signals = Array.isArray(data.signals) ? data.signals.filter(function (signal) { return signal && signal.validation_state !== 'invalid'; }).slice(0, maxVisible) : [];
         if (!signals.length) {
           renderEmpty(data);
           return;
         }
+        const preservedIndex = previousSignalId ? signals.findIndex(function (signal) { return signal.signal_id === previousSignalId; }) : -1;
+        currentIndex = preservedIndex >= 0 ? preservedIndex : Math.min(currentIndex, signals.length - 1);
         renderMode();
         const state = normalizeDeliveryState(data);
         const delivery = data.delivery || {};
@@ -3845,7 +3910,6 @@
         root.classList.add('is-ready');
         setDeliveryState(state, label);
         viewport.setAttribute('aria-busy', 'false');
-        if (root.dataset.motion === 'off') root.classList.add('is-paused');
       };
       const load = function () {
         viewport.setAttribute('aria-busy', 'true');
@@ -3856,14 +3920,23 @@
             return;
           }
           signals = [];
+          stopRotation();
+          if (controls) controls.hidden = true;
+          if (pause) pause.hidden = true;
           track.innerHTML = '<span class="scsi-live-intelligence__connecting">LIVE INTELLIGENCE TEMPORARILY UNAVAILABLE</span>';
           setDeliveryState('unavailable', 'Unavailable');
         });
       };
 
       if (finePointer.matches) {
-        root.addEventListener('mouseenter', function () { root.classList.add('is-hover-paused'); });
-        root.addEventListener('mouseleave', function () { root.classList.remove('is-hover-paused'); });
+        root.addEventListener('mouseenter', function () {
+          root.classList.add('is-hover-paused');
+          stopRotation();
+        });
+        root.addEventListener('mouseleave', function () {
+          root.classList.remove('is-hover-paused');
+          startRotation();
+        });
       }
       root.addEventListener('focusin', function () {
         root.classList.add('is-focus-paused');
@@ -3875,39 +3948,59 @@
           startRotation();
         }
       });
-      if (previous) previous.addEventListener('click', function () { showMobileSignal(currentIndex - 1, true); startRotation(); });
-      if (next) next.addEventListener('click', function () { showMobileSignal(currentIndex + 1, true); startRotation(); });
+      root.addEventListener('keydown', function (event) {
+        if (!(effectiveMode === 'manual' || effectiveMode === 'rotator') || event.altKey || event.ctrlKey || event.metaKey) return;
+        if (event.key === 'ArrowLeft') {
+          event.preventDefault();
+          showCurrentSignal(currentIndex - 1, true);
+          startRotation();
+        } else if (event.key === 'ArrowRight') {
+          event.preventDefault();
+          showCurrentSignal(currentIndex + 1, true);
+          startRotation();
+        } else if (event.key === 'Home') {
+          event.preventDefault();
+          showCurrentSignal(0, true);
+          startRotation();
+        } else if (event.key === 'End') {
+          event.preventDefault();
+          showCurrentSignal(signals.length - 1, true);
+          startRotation();
+        }
+      });
+      if (previous) previous.addEventListener('click', function () { showCurrentSignal(currentIndex - 1, true); startRotation(); });
+      if (next) next.addEventListener('click', function () { showCurrentSignal(currentIndex + 1, true); startRotation(); });
       viewport.addEventListener('touchstart', function (event) {
-        if (!isMobileRotator() || !event.touches.length) return;
+        if (!(effectiveMode === 'manual' || effectiveMode === 'rotator') || !event.touches.length) return;
         touchStartX = event.touches[0].clientX;
         stopRotation();
       }, {passive: true});
       viewport.addEventListener('touchend', function (event) {
-        if (!isMobileRotator() || touchStartX === null || !event.changedTouches.length) return;
+        if (!(effectiveMode === 'manual' || effectiveMode === 'rotator') || touchStartX === null || !event.changedTouches.length) return;
         const distance = event.changedTouches[0].clientX - touchStartX;
         touchStartX = null;
-        if (Math.abs(distance) >= 40) showMobileSignal(currentIndex + (distance < 0 ? 1 : -1), true);
+        if (Math.abs(distance) >= 40) showCurrentSignal(currentIndex + (distance < 0 ? 1 : -1), true);
         startRotation();
       }, {passive: true});
       if (pause) {
         pause.addEventListener('click', function () {
           const paused = root.classList.toggle('is-paused');
           pause.setAttribute('aria-pressed', paused ? 'true' : 'false');
-          pause.setAttribute('aria-label', paused ? 'Resume Live Intelligence ticker' : 'Pause Live Intelligence ticker');
+          pause.setAttribute('aria-label', paused ? 'Resume Live Intelligence movement' : 'Pause Live Intelligence movement');
           const icon = pause.querySelector('span');
           if (icon) icon.textContent = paused ? '▶' : 'Ⅱ';
+          announce(paused ? 'Live Intelligence movement paused.' : 'Live Intelligence movement resumed.', 'manual');
           if (paused) stopRotation(); else startRotation();
         });
       }
-      const handleModeChange = function () { renderMode(); };
-      if (mobileQuery.addEventListener) mobileQuery.addEventListener('change', handleModeChange); else mobileQuery.addListener(handleModeChange);
-      if (reducedMotion.addEventListener) reducedMotion.addEventListener('change', startRotation); else reducedMotion.addListener(startRotation);
+      const handlePresentationChange = function () { renderMode(); };
+      if (mobileQuery.addEventListener) mobileQuery.addEventListener('change', handlePresentationChange); else mobileQuery.addListener(handlePresentationChange);
+      if (reducedMotion.addEventListener) reducedMotion.addEventListener('change', handlePresentationChange); else reducedMotion.addListener(handlePresentationChange);
       document.addEventListener('visibilitychange', function () { if (document.hidden) stopRotation(); else startRotation(); });
       load();
       window.setInterval(load, refreshInterval);
     });
   }
-
   function init() {
     setupActivePageLinks();
     setupLaunchActions();

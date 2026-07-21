@@ -1,0 +1,26 @@
+Site Intelligence v3.6.2 — Live Intelligence Presentation, Motion, and Accessibility Controls
+Build validation completed: July 20, 2026 (America/Chicago)
+
+PASS: Full backend regression suite — 642 tests.
+PASS: Focused presentation and accessibility suite — static, manual, ticker, mobile stacked, reduced motion, bounded announcements, keyboard navigation, swipe navigation, and public policy endpoint.
+PASS: Preserved v3.6.1 reliability, v3.5.0 channels, v3.4.0 context, v3.3.0 ranking, and v3.1.x readability/mobile compatibility contracts.
+PASS: Python syntax for backend application and release scripts.
+PASS: JSON and webmanifest parsing.
+PASS: JavaScript syntax for the public app, service worker, and WordPress Live Intelligence surface.
+PASS: PHP syntax for the WordPress plugin.
+PASS: Animated viewport and delivery badge are not live regions; the dedicated announcer is bounded by administrator policy.
+PASS: Previous/next controls provide 44 CSS-pixel minimum targets with Arrow, Home, End, button, and swipe navigation.
+PASS: Static, manual, mobile stacked, no-JavaScript, forced-colors, reduced-motion, and high-zoom contracts are present.
+PASS: Astra navigation and breadcrumb styling boundaries remain untouched.
+PASS: Immutable release manifest — 673 packaged source files.
+PASS: Complete install-and-push script rehearsal — checksum, extraction, overlay, 642 tests, release validation, syntax checks, WordPress packaging, and local commit with push disabled.
+
+Release boundaries:
+- Motion is optional and is never required to access a signal.
+- Automatic rotation never announces every item to assistive technology.
+- Presentation choices do not alter source ranking, freshness, or evidence lineage.
+- Live Intelligence is not an emergency-warning service.
+- No API keys or private backend paths are exposed to browser JavaScript or public policy responses.
+
+Environment note:
+The release was validated in the build container with Python 3.13, Node.js, and PHP. Live activation on Render and WordPress remains a deployment step.

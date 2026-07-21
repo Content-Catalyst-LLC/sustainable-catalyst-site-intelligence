@@ -1,4 +1,4 @@
-"""Signal context, evidence, and drill-down support for Site Intelligence v3.6.1.
+"""Signal context, evidence, and drill-down support for Site Intelligence v3.6.2.
 
 The module builds public-safe detail records around already-selected Live
 Intelligence signals. It preserves source identity, timestamps, ranking

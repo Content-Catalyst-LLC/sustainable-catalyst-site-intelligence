@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.6.2 — Live Intelligence Presentation, Motion, and Accessibility Controls
+
+- Added moving ticker, fully static, and manual previous/next presentation modes.
+- Added reduced-motion static or manual presentation without requiring motion to access signals.
+- Added mobile stacked cards while preserving rotator, marquee, and hidden choices.
+- Added maximum-visible-signal controls, 44-pixel navigation targets, arrow-key, Home, End, button, and swipe navigation.
+- Removed live-region behavior from animated content and added bounded manual/status announcements through a dedicated assistive region.
+- Added complete accessible signal names, no-JavaScript feed-status access, forced-colors behavior, and high-zoom responsive control placement.
+- Added a public `/public/live-intelligence/presentation-policy` contract.
+- Preserved reliability, freshness, channels, ranking, evidence, source lineage, Astra navigation, and breadcrumb styling.
+
 ## 3.6.1 — Live Intelligence Reliability and Freshness
 
 - Added explicit signal freshness and delivery states.

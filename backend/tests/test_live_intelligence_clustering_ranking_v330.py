@@ -121,7 +121,7 @@ def test_live_feed_exposes_cluster_and_ranking_transparency(tmp_path):
         "source_states": {"usgs": "live", "partner": "live"},
     }
     settings = Settings(
-        version="3.6.1",
+        version="3.6.2",
         external_live=True,
         public_connector_live_checks=False,
         live_source_operations_enabled=False,

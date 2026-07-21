@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.6.1
+ * Version: 3.6.2
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.6.1';
+    const VERSION = '3.6.2';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -265,6 +265,10 @@ final class SC_Site_Intelligence_Plugin {
             'live_intelligence_feeds' => 'noaa_nws,usgs_earthquakes,nasa_eonet,reliefweb,nasa_power,openalex,world_bank',
             'live_intelligence_max_per_source' => '2',
             'live_intelligence_shortcode_overrides' => '1',
+            'live_intelligence_presentation_mode' => 'ticker',
+            'live_intelligence_reduced_motion_mode' => 'static',
+            'live_intelligence_max_visible' => '8',
+            'live_intelligence_announcement_mode' => 'manual',
             'live_intelligence_speed_preset' => 'balanced',
             'live_intelligence_speed' => '30',
             'live_intelligence_mobile_speed' => '36',
@@ -403,8 +407,8 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v3.6.1 preserves all v3.6.1 choices while adding explicit freshness and reliability controls.
-        // The former 42-second default is migrated to the balanced 30-second preset.
+        // v3.6.2 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
+        // Existing moving tickers remain moving unless an administrator selects static or manual presentation.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
             unset($stored_options['live_intelligence_parchment_navigation']);
@@ -427,7 +431,7 @@ final class SC_Site_Intelligence_Plugin {
             if (!isset($stored_options['live_intelligence_speed']) || (string) $stored_options['live_intelligence_speed'] === '42') {
                 $stored_options['live_intelligence_speed'] = '30';
             }
-            foreach (['live_intelligence_mobile_speed', 'live_intelligence_mobile_mode', 'live_intelligence_mobile_interval', 'live_intelligence_spacing', 'live_intelligence_text_limit', 'live_intelligence_compact_sources'] as $key) {
+            foreach (['live_intelligence_presentation_mode', 'live_intelligence_reduced_motion_mode', 'live_intelligence_max_visible', 'live_intelligence_announcement_mode', 'live_intelligence_mobile_speed', 'live_intelligence_mobile_mode', 'live_intelligence_mobile_interval', 'live_intelligence_spacing', 'live_intelligence_text_limit', 'live_intelligence_compact_sources'] as $key) {
                 if (!isset($stored_options[$key])) {
                     $stored_options[$key] = $readability_defaults[$key];
                 }
@@ -706,12 +710,19 @@ final class SC_Site_Intelligence_Plugin {
         $output['live_intelligence_feeds'] = implode(',', $feed_ids);
         $output['live_intelligence_max_per_source'] = (string) max(1, min(5, absint($input['live_intelligence_max_per_source'] ?? 2)));
         $output['live_intelligence_shortcode_overrides'] = !empty($input['live_intelligence_shortcode_overrides']) ? '1' : '0';
+        $presentation_mode = sanitize_key((string) ($input['live_intelligence_presentation_mode'] ?? 'ticker'));
+        $output['live_intelligence_presentation_mode'] = in_array($presentation_mode, ['ticker', 'static', 'manual'], true) ? $presentation_mode : 'ticker';
+        $reduced_motion_mode = sanitize_key((string) ($input['live_intelligence_reduced_motion_mode'] ?? 'static'));
+        $output['live_intelligence_reduced_motion_mode'] = in_array($reduced_motion_mode, ['static', 'manual'], true) ? $reduced_motion_mode : 'static';
+        $output['live_intelligence_max_visible'] = (string) max(1, min(12, absint($input['live_intelligence_max_visible'] ?? 8)));
+        $announcement_mode = sanitize_key((string) ($input['live_intelligence_announcement_mode'] ?? 'manual'));
+        $output['live_intelligence_announcement_mode'] = in_array($announcement_mode, ['manual', 'status', 'off'], true) ? $announcement_mode : 'manual';
         $speed_preset = sanitize_key((string) ($input['live_intelligence_speed_preset'] ?? 'balanced'));
         $output['live_intelligence_speed_preset'] = in_array($speed_preset, ['relaxed', 'balanced', 'brisk', 'custom'], true) ? $speed_preset : 'balanced';
         $output['live_intelligence_speed'] = (string) max(16, min(120, absint($input['live_intelligence_speed'] ?? 30)));
         $output['live_intelligence_mobile_speed'] = (string) max(18, min(140, absint($input['live_intelligence_mobile_speed'] ?? 36)));
         $mobile_mode = sanitize_key((string) ($input['live_intelligence_mobile_mode'] ?? 'rotator'));
-        $output['live_intelligence_mobile_mode'] = in_array($mobile_mode, ['rotator', 'marquee', 'hidden'], true) ? $mobile_mode : 'rotator';
+        $output['live_intelligence_mobile_mode'] = in_array($mobile_mode, ['rotator', 'stacked', 'marquee', 'hidden'], true) ? $mobile_mode : 'rotator';
         $output['live_intelligence_mobile_interval'] = (string) max(4, min(30, absint($input['live_intelligence_mobile_interval'] ?? 7)));
         $spacing = sanitize_key((string) ($input['live_intelligence_spacing'] ?? 'balanced'));
         $output['live_intelligence_spacing'] = in_array($spacing, ['compact', 'balanced', 'spacious'], true) ? $spacing : 'balanced';
@@ -749,6 +760,7 @@ final class SC_Site_Intelligence_Plugin {
         $options = self::options();
         $defaults = self::defaults();
         $keys = [
+            'live_intelligence_presentation_mode', 'live_intelligence_reduced_motion_mode', 'live_intelligence_max_visible', 'live_intelligence_announcement_mode',
             'live_intelligence_speed_preset', 'live_intelligence_speed', 'live_intelligence_mobile_speed',
             'live_intelligence_mobile_mode', 'live_intelligence_mobile_interval', 'live_intelligence_spacing', 'live_intelligence_text_limit', 'live_intelligence_compact_sources',
             'live_intelligence_category_earth_systems', 'live_intelligence_category_human_systems',
@@ -782,6 +794,11 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/live-intelligence/status', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_live_intelligence_status'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/presentation-policy', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_presentation_policy'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/live-intelligence/ranking-policy', [
@@ -2704,6 +2721,11 @@ final class SC_Site_Intelligence_Plugin {
         return is_wp_error($result) ? $result : rest_ensure_response($result);
     }
 
+    public function rest_live_intelligence_presentation_policy(WP_REST_Request $request) {
+        $result = $this->backend_request('public/live-intelligence/presentation-policy');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
     public function rest_live_intelligence_ranking_policy(WP_REST_Request $request) {
         $result = $this->backend_request('public/live-intelligence/ranking-policy');
         return is_wp_error($result) ? $result : rest_ensure_response($result);
@@ -3035,6 +3057,10 @@ final class SC_Site_Intelligence_Plugin {
             'feeds' => (string) ($options['live_intelligence_feeds'] ?? self::defaults()['live_intelligence_feeds']),
             'exclude' => '',
             'max_per_source' => (string) ($options['live_intelligence_max_per_source'] ?? '2'),
+            'presentation' => (string) ($options['live_intelligence_presentation_mode'] ?? 'ticker'),
+            'reduced_motion' => (string) ($options['live_intelligence_reduced_motion_mode'] ?? 'static'),
+            'max_visible' => (string) ($options['live_intelligence_max_visible'] ?? '8'),
+            'announce' => (string) ($options['live_intelligence_announcement_mode'] ?? 'manual'),
             'motion' => 'slow',
             'theme' => 'electronic',
             'speed' => (string) ($options['live_intelligence_speed'] ?? '30'),
@@ -3068,12 +3094,19 @@ final class SC_Site_Intelligence_Plugin {
         $max_per_source = max(1, min(5, absint(
             $allow_overrides ? $atts['max_per_source'] : ($options['live_intelligence_max_per_source'] ?? '2')
         )));
+        $presentation = in_array(sanitize_key((string) $atts['presentation']), ['ticker', 'static', 'manual'], true) ? sanitize_key((string) $atts['presentation']) : 'ticker';
+        $reduced_motion_mode = in_array(sanitize_key((string) $atts['reduced_motion']), ['static', 'manual'], true) ? sanitize_key((string) $atts['reduced_motion']) : 'static';
+        $max_visible = max(1, min(12, absint($atts['max_visible'])));
+        $announcement_mode = in_array(sanitize_key((string) $atts['announce']), ['manual', 'status', 'off'], true) ? sanitize_key((string) $atts['announce']) : 'manual';
         $motion = in_array($atts['motion'], ['slow', 'off'], true) ? $atts['motion'] : 'slow';
+        if ($motion === 'off') {
+            $presentation = 'static';
+        }
         $placement = $atts['placement'] === 'top' ? 'top' : 'content';
         $label = sanitize_text_field((string) $atts['label']);
         $speed = max(16, min(120, absint($atts['speed'])));
         $mobile_speed = max(18, min(140, absint($atts['mobile_speed'])));
-        $mobile_mode = in_array(sanitize_key((string) $atts['mobile_mode']), ['rotator', 'marquee', 'hidden'], true) ? sanitize_key((string) $atts['mobile_mode']) : 'rotator';
+        $mobile_mode = in_array(sanitize_key((string) $atts['mobile_mode']), ['rotator', 'stacked', 'marquee', 'hidden'], true) ? sanitize_key((string) $atts['mobile_mode']) : 'rotator';
         $mobile_interval = max(4, min(30, absint($atts['mobile_interval'])));
         $spacing = in_array(sanitize_key((string) $atts['spacing']), ['compact', 'balanced', 'spacious'], true) ? sanitize_key((string) $atts['spacing']) : 'balanced';
         $text_limit = max(48, min(220, absint($atts['text_limit'])));
@@ -3083,20 +3116,22 @@ final class SC_Site_Intelligence_Plugin {
         $refresh_seconds = max(60, min(1800, absint($atts['refresh_seconds'])));
         $context_base = trailingslashit(home_url('/live-intelligence/signal/'));
         $category_labels = self::live_intelligence_category_labels($options);
-        $classes = 'scsi-live-intelligence scsi-live-intelligence--electronic scsi-live-intelligence--' . $placement . ' scsi-live-intelligence--spacing-' . $spacing;
+        $classes = 'scsi-live-intelligence scsi-live-intelligence--electronic scsi-live-intelligence--' . $placement . ' scsi-live-intelligence--spacing-' . $spacing . ' scsi-live-intelligence--presentation-' . $presentation;
         ob_start();
         ?>
-        <section class="<?php echo esc_attr($classes); ?>" data-scsi-live-intelligence data-category="<?php echo esc_attr($category); ?>" data-channel="<?php echo esc_attr($channel); ?>" data-region="<?php echo esc_attr($region); ?>" data-country="<?php echo esc_attr($country); ?>" data-limit="<?php echo esc_attr((string) $limit); ?>" data-feeds="<?php echo esc_attr(implode(',', $feeds)); ?>" data-exclude="<?php echo esc_attr(implode(',', $exclude)); ?>" data-max-per-source="<?php echo esc_attr((string) $max_per_source); ?>" data-motion="<?php echo esc_attr($motion); ?>" data-mobile-mode="<?php echo esc_attr($mobile_mode); ?>" data-mobile-interval="<?php echo esc_attr((string) $mobile_interval); ?>" data-show-sources="<?php echo esc_attr((string) $atts['show_sources']); ?>" data-show-updated="<?php echo esc_attr((string) $atts['show_updated']); ?>" data-show-cluster-sources="<?php echo esc_attr((string) $atts['show_cluster_sources']); ?>" data-selection-context="<?php echo esc_attr((string) $atts['selection_context']); ?>" data-detail-links="<?php echo esc_attr($detail_links); ?>" data-show-freshness="<?php echo esc_attr($show_freshness); ?>" data-refresh-seconds="<?php echo esc_attr((string) $refresh_seconds); ?>" data-context-base="<?php echo esc_url($context_base); ?>" data-compact-sources="<?php echo esc_attr($compact_sources); ?>" data-text-limit="<?php echo esc_attr((string) $text_limit); ?>" data-category-labels="<?php echo esc_attr(wp_json_encode($category_labels)); ?>" style="--scsi-live-duration:<?php echo esc_attr((string) $speed); ?>s;--scsi-live-mobile-duration:<?php echo esc_attr((string) $mobile_speed); ?>s" aria-label="<?php echo esc_attr($label); ?>">
-            <div class="scsi-live-intelligence__label"><span class="scsi-live-intelligence__lamp" aria-hidden="true"></span><strong><?php echo esc_html(strtoupper($label)); ?></strong><span class="scsi-live-intelligence__delivery" data-scsi-live-delivery aria-live="polite">Connecting</span></div>
-            <div class="scsi-live-intelligence__viewport" aria-live="polite" aria-busy="true">
+        <section class="<?php echo esc_attr($classes); ?>" data-scsi-live-intelligence data-presentation="<?php echo esc_attr($presentation); ?>" data-reduced-motion="<?php echo esc_attr($reduced_motion_mode); ?>" data-max-visible="<?php echo esc_attr((string) $max_visible); ?>" data-announcement-mode="<?php echo esc_attr($announcement_mode); ?>" data-category="<?php echo esc_attr($category); ?>" data-channel="<?php echo esc_attr($channel); ?>" data-region="<?php echo esc_attr($region); ?>" data-country="<?php echo esc_attr($country); ?>" data-limit="<?php echo esc_attr((string) $limit); ?>" data-feeds="<?php echo esc_attr(implode(',', $feeds)); ?>" data-exclude="<?php echo esc_attr(implode(',', $exclude)); ?>" data-max-per-source="<?php echo esc_attr((string) $max_per_source); ?>" data-motion="<?php echo esc_attr($motion); ?>" data-mobile-mode="<?php echo esc_attr($mobile_mode); ?>" data-mobile-interval="<?php echo esc_attr((string) $mobile_interval); ?>" data-show-sources="<?php echo esc_attr((string) $atts['show_sources']); ?>" data-show-updated="<?php echo esc_attr((string) $atts['show_updated']); ?>" data-show-cluster-sources="<?php echo esc_attr((string) $atts['show_cluster_sources']); ?>" data-selection-context="<?php echo esc_attr((string) $atts['selection_context']); ?>" data-detail-links="<?php echo esc_attr($detail_links); ?>" data-show-freshness="<?php echo esc_attr($show_freshness); ?>" data-refresh-seconds="<?php echo esc_attr((string) $refresh_seconds); ?>" data-context-base="<?php echo esc_url($context_base); ?>" data-compact-sources="<?php echo esc_attr($compact_sources); ?>" data-text-limit="<?php echo esc_attr((string) $text_limit); ?>" data-category-labels="<?php echo esc_attr(wp_json_encode($category_labels)); ?>" style="--scsi-live-duration:<?php echo esc_attr((string) $speed); ?>s;--scsi-live-mobile-duration:<?php echo esc_attr((string) $mobile_speed); ?>s" aria-label="<?php echo esc_attr($label); ?>">
+            <div class="scsi-live-intelligence__label"><span class="scsi-live-intelligence__lamp" aria-hidden="true"></span><strong><?php echo esc_html(strtoupper($label)); ?></strong><span class="scsi-live-intelligence__delivery" data-scsi-live-delivery aria-live="off">Connecting</span></div>
+            <div class="scsi-live-intelligence__viewport" aria-live="off" aria-busy="true">
                 <div class="scsi-live-intelligence__track"><span class="scsi-live-intelligence__connecting">CONNECTING TO SELECTED PUBLIC INTELLIGENCE FEEDS…</span></div>
             </div>
             <button class="scsi-live-intelligence__pause" type="button" aria-pressed="false" aria-label="Pause Live Intelligence ticker"><span aria-hidden="true">Ⅱ</span></button>
-            <nav class="scsi-live-intelligence__mobile-controls" aria-label="Live Intelligence mobile navigation" hidden>
+            <nav class="scsi-live-intelligence__mobile-controls scsi-live-intelligence__controls" aria-label="Live Intelligence signal navigation" hidden>
                 <button class="scsi-live-intelligence__previous" type="button" aria-label="Previous Live Intelligence signal"><span aria-hidden="true">‹</span></button>
                 <output class="scsi-live-intelligence__position" aria-live="polite">1 / 1</output>
                 <button class="scsi-live-intelligence__next" type="button" aria-label="Next Live Intelligence signal"><span aria-hidden="true">›</span></button>
             </nav>
+            <p class="scsi-live-intelligence__announcer screen-reader-text" data-scsi-live-announcer role="status" aria-live="polite" aria-atomic="true"></p>
+            <noscript><p class="scsi-live-intelligence__noscript">Live Intelligence motion and signal controls require JavaScript. <a href="<?php echo esc_url(rest_url(self::REST_NAMESPACE . '/live-intelligence/status')); ?>">Open the public feed status.</a></p></noscript>
         </section>
         <?php
         return ob_get_clean();
@@ -3164,7 +3199,7 @@ final class SC_Site_Intelligence_Plugin {
                         <td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[enable_dashboard]" value="1" <?php checked($options['enable_dashboard'], '1'); ?> /> Enable dashboard shortcodes.</label></td>
                     </tr>
                     <tr><th scope="row">Live Intelligence</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[enable_live_intelligence]" value="1" <?php checked($options['enable_live_intelligence'], '1'); ?> /> Enable the Live Intelligence service and shortcode.</label></td></tr>
-                    <tr><th scope="row">Automatic electronic ticker</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[show_top_live_intelligence]" value="1" <?php checked($options['show_top_live_intelligence'], '1'); ?> /> Automatically place the black-and-green ticker using the selected location.</label></td></tr>
+                    <tr><th scope="row">Automatic Live Intelligence surface</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[show_top_live_intelligence]" value="1" <?php checked($options['show_top_live_intelligence'], '1'); ?> /> Automatically place the governed Live Intelligence strip using the selected location.</label></td></tr>
                     <tr><th scope="row"><label for="scsi_live_placement">Automatic placement</label></th><td><select id="scsi_live_placement" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_placement]"><option value="below_breadcrumb" <?php selected($options['live_intelligence_placement'], 'below_breadcrumb'); ?>>Below Astra breadcrumb</option><option value="below_header" <?php selected($options['live_intelligence_placement'], 'below_header'); ?>>Immediately below global header</option><option value="shortcode_only" <?php selected($options['live_intelligence_placement'], 'shortcode_only'); ?>>Disabled — shortcode only</option></select><p class="description">Below-breadcrumb placement follows Astra's configured hook and uses a guarded content fallback when that hook is unavailable on the homepage.</p></td></tr>
                     <tr><th scope="row"><label for="scsi_live_scope">Top ticker scope</label></th><td><select id="scsi_live_scope" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_scope]"><option value="homepage" <?php selected($options['live_intelligence_scope'], 'homepage'); ?>>Homepage only</option><option value="selected" <?php selected($options['live_intelligence_scope'], 'selected'); ?>>Selected page IDs</option><option value="entire_site" <?php selected($options['live_intelligence_scope'], 'entire_site'); ?>>Entire site</option></select></td></tr>
                     <tr><th scope="row"><label for="scsi_live_pages">Selected page IDs</label></th><td><input id="scsi_live_pages" type="text" class="regular-text" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_selected_pages]" value="<?php echo esc_attr($options['live_intelligence_selected_pages']); ?>" placeholder="12, 84, 190" /><p class="description">Used only when the selected-page scope is active.</p></td></tr>
@@ -3183,9 +3218,13 @@ final class SC_Site_Intelligence_Plugin {
                     </tr>
                     <tr><th scope="row"><label for="scsi_live_source_limit">Items per source</label></th><td><input id="scsi_live_source_limit" type="number" min="1" max="5" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_max_per_source]" value="<?php echo esc_attr($options['live_intelligence_max_per_source']); ?>" /><p class="description">Limits repetition while category balancing fills the remaining ticker positions.</p></td></tr>
                     <tr><th scope="row">Shortcode feed overrides</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_shortcode_overrides]" value="1" <?php checked($options['live_intelligence_shortcode_overrides'], '1'); ?> /> Allow <code>feeds</code>, <code>exclude</code>, and <code>max_per_source</code> in individual shortcodes.</label></td></tr>
+                    <tr><th scope="row"><label for="scsi_live_presentation_mode">Desktop presentation</label></th><td><select id="scsi_live_presentation_mode" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_presentation_mode]"><option value="ticker" <?php selected($options['live_intelligence_presentation_mode'], 'ticker'); ?>>Slow moving ticker</option><option value="static" <?php selected($options['live_intelligence_presentation_mode'], 'static'); ?>>Fully static strip</option><option value="manual" <?php selected($options['live_intelligence_presentation_mode'], 'manual'); ?>>One signal with previous / next controls</option></select><p class="description">Motion is never required. Static and manual modes use the same validated signal feed and evidence links.</p></td></tr>
+                    <tr><th scope="row"><label for="scsi_live_reduced_motion_mode">Reduced-motion presentation</label></th><td><select id="scsi_live_reduced_motion_mode" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_reduced_motion_mode]"><option value="static" <?php selected($options['live_intelligence_reduced_motion_mode'], 'static'); ?>>Static strip</option><option value="manual" <?php selected($options['live_intelligence_reduced_motion_mode'], 'manual'); ?>>Manual previous / next viewer</option></select><p class="description">Applied automatically when the visitor requests reduced motion through their operating system or browser.</p></td></tr>
+                    <tr><th scope="row"><label for="scsi_live_max_visible">Maximum visible signals</label></th><td><input id="scsi_live_max_visible" type="number" min="1" max="12" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_max_visible]" value="<?php echo esc_attr($options['live_intelligence_max_visible']); ?>" /> signals<p class="description">The backend may return more records for ranking, but the public surface remains intentionally selective.</p></td></tr>
+                    <tr><th scope="row"><label for="scsi_live_announcement_mode">Assistive announcements</label></th><td><select id="scsi_live_announcement_mode" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_announcement_mode]"><option value="manual" <?php selected($options['live_intelligence_announcement_mode'], 'manual'); ?>>Manual navigation and pause actions only</option><option value="status" <?php selected($options['live_intelligence_announcement_mode'], 'status'); ?>>Manual actions plus delivery-state changes</option><option value="off" <?php selected($options['live_intelligence_announcement_mode'], 'off'); ?>>No dynamic announcements</option></select><p class="description">Animated content is never itself a live region, preventing repetitive screen-reader output.</p></td></tr>
                     <tr><th scope="row"><label for="scsi_live_speed_preset">Ticker speed</label></th><td><select id="scsi_live_speed_preset" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_speed_preset]"><option value="relaxed" <?php selected($options['live_intelligence_speed_preset'], 'relaxed'); ?>>Relaxed — 42s desktop / 48s mobile</option><option value="balanced" <?php selected($options['live_intelligence_speed_preset'], 'balanced'); ?>>Balanced — 30s desktop / 36s mobile</option><option value="brisk" <?php selected($options['live_intelligence_speed_preset'], 'brisk'); ?>>Brisk — 24s desktop / 30s mobile</option><option value="custom" <?php selected($options['live_intelligence_speed_preset'], 'custom'); ?>>Custom</option></select><p class="description">Lower cycle times move the board faster. Hover, keyboard focus, reduced-motion preferences, and the pause button continue to stop movement.</p></td></tr>
                     <tr><th scope="row"><label for="scsi_live_speed">Custom cycle</label></th><td><input id="scsi_live_speed" type="number" min="16" max="120" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_speed]" value="<?php echo esc_attr($options['live_intelligence_speed']); ?>" /> seconds desktop &nbsp; <input id="scsi_live_mobile_speed" type="number" min="18" max="140" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_mobile_speed]" value="<?php echo esc_attr($options['live_intelligence_mobile_speed']); ?>" /> seconds mobile marquee</td></tr>
-                    <tr><th scope="row"><label for="scsi_live_mobile_mode">Mobile presentation</label></th><td><select id="scsi_live_mobile_mode" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_mobile_mode]"><option value="rotator" <?php selected($options['live_intelligence_mobile_mode'], 'rotator'); ?>>Signal rotator with previous / next controls</option><option value="marquee" <?php selected($options['live_intelligence_mobile_mode'], 'marquee'); ?>>Scrolling electronic ticker</option><option value="hidden" <?php selected($options['live_intelligence_mobile_mode'], 'hidden'); ?>>Hide ticker on mobile</option></select><p class="description">The rotator is the recommended default. It auto-advances one signal at a time and supports buttons, swipe gestures, keyboard focus, and reduced-motion preferences.</p></td></tr>
+                    <tr><th scope="row"><label for="scsi_live_mobile_mode">Mobile presentation</label></th><td><select id="scsi_live_mobile_mode" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_mobile_mode]"><option value="rotator" <?php selected($options['live_intelligence_mobile_mode'], 'rotator'); ?>>Signal rotator with previous / next controls</option><option value="stacked" <?php selected($options['live_intelligence_mobile_mode'], 'stacked'); ?>>Stacked static signal cards</option><option value="marquee" <?php selected($options['live_intelligence_mobile_mode'], 'marquee'); ?>>Scrolling electronic ticker</option><option value="hidden" <?php selected($options['live_intelligence_mobile_mode'], 'hidden'); ?>>Hide ticker on mobile</option></select><p class="description">The rotator is the recommended default. Stacked mode shows all selected signals without movement. Rotator and manual modes support buttons, swipe gestures, arrow keys, keyboard focus, and reduced-motion preferences.</p></td></tr>
                     <tr><th scope="row"><label for="scsi_live_mobile_interval">Mobile auto-advance</label></th><td><input id="scsi_live_mobile_interval" type="number" min="4" max="30" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_mobile_interval]" value="<?php echo esc_attr($options['live_intelligence_mobile_interval']); ?>" /> seconds per signal<p class="description">Manual previous and next controls remain available. Auto-advance is disabled when reduced motion is requested or the ticker is paused.</p></td></tr>
                     <tr><th scope="row"><label for="scsi_live_spacing">Story spacing</label></th><td><select id="scsi_live_spacing" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_spacing]"><option value="compact" <?php selected($options['live_intelligence_spacing'], 'compact'); ?>>Compact</option><option value="balanced" <?php selected($options['live_intelligence_spacing'], 'balanced'); ?>>Balanced</option><option value="spacious" <?php selected($options['live_intelligence_spacing'], 'spacious'); ?>>Spacious</option></select></td></tr>
                     <tr><th scope="row"><label for="scsi_live_text_limit">Maximum signal text</label></th><td><input id="scsi_live_text_limit" type="number" min="48" max="220" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_text_limit]" value="<?php echo esc_attr($options['live_intelligence_text_limit']); ?>" /> characters<p class="description">Long headlines are shortened with an ellipsis; the full description remains available in the link title.</p></td></tr>
@@ -3200,7 +3239,7 @@ final class SC_Site_Intelligence_Plugin {
                     <tr><th scope="row">Freshness labels</th><td><label><input type="checkbox" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_show_freshness]" value="1" <?php checked($options['live_intelligence_show_freshness'], '1'); ?> /> Show explicit Live, Recently updated, Delayed, Stale, or Historical metadata supplied by the backend.</label></td></tr>
                     <tr><th scope="row"><label for="scsi_live_refresh_seconds">Browser refresh interval</label></th><td><input id="scsi_live_refresh_seconds" type="number" min="60" max="1800" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_refresh_seconds]" value="<?php echo esc_attr($options['live_intelligence_refresh_seconds']); ?>" /> seconds<p class="description">The browser requests the WordPress proxy at this interval. Upstream API calls remain server-side and cached.</p></td></tr>
                     <tr><th scope="row">WordPress reliability proxy</th><td><input type="number" min="3" max="30" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_proxy_timeout_seconds]" value="<?php echo esc_attr($options['live_intelligence_proxy_timeout_seconds']); ?>" /> second timeout &nbsp; <input type="number" min="30" max="900" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_proxy_cache_seconds]" value="<?php echo esc_attr($options['live_intelligence_proxy_cache_seconds']); ?>" /> second fresh cache &nbsp; <input type="number" min="1" max="168" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_proxy_stale_hours]" value="<?php echo esc_attr($options['live_intelligence_proxy_stale_hours']); ?>" /> hour stale retention<p class="description">A stale proxy response is clearly marked and is never presented as current.</p></td></tr>
-                    <tr><th scope="row">Clustering and ranking</th><td><p><strong>Conservative duplicate reduction is enabled by the backend.</strong> Signals are ranked for display relevance using significance, freshness, source priority, represented sources, and data-state penalties.</p><p><a href="<?php echo esc_url(rest_url(self::REST_NAMESPACE . '/live-intelligence/ranking-policy')); ?>" target="_blank" rel="noopener noreferrer">Open the public ranking policy</a></p><p class="description">Scores do not measure truth, danger, source accuracy, or institutional importance. Multiple sources do not automatically mean independent verification.</p></td></tr>
+                    <tr><th scope="row">Clustering and ranking</th><td><p><strong>Conservative duplicate reduction is enabled by the backend.</strong> Signals are ranked for display relevance using significance, freshness, source priority, represented sources, and data-state penalties.</p><p><a href="<?php echo esc_url(rest_url(self::REST_NAMESPACE . '/live-intelligence/ranking-policy')); ?>" target="_blank" rel="noopener noreferrer">Open the public ranking policy</a> · <a href="<?php echo esc_url(rest_url(self::REST_NAMESPACE . '/live-intelligence/presentation-policy')); ?>" target="_blank" rel="noopener noreferrer">Open the presentation and accessibility policy</a></p><p class="description">Scores do not measure truth, danger, source accuracy, or institutional importance. Multiple sources do not automatically mean independent verification.</p></td></tr>
                 </table>
                 <h2>Live preview</h2>
                 <div id="scsi-live-admin-preview" class="scsi-live-admin-preview" aria-label="Live Intelligence settings preview">

@@ -2042,3 +2042,63 @@
 @media(max-width:920px){.scsi-live-intelligence__delivery{display:none}}
 @media(prefers-reduced-motion:reduce){.scsi-live-intelligence__delivery{display:inline-flex}.scsi-live-intelligence__lamp{box-shadow:none}}
 @media(forced-colors:active){.scsi-live-intelligence__delivery{border-color:CanvasText;color:CanvasText}}
+
+/* Site Intelligence v3.6.2 — Live Intelligence presentation, motion, and accessibility controls. */
+.scsi-live-intelligence [hidden]{display:none!important}
+.scsi-live-intelligence__announcer{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.scsi-live-intelligence__noscript{grid-column:1/-1;margin:0;padding:.7rem 1rem;border-top:1px solid #214d29;background:#050906;color:var(--scsi-live-green);font-size:.72rem;line-height:1.5}
+.scsi-live-intelligence__noscript a{color:var(--scsi-live-bright)!important;text-underline-offset:.2em}
+.scsi-live-intelligence__controls{min-width:132px;background:#050906;border-left:1px solid #214d29}
+.scsi-live-intelligence__controls:not([hidden]){display:grid;grid-template-columns:44px minmax(44px,1fr) 44px;align-items:stretch}
+.scsi-live-intelligence__controls .scsi-live-intelligence__previous,.scsi-live-intelligence__controls .scsi-live-intelligence__next{min-width:44px;min-height:44px}
+.scsi-live-intelligence__controls .scsi-live-intelligence__position{display:grid;place-items:center;min-width:44px;min-height:44px;padding:.25rem;color:var(--scsi-live-dim);font:700 .62rem/1.2 monospace;letter-spacing:.1em;text-align:center}
+.scsi-live-intelligence__pause[hidden]{display:none!important}
+.scsi-live-intelligence.is-static-mode,.scsi-live-intelligence.is-mobile-stacked{grid-template-columns:auto minmax(0,1fr)}
+.scsi-live-intelligence.is-static-mode .scsi-live-intelligence__viewport{overflow-x:auto;overscroll-behavior-inline:contain;mask-image:none;scrollbar-width:thin}
+.scsi-live-intelligence.is-static-mode .scsi-live-intelligence__track{width:auto;min-width:100%;transform:none!important;animation:none!important;will-change:auto}
+.scsi-live-intelligence.is-static-mode .scsi-live-intelligence__static-set{min-width:max-content}
+.scsi-live-intelligence.is-manual-mode{grid-template-columns:auto minmax(0,1fr) 132px}
+.scsi-live-intelligence.is-manual-mode .scsi-live-intelligence__viewport,.scsi-live-intelligence.is-mobile-rotator .scsi-live-intelligence__viewport{overflow:hidden;mask-image:none}
+.scsi-live-intelligence.is-manual-mode .scsi-live-intelligence__track,.scsi-live-intelligence.is-mobile-rotator .scsi-live-intelligence__track{display:block;width:100%;min-width:0;transform:none!important;animation:none!important;will-change:auto;white-space:normal}
+.scsi-live-intelligence__current-signal{display:flex;align-items:center;width:100%;min-height:50px;padding-inline:.8rem}
+.scsi-live-intelligence__current-signal .scsi-live-intelligence__signal{width:100%;min-width:0}
+.scsi-live-intelligence.is-mobile-stacked .scsi-live-intelligence__viewport{grid-column:1/-1;overflow:visible;mask-image:none;border-top:1px solid #163d20}
+.scsi-live-intelligence.is-mobile-stacked .scsi-live-intelligence__track{display:block;width:100%;min-width:0;white-space:normal;transform:none!important;animation:none!important;will-change:auto}
+.scsi-live-intelligence__stacked-list{display:grid;width:100%}
+.scsi-live-intelligence__stacked-signal{border-bottom:1px solid #163d20;padding:.15rem .8rem}
+.scsi-live-intelligence__stacked-signal:last-child{border-bottom:0}
+.scsi-live-intelligence__stacked-signal .scsi-live-intelligence__signal{display:grid;grid-template-columns:minmax(0,1fr);gap:.18rem;width:100%;min-height:56px;align-content:center;white-space:normal}
+.scsi-live-intelligence__stacked-signal .scsi-live-intelligence__category,.scsi-live-intelligence__stacked-signal .scsi-live-intelligence__name,.scsi-live-intelligence__stacked-signal .scsi-live-intelligence__value,.scsi-live-intelligence__stacked-signal .scsi-live-intelligence__signal small{display:block;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+.scsi-live-intelligence[data-effective-presentation="hidden"]{display:none!important}
+.scsi-live-intelligence[data-effective-presentation="static"] .scsi-live-intelligence__lamp{animation:none;box-shadow:0 0 5px var(--scsi-live-bright)}
+.scsi-live-intelligence[data-effective-presentation="manual"] .scsi-live-intelligence__lamp{animation:none}
+.scsi-live-intelligence.is-reduced-motion .scsi-live-intelligence__connecting,.scsi-live-intelligence.is-reduced-motion .scsi-live-intelligence__lamp{animation:none!important}
+@media(max-width:1100px){
+  .scsi-live-intelligence.is-manual-mode{grid-template-columns:minmax(0,1fr);grid-template-areas:"label" "viewport" "controls"}
+  .scsi-live-intelligence.is-manual-mode .scsi-live-intelligence__label{grid-area:label;min-height:44px;border-right:0;box-shadow:none}
+  .scsi-live-intelligence.is-manual-mode .scsi-live-intelligence__viewport{grid-area:viewport;min-height:64px;border-top:1px solid #163d20;border-bottom:1px solid #163d20}
+  .scsi-live-intelligence.is-manual-mode .scsi-live-intelligence__controls{grid-area:controls;width:100%;min-width:0;border-left:0}
+}
+@media(max-width:760px){
+  .scsi-live-intelligence.is-mobile-rotator{grid-template-columns:minmax(0,1fr);grid-template-areas:"label" "viewport" "controls"}
+  .scsi-live-intelligence.is-mobile-rotator .scsi-live-intelligence__label{grid-area:label;min-height:44px;border-right:0;box-shadow:none}
+  .scsi-live-intelligence.is-mobile-rotator .scsi-live-intelligence__viewport{grid-area:viewport;min-height:82px;padding:.15rem .78rem;border-top:1px solid #163d20;border-bottom:1px solid #163d20}
+  .scsi-live-intelligence.is-mobile-rotator .scsi-live-intelligence__controls{grid-area:controls;width:100%;min-width:0;border-left:0}
+  .scsi-live-intelligence.is-mobile-rotator .scsi-live-intelligence__current-signal{min-height:76px;padding:0}
+  .scsi-live-intelligence.is-mobile-rotator .scsi-live-intelligence__signal,.scsi-live-intelligence.is-manual-mode .scsi-live-intelligence__signal{display:grid;grid-template-columns:minmax(0,1fr);align-content:center;gap:.18rem;white-space:normal}
+  .scsi-live-intelligence.is-mobile-rotator .scsi-live-intelligence__category,.scsi-live-intelligence.is-mobile-rotator .scsi-live-intelligence__name,.scsi-live-intelligence.is-mobile-rotator .scsi-live-intelligence__value,.scsi-live-intelligence.is-mobile-rotator .scsi-live-intelligence__signal small,.scsi-live-intelligence.is-manual-mode .scsi-live-intelligence__category,.scsi-live-intelligence.is-manual-mode .scsi-live-intelligence__name,.scsi-live-intelligence.is-manual-mode .scsi-live-intelligence__value,.scsi-live-intelligence.is-manual-mode .scsi-live-intelligence__signal small{display:block;max-width:100%;white-space:normal;overflow-wrap:anywhere}
+  .scsi-live-intelligence.is-static-mode{grid-template-columns:minmax(0,1fr);grid-template-areas:"label" "viewport"}
+  .scsi-live-intelligence.is-static-mode .scsi-live-intelligence__label{grid-area:label;min-height:44px;border-right:0;box-shadow:none}
+  .scsi-live-intelligence.is-static-mode .scsi-live-intelligence__viewport{grid-area:viewport;border-top:1px solid #163d20}
+  .scsi-live-intelligence.is-mobile-stacked{display:grid;grid-template-columns:minmax(0,1fr)}
+  .scsi-live-intelligence.is-mobile-stacked .scsi-live-intelligence__label{min-height:44px;border-right:0;box-shadow:none}
+  .scsi-live-intelligence__controls:not([hidden]){grid-template-columns:44px minmax(0,1fr) 44px}
+}
+@media(prefers-reduced-motion:reduce){
+  .scsi-live-intelligence .scsi-live-intelligence__track,.scsi-live-intelligence .scsi-live-intelligence__lamp,.scsi-live-intelligence .scsi-live-intelligence__connecting{animation:none!important;transition:none!important}
+  .scsi-live-intelligence.is-manual-mode .scsi-live-intelligence__controls{display:grid}
+}
+@media(forced-colors:active){
+  .scsi-live-intelligence__controls,.scsi-live-intelligence__stacked-signal,.scsi-live-intelligence__noscript{border-color:CanvasText;background:Canvas;color:CanvasText}
+  .scsi-live-intelligence__controls button{border:1px solid ButtonText;background:ButtonFace;color:ButtonText;text-shadow:none}
+}
