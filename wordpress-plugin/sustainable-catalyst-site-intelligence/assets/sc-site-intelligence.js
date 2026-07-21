@@ -4346,6 +4346,43 @@
   }
 
 
+  function setupLiveIntelligenceArchiveAudits() {
+    document.querySelectorAll('[data-scsi-live-archive-audits]').forEach(function (root) {
+      const output = root.querySelector('.scsi-live-archive-audits__output');
+      const policyEndpoint = root.dataset.policyEndpoint || '';
+      const statusEndpoint = root.dataset.statusEndpoint || '';
+      const auditsEndpoint = root.dataset.auditsEndpoint || '';
+      const custodyEndpoint = root.dataset.custodyEndpoint || '';
+      Promise.all([policyEndpoint, statusEndpoint, auditsEndpoint, custodyEndpoint].map(fetchJson)).then(function (responses) {
+        const policy = responses[0] || {};
+        const status = responses[1] || {};
+        const audits = Array.isArray((responses[2] || {}).audits) ? responses[2].audits : [];
+        const transfers = Array.isArray((responses[3] || {}).transfers) ? responses[3].transfers : [];
+        const metrics = [
+          ['Approved audit reports', status.public_audit_count || 0],
+          ['Custody transfers', status.custody_transfer_count || 0],
+          ['Due audits', status.due_audit_count || 0],
+          ['Critical findings', status.critical_finding_count || 0]
+        ];
+        output.innerHTML = '<div class="scsi-live-subscriptions__metrics">' + metrics.map(function (metric) {
+          return '<div><strong>' + escapeHtml(metric[1]) + '</strong><span>' + escapeHtml(metric[0]) + '</span></div>';
+        }).join('') + '</div>' +
+          '<p class="scsi-live-subscriptions__tags"><span>Checksum audits</span><span>Provenance-chain review</span><span>Manual custody</span><span>No remote deposit</span></p>' +
+          (audits.length ? '<div class="scsi-live-subscriptions__list">' + audits.map(function (audit) {
+            const summary = audit.summary || {};
+            return '<article class="scsi-live-subscriptions__item"><p class="scsi-live-subscriptions__meta">' + escapeHtml(String(audit.audit_type || 'preservation audit').replaceAll('_', ' ').toUpperCase()) + '</p><h3>' + escapeHtml(audit.scope_note || 'Archive integrity audit') + '</h3><p>' + escapeHtml(String(summary.records_examined || 0)) + ' records examined · ' + escapeHtml(String(summary.finding_count || 0)) + ' findings</p></article>';
+          }).join('') + '</div>' : '<p class="scsi-live-subscriptions__empty">No approved public preservation audit reports have been published.</p>') +
+          (transfers.length ? '<p class="scsi-live-subscriptions__boundary">' + escapeHtml(String(transfers.length)) + ' public custody transfer record(s) are available. Every transfer remains manual and checksum-bound.</p>' : '');
+        output.setAttribute('aria-busy', 'false');
+        const muted = root.querySelector('.scsi-muted');
+        if (muted) muted.textContent = policy.principle || 'Repeatable preservation verification and manual institutional custody.';
+      }).catch(function () {
+        output.innerHTML = '<p class="scsi-live-subscriptions__empty">Preservation audit status is temporarily unavailable.</p>';
+        output.setAttribute('aria-busy', 'false');
+      });
+    });
+  }
+
   function init() {
     setupActivePageLinks();
     setupLiveIntelligenceSubscriptions();
@@ -4354,6 +4391,7 @@
     setupLiveIntelligenceReleaseOperations();
     setupLiveIntelligenceChangeHistory();
     setupLiveIntelligencePublicArchive();
+    setupLiveIntelligenceArchiveAudits();
     setupLaunchActions();
     setupResponsiveEmbeds();
     setupLiveIntelligence();

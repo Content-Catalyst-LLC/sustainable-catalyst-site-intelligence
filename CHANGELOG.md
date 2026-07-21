@@ -1,4 +1,13 @@
-# v3.15.0 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
+# v3.16.0 — Archive Verification, Preservation Audits, and Institutional Custody
+
+- Added repeatable checksum, source-snapshot, manifest, and provenance-chain audits.
+- Added warning and critical preservation findings with human approval gates.
+- Added audit cadence metadata without claiming an automatic scheduler.
+- Added institution-ready custody packages, separate verification and approval, and manual custody receipts.
+- Added public and WordPress read-only preservation-assurance surfaces.
+- Preserved no-mutation, no-deletion, no-remote-deposit, no-destination-write, and no-identity-storage boundaries.
+
+# v3.16.0 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
 
 - Added checksum-bound archival records for approved public releases, notices, and briefings.
 - Added append-only provenance-chain links and preservation manifests.
@@ -994,7 +1003,7 @@
 - Added public policy, adapter catalog, aggregate status, protected administration, and WordPress governance surface.
 - Preserved no-write, no-credential, no-recipient-identity, and no-automatic-publication boundaries.
 
-## 3.15.0
+## 3.16.0
 
 - Added append-only public correction, clarification, replacement, retraction, and rollback notices.
 - Added release lineage linking affected and replacement release checksums.

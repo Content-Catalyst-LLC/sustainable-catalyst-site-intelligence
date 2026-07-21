@@ -1,0 +1,35 @@
+Sustainable Catalyst Site Intelligence v3.16.0
+Archive Verification, Preservation Audits, and Institutional Custody
+Build validation report
+
+RESULT: PASS
+
+Backend regression
+- 761 tests passed
+- v3.16.0 focused workflow and release contract passed
+
+Static integrity
+- 332 Python files parsed
+- 99 JSON files validated
+- 672 unique application HTML IDs verified
+- 27 JavaScript files passed Node syntax validation
+- WordPress PHP syntax passed
+
+Preservation workflow validation
+- Archive record, source snapshot, preservation manifest, and provenance-chain checks
+- Warning and critical finding classification
+- Explicit critical-finding acknowledgment
+- Separation-of-duty audit approval
+- Institution-ready custody package checksums
+- Separate custody verification and approval
+- Manual custody receipt recording
+- JSON and Markdown audit/custody packages
+- Identity and credential rejection
+- Read-only public and WordPress surfaces
+
+Governance boundaries
+- No automatic scheduler claimed
+- No archive mutation or deletion
+- No remote deposit or destination write
+- No credential or recipient identity storage
+- No advertising or affiliate insertion

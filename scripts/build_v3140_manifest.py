@@ -46,7 +46,7 @@ for path in sorted((p for p in ROOT.rglob('*') if p.is_file() and included(p)), 
     files.append({'path': path.relative_to(ROOT).as_posix(), 'bytes': len(data), 'sha256': hashlib.sha256(data).hexdigest()})
 manifest = {
     'schema': 'sc-site-intelligence-release-manifest/1.0',
-    'release': '3.15.0',
+    'release': '3.16.0',
     'release_name': 'Corrections, Retractions, and Public Change History',
     'file_count': len(files),
     'files': files,

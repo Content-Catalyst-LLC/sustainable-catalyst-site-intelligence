@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/live-intelligence-archive-audit-v3160.schema.json",
+  "title": "Live Intelligence Archive Audit",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "release_version",
+    "audit_id",
+    "audit_type",
+    "cadence",
+    "status",
+    "audit_sha256",
+    "automatic_scheduler_claimed",
+    "archive_record_mutated",
+    "archive_record_deleted",
+    "destination_write_performed"
+  ],
+  "properties": {
+    "schema": {"type": "string", "const": "sc-site-intelligence-archive-audit/1.0"},
+    "release_version": {"type": "string", "const": "3.16.0"},
+    "audit_id": {"type": "string", "minLength": 1, "maxLength": 180},
+    "audit_type": {"enum": ["full_chain", "record_sample", "retention_review", "custody_review"]},
+    "cadence": {"enum": ["manual", "quarterly", "semiannual", "annual"]},
+    "archive_ids": {"type": "array", "items": {"type": "string"}, "maxItems": 500},
+    "sample_limit": {"type": "integer", "minimum": 1, "maximum": 1000},
+    "scope_note": {"type": "string", "maxLength": 3000},
+    "status": {"enum": ["draft", "verified", "review_required", "approved"]},
+    "summary": {"type": "object"},
+    "findings": {"type": "array", "items": {"type": "object"}},
+    "audit_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "public_visible": {"type": "boolean"},
+    "automatic_scheduler_claimed": {"type": "boolean", "const": false},
+    "archive_record_mutated": {"type": "boolean", "const": false},
+    "archive_record_deleted": {"type": "boolean", "const": false},
+    "destination_write_performed": {"type": "boolean", "const": false}
+  }
+}

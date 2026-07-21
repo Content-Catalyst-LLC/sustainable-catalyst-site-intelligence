@@ -2,7 +2,7 @@
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = {
-    "backend/app/version.py": ['APP_VERSION = "3.15.0"'],
+    "backend/app/version.py": ['APP_VERSION = "3.16.0"'],
     "backend/app/live_intelligence_editorial_workspace_v3110.py": [
         "POLICY_SCHEMA_VERSION", "WORKSPACE_SCHEMA_VERSION", "REVISION_SCHEMA_VERSION",
         "REVIEW_SCHEMA_VERSION", "ORCHESTRATION_SCHEMA_VERSION",
@@ -25,7 +25,7 @@ REQUIRED = {
         "SC_SI_LIVE_INTELLIGENCE_EDITORIAL_REQUIRE_SEPARATION_OF_DUTIES",
     ],
     "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": [
-        "Version: 3.15.0", "sc_live_intelligence_editorial_workspace",
+        "Version: 3.16.0", "sc_live_intelligence_editorial_workspace",
         "rest_live_intelligence_editorial_policy", "rest_live_intelligence_editorial_status",
         "separation of duties", "automatic WordPress write",
     ],
@@ -33,12 +33,12 @@ REQUIRED = {
         "setupLiveIntelligenceEditorial", "Publication ready", "Immutable evidence",
         "No automatic WordPress write",
     ],
-    "README.md": ["v3.15.0 — Editorial Workspace, Review Queues, and Publication Orchestration"],
+    "README.md": ["v3.16.0 — Editorial Workspace, Review Queues, and Publication Orchestration"],
     "RELEASE_NOTES_SITE_INTELLIGENCE_V3110.md": [
         "Editorial Workspace", "separation of duties", "revision history", "provider-neutral",
     ],
     "docs/RELEASE_MANIFEST_V3110.json": [
-        '"version": "3.15.0"', '"automatic_publication": false',
+        '"version": "3.16.0"', '"automatic_publication": false',
         '"automatic_wordpress_write": false', '"evidence_mutation_allowed": false',
     ],
     "docs/live-intelligence-editorial-workspace-v3110.schema.json": [
@@ -53,4 +53,4 @@ for relative, needles in REQUIRED.items():
     for needle in needles:
         if needle not in text:
             raise SystemExit(f"Missing {needle!r} in {relative}")
-print("Site Intelligence v3.15.0 release contract passed.")
+print("Site Intelligence v3.16.0 release contract passed.")

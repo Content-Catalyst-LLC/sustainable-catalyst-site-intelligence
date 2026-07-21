@@ -1,0 +1,22 @@
+{
+  "schema": "sc-site-intelligence-archive-audit-governance/1.0",
+  "version": "3.16.0",
+  "release": "Archive Verification, Preservation Audits, and Institutional Custody",
+  "approved_archive_records_only": true,
+  "separate_audit_approval_required": true,
+  "separate_custody_approval_required": true,
+  "append_only_audit_ledger": true,
+  "checksum_audits_required": true,
+  "provenance_chain_verification": true,
+  "retention_review_metadata": true,
+  "json_and_markdown_packages": true,
+  "manual_custody_receipts_retained": true,
+  "automatic_scheduler_claimed": false,
+  "archive_record_mutated": false,
+  "archive_record_deleted": false,
+  "remote_deposit_performed": false,
+  "destination_write_performed": false,
+  "credentials_stored": false,
+  "recipient_identities_stored": false,
+  "advertising_or_affiliate_content": false
+}

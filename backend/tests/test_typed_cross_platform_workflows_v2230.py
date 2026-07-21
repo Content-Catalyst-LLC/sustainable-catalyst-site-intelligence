@@ -75,7 +75,7 @@ def test_public_and_admin_api_contracts(tmp_path):
     try:
         client=TestClient(app)
         public=client.get("/public/cross-platform-workflows")
-        assert public.status_code==200 and public.json()["version"]=="3.15.0"
+        assert public.status_code==200 and public.json()["version"]=="3.16.0"
         create=client.post("/admin/cross-platform-workflows/packets",json={"route_id":"site-intelligence-to-research-librarian-question","payload":{"question":"What evidence is missing?","scope":"climate"},"provenance":{"source_record_ids":["claim:1"]}})
         assert create.status_code==200
         packet_id=create.json()["packet_id"]
