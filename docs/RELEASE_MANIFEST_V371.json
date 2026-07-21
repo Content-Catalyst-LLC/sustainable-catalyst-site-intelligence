@@ -1,0 +1,21 @@
+{
+  "schema": "sc-site-intelligence-release-governance/1.0",
+  "version": "3.7.1",
+  "release": "Signal Relevance and Rotation Intelligence",
+  "candidate_pool_limit": 24,
+  "default_homepage_signal_limit": 8,
+  "maximum_homepage_signal_limit": 12,
+  "transparent_score_components": true,
+  "family_diversity": true,
+  "geography_diversity": true,
+  "source_diversity": true,
+  "repetition_penalty": true,
+  "aggregate_signal_history_only": true,
+  "individual_user_tracking": false,
+  "human_approval_required_for_override": true,
+  "automatic_emergency_publication": false,
+  "override_changes_observation": false,
+  "deterministic_fallback": true,
+  "minimum_display_seconds": 12,
+  "maximum_continuous_exposure_seconds": 45
+}

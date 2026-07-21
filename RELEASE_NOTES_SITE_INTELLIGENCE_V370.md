@@ -1,4 +1,4 @@
-# Site Intelligence v3.7.0 — Homepage Intelligence Gateway
+# Site Intelligence v3.7.1 — Homepage Intelligence Gateway
 
 ## Purpose
 

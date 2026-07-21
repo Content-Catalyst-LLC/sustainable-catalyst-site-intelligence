@@ -3796,15 +3796,18 @@
         const categoryId = signal.category || 'signal';
         const categoryLabel = signal.family_label || categoryLabels[categoryId] || categoryId.replace(/_/g, ' ');
         const fullValue = signal.value || 'AVAILABLE';
-        const reasons = Array.isArray(signal.selection_reasons) ? signal.selection_reasons.join('; ') : '';
+        const baseReasons = Array.isArray(signal.selection_reasons) ? signal.selection_reasons : [];
+        const rotationReasons = Array.isArray(signal.rotation_reasons) ? signal.rotation_reasons : [];
+        const reasons = baseReasons.concat(rotationReasons).filter(Boolean).join('; ');
         const titleParts = [signal.detail || fullValue || signal.label || ''];
         if (signal.freshness_label) titleParts.push('Freshness: ' + signal.freshness_label);
         if (showSelectionContext && signal.development_state) titleParts.push('State: ' + signal.development_state);
         if (showSelectionContext && reasons) titleParts.push('Selected because: ' + reasons);
+        if (showSelectionContext && Number.isFinite(Number(signal.rotation_score))) titleParts.push('Rotation relevance: ' + Number(signal.rotation_score));
         if (primaryDestination.label) titleParts.push(primaryDestination.label);
         const title = titleParts.filter(Boolean).join(' — ');
         const separator = includeSeparator ? '<span class="scsi-live-intelligence__separator" aria-hidden="true">◆</span>' : '';
-        return '<a class="scsi-live-intelligence__signal" data-scsi-event="sc_live_intelligence_context_open" data-scsi-signal-id="' + escapeHtml(signal.signal_id || '') + '" data-freshness-state="' + escapeHtml(signal.freshness_state || 'unknown') + '" data-signal-family="' + escapeHtml(signal.signal_family || '') + '" data-destination-type="' + escapeHtml(primaryDestination.type || '') + '" href="' + escapeHtml(href) + '" title="' + escapeHtml(title) + '" aria-label="' + escapeHtml(signalAccessibleText(signal, Number.isInteger(index) ? index : null)) + '">' +
+        return '<a class="scsi-live-intelligence__signal" data-scsi-event="sc_live_intelligence_context_open" data-scsi-signal-id="' + escapeHtml(signal.signal_id || '') + '" data-freshness-state="' + escapeHtml(signal.freshness_state || 'unknown') + '" data-signal-family="' + escapeHtml(signal.signal_family || '') + '" data-destination-type="' + escapeHtml(primaryDestination.type || '') + '" data-rotation-rank="' + escapeHtml(signal.rotation_rank || '') + '" data-rotation-score="' + escapeHtml(signal.rotation_score || '') + '" data-rotation-override="' + escapeHtml((signal.rotation_override && signal.rotation_override.mode) || 'neutral') + '" href="' + escapeHtml(href) + '" title="' + escapeHtml(title) + '" aria-label="' + escapeHtml(signalAccessibleText(signal, Number.isInteger(index) ? index : null)) + '">' +
           '<span class="scsi-live-intelligence__category">' + escapeHtml(categoryLabel.toUpperCase()) + '</span>' +
           '<span class="scsi-live-intelligence__name">' + escapeHtml(shorten(signal.label || 'LIVE SIGNAL', 72)) + '</span>' +
           '<strong class="scsi-live-intelligence__value">' + escapeHtml(shorten(fullValue, textLimit)) + '</strong>' +

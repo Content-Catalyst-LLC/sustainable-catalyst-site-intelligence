@@ -78,6 +78,11 @@ from .live_intelligence_gateway_v370 import (
     homepage_gateway_policy as live_intelligence_gateway_policy,
     DEFAULT_HOMEPAGE_SIGNAL_LIMIT, MAX_HOMEPAGE_SIGNAL_LIMIT,
 )
+from .live_intelligence_rotation_v371 import (
+    apply_rotation_policy as apply_live_intelligence_rotation_policy,
+    rotation_policy as live_intelligence_rotation_policy,
+    LiveIntelligenceRotationStore,
+)
 from .live_intelligence_source_operations_v320 import LiveIntelligenceSourceOperations
 from .live_intelligence_context_v340 import (
     build_signal_context, build_signal_evidence, context_policy as live_signal_context_policy,
@@ -2237,7 +2242,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.7.0 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v3.7.1 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -2379,7 +2384,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.7.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v3.7.1 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -2496,7 +2501,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.7.0 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v3.7.1 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -2618,7 +2623,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.7.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v3.7.1 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -2754,7 +2759,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.7.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v3.7.1 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -5931,7 +5936,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v3.7.0 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v3.7.1 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -6165,7 +6170,7 @@ def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     return build_reliability(settings)
 
 
-# Site Intelligence v3.7.0 — Open Standards, Federation, and Institutional Data Exchange.
+# Site Intelligence v3.7.1 — Open Standards, Federation, and Institutional Data Exchange.
 def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
     if not settings.federation_exchange_enabled:
         raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
@@ -6255,7 +6260,7 @@ def admin_federation_accept_import_endpoint(request: dict = Body(default={}), se
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.7.0 — Security, Privacy, Governance, and Production Scale.
+# Site Intelligence v3.7.1 — Security, Privacy, Governance, and Production Scale.
 def _production_governance(settings: Settings) -> ProductionGovernanceCenter:
     if not settings.production_governance_enabled:
         raise HTTPException(status_code=503, detail="Production governance is disabled.")
@@ -6404,7 +6409,7 @@ def admin_production_governance_deployment_endpoint(request: dict = Body(default
 def admin_production_governance_load_probe_endpoint(requests: int = Query(default=250, ge=1, le=5000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return _production_governance(settings).load_probe(requests)
 
-# Site Intelligence v3.7.0 — Homepage Intelligence Gateway.
+# Site Intelligence v3.7.1 — Signal Relevance and Rotation Intelligence.
 def _connected_platform(settings: Settings) -> ConnectedPublicIntelligencePlatform:
     if not settings.connected_platform_enabled:
         raise HTTPException(status_code=404, detail="Connected platform is disabled.")
@@ -6453,10 +6458,13 @@ def public_live_intelligence_homepage_endpoint(
 ):
     try:
         payload = build_live_intelligence(
-            settings, category=category, limit=limit, feeds=feeds, exclude=exclude,
+            settings, category=category, limit=24, feeds=feeds, exclude=exclude,
             max_per_source=max_per_source, channel=channel, region=region, country=country,
         )
-        return apply_live_intelligence_gateway_policy(payload, surface="homepage")
+        gateway = apply_live_intelligence_gateway_policy(payload, surface="homepage")
+        return apply_live_intelligence_rotation_policy(
+            gateway, settings, limit=limit, surface="homepage", record_history=True,
+        )
     except KeyError as exc:
         raise HTTPException(status_code=404, detail="Live Intelligence channel not found.") from exc
 
@@ -6469,6 +6477,21 @@ def public_live_intelligence_status_endpoint(settings: Settings = Depends(get_se
 @app.get("/public/live-intelligence/gateway-policy")
 def public_live_intelligence_gateway_policy_endpoint():
     return live_intelligence_gateway_policy()
+
+
+@app.get("/public/live-intelligence/rotation-policy")
+def public_live_intelligence_rotation_policy_endpoint():
+    return live_intelligence_rotation_policy()
+
+
+@app.get("/public/live-intelligence/rotation-status")
+def public_live_intelligence_rotation_status_endpoint(settings: Settings = Depends(get_settings)):
+    return {
+        "ok": True,
+        "version": APP_VERSION,
+        "rotation": LiveIntelligenceRotationStore(settings).status(),
+        "policy_url": "/public/live-intelligence/rotation-policy",
+    }
 
 
 @app.get("/public/live-intelligence/presentation-policy")
@@ -6578,6 +6601,26 @@ def public_live_intelligence_source_endpoint(feed_id: str, settings: Settings = 
         return _live_source_operations(settings).source(feed_id, public=True)
     except KeyError as exc:
         raise HTTPException(status_code=404, detail="Live Intelligence source not found.") from exc
+
+
+@app.get("/admin/live-intelligence/rotation")
+def admin_live_intelligence_rotation_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    store = LiveIntelligenceRotationStore(settings)
+    return {"ok": True, "version": APP_VERSION, "state": store.read(), "status": store.status()}
+
+
+@app.patch("/admin/live-intelligence/rotation/signals/{signal_id}")
+def admin_live_intelligence_rotation_override_endpoint(
+    signal_id: str,
+    request: dict = Body(default={}),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    try:
+        override = LiveIntelligenceRotationStore(settings).set_override(signal_id, request)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return {"ok": True, "version": APP_VERSION, "override": override}
 
 
 @app.get("/admin/live-intelligence/sources/control-center")

@@ -26,7 +26,7 @@ def sample_signals():
 def sample_base(*args, **kwargs):
     return {
         "ok": True,
-        "version": "3.7.0",
+        "version": "3.7.1",
         "schema": "sc-site-intelligence-live-intelligence/1.4",
         "generated_at": "2026-07-21T00:00:00+00:00",
         "category": "all",
@@ -42,7 +42,7 @@ def sample_base(*args, **kwargs):
 
 def test_channel_directory_and_policy_are_public_and_explicit():
     directory = channel_directory()
-    assert directory["version"] == "3.7.0"
+    assert directory["version"] == "3.7.1"
     assert directory["count"] == len(CHANNEL_REGISTRY)
     assert any(item["id"] == "weather-climate" for item in directory["channels"])
     assert channel_definition("mena")["channel"]["id"] == "middle-east-north-africa"

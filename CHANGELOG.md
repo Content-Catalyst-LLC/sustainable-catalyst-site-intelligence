@@ -1,6 +1,15 @@
 # Changelog
 
-## 3.7.0 — Homepage Intelligence Gateway
+## 3.7.1 — Signal Relevance and Rotation Intelligence
+
+- Added a public-safe relevance and rotation policy over validated Live Intelligence signals.
+- Added family, geography, and source diversity adjustments with transparent reasons.
+- Added bounded aggregate exposure history and repetition penalties.
+- Added human-approved boost, pin, and suppress overrides with expiry and audit metadata.
+- Added public policy/status routes, protected administration routes, and WordPress proxy support.
+- Preserved source observations, evidence, freshness, reliability, accessibility, and human publication control.
+
+## 3.7.1 — Homepage Intelligence Gateway
 
 - Added `/public/live-intelligence/homepage` and `/public/live-intelligence/gateway-policy`.
 - Added eight governed signal families, structured geography, and canonical primary/secondary destinations.

@@ -104,7 +104,7 @@ def test_public_boundary_and_admin_api_contracts(tmp_path):
     try:
         client = TestClient(app)
         public = client.get("/public/production-governance")
-        assert public.status_code == 200 and public.json()["version"] == "3.7.0"
+        assert public.status_code == 200 and public.json()["version"] == "3.7.1"
         assert "api_keys" not in public.json()["diagnostics"]["counts"]
         control = client.get("/admin/production-governance/control-center")
         assert control.status_code == 200

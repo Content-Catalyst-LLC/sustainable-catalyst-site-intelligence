@@ -4,14 +4,14 @@ import json
 
 ROOT = Path(__file__).resolve().parents[1]
 checks = {
-    'backend/app/version.py': ['APP_VERSION = "3.7.0"', 'Connected Public Intelligence and Evidence Platform'],
+    'backend/app/version.py': ['APP_VERSION = "3.7.1"', 'Connected Public Intelligence and Evidence Platform'],
     'backend/app/live_intelligence_presentation_v362.py': ['PRESENTATION_SCHEMA', 'presentation_policy', 'reduced_motion_default', 'animated_viewport_live_region'],
     'backend/app/main.py': ['/public/live-intelligence/presentation-policy', 'public_live_intelligence_presentation_policy_endpoint'],
     'backend/tests/test_live_intelligence_presentation_accessibility_v362.py': ['minimum_touch_target_css_pixels', 'maxVisible', 'showCurrentSignal(currentIndex + 1, false)'],
-    'wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php': ['Version: 3.7.0', "const VERSION = '3.7.0';", 'live_intelligence_presentation_mode', 'live_intelligence_reduced_motion_mode', 'live_intelligence_max_visible', 'data-scsi-live-announcer', 'rest_live_intelligence_presentation_policy'],
+    'wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php': ['Version: 3.7.1', "const VERSION = '3.7.1';", 'live_intelligence_presentation_mode', 'live_intelligence_reduced_motion_mode', 'live_intelligence_max_visible', 'data-scsi-live-announcer', 'rest_live_intelligence_presentation_policy'],
     'wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js': ['renderTicker', 'renderStatic', 'renderStacked', 'signalAccessibleText', 'showCurrentSignal', 'ArrowRight', '.slice(0, maxVisible)'],
-    'wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.css': ['v3.7.0 — Live Intelligence presentation', 'is-static-mode', 'is-manual-mode', 'is-mobile-stacked', 'min-height:44px'],
-    'README.md': ['v3.7.0 — Live Intelligence Presentation, Motion, and Accessibility Controls', 'Current release:** v3.7.0'],
+    'wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.css': ['v3.7.1 — Live Intelligence presentation', 'is-static-mode', 'is-manual-mode', 'is-mobile-stacked', 'min-height:44px'],
+    'README.md': ['v3.7.1 — Live Intelligence Presentation, Motion, and Accessibility Controls', 'Current release:** v3.7.1'],
     'RELEASE_NOTES_SITE_INTELLIGENCE_V362.md': ['642-test regression coverage', 'Automatic rotation does not announce every item'],
     'docs/V362_LIVE_INTELLIGENCE_PRESENTATION_ACCESSIBILITY.md': ['Motion is optional', 'Screen-reader announcements', '200% zoom'],
 }
@@ -45,6 +45,6 @@ php = (ROOT / 'wordpress-plugin/sustainable-catalyst-site-intelligence/sustainab
 if 'aria-live="polite" aria-busy="true"' in php:
     raise SystemExit('Animated ticker viewport must not be a polite live region.')
 manifest = json.loads((ROOT / 'MANIFEST.json').read_text())
-if manifest.get('release') != '3.7.0' or manifest.get('file_count') != len(manifest.get('files') or []):
+if manifest.get('release') != '3.7.1' or manifest.get('file_count') != len(manifest.get('files') or []):
     raise SystemExit('Immutable manifest release or file count mismatch.')
-print('Site Intelligence v3.7.0 release contract passed.')
+print('Site Intelligence v3.7.1 release contract passed.')

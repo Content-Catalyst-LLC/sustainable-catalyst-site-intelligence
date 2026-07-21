@@ -1,6 +1,24 @@
 # Sustainable Catalyst Site Intelligence
 
-## v3.7.0 — Homepage Intelligence Gateway
+## v3.7.1 — Signal Relevance and Rotation Intelligence
+
+- Selects homepage signals from a larger validated candidate pool before applying the requested display limit.
+- Returns transparent freshness, source-health, public-relevance, editorial, diversity, and repetition components.
+- Balances signal families, sources, and geographies while preserving deterministic fallback order.
+- Records aggregate signal-display history only; no individual visitor profile is created.
+- Adds human-approved boost, pin, and suppress overrides that cannot change source observations or evidence.
+- Adds public rotation policy/status routes and protected rotation administration routes.
+- Preserves v3.7.0 gateway destinations, v3.6.2 accessibility controls, and v3.6.1 reliability.
+
+Primary v3.7.1 routes:
+
+- `/public/live-intelligence/homepage`
+- `/public/live-intelligence/rotation-policy`
+- `/public/live-intelligence/rotation-status`
+- `/admin/live-intelligence/rotation`
+- `/admin/live-intelligence/rotation/signals/{signal_id}`
+
+## v3.7.1 — Homepage Intelligence Gateway
 
 - Adds a bounded homepage feed with an eight-signal default and twelve-signal maximum.
 - Enriches every signal with a public family, structured geography, formatted value, and responsible-use metadata.
@@ -13,7 +31,7 @@
 
 Site Intelligence v3.6.2 adds a governed presentation layer to the validated Live Intelligence feed. Administrators can choose a slow moving ticker, a fully static strip, or a manual signal viewer. Reduced-motion visitors automatically receive a static or manual experience, and mobile visitors may use a rotator, stacked cards, a marquee, or a hidden surface.
 
-**Current release:** v3.7.0 — Connected Public Intelligence and Evidence Platform
+**Current release:** v3.7.1 — Connected Public Intelligence and Evidence Platform
 
 Primary v3.6.2 routes:
 
@@ -34,11 +52,11 @@ The WordPress surface adds maximum-visible-signal controls, dedicated assistive 
 
 The v3.6.1 validation, explicit freshness states, malformed-record isolation, duplicate and expired-signal suppression, same-query last-known-good recovery, public status contract, and WordPress proxy-cache boundaries remain active beneath the v3.6.2 presentation layer.
 
-### v3.7.0 — Topic and Regional Channels
+### v3.7.1 — Topic and Regional Channels
 
 The v3.5.0 channel directory, topic and regional filters, country routing, source selection, and honest empty-result policy remain version-aligned and active in v3.6.2.
 
-### v3.7.0 — Signal Context and Drill-Down
+### v3.7.1 — Signal Context and Drill-Down
 
 The v3.4.0 context, evidence, source-lineage, map, Decision Studio, ranking-explanation, and responsible-use capability remains version-aligned and active in v3.6.2.
 

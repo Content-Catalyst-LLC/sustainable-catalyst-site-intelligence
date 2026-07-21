@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.7.0
+ * Version: 3.7.1
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.7.0';
+    const VERSION = '3.7.1';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -407,7 +407,7 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v3.7.0 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
+        // v3.7.1 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
         // Existing moving tickers remain moving unless an administrator selects static or manual presentation.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
@@ -815,6 +815,16 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/live-intelligence/gateway-policy', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_live_intelligence_gateway_policy'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/rotation-policy', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_rotation_policy'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/rotation-status', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_rotation_status'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/live-intelligence/presentation-policy', [
@@ -2751,6 +2761,16 @@ final class SC_Site_Intelligence_Plugin {
 
     public function rest_live_intelligence_gateway_policy(WP_REST_Request $request) {
         $result = $this->backend_request('public/live-intelligence/gateway-policy');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_rotation_policy(WP_REST_Request $request) {
+        $result = $this->backend_request('public/live-intelligence/rotation-policy');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_rotation_status(WP_REST_Request $request) {
+        $result = $this->backend_request('public/live-intelligence/rotation-status');
         return is_wp_error($result) ? $result : rest_ensure_response($result);
     }
 
