@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.7.1
+ * Version: 3.7.2
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.7.1';
+    const VERSION = '3.7.2';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -407,7 +407,7 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v3.7.1 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
+        // v3.7.2 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
         // Existing moving tickers remain moving unless an administrator selects static or manual presentation.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
@@ -826,6 +826,28 @@ final class SC_Site_Intelligence_Plugin {
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_live_intelligence_rotation_status'],
             'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/analytics-policy', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_analytics_policy'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/analytics/events', [
+            'methods' => WP_REST_Server::CREATABLE,
+            'callback' => [$this, 'rest_live_intelligence_analytics_events'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/analytics/summary', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_analytics_summary'],
+            'permission_callback' => '__return_true',
+            'args' => ['days' => ['sanitize_callback' => 'absint']],
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/analytics/source-reliability', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_analytics_source_reliability'],
+            'permission_callback' => '__return_true',
+            'args' => ['days' => ['sanitize_callback' => 'absint']],
         ]);
         register_rest_route(self::REST_NAMESPACE, '/live-intelligence/presentation-policy', [
             'methods' => WP_REST_Server::READABLE,
@@ -2771,6 +2793,44 @@ final class SC_Site_Intelligence_Plugin {
 
     public function rest_live_intelligence_rotation_status(WP_REST_Request $request) {
         $result = $this->backend_request('public/live-intelligence/rotation-status');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_analytics_policy(WP_REST_Request $request) {
+        $result = $this->backend_request('public/live-intelligence/analytics-policy');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_analytics_events(WP_REST_Request $request) {
+        $payload = $request->get_json_params();
+        $source_events = is_array($payload) && isset($payload['events']) && is_array($payload['events']) ? array_slice($payload['events'], 0, 25) : [];
+        $allowed = ['event_type', 'count', 'surface', 'signal_id', 'signal_family', 'freshness_state', 'source_id', 'destination_type', 'viewport', 'motion_mode', 'delivery_state'];
+        $events = [];
+        foreach ($source_events as $source) {
+            if (!is_array($source)) { continue; }
+            $event = [];
+            foreach ($allowed as $key) {
+                if (!array_key_exists($key, $source)) { continue; }
+                $event[$key] = $key === 'count' ? max(1, min(25, absint($source[$key]))) : sanitize_text_field((string) $source[$key]);
+            }
+            if (!empty($event['event_type'])) { $events[] = $event; }
+        }
+        if (empty($events)) {
+            return new WP_Error('scsi_invalid_live_intelligence_analytics', 'No valid aggregate analytics events were supplied.', ['status' => 400]);
+        }
+        $result = $this->backend_request('public/live-intelligence/analytics/events', 'POST', ['events' => $events]);
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_analytics_summary(WP_REST_Request $request) {
+        $days = max(1, min(365, absint($request->get_param('days') ?: 30)));
+        $result = $this->backend_request('public/live-intelligence/analytics/summary?days=' . $days);
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_analytics_source_reliability(WP_REST_Request $request) {
+        $days = max(1, min(365, absint($request->get_param('days') ?: 30)));
+        $result = $this->backend_request('public/live-intelligence/analytics/source-reliability?days=' . $days);
         return is_wp_error($result) ? $result : rest_ensure_response($result);
     }
 

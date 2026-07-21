@@ -7,7 +7,7 @@ client = TestClient(app)
 def test_root_reports_v1160():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json()["version"] == "3.7.1"
+    assert response.json()["version"] == "3.7.2"
 
 def test_earth_observation_overview():
     response = client.get("/public/earth-observation")

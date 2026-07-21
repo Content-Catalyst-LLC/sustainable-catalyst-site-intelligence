@@ -3,14 +3,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = {
-    "backend/app/version.py": ['APP_VERSION = "3.7.1"'],
+    "backend/app/version.py": ['APP_VERSION = "3.7.2"'],
     "backend/app/live_intelligence_gateway_v370.py": ["GATEWAY_SCHEMA_VERSION", "homepage_gateway_policy", "primary_destination"],
     "backend/app/main.py": ["/public/live-intelligence/homepage", "/public/live-intelligence/gateway-policy"],
-    "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": ["Version: 3.7.1", "rest_live_intelligence_homepage", "data-surface"],
+    "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": ["Version: 3.7.2", "rest_live_intelligence_homepage", "data-surface"],
     "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js": ["data-signal-family", "data-destination-type", "signal.primary_destination"],
-    "README.md": ["v3.7.1 — Homepage Intelligence Gateway"],
+    "README.md": ["v3.7.2 — Homepage Intelligence Gateway"],
     "RELEASE_NOTES_SITE_INTELLIGENCE_V370.md": ["Homepage Intelligence Gateway"],
-    "docs/RELEASE_MANIFEST_V370.json": ["\"version\": \"3.7.1\"", "\"automatic_emergency_publication\": false"],
+    "docs/RELEASE_MANIFEST_V370.json": ["\"version\": \"3.7.2\"", "\"automatic_emergency_publication\": false"],
 }
 for relative, needles in REQUIRED.items():
     path = ROOT / relative
@@ -20,4 +20,4 @@ for relative, needles in REQUIRED.items():
     for needle in needles:
         if needle not in text:
             raise SystemExit(f"Missing {needle!r} in {relative}")
-print("Site Intelligence v3.7.1 release contract passed.")
+print("Site Intelligence v3.7.2 release contract passed.")

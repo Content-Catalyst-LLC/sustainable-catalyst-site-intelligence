@@ -1,8 +1,8 @@
-# Site Intelligence v3.7.1 — Signal Relevance and Rotation Intelligence
+# Site Intelligence v3.7.2 — Signal Relevance and Rotation Intelligence
 
 ## Summary
 
-v3.7.1 adds a governed rotation layer to the Live Intelligence homepage gateway. It evaluates a larger validated candidate pool, returns transparent relevance components, balances families, sources, and geographies, limits repeated exposure, and records aggregate signal-display history without profiling visitors.
+v3.7.2 adds a governed rotation layer to the Live Intelligence homepage gateway. It evaluates a larger validated candidate pool, returns transparent relevance components, balances families, sources, and geographies, limits repeated exposure, and records aggregate signal-display history without profiling visitors.
 
 ## Capabilities
 

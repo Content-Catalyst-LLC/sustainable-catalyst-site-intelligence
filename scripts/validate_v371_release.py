@@ -3,7 +3,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = {
-    "backend/app/version.py": ['APP_VERSION = "3.7.1"'],
+    "backend/app/version.py": ['APP_VERSION = "3.7.2"'],
     "backend/app/config.py": ["live_intelligence_rotation_enabled", "live_intelligence_rotation_state_path", "live_intelligence_rotation_window_hours"],
     "backend/app/live_intelligence_rotation_v371.py": [
         "ROTATION_SCHEMA_VERSION", "class LiveIntelligenceRotationStore", "def score_rotation_candidate(",
@@ -15,15 +15,15 @@ REQUIRED = {
         "/admin/live-intelligence/rotation", "apply_live_intelligence_rotation_policy",
     ],
     "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": [
-        "Version: 3.7.1", "rest_live_intelligence_rotation_policy", "rest_live_intelligence_rotation_status",
+        "Version: 3.7.2", "rest_live_intelligence_rotation_policy", "rest_live_intelligence_rotation_status",
     ],
     "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js": [
         "data-rotation-rank", "data-rotation-score", "data-rotation-override", "rotation_reasons",
     ],
-    "README.md": ["v3.7.1 — Signal Relevance and Rotation Intelligence"],
+    "README.md": ["v3.7.2 — Signal Relevance and Rotation Intelligence"],
     "RELEASE_NOTES_SITE_INTELLIGENCE_V371.md": ["Signal Relevance and Rotation Intelligence", "aggregate signal-display history"],
     "docs/RELEASE_MANIFEST_V371.json": [
-        '"version": "3.7.1"', '"individual_user_tracking": false',
+        '"version": "3.7.2"', '"individual_user_tracking": false',
         '"automatic_emergency_publication": false', '"override_changes_observation": false',
     ],
 }
@@ -35,4 +35,4 @@ for relative, needles in REQUIRED.items():
     for needle in needles:
         if needle not in text:
             raise SystemExit(f"Missing {needle!r} in {relative}")
-print("Site Intelligence v3.7.1 release contract passed.")
+print("Site Intelligence v3.7.2 release contract passed.")

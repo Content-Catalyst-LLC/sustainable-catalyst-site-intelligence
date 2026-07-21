@@ -77,6 +77,9 @@
       }
       const anchor = event.target.closest ? event.target.closest('a') : null;
       if (!anchor) return;
+      // Live Intelligence uses its own aggregate-only telemetry contract and must
+      // never inherit page-path, title, href, or free-text event-bridge metadata.
+      if (anchor.closest('[data-scsi-live-intelligence]')) return;
       const eventName = classifyLink(anchor);
       if (!eventName) return;
       backendEvent(eventName, {
@@ -3714,6 +3717,9 @@
       let effectiveMode = 'ticker';
       let lastDeliveryAnnouncement = '';
       let categoryLabels = {};
+      let analyticsComponentRecorded = false;
+      let analyticsReducedMotionRecorded = false;
+      const analyticsSignalImpressions = new Set();
       try { categoryLabels = JSON.parse(root.dataset.categoryLabels || '{}'); } catch (error) { categoryLabels = {}; }
 
       const params = new URLSearchParams({limit: String(limit), max_per_source: String(maxPerSource)});
@@ -3725,6 +3731,69 @@
       if (exclude) params.set('exclude', exclude);
       const endpointPath = surface === 'homepage' ? '/live-intelligence/homepage' : '/live-intelligence';
       const endpoint = cfg.restBase + endpointPath + '?' + params.toString();
+      const analyticsEndpoint = cfg.restBase + '/live-intelligence/analytics/events';
+      const analyticsViewport = function () {
+        if (window.innerWidth <= 760) return 'mobile';
+        if (window.innerWidth <= 1024) return 'tablet';
+        return 'desktop';
+      };
+      const analyticsMotionMode = function () {
+        if (reducedMotion.matches) return 'reduced';
+        if (effectiveMode === 'manual') return 'manual';
+        if (effectiveMode === 'static' || effectiveMode === 'stacked') return 'static';
+        return 'standard';
+      };
+      const sendLiveAnalytics = function (events) {
+        if (!Array.isArray(events) || !events.length) return;
+        const safeEvents = events.slice(0, 25).map(function (event) {
+          return Object.assign({
+            surface: surface,
+            viewport: analyticsViewport(),
+            motion_mode: analyticsMotionMode(),
+            delivery_state: root.dataset.deliveryState || 'unknown'
+          }, event || {});
+        });
+        fetch(analyticsEndpoint, {
+          method: 'POST', headers: headers, keepalive: true,
+          body: JSON.stringify({events: safeEvents})
+        }).catch(function () {});
+      };
+      const liveAnalyticsEvent = function (eventType, signal, extras) {
+        const item = signal || {};
+        sendLiveAnalytics([Object.assign({
+          event_type: eventType,
+          signal_id: item.signal_id || '',
+          signal_family: item.signal_family || 'unknown',
+          freshness_state: item.freshness_state || 'unknown',
+          source_id: item.feed_id || item.source_id || 'unknown',
+          destination_type: 'unknown'
+        }, extras || {})]);
+      };
+      const recordSignalImpressions = function () {
+        const events = [];
+        signals.forEach(function (signal) {
+          const signalId = String(signal.signal_id || '');
+          if (!signalId || analyticsSignalImpressions.has(signalId)) return;
+          analyticsSignalImpressions.add(signalId);
+          const destination = signal.primary_destination && typeof signal.primary_destination === 'object' ? signal.primary_destination : {};
+          events.push({
+            event_type: 'signal_impression', signal_id: signalId,
+            signal_family: signal.signal_family || 'unknown', freshness_state: signal.freshness_state || 'unknown',
+            source_id: signal.feed_id || signal.source_id || 'unknown', destination_type: destination.type || 'unknown'
+          });
+        });
+        sendLiveAnalytics(events);
+      };
+      const recordComponentUse = function () {
+        if (!analyticsComponentRecorded) {
+          analyticsComponentRecorded = true;
+          liveAnalyticsEvent('component_impression', null, {destination_type: 'unknown'});
+        }
+        if (reducedMotion.matches && !analyticsReducedMotionRecorded) {
+          analyticsReducedMotionRecorded = true;
+          liveAnalyticsEvent('reduced_motion_use', null, {motion_mode: 'reduced'});
+        }
+      };
 
       const relativeTime = function (value) {
         const stamp = Date.parse(value || '');
@@ -3807,7 +3876,7 @@
         if (primaryDestination.label) titleParts.push(primaryDestination.label);
         const title = titleParts.filter(Boolean).join(' — ');
         const separator = includeSeparator ? '<span class="scsi-live-intelligence__separator" aria-hidden="true">◆</span>' : '';
-        return '<a class="scsi-live-intelligence__signal" data-scsi-event="sc_live_intelligence_context_open" data-scsi-signal-id="' + escapeHtml(signal.signal_id || '') + '" data-freshness-state="' + escapeHtml(signal.freshness_state || 'unknown') + '" data-signal-family="' + escapeHtml(signal.signal_family || '') + '" data-destination-type="' + escapeHtml(primaryDestination.type || '') + '" data-rotation-rank="' + escapeHtml(signal.rotation_rank || '') + '" data-rotation-score="' + escapeHtml(signal.rotation_score || '') + '" data-rotation-override="' + escapeHtml((signal.rotation_override && signal.rotation_override.mode) || 'neutral') + '" href="' + escapeHtml(href) + '" title="' + escapeHtml(title) + '" aria-label="' + escapeHtml(signalAccessibleText(signal, Number.isInteger(index) ? index : null)) + '">' +
+        return '<a class="scsi-live-intelligence__signal" data-scsi-event="sc_live_intelligence_context_open" data-scsi-signal-id="' + escapeHtml(signal.signal_id || '') + '" data-freshness-state="' + escapeHtml(signal.freshness_state || 'unknown') + '" data-signal-family="' + escapeHtml(signal.signal_family || '') + '" data-source-id="' + escapeHtml(signal.feed_id || signal.source_id || '') + '" data-destination-type="' + escapeHtml(primaryDestination.type || '') + '" data-rotation-rank="' + escapeHtml(signal.rotation_rank || '') + '" data-rotation-score="' + escapeHtml(signal.rotation_score || '') + '" data-rotation-override="' + escapeHtml((signal.rotation_override && signal.rotation_override.mode) || 'neutral') + '" href="' + escapeHtml(href) + '" title="' + escapeHtml(title) + '" aria-label="' + escapeHtml(signalAccessibleText(signal, Number.isInteger(index) ? index : null)) + '">' +
           '<span class="scsi-live-intelligence__category">' + escapeHtml(categoryLabel.toUpperCase()) + '</span>' +
           '<span class="scsi-live-intelligence__name">' + escapeHtml(shorten(signal.label || 'LIVE SIGNAL', 72)) + '</span>' +
           '<strong class="scsi-live-intelligence__value">' + escapeHtml(shorten(fullValue, textLimit)) + '</strong>' +
@@ -3901,6 +3970,8 @@
         root.classList.remove('is-ready');
         setDeliveryState(state === 'live' ? 'empty' : state, label);
         viewport.setAttribute('aria-busy', 'false');
+        recordComponentUse();
+        liveAnalyticsEvent('empty_feed', null, {delivery_state: state === 'live' ? 'empty' : state});
       };
       const render = function (data) {
         const previousSignalId = signals[currentIndex] && signals[currentIndex].signal_id ? signals[currentIndex].signal_id : '';
@@ -3919,10 +3990,16 @@
         root.classList.add('is-ready');
         setDeliveryState(state, label);
         viewport.setAttribute('aria-busy', 'false');
+        recordComponentUse();
+        recordSignalImpressions();
       };
       const load = function () {
         viewport.setAttribute('aria-busy', 'true');
-        fetchJson(endpoint).then(render).catch(function () {
+        fetchJson(endpoint).then(function (data) {
+          liveAnalyticsEvent('feed_load_success', null, {delivery_state: normalizeDeliveryState(data)});
+          render(data);
+        }).catch(function () {
+          liveAnalyticsEvent('feed_load_failure', null, {delivery_state: 'unavailable'});
           viewport.setAttribute('aria-busy', 'false');
           if (root.classList.contains('is-ready')) {
             setDeliveryState('delayed', 'Refresh delayed');
@@ -3936,6 +4013,25 @@
           setDeliveryState('unavailable', 'Unavailable');
         });
       };
+
+      root.addEventListener('click', function (event) {
+        const anchor = event.target.closest ? event.target.closest('.scsi-live-intelligence__signal') : null;
+        if (!anchor) return;
+        const destinationType = anchor.dataset.destinationType || 'signal_context';
+        const eventTypes = {
+          signal_context: 'signal_context_open', primary_source: 'source_open',
+          site_intelligence_workspace: 'site_intelligence_handoff', map_context: 'map_handoff',
+          decision_studio: 'decision_studio_handoff', evidence_record: 'evidence_record_open'
+        };
+        sendLiveAnalytics([{
+          event_type: eventTypes[destinationType] || 'signal_context_open',
+          signal_id: anchor.dataset.scsiSignalId || '',
+          signal_family: anchor.dataset.signalFamily || 'unknown',
+          freshness_state: anchor.dataset.freshnessState || 'unknown',
+          source_id: anchor.dataset.sourceId || 'unknown',
+          destination_type: destinationType
+        }]);
+      }, {capture: true});
 
       if (finePointer.matches) {
         root.addEventListener('mouseenter', function () {
@@ -3977,8 +4073,8 @@
           startRotation();
         }
       });
-      if (previous) previous.addEventListener('click', function () { showCurrentSignal(currentIndex - 1, true); startRotation(); });
-      if (next) next.addEventListener('click', function () { showCurrentSignal(currentIndex + 1, true); startRotation(); });
+      if (previous) previous.addEventListener('click', function () { liveAnalyticsEvent('manual_control_use'); showCurrentSignal(currentIndex - 1, true); startRotation(); });
+      if (next) next.addEventListener('click', function () { liveAnalyticsEvent('manual_control_use'); showCurrentSignal(currentIndex + 1, true); startRotation(); });
       viewport.addEventListener('touchstart', function (event) {
         if (!(effectiveMode === 'manual' || effectiveMode === 'rotator') || !event.touches.length) return;
         touchStartX = event.touches[0].clientX;
@@ -3993,6 +4089,7 @@
       }, {passive: true});
       if (pause) {
         pause.addEventListener('click', function () {
+          liveAnalyticsEvent('manual_control_use');
           const paused = root.classList.toggle('is-paused');
           pause.setAttribute('aria-pressed', paused ? 'true' : 'false');
           pause.setAttribute('aria-label', paused ? 'Resume Live Intelligence movement' : 'Pause Live Intelligence movement');

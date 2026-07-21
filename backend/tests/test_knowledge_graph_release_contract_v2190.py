@@ -6,12 +6,12 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_release_contract_files_and_markers():
     checks = {
-        "backend/app/version.py": ['APP_VERSION = "3.7.1"', 'RELEASE_NAME = "Connected Public Intelligence and Evidence Platform"'],
+        "backend/app/version.py": ['APP_VERSION = "3.7.2"', 'RELEASE_NAME = "Connected Public Intelligence and Evidence Platform"'],
         "backend/app/config.py": ["knowledge_graph_enabled", "knowledge_graph_entities_path", "knowledge_graph_relationships_path", "knowledge_graph_aliases_path"],
-        "backend/app/knowledge_graph_v2190.py": ['RELEASE_VERSION = "3.7.1"', "def register_entity(", "def register_relationship(", "def traverse(", "def shortest_path(", "def preview_reconciliation(", "def platform_core_handoff("],
+        "backend/app/knowledge_graph_v2190.py": ['RELEASE_VERSION = "3.7.2"', "def register_entity(", "def register_relationship(", "def traverse(", "def shortest_path(", "def preview_reconciliation(", "def platform_core_handoff("],
         "backend/app/main.py": ['"/public/knowledge-graph"', '"/public/knowledge-graph/traverse"', '"/public/knowledge-graph/path"', '"/admin/knowledge-graph/control-center"', '"/admin/knowledge-graph/platform-core-handoff"'],
-        "backend/data/knowledge_graph_policy_v2190.json": ['"version": "3.7.1"', "No causation inferred", "No automatic entity merging", "No individual tracking"],
-        "backend/data/knowledge_graph_relationship_registry_v2190.json": ['"version": "3.7.1"', '"entity_types"', '"relationship_types"', '"supports"', '"conflicts_with"'],
+        "backend/data/knowledge_graph_policy_v2190.json": ['"version": "3.7.2"', "No causation inferred", "No automatic entity merging", "No individual tracking"],
+        "backend/data/knowledge_graph_relationship_registry_v2190.json": ['"version": "3.7.2"', '"entity_types"', '"relationship_types"', '"supports"', '"conflicts_with"'],
     }
     for relative, markers in checks.items():
         text = (ROOT / relative).read_text(encoding="utf-8")

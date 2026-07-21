@@ -218,7 +218,7 @@ class Settings(BaseSettings):
     live_source_operations_history_path: str = "backend/data/live_intelligence_source_operations_history_v320.jsonl"
     live_source_operations_max_history: int = Field(default=500, ge=50, le=5000)
 
-    # Site Intelligence v3.7.1 — Event Clustering and Intelligence Ranking.
+    # Site Intelligence v3.7.2 — Event Clustering and Intelligence Ranking.
     # Deterministic heuristics reduce duplicate presentation and rank display
     # relevance. Scores are not truth, danger, or institutional-importance scores.
     live_intelligence_clustering_enabled: bool = True
@@ -227,17 +227,17 @@ class Settings(BaseSettings):
     live_intelligence_cluster_distance_km: float = Field(default=300.0, ge=1.0, le=2500.0)
     live_intelligence_cluster_text_similarity: float = Field(default=0.34, ge=0.1, le=0.95)
 
-    # Site Intelligence v3.7.1 — Signal Context and Drill-Down.
+    # Site Intelligence v3.7.2 — Signal Context and Drill-Down.
     # Context packets are assembled only from public-safe signal fields and retain
     # source, time, map precision, ranking, evidence, and human-review boundaries.
     live_intelligence_context_enabled: bool = True
 
-    # Site Intelligence v3.7.1 — Topic and Regional Channels.
+    # Site Intelligence v3.7.2 — Topic and Regional Channels.
     # Channels are public-safe filters over existing signals. Empty geographic
     # results remain empty and are never replaced by unrelated global records.
     live_intelligence_channels_enabled: bool = True
 
-    # Site Intelligence v3.7.1 — Live Intelligence reliability and freshness.
+    # Site Intelligence v3.7.2 — Live Intelligence reliability and freshness.
     # Same-query last-known-good payloads are public-safe runtime state and must
     # remain outside immutable release archives.
     live_intelligence_reliability_enabled: bool = True
@@ -250,7 +250,7 @@ class Settings(BaseSettings):
     live_intelligence_last_known_good_retention_hours: int = Field(default=168, ge=1, le=2160)
     live_intelligence_last_known_good_max_entries: int = Field(default=64, ge=1, le=512)
 
-    # Site Intelligence v3.7.1 — Signal Relevance and Rotation Intelligence.
+    # Site Intelligence v3.7.2 — Signal Relevance and Rotation Intelligence.
     # Rotation state stores aggregate signal exposure history and bounded human
     # overrides only. It never stores individual visitor behavior or source values.
     live_intelligence_rotation_enabled: bool = True
@@ -259,6 +259,14 @@ class Settings(BaseSettings):
     live_intelligence_rotation_max_history: int = Field(default=500, ge=20, le=5000)
     live_intelligence_minimum_display_seconds: int = Field(default=12, ge=4, le=120)
     live_intelligence_maximum_exposure_seconds: int = Field(default=45, ge=12, le=600)
+
+    # Site Intelligence v3.7.2 — Analytics and Public-Value Measurement.
+    # Runtime state contains day-level aggregate counters only. Raw events, IP
+    # addresses, cookies, user agents, referrers, page paths, and visitor IDs are rejected.
+    live_intelligence_analytics_enabled: bool = True
+    live_intelligence_analytics_state_path: str = "backend/data/live_intelligence_analytics_state_v372.json"
+    live_intelligence_analytics_retention_days: int = Field(default=90, ge=7, le=730)
+    live_intelligence_analytics_max_signal_buckets: int = Field(default=500, ge=20, le=5000)
 
     # Site Intelligence v2.14.0 — Historical Archive and Temporal Change Intelligence.
     # Accepted connector payloads are sanitized before file-backed archival. The
@@ -296,7 +304,7 @@ class Settings(BaseSettings):
     spatial_evidence_max_radius_km: float = Field(default=5000.0, ge=0.1, le=20000.0)
     spatial_evidence_max_proximity_km: float = Field(default=5000.0, ge=0.1, le=20000.0)
 
-    # Site Intelligence v3.7.1 — Statistical Harmonization and Comparable-Series Engine.
+    # Site Intelligence v3.7.2 — Statistical Harmonization and Comparable-Series Engine.
     # Source series, transformed series, and lineage receipts are writable runtime
     # state and may be redirected to durable storage. Release registries remain immutable.
     statistical_harmonization_enabled: bool = True
@@ -309,7 +317,7 @@ class Settings(BaseSettings):
     statistical_harmonization_max_records: int = Field(default=10000, ge=100, le=100000)
     statistical_harmonization_max_observations: int = Field(default=5000, ge=1, le=100000)
 
-    # Site Intelligence v3.7.1 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+    # Site Intelligence v3.7.2 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
     # Model cards and immutable policy registries ship with the release. Forecasts,
     # evaluations, warning rules, and warning events are writable runtime state.
     model_governance_enabled: bool = True
@@ -324,7 +332,7 @@ class Settings(BaseSettings):
     model_governance_max_records: int = Field(default=10000, ge=100, le=100000)
     model_governance_max_forecast_points: int = Field(default=5000, ge=1, le=100000)
 
-    # Site Intelligence v3.7.1 — Evidence Synthesis, Claims, and Contradiction Review.
+    # Site Intelligence v3.7.2 — Evidence Synthesis, Claims, and Contradiction Review.
     # Claims, evidence, reviews, syntheses, and uncertainty records are writable
     # runtime state. Immutable policy files ship with the release.
     evidence_synthesis_enabled: bool = True
@@ -338,7 +346,7 @@ class Settings(BaseSettings):
     evidence_synthesis_max_records: int = Field(default=10000, ge=100, le=100000)
     evidence_synthesis_max_excerpt_chars: int = Field(default=4000, ge=100, le=20000)
 
-    # Site Intelligence v3.7.1 — Intelligence Publishing and Story Map Studio.
+    # Site Intelligence v3.7.2 — Intelligence Publishing and Story Map Studio.
     # Entity, relationship, and alias records are writable runtime state. Immutable
     # policy and relationship registries ship with the release.
     knowledge_graph_enabled: bool = True
@@ -353,7 +361,7 @@ class Settings(BaseSettings):
     knowledge_graph_max_results: int = Field(default=1000, ge=10, le=10000)
 
 
-    # Site Intelligence v3.7.1 — Intelligence Publishing and Story Map Studio.
+    # Site Intelligence v3.7.2 — Intelligence Publishing and Story Map Studio.
     # Publication projects, blocks, reviews, and immutable published versions are
     # writable runtime state. Policy files ship with the immutable release.
     intelligence_publishing_enabled: bool = True
@@ -367,7 +375,7 @@ class Settings(BaseSettings):
     intelligence_publishing_max_blocks: int = Field(default=250, ge=1, le=2000)
     intelligence_publishing_max_block_chars: int = Field(default=100000, ge=1000, le=1000000)
 
-    # Site Intelligence v3.7.1 — Scheduled Monitoring, Digests, and Public Intelligence Feeds.
+    # Site Intelligence v3.7.2 — Scheduled Monitoring, Digests, and Public Intelligence Feeds.
     # Monitor definitions, checks, alerts, digests, delivery receipts, and feed
     # definitions are writable runtime state. The policy file is immutable.
     scheduled_monitoring_enabled: bool = True
@@ -385,7 +393,7 @@ class Settings(BaseSettings):
     scheduled_monitoring_email_enabled: bool = False
     scheduled_monitoring_webhook_enabled: bool = False
 
-    # Site Intelligence v3.7.1 — Institutional Workspaces, Collaboration, and Review.
+    # Site Intelligence v3.7.2 — Institutional Workspaces, Collaboration, and Review.
     # Roles and permissions are enforced inside token-protected administrative APIs,
     # but this release does not provision accounts or replace an identity provider.
     # All writable workspace state is excluded from immutable release packages.
@@ -407,7 +415,7 @@ class Settings(BaseSettings):
 
 
 
-    # Site Intelligence v3.7.1 — Typed Cross-Platform Intelligence Workflows.
+    # Site Intelligence v3.7.2 — Typed Cross-Platform Intelligence Workflows.
     # Packets, receipts, delivery attempts, linkbacks, and retry records are writable
     # runtime state. This release validates and records handoffs but does not perform
     # remote writes or replace Platform Core orchestration.
@@ -425,7 +433,7 @@ class Settings(BaseSettings):
     cross_platform_workflows_retry_delay_seconds: int = Field(default=300, ge=10, le=86400)
     cross_platform_workflows_max_payload_bytes: int = Field(default=2000000, ge=1000, le=20000000)
 
-    # Open Standards, Federation, and Institutional Data Exchange v3.7.1.
+    # Open Standards, Federation, and Institutional Data Exchange v3.7.2.
     federation_exchange_enabled: bool = True
     federation_root_path: str = "backend/data/federation_exchange_v2240"
     federation_institutions_path: str = "backend/data/federation_exchange_v2240/institutions_v2240.jsonl"
@@ -440,7 +448,7 @@ class Settings(BaseSettings):
     federation_max_records: int = Field(default=30000, ge=100, le=300000)
     federation_max_manifest_bytes: int = Field(default=5000000, ge=1000, le=50000000)
 
-    # Site Intelligence v3.7.1 — Security, Privacy, Governance, and Production Scale.
+    # Site Intelligence v3.7.2 — Security, Privacy, Governance, and Production Scale.
     # SQLite provides a zero-cost durable mode with explicit migrations. Production
     # deployments should map the database and backup paths to a persistent disk.
     production_governance_enabled: bool = True
@@ -453,7 +461,7 @@ class Settings(BaseSettings):
     production_admin_rate_limit: int = Field(default=120, ge=10, le=10000)
     production_admin_rate_window_seconds: int = Field(default=60, ge=1, le=3600)
 
-    # Site Intelligence v3.7.1 — Connected Public Intelligence and Evidence Platform.
+    # Site Intelligence v3.7.2 — Connected Public Intelligence and Evidence Platform.
     # The default zero-cost index is generated from public-safe registries and
     # approved runtime records. It does not expose private records or claim a
     # persistent search cluster, automatic publication, or remote delivery.

@@ -83,6 +83,9 @@ from .live_intelligence_rotation_v371 import (
     rotation_policy as live_intelligence_rotation_policy,
     LiveIntelligenceRotationStore,
 )
+from .live_intelligence_analytics_v372 import (
+    LiveIntelligenceAnalyticsStore, analytics_policy as live_intelligence_analytics_policy,
+)
 from .live_intelligence_source_operations_v320 import LiveIntelligenceSourceOperations
 from .live_intelligence_context_v340 import (
     build_signal_context, build_signal_evidence, context_policy as live_signal_context_policy,
@@ -2242,7 +2245,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.7.1 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v3.7.2 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -2384,7 +2387,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.7.1 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v3.7.2 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -2501,7 +2504,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.7.1 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v3.7.2 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -2623,7 +2626,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.7.1 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v3.7.2 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -2759,7 +2762,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.7.1 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v3.7.2 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -5936,7 +5939,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v3.7.1 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v3.7.2 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -6170,7 +6173,7 @@ def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     return build_reliability(settings)
 
 
-# Site Intelligence v3.7.1 — Open Standards, Federation, and Institutional Data Exchange.
+# Site Intelligence v3.7.2 — Open Standards, Federation, and Institutional Data Exchange.
 def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
     if not settings.federation_exchange_enabled:
         raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
@@ -6260,7 +6263,7 @@ def admin_federation_accept_import_endpoint(request: dict = Body(default={}), se
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.7.1 — Security, Privacy, Governance, and Production Scale.
+# Site Intelligence v3.7.2 — Security, Privacy, Governance, and Production Scale.
 def _production_governance(settings: Settings) -> ProductionGovernanceCenter:
     if not settings.production_governance_enabled:
         raise HTTPException(status_code=503, detail="Production governance is disabled.")
@@ -6409,7 +6412,7 @@ def admin_production_governance_deployment_endpoint(request: dict = Body(default
 def admin_production_governance_load_probe_endpoint(requests: int = Query(default=250, ge=1, le=5000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return _production_governance(settings).load_probe(requests)
 
-# Site Intelligence v3.7.1 — Signal Relevance and Rotation Intelligence.
+# Site Intelligence v3.7.2 — Signal Relevance and Rotation Intelligence.
 def _connected_platform(settings: Settings) -> ConnectedPublicIntelligencePlatform:
     if not settings.connected_platform_enabled:
         raise HTTPException(status_code=404, detail="Connected platform is disabled.")
@@ -6462,9 +6465,20 @@ def public_live_intelligence_homepage_endpoint(
             max_per_source=max_per_source, channel=channel, region=region, country=country,
         )
         gateway = apply_live_intelligence_gateway_policy(payload, surface="homepage")
-        return apply_live_intelligence_rotation_policy(
+        result = apply_live_intelligence_rotation_policy(
             gateway, settings, limit=limit, surface="homepage", record_history=True,
         )
+        result["measurement"] = {
+            "enabled": bool(settings.live_intelligence_analytics_enabled),
+            "policy_url": "/public/live-intelligence/analytics-policy",
+            "event_url": "/public/live-intelligence/analytics/events",
+            "summary_url": "/public/live-intelligence/analytics/summary",
+            "source_reliability_url": "/public/live-intelligence/analytics/source-reliability",
+            "aggregate_counters_only": True,
+            "individual_user_tracking": False,
+            "click_through_rate_only": False,
+        }
+        return result
     except KeyError as exc:
         raise HTTPException(status_code=404, detail="Live Intelligence channel not found.") from exc
 
@@ -6491,6 +6505,77 @@ def public_live_intelligence_rotation_status_endpoint(settings: Settings = Depen
         "version": APP_VERSION,
         "rotation": LiveIntelligenceRotationStore(settings).status(),
         "policy_url": "/public/live-intelligence/rotation-policy",
+    }
+
+
+@app.get("/public/live-intelligence/analytics-policy")
+def public_live_intelligence_analytics_policy_endpoint():
+    return live_intelligence_analytics_policy()
+
+
+@app.post("/public/live-intelligence/analytics/events", status_code=202)
+def public_live_intelligence_analytics_events_endpoint(
+    request: dict = Body(default={}),
+    settings: Settings = Depends(get_settings),
+):
+    if not settings.live_intelligence_analytics_enabled:
+        raise HTTPException(status_code=404, detail="Live Intelligence analytics are disabled.")
+    events = request.get("events") if isinstance(request.get("events"), list) else []
+    try:
+        receipt = LiveIntelligenceAnalyticsStore(settings).record(events)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return {"ok": True, "version": APP_VERSION, "receipt": receipt}
+
+
+@app.get("/public/live-intelligence/analytics/summary")
+def public_live_intelligence_analytics_summary_endpoint(
+    days: int = Query(default=30, ge=1, le=365),
+    settings: Settings = Depends(get_settings),
+):
+    if not settings.live_intelligence_analytics_enabled:
+        raise HTTPException(status_code=404, detail="Live Intelligence analytics are disabled.")
+    return LiveIntelligenceAnalyticsStore(settings).summary(days=days, include_signals=False)
+
+
+@app.get("/public/live-intelligence/analytics/source-reliability")
+def public_live_intelligence_analytics_source_reliability_endpoint(
+    days: int = Query(default=30, ge=1, le=365),
+    settings: Settings = Depends(get_settings),
+):
+    if not settings.live_intelligence_analytics_enabled:
+        raise HTTPException(status_code=404, detail="Live Intelligence analytics are disabled.")
+    summary = LiveIntelligenceAnalyticsStore(settings).summary(days=days, include_signals=False)
+    engagement = {item["source_id"]: item for item in summary["source_reliability"]}
+    registry = _live_source_operations(settings).registry(public=True)
+    sources = []
+    for source in registry.get("sources") or []:
+        source_id = str(source.get("feed_id") or "unknown")
+        observed = engagement.pop(source_id, {
+            "source_id": source_id, "signal_impressions": 0, "source_opens": 0,
+            "successful_loads": 0, "failed_loads": 0, "observed_load_success_rate": None,
+        })
+        health = source.get("health") or {}
+        runtime = source.get("runtime") or {}
+        sources.append({
+            **observed,
+            "label": source.get("label") or source_id,
+            "provider": source.get("provider") or "",
+            "enabled": bool((source.get("effective") or {}).get("enabled")),
+            "operational_state": health.get("state") or "unknown",
+            "operational_freshness": health.get("freshness") or "unknown",
+            "age_minutes": health.get("age_minutes"),
+            "due": bool(health.get("due")),
+            "last_success_at": runtime.get("last_success_at"),
+            "consecutive_failures": int(runtime.get("consecutive_failures") or 0),
+            "interpretation": "Operational source health plus aggregate public engagement; not a contractual service-level agreement.",
+        })
+    sources.extend(engagement.values())
+    return {
+        "ok": True, "version": APP_VERSION, "schema": summary["schema"],
+        "window_days": summary["window_days"], "updated_at": summary["updated_at"],
+        "sources": sources, "source_summary": registry.get("summary") or {}, "delivery": summary["delivery"],
+        "boundary": "Operational source receipts and aggregate engagement only; no visitor profiles and no upstream SLA claim.",
     }
 
 
@@ -6621,6 +6706,18 @@ def admin_live_intelligence_rotation_override_endpoint(
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     return {"ok": True, "version": APP_VERSION, "override": override}
+
+
+@app.get("/admin/live-intelligence/analytics")
+def admin_live_intelligence_analytics_endpoint(
+    days: int = Query(default=30, ge=1, le=365),
+    settings: Settings = Depends(get_settings),
+    _: None = Depends(require_token),
+):
+    if not settings.live_intelligence_analytics_enabled:
+        raise HTTPException(status_code=404, detail="Live Intelligence analytics are disabled.")
+    store = LiveIntelligenceAnalyticsStore(settings)
+    return {"ok": True, "version": APP_VERSION, "summary": store.summary(days=days, include_signals=True), "status": store.status()}
 
 
 @app.get("/admin/live-intelligence/sources/control-center")
