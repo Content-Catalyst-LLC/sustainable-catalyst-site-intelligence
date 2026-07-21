@@ -1,5 +1,22 @@
 # Sustainable Catalyst Site Intelligence
 
+**Current release:** v3.14.0 — Connected Public Intelligence and Evidence Platform
+
+### Current integrated Live Intelligence capabilities
+
+- v3.14.0 — Signal Context and Drill-Down
+- v3.14.0 — Topic and Regional Channels
+- v3.14.0 — Homepage Intelligence Gateway
+- v3.14.0 — Signal Relevance and Rotation Intelligence
+- v3.14.0 — Analytics and Public-Value Measurement
+- v3.14.0 — Connected Live Intelligence Surface
+- v3.14.0 — Signal Subscriptions, Alerts, and Scheduled Intelligence
+- v3.14.0 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
+- v3.14.0 — Editorial Workspace, Review Queues, and Publication Orchestration
+- v3.14.0 — Publication Adapters, Institutional Handoffs, and Release Governance
+- v3.14.0 — Release Monitoring, Rollback, and Post-Publication Governance
+- v3.14.0 — Corrections, Retractions, and Public Change History
+
 ## v3.13.0 — Release Monitoring, Rollback, and Post-Publication Governance
 
 - Records externally performed deployment receipts against approved publication release packages.
@@ -1258,3 +1275,9 @@ For durable source health and history across Render deploys, redirect `SC_SI_LIV
 ## v3.13.0 — Publication Adapters, Institutional Handoffs, and Release Governance
 
 Live Intelligence now turns approved editorial workspaces into checksum-verified release candidates and adapter-specific packages for Publications, the Knowledge Library, Decision Studio, WordPress manual import, and direct download. Validation and separate release approval are required before package export or manual handoff. No adapter writes to a destination, stores credentials, or includes recipient identities.
+
+## v3.14.0 — Corrections, Retractions, and Public Change History
+
+Live Intelligence now converts approved public corrections into a separately reviewed, append-only public change history. Correction, clarification, replacement, retraction, and rollback notices preserve the original release, link immutable release checksums, and expose public lineage without silently rewriting or deleting prior evidence. JSON and Markdown packages support manual delivery to Publications, the Knowledge Library, WordPress, and download workflows.
+
+WordPress shortcode: `[sc_live_intelligence_change_history]`

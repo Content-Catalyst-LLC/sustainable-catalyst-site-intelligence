@@ -6,7 +6,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_v340_release_markers_and_wordpress_context_routes():
     checks = {
-        "backend/app/version.py": ['APP_VERSION = "3.13.0"'],
+        "backend/app/version.py": ['APP_VERSION = "3.14.0"'],
         "backend/app/live_intelligence_context_v340.py": [
             "build_signal_context", "build_signal_evidence", "render_signal_context_html",
             "canonical_digest", "term overlap", "independent verification",
@@ -19,7 +19,7 @@ def test_v340_release_markers_and_wordpress_context_routes():
             "signal_context_supported", "signal_evidence_download_supported", "enrich_signal_links",
         ],
         "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": [
-            "Version: 3.13.0", "scsi_live_signal", "render_live_intelligence_signal_page",
+            "Version: 3.14.0", "scsi_live_signal", "render_live_intelligence_signal_page",
             "live_intelligence_detail_links", "Send to Decision Studio",
         ],
         "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js": [
@@ -28,7 +28,7 @@ def test_v340_release_markers_and_wordpress_context_routes():
         "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.css": [
             "scsi-live-signal-context", "scsi-live-signal-button",
         ],
-        "README.md": ["v3.13.0 — Signal Context and Drill-Down"],
+        "README.md": ["v3.14.0 — Signal Context and Drill-Down"],
         "RELEASE_NOTES_SITE_INTELLIGENCE_V340.md": ["Source lineage", "SHA-256", "Decision Studio"],
     }
     for relative, markers in checks.items():

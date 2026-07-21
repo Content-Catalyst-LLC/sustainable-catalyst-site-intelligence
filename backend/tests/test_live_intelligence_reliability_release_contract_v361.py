@@ -8,7 +8,7 @@ def test_v361_release_contract_files_and_markers():
     checks = {
         "backend/app/live_intelligence_reliability_v361.py": ["RELIABILITY_SCHEMA_VERSION", "LiveIntelligenceReliabilityStore", "classify_signal_freshness"],
         "backend/app/main.py": ["/public/live-intelligence/status"],
-        "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": ["Version: 3.13.0", "live_intelligence_show_freshness"],
+        "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": ["Version: 3.14.0", "live_intelligence_show_freshness"],
         "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js": ["data-scsi-live-delivery", "refreshSeconds"],
         "docs/V361_LIVE_INTELLIGENCE_RELIABILITY.md": ["same channel", "Freshness describes time, not truth"],
     }

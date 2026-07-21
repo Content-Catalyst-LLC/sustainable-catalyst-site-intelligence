@@ -4273,12 +4273,50 @@
     });
   }
 
+
+  function setupLiveIntelligenceChangeHistory() {
+    document.querySelectorAll('[data-scsi-live-change-history]').forEach(function (root) {
+      const output = root.querySelector('.scsi-live-change-history__output');
+      const policyEndpoint = root.dataset.policyEndpoint || '';
+      const statusEndpoint = root.dataset.statusEndpoint || '';
+      const historyEndpoint = root.dataset.historyEndpoint || '';
+      if (!output || !policyEndpoint || !statusEndpoint || !historyEndpoint) return;
+      Promise.all([fetchJson(policyEndpoint), fetchJson(statusEndpoint), fetchJson(historyEndpoint)]).then(function (responses) {
+        const policy = responses[0] || {};
+        const status = responses[1] || {};
+        const changeHistory = responses[2] || {};
+        const metrics = [
+          ['Public notices', status.public_notice_count || 0],
+          ['Corrections', status.correction_count || 0],
+          ['Replacements', status.replacement_count || 0],
+          ['Retractions', status.retraction_count || 0],
+          ['Rollback notices', status.rollback_notice_count || 0]
+        ];
+        const records = (changeHistory.history || []).slice(0, 4);
+        output.innerHTML = '<div class="scsi-live-subscriptions__grid">' + metrics.map(function (item) {
+          return '<article class="scsi-live-subscriptions__item"><p class="scsi-live-subscriptions__meta">PUBLIC CHANGE HISTORY</p><h3>' + escapeHtml(String(item[1])) + '</h3><p>' + escapeHtml(item[0]) + '</p></article>';
+        }).join('') + '</div>' +
+          '<p class="scsi-live-subscriptions__tags"><span>Original release retained</span><span>Append-only chronology</span><span>Source-linked replacements</span><span>No destination deletion</span></p>' +
+          (records.length ? '<div class="scsi-live-subscriptions__list">' + records.map(function (record) {
+            return '<article class="scsi-live-subscriptions__item"><p class="scsi-live-subscriptions__meta">' + escapeHtml(String(record.notice_type || 'change').toUpperCase()) + '</p><h3>' + escapeHtml(record.title || 'Public change notice') + '</h3><p>' + escapeHtml(record.public_summary || '') + '</p></article>';
+          }).join('') + '</div>' : '<p class="scsi-live-subscriptions__empty">No approved public change notices have been recorded.</p>');
+        output.setAttribute('aria-busy', 'false');
+        const muted = root.querySelector('.scsi-muted');
+        if (muted) muted.textContent = policy.principle || 'Append-only public change history with retained original releases.';
+      }).catch(function () {
+        output.innerHTML = '<p class="scsi-live-subscriptions__empty">Public change history is temporarily unavailable.</p>';
+        output.setAttribute('aria-busy', 'false');
+      });
+    });
+  }
+
   function init() {
     setupActivePageLinks();
     setupLiveIntelligenceSubscriptions();
     setupLiveIntelligenceEditorial();
     setupLiveIntelligencePublicationReleases();
     setupLiveIntelligenceReleaseOperations();
+    setupLiveIntelligenceChangeHistory();
     setupLaunchActions();
     setupResponsiveEmbeds();
     setupLiveIntelligence();

@@ -984,3 +984,13 @@
 - Added separate release approval and manual handoff receipts.
 - Added public policy, adapter catalog, aggregate status, protected administration, and WordPress governance surface.
 - Preserved no-write, no-credential, no-recipient-identity, and no-automatic-publication boundaries.
+
+## 3.14.0
+
+- Added append-only public correction, clarification, replacement, retraction, and rollback notices.
+- Added release lineage linking affected and replacement release checksums.
+- Added separate notice preparation and approval with retraction retention acknowledgement.
+- Added public change-history policy, status, feed, and release-lineage routes.
+- Added JSON and Markdown packages plus manual no-write handoff receipts.
+- Added the read-only `[sc_live_intelligence_change_history]` WordPress surface.
+- Preserved original releases and prohibited evidence rewrite, destination writes, deletion, and automatic republication.

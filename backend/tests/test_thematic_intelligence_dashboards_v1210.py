@@ -54,7 +54,7 @@ def fake_country_indicators(_code: str):
         })
     return {
         "ok": True,
-        "version": "3.13.0",
+        "version": "3.14.0",
         "country": COUNTRY,
         "data_state": "partial-live",
         "indicators": rows,
@@ -83,7 +83,7 @@ def fake_country_trends(_code: str):
         })
     return {
         "ok": True,
-        "version": "3.13.0",
+        "version": "3.14.0",
         "country": COUNTRY,
         "data_state": "partial-live",
         "trends": rows,
@@ -102,7 +102,7 @@ def fake_layers():
     ]
     return {
         "ok": True,
-        "version": "3.13.0",
+        "version": "3.14.0",
         "layers": [
             {
                 "id": item,
@@ -141,7 +141,7 @@ def fake_events(**_kwargs):
     }
     return {
         "ok": True,
-        "version": "3.13.0",
+        "version": "3.14.0",
         "generated_at": "2026-07-11T12:00:00+00:00",
         "data_state": "live",
         "delivery_state": "live",
@@ -164,7 +164,7 @@ def install(monkeypatch):
 
 def test_directory_registers_four_public_beta_dashboards():
     payload = thematic.dashboard_directory()
-    assert payload["version"] == "3.13.0"
+    assert payload["version"] == "3.14.0"
     assert payload["dashboard_count"] == 4
     assert {item["id"] for item in payload["dashboards"]} == {
         "climate-environment",
@@ -185,7 +185,7 @@ def test_each_dashboard_has_indicators_map_sources_methods_and_exports(monkeypat
     install(monkeypatch)
     payload = thematic.build_dashboard(dashboard_id, "KEN", days=30)
     assert payload["ok"] is True
-    assert payload["version"] == "3.13.0"
+    assert payload["version"] == "3.14.0"
     assert payload["schema_version"] == "sc-thematic-dashboard/1.0"
     assert payload["dashboard"]["maturity"] == "Public beta"
     assert payload["country"]["code"] == "KEN"
@@ -293,5 +293,5 @@ def test_frontend_and_wordpress_expose_thematic_product():
     assert '.thematic-studio' in css
     assert "add_shortcode('sc_thematic_intelligence'" in php
     assert 'public function thematic_intelligence_shortcode' in php
-    assert "Version: 3.13.0" in php
-    assert "const VERSION = '3.13.0';" in php
+    assert "Version: 3.14.0" in php
+    assert "const VERSION = '3.14.0';" in php

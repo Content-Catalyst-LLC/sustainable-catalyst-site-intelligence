@@ -6,7 +6,7 @@
   "required": ["schema", "release_version", "watchlist_id", "title", "enabled", "visibility", "surface", "rules", "match_mode", "cadence", "automatic_publication", "subscriber_profiles_stored"],
   "properties": {
     "schema": {"const": "sc-site-intelligence-live-intelligence-watchlist/1.0"},
-    "release_version": {"const": "3.13.0"},
+    "release_version": {"const": "3.14.0"},
     "watchlist_id": {"type": "string", "minLength": 1, "maxLength": 180},
     "title": {"type": "string", "minLength": 1, "maxLength": 240},
     "summary": {"type": "string", "maxLength": 2000},

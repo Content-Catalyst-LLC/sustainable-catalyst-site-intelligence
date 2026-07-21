@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/live-intelligence-change-history-v3140.schema.json",
+  "title": "Live Intelligence Public Change History",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "release_version",
+    "notice_id",
+    "notice_type",
+    "affected_release_id",
+    "affected_release_sha256",
+    "status",
+    "original_release_retained",
+    "append_only_history",
+    "evidence_rewritten",
+    "destination_write_performed",
+    "deletion_performed"
+  ],
+  "properties": {
+    "schema": {"type": "string", "const": "sc-site-intelligence-public-change-notice/1.0"},
+    "release_version": {"type": "string", "const": "3.14.0"},
+    "notice_id": {"type": "string", "minLength": 1, "maxLength": 180},
+    "notice_type": {"enum": ["correction", "clarification", "replacement", "retraction", "rollback"]},
+    "scope": {"enum": ["full_release", "section", "claim", "source_link", "presentation"]},
+    "title": {"type": "string", "minLength": 1, "maxLength": 500},
+    "public_summary": {"type": "string", "minLength": 1, "maxLength": 4000},
+    "rationale": {"type": "string", "minLength": 1, "maxLength": 4000},
+    "affected_release_id": {"type": "string", "minLength": 1, "maxLength": 180},
+    "affected_release_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "replacement_release_id": {"type": "string", "maxLength": 180},
+    "replacement_release_sha256": {"type": "string", "pattern": "^$|^[a-f0-9]{64}$"},
+    "status": {"enum": ["draft", "approved"]},
+    "effective_at": {"type": "string", "maxLength": 80},
+    "notice_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "original_release_retained": {"type": "boolean", "const": true},
+    "append_only_history": {"type": "boolean", "const": true},
+    "evidence_rewritten": {"type": "boolean", "const": false},
+    "destination_write_performed": {"type": "boolean", "const": false},
+    "deletion_performed": {"type": "boolean", "const": false}
+  }
+}

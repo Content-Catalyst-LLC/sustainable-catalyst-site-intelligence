@@ -5,7 +5,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_v380_release_contract():
     requirements = {
-        "backend/app/version.py": ['APP_VERSION = "3.13.0"'],
+        "backend/app/version.py": ['APP_VERSION = "3.14.0"'],
         "backend/app/live_intelligence_surfaces_v380.py": [
             "SURFACE_SCHEMA_VERSION", "SURFACE_REGISTRY", "def surface_directory(",
             "def apply_connected_surface_policy(", "def embed_manifest(",
@@ -20,14 +20,14 @@ def test_v380_release_contract():
             '"static_strip"', '"publication"', '"library"', '"advisory"', '"lab"', '"external_embed"',
         ],
         "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": [
-            "Version: 3.13.0", "sc_live_intelligence_publication", "sc_live_intelligence_library",
+            "Version: 3.14.0", "sc_live_intelligence_publication", "sc_live_intelligence_library",
             "sc_live_intelligence_advisory", "sc_live_intelligence_lab", "sc_live_intelligence_embed",
             "rest_live_intelligence_surface_policy", "rest_live_intelligence_surface_feed",
         ],
         "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js": [
             "allowedSurfaces", "static_strip", "external_embed", "/live-intelligence/surfaces/",
         ],
-        "README.md": ["v3.13.0 — Connected Live Intelligence Surface"],
+        "README.md": ["v3.14.0 — Connected Live Intelligence Surface"],
         "RELEASE_NOTES_SITE_INTELLIGENCE_V380.md": ["Connected Live Intelligence Surface", "one governed signal system"],
         "docs/RELEASE_MANIFEST_V380.json": [
             '"version": "3.8.0"', '"separate_ingestion_per_surface": false',

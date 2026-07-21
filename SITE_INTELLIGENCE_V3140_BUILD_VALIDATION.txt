@@ -1,0 +1,35 @@
+SUSTAINABLE CATALYST SITE INTELLIGENCE v3.14.0
+BUILD VALIDATION REPORT
+
+Release: Corrections, Retractions, and Public Change History
+Result: PASS
+
+FUNCTIONAL VALIDATION
+- 739 backend tests passed.
+- 10 focused v3.14.0 workflow and release-contract tests passed.
+- Approved public correction gating passed.
+- Separate notice approval passed.
+- Retraction original-record retention acknowledgement passed.
+- Replacement release lineage and checksum linkage passed.
+- Draft/private exclusion from public history passed.
+- JSON and Markdown change packages passed.
+- Manual no-write handoff receipts passed.
+- Public and protected route boundaries passed.
+
+STATIC AND PACKAGE VALIDATION
+- 245 Python files parsed.
+- 96 JSON files validated.
+- 672 unique HTML IDs verified.
+- 27 JavaScript files passed syntax validation.
+- WordPress PHP syntax passed.
+- Immutable release manifest verified.
+- Repository and WordPress archives verified.
+
+GOVERNANCE BOUNDARIES
+- Original releases remain retained and addressable.
+- Public change history is append-only.
+- Evidence is not rewritten.
+- Destination content is not modified or deleted.
+- No automatic republication occurs.
+- No credentials or recipient identities are stored.
+- No GitHub push was performed during local release validation.
