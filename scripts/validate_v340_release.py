@@ -3,7 +3,7 @@ import json
 
 ROOT = Path(__file__).resolve().parents[1]
 checks = {
-    'backend/app/version.py': ['APP_VERSION = "3.4.0"', 'Connected Public Intelligence and Evidence Platform'],
+    'backend/app/version.py': ['APP_VERSION = "3.5.0"', 'Connected Public Intelligence and Evidence Platform'],
     'backend/app/live_intelligence_context_v340.py': [
         'build_signal_context', 'build_signal_evidence', 'render_signal_context_html',
         'canonical_digest', 'related_research', 'independent verification',
@@ -18,7 +18,7 @@ checks = {
     ],
     'backend/app/config.py': ['live_intelligence_context_enabled'],
     'wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php': [
-        'Version: 3.4.0', "const VERSION = '3.4.0';", 'scsi_live_signal',
+        'Version: 3.5.0', "const VERSION = '3.5.0';", 'scsi_live_signal',
         'render_live_intelligence_signal_page', 'live_intelligence_detail_links', 'Send to Decision Studio',
     ],
     'wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js': [
@@ -27,7 +27,7 @@ checks = {
     'wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.css': [
         'scsi-live-signal-context', 'scsi-live-signal-button',
     ],
-    'README.md': ['v3.4.0 — Signal Context and Drill-Down', 'Current release:** v3.4.0'],
+    'README.md': ['v3.5.0 — Signal Context and Drill-Down', 'Current release:** v3.5.0'],
     'RELEASE_NOTES_SITE_INTELLIGENCE_V340.md': ['Source lineage', 'SHA-256', 'Decision Studio'],
     'docs/V340_SIGNAL_CONTEXT_DRILL_DOWN.md': ['Context contract', 'Non-claims'],
     'docs/live-intelligence-context-v340.schema.json': ['sc-site-intelligence-live-signal-context/1.0'],
@@ -62,6 +62,6 @@ css = (ROOT / 'wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc
 if 'ast-breadcrumbs-wrapper' in css or 'scsi-live-intelligence-parchment-navigation' in css:
     raise SystemExit('Theme navigation or breadcrumb color overrides must remain absent.')
 manifest = json.loads((ROOT / 'MANIFEST.json').read_text())
-if manifest.get('release') != '3.4.0':
+if manifest.get('release') != '3.5.0':
     raise SystemExit('Immutable manifest release mismatch.')
-print('Site Intelligence v3.4.0 release contract passed.')
+print('Site Intelligence v3.5.0 release contract passed.')

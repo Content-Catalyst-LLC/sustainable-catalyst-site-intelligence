@@ -3,7 +3,7 @@ import json
 
 ROOT = Path(__file__).resolve().parents[1]
 checks = {
-    'backend/app/version.py': ['APP_VERSION = "3.4.0"', 'Connected Public Intelligence and Evidence Platform'],
+    'backend/app/version.py': ['APP_VERSION = "3.5.0"', 'Connected Public Intelligence and Evidence Platform'],
     'backend/app/live_intelligence_clustering_v330.py': [
         'cluster_event_records', 'select_ranked_signals', 'selection_reasons',
         'corroboration', 'Scores rank display relevance', 'category_boundary_required',
@@ -18,14 +18,14 @@ checks = {
         'live_intelligence_cluster_time_window_hours', 'live_intelligence_cluster_distance_km',
     ],
     'wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php': [
-        'Version: 3.4.0', "const VERSION = '3.4.0';",
+        'Version: 3.5.0', "const VERSION = '3.5.0';",
         'live_intelligence_show_cluster_sources', 'live_intelligence_selection_context',
         'rest_live_intelligence_ranking_policy', 'Open the public ranking policy',
     ],
     'wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js': [
         'cluster_source_count', 'selection_reasons', 'Selected because:', 'development_state',
     ],
-    'README.md': ['v3.4.0 — Event Clustering and Intelligence Ranking', 'Current release:** v3.4.0'],
+    'README.md': ['v3.5.0 — Event Clustering and Intelligence Ranking', 'Current release:** v3.5.0'],
     'RELEASE_NOTES_SITE_INTELLIGENCE_V330.md': ['canonical event', 'selection reasons', 'display relevance'],
 }
 for rel, markers in checks.items():
@@ -51,6 +51,6 @@ css = (ROOT / 'wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc
 if 'ast-breadcrumbs-wrapper' in css or 'scsi-live-intelligence-parchment-navigation' in css:
     raise SystemExit('Theme navigation or breadcrumb color overrides must remain absent.')
 manifest = json.loads((ROOT / 'MANIFEST.json').read_text())
-if manifest.get('release') != '3.4.0':
+if manifest.get('release') != '3.5.0':
     raise SystemExit('Immutable manifest release mismatch.')
-print('Site Intelligence v3.4.0 release contract passed.')
+print('Site Intelligence v3.5.0 release contract passed.')

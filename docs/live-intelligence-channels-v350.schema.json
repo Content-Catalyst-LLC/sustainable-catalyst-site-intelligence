@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/live-intelligence-channels-v350.schema.json",
+  "title": "Site Intelligence Live Intelligence Channel Directory",
+  "type": "object",
+  "required": [
+    "ok",
+    "version",
+    "schema",
+    "count",
+    "channels"
+  ],
+  "properties": {
+    "ok": {
+      "const": true
+    },
+    "version": {
+      "type": "string"
+    },
+    "schema": {
+      "const": "sc-site-intelligence-live-intelligence-channels/1.0"
+    },
+    "count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "channels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "label",
+          "kind",
+          "feed_url"
+        ]
+      }
+    }
+  }
+}

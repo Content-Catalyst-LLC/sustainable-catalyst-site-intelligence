@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.4.0
+ * Version: 3.5.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.4.0';
+    const VERSION = '3.5.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -259,6 +259,9 @@ final class SC_Site_Intelligence_Plugin {
             'live_intelligence_placement' => 'below_breadcrumb',
             'live_intelligence_selected_pages' => '',
             'live_intelligence_limit' => '16',
+            'live_intelligence_channel' => 'global',
+            'live_intelligence_region' => '',
+            'live_intelligence_country' => '',
             'live_intelligence_feeds' => 'noaa_nws,usgs_earthquakes,nasa_eonet,reliefweb,nasa_power,openalex,world_bank',
             'live_intelligence_max_per_source' => '2',
             'live_intelligence_shortcode_overrides' => '1',
@@ -305,6 +308,30 @@ final class SC_Site_Intelligence_Plugin {
             'economy_resources' => 'Economy, Energy & Resources',
             'platform' => 'Platform',
         ];
+    }
+
+    private static function live_intelligence_channel_catalog() {
+        return [
+            'global' => 'Global Intelligence',
+            'earth-systems' => 'Earth Systems',
+            'weather-climate' => 'Weather and Climate',
+            'humanitarian' => 'Humanitarian Conditions',
+            'economy-energy-resources' => 'Economy, Energy and Resources',
+            'science-research' => 'Science and Research',
+            'infrastructure-resilience' => 'Infrastructure and Resilience',
+            'africa' => 'Africa',
+            'americas' => 'The Americas',
+            'asia-pacific' => 'Asia-Pacific',
+            'europe' => 'Europe',
+            'middle-east-north-africa' => 'Middle East and North Africa',
+        ];
+    }
+
+    private static function sanitize_live_intelligence_channel($value) {
+        $channel = sanitize_title((string) $value);
+        $aliases = ['all' => 'global', 'world' => 'global', 'earth' => 'earth-systems', 'weather' => 'weather-climate', 'climate' => 'weather-climate', 'economy' => 'economy-energy-resources', 'research' => 'science-research', 'science' => 'science-research', 'infrastructure' => 'infrastructure-resilience', 'mena' => 'middle-east-north-africa', 'apac' => 'asia-pacific'];
+        if (isset($aliases[$channel])) { $channel = $aliases[$channel]; }
+        return isset(self::live_intelligence_channel_catalog()[$channel]) ? $channel : 'global';
     }
 
     private static function live_intelligence_category_labels($options = null) {
@@ -371,7 +398,7 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v3.4.0 preserves placement, feed, readability, mobile, and theme choices while adding public signal context.
+        // v3.5.0 preserves placement, feed, readability, mobile, context, and theme choices while adding topic and regional channels.
         // The former 42-second default is migrated to the balanced 30-second preset.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
@@ -667,6 +694,9 @@ final class SC_Site_Intelligence_Plugin {
         $selected = isset($input['live_intelligence_selected_pages']) ? sanitize_text_field($input['live_intelligence_selected_pages']) : '';
         $output['live_intelligence_selected_pages'] = implode(',', array_filter(array_map('absint', preg_split('/[\s,]+/', $selected))));
         $output['live_intelligence_limit'] = (string) max(1, min(24, absint($input['live_intelligence_limit'] ?? 16)));
+        $output['live_intelligence_channel'] = self::sanitize_live_intelligence_channel($input['live_intelligence_channel'] ?? 'global');
+        $output['live_intelligence_region'] = sanitize_text_field((string) ($input['live_intelligence_region'] ?? ''));
+        $output['live_intelligence_country'] = sanitize_text_field((string) ($input['live_intelligence_country'] ?? ''));
         $feed_ids = self::sanitize_live_intelligence_feeds($input['live_intelligence_feeds'] ?? [], true);
         $output['live_intelligence_feeds'] = implode(',', $feed_ids);
         $output['live_intelligence_max_per_source'] = (string) max(1, min(5, absint($input['live_intelligence_max_per_source'] ?? 2)));
@@ -734,6 +764,9 @@ final class SC_Site_Intelligence_Plugin {
                 'feeds' => ['sanitize_callback' => 'sanitize_text_field'],
                 'exclude' => ['sanitize_callback' => 'sanitize_text_field'],
                 'max_per_source' => ['sanitize_callback' => 'absint'],
+                'channel' => ['sanitize_callback' => 'sanitize_title'],
+                'region' => ['sanitize_callback' => 'sanitize_text_field'],
+                'country' => ['sanitize_callback' => 'sanitize_text_field'],
             ],
         ]);
         register_rest_route(self::REST_NAMESPACE, '/live-intelligence/ranking-policy', [
@@ -744,6 +777,21 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/live-intelligence/context-policy', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_live_intelligence_context_policy'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/channels', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_channels'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/channel-policy', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_channel_policy'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/channels/(?P<channel_id>[a-z0-9\-]+)', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_channel'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/live-intelligence/signals/(?P<signal_id>[^/]+)', [
@@ -2597,11 +2645,17 @@ final class SC_Site_Intelligence_Plugin {
         $feeds = self::sanitize_live_intelligence_feeds((string) $request->get_param('feeds'), true);
         $exclude = self::sanitize_live_intelligence_feeds((string) $request->get_param('exclude'), false);
         $max_per_source = max(1, min(5, absint($request->get_param('max_per_source') ?: 2)));
+        $channel = self::sanitize_live_intelligence_channel((string) $request->get_param('channel'));
+        $region = sanitize_text_field((string) $request->get_param('region'));
+        $country = sanitize_text_field((string) $request->get_param('country'));
         $query = [
             'limit' => $limit,
             'feeds' => implode(',', $feeds),
             'max_per_source' => $max_per_source,
+            'channel' => $channel,
         ];
+        if ($region !== '') { $query['region'] = $region; }
+        if ($country !== '') { $query['country'] = $country; }
         if ($category !== '') {
             $query['category'] = $category;
         }
@@ -2622,6 +2676,22 @@ final class SC_Site_Intelligence_Plugin {
 
     public function rest_live_intelligence_context_policy(WP_REST_Request $request) {
         $result = $this->backend_request('public/live-intelligence/context-policy');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_channels(WP_REST_Request $request) {
+        $result = $this->backend_request('public/live-intelligence/channels');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_channel_policy(WP_REST_Request $request) {
+        $result = $this->backend_request('public/live-intelligence/channel-policy');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_channel(WP_REST_Request $request) {
+        $channel_id = self::sanitize_live_intelligence_channel((string) $request->get_param('channel_id'));
+        $result = $this->backend_request('public/live-intelligence/channels/' . rawurlencode($channel_id));
         return is_wp_error($result) ? $result : rest_ensure_response($result);
     }
 
@@ -2923,6 +2993,9 @@ final class SC_Site_Intelligence_Plugin {
         }
         $atts = shortcode_atts([
             'category' => '',
+            'channel' => (string) ($options['live_intelligence_channel'] ?? 'global'),
+            'region' => (string) ($options['live_intelligence_region'] ?? ''),
+            'country' => (string) ($options['live_intelligence_country'] ?? ''),
             'limit' => (string) ($options['live_intelligence_limit'] ?? '16'),
             'feeds' => (string) ($options['live_intelligence_feeds'] ?? self::defaults()['live_intelligence_feeds']),
             'exclude' => '',
@@ -2945,6 +3018,9 @@ final class SC_Site_Intelligence_Plugin {
             'detail_links' => (string) ($options['live_intelligence_detail_links'] ?? '1'),
         ], $atts, 'sc_live_intelligence');
         $category = sanitize_key((string) $atts['category']);
+        $channel = self::sanitize_live_intelligence_channel((string) $atts['channel']);
+        $region = sanitize_text_field((string) $atts['region']);
+        $country = sanitize_text_field((string) $atts['country']);
         $limit = max(1, min(24, absint($atts['limit'])));
         $allow_overrides = ($options['live_intelligence_shortcode_overrides'] ?? '1') === '1';
         $feeds = self::sanitize_live_intelligence_feeds(
@@ -2971,7 +3047,7 @@ final class SC_Site_Intelligence_Plugin {
         $classes = 'scsi-live-intelligence scsi-live-intelligence--electronic scsi-live-intelligence--' . $placement . ' scsi-live-intelligence--spacing-' . $spacing;
         ob_start();
         ?>
-        <section class="<?php echo esc_attr($classes); ?>" data-scsi-live-intelligence data-category="<?php echo esc_attr($category); ?>" data-limit="<?php echo esc_attr((string) $limit); ?>" data-feeds="<?php echo esc_attr(implode(',', $feeds)); ?>" data-exclude="<?php echo esc_attr(implode(',', $exclude)); ?>" data-max-per-source="<?php echo esc_attr((string) $max_per_source); ?>" data-motion="<?php echo esc_attr($motion); ?>" data-mobile-mode="<?php echo esc_attr($mobile_mode); ?>" data-mobile-interval="<?php echo esc_attr((string) $mobile_interval); ?>" data-show-sources="<?php echo esc_attr((string) $atts['show_sources']); ?>" data-show-updated="<?php echo esc_attr((string) $atts['show_updated']); ?>" data-show-cluster-sources="<?php echo esc_attr((string) $atts['show_cluster_sources']); ?>" data-selection-context="<?php echo esc_attr((string) $atts['selection_context']); ?>" data-detail-links="<?php echo esc_attr($detail_links); ?>" data-context-base="<?php echo esc_url($context_base); ?>" data-compact-sources="<?php echo esc_attr($compact_sources); ?>" data-text-limit="<?php echo esc_attr((string) $text_limit); ?>" data-category-labels="<?php echo esc_attr(wp_json_encode($category_labels)); ?>" style="--scsi-live-duration:<?php echo esc_attr((string) $speed); ?>s;--scsi-live-mobile-duration:<?php echo esc_attr((string) $mobile_speed); ?>s" aria-label="<?php echo esc_attr($label); ?>">
+        <section class="<?php echo esc_attr($classes); ?>" data-scsi-live-intelligence data-category="<?php echo esc_attr($category); ?>" data-channel="<?php echo esc_attr($channel); ?>" data-region="<?php echo esc_attr($region); ?>" data-country="<?php echo esc_attr($country); ?>" data-limit="<?php echo esc_attr((string) $limit); ?>" data-feeds="<?php echo esc_attr(implode(',', $feeds)); ?>" data-exclude="<?php echo esc_attr(implode(',', $exclude)); ?>" data-max-per-source="<?php echo esc_attr((string) $max_per_source); ?>" data-motion="<?php echo esc_attr($motion); ?>" data-mobile-mode="<?php echo esc_attr($mobile_mode); ?>" data-mobile-interval="<?php echo esc_attr((string) $mobile_interval); ?>" data-show-sources="<?php echo esc_attr((string) $atts['show_sources']); ?>" data-show-updated="<?php echo esc_attr((string) $atts['show_updated']); ?>" data-show-cluster-sources="<?php echo esc_attr((string) $atts['show_cluster_sources']); ?>" data-selection-context="<?php echo esc_attr((string) $atts['selection_context']); ?>" data-detail-links="<?php echo esc_attr($detail_links); ?>" data-context-base="<?php echo esc_url($context_base); ?>" data-compact-sources="<?php echo esc_attr($compact_sources); ?>" data-text-limit="<?php echo esc_attr((string) $text_limit); ?>" data-category-labels="<?php echo esc_attr(wp_json_encode($category_labels)); ?>" style="--scsi-live-duration:<?php echo esc_attr((string) $speed); ?>s;--scsi-live-mobile-duration:<?php echo esc_attr((string) $mobile_speed); ?>s" aria-label="<?php echo esc_attr($label); ?>">
             <div class="scsi-live-intelligence__label"><span class="scsi-live-intelligence__lamp" aria-hidden="true"></span><strong><?php echo esc_html(strtoupper($label)); ?></strong></div>
             <div class="scsi-live-intelligence__viewport" aria-live="polite" aria-busy="true">
                 <div class="scsi-live-intelligence__track"><span class="scsi-live-intelligence__connecting">CONNECTING TO SELECTED PUBLIC INTELLIGENCE FEEDS…</span></div>
@@ -3054,6 +3130,9 @@ final class SC_Site_Intelligence_Plugin {
                     <tr><th scope="row"><label for="scsi_live_scope">Top ticker scope</label></th><td><select id="scsi_live_scope" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_scope]"><option value="homepage" <?php selected($options['live_intelligence_scope'], 'homepage'); ?>>Homepage only</option><option value="selected" <?php selected($options['live_intelligence_scope'], 'selected'); ?>>Selected page IDs</option><option value="entire_site" <?php selected($options['live_intelligence_scope'], 'entire_site'); ?>>Entire site</option></select></td></tr>
                     <tr><th scope="row"><label for="scsi_live_pages">Selected page IDs</label></th><td><input id="scsi_live_pages" type="text" class="regular-text" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_selected_pages]" value="<?php echo esc_attr($options['live_intelligence_selected_pages']); ?>" placeholder="12, 84, 190" /><p class="description">Used only when the selected-page scope is active.</p></td></tr>
                     <tr><th scope="row"><label for="scsi_live_limit">Ticker signals</label></th><td><input id="scsi_live_limit" type="number" min="1" max="24" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_limit]" value="<?php echo esc_attr($options['live_intelligence_limit']); ?>" /></td></tr>
+                    <tr><th scope="row"><label for="scsi_live_channel">Default channel</label></th><td><select id="scsi_live_channel" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_channel]"><?php foreach (self::live_intelligence_channel_catalog() as $channel_id => $channel_label) : ?><option value="<?php echo esc_attr($channel_id); ?>" <?php selected(self::sanitize_live_intelligence_channel($options['live_intelligence_channel'] ?? 'global'), $channel_id); ?>><?php echo esc_html($channel_label); ?></option><?php endforeach; ?></select><p class="description">The automatic ticker uses this channel. Shortcodes may override it with <code>channel</code>, <code>region</code>, or <code>country</code>.</p></td></tr>
+                    <tr><th scope="row"><label for="scsi_live_region">Optional region</label></th><td><input id="scsi_live_region" type="text" class="regular-text" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_region]" value="<?php echo esc_attr($options['live_intelligence_region'] ?? ''); ?>" placeholder="africa, americas, asia-pacific, europe, mena" /></td></tr>
+                    <tr><th scope="row"><label for="scsi_live_country">Optional country</label></th><td><input id="scsi_live_country" type="text" class="regular-text" name="<?php echo esc_attr(self::OPTION_KEY); ?>[live_intelligence_country]" value="<?php echo esc_attr($options['live_intelligence_country'] ?? ''); ?>" placeholder="US or United States" /><p class="description">Geographic filters use source-supplied country, region, and location fields. Empty matches remain empty.</p><p><a href="<?php echo esc_url(rest_url(self::REST_NAMESPACE . '/live-intelligence/channels')); ?>" target="_blank" rel="noopener noreferrer">Open the public channel directory</a> · <a href="<?php echo esc_url(rest_url(self::REST_NAMESPACE . '/live-intelligence/channel-policy')); ?>" target="_blank" rel="noopener noreferrer">Open channel methodology</a></p></td></tr>
                     <tr>
                         <th scope="row">Displayed feeds</th>
                         <td>
@@ -3159,7 +3238,7 @@ final class SC_Site_Intelligence_Plugin {
             </script>
             <hr />
             <h2>Shortcodes</h2>
-            <p><code>[sc_live_intelligence]</code> — electronic board; supports <code>category</code>, <code>limit</code>, <code>feeds</code>, <code>exclude</code>, <code>max_per_source</code>, <code>speed</code>, <code>mobile_speed</code>, <code>mobile_mode</code>, <code>mobile_interval</code>, <code>spacing</code>, <code>text_limit</code>, <code>detail_links</code>, and <code>motion="off"</code>.</p>
+            <p><code>[sc_live_intelligence]</code> — electronic board; supports <code>channel</code>, <code>region</code>, <code>country</code>, <code>category</code>, <code>limit</code>, <code>feeds</code>, <code>exclude</code>, <code>max_per_source</code>, <code>speed</code>, <code>mobile_speed</code>, <code>mobile_mode</code>, <code>mobile_interval</code>, <code>spacing</code>, <code>text_limit</code>, <code>detail_links</code>, and <code>motion="off"</code>.</p>
             <p><code>[sc_site_intelligence_dashboard]</code></p>
             <p><code>[sc_site_intelligence_page]</code></p>
             <p><code>[sc_site_intelligence_unmapped]</code></p>

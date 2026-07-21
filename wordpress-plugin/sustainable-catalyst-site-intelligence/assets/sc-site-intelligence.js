@@ -3677,6 +3677,9 @@
       const position = root.querySelector('.scsi-live-intelligence__position');
       if (!viewport || !track || !cfg.restBase) return;
       const category = root.dataset.category || '';
+      const channel = root.dataset.channel || 'global';
+      const region = root.dataset.region || '';
+      const country = root.dataset.country || '';
       const limit = Math.max(1, Math.min(24, Number(root.dataset.limit || 16)));
       const feeds = root.dataset.feeds || '';
       const exclude = root.dataset.exclude || '';
@@ -3703,6 +3706,9 @@
       try { categoryLabels = JSON.parse(root.dataset.categoryLabels || '{}'); } catch (error) { categoryLabels = {}; }
       const params = new URLSearchParams({limit: String(limit), max_per_source: String(maxPerSource)});
       if (category) params.set('category', category);
+      if (channel) params.set('channel', channel);
+      if (region) params.set('region', region);
+      if (country) params.set('country', country);
       if (feeds) params.set('feeds', feeds);
       if (exclude) params.set('exclude', exclude);
       const endpoint = cfg.restBase + '/live-intelligence?' + params.toString();

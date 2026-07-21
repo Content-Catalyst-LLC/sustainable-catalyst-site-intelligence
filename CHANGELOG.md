@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.5.0 — Topic and Regional Channels
+
+- Added a public channel directory and channel methodology endpoint.
+- Added global, topic, regional, and country-filtered ticker feeds.
+- Added WordPress default-channel controls and shortcode `channel`, `region`, and `country` attributes.
+- Preserved feed selection, source operations, clustering, ranking, context pages, mobile navigation, placement reliability, and theme color boundaries.
+- Kept empty geographic matches explicit without silent global fallback.
+
 ## 3.4.0 — Signal Context and Drill-Down
 
 - Added public signal-context, evidence-record, context-policy, and standalone detail-view endpoints.

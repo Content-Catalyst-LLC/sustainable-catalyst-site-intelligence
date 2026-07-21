@@ -1,5 +1,24 @@
 # Sustainable Catalyst Site Intelligence
 
+## v3.5.0 — Topic and Regional Channels
+
+Site Intelligence v3.5.0 adds reusable global, topic, regional, and country-filtered Live Intelligence channels. The channel layer preserves source controls, clustering, ranking, signal context, evidence records, mobile navigation, placement reliability, caching, and Astra/theme boundaries. Empty geographic matches remain empty rather than silently falling back to unrelated global data.
+
+**Current release:** v3.5.0 — Connected Public Intelligence and Evidence Platform
+
+Primary v3.5.0 routes:
+
+- `/public/live-intelligence/channels`
+- `/public/live-intelligence/channel-policy`
+- `/public/live-intelligence/channels/{channel_id}`
+- `/public/live-intelligence/channels/{channel_id}/feed`
+
+## Previous release notes
+
+### v3.5.0 — Signal Context and Drill-Down
+
+The v3.4.0 signal-context capability remains preserved and version-aligned in v3.5.0.
+
 ## v3.4.0 — Signal Context and Drill-Down
 
 Site Intelligence v3.4.0 turns each Live Intelligence ticker item into a traceable research entry point. Public signal pages preserve source lineage, timestamps, location precision, ranking explanations, related workspace routes, term-overlap research suggestions, responsible-use boundaries, and downloadable SHA-256 evidence records. Ticker, source-operation, clustering, mobile, placement, and theme behavior remain intact.
