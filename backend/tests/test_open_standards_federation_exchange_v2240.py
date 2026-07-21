@@ -162,7 +162,7 @@ def test_public_and_admin_api_contracts(tmp_path):
         record = client.post("/admin/institutional-data-exchange/records", json={"institution_id": "open-lab", "record_id": "publication:1", "record_type": "publication", "title": "Open Brief", "license": "CC BY 4.0", "hosting_mode": "referenced", "visibility": "public"})
         assert record.status_code == 200
         public = client.get("/public/institutional-data-exchange")
-        assert public.status_code == 200 and public.json()["version"] == "3.8.0"
+        assert public.status_code == 200 and public.json()["version"] == "3.9.0"
         catalog = client.get("/public/institutional-data-exchange/catalog?format=jsonld")
         assert catalog.status_code == 200 and catalog.headers["content-type"].startswith("application/ld+json")
         control = client.get("/admin/institutional-data-exchange/control-center")

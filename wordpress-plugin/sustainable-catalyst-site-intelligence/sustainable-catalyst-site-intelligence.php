@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.8.0
+ * Version: 3.9.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.8.0';
+    const VERSION = '3.9.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -47,6 +47,9 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_live_intelligence_advisory', [$this, 'live_intelligence_advisory_shortcode']);
         add_shortcode('sc_live_intelligence_lab', [$this, 'live_intelligence_lab_shortcode']);
         add_shortcode('sc_live_intelligence_embed', [$this, 'live_intelligence_embed_shortcode']);
+        add_shortcode('sc_live_intelligence_watchlists', [$this, 'live_intelligence_watchlists_shortcode']);
+        add_shortcode('sc_live_intelligence_alerts', [$this, 'live_intelligence_alerts_shortcode']);
+        add_shortcode('sc_live_intelligence_digests', [$this, 'live_intelligence_digests_shortcode']);
         add_shortcode('sc_site_intelligence_dashboard', [$this, 'dashboard_shortcode']);
         add_shortcode('sc_site_intelligence_page', [$this, 'page_shortcode']);
         add_shortcode('sc_site_intelligence_unmapped', [$this, 'unmapped_shortcode']);
@@ -414,7 +417,7 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v3.8.0 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
+        // v3.9.0 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
         // Existing moving tickers remain moving unless an administrator selects static or manual presentation.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
@@ -859,6 +862,47 @@ final class SC_Site_Intelligence_Plugin {
             'callback' => [$this, 'rest_live_intelligence_embed_manifest'],
             'permission_callback' => '__return_true',
             'args' => ['surface' => ['sanitize_callback' => 'sanitize_key']],
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/subscriptions/policy', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_subscription_policy'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/subscriptions/preferences', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_subscription_preferences'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/subscriptions/status', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_subscription_status'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/subscriptions/catalog', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_subscription_catalog'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/subscriptions/alerts', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_subscription_alerts'],
+            'permission_callback' => '__return_true',
+            'args' => [
+                'watchlist_id' => ['sanitize_callback' => 'sanitize_text_field'],
+                'limit' => ['sanitize_callback' => 'absint'],
+            ],
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/subscriptions/digests', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_subscription_digests'],
+            'permission_callback' => '__return_true',
+            'args' => ['limit' => ['sanitize_callback' => 'absint']],
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/subscriptions/watchlists/(?P<watchlist_id>[a-z0-9_\-.:]+)/feed', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_subscription_feed'],
+            'permission_callback' => '__return_true',
+            'args' => ['format' => ['sanitize_callback' => 'sanitize_key']],
         ]);
         register_rest_route(self::REST_NAMESPACE, '/live-intelligence/rotation-policy', [
             'methods' => WP_REST_Server::READABLE,
@@ -2858,6 +2902,67 @@ final class SC_Site_Intelligence_Plugin {
         return is_wp_error($result) ? $result : rest_ensure_response($result);
     }
 
+    public function rest_live_intelligence_subscription_policy(WP_REST_Request $request) {
+        $result = $this->backend_request('public/live-intelligence/subscriptions/policy');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_subscription_preferences(WP_REST_Request $request) {
+        $result = $this->backend_request('public/live-intelligence/subscriptions/preferences');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_subscription_status(WP_REST_Request $request) {
+        $result = $this->backend_request('public/live-intelligence/subscriptions/status');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_subscription_catalog(WP_REST_Request $request) {
+        $result = $this->backend_request('public/live-intelligence/subscriptions/catalog');
+        if (is_wp_error($result)) {
+            return $result;
+        }
+        $options = self::options();
+        $backend = untrailingslashit((string) ($options['backend_url'] ?? ''));
+        if ($backend !== '' && isset($result['watchlists']) && is_array($result['watchlists'])) {
+            foreach ($result['watchlists'] as &$watchlist) {
+                if (!isset($watchlist['feed_urls']) || !is_array($watchlist['feed_urls'])) {
+                    continue;
+                }
+                foreach ($watchlist['feed_urls'] as $format => $feed_url) {
+                    $relative = (string) $feed_url;
+                    if ($relative !== '' && strpos($relative, '/') === 0) {
+                        $watchlist['feed_urls'][$format] = esc_url_raw($backend . $relative);
+                    }
+                }
+            }
+            unset($watchlist);
+        }
+        return rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_subscription_alerts(WP_REST_Request $request) {
+        $query = array_filter([
+            'watchlist_id' => sanitize_text_field((string) $request->get_param('watchlist_id')),
+            'limit' => absint($request->get_param('limit')) ?: 100,
+        ]);
+        $result = $this->backend_request('public/live-intelligence/subscriptions/alerts?' . http_build_query($query));
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_subscription_digests(WP_REST_Request $request) {
+        $limit = absint($request->get_param('limit')) ?: 50;
+        $result = $this->backend_request('public/live-intelligence/subscriptions/digests?limit=' . $limit);
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_subscription_feed(WP_REST_Request $request) {
+        $watchlist_id = sanitize_text_field((string) $request->get_param('watchlist_id'));
+        $format = sanitize_key((string) ($request->get_param('format') ?: 'json'));
+        $result = $this->backend_request('public/live-intelligence/subscriptions/watchlists/' . rawurlencode($watchlist_id) . '/feed?format=' . rawurlencode($format));
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
     public function rest_live_intelligence_rotation_policy(WP_REST_Request $request) {
         $result = $this->backend_request('public/live-intelligence/rotation-policy');
         return is_wp_error($result) ? $result : rest_ensure_response($result);
@@ -3354,6 +3459,46 @@ final class SC_Site_Intelligence_Plugin {
         return $this->live_intelligence_shortcode(array_merge(['surface' => 'external_embed', 'presentation' => 'static', 'motion' => 'off', 'mobile_mode' => 'stacked', 'limit' => '6', 'max_visible' => '8'], is_array($atts) ? $atts : []));
     }
 
+    private function live_intelligence_subscription_panel($kind, $atts = []) {
+        $kind = in_array($kind, ['watchlists', 'alerts', 'digests'], true) ? $kind : 'watchlists';
+        $defaults = [
+            'limit' => $kind === 'digests' ? '12' : '20',
+            'watchlist_id' => '',
+            'title' => $kind === 'watchlists' ? 'Live Intelligence Watchlists' : ($kind === 'alerts' ? 'Reviewed Live Intelligence Alerts' : 'Live Intelligence Digests'),
+        ];
+        $atts = shortcode_atts($defaults, is_array($atts) ? $atts : [], 'sc_live_intelligence_' . $kind);
+        $limit = max(1, min(absint($atts['limit']), 100));
+        $watchlist_id = sanitize_text_field((string) $atts['watchlist_id']);
+        $endpoint = rest_url(self::REST_NAMESPACE . '/live-intelligence/subscriptions/' . ($kind === 'watchlists' ? 'catalog' : $kind));
+        $params = ['limit' => $limit];
+        if ($kind === 'alerts' && $watchlist_id !== '') { $params['watchlist_id'] = $watchlist_id; }
+        if ($kind !== 'watchlists') { $endpoint = add_query_arg($params, $endpoint); }
+        ob_start();
+        ?>
+        <section class="scsi-card scsi-live-subscriptions scsi-live-subscriptions--<?php echo esc_attr($kind); ?>" data-scsi-live-subscriptions data-kind="<?php echo esc_attr($kind); ?>" data-endpoint="<?php echo esc_url($endpoint); ?>">
+            <p class="scsi-eyebrow">Live Intelligence · Human reviewed</p>
+            <h2><?php echo esc_html(sanitize_text_field((string) $atts['title'])); ?></h2>
+            <p class="scsi-muted">Loading governed public intelligence…</p>
+            <div class="scsi-live-subscriptions__output" aria-live="polite" aria-busy="true"></div>
+            <p class="scsi-live-subscriptions__boundary">Site Intelligence stores no subscriber profiles and performs no direct email delivery or automatic alert publication.</p>
+            <noscript><p><a href="<?php echo esc_url($endpoint); ?>">Open the public JSON endpoint.</a></p></noscript>
+        </section>
+        <?php
+        return ob_get_clean();
+    }
+
+    public function live_intelligence_watchlists_shortcode($atts = []) {
+        return $this->live_intelligence_subscription_panel('watchlists', $atts);
+    }
+
+    public function live_intelligence_alerts_shortcode($atts = []) {
+        return $this->live_intelligence_subscription_panel('alerts', $atts);
+    }
+
+    public function live_intelligence_digests_shortcode($atts = []) {
+        return $this->live_intelligence_subscription_panel('digests', $atts);
+    }
+
     public function settings_page() {
         if (!current_user_can('manage_options')) {
             return;
@@ -3536,7 +3681,7 @@ final class SC_Site_Intelligence_Plugin {
             </script>
             <hr />
             <h2>Shortcodes</h2>
-            <p><code>[sc_live_intelligence]</code> — governed signal surface; supports <code>channel</code>, <code>region</code>, <code>country</code>, <code>category</code>, <code>limit</code>, <code>feeds</code>, <code>exclude</code>, <code>max_per_source</code>, presentation controls, and <code>surface</code> values <code>homepage</code>, <code>static_strip</code>, <code>channel</code>, <code>publication</code>, <code>library</code>, <code>advisory</code>, <code>lab</code>, or <code>external_embed</code>. Preset aliases: <code>[sc_live_intelligence_static]</code>, <code>[sc_live_intelligence_channel]</code>, <code>[sc_live_intelligence_publication]</code>, <code>[sc_live_intelligence_library]</code>, <code>[sc_live_intelligence_advisory]</code>, <code>[sc_live_intelligence_lab]</code>, and <code>[sc_live_intelligence_embed]</code>.</p>
+            <p><code>[sc_live_intelligence]</code> — governed signal surface; supports <code>channel</code>, <code>region</code>, <code>country</code>, <code>category</code>, <code>limit</code>, <code>feeds</code>, <code>exclude</code>, <code>max_per_source</code>, presentation controls, and <code>surface</code> values <code>homepage</code>, <code>static_strip</code>, <code>channel</code>, <code>publication</code>, <code>library</code>, <code>advisory</code>, <code>lab</code>, or <code>external_embed</code>. Preset aliases: <code>[sc_live_intelligence_static]</code>, <code>[sc_live_intelligence_channel]</code>, <code>[sc_live_intelligence_publication]</code>, <code>[sc_live_intelligence_library]</code>, <code>[sc_live_intelligence_advisory]</code>, <code>[sc_live_intelligence_lab]</code>, and <code>[sc_live_intelligence_embed]</code>. Reviewed subscription surfaces: <code>[sc_live_intelligence_watchlists]</code>, <code>[sc_live_intelligence_alerts]</code>, and <code>[sc_live_intelligence_digests]</code>.</p>
             <p><code>[sc_site_intelligence_dashboard]</code></p>
             <p><code>[sc_site_intelligence_page]</code></p>
             <p><code>[sc_site_intelligence_unmapped]</code></p>

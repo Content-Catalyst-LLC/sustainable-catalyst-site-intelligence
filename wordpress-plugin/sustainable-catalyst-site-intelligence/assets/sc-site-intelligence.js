@@ -4108,8 +4108,65 @@
       window.setInterval(load, refreshInterval);
     });
   }
+  function setupLiveIntelligenceSubscriptions() {
+    document.querySelectorAll('[data-scsi-live-subscriptions]').forEach(function (root) {
+      const output = root.querySelector('.scsi-live-subscriptions__output');
+      const endpoint = root.dataset.endpoint || '';
+      const kind = root.dataset.kind || 'watchlists';
+      if (!output || !endpoint) return;
+      const link = function (href, label) {
+        const safeHref = sanitizeHref(href || '');
+        return safeHref ? '<a class="scsi-live-subscriptions__action" href="' + escapeHtml(safeHref) + '">' + escapeHtml(label) + '</a>' : '';
+      };
+      const watchlistCard = function (item) {
+        const feeds = item.feed_urls || {};
+        return '<article class="scsi-live-subscriptions__item">' +
+          '<p class="scsi-live-subscriptions__meta">' + escapeHtml(String(item.cadence || 'manual').toUpperCase()) + ' · ' + escapeHtml(String(item.rule_count || 0)) + ' rules</p>' +
+          '<h3>' + escapeHtml(item.title || 'Public watchlist') + '</h3>' +
+          '<p>' + escapeHtml(item.summary || '') + '</p>' +
+          '<p class="scsi-live-subscriptions__tags">' + (Array.isArray(item.rule_summary) ? item.rule_summary.map(function (value) { return '<span>' + escapeHtml(value) + '</span>'; }).join('') : '') + '</p>' +
+          '<p class="scsi-live-subscriptions__actions">' + link(feeds.json, 'JSON feed') + link(feeds.rss, 'RSS') + link(feeds.atom, 'Atom') + '</p>' +
+          '</article>';
+      };
+      const alertCard = function (item) {
+        const signal = item.signal || {};
+        const primary = signal.primary_destination || {};
+        return '<article class="scsi-live-subscriptions__item">' +
+          '<p class="scsi-live-subscriptions__meta">' + escapeHtml(item.watchlist_title || 'Reviewed watchlist') + ' · ' + escapeHtml(signal.freshness_state || 'unknown') + '</p>' +
+          '<h3>' + escapeHtml(signal.label || 'Live Intelligence signal') + '</h3>' +
+          '<p class="scsi-live-subscriptions__value">' + escapeHtml(signal.value || '') + '</p>' +
+          '<p>' + escapeHtml(item.interpretation || '') + '</p>' +
+          '<p class="scsi-live-subscriptions__actions">' + link(signal.context_url || primary.url, primary.label || 'Open context') + link(signal.source_url, 'Primary source') + '</p>' +
+          '</article>';
+      };
+      const digestCard = function (item) {
+        return '<article class="scsi-live-subscriptions__item">' +
+          '<p class="scsi-live-subscriptions__meta">' + escapeHtml(String(item.period || 'manual').toUpperCase()) + ' · ' + escapeHtml(String(item.alert_count || 0)) + ' reviewed alerts</p>' +
+          '<h3>' + escapeHtml(item.title || 'Live Intelligence digest') + '</h3>' +
+          '<p>' + escapeHtml(item.summary || '') + '</p>' +
+          '</article>';
+      };
+      fetchJson(endpoint).then(function (data) {
+        const items = kind === 'watchlists' ? (data.watchlists || []) : kind === 'alerts' ? (data.alerts || []) : (data.digests || []);
+        if (!Array.isArray(items) || !items.length) {
+          output.innerHTML = '<p class="scsi-live-subscriptions__empty">No reviewed public ' + escapeHtml(kind) + ' are available yet.</p>';
+        } else {
+          const render = kind === 'watchlists' ? watchlistCard : kind === 'alerts' ? alertCard : digestCard;
+          output.innerHTML = '<div class="scsi-live-subscriptions__grid">' + items.map(render).join('') + '</div>';
+        }
+        output.setAttribute('aria-busy', 'false');
+        const muted = root.querySelector('.scsi-muted');
+        if (muted) muted.textContent = kind === 'watchlists' ? 'Published watch definitions with public feed access.' : kind === 'alerts' ? 'Human-reviewed matches only; no automatic emergency claims.' : 'Human-reviewed intelligence summaries prepared for public use.';
+      }).catch(function () {
+        output.innerHTML = '<p class="scsi-live-subscriptions__empty">Reviewed Live Intelligence is temporarily unavailable.</p>';
+        output.setAttribute('aria-busy', 'false');
+      });
+    });
+  }
+
   function init() {
     setupActivePageLinks();
+    setupLiveIntelligenceSubscriptions();
     setupLaunchActions();
     setupResponsiveEmbeds();
     setupLiveIntelligence();

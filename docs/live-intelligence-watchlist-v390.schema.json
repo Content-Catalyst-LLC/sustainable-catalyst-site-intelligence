@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/live-intelligence-watchlist-v390.schema.json",
+  "title": "Live Intelligence Watchlist",
+  "type": "object",
+  "required": ["schema", "release_version", "watchlist_id", "title", "enabled", "visibility", "surface", "rules", "match_mode", "cadence", "automatic_publication", "subscriber_profiles_stored"],
+  "properties": {
+    "schema": {"const": "sc-site-intelligence-live-intelligence-watchlist/1.0"},
+    "release_version": {"const": "3.9.0"},
+    "watchlist_id": {"type": "string", "minLength": 1, "maxLength": 180},
+    "title": {"type": "string", "minLength": 1, "maxLength": 240},
+    "summary": {"type": "string", "maxLength": 2000},
+    "enabled": {"type": "boolean"},
+    "visibility": {"enum": ["private", "public"]},
+    "surface": {"enum": ["homepage", "static_strip", "channel", "publication", "library", "advisory", "lab", "external_embed"]},
+    "match_mode": {"enum": ["all", "any"]},
+    "cadence": {"enum": ["manual", "hourly", "daily", "weekly"]},
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "required": ["rule_id", "type", "value"],
+        "properties": {
+          "rule_id": {"type": "string"},
+          "type": {"enum": ["signal_id", "signal_family", "source_id", "freshness_state", "destination_type", "geography_scope", "geography_code", "numeric_above", "numeric_below", "text_contains"]},
+          "value": {},
+          "label": {"type": "string"}
+        },
+        "additionalProperties": false
+      }
+    },
+    "automatic_publication": {"const": false},
+    "automatic_delivery": {"const": false},
+    "subscriber_profiles_stored": {"const": false},
+    "email_delivery": {"const": false},
+    "webhook_delivery": {"const": false},
+    "emergency_dispatch": {"const": false}
+  },
+  "additionalProperties": true
+}

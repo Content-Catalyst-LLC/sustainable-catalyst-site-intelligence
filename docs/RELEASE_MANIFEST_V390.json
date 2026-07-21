@@ -1,0 +1,30 @@
+{
+  "schema": "sc-site-intelligence-release-governance/1.0",
+  "version": "3.9.0",
+  "release": "Signal Subscriptions, Alerts, and Scheduled Intelligence",
+  "canonical_live_intelligence_signals": true,
+  "supported_cadences": ["manual", "hourly", "daily", "weekly"],
+  "supported_rule_types": [
+    "signal_id",
+    "signal_family",
+    "source_id",
+    "freshness_state",
+    "destination_type",
+    "geography_scope",
+    "geography_code",
+    "numeric_above",
+    "numeric_below",
+    "text_contains"
+  ],
+  "supported_public_feed_formats": ["json", "rss", "atom"],
+  "subscriber_profiles_stored": false,
+  "recipient_identities_stored": false,
+  "direct_email_delivery": false,
+  "webhook_delivery": false,
+  "automatic_publication": false,
+  "automated_emergency_authority": false,
+  "human_review_required_for_public_alerts": true,
+  "human_review_required_for_public_digests": true,
+  "provider_neutral_handoffs": true,
+  "advertising_or_affiliate_delivery": false
+}

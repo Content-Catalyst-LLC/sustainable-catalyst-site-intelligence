@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.9.0 — Signal Subscriptions, Alerts, and Scheduled Intelligence
+
+- Added governed Live Intelligence watchlists and deterministic scheduled evaluation.
+- Added human-reviewed alerts, digests, JSON/RSS/Atom feeds, and provider-neutral communications handoffs.
+- Explicitly excluded subscriber profiles, recipient identities, direct email, webhooks, automatic publication, and emergency dispatch.
+- Added WordPress watchlist, alert, and digest panels.
+
 ## 3.8.0 — Connected Live Intelligence Surface
 
 - Added one governed surface registry for homepage, static, channel, publication, Library, Advisory, Lab, and external embed use.

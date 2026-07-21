@@ -29,7 +29,7 @@ def test_v2140_wordpress_and_javascript_publish_temporal_surfaces() -> None:
     plugin = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text(encoding="utf-8")
     javascript = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js").read_text(encoding="utf-8")
 
-    assert "Version: 3.8.0" in plugin
+    assert "Version: 3.9.0" in plugin
     assert "sc_public_temporal_intelligence" in plugin
     assert "sc_historical_archive_control_center" in plugin
     assert "public-temporal-intelligence" in plugin
