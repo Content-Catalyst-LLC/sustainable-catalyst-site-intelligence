@@ -1,0 +1,25 @@
+{
+  "product": "Sustainable Catalyst Site Intelligence",
+  "version": "3.19.0",
+  "increment": "Registry Governance, Challenges, Revocation, and Appeals",
+  "backend_module": "backend/app/live_intelligence_registry_governance_v3190.py",
+  "wordpress_shortcode": "[sc_live_intelligence_registry_governance]",
+  "public_routes": [
+    "/public/live-intelligence/registry-governance/policy",
+    "/public/live-intelligence/registry-governance/status",
+    "/public/live-intelligence/registry-governance/challenges",
+    "/public/live-intelligence/registry-governance/appeals",
+    "/public/live-intelligence/registry-governance/institutions/{institution_id}"
+  ],
+  "governance": {
+    "append_only_governance_ledger": true,
+    "original_registry_records_retained": true,
+    "prior_attestations_retained": true,
+    "separation_of_duties_required": true,
+    "automatic_enforcement_performed": false,
+    "network_verification_performed": false,
+    "remote_write_performed": false,
+    "archive_or_evidence_mutated": false,
+    "certification_claimed": false
+  }
+}

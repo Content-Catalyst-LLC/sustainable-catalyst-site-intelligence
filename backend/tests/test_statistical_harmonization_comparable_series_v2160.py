@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 def settings(tmp_path: Path) -> Settings:
     root = tmp_path / "harmonization"
     return Settings(
-        version="3.18.0",
+        version="3.19.0",
         statistical_harmonization_root_path=str(root),
         statistical_harmonization_series_index_path=str(root / "series.jsonl"),
         statistical_harmonization_lineage_path=str(root / "lineage.jsonl"),

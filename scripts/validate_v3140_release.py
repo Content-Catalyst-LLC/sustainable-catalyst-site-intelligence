@@ -1,7 +1,7 @@
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 requirements = {
-    "backend/app/version.py": ['APP_VERSION = "3.18.0"'],
+    "backend/app/version.py": ['APP_VERSION = "3.19.0"'],
     "backend/app/live_intelligence_change_history_v3140.py": [
         "POLICY_SCHEMA_VERSION", "NOTICE_SCHEMA_VERSION", "HANDOFF_SCHEMA_VERSION",
         "class LiveIntelligenceChangeHistoryCenter", "def prepare_notice(",
@@ -29,7 +29,7 @@ requirements = {
         "SC_SI_LIVE_INTELLIGENCE_CHANGE_HISTORY_REQUIRE_SEPARATION_OF_DUTIES",
     ],
     "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": [
-        "Version: 3.18.0", "sc_live_intelligence_change_history",
+        "Version: 3.19.0", "sc_live_intelligence_change_history",
         "rest_live_intelligence_change_history_policy",
         "rest_live_intelligence_change_history_status",
         "preserves the original record",
@@ -37,10 +37,10 @@ requirements = {
     "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js": [
         "setupLiveIntelligenceChangeHistory", "Original release retained", "No destination deletion",
     ],
-    "README.md": ["v3.18.0 — Corrections, Retractions, and Public Change History"],
+    "README.md": ["v3.19.0 — Corrections, Retractions, and Public Change History"],
     "RELEASE_NOTES_SITE_INTELLIGENCE_V3140.md": ["Corrections, Retractions", "append-only", "original release"],
     "docs/RELEASE_MANIFEST_V3140.json": [
-        '"version": "3.18.0"', '"original_release_retained": true',
+        '"version": "3.19.0"', '"original_release_retained": true',
         '"append_only_history": true', '"deletion_performed": false',
     ],
     "docs/live-intelligence-change-history-v3140.schema.json": [
@@ -55,4 +55,4 @@ for relative, needles in requirements.items():
     for needle in needles:
         if needle not in text:
             raise SystemExit(f"Missing {needle!r} in {relative}")
-print("Site Intelligence v3.18.0 release contract passed.")
+print("Site Intelligence v3.19.0 release contract passed.")

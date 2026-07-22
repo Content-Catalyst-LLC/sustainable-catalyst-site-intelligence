@@ -1,10 +1,10 @@
-# Site Intelligence v3.18.0 Install and Test
+# Site Intelligence v3.19.0 Install and Test
 
 ## Install
 
 ```bash
 cd ~/Downloads
-unzip -o sustainable-catalyst-site-intelligence-v3.18.0-release-bundle.zip
+unzip -o sustainable-catalyst-site-intelligence-v3.19.0-release-bundle.zip
 chmod +x install_and_push_site_intelligence_v3_18_0.sh
 ./install_and_push_site_intelligence_v3_18_0.sh
 ```
@@ -19,7 +19,7 @@ SC_SI_FULL_TESTS=1 ./install_and_push_site_intelligence_v3_18_0.sh
 
 ## WordPress
 
-Install `sustainable-catalyst-site-intelligence-v3.18.0-wordpress.zip`, then place:
+Install `sustainable-catalyst-site-intelligence-v3.19.0-wordpress.zip`, then place:
 
 ```text
 [sc_live_intelligence_preservation_registry]

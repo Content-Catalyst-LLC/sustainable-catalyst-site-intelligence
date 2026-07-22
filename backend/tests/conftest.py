@@ -27,6 +27,7 @@ _RUNTIME_DIRS = [
     "model_governance_v2170",
     "statistical_harmonization_v2160",
     "spatial_evidence_v2150",
+    "live_intelligence_registry_governance_v3190",
 ]
 _RUNTIME_FILES = [
     "country_last_known_good.json",

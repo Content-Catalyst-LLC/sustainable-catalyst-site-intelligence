@@ -38,6 +38,6 @@ files=[]
 for path in sorted((p for p in ROOT.rglob('*') if p.is_file() and included(p)), key=lambda p:p.relative_to(ROOT).as_posix()):
     data=path.read_bytes()
     files.append({'path':path.relative_to(ROOT).as_posix(),'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()})
-manifest={'schema':'sc-site-intelligence-release-manifest/1.0','release':'3.18.0','release_name':'Editorial Workspace, Review Queues, and Publication Orchestration','file_count':len(files),'files':files}
+manifest={'schema':'sc-site-intelligence-release-manifest/1.0','release':'3.19.0','release_name':'Editorial Workspace, Review Queues, and Publication Orchestration','file_count':len(files),'files':files}
 (ROOT/'MANIFEST.json').write_text(json.dumps(manifest,indent=2)+'\n',encoding='utf-8')
 print(f"Wrote {len(files)}-file immutable release manifest.")

@@ -1,0 +1,23 @@
+Sustainable Catalyst Site Intelligence v3.19.0
+Registry Governance, Challenges, Revocation, and Appeals
+
+Validation summary
+- Complete backend regression: 800 tests passed
+- Focused preservation-governance integration gate: 89 tests passed
+- Python syntax/AST validation: 345 files
+- JSON validation: 104 files
+- Unique application HTML IDs: 672
+- JavaScript syntax: passed
+- WordPress PHP syntax: passed
+- v3.19.0 release contract: passed
+- Immutable manifest: 830 files verified
+- Installer rehearsal: passed against a disposable local Git remote
+
+Governance verification
+- Challenges are append-only and evidence-linked.
+- Review and approval require separate human roles.
+- Suspension and revocation append new institution states; prior records are retained.
+- Prior attestations remain stored but inactive institutions are excluded from current consensus.
+- Appeals require independent review and approval before reinstatement.
+- Private challenges and appeals remain excluded from public results.
+- No automatic enforcement, network verification, remote write, deletion, credential storage, or certification claim is performed.

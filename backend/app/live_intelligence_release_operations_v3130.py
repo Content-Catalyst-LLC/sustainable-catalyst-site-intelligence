@@ -1,6 +1,6 @@
 """Release monitoring, rollback, and post-publication governance.
 
-Site Intelligence v3.18.0 records externally performed publication deployments,
+Site Intelligence v3.19.0 records externally performed publication deployments,
 verifies immutable release checksums and public safeguards, prepares controlled
 rollback and correction packages, and retains auditable manual handoff receipts.
 It never performs a destination write, deployment, rollback, deletion, or

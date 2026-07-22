@@ -13,7 +13,7 @@ def settings(**kwargs):
 
 def test_overview_and_cache_plan_preserve_offline_limits():
     out=module.build_overview(settings());plan=module.build_cache_plan(settings())
-    assert out["version"]=="3.18.0" and out["privacy"]["server_profile_storage_added"] is False
+    assert out["version"]=="3.19.0" and out["privacy"]["server_profile_storage_added"] is False
     assert plan["enabled"] is True and plan["limits"]["maximum_entries"]==120
     assert plan["strategies"]["writes"]=="network-only"
 
@@ -32,4 +32,4 @@ def test_frontend_and_wordpress_contract():
     html=(ROOT/"backend/public_app/index.html").read_text();js=(ROOT/"backend/public_app/assets/experience-v2120.js").read_text();sw=(ROOT/"backend/public_app/service-worker.js").read_text();php=(ROOT/"wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
     assert 'data-route="experience"' in html and 'id="offlineExperienceStudio"' in html and 'rel="manifest"' in html
     assert "SCExperienceV2120" in js and 'request.method!=="GET"' in sw
-    assert "Version: 3.18.0" in php and "sc_offline_mobile_accessibility_performance" in php
+    assert "Version: 3.19.0" in php and "sc_offline_mobile_accessibility_performance" in php

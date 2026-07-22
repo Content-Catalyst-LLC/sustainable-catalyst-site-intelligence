@@ -1,4 +1,4 @@
-# Site Intelligence v3.18.0
+# Site Intelligence v3.19.0
 
 ## Preservation Interoperability, External Verification, and Institutional Exchange
 

@@ -4457,6 +4457,43 @@
     });
   }
 
+  function setupLiveIntelligenceRegistryGovernance() {
+    document.querySelectorAll('[data-scsi-live-registry-governance]').forEach(function (root) {
+      const output = root.querySelector('.scsi-live-registry-governance__output');
+      const policyEndpoint = root.dataset.policyEndpoint || '';
+      const statusEndpoint = root.dataset.statusEndpoint || '';
+      const challengesEndpoint = root.dataset.challengesEndpoint || '';
+      const appealsEndpoint = root.dataset.appealsEndpoint || '';
+      if (!output || !policyEndpoint || !statusEndpoint || !challengesEndpoint || !appealsEndpoint) return;
+      Promise.all([policyEndpoint, statusEndpoint, challengesEndpoint, appealsEndpoint].map(fetchJson)).then(function (responses) {
+        const policy = responses[0] || {};
+        const status = responses[1] || {};
+        const challenges = Array.isArray((responses[2] || {}).challenges) ? responses[2].challenges : [];
+        const appeals = Array.isArray((responses[3] || {}).appeals) ? responses[3].appeals : [];
+        const metrics = [
+          ['Public challenges', status.public_challenge_count || 0],
+          ['Open reviews', status.open_challenge_count || 0],
+          ['Public appeals', status.public_appeal_count || 0],
+          ['Suspended / revoked', (status.suspended_institution_count || 0) + (status.revoked_institution_count || 0)]
+        ];
+        output.innerHTML = '<div class="scsi-live-subscriptions__metrics">' + metrics.map(function (metric) {
+          return '<div><strong>' + escapeHtml(metric[1]) + '</strong><span>' + escapeHtml(metric[0]) + '</span></div>';
+        }).join('') + '</div>' +
+          '<p class="scsi-live-subscriptions__tags"><span>Append-only decisions</span><span>Independent review</span><span>Appeal pathway</span><span>No record deletion</span></p>' +
+          (challenges.length ? '<div class="scsi-live-subscriptions__list">' + challenges.map(function (challenge) {
+            return '<article class="scsi-live-subscriptions__item"><p class="scsi-live-subscriptions__meta">' + escapeHtml(String(challenge.resolution_action || challenge.challenge_type || 'governance review').replaceAll('_', ' ').toUpperCase()) + '</p><h3>' + escapeHtml(challenge.institution_name || 'Preservation institution') + '</h3><p>' + escapeHtml(challenge.summary || 'Public registry governance decision') + '</p></article>';
+          }).join('') + '</div>' : '<p class="scsi-live-subscriptions__empty">No approved public registry challenges have been published.</p>') +
+          (appeals.length ? '<p class="scsi-live-subscriptions__boundary">' + escapeHtml(String(appeals.length)) + ' public appeal outcome(s) are available. Original decisions and prior attestations remain retained.</p>' : '');
+        output.setAttribute('aria-busy', 'false');
+        const muted = root.querySelector('.scsi-muted');
+        if (muted) muted.textContent = policy.principle || 'Evidence-based registry challenges, status decisions, and appeals with preserved history.';
+      }).catch(function () {
+        output.innerHTML = '<p class="scsi-live-subscriptions__empty">Registry governance status is temporarily unavailable.</p>';
+        output.setAttribute('aria-busy', 'false');
+      });
+    });
+  }
+
   function init() {
     setupActivePageLinks();
     setupLiveIntelligenceSubscriptions();
@@ -4468,6 +4505,7 @@
     setupLiveIntelligenceArchiveAudits();
     setupLiveIntelligencePreservationExchange();
     setupLiveIntelligencePreservationRegistry();
+    setupLiveIntelligenceRegistryGovernance();
     setupLaunchActions();
     setupResponsiveEmbeds();
     setupLiveIntelligence();

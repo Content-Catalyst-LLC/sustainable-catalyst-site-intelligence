@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/live-intelligence-registry-governance-v3190.schema.json",
+  "title": "Live Intelligence Registry Governance",
+  "description": "Public-safe append-only registry challenge, status decision, and appeal records.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "release_version", "institution_id", "current_status", "challenges", "appeals", "governance_sha256"],
+  "properties": {
+    "schema": {"const": "sc-site-intelligence-institution-governance-summary/1.0"},
+    "release_version": {"const": "3.19.0"},
+    "institution_id": {"type": "string", "minLength": 1},
+    "institution_name": {"type": ["string", "null"]},
+    "current_status": {"enum": ["approved", "suspended", "revoked"]},
+    "current_trust_profile": {"enum": ["declared", "policy_reviewed", "verified_exchange_partner"]},
+    "institution_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "challenge_count": {"type": "integer", "minimum": 0},
+    "appeal_count": {"type": "integer", "minimum": 0},
+    "challenges": {"type": "array", "items": {"type": "object"}},
+    "appeals": {"type": "array", "items": {"type": "object"}},
+    "original_registry_records_retained": {"const": true},
+    "prior_attestations_retained": {"const": true},
+    "inactive_institutions_excluded_from_current_consensus": {"type": "boolean"},
+    "automatic_enforcement_performed": {"const": false},
+    "remote_write_performed": {"const": false},
+    "certification_claimed": {"const": false},
+    "governance_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}
