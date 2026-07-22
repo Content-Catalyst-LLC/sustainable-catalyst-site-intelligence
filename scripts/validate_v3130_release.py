@@ -1,7 +1,7 @@
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 requirements={
-    "backend/app/version.py": ['APP_VERSION = "3.16.0"'],
+    "backend/app/version.py": ['APP_VERSION = "3.17.0"'],
     "backend/app/live_intelligence_release_operations_v3130.py": [
         "POLICY_SCHEMA_VERSION", "DEPLOYMENT_SCHEMA_VERSION", "ISSUE_SCHEMA_VERSION",
         "CORRECTION_SCHEMA_VERSION", "ROLLBACK_SCHEMA_VERSION",
@@ -33,7 +33,7 @@ requirements={
         "SC_SI_LIVE_INTELLIGENCE_RELEASE_OPERATIONS_REQUIRE_SEPARATION_OF_DUTIES",
     ],
     "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": [
-        "Version: 3.16.0", "sc_live_intelligence_release_operations",
+        "Version: 3.17.0", "sc_live_intelligence_release_operations",
         "rest_live_intelligence_release_operations_policy",
         "rest_live_intelligence_release_operations_status",
         "performs no deployment, rollback, deletion, network verification, or destination write",
@@ -42,12 +42,12 @@ requirements={
         "setupLiveIntelligenceReleaseOperations", "Deployment receipts", "Verified deployments",
         "No deployment or rollback write",
     ],
-    "README.md": ["v3.16.0 — Release Monitoring, Rollback, and Post-Publication Governance"],
+    "README.md": ["v3.17.0 — Release Monitoring, Rollback, and Post-Publication Governance"],
     "RELEASE_NOTES_SITE_INTELLIGENCE_V3130.md": ["Release Monitoring", "rollback manifests", "Private corrections"],
     "SITE_INTELLIGENCE_V3130_BUILD_VALIDATION.txt": ["RESULT: PASS", "729 tests passed", "21 tests passed", "No network verification"],
     "SITE_INTELLIGENCE_V3130_INSTALL_AND_TEST.md": ["SC_SI_FULL_TESTS=1", "sc_live_intelligence_release_operations"],
     "docs/RELEASE_MANIFEST_V3130.json": [
-        '"version": "3.16.0"', '"network_fetch_performed": false',
+        '"version": "3.17.0"', '"network_fetch_performed": false',
         '"deployment_performed": false', '"rollback_performed": false',
         '"destination_write_performed": false',
     ],
@@ -61,4 +61,4 @@ for relative,needles in requirements.items():
     text=path.read_text(encoding="utf-8")
     for needle in needles:
         if needle not in text: raise SystemExit(f"Missing {needle!r} in {relative}")
-print("Site Intelligence v3.16.0 release contract passed.")
+print("Site Intelligence v3.17.0 release contract passed.")

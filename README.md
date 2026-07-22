@@ -1,25 +1,29 @@
 # Sustainable Catalyst Site Intelligence
 
-**Current release:** v3.16.0 — Connected Public Intelligence and Evidence Platform
+## v3.17.0 — Preservation Interoperability, External Verification, and Institutional Exchange
+
+Approved custody packages can now be prepared as standards-aligned, checksum-verifiable institutional exchange records with human-reported external verification receipts and no remote write authority.
+
+**Current release:** v3.17.0 — Connected Public Intelligence and Evidence Platform
 
 **Current Live Intelligence increment:** Archive Verification, Preservation Audits, and Institutional Custody
 
 ### Current integrated Live Intelligence capabilities
 
-- v3.16.0 — Signal Context and Drill-Down
-- v3.16.0 — Topic and Regional Channels
-- v3.16.0 — Homepage Intelligence Gateway
-- v3.16.0 — Signal Relevance and Rotation Intelligence
-- v3.16.0 — Analytics and Public-Value Measurement
-- v3.16.0 — Connected Live Intelligence Surface
-- v3.16.0 — Signal Subscriptions, Alerts, and Scheduled Intelligence
-- v3.16.0 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
-- v3.16.0 — Editorial Workspace, Review Queues, and Publication Orchestration
-- v3.16.0 — Publication Adapters, Institutional Handoffs, and Release Governance
-- v3.16.0 — Release Monitoring, Rollback, and Post-Publication Governance
-- v3.16.0 — Corrections, Retractions, and Public Change History
-- v3.16.0 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
-- v3.16.0 — Archive Verification, Preservation Audits, and Institutional Custody
+- v3.17.0 — Signal Context and Drill-Down
+- v3.17.0 — Topic and Regional Channels
+- v3.17.0 — Homepage Intelligence Gateway
+- v3.17.0 — Signal Relevance and Rotation Intelligence
+- v3.17.0 — Analytics and Public-Value Measurement
+- v3.17.0 — Connected Live Intelligence Surface
+- v3.17.0 — Signal Subscriptions, Alerts, and Scheduled Intelligence
+- v3.17.0 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
+- v3.17.0 — Editorial Workspace, Review Queues, and Publication Orchestration
+- v3.17.0 — Publication Adapters, Institutional Handoffs, and Release Governance
+- v3.17.0 — Release Monitoring, Rollback, and Post-Publication Governance
+- v3.17.0 — Corrections, Retractions, and Public Change History
+- v3.17.0 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
+- v3.17.0 — Archive Verification, Preservation Audits, and Institutional Custody
 
 ## v3.13.0 — Release Monitoring, Rollback, and Post-Publication Governance
 
@@ -1281,18 +1285,18 @@ For durable source health and history across Render deploys, redirect `SC_SI_LIV
 Live Intelligence now turns approved editorial workspaces into checksum-verified release candidates and adapter-specific packages for Publications, the Knowledge Library, Decision Studio, WordPress manual import, and direct download. Validation and separate release approval are required before package export or manual handoff. No adapter writes to a destination, stores credentials, or includes recipient identities.
 
 
-## v3.16.0 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
+## v3.17.0 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
 
-Site Intelligence v3.16.0 preserves approved public briefings, publication releases, and public change notices as checksum-bound, append-only archival records with source snapshots, retention classes, chain lineage, preservation manifests, human verification and approval, JSON/Markdown packages, and manual custody handoffs. It performs no source mutation, archive deletion, destination write, remote deposit, credential storage, or recipient profiling.
+Site Intelligence v3.17.0 preserves approved public briefings, publication releases, and public change notices as checksum-bound, append-only archival records with source snapshots, retention classes, chain lineage, preservation manifests, human verification and approval, JSON/Markdown packages, and manual custody handoffs. It performs no source mutation, archive deletion, destination write, remote deposit, credential storage, or recipient profiling.
 
-## v3.16.0 — Corrections, Retractions, and Public Change History
+## v3.17.0 — Corrections, Retractions, and Public Change History
 
 Live Intelligence now converts approved public corrections into a separately reviewed, append-only public change history. Correction, clarification, replacement, retraction, and rollback notices preserve the original release, link immutable release checksums, and expose public lineage without silently rewriting or deleting prior evidence. JSON and Markdown packages support manual delivery to Publications, the Knowledge Library, WordPress, and download workflows.
 
 WordPress shortcode: `[sc_live_intelligence_change_history]`
 
-## v3.16.0 — Archive Verification, Preservation Audits, and Institutional Custody
+## v3.17.0 — Archive Verification, Preservation Audits, and Institutional Custody
 
-Site Intelligence v3.16.0 adds repeatable checksum, source-snapshot, preservation-manifest, provenance-chain, retention, and custody audits above the append-only public archive. Human-approved reports and custody packages remain read-only, checksum-bound, and manually transferred. The platform claims no automatic scheduler and performs no archive mutation, deletion, remote deposit, destination write, credential storage, or recipient profiling.
+Site Intelligence v3.17.0 adds repeatable checksum, source-snapshot, preservation-manifest, provenance-chain, retention, and custody audits above the append-only public archive. Human-approved reports and custody packages remain read-only, checksum-bound, and manually transferred. The platform claims no automatic scheduler and performs no archive mutation, deletion, remote deposit, destination write, credential storage, or recipient profiling.
 
 WordPress shortcode: `[sc_live_intelligence_archive_audits]`

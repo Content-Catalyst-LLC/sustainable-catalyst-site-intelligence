@@ -26,7 +26,7 @@ def test_v2160_public_app_wordpress_and_backend_publish_harmonization_surfaces()
     assert 'data-route="harmonization"' in index and 'id="harmonizationStudio"' in index
     assert "SCHarmonizationV2160" in app
     assert "/app/assets/harmonization-v2160.js" in worker
-    assert "Version: 3.16.0" in plugin
+    assert "Version: 3.17.0" in plugin
     assert "sc_public_comparable_series" in plugin
     assert "sc_statistical_harmonization_control_center" in plugin
 

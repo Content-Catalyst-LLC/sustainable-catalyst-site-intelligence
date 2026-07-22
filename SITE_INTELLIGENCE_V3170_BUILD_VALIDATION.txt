@@ -1,0 +1,40 @@
+Sustainable Catalyst Site Intelligence v3.17.0
+Preservation Interoperability, External Verification, and Institutional Exchange
+Build validation report
+
+RESULT: PASS
+
+Backend regression
+- 773 tests passed
+- 62-test preservation, custody, exchange, and release-governance gate passed
+- v3.17.0 focused workflow and release contract passed
+
+Static integrity
+- 336 Python files parsed
+- 100 JSON files validated
+- 672 unique application HTML IDs verified
+- 27 JavaScript files passed Node syntax validation
+- WordPress PHP syntax passed
+
+Preservation exchange validation
+- Approved custody-transfer gating
+- BagIt-aligned, OAIS SIP, PREMIS-event, and RO-Crate metadata profiles
+- Checksum-bound exchange and record manifests
+- Custody-drift detection before approval
+- Separation-of-duty preparation, verification, and approval
+- Human-reported external verification receipts
+- Verified-receipt checksum enforcement
+- Public/private verification visibility boundaries
+- JSON and Markdown exchange and receipt packages
+- Identity and credential rejection
+- Read-only public and WordPress surfaces
+
+Governance boundaries
+- No network verification performed
+- No remote deposit or destination write
+- No archive mutation or deletion
+- No credential or recipient identity storage
+- No advertising or affiliate insertion
+
+Immutable release
+- 809-file manifest verified

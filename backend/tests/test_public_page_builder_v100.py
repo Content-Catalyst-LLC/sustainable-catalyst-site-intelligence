@@ -24,7 +24,7 @@ def test_v100_public_page_builder_is_public_safe():
     response = client.get("/public/page-builder")
     assert response.status_code == 200
     payload = response.json()
-    assert payload["version"] == "3.16.0"
+    assert payload["version"] == "3.17.0"
     assert payload["public_defaults"]["raw_analytics_exposed"] is False
     assert payload["public_defaults"]["private_reports_exposed"] is False
     assert payload["flagship_shortcode"] == "[sc_site_intelligence_public_flagship]"
@@ -47,7 +47,7 @@ def test_v100_admin_catalog_includes_page_builder_shortcodes():
 
 
 def test_v100_module_catalog_includes_public_builder():
-    modules = module_manager(Settings(version="3.16.0"))["modules"]
+    modules = module_manager(Settings(version="3.17.0"))["modules"]
     public = [module for module in modules if module["id"] == "public-dashboard"][0]
     assert "[sc_site_intelligence_public_flagship]" in public["shortcodes"]
     assert "/public/page-builder" in public["endpoints"]

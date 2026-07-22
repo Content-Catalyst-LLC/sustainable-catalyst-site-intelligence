@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/live-intelligence-preservation-exchange-v3170.schema.json",
+  "title": "Live Intelligence Preservation Exchange",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "release_version",
+    "exchange_id",
+    "custody_transfer_id",
+    "profile",
+    "status",
+    "package_sha256",
+    "exchange_sha256",
+    "manual_exchange_required",
+    "network_verification_performed",
+    "remote_deposit_performed",
+    "destination_write_performed"
+  ],
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "sc-site-intelligence-preservation-exchange/1.0"
+    },
+    "release_version": {
+      "type": "string",
+      "const": "3.17.0"
+    },
+    "exchange_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 180
+    },
+    "custody_transfer_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 180
+    },
+    "profile": {
+      "enum": [
+        "bagit_manifest_1_0",
+        "oais_sip_profile",
+        "premis_event_profile",
+        "ro_crate_metadata_1_1"
+      ]
+    },
+    "record_manifest": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "maxItems": 1000
+    },
+    "exchange_manifest": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "maxItems": 1100
+    },
+    "status": {
+      "enum": [
+        "prepared",
+        "verified",
+        "approved"
+      ]
+    },
+    "package_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "exchange_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "public_visible": {
+      "type": "boolean"
+    },
+    "manual_exchange_required": {
+      "type": "boolean",
+      "const": true
+    },
+    "network_verification_performed": {
+      "type": "boolean",
+      "const": false
+    },
+    "remote_deposit_performed": {
+      "type": "boolean",
+      "const": false
+    },
+    "destination_write_performed": {
+      "type": "boolean",
+      "const": false
+    },
+    "archive_record_mutated": {
+      "type": "boolean",
+      "const": false
+    },
+    "archive_record_deleted": {
+      "type": "boolean",
+      "const": false
+    }
+  }
+}

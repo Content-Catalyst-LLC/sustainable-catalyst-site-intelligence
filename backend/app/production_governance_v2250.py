@@ -19,7 +19,7 @@ import zipfile
 
 from .config import Settings
 
-RELEASE_VERSION = "3.16.0"
+RELEASE_VERSION = "3.17.0"
 SCHEMA_VERSION = "sc-site-intelligence-production-governance/1.0"
 MIGRATION_VERSION = 3
 ALLOWED_SCOPES = {

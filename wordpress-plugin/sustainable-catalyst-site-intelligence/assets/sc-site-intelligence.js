@@ -4383,6 +4383,43 @@
     });
   }
 
+  function setupLiveIntelligencePreservationExchange() {
+    document.querySelectorAll('[data-scsi-live-preservation-exchange]').forEach(function (root) {
+      const output = root.querySelector('.scsi-live-preservation-exchange__output');
+      const policyEndpoint = root.dataset.policyEndpoint || '';
+      const statusEndpoint = root.dataset.statusEndpoint || '';
+      const exchangesEndpoint = root.dataset.exchangesEndpoint || '';
+      const verificationsEndpoint = root.dataset.verificationsEndpoint || '';
+      if (!output || !policyEndpoint || !statusEndpoint || !exchangesEndpoint || !verificationsEndpoint) return;
+      Promise.all([policyEndpoint, statusEndpoint, exchangesEndpoint, verificationsEndpoint].map(fetchJson)).then(function (responses) {
+        const policy = responses[0] || {};
+        const status = responses[1] || {};
+        const exchanges = Array.isArray((responses[2] || {}).exchanges) ? responses[2].exchanges : [];
+        const verifications = Array.isArray((responses[3] || {}).verifications) ? responses[3].verifications : [];
+        const metrics = [
+          ['Public exchange packages', status.public_exchange_count || 0],
+          ['External verification receipts', status.external_verification_count || 0],
+          ['Checksum-verified receipts', status.verified_receipt_count || 0],
+          ['Supported profiles', Object.keys(status.profile_counts || {}).length]
+        ];
+        output.innerHTML = '<div class="scsi-live-subscriptions__metrics">' + metrics.map(function (metric) {
+          return '<div><strong>' + escapeHtml(metric[1]) + '</strong><span>' + escapeHtml(metric[0]) + '</span></div>';
+        }).join('') + '</div>' +
+          '<p class="scsi-live-subscriptions__tags"><span>BagIt-aligned manifests</span><span>OAIS SIP mapping</span><span>External checksum receipts</span><span>No remote write</span></p>' +
+          (exchanges.length ? '<div class="scsi-live-subscriptions__list">' + exchanges.map(function (exchange) {
+            return '<article class="scsi-live-subscriptions__item"><p class="scsi-live-subscriptions__meta">' + escapeHtml(String(exchange.profile || 'exchange profile').replaceAll('_', ' ').toUpperCase()) + '</p><h3>' + escapeHtml(exchange.institution_reference || 'Institutional exchange package') + '</h3><p>' + escapeHtml(String(exchange.record_count || 0)) + ' preserved records · checksum-bound manual exchange</p></article>';
+          }).join('') + '</div>' : '<p class="scsi-live-subscriptions__empty">No approved public preservation exchange packages have been published.</p>') +
+          (verifications.length ? '<p class="scsi-live-subscriptions__boundary">' + escapeHtml(String(verifications.length)) + ' public external verification receipt(s) are available. Verification is human-reported; Site Intelligence performs no network verification.</p>' : '');
+        output.setAttribute('aria-busy', 'false');
+        const muted = root.querySelector('.scsi-muted');
+        if (muted) muted.textContent = policy.principle || 'Standards-aligned preservation exchange with checksum-verifiable external receipts.';
+      }).catch(function () {
+        output.innerHTML = '<p class="scsi-live-subscriptions__empty">Preservation exchange status is temporarily unavailable.</p>';
+        output.setAttribute('aria-busy', 'false');
+      });
+    });
+  }
+
   function init() {
     setupActivePageLinks();
     setupLiveIntelligenceSubscriptions();
@@ -4392,6 +4429,7 @@
     setupLiveIntelligenceChangeHistory();
     setupLiveIntelligencePublicArchive();
     setupLiveIntelligenceArchiveAudits();
+    setupLiveIntelligencePreservationExchange();
     setupLaunchActions();
     setupResponsiveEmbeds();
     setupLiveIntelligence();

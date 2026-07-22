@@ -1,0 +1,24 @@
+{
+  "schema": "sc-site-intelligence-preservation-exchange-governance/1.0",
+  "version": "3.17.0",
+  "release": "Preservation Interoperability, External Verification, and Institutional Exchange",
+  "approved_custody_required": true,
+  "separate_exchange_approval_required": true,
+  "append_only_exchange_ledger": true,
+  "standards_aligned_profiles": [
+    "bagit_manifest_1_0",
+    "oais_sip_profile",
+    "premis_event_profile",
+    "ro_crate_metadata_1_1"
+  ],
+  "external_verification_human_reported": true,
+  "manual_exchange_required": true,
+  "network_verification_performed": false,
+  "remote_deposit_performed": false,
+  "destination_write_performed": false,
+  "archive_record_mutated": false,
+  "archive_record_deleted": false,
+  "credentials_stored": false,
+  "recipient_identities_stored": false,
+  "advertising_or_affiliate_content": false
+}

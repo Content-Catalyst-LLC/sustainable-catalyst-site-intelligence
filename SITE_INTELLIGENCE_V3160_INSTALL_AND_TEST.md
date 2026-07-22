@@ -1,10 +1,10 @@
-# Site Intelligence v3.16.0 — Install and Test
+# Site Intelligence v3.17.0 — Install and Test
 
 ## Standard installation
 
 ```bash
 cd ~/Downloads
-unzip -o sustainable-catalyst-site-intelligence-v3.16.0-release-bundle.zip
+unzip -o sustainable-catalyst-site-intelligence-v3.17.0-release-bundle.zip
 chmod +x install_and_push_site_intelligence_v3_16_0.sh
 ./install_and_push_site_intelligence_v3_16_0.sh
 ```

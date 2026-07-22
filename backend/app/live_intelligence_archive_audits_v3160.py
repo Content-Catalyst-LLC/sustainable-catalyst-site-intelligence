@@ -1,6 +1,6 @@
 """Archive verification, preservation audits, and institutional custody.
 
-Site Intelligence v3.16.0 audits approved public archive records, verifies
+Site Intelligence v3.17.0 audits approved public archive records, verifies
 checksum and provenance-chain integrity, records preservation findings, and
 prepares institution-ready custody packages. The workflow is append-only and
 human-governed. It performs no remote deposit, archive mutation, deletion,
