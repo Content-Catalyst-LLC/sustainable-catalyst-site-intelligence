@@ -1,4 +1,13 @@
-## 3.19.0 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
+## 3.20.0 — Public Registry Discovery, Evidence Search, and Institutional Profiles
+
+- Added bounded public search across approved institutions, exchanges, attestations, challenges, and appeals.
+- Added evidence-linked institutional profiles with governance, consensus, and public reference summaries.
+- Added public facets for institution type, trust profile, jurisdiction, exchange profile, and governance action.
+- Stripped staff identities and internal workflow reasons from all discovery results.
+- Stored no search queries and created no visitor profiles.
+- Preserved no-network-verification, no-remote-write, no-source-mutation, and no-certification boundaries.
+
+## 3.20.0 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
 
 - Added public-safe institutional preservation registry entries with separate preparation, verification, and approval.
 - Added evidence-linked trust profiles without certification, accreditation, ranking, or endorsement claims.
@@ -8,13 +17,13 @@
 - Preserved no-network-verification, no-remote-deposit, no-destination-write, no-archive-mutation, and no-identity-storage boundaries.
 
 
-## 3.19.0 — Preservation Interoperability, External Verification, and Institutional Exchange
+## 3.20.0 — Preservation Interoperability, External Verification, and Institutional Exchange
 
 - Added checksum-bound institutional exchange packages from approved custody transfers.
 - Added standards-aligned BagIt, OAIS SIP, PREMIS-event, and RO-Crate metadata profiles.
 - Added human-reported external verification receipts and read-only public verification routes.
 - Preserved no-network-verification, no-remote-deposit, no-destination-write, and no-archive-mutation boundaries.
-# v3.19.0 — Archive Verification, Preservation Audits, and Institutional Custody
+# v3.20.0 — Archive Verification, Preservation Audits, and Institutional Custody
 
 - Added repeatable checksum, source-snapshot, manifest, and provenance-chain audits.
 - Added warning and critical preservation findings with human approval gates.
@@ -23,7 +32,7 @@
 - Added public and WordPress read-only preservation-assurance surfaces.
 - Preserved no-mutation, no-deletion, no-remote-deposit, no-destination-write, and no-identity-storage boundaries.
 
-# v3.19.0 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
+# v3.20.0 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
 
 - Added checksum-bound archival records for approved public releases, notices, and briefings.
 - Added append-only provenance-chain links and preservation manifests.
@@ -1019,7 +1028,7 @@
 - Added public policy, adapter catalog, aggregate status, protected administration, and WordPress governance surface.
 - Preserved no-write, no-credential, no-recipient-identity, and no-automatic-publication boundaries.
 
-## 3.19.0
+## 3.20.0
 
 - Added append-only public correction, clarification, replacement, retraction, and rollback notices.
 - Added release lineage linking affected and replacement release checksums.
@@ -1028,7 +1037,7 @@
 - Added JSON and Markdown packages plus manual no-write handoff receipts.
 - Added the read-only `[sc_live_intelligence_change_history]` WordPress surface.
 - Preserved original releases and prohibited evidence rewrite, destination writes, deletion, and automatic republication.
-## 3.19.0
+## 3.20.0
 
 - Added append-only preservation registry challenges, independent review, and final governance approval.
 - Added no-action, trust-profile update, suspension, and revocation decisions without deleting prior records.

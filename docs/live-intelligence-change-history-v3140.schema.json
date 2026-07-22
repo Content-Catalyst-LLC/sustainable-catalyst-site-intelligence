@@ -20,7 +20,7 @@
   ],
   "properties": {
     "schema": {"type": "string", "const": "sc-site-intelligence-public-change-notice/1.0"},
-    "release_version": {"type": "string", "const": "3.19.0"},
+    "release_version": {"type": "string", "const": "3.20.0"},
     "notice_id": {"type": "string", "minLength": 1, "maxLength": 180},
     "notice_type": {"enum": ["correction", "clarification", "replacement", "retraction", "rollback"]},
     "scope": {"enum": ["full_release", "section", "claim", "source_link", "presentation"]},

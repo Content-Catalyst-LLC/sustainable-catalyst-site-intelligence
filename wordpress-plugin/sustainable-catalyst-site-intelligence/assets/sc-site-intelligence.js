@@ -4494,6 +4494,103 @@
     });
   }
 
+  function setupLiveIntelligenceRegistryDiscovery() {
+    document.querySelectorAll('[data-scsi-live-registry-discovery]').forEach(function (root) {
+      const output = root.querySelector('.scsi-live-registry-discovery__output');
+      const statusNode = root.querySelector('.scsi-live-registry-discovery__status');
+      const form = root.querySelector('.scsi-live-registry-discovery__form');
+      const policyEndpoint = root.dataset.policyEndpoint || '';
+      const statusEndpoint = root.dataset.statusEndpoint || '';
+      const facetsEndpoint = root.dataset.facetsEndpoint || '';
+      const searchEndpoint = root.dataset.searchEndpoint || '';
+      const profileBase = root.dataset.profileBase || '';
+      const limit = Math.max(1, Math.min(50, Number(root.dataset.limit || 12)));
+      if (!output || !form || !policyEndpoint || !statusEndpoint || !facetsEndpoint || !searchEndpoint) return;
+
+      function recordMeta(record) {
+        const parts = [record.record_type, record.jurisdiction, record.trust_profile, record.profile, record.result, record.resolution_action, record.resolution_outcome].filter(Boolean);
+        return parts.map(function (part) { return String(part).replaceAll('_', ' '); }).join(' · ');
+      }
+
+      function renderResults(payload) {
+        const results = Array.isArray(payload.results) ? payload.results : [];
+        if (statusNode) statusNode.textContent = String(payload.total || 0) + ' approved public record(s) found. Queries are not stored.';
+        if (!results.length) {
+          output.innerHTML = '<p class="scsi-live-subscriptions__empty">No approved public registry records match this search.</p>';
+          output.setAttribute('aria-busy', 'false');
+          return;
+        }
+        output.innerHTML = '<div class="scsi-live-registry-discovery__results">' + results.map(function (record) {
+          const isInstitution = record.record_type === 'institution' && record.institution_id;
+          const profileButton = isInstitution ? '<button type="button" class="scsi-live-registry-discovery__profile" data-institution-id="' + escapeHtml(record.institution_id) + '">View evidence profile</button>' : '';
+          return '<article class="scsi-live-subscriptions__item">' +
+            '<p class="scsi-live-subscriptions__meta">' + escapeHtml(recordMeta(record) || 'public registry record') + '</p>' +
+            '<h3>' + escapeHtml(record.title || record.record_id || 'Registry record') + '</h3>' +
+            '<p>' + escapeHtml(record.summary || 'Approved public preservation record.') + '</p>' +
+            profileButton +
+          '</article>';
+        }).join('') + '</div><div class="scsi-live-registry-discovery__profile-output" aria-live="polite"></div>';
+        output.setAttribute('aria-busy', 'false');
+        output.querySelectorAll('[data-institution-id]').forEach(function (button) {
+          button.addEventListener('click', function () {
+            const institutionId = button.dataset.institutionId || '';
+            const profileOutput = output.querySelector('.scsi-live-registry-discovery__profile-output');
+            if (!institutionId || !profileOutput || !profileBase) return;
+            profileOutput.innerHTML = '<p class="scsi-muted">Loading evidence-linked institutional profile…</p>';
+            fetchJson(profileBase + encodeURIComponent(institutionId)).then(function (profile) {
+              const institution = profile.institution || {};
+              const governance = profile.governance || {};
+              const evidenceLinks = Array.isArray(profile.evidence_links) ? profile.evidence_links : [];
+              profileOutput.innerHTML = '<article class="scsi-live-registry-discovery__profile-card">' +
+                '<p class="scsi-eyebrow">Evidence-linked profiles</p>' +
+                '<h3>' + escapeHtml(institution.institution_name || institutionId) + '</h3>' +
+                '<p>' + escapeHtml(institution.trust_basis_note || 'Approved public preservation institution.') + '</p>' +
+                '<dl><div><dt>Jurisdiction</dt><dd>' + escapeHtml(institution.jurisdiction || 'Not specified') + '</dd></div>' +
+                '<div><dt>Trust profile</dt><dd>' + escapeHtml(String(institution.trust_profile || 'declared').replaceAll('_', ' ')) + '</dd></div>' +
+                '<div><dt>Current status</dt><dd>' + escapeHtml(String(governance.current_status || institution.status || 'approved').replaceAll('_', ' ')) + '</dd></div>' +
+                '<div><dt>Attestations</dt><dd>' + escapeHtml(String((profile.attestations || []).length)) + '</dd></div></dl>' +
+                (evidenceLinks.length ? '<h4>Public evidence</h4><ul>' + evidenceLinks.map(function (link) { return '<li><strong>' + escapeHtml(link.label || 'Evidence') + ':</strong> ' + escapeHtml(link.reference || '') + '</li>'; }).join('') + '</ul>' : '') +
+                '<p class="scsi-live-subscriptions__boundary">No staff identities, internal review reasons, visitor profiles, or source-record mutations are exposed.</p>' +
+              '</article>';
+            }).catch(function () {
+              profileOutput.innerHTML = '<p class="scsi-live-subscriptions__empty">The public institutional profile is temporarily unavailable.</p>';
+            });
+          });
+        });
+      }
+
+      function runSearch() {
+        const data = new FormData(form);
+        const params = new URLSearchParams();
+        data.forEach(function (value, key) {
+          const text = String(value || '').trim();
+          if (text) params.set(key, text);
+        });
+        params.set('limit', String(limit));
+        output.setAttribute('aria-busy', 'true');
+        output.innerHTML = '<p class="scsi-muted">Searching approved public registry records…</p>';
+        fetchJson(searchEndpoint + '?' + params.toString()).then(renderResults).catch(function () {
+          output.innerHTML = '<p class="scsi-live-subscriptions__empty">Registry discovery is temporarily unavailable.</p>';
+          output.setAttribute('aria-busy', 'false');
+        });
+      }
+
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        runSearch();
+      });
+
+      Promise.all([policyEndpoint, statusEndpoint, facetsEndpoint].map(fetchJson)).then(function (responses) {
+        const policy = responses[0] || {};
+        const status = responses[1] || {};
+        const muted = root.querySelector('.scsi-muted');
+        if (muted) muted.textContent = policy.principle || 'Search approved public preservation records and evidence-linked institutional profiles.';
+        if (statusNode) statusNode.textContent = String(status.record_count || 0) + ' approved public record(s) indexed. Queries are not stored.';
+        runSearch();
+      }).catch(runSearch);
+    });
+  }
+
   function init() {
     setupActivePageLinks();
     setupLiveIntelligenceSubscriptions();
@@ -4506,6 +4603,7 @@
     setupLiveIntelligencePreservationExchange();
     setupLiveIntelligencePreservationRegistry();
     setupLiveIntelligenceRegistryGovernance();
+    setupLiveIntelligenceRegistryDiscovery();
     setupLaunchActions();
     setupResponsiveEmbeds();
     setupLiveIntelligence();

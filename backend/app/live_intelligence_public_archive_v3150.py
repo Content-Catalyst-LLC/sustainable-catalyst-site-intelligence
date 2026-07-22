@@ -1,6 +1,6 @@
 """Public record archive, provenance ledger, and long-term preservation.
 
-Site Intelligence v3.19.0 creates immutable preservation records from already
+Site Intelligence v3.20.0 creates immutable preservation records from already
 approved public Live Intelligence artifacts. Archive records are append-only,
 checksum-bound, chain-linked, and packaged for manual institutional custody.
 This module performs no deletion, destination write, remote deposit, or source

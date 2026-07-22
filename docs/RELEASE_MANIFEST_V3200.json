@@ -1,0 +1,25 @@
+{
+  "product": "Sustainable Catalyst Site Intelligence",
+  "version": "3.20.0",
+  "increment": "Public Registry Discovery, Evidence Search, and Institutional Profiles",
+  "backend_module": "backend/app/live_intelligence_registry_discovery_v3200.py",
+  "wordpress_shortcode": "[sc_live_intelligence_registry_discovery]",
+  "public_routes": [
+    "/public/live-intelligence/registry-discovery/policy",
+    "/public/live-intelligence/registry-discovery/status",
+    "/public/live-intelligence/registry-discovery/facets",
+    "/public/live-intelligence/registry-discovery/search",
+    "/public/live-intelligence/registry-discovery/institutions/{institution_id}"
+  ],
+  "privacy_and_governance": {
+    "approved_public_records_only": true,
+    "search_queries_stored": false,
+    "visitor_profiles_created": false,
+    "staff_identities_exposed": false,
+    "internal_review_reasons_exposed": false,
+    "source_records_mutated": false,
+    "network_verification_performed": false,
+    "remote_write_performed": false,
+    "certification_claimed": false
+  }
+}

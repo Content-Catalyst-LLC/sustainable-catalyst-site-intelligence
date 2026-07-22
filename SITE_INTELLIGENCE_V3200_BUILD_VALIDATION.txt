@@ -1,0 +1,29 @@
+Sustainable Catalyst Site Intelligence v3.20.0
+Public Registry Discovery, Evidence Search, and Institutional Profiles
+
+Validation summary
+- Complete backend regression: 813 tests passed
+- Focused preservation-discovery integration gate: 102 tests passed
+- Python syntax/AST validation: 349 files
+- JSON validation: 108 files
+- Unique application HTML IDs: 672
+- JavaScript syntax: passed
+- WordPress PHP syntax: passed
+- v3.20.0 release contract: passed
+
+Discovery verification
+- Only approved public-safe institutions, exchanges, attestations, challenges, and appeals are indexed.
+- Search supports bounded query length, deterministic relevance, alphabetical and recent sorting, pagination, and governed filters.
+- Institution profiles combine public policy references, attestations, exchange consensus, and public governance history.
+- Staff identities and internal workflow reasons are removed from discovery results.
+- Private institutions, challenges, appeals, attestations, and exchanges remain excluded.
+- Search queries are not stored and visitor profiles are not created.
+- No source mutation, network verification, remote write, certification, accreditation, ranking, or endorsement is performed.
+
+Release engineering verification
+- Immutable manifest: 840 files verified
+- Installer rehearsal: passed against a disposable local Git remote
+- Installer static validation: 350 Python files, 106 JSON files, 672 unique HTML IDs
+- WordPress plugin regeneration: passed
+- Disposable local release commit: passed
+- GitHub push: not performed

@@ -21,7 +21,7 @@ REGISTRY = ROOT / "backend/data/live_intelligence_source_registry_v320.json"
 
 def _settings(tmp_path: Path, **overrides) -> Settings:
     values = {
-        "version": "3.19.0",
+        "version": "3.20.0",
         "external_live": False,
         "public_connector_live_checks": False,
         "live_source_operations_registry_path": str(REGISTRY),
@@ -36,7 +36,7 @@ def test_v320_registry_has_operational_attribution_and_coverage(tmp_path):
     center = LiveIntelligenceSourceOperations(_settings(tmp_path))
     payload = center.registry(public=True)
     assert payload["schema"] == SCHEMA_VERSION
-    assert payload["version"] == "3.19.0"
+    assert payload["version"] == "3.20.0"
     assert payload["source_count"] == 8
     assert {item["feed_id"] for item in payload["sources"]} == {
         "noaa_nws", "usgs_earthquakes", "nasa_eonet", "reliefweb",
@@ -51,7 +51,7 @@ def test_v320_registry_has_operational_attribution_and_coverage(tmp_path):
 def test_registry_file_schema_and_safe_source_terms():
     payload = json.loads(REGISTRY.read_text())
     assert payload["schema"] == REGISTRY_SCHEMA
-    assert payload["version"] == "3.19.0"
+    assert payload["version"] == "3.20.0"
     sources = {item["feed_id"]: item for item in payload["sources"]}
     assert sources["openalex"]["license"]["name"] == "CC0"
     assert "data year" in sources["world_bank"]["public_note"].lower()

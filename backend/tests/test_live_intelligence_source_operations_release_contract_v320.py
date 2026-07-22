@@ -8,8 +8,8 @@ def test_v320_release_contract_files_and_version_parity():
     version = (ROOT / "backend/app/version.py").read_text()
     php = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
     main = (ROOT / "backend/app/main.py").read_text()
-    assert 'APP_VERSION = "3.19.0"' in version
-    assert "Version: 3.19.0" in php and "const VERSION = '3.19.0';" in php
+    assert 'APP_VERSION = "3.20.0"' in version
+    assert "Version: 3.20.0" in php and "const VERSION = '3.20.0';" in php
     for route in [
         '/public/live-intelligence/sources',
         '/admin/live-intelligence/sources/control-center',

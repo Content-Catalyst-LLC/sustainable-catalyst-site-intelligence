@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_v371_release_contract_markers():
     requirements = {
-        "backend/app/version.py": ['APP_VERSION = "3.19.0"'],
+        "backend/app/version.py": ['APP_VERSION = "3.20.0"'],
         "backend/app/live_intelligence_rotation_v371.py": [
             "ROTATION_SCHEMA_VERSION", "LiveIntelligenceRotationStore", "score_rotation_candidate",
             "select_rotation_signals", "apply_rotation_policy", "rotation_policy",
@@ -20,14 +20,14 @@ def test_v371_release_contract_markers():
             "/admin/live-intelligence/rotation", "limit=24",
         ],
         "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": [
-            "Version: 3.19.0", "rest_live_intelligence_rotation_policy", "rest_live_intelligence_rotation_status",
+            "Version: 3.20.0", "rest_live_intelligence_rotation_policy", "rest_live_intelligence_rotation_status",
         ],
         "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js": [
             "data-rotation-rank", "data-rotation-score", "data-rotation-override", "rotation_reasons",
         ],
-        "README.md": ["v3.19.0 — Signal Relevance and Rotation Intelligence"],
+        "README.md": ["v3.20.0 — Signal Relevance and Rotation Intelligence"],
         "docs/RELEASE_MANIFEST_V371.json": [
-            '"version": "3.19.0"', '"individual_user_tracking": false',
+            '"version": "3.20.0"', '"individual_user_tracking": false',
             '"automatic_emergency_publication": false', '"override_changes_observation": false',
         ],
     }

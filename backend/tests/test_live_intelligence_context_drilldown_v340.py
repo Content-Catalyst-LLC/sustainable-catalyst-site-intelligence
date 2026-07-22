@@ -13,7 +13,7 @@ from app.live_intelligence_context_v340 import (
 def sample_feed(*args, **kwargs):
     return {
         "ok": True,
-        "version": "3.19.0",
+        "version": "3.20.0",
         "generated_at": "2026-07-20T12:05:00+00:00",
         "signals": [
             {
@@ -102,7 +102,7 @@ def test_evidence_digest_is_deterministic_for_same_packet():
 
 def test_context_policy_is_explicit_about_non_claims():
     policy = context_policy()
-    assert policy["version"] == "3.19.0"
+    assert policy["version"] == "3.20.0"
     assert "downloadable evidence records with SHA-256 digest" in policy["capabilities"]
     assert any("do not independently verify" in item for item in policy["boundaries"])
 

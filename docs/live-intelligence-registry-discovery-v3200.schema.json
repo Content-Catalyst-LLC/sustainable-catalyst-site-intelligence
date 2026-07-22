@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/live-intelligence-registry-discovery-v3200.schema.json",
+  "title": "Live Intelligence Registry Discovery",
+  "description": "A bounded public registry search response containing approved public-safe records only.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ok", "version", "schema", "query", "total", "offset", "limit", "results",
+    "search_queries_stored", "visitor_profiles_created", "staff_identities_exposed",
+    "source_records_mutated", "certification_claimed"
+  ],
+  "properties": {
+    "ok": {"const": true},
+    "version": {"const": "3.20.0"},
+    "schema": {"const": "sc-site-intelligence-preservation-registry-search/1.0"},
+    "query": {"type": "string", "maxLength": 200},
+    "total": {"type": "integer", "minimum": 0},
+    "offset": {"type": "integer", "minimum": 0},
+    "limit": {"type": "integer", "minimum": 1, "maximum": 100},
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["record_type", "record_id", "title", "relevance_score"],
+        "properties": {
+          "record_type": {"enum": ["institution", "attestation", "exchange", "challenge", "appeal"]},
+          "record_id": {"type": "string", "minLength": 1},
+          "title": {"type": "string", "minLength": 1},
+          "summary": {"type": "string"},
+          "published_at": {"type": "string"},
+          "relevance_score": {"type": "integer", "minimum": 0}
+        }
+      }
+    },
+    "facets": {"type": "object"},
+    "search_queries_stored": {"const": false},
+    "visitor_profiles_created": {"const": false},
+    "staff_identities_exposed": {"const": false},
+    "source_records_mutated": {"const": false},
+    "certification_claimed": {"const": false}
+  }
+}

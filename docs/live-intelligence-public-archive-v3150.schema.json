@@ -21,7 +21,7 @@
   ],
   "properties": {
     "schema": {"type": "string", "const": "sc-site-intelligence-public-archive-record/1.0"},
-    "release_version": {"type": "string", "const": "3.19.0"},
+    "release_version": {"type": "string", "const": "3.20.0"},
     "archive_id": {"type": "string", "minLength": 1, "maxLength": 180},
     "source_type": {"enum": ["publication_release", "public_change_notice", "public_briefing"]},
     "source_id": {"type": "string", "minLength": 1, "maxLength": 180},

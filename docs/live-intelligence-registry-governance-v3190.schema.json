@@ -8,7 +8,7 @@
   "required": ["schema", "release_version", "institution_id", "current_status", "challenges", "appeals", "governance_sha256"],
   "properties": {
     "schema": {"const": "sc-site-intelligence-institution-governance-summary/1.0"},
-    "release_version": {"const": "3.19.0"},
+    "release_version": {"const": "3.20.0"},
     "institution_id": {"type": "string", "minLength": 1},
     "institution_name": {"type": ["string", "null"]},
     "current_status": {"enum": ["approved", "suspended", "revoked"]},

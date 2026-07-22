@@ -13,7 +13,7 @@ from uuid import uuid4
 from .alerts_monitoring_live_streams import build_stream_snapshot, evaluate_alert_rules
 from .config import Settings
 
-RELEASE_VERSION = "3.19.0"
+RELEASE_VERSION = "3.20.0"
 SCHEMA_VERSION = "sc-site-intelligence-scheduled-monitoring/1.0"
 MONITOR_SCHEMA = "sc-site-intelligence-monitor-definition/1.0"
 CHECK_SCHEMA = "sc-site-intelligence-monitor-check/1.0"

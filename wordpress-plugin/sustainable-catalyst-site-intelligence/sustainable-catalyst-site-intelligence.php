@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.19.0
+ * Version: 3.20.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.19.0';
+    const VERSION = '3.20.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -60,6 +60,7 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_live_intelligence_preservation_exchange', [$this, 'live_intelligence_preservation_exchange_shortcode']);
         add_shortcode('sc_live_intelligence_preservation_registry', [$this, 'live_intelligence_preservation_registry_shortcode']);
         add_shortcode('sc_live_intelligence_registry_governance', [$this, 'live_intelligence_registry_governance_shortcode']);
+        add_shortcode('sc_live_intelligence_registry_discovery', [$this, 'live_intelligence_registry_discovery_shortcode']);
         add_shortcode('sc_site_intelligence_dashboard', [$this, 'dashboard_shortcode']);
         add_shortcode('sc_site_intelligence_page', [$this, 'page_shortcode']);
         add_shortcode('sc_site_intelligence_unmapped', [$this, 'unmapped_shortcode']);
@@ -427,7 +428,7 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v3.19.0 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
+        // v3.20.0 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
         // Existing moving tickers remain moving unless an administrator selects static or manual presentation.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
@@ -1022,6 +1023,31 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/live-intelligence/registry-governance/appeals', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_live_intelligence_registry_governance_appeals'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/registry-discovery/policy', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_registry_discovery_policy'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/registry-discovery/status', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_registry_discovery_status'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/registry-discovery/facets', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_registry_discovery_facets'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/registry-discovery/search', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_registry_discovery_search'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/registry-discovery/institutions/(?P<institution_id>[a-zA-Z0-9:_-]+)', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_registry_discovery_institution'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/live-intelligence/archive-audits/policy', [
@@ -3263,6 +3289,49 @@ final class SC_Site_Intelligence_Plugin {
         return is_wp_error($result) ? $result : rest_ensure_response($result);
     }
 
+    public function rest_live_intelligence_registry_discovery_policy(WP_REST_Request $request) {
+        $result = $this->backend_request('public/live-intelligence/registry-discovery/policy');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_registry_discovery_status(WP_REST_Request $request) {
+        $result = $this->backend_request('public/live-intelligence/registry-discovery/status');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_registry_discovery_facets(WP_REST_Request $request) {
+        $result = $this->backend_request('public/live-intelligence/registry-discovery/facets');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_registry_discovery_search(WP_REST_Request $request) {
+        $allowed = ['q', 'record_type', 'institution_type', 'trust_profile', 'jurisdiction', 'exchange_profile', 'verification_method', 'governance_status', 'sort', 'offset', 'limit'];
+        $params = [];
+        foreach ($allowed as $key) {
+            $value = $request->get_param($key);
+            if (is_null($value) || $value === '') {
+                continue;
+            }
+            if ($key === 'offset' || $key === 'limit') {
+                $params[$key] = max(0, (int) $value);
+            } else {
+                $params[$key] = sanitize_text_field((string) $value);
+            }
+        }
+        if (isset($params['limit'])) {
+            $params['limit'] = max(1, min(100, (int) $params['limit']));
+        }
+        $query = http_build_query($params, '', '&', PHP_QUERY_RFC3986);
+        $result = $this->backend_request('public/live-intelligence/registry-discovery/search' . ($query ? '?' . $query : ''));
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_registry_discovery_institution(WP_REST_Request $request) {
+        $institution_id = sanitize_text_field((string) $request->get_param('institution_id'));
+        $result = $this->backend_request('public/live-intelligence/registry-discovery/institutions/' . rawurlencode($institution_id));
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
     public function rest_live_intelligence_archive_audit_policy(WP_REST_Request $request) {
         $result = $this->backend_request('public/live-intelligence/archive-audits/policy');
         return is_wp_error($result) ? $result : rest_ensure_response($result);
@@ -4048,6 +4117,32 @@ final class SC_Site_Intelligence_Plugin {
         <?php return ob_get_clean();
     }
 
+    public function live_intelligence_registry_discovery_shortcode($atts = []) {
+        $atts = shortcode_atts(['title' => 'Preservation Registry Discovery', 'limit' => 12], $atts, 'sc_live_intelligence_registry_discovery');
+        $limit = max(1, min(50, (int) $atts['limit']));
+        $policy_endpoint = rest_url(self::REST_NAMESPACE . '/live-intelligence/registry-discovery/policy');
+        $status_endpoint = rest_url(self::REST_NAMESPACE . '/live-intelligence/registry-discovery/status');
+        $facets_endpoint = rest_url(self::REST_NAMESPACE . '/live-intelligence/registry-discovery/facets');
+        $search_endpoint = rest_url(self::REST_NAMESPACE . '/live-intelligence/registry-discovery/search');
+        $profile_base = rest_url(self::REST_NAMESPACE . '/live-intelligence/registry-discovery/institutions/');
+        ob_start(); ?>
+        <section class="scsi-card scsi-live-editorial scsi-live-registry-discovery" data-scsi-live-registry-discovery data-policy-endpoint="<?php echo esc_url($policy_endpoint); ?>" data-status-endpoint="<?php echo esc_url($status_endpoint); ?>" data-facets-endpoint="<?php echo esc_url($facets_endpoint); ?>" data-search-endpoint="<?php echo esc_url($search_endpoint); ?>" data-profile-base="<?php echo esc_url($profile_base); ?>" data-limit="<?php echo esc_attr((string) $limit); ?>">
+            <p class="scsi-eyebrow">Live Intelligence · Public registry discovery</p>
+            <h2><?php echo esc_html(sanitize_text_field((string) $atts['title'])); ?></h2>
+            <p class="scsi-muted">Search approved institutions, exchanges, attestations, challenges, and appeals.</p>
+            <form class="scsi-live-registry-discovery__form" role="search">
+                <label><span>Search the registry</span><input type="search" name="q" maxlength="200" placeholder="Institution, jurisdiction, evidence, profile…"></label>
+                <label><span>Record type</span><select name="record_type"><option value="">All public records</option><option value="institution">Institutions</option><option value="exchange">Exchanges</option><option value="attestation">Attestations</option><option value="challenge">Challenges</option><option value="appeal">Appeals</option></select></label>
+                <button type="submit">Search</button>
+            </form>
+            <div class="scsi-live-registry-discovery__status" aria-live="polite"></div>
+            <div class="scsi-live-registry-discovery__output" aria-live="polite" aria-busy="true"></div>
+            <p class="scsi-live-subscriptions__boundary">Evidence-linked profiles only. Queries are not stored. No staff identities, visitor profiles, internal review reasons, certifications, network verification, or remote-system writes.</p>
+            <noscript><p><a href="<?php echo esc_url($search_endpoint); ?>">Open the public registry search API.</a></p></noscript>
+        </section>
+        <?php return ob_get_clean();
+    }
+
     public function settings_page() {
         if (!current_user_can('manage_options')) {
             return;
@@ -4230,7 +4325,7 @@ final class SC_Site_Intelligence_Plugin {
             </script>
             <hr />
             <h2>Shortcodes</h2>
-            <p><code>[sc_live_intelligence]</code> — governed signal surface; supports <code>channel</code>, <code>region</code>, <code>country</code>, <code>category</code>, <code>limit</code>, <code>feeds</code>, <code>exclude</code>, <code>max_per_source</code>, presentation controls, and <code>surface</code> values <code>homepage</code>, <code>static_strip</code>, <code>channel</code>, <code>publication</code>, <code>library</code>, <code>advisory</code>, <code>lab</code>, or <code>external_embed</code>. Preset aliases: <code>[sc_live_intelligence_static]</code>, <code>[sc_live_intelligence_channel]</code>, <code>[sc_live_intelligence_publication]</code>, <code>[sc_live_intelligence_library]</code>, <code>[sc_live_intelligence_advisory]</code>, <code>[sc_live_intelligence_lab]</code>, and <code>[sc_live_intelligence_embed]</code>. Reviewed subscription surfaces: <code>[sc_live_intelligence_watchlists]</code>, <code>[sc_live_intelligence_alerts]</code>, and <code>[sc_live_intelligence_digests]</code>. Editorial governance surface: <code>[sc_live_intelligence_editorial_workspace]</code>. Release-governance surface: <code>[sc_live_intelligence_publication_releases]</code>. Post-publication governance surface: <code>[sc_live_intelligence_release_operations]</code>. Public append-only change history: <code>[sc_live_intelligence_change_history]</code>. Long-term public record archive: <code>[sc_live_intelligence_public_archive]</code>. Preservation audit and institutional custody status: <code>[sc_live_intelligence_archive_audits]</code>. Preservation interoperability and external verification: <code>[sc_live_intelligence_preservation_exchange]</code>. Federated preservation registry and multi-party verification: <code>[sc_live_intelligence_preservation_registry]</code>. Registry challenges, revocation, and appeals: <code>[sc_live_intelligence_registry_governance]</code>.</p>
+            <p><code>[sc_live_intelligence]</code> — governed signal surface; supports <code>channel</code>, <code>region</code>, <code>country</code>, <code>category</code>, <code>limit</code>, <code>feeds</code>, <code>exclude</code>, <code>max_per_source</code>, presentation controls, and <code>surface</code> values <code>homepage</code>, <code>static_strip</code>, <code>channel</code>, <code>publication</code>, <code>library</code>, <code>advisory</code>, <code>lab</code>, or <code>external_embed</code>. Preset aliases: <code>[sc_live_intelligence_static]</code>, <code>[sc_live_intelligence_channel]</code>, <code>[sc_live_intelligence_publication]</code>, <code>[sc_live_intelligence_library]</code>, <code>[sc_live_intelligence_advisory]</code>, <code>[sc_live_intelligence_lab]</code>, and <code>[sc_live_intelligence_embed]</code>. Reviewed subscription surfaces: <code>[sc_live_intelligence_watchlists]</code>, <code>[sc_live_intelligence_alerts]</code>, and <code>[sc_live_intelligence_digests]</code>. Editorial governance surface: <code>[sc_live_intelligence_editorial_workspace]</code>. Release-governance surface: <code>[sc_live_intelligence_publication_releases]</code>. Post-publication governance surface: <code>[sc_live_intelligence_release_operations]</code>. Public append-only change history: <code>[sc_live_intelligence_change_history]</code>. Long-term public record archive: <code>[sc_live_intelligence_public_archive]</code>. Preservation audit and institutional custody status: <code>[sc_live_intelligence_archive_audits]</code>. Preservation interoperability and external verification: <code>[sc_live_intelligence_preservation_exchange]</code>. Federated preservation registry and multi-party verification: <code>[sc_live_intelligence_preservation_registry]</code>. Registry challenges, revocation, and appeals: <code>[sc_live_intelligence_registry_governance]</code>. Public registry search and evidence-linked institutional profiles: <code>[sc_live_intelligence_registry_discovery]</code>.</p>
             <p><code>[sc_site_intelligence_dashboard]</code></p>
             <p><code>[sc_site_intelligence_page]</code></p>
             <p><code>[sc_site_intelligence_unmapped]</code></p>

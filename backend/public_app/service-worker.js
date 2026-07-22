@@ -1,4 +1,4 @@
-const RELEASE="3.19.0";
+const RELEASE="3.20.0";
 const CACHE_PREFIX="scsi-";
 const VERSION=`${CACHE_PREFIX}v${RELEASE}`;
 const SHELL=`${VERSION}-shell`;
