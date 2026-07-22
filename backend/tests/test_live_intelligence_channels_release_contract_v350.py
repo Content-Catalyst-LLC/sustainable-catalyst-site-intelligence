@@ -6,7 +6,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_v350_release_markers_and_wordpress_channel_controls():
     checks = {
-        "backend/app/version.py": ['APP_VERSION = "3.17.0"'],
+        "backend/app/version.py": ['APP_VERSION = "3.18.0"'],
         "backend/app/live_intelligence_channels_v350.py": [
             "CHANNEL_REGISTRY", "channel_directory", "filter_channel_signals",
             "silent_global_fallback", "country_parameter_supported",
@@ -16,13 +16,13 @@ def test_v350_release_markers_and_wordpress_channel_controls():
             "public_live_intelligence_channel_feed_endpoint",
         ],
         "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": [
-            "Version: 3.17.0", "live_intelligence_channel", "live_intelligence_region",
+            "Version: 3.18.0", "live_intelligence_channel", "live_intelligence_region",
             "live_intelligence_country", "rest_live_intelligence_channels",
         ],
         "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js": [
             "root.dataset.channel", "params.set('region'", "params.set('country'",
         ],
-        "README.md": ["v3.17.0 — Topic and Regional Channels"],
+        "README.md": ["v3.18.0 — Topic and Regional Channels"],
         "RELEASE_NOTES_SITE_INTELLIGENCE_V350.md": ["Topic channels", "Regional channels", "empty"],
     }
     for relative, markers in checks.items():

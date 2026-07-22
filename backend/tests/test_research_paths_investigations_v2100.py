@@ -29,5 +29,5 @@ def test_public_routes_and_interface():
     root=Path(__file__).resolve().parents[2];html=(root/"backend/public_app/index.html").read_text();js=(root/"backend/public_app/assets/research-v2100.js").read_text();css=(root/"backend/public_app/assets/research-v2100.css").read_text();appjs=(root/"backend/public_app/assets/app.js").read_text();php=(root/"wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
     assert 'data-route="research"' in html and 'id="researchWorkflowStudio"' in html
     assert "SCResearchV2100" in js and ".research-workflow-studio" in css
-    assert 'const APP_VERSION="3.17.0"' in appjs
-    assert "Version: 3.17.0" in php and "sc_research_paths_investigations" in php
+    assert 'const APP_VERSION="3.18.0"' in appjs
+    assert "Version: 3.18.0" in php and "sc_research_paths_investigations" in php

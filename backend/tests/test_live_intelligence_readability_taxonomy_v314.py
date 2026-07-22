@@ -17,7 +17,7 @@ def test_v314_taxonomy_and_readability_contract():
         feeds="platform_status",
         limit=4,
     )
-    assert payload["version"] == "3.17.0"
+    assert payload["version"] == "3.18.0"
     assert payload["schema"] == "sc-site-intelligence-live-intelligence/1.4"
     assert payload["display"]["readability_controls_supported"] is True
     assert payload["display"]["category_labels"]["economy_resources"] == "Economy, Energy & Resources"

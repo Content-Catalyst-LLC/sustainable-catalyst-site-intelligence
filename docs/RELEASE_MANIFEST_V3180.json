@@ -1,0 +1,21 @@
+{
+  "schema": "sc-site-intelligence-federated-preservation-registry-governance/1.0",
+  "version": "3.18.0",
+  "release": "Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification",
+  "approved_exchange_required": true,
+  "approved_institution_required": true,
+  "separate_registry_approval_required": true,
+  "append_only_registry_ledger": true,
+  "multi_party_consensus_unique_institutions": true,
+  "default_consensus_threshold": 2,
+  "external_attestations_human_reported": true,
+  "trust_profiles_are_certification": false,
+  "certification_claimed": false,
+  "network_verification_performed": false,
+  "remote_deposit_performed": false,
+  "destination_write_performed": false,
+  "archive_record_mutated": false,
+  "credentials_stored": false,
+  "recipient_identities_stored": false,
+  "advertising_or_affiliate_content": false
+}

@@ -1,6 +1,6 @@
 """Corrections, retractions, and public change history for Live Intelligence.
 
-Site Intelligence v3.17.0 converts approved post-publication correction packages
+Site Intelligence v3.18.0 converts approved post-publication correction packages
 into immutable, source-linked public notices and manual delivery packages. The
 original release remains retained and addressable. This module never edits,
 deletes, retracts, replaces, or republishes destination content by itself.

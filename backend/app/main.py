@@ -124,6 +124,10 @@ from .live_intelligence_preservation_exchange_v3170 import (
     LiveIntelligencePreservationExchangeCenter,
     preservation_exchange_policy as live_intelligence_preservation_exchange_policy,
 )
+from .live_intelligence_federated_registry_v3180 import (
+    LiveIntelligenceFederatedPreservationRegistry,
+    federated_registry_policy as live_intelligence_federated_registry_policy,
+)
 from .live_intelligence_source_operations_v320 import LiveIntelligenceSourceOperations
 from .live_intelligence_context_v340 import (
     build_signal_context, build_signal_evidence, context_policy as live_signal_context_policy,
@@ -2283,7 +2287,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.17.0 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v3.18.0 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -2425,7 +2429,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.17.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v3.18.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -2542,7 +2546,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.17.0 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v3.18.0 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -2664,7 +2668,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.17.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v3.18.0 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -2800,7 +2804,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.17.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v3.18.0 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -5977,7 +5981,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v3.17.0 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v3.18.0 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -6211,7 +6215,7 @@ def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     return build_reliability(settings)
 
 
-# Site Intelligence v3.17.0 — Open Standards, Federation, and Institutional Data Exchange.
+# Site Intelligence v3.18.0 — Open Standards, Federation, and Institutional Data Exchange.
 def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
     if not settings.federation_exchange_enabled:
         raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
@@ -6301,7 +6305,7 @@ def admin_federation_accept_import_endpoint(request: dict = Body(default={}), se
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.17.0 — Security, Privacy, Governance, and Production Scale.
+# Site Intelligence v3.18.0 — Security, Privacy, Governance, and Production Scale.
 def _production_governance(settings: Settings) -> ProductionGovernanceCenter:
     if not settings.production_governance_enabled:
         raise HTTPException(status_code=503, detail="Production governance is disabled.")
@@ -6450,7 +6454,7 @@ def admin_production_governance_deployment_endpoint(request: dict = Body(default
 def admin_production_governance_load_probe_endpoint(requests: int = Query(default=250, ge=1, le=5000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return _production_governance(settings).load_probe(requests)
 
-# Site Intelligence v3.17.0 — Connected Live Intelligence Surface.
+# Site Intelligence v3.18.0 — Connected Live Intelligence Surface.
 def _connected_platform(settings: Settings) -> ConnectedPublicIntelligencePlatform:
     if not settings.connected_platform_enabled:
         raise HTTPException(status_code=404, detail="Connected platform is disabled.")
@@ -6749,6 +6753,14 @@ def _live_intelligence_preservation_exchange(settings: Settings) -> LiveIntellig
         raise HTTPException(status_code=404, detail="Live Intelligence preservation exchange is disabled.")
     return LiveIntelligencePreservationExchangeCenter(
         settings, custody_center=_live_intelligence_archive_audits(settings),
+    )
+
+
+def _live_intelligence_federated_registry(settings: Settings) -> LiveIntelligenceFederatedPreservationRegistry:
+    if not settings.live_intelligence_preservation_registry_enabled:
+        raise HTTPException(status_code=404, detail="Live Intelligence preservation registry is disabled.")
+    return LiveIntelligenceFederatedPreservationRegistry(
+        settings, exchange_center=_live_intelligence_preservation_exchange(settings),
     )
 
 
@@ -7615,6 +7627,125 @@ def admin_live_intelligence_preservation_verification_package_endpoint(verificat
 @app.get("/admin/live-intelligence/preservation-exchange/{entity_id}/history")
 def admin_live_intelligence_preservation_exchange_history_endpoint(entity_id: str, limit: int = Query(default=200, ge=1, le=1000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return {"ok": True, "version": APP_VERSION, "history": _live_intelligence_preservation_exchange(settings).history(entity_id, limit)}
+
+
+@app.get("/public/live-intelligence/preservation-registry/policy")
+def public_live_intelligence_preservation_registry_policy_endpoint():
+    return live_intelligence_federated_registry_policy()
+
+
+@app.get("/public/live-intelligence/preservation-registry/status")
+def public_live_intelligence_preservation_registry_status_endpoint(settings: Settings = Depends(get_settings)):
+    return _live_intelligence_federated_registry(settings).status()
+
+
+@app.get("/public/live-intelligence/preservation-registry/institutions")
+def public_live_intelligence_preservation_registry_institutions_endpoint(limit: int = Query(default=50, ge=1, le=500), settings: Settings = Depends(get_settings)):
+    rows = _live_intelligence_federated_registry(settings).institutions(public=True, limit=limit)
+    return {"ok": True, "version": APP_VERSION, "count": len(rows), "institutions": rows, "certification_claimed": False}
+
+
+@app.get("/public/live-intelligence/preservation-registry/institutions/{institution_id}")
+def public_live_intelligence_preservation_registry_institution_endpoint(institution_id: str, settings: Settings = Depends(get_settings)):
+    try:
+        return {"ok": True, "version": APP_VERSION, "institution": _live_intelligence_federated_registry(settings).institution(institution_id, public=True)}
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Public preservation institution not found.") from exc
+
+
+@app.get("/public/live-intelligence/preservation-registry/attestations")
+def public_live_intelligence_preservation_registry_attestations_endpoint(limit: int = Query(default=50, ge=1, le=500), settings: Settings = Depends(get_settings)):
+    rows = _live_intelligence_federated_registry(settings).attestations(public=True, limit=limit)
+    return {"ok": True, "version": APP_VERSION, "count": len(rows), "attestations": rows, "network_verification_performed": False}
+
+
+@app.get("/public/live-intelligence/preservation-registry/exchanges/{exchange_id}/consensus")
+def public_live_intelligence_preservation_registry_consensus_endpoint(exchange_id: str, settings: Settings = Depends(get_settings)):
+    try:
+        return {"ok": True, "version": APP_VERSION, "consensus": _live_intelligence_federated_registry(settings).consensus(exchange_id, public=True)}
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Public preservation exchange consensus not found.") from exc
+
+
+@app.get("/admin/live-intelligence/preservation-registry")
+def admin_live_intelligence_preservation_registry_endpoint(settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    center = _live_intelligence_federated_registry(settings)
+    return {"ok": True, "version": APP_VERSION, "status": center.status(), "institutions": center.institutions(limit=500), "attestations": center.attestations(limit=500)}
+
+
+@app.post("/admin/live-intelligence/preservation-registry/institutions")
+def admin_live_intelligence_preservation_registry_create_institution_endpoint(request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _live_intelligence_federated_registry(settings).create_institution(request)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/live-intelligence/preservation-registry/institutions/{institution_id}/verify")
+def admin_live_intelligence_preservation_registry_verify_institution_endpoint(institution_id: str, request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _live_intelligence_federated_registry(settings).verify_institution(institution_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Preservation institution not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/live-intelligence/preservation-registry/institutions/{institution_id}/approve")
+def admin_live_intelligence_preservation_registry_approve_institution_endpoint(institution_id: str, request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _live_intelligence_federated_registry(settings).approve_institution(institution_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Preservation institution not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.post("/admin/live-intelligence/preservation-registry/exchanges/{exchange_id}/attestations")
+def admin_live_intelligence_preservation_registry_attestation_endpoint(exchange_id: str, request: dict[str, Any], settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return _live_intelligence_federated_registry(settings).record_attestation(exchange_id, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Preservation exchange or institution not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/admin/live-intelligence/preservation-registry/exchanges/{exchange_id}/consensus")
+def admin_live_intelligence_preservation_registry_consensus_endpoint(exchange_id: str, settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        return {"ok": True, "version": APP_VERSION, "consensus": _live_intelligence_federated_registry(settings).consensus(exchange_id)}
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Preservation exchange not found.") from exc
+
+
+@app.get("/admin/live-intelligence/preservation-registry/institutions/{institution_id}/package")
+def admin_live_intelligence_preservation_registry_institution_package_endpoint(institution_id: str, format: str = Query(default="json", pattern="^(json|markdown)$"), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        media_type, body = _live_intelligence_federated_registry(settings).institution_package_payload(institution_id, format)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Preservation institution not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    suffix = "json" if format == "json" else "md"
+    return Response(content=body, media_type=media_type, headers={"Content-Disposition": f'attachment; filename="live-intelligence-preservation-institution-{institution_id}.{suffix}"', "X-SC-Site-Intelligence-Version": APP_VERSION})
+
+
+@app.get("/admin/live-intelligence/preservation-registry/exchanges/{exchange_id}/package")
+def admin_live_intelligence_preservation_registry_consensus_package_endpoint(exchange_id: str, format: str = Query(default="json", pattern="^(json|markdown)$"), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    try:
+        media_type, body = _live_intelligence_federated_registry(settings).consensus_package_payload(exchange_id, format)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Preservation exchange not found.") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    suffix = "json" if format == "json" else "md"
+    return Response(content=body, media_type=media_type, headers={"Content-Disposition": f'attachment; filename="live-intelligence-federated-consensus-{exchange_id}.{suffix}"', "X-SC-Site-Intelligence-Version": APP_VERSION})
+
+
+@app.get("/admin/live-intelligence/preservation-registry/{entity_id}/history")
+def admin_live_intelligence_preservation_registry_history_endpoint(entity_id: str, limit: int = Query(default=200, ge=1, le=1000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
+    return {"ok": True, "version": APP_VERSION, "history": _live_intelligence_federated_registry(settings).history(entity_id, limit)}
 
 
 @app.get("/public/live-intelligence/subscriptions/policy")

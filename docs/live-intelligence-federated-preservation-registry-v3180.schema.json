@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/live-intelligence-federated-preservation-registry-v3180.schema.json",
+  "title": "Live Intelligence Federated Preservation Registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "release_version",
+    "institution_id",
+    "institution_name",
+    "jurisdiction",
+    "institution_type",
+    "trust_profile",
+    "status",
+    "package_sha256",
+    "institution_sha256",
+    "certification_claimed",
+    "network_verification_performed",
+    "destination_write_performed"
+  ],
+  "properties": {
+    "schema": {"type": "string", "const": "sc-site-intelligence-preservation-institution/1.0"},
+    "release_version": {"type": "string", "const": "3.18.0"},
+    "institution_id": {"type": "string", "minLength": 1, "maxLength": 180},
+    "institution_name": {"type": "string", "minLength": 1, "maxLength": 300},
+    "jurisdiction": {"type": "string", "minLength": 1, "maxLength": 160},
+    "institution_type": {
+      "enum": ["national_archive", "university_repository", "public_library", "research_institute", "civil_society_archive", "other_public_repository"]
+    },
+    "trust_profile": {"enum": ["declared", "policy_reviewed", "verified_exchange_partner"]},
+    "supported_profiles": {"type": "array", "items": {"type": "string"}, "minItems": 1, "maxItems": 4},
+    "verification_methods": {"type": "array", "items": {"type": "string"}, "minItems": 1, "maxItems": 3},
+    "status": {"enum": ["prepared", "verified", "approved"]},
+    "package_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "institution_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "public_visible": {"type": "boolean"},
+    "certification_claimed": {"type": "boolean", "const": false},
+    "network_verification_performed": {"type": "boolean", "const": false},
+    "destination_write_performed": {"type": "boolean", "const": false},
+    "credentials_stored": {"type": "boolean", "const": false}
+  }
+}

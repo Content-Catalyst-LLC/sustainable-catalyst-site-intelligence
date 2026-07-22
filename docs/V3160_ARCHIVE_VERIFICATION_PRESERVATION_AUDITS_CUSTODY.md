@@ -1,6 +1,6 @@
-# Site Intelligence v3.17.0 — Archive Verification, Preservation Audits, and Institutional Custody
+# Site Intelligence v3.18.0 — Archive Verification, Preservation Audits, and Institutional Custody
 
-v3.17.0 adds a preservation-assurance layer above the append-only public archive. It verifies retained record checksums, source snapshots, preservation manifests, and provenance-chain links; records findings; and creates human-approved custody packages for manual institutional transfer.
+v3.18.0 adds a preservation-assurance layer above the append-only public archive. It verifies retained record checksums, source snapshots, preservation manifests, and provenance-chain links; records findings; and creates human-approved custody packages for manual institutional transfer.
 
 ## Workflow
 

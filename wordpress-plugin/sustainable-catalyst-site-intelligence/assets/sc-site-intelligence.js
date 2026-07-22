@@ -4420,6 +4420,43 @@
     });
   }
 
+  function setupLiveIntelligencePreservationRegistry() {
+    document.querySelectorAll('[data-scsi-live-preservation-registry]').forEach(function (root) {
+      const output = root.querySelector('.scsi-live-preservation-registry__output');
+      const policyEndpoint = root.dataset.policyEndpoint || '';
+      const statusEndpoint = root.dataset.statusEndpoint || '';
+      const institutionsEndpoint = root.dataset.institutionsEndpoint || '';
+      const attestationsEndpoint = root.dataset.attestationsEndpoint || '';
+      if (!output || !policyEndpoint || !statusEndpoint || !institutionsEndpoint || !attestationsEndpoint) return;
+      Promise.all([policyEndpoint, statusEndpoint, institutionsEndpoint, attestationsEndpoint].map(fetchJson)).then(function (responses) {
+        const policy = responses[0] || {};
+        const status = responses[1] || {};
+        const institutions = Array.isArray((responses[2] || {}).institutions) ? responses[2].institutions : [];
+        const attestations = Array.isArray((responses[3] || {}).attestations) ? responses[3].attestations : [];
+        const metrics = [
+          ['Public institutions', status.public_institution_count || 0],
+          ['Public attestations', status.public_attestation_count || 0],
+          ['Verified consensus records', status.verified_consensus_count || 0],
+          ['Consensus threshold', status.consensus_threshold || 2]
+        ];
+        output.innerHTML = '<div class="scsi-live-subscriptions__metrics">' + metrics.map(function (metric) {
+          return '<div><strong>' + escapeHtml(metric[1]) + '</strong><span>' + escapeHtml(metric[0]) + '</span></div>';
+        }).join('') + '</div>' +
+          '<p class="scsi-live-subscriptions__tags"><span>Evidence-linked trust profiles</span><span>Multi-party checksum consensus</span><span>Unique institutions only</span><span>No certification claim</span></p>' +
+          (institutions.length ? '<div class="scsi-live-subscriptions__list">' + institutions.map(function (institution) {
+            return '<article class="scsi-live-subscriptions__item"><p class="scsi-live-subscriptions__meta">' + escapeHtml(String(institution.institution_type || 'public repository').replaceAll('_', ' ').toUpperCase()) + '</p><h3>' + escapeHtml(institution.institution_name || 'Preservation institution') + '</h3><p>' + escapeHtml(institution.jurisdiction || 'Jurisdiction not listed') + ' · ' + escapeHtml(String(institution.trust_profile || 'declared').replaceAll('_', ' ')) + '</p></article>';
+          }).join('') + '</div>' : '<p class="scsi-live-subscriptions__empty">No approved public preservation institutions have been published.</p>') +
+          (attestations.length ? '<p class="scsi-live-subscriptions__boundary">' + escapeHtml(String(attestations.length)) + ' public checksum attestation(s) are available. Attestations are human-reported; registry presence is not certification or endorsement.</p>' : '');
+        output.setAttribute('aria-busy', 'false');
+        const muted = root.querySelector('.scsi-muted');
+        if (muted) muted.textContent = policy.principle || 'Evidence-linked institutional registry profiles and multi-party checksum attestations.';
+      }).catch(function () {
+        output.innerHTML = '<p class="scsi-live-subscriptions__empty">Federated preservation registry status is temporarily unavailable.</p>';
+        output.setAttribute('aria-busy', 'false');
+      });
+    });
+  }
+
   function init() {
     setupActivePageLinks();
     setupLiveIntelligenceSubscriptions();
@@ -4430,6 +4467,7 @@
     setupLiveIntelligencePublicArchive();
     setupLiveIntelligenceArchiveAudits();
     setupLiveIntelligencePreservationExchange();
+    setupLiveIntelligencePreservationRegistry();
     setupLaunchActions();
     setupResponsiveEmbeds();
     setupLiveIntelligence();
