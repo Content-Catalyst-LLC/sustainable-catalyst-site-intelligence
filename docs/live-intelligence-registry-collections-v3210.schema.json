@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/live-intelligence-registry-collections-v3210.schema.json",
+  "title": "Live Intelligence Registry Research Collection",
+  "description": "A public, human-curated, checksum-bound research collection and ordered evidence pathway over approved preservation-registry records.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ok", "version", "schema", "collection_id", "title", "purpose", "summary",
+    "record_count", "pathway", "records", "collection_sha256", "evidence_pathway_sha256",
+    "human_curated", "visitor_queries_stored", "visitor_profiles_created",
+    "source_records_mutated", "remote_write_performed", "certification_claimed"
+  ],
+  "properties": {
+    "ok": {"const": true},
+    "version": {"const": "3.21.0"},
+    "schema": {"const": "sc-site-intelligence-registry-collection-package/1.0"},
+    "collection_id": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "purpose": {"type": "string", "minLength": 1},
+    "summary": {"type": "string", "minLength": 1},
+    "record_count": {"type": "integer", "minimum": 1},
+    "pathway": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["sequence", "record_id", "record_type", "title", "rationale", "record_sha256"],
+        "properties": {
+          "sequence": {"type": "integer", "minimum": 1},
+          "record_id": {"type": "string", "minLength": 1},
+          "record_type": {"enum": ["institution", "attestation", "exchange", "challenge", "appeal"]},
+          "title": {"type": "string", "minLength": 1},
+          "rationale": {"type": "string", "minLength": 1},
+          "record_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+        }
+      }
+    },
+    "records": {"type": "array", "minItems": 1},
+    "collection_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "evidence_pathway_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "human_curated": {"const": true},
+    "visitor_queries_stored": {"const": false},
+    "visitor_profiles_created": {"const": false},
+    "source_records_mutated": {"const": false},
+    "remote_write_performed": {"const": false},
+    "certification_claimed": {"const": false}
+  }
+}

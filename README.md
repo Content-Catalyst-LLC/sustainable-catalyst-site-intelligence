@@ -1,33 +1,51 @@
 # Sustainable Catalyst Site Intelligence
 
-## v3.20.0 — Public Registry Discovery, Evidence Search, and Institutional Profiles
+## v3.21.0 — Saved Discovery Views, Public Research Collections, and Evidence Pathways
+
+Approved registry discovery states can now be saved as checksum-bound, reproducible views. Human-reviewed public research collections preserve ordered public-record snapshots, evidence-pathway rationale, source-view lineage, and explicit drift acknowledgments without storing visitor queries or profiles.
+
+**Current release:** v3.21.0 — Connected Public Intelligence and Evidence Platform
+
+**Current Live Intelligence increment:** Saved Discovery Views, Public Research Collections, and Evidence Pathways
+
+### Current v3.21.0 collection capabilities
+
+- Canonical saved discovery filter states and result checksums.
+- Separate preparation, review, and approval roles.
+- Public research collections over approved registry records only.
+- Ordered evidence pathways with human-written rationale.
+- Retained source snapshots and drift detection.
+- JSON/Markdown collection packages and read-only WordPress presentation.
+- No visitor-query storage, visitor profiling, source mutation, or remote write.
+
+## v3.21.0 — Public Registry Discovery, Evidence Search, and Institutional Profiles
 
 Approved preservation institutions, exchanges, attestations, challenges, and appeals are now discoverable through a bounded public search surface. Evidence-linked profiles expose public policy and verification references while stripping staff identities, internal review reasons, visitor profiling, and remote-write capability.
 
-**Current release:** v3.20.0 — Connected Public Intelligence and Evidence Platform
+**Current release:** v3.21.0 — Connected Public Intelligence and Evidence Platform
 
 **Current Live Intelligence increment:** Public Registry Discovery, Evidence Search, and Institutional Profiles
 
 ### Current integrated Live Intelligence capabilities
 
-- v3.20.0 — Signal Context and Drill-Down
-- v3.20.0 — Topic and Regional Channels
-- v3.20.0 — Homepage Intelligence Gateway
-- v3.20.0 — Signal Relevance and Rotation Intelligence
-- v3.20.0 — Analytics and Public-Value Measurement
-- v3.20.0 — Connected Live Intelligence Surface
-- v3.20.0 — Signal Subscriptions, Alerts, and Scheduled Intelligence
-- v3.20.0 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
-- v3.20.0 — Editorial Workspace, Review Queues, and Publication Orchestration
-- v3.20.0 — Publication Adapters, Institutional Handoffs, and Release Governance
-- v3.20.0 — Release Monitoring, Rollback, and Post-Publication Governance
-- v3.20.0 — Corrections, Retractions, and Public Change History
-- v3.20.0 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
-- v3.20.0 — Archive Verification, Preservation Audits, and Institutional Custody
-- v3.20.0 — Preservation Interoperability, External Verification, and Institutional Exchange
-- v3.20.0 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
-- v3.20.0 — Registry Governance, Challenges, Revocation, and Appeals
-- v3.20.0 — Public Registry Discovery, Evidence Search, and Institutional Profiles
+- v3.21.0 — Signal Context and Drill-Down
+- v3.21.0 — Topic and Regional Channels
+- v3.21.0 — Homepage Intelligence Gateway
+- v3.21.0 — Signal Relevance and Rotation Intelligence
+- v3.21.0 — Analytics and Public-Value Measurement
+- v3.21.0 — Connected Live Intelligence Surface
+- v3.21.0 — Signal Subscriptions, Alerts, and Scheduled Intelligence
+- v3.21.0 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
+- v3.21.0 — Editorial Workspace, Review Queues, and Publication Orchestration
+- v3.21.0 — Publication Adapters, Institutional Handoffs, and Release Governance
+- v3.21.0 — Release Monitoring, Rollback, and Post-Publication Governance
+- v3.21.0 — Corrections, Retractions, and Public Change History
+- v3.21.0 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
+- v3.21.0 — Archive Verification, Preservation Audits, and Institutional Custody
+- v3.21.0 — Preservation Interoperability, External Verification, and Institutional Exchange
+- v3.21.0 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
+- v3.21.0 — Registry Governance, Challenges, Revocation, and Appeals
+- v3.21.0 — Public Registry Discovery, Evidence Search, and Institutional Profiles
 
 ## v3.13.0 — Release Monitoring, Rollback, and Post-Publication Governance
 
@@ -1289,25 +1307,25 @@ For durable source health and history across Render deploys, redirect `SC_SI_LIV
 Live Intelligence now turns approved editorial workspaces into checksum-verified release candidates and adapter-specific packages for Publications, the Knowledge Library, Decision Studio, WordPress manual import, and direct download. Validation and separate release approval are required before package export or manual handoff. No adapter writes to a destination, stores credentials, or includes recipient identities.
 
 
-## v3.20.0 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
+## v3.21.0 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
 
-Site Intelligence v3.20.0 preserves approved public briefings, publication releases, and public change notices as checksum-bound, append-only archival records with source snapshots, retention classes, chain lineage, preservation manifests, human verification and approval, JSON/Markdown packages, and manual custody handoffs. It performs no source mutation, archive deletion, destination write, remote deposit, credential storage, or recipient profiling.
+Site Intelligence v3.21.0 preserves approved public briefings, publication releases, and public change notices as checksum-bound, append-only archival records with source snapshots, retention classes, chain lineage, preservation manifests, human verification and approval, JSON/Markdown packages, and manual custody handoffs. It performs no source mutation, archive deletion, destination write, remote deposit, credential storage, or recipient profiling.
 
-## v3.20.0 — Corrections, Retractions, and Public Change History
+## v3.21.0 — Corrections, Retractions, and Public Change History
 
 Live Intelligence now converts approved public corrections into a separately reviewed, append-only public change history. Correction, clarification, replacement, retraction, and rollback notices preserve the original release, link immutable release checksums, and expose public lineage without silently rewriting or deleting prior evidence. JSON and Markdown packages support manual delivery to Publications, the Knowledge Library, WordPress, and download workflows.
 
 WordPress shortcode: `[sc_live_intelligence_change_history]`
 
-## v3.20.0 — Archive Verification, Preservation Audits, and Institutional Custody
+## v3.21.0 — Archive Verification, Preservation Audits, and Institutional Custody
 
-Site Intelligence v3.20.0 adds repeatable checksum, source-snapshot, preservation-manifest, provenance-chain, retention, and custody audits above the append-only public archive. Human-approved reports and custody packages remain read-only, checksum-bound, and manually transferred. The platform claims no automatic scheduler and performs no archive mutation, deletion, remote deposit, destination write, credential storage, or recipient profiling.
+Site Intelligence v3.21.0 adds repeatable checksum, source-snapshot, preservation-manifest, provenance-chain, retention, and custody audits above the append-only public archive. Human-approved reports and custody packages remain read-only, checksum-bound, and manually transferred. The platform claims no automatic scheduler and performs no archive mutation, deletion, remote deposit, destination write, credential storage, or recipient profiling.
 
 WordPress shortcode: `[sc_live_intelligence_archive_audits]`
 
 
-## v3.20.0 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
+## v3.21.0 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
 
-Site Intelligence v3.20.0 adds a public-safe institutional registry above approved preservation exchange packages. Human-reviewed profiles declare repository scope, jurisdiction, supported exchange profiles, verification methods, and public policy references. Checksum-bound attestations are counted once per approved institution when computing multi-party consensus. Registry inclusion is not certification, accreditation, ranking, or endorsement. The platform performs no network verification, remote deposit, destination write, archive mutation, credential storage, or personal-contact storage.
+Site Intelligence v3.21.0 adds a public-safe institutional registry above approved preservation exchange packages. Human-reviewed profiles declare repository scope, jurisdiction, supported exchange profiles, verification methods, and public policy references. Checksum-bound attestations are counted once per approved institution when computing multi-party consensus. Registry inclusion is not certification, accreditation, ranking, or endorsement. The platform performs no network verification, remote deposit, destination write, archive mutation, credential storage, or personal-contact storage.
 
 WordPress shortcode: `[sc_live_intelligence_preservation_registry]`

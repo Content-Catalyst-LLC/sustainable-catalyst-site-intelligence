@@ -21,8 +21,8 @@ def test_build_info_matches_release_and_plugin_expectation():
     response = client.get("/public/build-info")
     assert response.status_code == 200
     payload = response.json()
-    assert payload["backend_version"] == "3.20.0"
-    assert payload["expected_wordpress_plugin_version"] == "3.20.0"
+    assert payload["backend_version"] == "3.21.0"
+    assert payload["expected_wordpress_plugin_version"] == "3.21.0"
     assert payload["api_schema_version"] == "2.0"
 
 
@@ -101,6 +101,6 @@ def test_frontend_contains_abortable_country_requests_and_debounce():
 def test_wordpress_plugin_has_backend_compatibility_notice():
     plugin = Path(__file__).resolve().parents[2] / "wordpress-plugin" / "sustainable-catalyst-site-intelligence" / "sustainable-catalyst-site-intelligence.php"
     text = plugin.read_text()
-    assert "Version: 3.20.0" in text
+    assert "Version: 3.21.0" in text
     assert "backend_version_notice" in text
     assert "/public/build-info" in text

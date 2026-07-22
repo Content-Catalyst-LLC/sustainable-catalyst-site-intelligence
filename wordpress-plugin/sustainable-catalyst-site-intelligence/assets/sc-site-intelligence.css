@@ -2043,7 +2043,7 @@
 @media(prefers-reduced-motion:reduce){.scsi-live-intelligence__delivery{display:inline-flex}.scsi-live-intelligence__lamp{box-shadow:none}}
 @media(forced-colors:active){.scsi-live-intelligence__delivery{border-color:CanvasText;color:CanvasText}}
 
-/* Site Intelligence v3.20.0 — Live Intelligence presentation, motion, and accessibility controls. */
+/* Site Intelligence v3.21.0 — Live Intelligence presentation, motion, and accessibility controls. */
 .scsi-live-intelligence [hidden]{display:none!important}
 .scsi-live-intelligence__announcer{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 .scsi-live-intelligence__noscript{grid-column:1/-1;margin:0;padding:.7rem 1rem;border-top:1px solid #214d29;background:#050906;color:var(--scsi-live-green);font-size:.72rem;line-height:1.5}
@@ -2103,13 +2103,13 @@
   .scsi-live-intelligence__controls button{border:1px solid ButtonText;background:ButtonFace;color:ButtonText;text-shadow:none}
 }
 
-/* v3.20.0 Homepage Intelligence Gateway */
+/* v3.21.0 Homepage Intelligence Gateway */
 .scsi-live-intelligence[data-surface="homepage"]{contain:layout paint;isolation:isolate}
 .scsi-live-intelligence[data-surface="homepage"] .scsi-live-intelligence__signal[data-destination-type="signal_context"]{cursor:pointer}
 .scsi-live-intelligence[data-surface="homepage"] .scsi-live-intelligence__signal[data-signal-family]{text-underline-offset:.22em}
 @media print{.scsi-live-intelligence[data-surface="homepage"]{position:static!important}.scsi-live-intelligence[data-surface="homepage"] .scsi-live-intelligence__pause,.scsi-live-intelligence[data-surface="homepage"] .scsi-live-intelligence__controls{display:none!important}}
 
-/* Site Intelligence v3.20.0 — connected Live Intelligence surfaces. */
+/* Site Intelligence v3.21.0 — connected Live Intelligence surfaces. */
 .scsi-live-intelligence--surface-static_strip,
 .scsi-live-intelligence--surface-publication,
 .scsi-live-intelligence--surface-library,
@@ -2142,7 +2142,7 @@
   display: none;
 }
 
-/* Site Intelligence v3.20.0 — reviewed Live Intelligence watchlists, alerts, digests, and source-linked briefings. */
+/* Site Intelligence v3.21.0 — reviewed Live Intelligence watchlists, alerts, digests, and source-linked briefings. */
 .scsi-live-subscriptions {
   --scsi-subscription-border: rgba(17, 24, 39, .16);
   overflow: hidden;
@@ -2236,7 +2236,7 @@
 
 .scsi-live-preservation-exchange__output { min-height: 6rem; }
 
-/* Site Intelligence v3.20.0 — public registry discovery and evidence-linked institutional profiles. */
+/* Site Intelligence v3.21.0 — public registry discovery and evidence-linked institutional profiles. */
 .scsi-live-registry-discovery__form {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(11rem, 0.35fr) auto;
@@ -2264,3 +2264,19 @@
 @media (max-width: 420px) {
   .scsi-live-registry-discovery__profile-card dl { grid-template-columns: 1fr; }
 }
+
+
+/* Site Intelligence v3.21.0 — saved discovery views, public research collections, and evidence pathways. */
+.scsi-live-registry-collections__status { margin: .75rem 0; font-size: .9rem; }
+.scsi-live-registry-collections__views,
+.scsi-live-registry-collections__items { display: grid; gap: .85rem; margin-top: 1rem; }
+.scsi-live-registry-collections__view { padding: .85rem 0; border-top: 1px solid currentColor; }
+.scsi-live-registry-collections__view h4 { margin-bottom: .35rem; }
+.scsi-live-registry-collections__open { min-height: 44px; margin-top: .65rem; }
+.scsi-live-registry-collections__pathway { margin-top: 1.25rem; }
+.scsi-live-registry-collections__pathway-card { border-top: 1px solid currentColor; padding-top: 1rem; }
+.scsi-live-registry-collections__steps { display: grid; gap: .8rem; padding-left: 1.4rem; }
+.scsi-live-registry-collections__steps li { padding-left: .25rem; }
+.scsi-live-registry-collections__steps span { display: block; margin-top: .2rem; font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; opacity: .72; }
+.scsi-live-registry-collections__steps p { margin: .45rem 0; }
+.scsi-live-registry-collections__steps code { display: block; max-width: 100%; overflow-wrap: anywhere; font-size: .72rem; }

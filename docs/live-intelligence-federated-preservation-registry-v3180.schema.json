@@ -21,7 +21,7 @@
   ],
   "properties": {
     "schema": {"type": "string", "const": "sc-site-intelligence-preservation-institution/1.0"},
-    "release_version": {"type": "string", "const": "3.20.0"},
+    "release_version": {"type": "string", "const": "3.21.0"},
     "institution_id": {"type": "string", "minLength": 1, "maxLength": 180},
     "institution_name": {"type": "string", "minLength": 1, "maxLength": 300},
     "jurisdiction": {"type": "string", "minLength": 1, "maxLength": 160},

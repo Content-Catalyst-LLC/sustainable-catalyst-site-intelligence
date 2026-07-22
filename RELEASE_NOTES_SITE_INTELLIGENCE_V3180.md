@@ -1,8 +1,8 @@
-# Site Intelligence v3.20.0 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
+# Site Intelligence v3.21.0 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
 
 ## Summary
 
-v3.20.0 adds a public-safe institutional preservation registry above the approved exchange workflow introduced in v3.17.0. It records evidence-linked institution profiles, checksum-bound attestations, and unique-institution consensus summaries without treating registry presence as accreditation, certification, ranking, or endorsement.
+v3.21.0 adds a public-safe institutional preservation registry above the approved exchange workflow introduced in v3.17.0. It records evidence-linked institution profiles, checksum-bound attestations, and unique-institution consensus summaries without treating registry presence as accreditation, certification, ranking, or endorsement.
 
 ## Delivered
 

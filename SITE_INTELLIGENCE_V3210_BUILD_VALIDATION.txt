@@ -1,0 +1,33 @@
+Sustainable Catalyst Site Intelligence v3.21.0
+Saved Discovery Views, Public Research Collections, and Evidence Pathways
+
+Validation summary
+- Complete backend regression: 827 tests passed
+- Focused preservation-discovery and collection integration gate: 116 tests passed
+- Python syntax/AST validation: 355 files during installer validation
+- JSON validation: 108 files
+- Webmanifest validation: 1 file
+- Unique application HTML IDs: 672
+- JavaScript syntax: 27 files passed
+- WordPress PHP syntax: passed
+- v3.21.0 release contract: passed
+
+Collection verification
+- Saved views preserve canonical query, filter, and sort states plus SHA-256 checksums.
+- Separate preparation, review, and approval roles are enforced.
+- Public collections accept approved public registry records only.
+- Ordered evidence pathways retain human-written rationale and record checksums.
+- Source-view and source-record drift is detected; approval requires explicit acknowledgment when drift exists.
+- Draft and private records remain excluded from public routes.
+- Public projections remove governance actor identities and internal review notes.
+- JSON and Markdown packages are checksum-bound.
+- Visitor queries are not stored and visitor profiles are not created.
+- Approved snapshots are not overwritten; source records and external systems are not modified.
+
+Release engineering verification
+- Immutable manifest: 851 files verified
+- Installer integration gate: 116 tests passed
+- Installer rehearsal: passed against a disposable local Git remote
+- WordPress plugin regeneration: passed
+- Disposable local release commit: 3d74ec6d8f5aff14fe2590093ebf00b436f42436
+- GitHub push: not performed

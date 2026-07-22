@@ -4591,6 +4591,94 @@
     });
   }
 
+  function setupLiveIntelligenceRegistryCollections() {
+    document.querySelectorAll('[data-scsi-live-registry-collections]').forEach(function (root) {
+      const output = root.querySelector('.scsi-live-registry-collections__output');
+      const statusNode = root.querySelector('.scsi-live-registry-collections__status');
+      const policyEndpoint = root.dataset.policyEndpoint || '';
+      const statusEndpoint = root.dataset.statusEndpoint || '';
+      const viewsEndpoint = root.dataset.viewsEndpoint || '';
+      const collectionsEndpoint = root.dataset.collectionsEndpoint || '';
+      const pathwayBase = root.dataset.pathwayBase || '';
+      const limit = Math.max(1, Math.min(50, Number(root.dataset.limit || 12)));
+      if (!output || !policyEndpoint || !statusEndpoint || !viewsEndpoint || !collectionsEndpoint) return;
+
+      function renderPathway(payload, target) {
+        const steps = Array.isArray(payload.pathway) ? payload.pathway : [];
+        const records = Array.isArray(payload.records) ? payload.records : [];
+        target.innerHTML = '<article class="scsi-live-registry-collections__pathway-card">' +
+          '<p class="scsi-eyebrow">Checksum-bound evidence pathway</p>' +
+          '<h3>' + escapeHtml(payload.title || payload.collection_id || 'Research collection') + '</h3>' +
+          '<p>' + escapeHtml(payload.summary || '') + '</p>' +
+          '<ol class="scsi-live-registry-collections__steps">' + steps.map(function (step) {
+            return '<li><strong>' + escapeHtml(step.title || step.record_id || 'Evidence record') + '</strong>' +
+              '<span>' + escapeHtml(String(step.record_type || 'record').replaceAll('_', ' ')) + '</span>' +
+              '<p>' + escapeHtml(step.rationale || '') + '</p>' +
+              '<code>' + escapeHtml(step.record_sha256 || '') + '</code></li>';
+          }).join('') + '</ol>' +
+          '<p class="scsi-live-subscriptions__boundary">' + escapeHtml(String(records.length)) + ' retained public record snapshot(s). Human curated. Visitor queries are not stored. Approved snapshots are not overwritten.</p>' +
+        '</article>';
+      }
+
+      function renderCollections(payload, viewsPayload) {
+        const collections = Array.isArray(payload.collections) ? payload.collections : [];
+        const views = Array.isArray(viewsPayload.views) ? viewsPayload.views : [];
+        if (statusNode) statusNode.textContent = String(collections.length) + ' approved public collection(s) · ' + String(views.length) + ' approved saved view(s).';
+        const viewMarkup = views.length ? '<div class="scsi-live-registry-collections__views"><h3>Reproducible saved views</h3>' + views.map(function (view) {
+          const filters = view.filter_state || {};
+          return '<article class="scsi-live-registry-collections__view">' +
+            '<h4>' + escapeHtml(view.title || view.view_id || 'Saved view') + '</h4>' +
+            '<p>' + escapeHtml(view.description || '') + '</p>' +
+            '<p class="scsi-live-subscriptions__meta">' + escapeHtml(Object.keys(filters).map(function (key) { return key.replaceAll('_', ' ') + ': ' + filters[key]; }).join(' · ') || 'All approved public records') + '</p>' +
+          '</article>';
+        }).join('') + '</div>' : '';
+        const collectionMarkup = collections.length ? '<div class="scsi-live-registry-collections__items"><h3>Curated research collections</h3>' + collections.map(function (collection) {
+          return '<article class="scsi-live-subscriptions__item">' +
+            '<p class="scsi-live-subscriptions__meta">' + escapeHtml(String(collection.record_count || 0)) + ' records · checksum-bound snapshot</p>' +
+            '<h4>' + escapeHtml(collection.title || collection.collection_id || 'Research collection') + '</h4>' +
+            '<p>' + escapeHtml(collection.summary || '') + '</p>' +
+            '<button type="button" class="scsi-live-registry-collections__open" data-collection-id="' + escapeHtml(collection.collection_id || '') + '">Open evidence pathway</button>' +
+          '</article>';
+        }).join('') + '</div>' : '<p class="scsi-live-subscriptions__empty">No approved public registry collections have been published.</p>';
+        output.innerHTML = viewMarkup + collectionMarkup + '<div class="scsi-live-registry-collections__pathway" aria-live="polite"></div>';
+        output.setAttribute('aria-busy', 'false');
+        output.querySelectorAll('[data-collection-id]').forEach(function (button) {
+          button.addEventListener('click', function () {
+            const collectionId = button.dataset.collectionId || '';
+            const target = output.querySelector('.scsi-live-registry-collections__pathway');
+            if (!collectionId || !target || !pathwayBase) return;
+            target.innerHTML = '<p class="scsi-muted">Loading retained evidence pathway…</p>';
+            fetchJson(pathwayBase + encodeURIComponent(collectionId) + '/pathway').then(function (payload) {
+              renderPathway(payload, target);
+            }).catch(function () {
+              target.innerHTML = '<p class="scsi-live-subscriptions__empty">The public evidence pathway is temporarily unavailable.</p>';
+            });
+          });
+        });
+      }
+
+      output.setAttribute('aria-busy', 'true');
+      Promise.all([
+        fetchJson(policyEndpoint),
+        fetchJson(statusEndpoint),
+        fetchJson(viewsEndpoint + '?limit=' + encodeURIComponent(String(limit))),
+        fetchJson(collectionsEndpoint + '?limit=' + encodeURIComponent(String(limit)))
+      ]).then(function (responses) {
+        const policy = responses[0] || {};
+        const status = responses[1] || {};
+        const views = responses[2] || {};
+        const collections = responses[3] || {};
+        const muted = root.querySelector('.scsi-muted');
+        if (muted) muted.textContent = policy.principle || 'Explore governed saved views, curated public collections, and reproducible evidence pathways.';
+        if (statusNode) statusNode.textContent = String(status.approved_public_collection_count || 0) + ' approved public collection(s). No visitor profiles.';
+        renderCollections(collections, views);
+      }).catch(function () {
+        output.innerHTML = '<p class="scsi-live-subscriptions__empty">Public registry collections are temporarily unavailable.</p>';
+        output.setAttribute('aria-busy', 'false');
+      });
+    });
+  }
+
   function init() {
     setupActivePageLinks();
     setupLiveIntelligenceSubscriptions();
@@ -4604,6 +4692,7 @@
     setupLiveIntelligencePreservationRegistry();
     setupLiveIntelligenceRegistryGovernance();
     setupLiveIntelligenceRegistryDiscovery();
+    setupLiveIntelligenceRegistryCollections();
     setupLaunchActions();
     setupResponsiveEmbeds();
     setupLiveIntelligence();

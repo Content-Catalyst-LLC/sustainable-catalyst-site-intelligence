@@ -1,0 +1,28 @@
+{
+  "product": "Sustainable Catalyst Site Intelligence",
+  "version": "3.21.0",
+  "increment": "Saved Discovery Views, Public Research Collections, and Evidence Pathways",
+  "backend_module": "backend/app/live_intelligence_registry_collections_v3210.py",
+  "wordpress_shortcode": "[sc_live_intelligence_registry_collections]",
+  "public_routes": [
+    "/public/live-intelligence/registry-collections/policy",
+    "/public/live-intelligence/registry-collections/status",
+    "/public/live-intelligence/registry-collections/views",
+    "/public/live-intelligence/registry-collections",
+    "/public/live-intelligence/registry-collections/{collection_id}",
+    "/public/live-intelligence/registry-collections/{collection_id}/pathway"
+  ],
+  "privacy_and_governance": {
+    "human_review_required": true,
+    "separation_of_duties_required": true,
+    "approved_public_records_only": true,
+    "visitor_queries_stored": false,
+    "visitor_profiles_created": false,
+    "personal_identity_data_stored": false,
+    "approved_snapshots_overwritten": false,
+    "source_records_mutated": false,
+    "network_verification_performed": false,
+    "remote_write_performed": false,
+    "certification_claimed": false
+  }
+}

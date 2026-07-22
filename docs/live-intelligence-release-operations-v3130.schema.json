@@ -7,7 +7,7 @@
   "required": ["schema", "release_version", "entity_id", "entity_type", "state", "destination_write_performed"],
   "properties": {
     "schema": {"type": "string", "minLength": 1},
-    "release_version": {"type": "string", "const": "3.20.0"},
+    "release_version": {"type": "string", "const": "3.21.0"},
     "entity_id": {"type": "string", "minLength": 1, "maxLength": 180},
     "entity_type": {"enum": ["deployment", "issue", "correction", "rollback", "handoff"]},
     "state": {"type": "string", "minLength": 1, "maxLength": 80},

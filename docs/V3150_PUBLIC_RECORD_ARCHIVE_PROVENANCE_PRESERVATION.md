@@ -1,6 +1,6 @@
-# Site Intelligence v3.20.0 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
+# Site Intelligence v3.21.0 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
 
-Live Intelligence v3.20.0 adds a long-term public-record layer above approved briefings, publication releases, and public change notices.
+Live Intelligence v3.21.0 adds a long-term public-record layer above approved briefings, publication releases, and public change notices.
 
 ## Workflow
 

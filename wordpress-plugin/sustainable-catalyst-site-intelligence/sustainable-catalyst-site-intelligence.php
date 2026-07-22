@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.20.0
+ * Version: 3.21.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.20.0';
+    const VERSION = '3.21.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -61,6 +61,7 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_live_intelligence_preservation_registry', [$this, 'live_intelligence_preservation_registry_shortcode']);
         add_shortcode('sc_live_intelligence_registry_governance', [$this, 'live_intelligence_registry_governance_shortcode']);
         add_shortcode('sc_live_intelligence_registry_discovery', [$this, 'live_intelligence_registry_discovery_shortcode']);
+        add_shortcode('sc_live_intelligence_registry_collections', [$this, 'live_intelligence_registry_collections_shortcode']);
         add_shortcode('sc_site_intelligence_dashboard', [$this, 'dashboard_shortcode']);
         add_shortcode('sc_site_intelligence_page', [$this, 'page_shortcode']);
         add_shortcode('sc_site_intelligence_unmapped', [$this, 'unmapped_shortcode']);
@@ -428,7 +429,7 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v3.20.0 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
+        // v3.21.0 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
         // Existing moving tickers remain moving unless an administrator selects static or manual presentation.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
@@ -1048,6 +1049,31 @@ final class SC_Site_Intelligence_Plugin {
         register_rest_route(self::REST_NAMESPACE, '/live-intelligence/registry-discovery/institutions/(?P<institution_id>[a-zA-Z0-9:_-]+)', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_live_intelligence_registry_discovery_institution'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/registry-collections/policy', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_registry_collections_policy'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/registry-collections/status', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_registry_collections_status'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/registry-collections/views', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_registry_collections_views'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/registry-collections', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_registry_collections'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/live-intelligence/registry-collections/(?P<collection_id>[a-zA-Z0-9:_-]+)/pathway', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_live_intelligence_registry_collection_pathway'],
             'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/live-intelligence/archive-audits/policy', [
@@ -3332,6 +3358,34 @@ final class SC_Site_Intelligence_Plugin {
         return is_wp_error($result) ? $result : rest_ensure_response($result);
     }
 
+    public function rest_live_intelligence_registry_collections_policy(WP_REST_Request $request) {
+        $result = $this->backend_request('public/live-intelligence/registry-collections/policy');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_registry_collections_status(WP_REST_Request $request) {
+        $result = $this->backend_request('public/live-intelligence/registry-collections/status');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_registry_collections_views(WP_REST_Request $request) {
+        $limit = max(1, min(100, (int) $request->get_param('limit')));
+        $result = $this->backend_request('public/live-intelligence/registry-collections/views?limit=' . $limit);
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_registry_collections(WP_REST_Request $request) {
+        $limit = max(1, min(100, (int) $request->get_param('limit')));
+        $result = $this->backend_request('public/live-intelligence/registry-collections?limit=' . $limit);
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
+    public function rest_live_intelligence_registry_collection_pathway(WP_REST_Request $request) {
+        $collection_id = sanitize_text_field((string) $request->get_param('collection_id'));
+        $result = $this->backend_request('public/live-intelligence/registry-collections/' . rawurlencode($collection_id) . '/pathway');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
+    }
+
     public function rest_live_intelligence_archive_audit_policy(WP_REST_Request $request) {
         $result = $this->backend_request('public/live-intelligence/archive-audits/policy');
         return is_wp_error($result) ? $result : rest_ensure_response($result);
@@ -4143,6 +4197,27 @@ final class SC_Site_Intelligence_Plugin {
         <?php return ob_get_clean();
     }
 
+    public function live_intelligence_registry_collections_shortcode($atts = []) {
+        $atts = shortcode_atts(['title' => 'Public Registry Research Collections', 'limit' => 12], $atts, 'sc_live_intelligence_registry_collections');
+        $limit = max(1, min(50, (int) $atts['limit']));
+        $policy_endpoint = rest_url(self::REST_NAMESPACE . '/live-intelligence/registry-collections/policy');
+        $status_endpoint = rest_url(self::REST_NAMESPACE . '/live-intelligence/registry-collections/status');
+        $views_endpoint = rest_url(self::REST_NAMESPACE . '/live-intelligence/registry-collections/views');
+        $collections_endpoint = rest_url(self::REST_NAMESPACE . '/live-intelligence/registry-collections');
+        $pathway_base = rest_url(self::REST_NAMESPACE . '/live-intelligence/registry-collections/');
+        ob_start(); ?>
+        <section class="scsi-card scsi-live-editorial scsi-live-registry-collections" data-scsi-live-registry-collections data-policy-endpoint="<?php echo esc_url($policy_endpoint); ?>" data-status-endpoint="<?php echo esc_url($status_endpoint); ?>" data-views-endpoint="<?php echo esc_url($views_endpoint); ?>" data-collections-endpoint="<?php echo esc_url($collections_endpoint); ?>" data-pathway-base="<?php echo esc_url($pathway_base); ?>" data-limit="<?php echo esc_attr((string) $limit); ?>">
+            <p class="scsi-eyebrow">Live Intelligence · Research collections</p>
+            <h2><?php echo esc_html(sanitize_text_field((string) $atts['title'])); ?></h2>
+            <p class="scsi-muted">Loading approved saved views, curated collections, and checksum-bound evidence pathways…</p>
+            <div class="scsi-live-registry-collections__status" aria-live="polite"></div>
+            <div class="scsi-live-registry-collections__output" aria-live="polite" aria-busy="true"></div>
+            <p class="scsi-live-subscriptions__boundary">Human-curated public records only. Filter states are reproducible, approved snapshots remain retained, visitor queries and profiles are not stored, and no source record or external system is modified.</p>
+            <noscript><p><a href="<?php echo esc_url($collections_endpoint); ?>">Open public registry research collections.</a></p></noscript>
+        </section>
+        <?php return ob_get_clean();
+    }
+
     public function settings_page() {
         if (!current_user_can('manage_options')) {
             return;
@@ -4325,7 +4400,7 @@ final class SC_Site_Intelligence_Plugin {
             </script>
             <hr />
             <h2>Shortcodes</h2>
-            <p><code>[sc_live_intelligence]</code> — governed signal surface; supports <code>channel</code>, <code>region</code>, <code>country</code>, <code>category</code>, <code>limit</code>, <code>feeds</code>, <code>exclude</code>, <code>max_per_source</code>, presentation controls, and <code>surface</code> values <code>homepage</code>, <code>static_strip</code>, <code>channel</code>, <code>publication</code>, <code>library</code>, <code>advisory</code>, <code>lab</code>, or <code>external_embed</code>. Preset aliases: <code>[sc_live_intelligence_static]</code>, <code>[sc_live_intelligence_channel]</code>, <code>[sc_live_intelligence_publication]</code>, <code>[sc_live_intelligence_library]</code>, <code>[sc_live_intelligence_advisory]</code>, <code>[sc_live_intelligence_lab]</code>, and <code>[sc_live_intelligence_embed]</code>. Reviewed subscription surfaces: <code>[sc_live_intelligence_watchlists]</code>, <code>[sc_live_intelligence_alerts]</code>, and <code>[sc_live_intelligence_digests]</code>. Editorial governance surface: <code>[sc_live_intelligence_editorial_workspace]</code>. Release-governance surface: <code>[sc_live_intelligence_publication_releases]</code>. Post-publication governance surface: <code>[sc_live_intelligence_release_operations]</code>. Public append-only change history: <code>[sc_live_intelligence_change_history]</code>. Long-term public record archive: <code>[sc_live_intelligence_public_archive]</code>. Preservation audit and institutional custody status: <code>[sc_live_intelligence_archive_audits]</code>. Preservation interoperability and external verification: <code>[sc_live_intelligence_preservation_exchange]</code>. Federated preservation registry and multi-party verification: <code>[sc_live_intelligence_preservation_registry]</code>. Registry challenges, revocation, and appeals: <code>[sc_live_intelligence_registry_governance]</code>. Public registry search and evidence-linked institutional profiles: <code>[sc_live_intelligence_registry_discovery]</code>.</p>
+            <p><code>[sc_live_intelligence]</code> — governed signal surface; supports <code>channel</code>, <code>region</code>, <code>country</code>, <code>category</code>, <code>limit</code>, <code>feeds</code>, <code>exclude</code>, <code>max_per_source</code>, presentation controls, and <code>surface</code> values <code>homepage</code>, <code>static_strip</code>, <code>channel</code>, <code>publication</code>, <code>library</code>, <code>advisory</code>, <code>lab</code>, or <code>external_embed</code>. Preset aliases: <code>[sc_live_intelligence_static]</code>, <code>[sc_live_intelligence_channel]</code>, <code>[sc_live_intelligence_publication]</code>, <code>[sc_live_intelligence_library]</code>, <code>[sc_live_intelligence_advisory]</code>, <code>[sc_live_intelligence_lab]</code>, and <code>[sc_live_intelligence_embed]</code>. Reviewed subscription surfaces: <code>[sc_live_intelligence_watchlists]</code>, <code>[sc_live_intelligence_alerts]</code>, and <code>[sc_live_intelligence_digests]</code>. Editorial governance surface: <code>[sc_live_intelligence_editorial_workspace]</code>. Release-governance surface: <code>[sc_live_intelligence_publication_releases]</code>. Post-publication governance surface: <code>[sc_live_intelligence_release_operations]</code>. Public append-only change history: <code>[sc_live_intelligence_change_history]</code>. Long-term public record archive: <code>[sc_live_intelligence_public_archive]</code>. Preservation audit and institutional custody status: <code>[sc_live_intelligence_archive_audits]</code>. Preservation interoperability and external verification: <code>[sc_live_intelligence_preservation_exchange]</code>. Federated preservation registry and multi-party verification: <code>[sc_live_intelligence_preservation_registry]</code>. Registry challenges, revocation, and appeals: <code>[sc_live_intelligence_registry_governance]</code>. Public registry search and evidence-linked institutional profiles: <code>[sc_live_intelligence_registry_discovery]</code>. Governed saved views, public research collections, and evidence pathways: <code>[sc_live_intelligence_registry_collections]</code>.</p>
             <p><code>[sc_site_intelligence_dashboard]</code></p>
             <p><code>[sc_site_intelligence_page]</code></p>
             <p><code>[sc_site_intelligence_unmapped]</code></p>
