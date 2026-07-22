@@ -19,7 +19,7 @@
   ],
   "properties": {
     "schema": {"type": "string", "const": "sc-site-intelligence-archive-audit/1.0"},
-    "release_version": {"type": "string", "const": "3.21.0"},
+    "release_version": {"type": "string", "const": "3.22.0"},
     "audit_id": {"type": "string", "minLength": 1, "maxLength": 180},
     "audit_type": {"enum": ["full_chain", "record_sample", "retention_review", "custody_review"]},
     "cadence": {"enum": ["manual", "quarterly", "semiannual", "annual"]},

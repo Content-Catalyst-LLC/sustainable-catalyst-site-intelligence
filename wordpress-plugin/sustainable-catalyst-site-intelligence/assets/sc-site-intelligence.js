@@ -4679,6 +4679,86 @@
     });
   }
 
+  function setupLiveIntelligenceRegistryPublications() {
+    document.querySelectorAll('[data-scsi-live-registry-publications]').forEach(function (root) {
+      const output = root.querySelector('.scsi-live-registry-publications__output');
+      const statusNode = root.querySelector('.scsi-live-registry-publications__status');
+      const policyEndpoint = root.dataset.policyEndpoint || '';
+      const statusEndpoint = root.dataset.statusEndpoint || '';
+      const briefsEndpoint = root.dataset.briefsEndpoint || '';
+      const briefBase = root.dataset.briefBase || '';
+      const limit = Math.max(1, Math.min(50, Number(root.dataset.limit || 12)));
+      if (!output || !policyEndpoint || !statusEndpoint || !briefsEndpoint) return;
+
+      function renderCitations(payload, target) {
+        const citations = Array.isArray(payload.citations) ? payload.citations : [];
+        target.innerHTML = '<article class="scsi-live-registry-publications__citation-card">' +
+          '<p class="scsi-eyebrow">Source-linked citation bundle</p>' +
+          '<h4>' + escapeHtml(String(citations.length)) + ' retained citation(s)</h4>' +
+          '<ol>' + citations.map(function (citation) {
+            const reference = citation.reference ? '<a href="' + escapeHtml(citation.reference) + '" target="_blank" rel="noopener">Open source reference</a>' : 'Reference retained in source snapshot';
+            return '<li><strong>' + escapeHtml(citation.title || citation.record_id || 'Public record') + '</strong>' +
+              '<span>' + escapeHtml(String(citation.record_type || 'record').replaceAll('_', ' ')) + '</span>' +
+              '<p>' + reference + '</p><code>' + escapeHtml(citation.record_sha256 || '') + '</code></li>';
+          }).join('') + '</ol>' +
+          '<p class="scsi-live-subscriptions__boundary">Citation checksum: <code>' + escapeHtml(payload.citations_sha256 || '') + '</code>. Source-linked mapping only; external citation-standard certification is not claimed.</p>' +
+        '</article>';
+      }
+
+      function renderBriefs(payload) {
+        const briefs = Array.isArray(payload.briefs) ? payload.briefs : [];
+        if (statusNode) statusNode.textContent = String(briefs.length) + ' approved public research brief(s).';
+        if (!briefs.length) {
+          output.innerHTML = '<p class="scsi-live-subscriptions__empty">No approved public registry research briefs have been published.</p>';
+          output.setAttribute('aria-busy', 'false');
+          return;
+        }
+        output.innerHTML = '<div class="scsi-live-registry-publications__items">' + briefs.map(function (brief) {
+          const findings = Array.isArray(brief.key_findings) ? brief.key_findings : [];
+          return '<article class="scsi-live-registry-publications__brief">' +
+            '<p class="scsi-live-subscriptions__meta">Human-reviewed research brief · ' + escapeHtml(String((brief.citations || []).length)) + ' citation(s)</p>' +
+            '<h3>' + escapeHtml(brief.title || brief.brief_id || 'Research brief') + '</h3>' +
+            '<p class="scsi-live-registry-publications__deck">' + escapeHtml(brief.deck || '') + '</p>' +
+            '<p>' + escapeHtml(brief.abstract || '') + '</p>' +
+            '<h4>Key findings</h4><ul>' + findings.map(function (finding) { return '<li>' + escapeHtml(finding) + '</li>'; }).join('') + '</ul>' +
+            '<details><summary>Methodology and limitations</summary><h5>Methodology</h5><p>' + escapeHtml(brief.methodology || '') + '</p><h5>Limitations</h5><p>' + escapeHtml(brief.limitations || '') + '</p></details>' +
+            '<button type="button" class="scsi-live-registry-publications__citations" data-brief-id="' + escapeHtml(brief.brief_id || '') + '">Open citation bundle</button>' +
+            '<div class="scsi-live-registry-publications__citation-output" aria-live="polite"></div>' +
+            '<p class="scsi-live-subscriptions__boundary">Brief checksum: <code>' + escapeHtml(brief.brief_sha256 || '') + '</code> · Source collection: <code>' + escapeHtml(brief.source_collection_sha256 || '') + '</code></p>' +
+          '</article>';
+        }).join('') + '</div>';
+        output.setAttribute('aria-busy', 'false');
+        output.querySelectorAll('[data-brief-id]').forEach(function (button) {
+          button.addEventListener('click', function () {
+            const briefId = button.dataset.briefId || '';
+            const target = button.parentElement.querySelector('.scsi-live-registry-publications__citation-output');
+            if (!briefId || !target || !briefBase) return;
+            target.innerHTML = '<p class="scsi-muted">Loading retained citation bundle…</p>';
+            fetchJson(briefBase + encodeURIComponent(briefId) + '/citations').then(function (payload) {
+              renderCitations(payload, target);
+            }).catch(function () {
+              target.innerHTML = '<p class="scsi-live-subscriptions__empty">The citation bundle is temporarily unavailable.</p>';
+            });
+          });
+        });
+      }
+
+      output.setAttribute('aria-busy', 'true');
+      Promise.all([fetchJson(policyEndpoint), fetchJson(statusEndpoint), fetchJson(briefsEndpoint + '?limit=' + encodeURIComponent(String(limit)))]).then(function (responses) {
+        const policy = responses[0] || {};
+        const status = responses[1] || {};
+        const payload = responses[2] || {};
+        const muted = root.querySelector('.scsi-muted');
+        if (muted) muted.textContent = policy.principle || 'Explore source-linked public research briefs and citation bundles.';
+        if (statusNode) statusNode.textContent = String(status.approved_public_brief_count || 0) + ' approved public brief(s). No automatic publication.';
+        renderBriefs(payload);
+      }).catch(function () {
+        output.innerHTML = '<p class="scsi-live-subscriptions__empty">Public registry research briefs are temporarily unavailable.</p>';
+        output.setAttribute('aria-busy', 'false');
+      });
+    });
+  }
+
   function init() {
     setupActivePageLinks();
     setupLiveIntelligenceSubscriptions();
@@ -4693,6 +4773,7 @@
     setupLiveIntelligenceRegistryGovernance();
     setupLiveIntelligenceRegistryDiscovery();
     setupLiveIntelligenceRegistryCollections();
+    setupLiveIntelligenceRegistryPublications();
     setupLaunchActions();
     setupResponsiveEmbeds();
     setupLiveIntelligence();

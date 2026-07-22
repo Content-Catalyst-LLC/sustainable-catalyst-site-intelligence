@@ -1,8 +1,8 @@
-# Site Intelligence v3.21.0
+# Site Intelligence v3.22.0
 
 ## Public Registry Discovery, Evidence Search, and Institutional Profiles
 
-Site Intelligence v3.21.0 adds a bounded public discovery layer above the approved preservation registry, exchange, attestation, challenge, and appeal records introduced in v3.17.0–v3.21.0.
+Site Intelligence v3.22.0 adds a bounded public discovery layer above the approved preservation registry, exchange, attestation, challenge, and appeal records introduced in v3.17.0–v3.22.0.
 
 ### Included
 

@@ -175,6 +175,6 @@ def test_interface_wordpress_and_release_contract():
     php = (root / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
     assert 'data-route="dossiers"' in html and 'id="dossierStudio"' in html
     assert "SCDossiersV270" in js and ".dossier-studio" in css
-    assert 'const APP_VERSION="3.21.0"' in app_js
-    assert "Version: 3.21.0" in php and "sc_country_regional_intelligence_dossiers" in php
+    assert 'const APP_VERSION="3.22.0"' in app_js
+    assert "Version: 3.22.0" in php and "sc_country_regional_intelligence_dossiers" in php
     assert "No composite score or country ranking" in html

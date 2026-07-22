@@ -1,8 +1,8 @@
-# Site Intelligence v3.21.0
+# Site Intelligence v3.22.0
 
 ## Registry Governance, Challenges, Revocation, and Appeals
 
-Site Intelligence v3.21.0 adds append-only evidence-based governance and appeals for the federated preservation registry.
+Site Intelligence v3.22.0 adds append-only evidence-based governance and appeals for the federated preservation registry.
 
 ### Included
 

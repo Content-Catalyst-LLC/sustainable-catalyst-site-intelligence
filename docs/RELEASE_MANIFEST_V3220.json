@@ -1,0 +1,20 @@
+{
+  "schema": "sc-site-intelligence-feature-release/1.0",
+  "version": "3.22.0",
+  "name": "Collection Publication, Citation Exports, and Research Brief Packages",
+  "capabilities": [
+    "approved collection to research brief workflow",
+    "source-linked citation bundles",
+    "JSON, Markdown, BibTeX-like, and RIS-like exports",
+    "manual institutional handoff receipts"
+  ],
+  "boundaries": {
+    "automatic_publication_performed": false,
+    "remote_write_performed": false,
+    "source_records_mutated": false,
+    "visitor_profiles_created": false,
+    "recipient_identities_stored": false,
+    "credentials_stored": false,
+    "citation_standard_certification_claimed": false
+  }
+}

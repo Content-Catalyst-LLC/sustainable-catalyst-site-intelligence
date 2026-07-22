@@ -1,8 +1,8 @@
-# Site Intelligence v3.21.0 — Saved Discovery Views, Public Research Collections, and Evidence Pathways
+# Site Intelligence v3.22.0 — Saved Discovery Views, Public Research Collections, and Evidence Pathways
 
 ## Summary
 
-Site Intelligence v3.21.0 adds a governed curation layer above Public Registry Discovery. Editorial and research teams can preserve reproducible discovery states, review and approve public research collections, and publish ordered evidence pathways tied to retained public-record snapshots and SHA-256 checksums.
+Site Intelligence v3.22.0 adds a governed curation layer above Public Registry Discovery. Editorial and research teams can preserve reproducible discovery states, review and approve public research collections, and publish ordered evidence pathways tied to retained public-record snapshots and SHA-256 checksums.
 
 ## Evidence pathways and delivered capabilities
 

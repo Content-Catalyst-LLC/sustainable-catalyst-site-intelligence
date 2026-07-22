@@ -1,7 +1,7 @@
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 requirements = {
-    "backend/app/version.py": ['APP_VERSION = "3.21.0"'],
+    "backend/app/version.py": ['APP_VERSION = "3.22.0"'],
     "backend/app/live_intelligence_public_archive_v3150.py": [
         "POLICY_SCHEMA_VERSION", "RECORD_SCHEMA_VERSION", "PACKAGE_SCHEMA_VERSION",
         "class LiveIntelligencePublicArchive", "def create_record(", "def verify_record(",
@@ -25,17 +25,17 @@ requirements = {
         "SC_SI_LIVE_INTELLIGENCE_PUBLIC_ARCHIVE_REQUIRE_SEPARATION_OF_DUTIES",
     ],
     "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": [
-        "Version: 3.21.0", "sc_live_intelligence_public_archive",
+        "Version: 3.22.0", "sc_live_intelligence_public_archive",
         "rest_live_intelligence_public_archive_policy", "rest_live_intelligence_public_archive_status",
         "append-only provenance ledger",
     ],
     "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js": [
         "setupLiveIntelligencePublicArchive", "Append-only ledger", "No remote deposit",
     ],
-    "README.md": ["v3.21.0 — Public Record Archive, Provenance Ledger, and Long-Term Preservation"],
+    "README.md": ["v3.22.0 — Public Record Archive, Provenance Ledger, and Long-Term Preservation"],
     "RELEASE_NOTES_SITE_INTELLIGENCE_V3150.md": ["Public Record Archive", "append-only", "preservation"],
     "docs/RELEASE_MANIFEST_V3150.json": [
-        '"version": "3.21.0"', '"append_only_ledger": true',
+        '"version": "3.22.0"', '"append_only_ledger": true',
         '"archive_record_deleted": false', '"remote_deposit_performed": false',
     ],
     "docs/live-intelligence-public-archive-v3150.schema.json": [
@@ -50,4 +50,4 @@ for relative, needles in requirements.items():
     for needle in needles:
         if needle not in text:
             raise SystemExit(f"Missing {needle!r} in {relative}")
-print("Site Intelligence v3.21.0 release contract passed.")
+print("Site Intelligence v3.22.0 release contract passed.")

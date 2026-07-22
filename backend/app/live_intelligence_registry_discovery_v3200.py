@@ -1,6 +1,6 @@
 """Public registry discovery, evidence search, and institutional profiles.
 
-Site Intelligence v3.21.0 builds a read-only discovery index over approved,
+Site Intelligence v3.22.0 builds a read-only discovery index over approved,
 public-safe preservation registry, exchange, attestation, challenge, and appeal
 records. The discovery layer never mutates source records, stores queries,
 profiles visitors, exposes staff identities, or grants remote write authority.

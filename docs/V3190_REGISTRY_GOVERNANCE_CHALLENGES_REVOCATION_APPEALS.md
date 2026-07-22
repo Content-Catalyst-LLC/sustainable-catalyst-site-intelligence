@@ -1,4 +1,4 @@
-# v3.21.0 — Registry Governance, Challenges, Revocation, and Appeals
+# v3.22.0 — Registry Governance, Challenges, Revocation, and Appeals
 
 This increment adds an append-only governance layer above the federated preservation registry.
 

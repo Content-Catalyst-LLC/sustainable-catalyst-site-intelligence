@@ -3,7 +3,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 requirements = {
-    "backend/app/version.py": ['APP_VERSION = "3.21.0"'],
+    "backend/app/version.py": ['APP_VERSION = "3.22.0"'],
     "backend/app/live_intelligence_registry_discovery_v3200.py": [
         "class LiveIntelligenceRegistryDiscovery", "def search(", "def facets(",
         "def institution_profile(", "search_queries_stored", "visitor_profiles_created",
@@ -22,16 +22,16 @@ requirements = {
         "live_intelligence_registry_discovery_max_limit",
     ],
     "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": [
-        "Version: 3.21.0", "sc_live_intelligence_registry_discovery",
+        "Version: 3.22.0", "sc_live_intelligence_registry_discovery",
         "rest_live_intelligence_registry_discovery_search",
     ],
     "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js": [
         "setupLiveIntelligenceRegistryDiscovery", "Evidence-linked profiles",
         "Queries are not stored", "No staff identities",
     ],
-    "README.md": ["v3.21.0 — Public Registry Discovery, Evidence Search, and Institutional Profiles"],
+    "README.md": ["v3.22.0 — Public Registry Discovery, Evidence Search, and Institutional Profiles"],
     "RELEASE_NOTES_SITE_INTELLIGENCE_V3200.md": ["Registry Discovery", "institutional profiles", "Search queries are not stored"],
-    "docs/RELEASE_MANIFEST_V3200.json": ['"version": "3.21.0"', '"search_queries_stored": false'],
+    "docs/RELEASE_MANIFEST_V3200.json": ['"version": "3.22.0"', '"search_queries_stored": false'],
     "docs/live-intelligence-registry-discovery-v3200.schema.json": [
         "Live Intelligence Registry Discovery", '"additionalProperties": false',
     ],
@@ -44,4 +44,4 @@ for relative, needles in requirements.items():
     for needle in needles:
         if needle not in text:
             raise SystemExit(f"Missing {needle!r} in {relative}")
-print("Site Intelligence v3.21.0 release contract passed.")
+print("Site Intelligence v3.22.0 release contract passed.")

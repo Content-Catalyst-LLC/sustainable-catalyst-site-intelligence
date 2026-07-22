@@ -5,7 +5,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_v3190_release_contract():
     requirements = {
-        "backend/app/version.py": ['APP_VERSION = "3.21.0"'],
+        "backend/app/version.py": ['APP_VERSION = "3.22.0"'],
         "backend/app/live_intelligence_registry_governance_v3190.py": [
             "class LiveIntelligenceRegistryGovernanceCenter",
             "def create_challenge(", "def review_challenge(", "def approve_challenge(",
@@ -28,18 +28,18 @@ def test_v3190_release_contract():
             "live_intelligence_registry_governance_events_path",
         ],
         "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": [
-            "Version: 3.21.0", "sc_live_intelligence_registry_governance",
+            "Version: 3.22.0", "sc_live_intelligence_registry_governance",
             "rest_live_intelligence_registry_governance_status",
         ],
         "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js": [
             "setupLiveIntelligenceRegistryGovernance", "Append-only decisions",
             "Appeal pathway", "No record deletion",
         ],
-        "README.md": ["v3.21.0 — Registry Governance, Challenges, Revocation, and Appeals"],
+        "README.md": ["v3.22.0 — Registry Governance, Challenges, Revocation, and Appeals"],
         "RELEASE_NOTES_SITE_INTELLIGENCE_V3190.md": [
             "Registry Governance", "revocation", "appeals", "append-only",
         ],
-        "docs/RELEASE_MANIFEST_V3190.json": ['"version": "3.21.0"', '"automatic_enforcement_performed": false'],
+        "docs/RELEASE_MANIFEST_V3190.json": ['"version": "3.22.0"', '"automatic_enforcement_performed": false'],
         "docs/live-intelligence-registry-governance-v3190.schema.json": [
             "Live Intelligence Registry Governance", '"additionalProperties": false',
         ],
