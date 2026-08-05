@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.23.1
+ * Version: 3.23.2
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,8 +13,8 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.23.1';
-    const RELEASE_ID = 'site-intelligence-v3.23.1';
+    const VERSION = '3.23.2';
+    const RELEASE_ID = 'site-intelligence-v3.23.2';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -433,7 +433,7 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v3.23.1 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
+        // v3.23.2 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
         // Existing moving tickers remain moving unless an administrator selects static or manual presentation.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
@@ -4589,11 +4589,9 @@ final class SC_Site_Intelligence_Plugin {
         $options = self::options();
         $base = plugin_dir_url(__FILE__) . 'assets/';
         wp_enqueue_style('scsi-map-engine', $base . 'vector-cartography-v3230.css', [], self::VERSION);
-        wp_enqueue_style('scsi-production-truth', $base . 'production-truth-v3231.css', ['scsi-map-engine'], self::VERSION);
         wp_enqueue_style('sc-site-intelligence', $base . 'sc-site-intelligence.css', ['scsi-map-engine'], self::VERSION);
         wp_enqueue_script('scsi-map-engine', $base . 'vector-cartography-v3230.js', [], self::VERSION, true);
         wp_enqueue_script('sc-site-intelligence', $base . 'sc-site-intelligence.js', ['scsi-map-engine'], self::VERSION, true);
-        wp_enqueue_script('scsi-production-truth', $base . 'production-truth-v3231.js', ['sc-site-intelligence'], self::VERSION, true);
         wp_localize_script('sc-site-intelligence', 'SCSiteIntelligence', [
             'restBase' => esc_url_raw(rest_url(self::REST_NAMESPACE)),
             'restNonce' => wp_create_nonce('wp_rest'),
@@ -4606,8 +4604,8 @@ final class SC_Site_Intelligence_Plugin {
             'mapWorldUrl' => esc_url_raw($base . 'world-cartography-v3230.geojson'),
             'mapEngineCssUrl' => esc_url_raw($base . 'vector-cartography-v3230.css'),
             'workspaceCssUrl' => esc_url_raw($base . 'cartographic-workspace-v3230.css'),
-            'productionTruthCssUrl' => esc_url_raw($base . 'production-truth-v3231.css'),
-            'productionTruthJsUrl' => esc_url_raw($base . 'production-truth-v3231.js'),
+            'mapInteractionCssUrl' => esc_url_raw($base . 'cartographic-interaction-v3232.css'),
+            'mapInteractionJsUrl' => esc_url_raw($base . 'cartographic-interaction-v3232.js'),
         ]);
     }
 

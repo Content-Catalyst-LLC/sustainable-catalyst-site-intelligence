@@ -1,8 +1,8 @@
-# Site Intelligence v3.23.1 Production Truth Audit
+# Site Intelligence v3.23.2 Production Truth Audit
 
 ## Audit objective
 
-The v3.23.0 interface exposed 35 public navigation routes. The objective of v3.23.1 was to ensure that each route either opens a real public surface with complete runtime states or fails closed with an explicit unavailable state.
+The v3.23.0 interface exposed 35 public navigation routes. The objective of v3.23.2 was to ensure that each route either opens a real public surface with complete runtime states or fails closed with an explicit unavailable state.
 
 ## Findings and repairs
 

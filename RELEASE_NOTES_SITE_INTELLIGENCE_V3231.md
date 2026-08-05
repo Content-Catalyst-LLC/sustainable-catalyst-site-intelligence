@@ -1,4 +1,4 @@
-# Site Intelligence v3.23.1
+# Site Intelligence v3.23.2
 
 ## Production Truth and Workspace Completion
 

@@ -1,0 +1,36 @@
+{
+  "version": "3.23.2",
+  "release_id": "site-intelligence-v3.23.2",
+  "contract": "cartographic-interaction-and-layer-control",
+  "default_state": {
+    "base_style": "institutional-dark",
+    "imagery_opacity": 0.62,
+    "events_visible": true,
+    "cluster_events": true,
+    "recency_days": 30,
+    "categories": [],
+    "source": ""
+  },
+  "base_styles": [
+    {"id": "institutional-dark", "label": "Institutional dark", "description": "Deep slate water, restrained land, clear boundaries, and progressive labels."},
+    {"id": "evidence-neutral", "label": "Evidence neutral", "description": "Lower-contrast context that prioritizes evidence overlays."},
+    {"id": "imagery-focus", "label": "Imagery focus", "description": "Reduced vector contrast for satellite interpretation."}
+  ],
+  "semantic_categories": [
+    {"id": "earthquake", "label": "Earthquake", "symbol": "ring", "severity_field": "magnitude"},
+    {"id": "wildfire", "label": "Fire", "symbol": "flame", "severity_field": "severity"},
+    {"id": "storm", "label": "Storm", "symbol": "spiral", "severity_field": "severity"},
+    {"id": "flood", "label": "Flood", "symbol": "wave", "severity_field": "severity"},
+    {"id": "humanitarian", "label": "Humanitarian", "symbol": "diamond", "severity_field": "severity"},
+    {"id": "conflict", "label": "Conflict", "symbol": "cross", "severity_field": "severity"},
+    {"id": "other", "label": "Other public event", "symbol": "dot", "severity_field": "severity"}
+  ],
+  "url_state": ["view", "country", "imageryLayer", "imageryDate", "mapStyle", "mapOpacity", "mapCategories", "mapSource", "mapDays", "mapCluster", "mapCenter", "mapZoom", "mapSelected"],
+  "health_requirements": ["visible_dimensions", "renderer_ready", "geography_or_tiles_visible", "controls_responsive", "active_route_visible"],
+  "boundaries": [
+    "Clusters summarize record density, not severity or importance.",
+    "Marker size and symbol reflect registered fields only.",
+    "Filters never imply that excluded records do not exist.",
+    "Shared URLs preserve interface state but do not freeze upstream source data."
+  ]
+}

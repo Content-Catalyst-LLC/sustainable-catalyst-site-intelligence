@@ -23,7 +23,7 @@
     }
     throw last;
   }
-  const APP_VERSION="3.23.1";
+  const APP_VERSION="3.23.2";
   let heightFrame=0;
   function documentHeight(){
     const body=document.body,root=document.documentElement;
@@ -77,7 +77,7 @@
     return `<div class="error-state"><div><strong>${escapeHtml(title)}</strong><span>${escapeHtml(text)}</span><br><button id="${id}" class="retry-button" type="button">Retry</button></div></div>`;
   }
 
-  const state = {map:null,base:null,imagery:null,markers:null,heat:null,layers:null,events:null,country:"KEN",route:"overview"};
+  const state = {map:null,base:null,imagery:null,markers:null,markerIndex:new Map(),filteredEvents:[],heat:null,layers:null,events:null,country:"KEN",route:"overview",overviewFilters:{categories:[],source:"",days:30,cluster:true,eventsVisible:true,selected:""}};
   const SAVED_VIEW_SCHEMA="sc-saved-view/1.0";
   const SAVED_VIEW_STORAGE_KEY="sc_site_intelligence_saved_views_v1";
   const SAVED_VIEW_LIMIT=50;
@@ -135,9 +135,22 @@
     if(window.L.__scsiFirstParty)reportMapReliability("First-party interactive map active; verified records remain available without third-party map code.");
     else if(window.L.__scsiFallback)reportMapReliability("Geographic map fallback active; verified records remain mapped.");
   }
-  function markerIcon(category){
-    const quake=String(category).toLowerCase().includes("earthquake");
-    return L.divIcon({className:"scsi-map-marker",html:`<span class="marker-core ${quake?"quake":"natural"}"></span><span class="marker-ring ${quake?"quake":"natural"}"></span>`,iconSize:[22,22],iconAnchor:[11,11]});
+  function semanticCategory(category){
+    const value=String(category||"other").toLowerCase();
+    if(value.includes("earthquake")||value.includes("seismic"))return "earthquake";
+    if(value.includes("fire")||value.includes("wildfire")||value.includes("thermal"))return "wildfire";
+    if(value.includes("storm")||value.includes("cyclone")||value.includes("hurricane")||value.includes("typhoon"))return "storm";
+    if(value.includes("flood"))return "flood";
+    if(value.includes("humanitarian")||value.includes("displacement")||value.includes("refugee"))return "humanitarian";
+    if(value.includes("conflict")||value.includes("violence"))return "conflict";
+    return "other";
+  }
+  function eventIdentifier(feature,index=0){const p=feature?.properties||{};return String(p.id||feature?.id||`${semanticCategory(p.category)}-${index}-${(feature?.geometry?.coordinates||[]).join("-")}`)}
+  function markerIcon(category,properties={}){
+    const semantic=semanticCategory(category);const magnitude=Number(properties.magnitude||0);const severity=String(properties.severity||"").toLowerCase();
+    const level=magnitude>=6||severity==="severe"||severity==="critical"?"high":magnitude>=4.5||severity==="moderate"?"medium":"standard";
+    const symbols={earthquake:"◎",wildfire:"▲",storm:"↻",flood:"≈",humanitarian:"◆",conflict:"×",other:"•"};
+    return L.divIcon({className:`scsi-map-marker semantic-${semantic} severity-${level}`,html:`<span class="marker-core" aria-hidden="true">${symbols[semantic]}</span><span class="marker-ring" aria-hidden="true"></span>`,iconSize:[28,28],iconAnchor:[14,14]});
   }
   async function loadLayers(){
     state.layers=await apiWithRetry("/public/geospatial/layers",3);
@@ -156,23 +169,45 @@
     qs("#legendSource").textContent=`${layer.source} imagery · USGS and NASA event records`;qs("#captionDetail").textContent=`${layer.title} · ${cleanDate(qs("#dateSelect").value)}`;
     qsa(".layer-tab").forEach(b=>b.classList.toggle("active",b.dataset.layer===id));
   }
+  function eventAgeDays(feature){const value=feature?.properties?.observed_at;if(!value)return Infinity;const time=Date.parse(value);return Number.isFinite(time)?Math.max(0,(Date.now()-time)/86400000):Infinity}
+  function overviewFilterParams(){
+    const params=new URLSearchParams(location.search);const raw=(params.get("mapCategories")||"").split(",").map(v=>v.trim()).filter(Boolean);
+    return {categories:raw,source:params.get("mapSource")||"",days:Math.max(1,Math.min(365,Number(params.get("mapDays")||30))),cluster:params.get("mapCluster")!=="0",eventsVisible:params.get("mapEvents")!=="0",selected:params.get("mapSelected")||""};
+  }
+  function syncOverviewMapUrl(){
+    const params=new URLSearchParams(location.search);params.set("view",state.route||"overview");params.set("country",state.country);
+    const f=state.overviewFilters;if(f.categories.length)params.set("mapCategories",f.categories.join(","));else params.delete("mapCategories");
+    if(f.source)params.set("mapSource",f.source);else params.delete("mapSource");params.set("mapDays",String(f.days));params.set("mapCluster",f.cluster?"1":"0");params.set("mapEvents",f.eventsVisible?"1":"0");
+    if(f.selected)params.set("mapSelected",f.selected);else params.delete("mapSelected");
+    const center=state.map?.getCenter?.(),zoom=state.map?.getZoom?.();if(center&&Number.isFinite(center.lat)&&Number.isFinite(center.lng)){params.set("mapCenter",`${center.lat.toFixed(4)},${center.lng.toFixed(4)}`);params.set("mapZoom",String(zoom||2))}
+    history.replaceState(null,"",`?${params.toString()}`);
+  }
+  function filteredOverviewFeatures(){
+    const all=state.events?.features||[],filters=state.overviewFilters;return all.filter(feature=>{const p=feature.properties||{},semantic=semanticCategory(p.category);if(filters.categories.length&&!filters.categories.includes(semantic))return false;if(filters.source&&String(p.source||"")!==filters.source)return false;if(Number.isFinite(filters.days)&&eventAgeDays(feature)>filters.days)return false;return true});
+  }
+  function clusterOverviewFeatures(features){
+    if(!state.overviewFilters.cluster||Number(state.map?.getZoom?.()||2)>=5)return features.map((feature,index)=>({type:"event",feature,id:eventIdentifier(feature,index)}));
+    const zoom=Number(state.map?.getZoom?.()||2),cell=Math.max(4,32/Math.pow(2,Math.max(0,zoom-2))),groups=new Map();
+    features.forEach((feature,index)=>{const c=feature.geometry?.coordinates||[];if(c.length<2)return;const key=`${Math.round(Number(c[0])/cell)}:${Math.round(Number(c[1])/cell)}`;if(!groups.has(key))groups.set(key,[]);groups.get(key).push({feature,id:eventIdentifier(feature,index)})});
+    return [...groups.values()].map(items=>{if(items.length===1)return {type:"event",...items[0]};const coords=items.map(item=>item.feature.geometry.coordinates);return {type:"cluster",items,count:items.length,coordinates:[coords.reduce((a,c)=>a+Number(c[0]),0)/coords.length,coords.reduce((a,c)=>a+Number(c[1]),0)/coords.length]}});
+  }
+  function renderOverviewFeatures(){
+    if(!state.events||!state.markers)return;const features=filteredOverviewFeatures();state.filteredEvents=features;state.markerIndex.clear();state.markers.clearLayers();
+    if(state.overviewFilters.eventsVisible){clusterOverviewFeatures(features).forEach(item=>{if(item.type==="cluster"){const c=item.coordinates;const marker=L.marker([c[1],c[0]],{icon:L.divIcon({className:"scsi-map-cluster",html:`<span>${item.count}</span>`,iconSize:[38,38],iconAnchor:[19,19]})}).bindPopup(`<div class="popup-title">${item.count} public records</div><div class="popup-meta">Zoom in to inspect individual evidence records.</div>`);marker.on?.("click",()=>state.map?.flyTo?.([c[1],c[0]],Math.min(8,Number(state.map?.getZoom?.()||2)+2)));marker.addTo(state.markers);return}
+      const f=item.feature,c=f.geometry?.coordinates||[],p=f.properties||{};if(c.length<2)return;const marker=L.marker([c[1],c[0]],{icon:markerIcon(p.category,p)}).bindPopup(`<div class="popup-title">${escapeHtml(p.title||"Event")}</div><div class="popup-meta">${escapeHtml(p.category||"Public record")} · ${escapeHtml(p.source||"Source")}${p.magnitude?` · M${escapeHtml(p.magnitude)}`:""}</div>`);marker.on?.("click",()=>selectOverviewEvent(item.id,{focusList:true,sync:true}));marker.addTo(state.markers);state.markerIndex.set(item.id,{marker,feature:f})});}
+    qs("#eventCount").textContent=String(features.length);renderEvents(features.slice(0,20));
+    window.dispatchEvent(new CustomEvent("scsi:overview-events-rendered",{detail:{version:APP_VERSION,count:features.length,clustered:state.overviewFilters.cluster,visible:state.overviewFilters.eventsVisible}}));
+  }
+  function selectOverviewEvent(id,{focusList=false,sync=true}={}){const entry=state.markerIndex.get(String(id));state.overviewFilters.selected=String(id||"");qsa("#eventList [data-event-id]").forEach(row=>row.classList.toggle("is-selected",row.dataset.eventId===state.overviewFilters.selected));if(entry){const c=entry.feature.geometry?.coordinates||[];entry.marker.openPopup?.();if(c.length>=2)state.map?.flyTo?.([c[1],c[0]],Math.max(5,Number(state.map?.getZoom?.()||2)));if(focusList)qs(`#eventList [data-event-id="${CSS.escape(state.overviewFilters.selected)}"]`)?.focus()}if(sync)syncOverviewMapUrl()}
+  function fitOverviewResults(){const points=state.filteredEvents.map(f=>{const c=f.geometry?.coordinates||[];return c.length>=2?[c[1],c[0]]:null}).filter(Boolean);if(points.length>1)state.map?.fitBounds?.(points,{padding:[50,50],maxZoom:6});else if(points.length===1)state.map?.flyTo?.(points[0],5);else state.map?.setView?.([0,20],2);syncOverviewMapUrl()}
+  function setOverviewFilters(next={},sync=true){state.overviewFilters={...state.overviewFilters,...next};renderOverviewFeatures();if(sync)syncOverviewMapUrl();return {...state.overviewFilters}}
   async function loadEvents(){
-    const data=await apiWithRetry("/public/geospatial/events",3);
-    state.events=data;
-    state.markers.clearLayers();
-    data.features.forEach(f=>{
-      const c=f.geometry?.coordinates||[],p=f.properties||{};
-      if(c.length<2)return;
-      L.marker([c[1],c[0]],{icon:markerIcon(p.category)}).bindPopup(`<div class="popup-title">${escapeHtml(p.title||"Event")}</div><div class="popup-meta">${escapeHtml(p.category||"Public record")} · ${escapeHtml(p.source||"Source")}</div>`).addTo(state.markers);
-    });
-    qs("#eventCount").textContent=data.count??data.features.length;
-    qs("#statusText").textContent=data.data_state==="live"?"Public feeds connected":"Demonstration fallback";
-    qs(".status-pill").classList.toggle("live",data.data_state==="live");
-    renderEvents(data.features.slice(0,6));
+    const data=await apiWithRetry("/public/geospatial/events",3);state.events=data;state.overviewFilters={...state.overviewFilters,...overviewFilterParams()};
+    qs("#statusText").textContent=data.data_state==="live"?"Public feeds connected":"Demonstration fallback";qs(".status-pill").classList.toggle("live",data.data_state==="live");renderOverviewFeatures();
   }
   function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
   function renderEvents(features){
-    qs("#eventList").innerHTML=features.length?features.map(f=>{const p=f.properties||{};const quake=String(p.category).toLowerCase().includes("earthquake");return `<div class="event-row"><span class="event-marker ${quake?"quake":""}"></span><div><div class="event-title">${escapeHtml(p.title||"Public event")}</div><div class="event-meta">${escapeHtml(p.category||"Event")} · ${escapeHtml(p.source||"Source")}</div></div><div class="event-time">${cleanDate(p.observed_at)}</div></div>`}).join(""):`<div class="empty-state"><div><strong>No recent public events</strong><span>The selected feeds returned no mapped records for this view.</span></div></div>`;
+    qs("#eventList").innerHTML=features.length?features.map((f,index)=>{const p=f.properties||{},semantic=semanticCategory(p.category),id=eventIdentifier(f,index);return `<button type="button" class="event-row semantic-${semantic}${state.overviewFilters.selected===id?" is-selected":""}" data-event-id="${escapeHtml(id)}"><span class="event-marker" aria-hidden="true"></span><span><span class="event-title">${escapeHtml(p.title||"Public event")}</span><span class="event-meta">${escapeHtml(p.category||"Event")} · ${escapeHtml(p.source||"Source")}${p.magnitude?` · M${escapeHtml(p.magnitude)}`:""}</span></span><span class="event-time">${cleanDate(p.observed_at)}</span></button>`}).join(""):`<div class="empty-state"><div><strong>No matching public events</strong><span>The basemap remains available. Adjust the active map filters to inspect other records.</span></div></div>`;
   }
   async function loadCountry(code){
     state.country=code;const name=names[code]||code;
@@ -1670,6 +1705,8 @@
   async function init(){setLaunch("Preparing the map and public evidence services.",18);
     qs("#dateSelect").value=today();initMap();setLaunch("Loading map layers.",34);
     qsa(".layer-tab").forEach(b=>b.addEventListener("click",()=>setImagery(b.dataset.layer)));
+    qs("#eventList")?.addEventListener("click",event=>{const row=event.target.closest("[data-event-id]");if(row)selectOverviewEvent(row.dataset.eventId,{sync:true})});
+    state.map?.on?.("zoomend",()=>{renderOverviewFeatures();syncOverviewMapUrl()});state.map?.on?.("moveend",()=>syncOverviewMapUrl());
     qs("#primaryNavigation")?.addEventListener("click",event=>{const button=event.target.closest?.(".nav-item[data-route]");if(!button||!event.currentTarget.contains(button))return;navigateToRoute(button.dataset.route)});
     qs("#mobileNavToggle")?.addEventListener("click",()=>setMobileNavigation(!document.body.classList.contains("mobile-nav-open")));
     qs("#mobileNavBackdrop")?.addEventListener("click",()=>setMobileNavigation(false,{restoreFocus:true}));
@@ -1752,7 +1789,8 @@
     const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const requestedView=params.get("view")||"overview";const initialView=[...Object.keys(savedViewDefinitions),"saved","launch","observatory"].includes(requestedView)?requestedView:"overview";const invalidRequestedView=requestedView!==initialView;qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";if(params.get("imageryDate"))qs("#dateSelect").value=params.get("imageryDate");try{setLaunch("Loading satellite imagery.",50);await loadLayers();await setImagery(params.get("imageryLayer")||"true-color");setLaunch("Connecting to live events and country evidence.",68);await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);setLaunch("Preparing the workspace.",88);await setRoute(initialView);applySharedControlState(initialView,params);finishLaunch();if(invalidRequestedView)toast("The requested view is unavailable; Overview was opened instead.")}
     catch(e){qs("#statusText").textContent="Partial public data";toast("Some optional public data is temporarily unavailable.");finishLaunch()}
   }
-  window.SCSIRouterV3228={version:"3.23.1",navigate:navigateToRoute,current:()=>state.route};
+  window.SCSIOverviewMapV3232={version:APP_VERSION,getMap:()=>state.map,getEvents:()=>state.events?.features||[],getFilteredEvents:()=>state.filteredEvents.slice(),getFilters:()=>({...state.overviewFilters}),setFilters:setOverviewFilters,selectEvent:selectOverviewEvent,fitResults:fitOverviewResults,setImageryOpacity:value=>state.imagery?.setOpacity?.(Math.max(0,Math.min(1,Number(value)))),setBaseStyle:style=>{const map=qs("#map");if(map)map.dataset.mapStyle=String(style||"institutional-dark");syncOverviewMapUrl()},syncUrl:syncOverviewMapUrl,render:renderOverviewFeatures};
+  window.SCSIRouterV3228={version:"3.23.2",navigate:navigateToRoute,current:()=>state.route};
   document.addEventListener("DOMContentLoaded",init);
 })();
 
@@ -1771,5 +1809,5 @@ document.head.appendChild(visualStyle);
 
 window.addEventListener("load",reportHeight,{once:true});window.addEventListener("resize",reportHeight,{passive:true});window.visualViewport?.addEventListener("resize",reportHeight,{passive:true});window.addEventListener("message",event=>{if(event.data?.type==="SC_SI_REQUEST_HEIGHT")reportHeight()});if("ResizeObserver" in window)new ResizeObserver(reportHeight).observe(document.body);
 
-/* v3.23.1 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v3.23.1 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v3.23.2 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v3.23.2 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

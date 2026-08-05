@@ -1,4 +1,16 @@
-# v3.23.1 — Cartographic Workspace and Application Presentation
+# Changelog
+
+## 3.23.2 — Cartographic Interaction and Layer Control
+
+- Added a map layer and evidence-control panel with base presentation and imagery opacity.
+- Added semantic event symbols, magnitude/severity treatment, and low-zoom clustering.
+- Synchronized event-list and map selection.
+- Added category, source, recency, visibility, and cluster filters.
+- Added fit-to-results and shareable map center, zoom, layer, filter, and selected-record URL state.
+- Preserved the v3.23.1 WordPress host-isolation repair.
+- Added a public map-interaction contract and live Render verification.
+
+# v3.23.2 — Cartographic Workspace and Application Presentation
 
 - Converted the overview into a map-first workspace with a collapsible evidence rail.
 - Enforced routed visibility so hidden workspaces no longer create a massive stacked page.

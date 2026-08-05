@@ -1,6 +1,8 @@
 (function(window,document){
   "use strict";
-  const VERSION="3.23.1";
+  const VERSION="3.23.2";
+  const APP_ROOT=document.querySelector('#app[data-scsi-release]');
+  if(!APP_ROOT||!document.querySelector('#primaryNavigation')||!document.querySelector('#main.workspace'))return;
   const ENDPOINT="/public/workspaces/production-truth";
   const CORE_ROUTES=new Set(["overview","global","economics","law","science","humanitarian","resources","dossiers","alerts","scenarios","earth","spatial","harmonization","country","events","compare","thematic","briefing","sources"]);
   const CONTROLLERS={platform:"SCConnectedPlatformV300",global:"SCGlobalConditionsV210",economics:"SCEconomicsV220",law:"SCLawV230",science:"SCScienceV240",humanitarian:"SCHumanitarianV250",resources:"SCResourcesV260",dossiers:"SCDossiersV270",alerts:"SCAlertsV280",scenarios:"SCScenariosV290",research:"SCResearchV2100",integration:"SCIntegrationV2110",experience:"SCExperienceV2120",spatial:"SCSpatialV2150",harmonization:"SCHarmonizationV2160",models:"SCModelsV2170",evidence:"SCEvidenceV2180",graph:"SCKnowledgeGraphV2190",publishing:"SCIntelligencePublishingV2200",monitoring:"SCScheduledMonitoringV2210",workspaces:"SCInstitutionalWorkspacesV2220",workflows:"SCCrossPlatformWorkflowsV2230",federation:"SCInstitutionalFederationV2240",governance:"SCProductionGovernanceV2250"};
@@ -47,6 +49,7 @@
   }
   function controllerAvailable(route){const name=contract(route).controller||CONTROLLERS[route];return !name||Boolean(window[name])}
   function classifySurface(route){
+    if(!APP_ROOT.classList.contains('app-ready'))return {phase:'initial',reason:'The Site Intelligence application is still completing its launch sequence.'};
     if(!controllerAvailable(route))return {phase:'unavailable',reason:`The ${contract(route).label} controller is not packaged in this release.`};
     const surface=surfaceFor(route);if(!surface)return {phase:'unavailable',reason:`The ${contract(route).label} route opened without a visible workspace surface.`};
     const text=(surface.textContent||'').replace(/\s+/g,' ').trim();
