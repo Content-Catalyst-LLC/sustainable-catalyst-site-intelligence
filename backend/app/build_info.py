@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from hashlib import sha256
 import os
 from typing import Any
 
@@ -25,6 +26,10 @@ def public_build_info() -> dict[str, Any]:
     instance_id = _value("RENDER_INSTANCE_ID")
     build_timestamp = _value("SC_SI_BUILD_TIMESTAMP", _BUILD_STARTED_AT)
     platform = "render" if service_id != "unavailable" or external_url != "unavailable" else "local"
+    release_channel = _value("SC_SI_RELEASE_CHANNEL", "production")
+    expected_branch = _value("SC_SI_EXPECTED_GIT_BRANCH", "main")
+    fingerprint_material = "|".join([APP_VERSION, repo_slug, branch, commit, release_channel])
+    release_fingerprint = sha256(fingerprint_material.encode("utf-8")).hexdigest()[:20]
 
     deployment = {
         "platform": platform,
@@ -39,6 +44,9 @@ def public_build_info() -> dict[str, Any]:
         "release_version": APP_VERSION,
         "auto_deploy_contract": "commit",
         "health_check_path": "/health",
+        "expected_git_branch": expected_branch,
+        "release_channel": release_channel,
+        "release_fingerprint": release_fingerprint,
     }
 
     return {
@@ -52,6 +60,9 @@ def public_build_info() -> dict[str, Any]:
         "git_branch": branch,
         "git_repository": repo_slug,
         "build_timestamp": build_timestamp,
+        "release_channel": release_channel,
+        "release_fingerprint": release_fingerprint,
+        "cache_policy": "no-store",
         "platform_core_optional": True,
         "deployment": deployment,
     }
@@ -69,5 +80,6 @@ def public_deployment_status() -> dict[str, Any]:
             "health": "/health",
             "build_info": "/public/build-info",
             "deployment_status": "/public/deployment-status",
+            "release_gate": "/public/release-gate",
         },
     }

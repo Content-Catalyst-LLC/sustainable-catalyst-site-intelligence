@@ -1,4 +1,4 @@
-# Site Intelligence v3.22.4
+# Site Intelligence v3.22.5
 
 ## Render Deployment Parity and Release Promotion
 

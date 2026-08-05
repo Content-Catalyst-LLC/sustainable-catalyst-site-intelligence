@@ -25,7 +25,7 @@ def test_build_info_exposes_public_render_commit_metadata(monkeypatch):
     monkeypatch.setenv("RENDER_GIT_BRANCH", "main")
     monkeypatch.setenv("RENDER_GIT_COMMIT", "0123456789abcdef")
     data = public_build_info()
-    assert data["backend_version"] == "3.22.4"
+    assert data["backend_version"] == "3.22.5"
     assert data["git_commit"] == "0123456789abcdef"
     assert data["deployment"]["platform"] == "render"
     assert data["deployment"]["git_commit_short"] == "0123456789ab"
@@ -38,18 +38,18 @@ def test_public_deployment_status_endpoint_is_available():
     assert response.status_code == 200
     payload = response.json()
     assert payload["ok"] is True
-    assert payload["version"] == "3.22.4"
-    assert payload["expected_wordpress_plugin_version"] == "3.22.4"
+    assert payload["version"] == "3.22.5"
+    assert payload["expected_wordpress_plugin_version"] == "3.22.5"
     assert payload["verification_endpoints"]["build_info"] == "/public/build-info"
-    assert payload["deployment"]["release_version"] == "3.22.4"
+    assert payload["deployment"]["release_version"] == "3.22.5"
 
 
 def test_promotion_script_pushes_before_render_verification():
-    script = (ROOT / "promote_site_intelligence_v3_22_4_to_github_and_render_macos.sh").read_text(encoding="utf-8")
+    script = (ROOT / "promote_site_intelligence_v3_22_5_to_github_and_render_macos.sh").read_text(encoding="utf-8")
     assert "git push origin \"$BRANCH\"" in script
     assert "git push origin \"v${RELEASE}\"" in script
     assert "SC_SI_RENDER_DEPLOY_HOOK" in script
     assert "render deploys create" in script
-    assert "/public/build-info?release_check=" in script
-    assert "Do not update the WordPress plugin until" in script
-    assert script.index('git push origin "$BRANCH"') < script.index("Verifying the live Render backend")
+    assert "/public/release-gate?plugin_version=" in script
+    assert "Do not install the WordPress ZIP until" in script
+    assert script.index('git push origin "$BRANCH"') < script.index("Verifying the live Render release gate")

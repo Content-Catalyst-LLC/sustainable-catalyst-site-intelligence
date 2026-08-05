@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.22.4
+ * Version: 3.22.5
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,11 +13,13 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.22.4';
+    const VERSION = '3.22.5';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
     const BUILD_INFO_MATCH_TTL = 21600;
+    const RELEASE_GATE_MATCH_TTL = 900;
+    const LEGACY_BUILD_INFO_ENDPOINT = '/public/build-info';
     const BUILD_INFO_MISMATCH_TTL = 45;
     const BUILD_INFO_ERROR_TTL = 30;
     const LEGACY_SHORTCODE_REMOVAL_TARGET = 'fulfilled-in-2.0.0';
@@ -430,7 +432,7 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v3.22.4 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
+        // v3.22.5 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
         // Existing moving tickers remain moving unless an administrator selects static or manual presentation.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
@@ -550,6 +552,10 @@ final class SC_Site_Intelligence_Plugin {
                 'plugin_version' => self::VERSION,
                 'backend_version' => '',
                 'expected_wordpress_plugin_version' => '',
+                'gate_state' => 'not-configured',
+                'install_allowed' => false,
+                'git_commit' => '',
+                'release_fingerprint' => '',
                 'http_status' => 0,
                 'message' => 'No backend URL is configured.',
                 'checked_at' => gmdate('c'),
@@ -569,14 +575,15 @@ final class SC_Site_Intelligence_Plugin {
         $endpoint = add_query_arg([
             'plugin_version' => self::VERSION,
             'cache_bust' => (string) time(),
-        ], $backend . '/public/build-info');
+        ], $backend . '/public/release-gate');
 
         $response = wp_remote_get($endpoint, [
-            'timeout' => 6,
+            'timeout' => 8,
             'redirection' => 2,
             'headers' => [
                 'Accept' => 'application/json',
-                'Cache-Control' => 'no-cache',
+                'Cache-Control' => 'no-cache, no-store',
+                'Pragma' => 'no-cache',
                 'User-Agent' => 'Sustainable-Catalyst-Site-Intelligence/' . self::VERSION,
             ],
         ]);
@@ -587,6 +594,10 @@ final class SC_Site_Intelligence_Plugin {
                 'backend_url' => $backend,
                 'backend_version' => '',
                 'expected_wordpress_plugin_version' => '',
+                'gate_state' => 'unavailable',
+                'install_allowed' => false,
+                'git_commit' => '',
+                'release_fingerprint' => '',
                 'http_status' => 0,
                 'message' => sanitize_text_field($response->get_error_message()),
             ], self::BUILD_INFO_ERROR_TTL);
@@ -601,13 +612,26 @@ final class SC_Site_Intelligence_Plugin {
                 'backend_url' => $backend,
                 'backend_version' => '',
                 'expected_wordpress_plugin_version' => '',
+                'gate_state' => 'invalid-response',
+                'install_allowed' => false,
+                'git_commit' => '',
+                'release_fingerprint' => '',
                 'http_status' => $code,
-                'message' => 'The build-info endpoint did not return a valid JSON response.',
+                'message' => 'The release-gate endpoint did not return a valid JSON response.',
             ], self::BUILD_INFO_ERROR_TTL);
         }
 
         $backend_version = sanitize_text_field((string) ($payload['backend_version'] ?? $payload['version'] ?? ''));
         $expected_plugin = sanitize_text_field((string) ($payload['expected_wordpress_plugin_version'] ?? ''));
+        $gate_state = sanitize_key((string) ($payload['gate_state'] ?? 'unknown'));
+        $install_allowed = !empty($payload['install_allowed']);
+        $deployment = isset($payload['deployment']) && is_array($payload['deployment']) ? $payload['deployment'] : [];
+        $git_commit = sanitize_text_field((string) ($deployment['git_commit'] ?? $payload['git_commit'] ?? ''));
+        $release_fingerprint = sanitize_text_field((string) ($payload['release_fingerprint'] ?? ''));
+        $release_channel = sanitize_key((string) ($payload['release_channel'] ?? 'unknown'));
+        $reasons = isset($payload['reasons']) && is_array($payload['reasons'])
+            ? array_values(array_filter(array_map('sanitize_text_field', $payload['reasons'])))
+            : [];
 
         if ($backend_version === '') {
             return $this->store_backend_version_status([
@@ -615,24 +639,36 @@ final class SC_Site_Intelligence_Plugin {
                 'backend_url' => $backend,
                 'backend_version' => '',
                 'expected_wordpress_plugin_version' => $expected_plugin,
+                'gate_state' => $gate_state,
+                'install_allowed' => false,
+                'git_commit' => $git_commit,
+                'release_fingerprint' => $release_fingerprint,
+                'release_channel' => $release_channel,
                 'http_status' => $code,
-                'message' => 'The build-info response did not include a backend version.',
+                'message' => 'The release-gate response did not include a backend version.',
             ], self::BUILD_INFO_ERROR_TTL);
         }
 
-        $matches = $backend_version === self::VERSION
+        $versions_match = $backend_version === self::VERSION
             && ($expected_plugin === '' || $expected_plugin === self::VERSION);
+        $matches = $versions_match && $install_allowed;
 
         return $this->store_backend_version_status([
             'state' => $matches ? 'match' : 'mismatch',
             'backend_url' => $backend,
             'backend_version' => $backend_version,
             'expected_wordpress_plugin_version' => $expected_plugin,
+            'gate_state' => $gate_state,
+            'install_allowed' => $install_allowed,
+            'git_commit' => $git_commit,
+            'release_fingerprint' => $release_fingerprint,
+            'release_channel' => $release_channel,
+            'reasons' => $reasons,
             'http_status' => $code,
             'message' => $matches
-                ? 'The WordPress plugin and backend versions match.'
-                : 'The WordPress plugin and backend versions do not match.',
-        ], $matches ? self::BUILD_INFO_MATCH_TTL : self::BUILD_INFO_MISMATCH_TTL);
+                ? 'The WordPress plugin and verified Render release match.'
+                : (!empty($reasons) ? implode(' ', $reasons) : 'The WordPress plugin and verified Render release do not match.'),
+        ], $matches ? self::RELEASE_GATE_MATCH_TTL : self::BUILD_INFO_MISMATCH_TTL);
     }
 
     public function handle_refresh_backend_version() {
@@ -671,11 +707,17 @@ final class SC_Site_Intelligence_Plugin {
         $backend = sanitize_text_field((string) ($status['backend_version'] ?? ''));
         $checked = sanitize_text_field((string) ($status['checked_at'] ?? ''));
         $refresh_url = $this->backend_version_refresh_url();
+        $gate_state = sanitize_key((string) ($status['gate_state'] ?? 'unknown'));
+        $commit = sanitize_text_field((string) ($status['git_commit'] ?? ''));
+        $fingerprint = sanitize_text_field((string) ($status['release_fingerprint'] ?? ''));
 
         if ($state === 'mismatch') {
             echo '<div class="notice notice-warning"><p><strong>Site Intelligence version mismatch.</strong> ';
             echo 'WordPress plugin: <code>' . esc_html(self::VERSION) . '</code>; backend: <code>' . esc_html($backend !== '' ? $backend : 'unknown') . '</code>. ';
-            echo 'This mismatch is rechecked automatically after ' . esc_html((string) self::BUILD_INFO_MISMATCH_TTL) . ' seconds. ';
+            echo 'Release gate: <code>' . esc_html($gate_state) . '</code>';
+            if ($commit !== '') { echo '; Render commit: <code>' . esc_html(substr($commit, 0, 12)) . '</code>'; }
+            if ($fingerprint !== '') { echo '; fingerprint: <code>' . esc_html($fingerprint) . '</code>'; }
+            echo '. This mismatch is rechecked automatically after ' . esc_html((string) self::BUILD_INFO_MISMATCH_TTL) . ' seconds. ';
             echo '<a href="' . esc_url($refresh_url) . '">Refresh backend version now</a>';
             if ($checked !== '') {
                 echo ' <span class="description">Last checked: ' . esc_html($checked) . '</span>';
@@ -685,7 +727,7 @@ final class SC_Site_Intelligence_Plugin {
         }
 
         $label = $state === 'invalid-response'
-            ? 'Site Intelligence returned an invalid build-info response.'
+            ? 'Site Intelligence returned an invalid release-gate response.'
             : 'Site Intelligence backend verification is temporarily unavailable.';
         echo '<div class="notice notice-info"><p><strong>' . esc_html($label) . '</strong> ';
         echo 'The public application can remain available while the version check is retried. ';
@@ -4316,6 +4358,9 @@ final class SC_Site_Intelligence_Plugin {
             $version_checked = sanitize_text_field((string) ($version_status['checked_at'] ?? 'Never'));
             $version_http = (int) ($version_status['http_status'] ?? 0);
             $version_url = sanitize_text_field((string) ($version_status['backend_url'] ?? ($options['backend_url'] ?? '')));
+            $version_gate = sanitize_key((string) ($version_status['gate_state'] ?? 'unknown'));
+            $version_commit = sanitize_text_field((string) ($version_status['git_commit'] ?? ''));
+            $version_fingerprint = sanitize_text_field((string) ($version_status['release_fingerprint'] ?? ''));
             ?>
             <div class="notice inline <?php echo $version_state === 'match' ? 'notice-success' : ($version_state === 'mismatch' ? 'notice-warning' : 'notice-info'); ?>">
                 <p><strong>Backend version verification</strong></p>
@@ -4323,7 +4368,10 @@ final class SC_Site_Intelligence_Plugin {
                     State: <code><?php echo esc_html($version_state); ?></code> ·
                     Plugin: <code><?php echo esc_html(self::VERSION); ?></code> ·
                     Backend: <code><?php echo esc_html($version_backend !== '' ? $version_backend : 'unknown'); ?></code> ·
-                    HTTP: <code><?php echo esc_html((string) $version_http); ?></code>
+                    HTTP: <code><?php echo esc_html((string) $version_http); ?></code> ·
+                    Gate: <code><?php echo esc_html($version_gate); ?></code> ·
+                    Commit: <code><?php echo esc_html($version_commit !== '' ? substr($version_commit, 0, 12) : 'unknown'); ?></code> ·
+                    Fingerprint: <code><?php echo esc_html($version_fingerprint !== '' ? $version_fingerprint : 'unknown'); ?></code>
                 </p>
                 <p>Checked URL: <code><?php echo esc_html($version_url !== '' ? $version_url : 'not configured'); ?></code><br />Last verification: <code><?php echo esc_html($version_checked); ?></code></p>
                 <p><a class="button button-secondary" href="<?php echo esc_url($this->backend_version_refresh_url()); ?>">Refresh backend version</a></p>

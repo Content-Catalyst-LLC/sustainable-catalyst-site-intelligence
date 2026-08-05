@@ -1,4 +1,4 @@
-"""Public-safe runtime diagnostics for Site Intelligence v3.22.4.
+"""Public-safe runtime diagnostics for Site Intelligence v3.22.5.
 
 The diagnostics intentionally avoid outbound network calls. They report the local
 application contract, required first-party assets, map surfaces, embed policy,
@@ -35,6 +35,7 @@ REQUIRED_ASSETS = (
 CRITICAL_PUBLIC_ENDPOINTS = (
     "/health",
     "/public/build-info",
+    "/public/release-gate",
     "/public/geospatial/diagnostics",
     "/public/geospatial/events",
     "/public/spatial",

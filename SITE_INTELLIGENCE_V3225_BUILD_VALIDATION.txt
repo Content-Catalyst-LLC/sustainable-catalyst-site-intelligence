@@ -1,0 +1,19 @@
+Sustainable Catalyst Site Intelligence v3.22.5
+Build: Deployment Gate, Live Parity Lock, and Rollback Readiness
+
+VALIDATION SUMMARY
+PASS - Canonical backend version 3.22.5
+PASS - WordPress plugin version 3.22.5
+PASS - Render commit auto-deploy and /health contract
+PASS - Public /public/release-gate endpoint
+PASS - No-store release identity headers
+PASS - Render branch, commit, channel, and plugin compatibility checks
+PASS - WordPress gate-state, commit, and fingerprint diagnostics
+PASS - Pre-deploy annotated rollback tag
+PASS - Exact prior-commit Render rollback command
+PASS - 33 JavaScript files passed syntax validation
+PASS - 114 JSON files parsed successfully
+PASS - WordPress PHP syntax validation
+PASS - 873 automated tests
+
+Browser screenshot validation was not available in the build environment. Production verification is enforced through the live Render release gate and the included browser checklist.

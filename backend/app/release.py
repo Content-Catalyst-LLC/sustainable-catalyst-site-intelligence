@@ -69,7 +69,7 @@ def release_checklist(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Checklist",
         "summary": RELEASE_NAME,
-        "release_stage": "v3.22.4_archive_verification_custody",
+        "release_stage": "v3.22.5_archive_verification_custody",
         "status": "launch_ready_with_manual_review" if counts["fail"] == 0 else "needs_fix",
         "score": score,
         "counts": counts,
@@ -135,6 +135,7 @@ def smoke_test(settings: Settings) -> Dict[str, Any]:
         {"path": "/", "scope": "public", "critical": True, "expected": "canonical version"},
         {"path": "/health", "scope": "public", "critical": True, "expected": "service health"},
         {"path": "/public/build-info", "scope": "public", "critical": True, "expected": "backend/plugin compatibility metadata"},
+        {"path": "/public/release-gate", "scope": "public", "critical": True, "expected": "Render commit and WordPress installation gate"},
         {"path": "/public/spatial", "scope": "public", "critical": True, "expected": "spatial evidence workspace summary"},
         {"path": "/public/spatial/layers", "scope": "public", "critical": True, "expected": "source-aware spatial layer catalog"},
         {"path": "/public/spatial/methodology", "scope": "public", "critical": True, "expected": "spatial methods and responsible-use boundaries"},
@@ -229,7 +230,7 @@ def smoke_test(settings: Settings) -> Dict[str, Any]:
         ],
         "wordpress_checks": [
             "Confirm [sc_site_intelligence_app height=\"1000\"] renders while logged out.",
-            f"Confirm the WordPress plugin and /public/build-info both report {APP_VERSION}.",
+            f"Confirm the WordPress plugin and /public/release-gate reports install_allowed=true and both report {APP_VERSION}.",
             "Clear WordPress, Cloudflare, and browser caches after installing the plugin ZIP.",
         ],
     }
@@ -244,7 +245,7 @@ def release_status(settings: Settings) -> Dict[str, Any]:
         "version": settings.version,
         "title": f"Site Intelligence v{APP_VERSION} Release Status",
         "summary": RELEASE_NAME,
-        "release_stage": "v3.22.4_archive_verification_custody",
+        "release_stage": "v3.22.5_archive_verification_custody",
         "release_status": checklist["status"],
         "release_score": checklist["score"],
         "public_shortcode": "[sc_site_intelligence_app height=\"1000\"]",
@@ -257,7 +258,7 @@ def release_status(settings: Settings) -> Dict[str, Any]:
         "smoke_test_endpoint": "/release/smoke-test",
         "public_summary_endpoint": "/release/public-summary",
         "launch_notes": [
-            f"Deploy the v{APP_VERSION} backend and confirm /public/build-info reports the matching version.",
+            f"Deploy the v{APP_VERSION} backend and confirm /public/release-gate reports the matching version, commit, and install_allowed=true.",
             f"Install the v{APP_VERSION} WordPress plugin ZIP and clear all caches.",
             "Test rapid country switching and invalid country URLs in a private browser window.",
             "Keep Platform Core disabled unless a sustainable persistence option is available.",

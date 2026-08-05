@@ -16,12 +16,21 @@ if [[ -z "$PYTHON" ]]; then
   fi
 fi
 
+# Tests and local app startup can create backend/backend/ when legacy
+# backend-relative runtime paths are resolved from the backend directory.
+# That directory is writable runtime state, never an immutable release input.
+rm -rf "$BACKEND/backend"
+
 printf '\n==> Verifying release identity\n'
-grep -q 'APP_VERSION = "3.22.4"' "$BACKEND/app/version.py"
-grep -q 'Version: 3.22.4' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
-grep -q 'const RELEASE="3.22.4"' "$BACKEND/public_app/service-worker.js"
+grep -q 'APP_VERSION = "3.22.5"' "$BACKEND/app/version.py"
+grep -q 'Version: 3.22.5' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
+grep -q 'const RELEASE="3.22.5"' "$BACKEND/public_app/service-worker.js"
 grep -q '/app/assets/service-recovery-v3224.js' "$BACKEND/public_app/index.html"
 grep -q '/public/runtime-recovery' "$BACKEND/app/main.py"
+grep -q '/public/release-gate' "$BACKEND/app/main.py"
+grep -q 'SC_SI_RELEASE_CHANNEL' "$ROOT/render.yaml"
+grep -q 'ROLLBACK_TAG=' "$ROOT/promote_site_intelligence_v3_22_5_to_github_and_render_macos.sh"
+grep -q "public/release-gate" "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
 
 printf '\n==> Verifying immutable repository manifest\n'
 "$PYTHON" - "$ROOT" <<'PY'
@@ -29,7 +38,7 @@ from pathlib import Path
 import hashlib, json, sys
 root = Path(sys.argv[1])
 manifest = json.loads((root / "MANIFEST.json").read_text(encoding="utf-8"))
-assert manifest["release"] == "3.22.4"
+assert manifest["release"] == "3.22.5"
 assert manifest["file_count"] == len(manifest["files"])
 for entry in manifest["files"]:
     path = root / entry["path"]
@@ -76,5 +85,8 @@ printf '\n==> Running Site Intelligence tests\n'
 cd "$BACKEND"
 "$PYTHON" -m pytest -q
 
-printf '\nSUCCESS: Site Intelligence v3.22.4 passed local validation.\n'
+# Restore immutable-tree cleanliness after tests create writable runtime state.
+rm -rf "$BACKEND/backend"
+
+printf '\nSUCCESS: Site Intelligence v3.22.5 passed local validation.\n'
 printf 'Repository: %s\n' "$ROOT"

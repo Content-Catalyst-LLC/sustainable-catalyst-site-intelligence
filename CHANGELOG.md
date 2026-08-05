@@ -1,6 +1,15 @@
 # Changelog
 
-## 3.22.4 — Self-Healing Data Services, Map Recovery, and Fault Isolation
+## 3.22.5 — Deployment Gate, Live Parity Lock, and Rollback Readiness
+
+- Added an uncached public release gate that validates backend version, WordPress compatibility, Render identity, expected branch, expected commit, and production release channel.
+- Added release fingerprints and public-safe deployment identity to build diagnostics.
+- Added WordPress gate-state, commit, and fingerprint diagnostics with a 15-minute healthy recheck and 45-second blocked recheck.
+- Added a pre-deploy annotated rollback tag and exact prior-commit Render rollback command.
+- Changed the promotion workflow to verify `install_allowed=true` at the pushed commit before releasing the WordPress installation path.
+- Added seven deployment-gate regressions; 873 tests pass in total.
+
+## 3.22.5 — Self-Healing Data Services, Map Recovery, and Fault Isolation
 
 - Added a public-safe runtime recovery contract and first-party browser recovery runtime.
 - Added bounded retries, service-group circuit breakers, automatic probes, and marked last-known-good public JSON responses.

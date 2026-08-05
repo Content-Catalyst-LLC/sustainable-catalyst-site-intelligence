@@ -1,4 +1,4 @@
-# Sustainable Catalyst Site Intelligence v3.22.4
+# Sustainable Catalyst Site Intelligence v3.22.5
 
 ## Runtime Diagnostics, Map Health, and Fault Isolation
 
@@ -20,8 +20,8 @@ This patch builds on the v3.22.1 map-runtime repair by making production failure
 - Upgraded the map runtime so failed OpenStreetMap tiles fall back to the first-party geographic grid while verified overlays remain active.
 - Added a compact map-runtime snapshot API for diagnostics.
 - Added the diagnostics runtime to the offline application shell.
-- Upgraded the WordPress map fallback package to the v3.22.4 runtime.
-- Aligned backend, public app, tests, service worker, data contracts, WordPress plugin, and release metadata to v3.22.4.
+- Upgraded the WordPress map fallback package to the v3.22.5 runtime.
+- Aligned backend, public app, tests, service worker, data contracts, WordPress plugin, and release metadata to v3.22.5.
 
 ### Validation
 
