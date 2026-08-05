@@ -14,7 +14,7 @@ from uuid import uuid4
 
 from .config import Settings
 
-RELEASE_VERSION = "3.22.6"
+RELEASE_VERSION = "3.22.7"
 SCHEMA_VERSION = "sc-site-intelligence-federation-exchange/1.0"
 CATALOG_SCHEMA = "https://www.w3.org/ns/dcat#Catalog"
 DATASET_SCHEMA = "https://www.w3.org/ns/dcat#Dataset"

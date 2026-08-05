@@ -17,9 +17,9 @@ if [[ -z "$PYTHON" ]]; then
 fi
 
 printf '\n==> Verifying release identity\n'
-grep -q 'APP_VERSION = "3.22.6"' "$BACKEND/app/version.py"
-grep -q 'Version: 3.22.6' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
-grep -q 'const RELEASE="3.22.6"' "$BACKEND/public_app/service-worker.js"
+grep -q 'APP_VERSION = "3.22.7"' "$BACKEND/app/version.py"
+grep -q 'Version: 3.22.7' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
+grep -q 'const RELEASE="3.22.7"' "$BACKEND/public_app/service-worker.js"
 grep -q '/app/assets/service-recovery-v3224.js' "$BACKEND/public_app/index.html"
 grep -q '/public/runtime-recovery' "$BACKEND/app/main.py"
 
@@ -29,7 +29,7 @@ from pathlib import Path
 import hashlib, json, sys
 root = Path(sys.argv[1])
 manifest = json.loads((root / "MANIFEST.json").read_text(encoding="utf-8"))
-assert manifest["release"] == "3.22.6"
+assert manifest["release"] == "3.22.7"
 assert manifest["file_count"] == len(manifest["files"])
 for entry in manifest["files"]:
     path = root / entry["path"]
@@ -76,5 +76,5 @@ printf '\n==> Running Site Intelligence tests\n'
 cd "$BACKEND"
 "$PYTHON" -m pytest -q
 
-printf '\nSUCCESS: Site Intelligence v3.22.6 passed local validation.\n'
+printf '\nSUCCESS: Site Intelligence v3.22.7 passed local validation.\n'
 printf 'Repository: %s\n' "$ROOT"

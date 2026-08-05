@@ -1,6 +1,13 @@
 # Changelog
 
-## 3.22.6 — Deployment Gate, Live Parity Lock, and Rollback Readiness
+## 3.22.7 — Production Map Runtime and Navigation Repair
+
+- Repaired the inert Global Conditions sidebar route with permanent markup and delegated navigation.
+- Removed blocking third-party Leaflet startup dependencies from the standalone app and WordPress map loader.
+- Added a healthy first-party interactive map runtime and visible-surface health classification.
+- Added exact v3.22.7 GitHub, Render, WordPress, offline-shell, and deployment-gate alignment.
+
+## 3.22.7 — Deployment Gate, Live Parity Lock, and Rollback Readiness
 
 - Added an uncached public release gate that validates backend version, WordPress compatibility, Render identity, expected branch, expected commit, and production release channel.
 - Added release fingerprints and public-safe deployment identity to build diagnostics.
@@ -9,7 +16,7 @@
 - Changed the promotion workflow to verify `install_allowed=true` at the pushed commit before releasing the WordPress installation path.
 - Added seven deployment-gate regressions; 873 tests pass in total.
 
-## 3.22.6 — Self-Healing Data Services, Map Recovery, and Fault Isolation
+## 3.22.7 — Self-Healing Data Services, Map Recovery, and Fault Isolation
 
 - Added a public-safe runtime recovery contract and first-party browser recovery runtime.
 - Added bounded retries, service-group circuit breakers, automatic probes, and marked last-known-good public JSON responses.

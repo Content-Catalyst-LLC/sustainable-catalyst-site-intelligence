@@ -1,4 +1,4 @@
-"""Public-safe runtime diagnostics for Site Intelligence v3.22.6.
+"""Public-safe runtime diagnostics for Site Intelligence v3.22.7.
 
 The diagnostics intentionally avoid outbound network calls. They report the local
 application contract, required first-party assets, map surfaces, embed policy,
@@ -145,9 +145,15 @@ def build_runtime_health(settings: Settings) -> dict[str, Any]:
         ),
         _check(
             "script-order",
-            "Fault-isolation runtime loads before application modules",
+            "First-party map and fault-isolation runtimes load before application modules",
             ordered_scripts,
-            "Map fallback → service recovery → runtime diagnostics → application order is enforced." if ordered_scripts else "Required script order is incomplete.",
+            "First-party map runtime → service recovery → runtime diagnostics → application order is enforced." if ordered_scripts else "Required script order is incomplete.",
+        ),
+        _check(
+            "first-party-map-runtime",
+            "Map startup has no blocking third-party JavaScript dependency",
+            "unpkg.com/leaflet" not in index_html and "cdn.jsdelivr.net/npm/leaflet" not in index_html and "__scsiFirstParty" in _read(PUBLIC_APP_DIR / "assets/map-fallback-v3224.js"),
+            "The interactive map runtime is packaged and starts before application modules.",
         ),
         _check(
             "offline-shell",
@@ -196,16 +202,16 @@ def build_runtime_health(settings: Settings) -> dict[str, Any]:
             "allowed_origin_count": len(settings.cors_origin_list) if settings.public_embeds_enabled else 0,
         },
         "recovery_policy": {
-            "leaflet_unavailable": "Use the first-party static geographic grid.",
+            "leaflet_unavailable": "Use the first-party interactive geographic runtime.",
             "carto_tiles_unavailable": "Retry with OpenStreetMap tiles.",
-            "openstreetmap_tiles_unavailable": "Hide the failed tile pane and retain verified overlays on the geographic grid.",
+            "openstreetmap_tiles_unavailable": "Retain verified overlays in the first-party interactive geographic runtime.",
             "imagery_tiles_unavailable": "Keep other layers interactive and expose a degraded-imagery status.",
             "endpoint_unavailable": "Retry transient failures, isolate the affected service group, and use a marked last-known-good public JSON response when available.",
             "service_recovered": "Close the affected circuit and refresh the active workspace once without reloading the full application.",
         },
         "limitations": [
             "This endpoint does not contact third-party APIs or tile providers.",
-            "Browser-side diagnostics determine actual map modes, request failures, and service-worker state.",
+            "Browser-side diagnostics determine actual map modes, visible-workspace failures, and service-worker state.",
             "A healthy local contract does not guarantee that every upstream public data service is currently available.",
         ],
     }

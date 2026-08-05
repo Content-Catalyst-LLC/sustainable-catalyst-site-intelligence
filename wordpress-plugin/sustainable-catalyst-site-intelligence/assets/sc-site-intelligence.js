@@ -172,7 +172,7 @@
     try {
       const item = JSON.parse(sessionStorage.getItem(recoveryCacheKey(url)) || 'null');
       if (!item || !item.savedAt || Date.now() - item.savedAt > 21600000) return null;
-      window.dispatchEvent(new CustomEvent('scsi:service-fallback', {detail: {version: cfg.version || '3.22.6', group: 'wordpress-proxy', path: url, reason: 'last-known-good', staleAgeMs: Date.now() - item.savedAt}}));
+      window.dispatchEvent(new CustomEvent('scsi:service-fallback', {detail: {version: cfg.version || '3.22.7', group: 'wordpress-proxy', path: url, reason: 'last-known-good', staleAgeMs: Date.now() - item.savedAt}}));
       return item.data;
     } catch (e) { return null; }
   }
@@ -200,7 +200,7 @@
       return fetchJsonAttempt(url).catch(function (error) {
         const retryable = !error.status || recoveryStatuses.indexOf(Number(error.status)) !== -1;
         if (retryable && attempt < 3) {
-          window.dispatchEvent(new CustomEvent('scsi:service-retry', {detail: {version: cfg.version || '3.22.6', group: 'wordpress-proxy', path: url, attempt: attempt + 1}}));
+          window.dispatchEvent(new CustomEvent('scsi:service-retry', {detail: {version: cfg.version || '3.22.7', group: 'wordpress-proxy', path: url, attempt: attempt + 1}}));
           return new Promise(function (resolve) { setTimeout(resolve, attempt === 1 ? 600 : 1400); }).then(run);
         }
         const recovered = readRecoveredJson(url);
@@ -3608,18 +3608,7 @@
 
   function loadLeaflet() {
     if (window.L) return Promise.resolve(window.L);
-    return new Promise(function(resolve, reject) {
-      var settled=false;
-      function finish(value){if(settled)return;settled=true;clearTimeout(timer);resolve(value);}
-      function useFallback(){if(settled)return;loadLocalMapFallback().then(finish,reject);}
-      if (!document.querySelector('link[data-scsi-leaflet]')) {
-        var link=document.createElement('link'); link.rel='stylesheet'; link.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'; link.setAttribute('data-scsi-leaflet','1'); document.head.appendChild(link);
-      }
-      var timer=setTimeout(useFallback,3500);
-      var existing=document.querySelector('script[data-scsi-leaflet]');
-      if (existing) { existing.addEventListener('load',function(){window.L?finish(window.L):useFallback();},{once:true}); existing.addEventListener('error',useFallback,{once:true}); return; }
-      var script=document.createElement('script'); script.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'; script.async=true; script.setAttribute('data-scsi-leaflet','1'); script.onload=function(){window.L?finish(window.L):useFallback();}; script.onerror=useFallback; document.head.appendChild(script);
-    });
+    return loadLocalMapFallback();
   }
 
   function geoTableHtml(features) {
@@ -3647,7 +3636,7 @@
       root.querySelector('[data-scsi-geo-refresh]').addEventListener('click',function(){window.location.reload();});
       root.querySelector('[data-scsi-geo-fullscreen]').addEventListener('click',function(){if(root.requestFullscreen)root.requestFullscreen();});
       root.querySelector('.scsi-geo-table').innerHTML=geoTableHtml(events.features||[]);
-      status.textContent=(events.data_state==='live'?'Live public events':'Demonstration fallback events')+' · '+(events.count||0)+' records · Generated '+(events.generated_at||'');
+      status.textContent=(events.data_state==='live'?'Live public events':'Demonstration fallback events')+' · '+(events.count||0)+' records · '+(window.L&&window.L.__scsiFirstParty?'First-party interactive map':'Map runtime ready')+' · Generated '+(events.generated_at||'');
       setTimeout(function(){map.invalidateSize();},250);
     }).catch(function(err){showError(root,err&&err.message?err.message:'Unable to load geospatial map.');});
   }

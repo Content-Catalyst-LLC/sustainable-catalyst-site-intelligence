@@ -1,7 +1,7 @@
 (function (window, document) {
   "use strict";
 
-  const VERSION = "3.22.6";
+  const VERSION = "3.22.7";
   const OSM_TILES = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
   const ATTRIBUTION = "© OpenStreetMap contributors";
   const managedMaps = new Map();
@@ -187,58 +187,153 @@
       this._zoom = 2;
       this._layers = new Set();
       this._events = new Map();
-      this._container.classList.add("scsi-map-managed", "scsi-static-map");
-      this._container.dataset.scsiMapMode = "static-fallback";
-      this._container.dataset.scsiMapStatus = "degraded";
+      this._drag = null;
+      this._container.classList.add("scsi-map-managed", "scsi-static-map", "scsi-first-party-map");
+      this._container.dataset.scsiMapMode = "first-party-interactive";
+      this._container.dataset.scsiMapStatus = "ready";
+      this._container.dataset.scsiMapProvider = "sustainable-catalyst";
       this._container.innerHTML = "";
+      this._container.tabIndex = this._container.tabIndex >= 0 ? this._container.tabIndex : 0;
+      if (!this._container.getAttribute("aria-label")) this._container.setAttribute("aria-label", "Interactive geographic evidence map");
       this._canvas = document.createElement("div");
       this._canvas.className = "scsi-static-map-canvas";
-      this._canvas.innerHTML = '<svg class="scsi-static-map-svg" viewBox="0 0 1000 500" preserveAspectRatio="none" role="presentation"><g class="scsi-static-grid"></g><g class="scsi-static-layers"></g></svg><div class="scsi-static-map-label">Static geographic grid · live basemap unavailable</div><div class="scsi-static-popup" hidden></div>';
+      this._canvas.innerHTML = '<svg class="scsi-static-map-svg" viewBox="0 0 1000 500" preserveAspectRatio="none" role="presentation"><g class="scsi-static-grid"></g><g class="scsi-static-layers"></g></svg><div class="scsi-static-map-label">First-party interactive map · verified overlays</div><div class="scsi-map-controls" role="group" aria-label="Map controls"><button type="button" data-map-zoom-in aria-label="Zoom in">+</button><button type="button" data-map-zoom-out aria-label="Zoom out">−</button><button type="button" data-map-reset aria-label="Reset world view">⌂</button></div><div class="scsi-static-popup" hidden></div>';
       this._container.appendChild(this._canvas);
       this._svg = this._canvas.querySelector("svg");
       this._grid = this._canvas.querySelector(".scsi-static-grid");
       this._layerRoot = this._canvas.querySelector(".scsi-static-layers");
       this._popup = this._canvas.querySelector(".scsi-static-popup");
-      this._drawGrid();
-      registerMap(this, "static-fallback");
-      dispatch("scsi:map-fallback", { containerId: containerId(this._container), reason: "leaflet-unavailable", mode: "static" });
+      this._bindInteraction();
+      this._redraw();
+      registerMap(this, "first-party-interactive");
+      dispatch("scsi:map-first-party-ready", { containerId: containerId(this._container), mode: "first-party-interactive" });
+    }
+    _normalizeCenter(center) {
+      const point = latLng(center);
+      return {
+        lat: Math.max(-85, Math.min(85, point.lat)),
+        lng: ((point.lng + 540) % 360) - 180,
+      };
+    }
+    _scale() { return Math.pow(2, Math.max(-1, Math.min(8, this._zoom)) - 2); }
+    _bindInteraction() {
+      this._canvas.querySelector("[data-map-zoom-in]")?.addEventListener("click", () => this.setZoom(this._zoom + 1));
+      this._canvas.querySelector("[data-map-zoom-out]")?.addEventListener("click", () => this.setZoom(this._zoom - 1));
+      this._canvas.querySelector("[data-map-reset]")?.addEventListener("click", () => this.setView([12, 20], 2));
+      this._container.addEventListener("wheel", event => {
+        event.preventDefault();
+        this.setZoom(this._zoom + (event.deltaY < 0 ? 1 : -1));
+      }, { passive: false });
+      this._container.addEventListener("pointerdown", event => {
+        if (event.button !== 0 || event.target.closest?.("button,a")) return;
+        this._drag = { x: event.clientX, y: event.clientY, center: { ...this._center } };
+        this._container.classList.add("is-dragging");
+        this._container.setPointerCapture?.(event.pointerId);
+      });
+      this._container.addEventListener("pointermove", event => {
+        if (!this._drag) return;
+        const scale = this._scale();
+        const dx = event.clientX - this._drag.x;
+        const dy = event.clientY - this._drag.y;
+        this._center = this._normalizeCenter({
+          lng: this._drag.center.lng - (dx / Math.max(1, this._container.clientWidth)) * (360 / scale),
+          lat: this._drag.center.lat + (dy / Math.max(1, this._container.clientHeight)) * (180 / scale),
+        });
+        this._redraw();
+        this._emit("move");
+      });
+      const finishDrag = event => {
+        if (!this._drag) return;
+        this._drag = null;
+        this._container.classList.remove("is-dragging");
+        this._container.releasePointerCapture?.(event.pointerId);
+        this._emit("moveend");
+      };
+      this._container.addEventListener("pointerup", finishDrag);
+      this._container.addEventListener("pointercancel", finishDrag);
+      this._container.addEventListener("keydown", event => {
+        const step = 24;
+        if (event.key === "+" || event.key === "=") { event.preventDefault(); this.setZoom(this._zoom + 1); }
+        else if (event.key === "-") { event.preventDefault(); this.setZoom(this._zoom - 1); }
+        else if (event.key === "ArrowLeft") { event.preventDefault(); this.panBy([step, 0]); }
+        else if (event.key === "ArrowRight") { event.preventDefault(); this.panBy([-step, 0]); }
+        else if (event.key === "ArrowUp") { event.preventDefault(); this.panBy([0, step]); }
+        else if (event.key === "ArrowDown") { event.preventDefault(); this.panBy([0, -step]); }
+        else if (event.key === "Home") { event.preventDefault(); this.setView([12, 20], 2); }
+      });
     }
     _drawGrid() {
+      if (!this._grid) return;
+      this._grid.innerHTML = "";
       const ns = "http://www.w3.org/2000/svg";
-      for (let lng = -180; lng <= 180; lng += 30) {
+      const step = this._zoom >= 5 ? 5 : this._zoom >= 4 ? 10 : this._zoom >= 3 ? 15 : 30;
+      for (let lng = -180; lng <= 180; lng += step) {
+        const projected = this.project([0, lng]);
+        if (projected.x < -2 || projected.x > 1002) continue;
         const line = document.createElementNS(ns, "line");
-        const x = ((lng + 180) / 360) * 1000;
-        line.setAttribute("x1", x); line.setAttribute("x2", x); line.setAttribute("y1", 0); line.setAttribute("y2", 500);
+        line.setAttribute("x1", projected.x); line.setAttribute("x2", projected.x); line.setAttribute("y1", 0); line.setAttribute("y2", 500);
         this._grid.appendChild(line);
       }
-      for (let lat = -60; lat <= 60; lat += 30) {
+      for (let lat = -90; lat <= 90; lat += step) {
+        const projected = this.project([lat, this._center.lng]);
+        if (projected.y < -2 || projected.y > 502) continue;
         const line = document.createElementNS(ns, "line");
-        const y = ((90 - lat) / 180) * 500;
-        line.setAttribute("x1", 0); line.setAttribute("x2", 1000); line.setAttribute("y1", y); line.setAttribute("y2", y);
+        line.setAttribute("x1", 0); line.setAttribute("x2", 1000); line.setAttribute("y1", projected.y); line.setAttribute("y2", projected.y);
         this._grid.appendChild(line);
       }
     }
     project(value) {
       const point = latLng(value);
-      return { x: ((point.lng + 180) / 360) * 1000, y: ((90 - point.lat) / 180) * 500 };
+      const scale = this._scale();
+      let deltaLng = point.lng - this._center.lng;
+      if (deltaLng > 180) deltaLng -= 360;
+      if (deltaLng < -180) deltaLng += 360;
+      return {
+        x: 500 + (deltaLng / 360) * 1000 * scale,
+        y: 250 + ((this._center.lat - point.lat) / 180) * 500 * scale,
+      };
+    }
+    _redraw() {
+      this._drawGrid();
+      this._layers.forEach(layer => layer?._redraw?.());
+      this._container.dataset.scsiMapStatus = "ready";
+      this._container.dataset.scsiMapCenter = `${this._center.lat.toFixed(3)},${this._center.lng.toFixed(3)}`;
+      this._container.dataset.scsiMapZoom = String(this._zoom);
     }
     setView(center, zoom) {
-      this._center = latLng(center);
-      if (Number.isFinite(Number(zoom))) this._zoom = Number(zoom);
-      this._emit("move"); this._emit("zoom");
+      this._center = this._normalizeCenter(center);
+      if (Number.isFinite(Number(zoom))) this._zoom = Math.max(1, Math.min(8, Number(zoom)));
+      this._redraw();
+      this._emit("move"); this._emit("zoom"); this._emit("moveend"); this._emit("zoomend");
       return this;
     }
+    setZoom(zoom) { return this.setView(this._center, zoom); }
+    zoomIn(delta = 1) { return this.setZoom(this._zoom + Number(delta || 1)); }
+    zoomOut(delta = 1) { return this.setZoom(this._zoom - Number(delta || 1)); }
+    panBy(offset) {
+      const values = Array.isArray(offset) ? offset : [offset?.x || 0, offset?.y || 0];
+      const scale = this._scale();
+      return this.setView({
+        lng: this._center.lng - (Number(values[0]) / Math.max(1, this._container.clientWidth)) * (360 / scale),
+        lat: this._center.lat + (Number(values[1]) / Math.max(1, this._container.clientHeight)) * (180 / scale),
+      }, this._zoom);
+    }
+    panTo(center) { return this.setView(center, this._zoom); }
     flyTo(center, zoom) { return this.setView(center, zoom); }
     fitBounds(bounds) {
       const points = Array.isArray(bounds) ? bounds.map(latLng) : bounds?._points || [];
       if (points.length) {
-        this._center = {
-          lat: points.reduce((sum, item) => sum + item.lat, 0) / points.length,
-          lng: points.reduce((sum, item) => sum + item.lng, 0) / points.length,
-        };
-        this._zoom = points.length === 1 ? 5 : 2;
+        const minLat = Math.min(...points.map(item => item.lat));
+        const maxLat = Math.max(...points.map(item => item.lat));
+        const minLng = Math.min(...points.map(item => item.lng));
+        const maxLng = Math.max(...points.map(item => item.lng));
+        const latSpan = Math.max(1, maxLat - minLat);
+        const lngSpan = Math.max(1, maxLng - minLng);
+        const scale = Math.max(0.5, Math.min(32, Math.min(145 / latSpan, 300 / lngSpan)));
+        this._center = this._normalizeCenter({ lat: (minLat + maxLat) / 2, lng: (minLng + maxLng) / 2 });
+        this._zoom = Math.max(1, Math.min(7, Math.round(2 + Math.log2(scale))));
       }
-      this._emit("move"); this._emit("zoom");
+      this._redraw(); this._emit("move"); this._emit("zoom"); this._emit("moveend"); this._emit("zoomend");
       return this;
     }
     getCenter() { return { ...this._center }; }
@@ -247,12 +342,16 @@
     addLayer(layer) { this._layers.add(layer); layer?._attach?.(this); return this; }
     removeLayer(layer) { this._layers.delete(layer); layer?._detach?.(); return this; }
     hasLayer(layer) { return this._layers.has(layer); }
-    invalidateSize() { this._layers.forEach(layer => layer?._redraw?.()); return this; }
+    invalidateSize() { this._redraw(); return this; }
     on(names, handler) {
       String(names).split(/\s+/).forEach(name => {
         if (!this._events.has(name)) this._events.set(name, new Set());
         this._events.get(name).add(handler);
       });
+      return this;
+    }
+    off(names, handler) {
+      String(names).split(/\s+/).forEach(name => handler ? this._events.get(name)?.delete(handler) : this._events.delete(name));
       return this;
     }
     _emit(name) { (this._events.get(name) || []).forEach(handler => { try { handler({ target: this, type: name }); } catch (_) {} }); }
@@ -266,6 +365,7 @@
         this._popup.style.top = `${Math.max(4, Math.min(88, projected.y / 5))}%`;
       }
     }
+    closePopup() { if (this._popup) this._popup.hidden = true; return this; }
   }
 
   class StaticTileLayer {
@@ -397,8 +497,9 @@
   function installFallback() {
     if (window.L) return patchRealLeaflet(window.L);
     const L = {
-      version: `scsi-static-${VERSION}`,
+      version: `scsi-first-party-${VERSION}`,
       __scsiFallback: true,
+      __scsiFirstParty: true,
       map: (target, options) => new StaticMap(target, options),
       tileLayer: (url, options) => new StaticTileLayer(url, options),
       layerGroup: layers => new StaticLayerGroup(layers),
@@ -410,7 +511,7 @@
       latLngBounds: points => boundsObject(points),
     };
     window.L = L;
-    dispatch("scsi:map-library-ready", { mode: "static-fallback", leafletVersion: L.version });
+    dispatch("scsi:map-library-ready", { mode: "first-party-interactive", leafletVersion: L.version, firstParty: true });
     return L;
   }
 
@@ -421,7 +522,7 @@
     snapshot: function () {
       const containers = Array.from(document.querySelectorAll(".scsi-map-managed, .scsi-static-map"));
       const surfaces = containers.map(function (container) {
-        const mode = container.dataset.scsiMapMode || (container.classList.contains("scsi-static-map") ? "static-fallback" : "leaflet");
+        const mode = container.dataset.scsiMapMode || (container.classList.contains("scsi-static-map") ? "first-party-interactive" : "leaflet");
         const degraded = container.dataset.scsiMapStatus === "degraded" || container.classList.contains("scsi-map-tile-degraded") || container.classList.contains("scsi-map-grid-overlay");
         return {
           id: containerId(container),
@@ -435,7 +536,7 @@
       });
       return {
         version: VERSION,
-        libraryMode: window.L && window.L.__scsiFallback ? "static-fallback" : "leaflet",
+        libraryMode: window.L && window.L.__scsiFirstParty ? "first-party-interactive" : window.L && window.L.__scsiFallback ? "geographic-fallback" : "leaflet",
         mapCount: containers.length,
         degradedCount: surfaces.filter(function (surface) { return surface.degraded; }).length,
         modes: surfaces.reduce(function (counts, surface) {

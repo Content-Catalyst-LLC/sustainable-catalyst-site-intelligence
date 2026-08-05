@@ -1,4 +1,4 @@
-# Site Intelligence v3.22.6 installation and testing
+# Site Intelligence v3.22.7 installation and testing
 
 ## Local validation
 
@@ -12,7 +12,7 @@ The verifier checks release identity, compiles Python, parses JSON, validates Ja
 
 ## WordPress
 
-Upload `sustainable-catalyst-site-intelligence-v3.22.6-wordpress-plugin.zip` through **Plugins → Add New → Upload Plugin**, replace the installed version, and purge WordPress, host/CDN, and browser caches.
+Upload `sustainable-catalyst-site-intelligence-v3.22.7-wordpress-plugin.zip` through **Plugins → Add New → Upload Plugin**, replace the installed version, and purge WordPress, host/CDN, and browser caches.
 
 ## Production checks
 

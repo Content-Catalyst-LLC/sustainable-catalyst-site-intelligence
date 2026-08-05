@@ -7,13 +7,13 @@ client = TestClient(app)
 def test_root_reports_v1161():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json()["version"] == "3.22.6"
+    assert response.json()["version"] == "3.22.7"
 
 def test_earth_diagnostics():
     response = client.get("/public/earth-observation/diagnostics")
     assert response.status_code == 200
     payload = response.json()
-    assert payload["version"] == "3.22.6"
+    assert payload["version"] == "3.22.7"
     assert payload["interaction_checks"]["broken_tile_state"] == "ready"
     assert payload["layer_count"] >= 8
 

@@ -1,0 +1,28 @@
+SITE INTELLIGENCE v3.22.7 BUILD VALIDATION
+Build: Production Map Runtime and Navigation Repair
+
+SOURCE VALIDATION
+- Full inherited and release-specific test suite: 887 passed
+- Deterministic complete test passes: 2
+- Targeted map, navigation, and runtime regression tests: 19 passed
+- Python compilation: passed
+- JSON parsing: 112 files passed
+- JavaScript syntax: 33 files passed
+- WordPress PHP syntax: passed
+- Critical application/API/assets smoke checks: 15 HTTP 200 responses
+- /public/runtime-health: healthy
+- first-party-map-runtime check: pass
+- Release identity: 3.22.7
+- Release id: site-intelligence-v3.22.7
+
+PRODUCTION FAILURES REPAIRED
+- Global Conditions is a permanent sidebar route.
+- Sidebar routing is delegated and supports routes present before or after initialization.
+- Standalone startup no longer loads Leaflet from unpkg.com.
+- WordPress no longer waits for third-party Leaflet before initializing map features.
+- First-party map runtime supports drag, wheel zoom, keyboard navigation, controls, markers, vector evidence, popups, and bounds fitting.
+- Hidden map workspaces no longer lower overall health.
+- A ready first-party interactive map is classified as healthy.
+
+BROWSER VALIDATION BOUNDARY
+Chromium was available, but the managed browser policy blocked both localhost and file URLs with “Your organization doesn’t allow you to view this site.” No screenshot-based visual sign-off is claimed. Static browser contracts, JavaScript syntax, application endpoint smoke checks, runtime-health checks, and automated route/map regressions passed. The installation guide includes the required production pointer, mobile, route, and map-surface checks.

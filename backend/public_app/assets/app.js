@@ -23,7 +23,7 @@
     }
     throw last;
   }
-  const APP_VERSION="3.22.6";
+  const APP_VERSION="3.22.7";
   let heightFrame=0;
   function documentHeight(){
     const body=document.body,root=document.documentElement;
@@ -105,6 +105,11 @@
     qsa(".nav-item").forEach(button=>{const active=button.dataset.route===route;button.classList.toggle("active",active);if(active)button.setAttribute("aria-current","page");else button.removeAttribute("aria-current")});
     const announcement=qs("#routeAnnouncement");if(announcement)announcement.textContent=`${routeMeta(route)[1]} workspace opened`;
   }
+  function navigateToRoute(route){
+    const target=String(route||"").trim();if(!target)return Promise.resolve(false);
+    history.replaceState(null,"",`?country=${encodeURIComponent(state.country)}&view=${encodeURIComponent(target)}`);
+    return Promise.resolve(setRoute(target)).then(()=>true).catch(error=>{console.error("[Site Intelligence] Route failed",target,error);toast("That workspace could not be opened.");return false});
+  }
   const cleanDate=(v)=>{if(!v)return "Date unavailable";try{return new Date(v).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"})}catch{return v}};
   const api=async(path,{signal,timeout=12000}={})=>{
     const controller=new AbortController();
@@ -127,7 +132,8 @@
     state.map=L.map("map",{zoomControl:true,worldCopyJump:true}).setView([12,20],2);
     state.base=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"© OpenStreetMap contributors",maxZoom:19}).addTo(state.map);
     state.markers=L.layerGroup().addTo(state.map);
-    if(window.L.__scsiFallback)reportMapReliability("Static map mode active; verified records remain mapped on a geographic grid.");
+    if(window.L.__scsiFirstParty)reportMapReliability("First-party interactive map active; verified records remain available without third-party map code.");
+    else if(window.L.__scsiFallback)reportMapReliability("Geographic map fallback active; verified records remain mapped.");
   }
   function markerIcon(category){
     const quake=String(category).toLowerCase().includes("earthquake");
@@ -1659,10 +1665,10 @@
   async function init(){setLaunch("Preparing the map and public evidence services.",18);
     qs("#dateSelect").value=today();initMap();setLaunch("Loading map layers.",34);
     qsa(".layer-tab").forEach(b=>b.addEventListener("click",()=>setImagery(b.dataset.layer)));
-    qsa(".nav-item").forEach(b=>b.addEventListener("click",()=>{history.replaceState(null,"",`?country=${encodeURIComponent(state.country)}&view=${encodeURIComponent(b.dataset.route)}`);setRoute(b.dataset.route)}));
+    qs("#primaryNavigation")?.addEventListener("click",event=>{const button=event.target.closest?.(".nav-item[data-route]");if(!button||!event.currentTarget.contains(button))return;navigateToRoute(button.dataset.route)});
     qs("#mobileNavToggle")?.addEventListener("click",()=>setMobileNavigation(!document.body.classList.contains("mobile-nav-open")));
     qs("#mobileNavBackdrop")?.addEventListener("click",()=>setMobileNavigation(false,{restoreFocus:true}));
-    qsa("[data-route-link]").forEach(b=>b.addEventListener("click",()=>{const route=b.dataset.routeLink;history.replaceState(null,"",`?country=${encodeURIComponent(state.country)}&view=${encodeURIComponent(route)}`);setRoute(route)}));
+    qsa("[data-route-link]").forEach(b=>b.addEventListener("click",()=>navigateToRoute(b.dataset.routeLink)));
     qs("#countrySelect").addEventListener("change",async e=>{state.country=e.target.value;if(state.route==="country"){await selectGlobalCountry(e.target.value,true)}else if(state.route==="thematic"){qs("#thematicCountry").value=e.target.value;await loadThematicDashboard(true)}else{await loadCountry(e.target.value);history.replaceState(null,"",`?country=${encodeURIComponent(e.target.value)}&view=${encodeURIComponent(state.route)}`)}});
     qs("#dateSelect").addEventListener("change",()=>setImagery(qs(".layer-tab.active").dataset.layer));
     qs("#eventsToggle").addEventListener("change",e=>e.target.checked?state.markers.addTo(state.map):state.map.removeLayer(state.markers));
@@ -1741,6 +1747,7 @@
     const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const requestedView=params.get("view")||"overview";const initialView=[...Object.keys(savedViewDefinitions),"saved","launch","observatory"].includes(requestedView)?requestedView:"overview";const invalidRequestedView=requestedView!==initialView;qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";if(params.get("imageryDate"))qs("#dateSelect").value=params.get("imageryDate");try{setLaunch("Loading satellite imagery.",50);await loadLayers();await setImagery(params.get("imageryLayer")||"true-color");setLaunch("Connecting to live events and country evidence.",68);await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);setLaunch("Preparing the workspace.",88);await setRoute(initialView);applySharedControlState(initialView,params);finishLaunch();if(invalidRequestedView)toast("The requested view is unavailable; Overview was opened instead.")}
     catch(e){qs("#statusText").textContent="Partial public data";toast("Some optional public data is temporarily unavailable.");finishLaunch()}
   }
+  window.SCSIRouterV3227={version:"3.22.7",navigate:navigateToRoute,current:()=>state.route};
   document.addEventListener("DOMContentLoaded",init);
 })();
 
@@ -1759,5 +1766,5 @@ document.head.appendChild(visualStyle);
 
 window.addEventListener("load",reportHeight,{once:true});window.addEventListener("resize",reportHeight,{passive:true});window.visualViewport?.addEventListener("resize",reportHeight,{passive:true});window.addEventListener("message",event=>{if(event.data?.type==="SC_SI_REQUEST_HEIGHT")reportHeight()});if("ResizeObserver" in window)new ResizeObserver(reportHeight).observe(document.body);
 
-/* v3.22.6 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v3.22.6 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v3.22.7 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v3.22.7 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

@@ -1,4 +1,4 @@
-# Site Intelligence v3.22.6 Deployment Gate Audit
+# Site Intelligence v3.22.7 Deployment Gate Audit
 
 ## Problem
 
@@ -6,13 +6,13 @@ Earlier builds could validate locally and update WordPress without proving that 
 
 ## Repair
 
-v3.22.6 introduces a durable release gate. Installation readiness requires the current backend version, a compatible WordPress version, an available Render branch and commit, the expected branch, the requested commit, and the production release channel.
+v3.22.7 introduces a durable release gate. Installation readiness requires the current backend version, a compatible WordPress version, an available Render branch and commit, the expected branch, the requested commit, and the production release channel.
 
 The release identity is returned with `Cache-Control: no-cache, no-store, must-revalidate`, preventing a CDN or browser cache from presenting stale deployment metadata as current.
 
 ## Rollback readiness
 
-Before synchronization, the promotion script records the branch head and creates an annotated tag named `site-intelligence-pre-v3.22.6-<commit>`. If deployment verification fails, the script prints the exact Render CLI command to deploy that prior commit. Rollback remains human-controlled.
+Before synchronization, the promotion script records the branch head and creates an annotated tag named `site-intelligence-pre-v3.22.7-<commit>`. If deployment verification fails, the script prints the exact Render CLI command to deploy that prior commit. Rollback remains human-controlled.
 
 ## WordPress behavior
 

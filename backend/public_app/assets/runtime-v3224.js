@@ -1,13 +1,13 @@
 (function (window, document) {
   "use strict";
 
-  const VERSION = "3.22.6";
+  const VERSION = "3.22.7";
   const EVENT_LIMIT = 30;
   const ENDPOINTS = [
     ["Service", "/health"],
     ["Build", "/public/build-info"],
     ["Deployment Receipt", "/public/deployment-receipt"],
-    ["Release Gate", "/public/release-gate?plugin_version=3.22.6&expected_release_id=site-intelligence-v3.22.6"],
+    ["Release Gate", "/public/release-gate?plugin_version=3.22.7&expected_release_id=site-intelligence-v3.22.7"],
     ["Runtime", "/public/runtime-health"],
     ["Recovery", "/public/runtime-recovery"],
     ["Geospatial", "/public/geospatial/diagnostics"],
@@ -86,10 +86,10 @@
     const containers = Array.from(document.querySelectorAll(".scsi-map-managed, .scsi-static-map, [id$='Map']"));
     return {
       version: window.SCSIMapReliability?.version || "unknown",
-      libraryMode: window.L?.__scsiFallback ? "static-fallback" : window.L ? "leaflet" : "unavailable",
+      libraryMode: window.L?.__scsiFirstParty ? "first-party-interactive" : window.L?.__scsiFallback ? "geographic-fallback" : window.L ? "leaflet" : "unavailable",
       mapCount: containers.length,
       modes: containers.reduce(function (counts, container) {
-        const mode = container.dataset.scsiMapMode || (container.classList.contains("scsi-static-map") ? "static-fallback" : "declared");
+        const mode = container.dataset.scsiMapMode || (container.classList.contains("scsi-static-map") ? "first-party-interactive" : "declared");
         counts[mode] = (counts[mode] || 0) + 1;
         return counts;
       }, {}),
@@ -103,8 +103,8 @@
     }).map(function (element) {
       return {
         id: element.id || "unnamed-map",
-        mode: element.dataset.scsiMapMode || (element.classList.contains("scsi-static-map") ? "static-fallback" : "leaflet-or-pending"),
-        degraded: element.classList.contains("scsi-map-tile-degraded") || element.classList.contains("scsi-map-grid-overlay"),
+        mode: element.dataset.scsiMapMode || (element.classList.contains("scsi-static-map") ? "first-party-interactive" : "leaflet-or-pending"),
+        degraded: element.dataset.scsiMapStatus === "degraded" || element.classList.contains("scsi-map-tile-degraded") || element.classList.contains("scsi-map-grid-overlay"),
       };
     });
   }
@@ -134,9 +134,8 @@
   function overallStatus() {
     const failed = state.endpoints.filter(function (item) { return !item.ok; }).length;
     const maps = mapSnapshot();
-    const degradedMaps = (maps.surfaces || []).some(function (surface) { return surface.degraded; }) || Object.keys(maps.modes || {}).some(function (mode) {
-      return mode.indexOf("fallback") >= 0 || mode.indexOf("grid") >= 0 || mode.indexOf("degraded") >= 0;
-    });
+    const visibleSurfaces = (maps.surfaces || visibleMapContainers()).filter(function (surface) { return surface.visible !== false; });
+    const degradedMaps = visibleSurfaces.some(function (surface) { return surface.degraded || surface.status === "degraded"; });
     const degradedServices = (serviceSnapshot().groups || []).some(function (group) { return group.degraded || group.circuitOpen; });
     if (!state.online || failed >= 3) return "offline";
     if (failed || state.errors.length || degradedMaps || degradedServices || state.contract?.status === "degraded") return "degraded";
@@ -299,7 +298,7 @@
     const summary = panel.querySelector("[data-runtime-summary]");
     if (summary) summary.innerHTML = '<strong>' + statusLabel(status) + '</strong><span>' + (state.running ? "Checks are running." : "Local runtime and critical public endpoints.") + '</span>';
     const body = panel.querySelector("[data-runtime-body]");
-    if (body) body.innerHTML = '<section><h3>Application contract</h3>' + endpointRows() + '</section><section><h3>Service recovery</h3>' + serviceRows() + '</section><section><h3>Map-by-map health</h3>' + mapRows() + '</section><section><h3>Session faults</h3>' + eventRows() + '</section><p class="scsi-runtime-footnote">Diagnostics are local and public-safe. Cached recovery responses are marked and third-party source availability can change independently.</p>';
+    if (body) body.innerHTML = '<section><h3>Application contract</h3>' + endpointRows() + '</section><section><h3>Service recovery</h3>' + serviceRows() + '</section><section><h3>Map-by-map health</h3>' + mapRows() + '</section><section><h3>Session faults</h3>' + eventRows() + '</section><p class="scsi-runtime-footnote">Diagnostics are local and public-safe. Hidden map workspaces do not lower health, and the first-party interactive map runtime is a healthy production mode. Cached recovery responses remain explicitly marked.</p>';
   }
 
   async function runChecks() {
@@ -321,7 +320,7 @@
     emit("scsi:runtime-health", reportObject());
   }
 
-  ["scsi:map-library-ready", "scsi:map-initialized", "scsi:map-degraded", "scsi:map-fallback", "scsi:map-recovered", "scsi:map-retry", "scsi:imagery-degraded", "scsi:service-recovery-ready", "scsi:service-retry", "scsi:service-fallback", "scsi:service-circuit-open", "scsi:service-recovered"].forEach(function (name) {
+  ["scsi:map-library-ready", "scsi:map-first-party-ready", "scsi:map-initialized", "scsi:map-degraded", "scsi:map-fallback", "scsi:map-recovered", "scsi:map-retry", "scsi:imagery-degraded", "scsi:service-recovery-ready", "scsi:service-retry", "scsi:service-fallback", "scsi:service-circuit-open", "scsi:service-recovered"].forEach(function (name) {
     window.addEventListener(name, function (event) { recordEvent(name, event.detail || {}); });
   });
   window.addEventListener("error", function (event) {

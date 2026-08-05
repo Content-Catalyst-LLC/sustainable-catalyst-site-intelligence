@@ -13,7 +13,7 @@ def test_public_runtime_health_is_local_public_safe_and_versioned():
     assert response.status_code == 200
     data = response.json()
     assert data["ok"] is True
-    assert data["version"] == "3.22.6"
+    assert data["version"] == "3.22.7"
     assert data["scope"] == "local-runtime-contract"
     assert data["live_upstream_checks_performed"] is False
     assert data["summary"]["available_assets"] == data["summary"]["required_assets"]
@@ -39,7 +39,7 @@ def test_runtime_health_tray_has_rescan_copy_and_fault_capture():
     assert ".scsi-runtime-toggle" in css and ".scsi-runtime-panel" in css
 
 
-def test_map_runtime_degrades_to_grid_when_openstreetmap_fails():
+def test_map_runtime_keeps_first_party_interactive_mode_without_openstreetmap():
     js = (ROOT / "backend/public_app/assets/map-fallback-v3224.js").read_text(encoding="utf-8")
     css = (ROOT / "backend/public_app/assets/map-fallback-v3224.css").read_text(encoding="utf-8")
     assert 'reason: "openstreetmap-unavailable"' in js
@@ -51,7 +51,7 @@ def test_map_runtime_degrades_to_grid_when_openstreetmap_fails():
 
 def test_runtime_assets_are_offline_cached_and_release_aligned():
     worker = (ROOT / "backend/public_app/service-worker.js").read_text(encoding="utf-8")
-    assert 'const RELEASE="3.22.6"' in worker
+    assert 'const RELEASE="3.22.7"' in worker
     assert "runtime-v3224.js" in worker
     assert "runtime-v3224.css" in worker
     assert "map-fallback-v3224.js" in worker
@@ -60,7 +60,7 @@ def test_runtime_assets_are_offline_cached_and_release_aligned():
 def test_wordpress_package_uses_the_upgraded_map_runtime():
     php = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text(encoding="utf-8")
     fallback = ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/map-fallback-v3224.js"
-    assert "Version: 3.22.6" in php
+    assert "Version: 3.22.7" in php
     assert "map-fallback-v3224.js" in php
     assert fallback.is_file()
     assert "openstreetmap-unavailable" in fallback.read_text(encoding="utf-8")

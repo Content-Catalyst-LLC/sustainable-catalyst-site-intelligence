@@ -9,12 +9,13 @@ ROOT = Path(__file__).resolve().parents[2]
 client = TestClient(app)
 
 
-def test_local_map_runtime_loads_after_leaflet_and_before_application():
+def test_first_party_map_runtime_loads_before_application_without_blocking_cdn():
     html = (ROOT / "backend/public_app/index.html").read_text(encoding="utf-8")
-    leaflet = html.index("leaflet@1.9.4/dist/leaflet.js")
-    fallback = html.index("/app/assets/map-fallback-v3224.js")
+    runtime = html.index("/app/assets/map-fallback-v3224.js")
     application = html.index('src="/app/assets/app.js" defer')
-    assert leaflet < fallback < application
+    assert runtime < application
+    assert "unpkg.com/leaflet" not in html
+    assert "cdn.jsdelivr.net/npm/leaflet" not in html
     assert "/app/assets/map-fallback-v3224.css" in html
 
 
@@ -24,7 +25,8 @@ def test_map_runtime_assets_are_first_party_and_offline_cached():
     worker = (ROOT / "backend/public_app/service-worker.js").read_text(encoding="utf-8")
     assert js_response.status_code == css_response.status_code == 200
     assert "SCSIMapReliability" in js_response.text
-    assert "static-fallback" in js_response.text
+    assert "first-party-interactive" in js_response.text
+    assert "__scsiFirstParty" in js_response.text
     assert "map-fallback-v3224.js" in worker
     assert "map-fallback-v3224.css" in worker
 
@@ -58,10 +60,12 @@ def test_non_embeddable_app_keeps_same_origin_frame_protection(monkeypatch):
     assert response.headers["content-security-policy"] == "frame-ancestors 'self'"
 
 
-def test_wordpress_map_loader_has_bounded_remote_failover():
+def test_wordpress_map_loader_is_first_party_and_dependency_ordered():
     php = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text(encoding="utf-8")
     js = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js").read_text(encoding="utf-8")
     assert "mapFallbackUrl" in php and "map-fallback-v3224.js" in php
     assert "function loadLocalMapFallback" in js
-    assert "setTimeout(useFallback,3500)" in js
-    assert "script.onerror=useFallback" in js
+    assert "return loadLocalMapFallback();" in js
+    assert "unpkg.com/leaflet" not in js
+    assert "wp_enqueue_script('scsi-map-runtime'" in php
+    assert "['scsi-map-runtime']" in php

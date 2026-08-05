@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = "3.22.6";
+  const VERSION = "3.22.7";
   const API = window.SC_SITE_INTELLIGENCE_API || window.location.origin;
   const qs = (selector, root = document) => root.querySelector(selector);
   const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
@@ -29,7 +29,7 @@
     state.contextLayer=L.layerGroup().addTo(state.map);
     state.areaLayer=L.layerGroup().addTo(state.map);
     state.evidenceLayer=L.layerGroup().addTo(state.map);
-    if(window.L.__scsiFallback)mapStatus("Static geographic grid active; evidence geometries remain interactive.");
+    if(window.L.__scsiFirstParty)mapStatus("First-party interactive map active; evidence geometries remain fully available."); else if(window.L.__scsiFallback)mapStatus("Geographic fallback active; evidence geometries remain interactive.");
   }
   function renderContext(){
     ensureMap();if(!state.contextLayer)return;
@@ -121,5 +121,5 @@
     qs("#spatialRunEvidence")?.addEventListener("click",runEvidence);
     qs("#spatialAreaSelect")?.addEventListener("change",()=>{state.evidenceLayer?.clearLayers();renderArea()});
   });
-  window.SCSpatialV2150={open,close,status:()=>({version:VERSION,loaded:state.loaded,publicAreas:state.areas.length,publicDatasets:state.datasets.length,mapMode:window.L?.__scsiFallback?"static-fallback":"leaflet",map:state.map})};
+  window.SCSpatialV2150={open,close,status:()=>({version:VERSION,loaded:state.loaded,publicAreas:state.areas.length,publicDatasets:state.datasets.length,mapMode:window.L?.__scsiFirstParty?"first-party-interactive":window.L?.__scsiFallback?"geographic-fallback":"leaflet",map:state.map})};
 })();

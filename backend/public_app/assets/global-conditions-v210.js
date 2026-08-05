@@ -62,16 +62,8 @@
     const main = $("#main");
     if (!main || $("#globalConditionsObservatory")) return;
     main.insertAdjacentHTML("beforeend", panelMarkup());
-    const nav = $("#primaryNavigation");
-    if (nav && !nav.querySelector('[data-route="global"]')) {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "nav-item";
-      button.dataset.route = "global";
-      button.innerHTML = '<span class="nav-label">Global</span><span class="nav-description">Conditions and live map</span>';
-      const overview = nav.querySelector('[data-route="overview"]');
-      if (overview?.nextSibling) nav.insertBefore(button, overview.nextSibling); else nav.appendChild(button);
-    }
+    const navButton = $("#primaryNavigation [data-route=\"global\"]");
+    if (navButton) navButton.dataset.routeReady = "true";
     $("#gcApply")?.addEventListener("click", loadAll);
     $("#gcFit")?.addEventListener("click", fitFeatures);
     $("#gcShare")?.addEventListener("click", shareView);
@@ -85,6 +77,8 @@
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: "© OpenStreetMap contributors", maxZoom: 19,
     }).addTo(state.map);
+    const mapStatus = $("#gcMapStatus");
+    if (mapStatus && window.L.__scsiFirstParty) mapStatus.textContent = "First-party interactive map ready; public evidence overlays do not depend on external map code.";
     state.featureLayer = L.geoJSON([], {
       pointToLayer: (feature, latlng) => L.circleMarker(latlng, {
         radius: 6, weight: 1.5, color: "#ffffff", fillColor: markerColor(feature), fillOpacity: 0.9,
