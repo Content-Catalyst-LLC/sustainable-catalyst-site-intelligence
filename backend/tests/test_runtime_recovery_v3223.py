@@ -13,7 +13,7 @@ def test_runtime_recovery_contract_is_public_safe_and_grouped():
     assert response.status_code == 200
     data = response.json()
     assert data["ok"] is True
-    assert data["version"] == "3.22.7"
+    assert data["version"] == "3.22.8"
     assert data["scope"] == "public-client-recovery-contract"
     assert data["live_upstream_checks_performed"] is False
     assert data["policy"]["maximum_attempts"] == 3
@@ -23,10 +23,10 @@ def test_runtime_recovery_contract_is_public_safe_and_grouped():
 
 def test_service_recovery_loads_before_diagnostics_and_application_modules():
     html = (ROOT / "backend/public_app/index.html").read_text(encoding="utf-8")
-    fallback = html.index("/app/assets/map-fallback-v3224.js")
+    fallback = html.index("/app/assets/map-engine-v3228.js")
     recovery = html.index("/app/assets/service-recovery-v3224.js")
-    runtime = html.index("/app/assets/runtime-v3224.js")
-    application = html.index('src="/app/assets/app.js" defer')
+    runtime = html.index("/app/assets/runtime-v3228.js")
+    application = html.index('src="/app/assets/app.js?v=3.22.8" defer')
     assert fallback < recovery < runtime < application
 
 
@@ -45,24 +45,24 @@ def test_client_recovery_has_bounded_retry_circuit_and_last_known_good_controls(
 
 def test_service_worker_marks_recovered_public_json_and_caches_recovery_runtime():
     worker = (ROOT / "backend/public_app/service-worker.js").read_text(encoding="utf-8")
-    assert 'const RELEASE="3.22.7"' in worker
+    assert 'const RELEASE="3.22.8"' in worker
     assert "service-recovery-v3224.js" in worker
     assert 'headers.set("X-SCSI-Recovery",reason||"service-worker-cache")' in worker
     assert 'return recovered(cached,"service-worker-cache")' in worker
 
 
 def test_map_runtime_reports_each_surface_and_schedules_tile_recovery():
-    js = (ROOT / "backend/public_app/assets/map-fallback-v3224.js").read_text(encoding="utf-8")
+    js = (ROOT / "backend/public_app/assets/map-engine-v3228.js").read_text(encoding="utf-8")
     assert "const managedMaps = new Map()" in js
-    assert "scheduleOsmRecovery" in js
+    assert "local world boundaries" in js
     assert "scsi:map-recovered" in js
     assert "recoveryScheduled" in js
-    assert "surfaces," in js
+    assert "surfaces }" in js or "surfaces," in js
     assert "retry: function (id)" in js
 
 
 def test_runtime_console_exposes_service_and_map_by_map_health():
-    js = (ROOT / "backend/public_app/assets/runtime-v3224.js").read_text(encoding="utf-8")
+    js = (ROOT / "backend/public_app/assets/runtime-v3228.js").read_text(encoding="utf-8")
     assert "/public/runtime-recovery" in js
     assert "data-runtime-recover" in js
     assert "function serviceRows()" in js
@@ -81,9 +81,9 @@ def test_active_workspace_refreshes_once_after_service_recovery():
 def test_wordpress_proxy_uses_retry_cache_and_current_map_runtime():
     php = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text(encoding="utf-8")
     js = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js").read_text(encoding="utf-8")
-    assert "Version: 3.22.7" in php
-    assert "map-fallback-v3224.js" in php
-    assert "map-fallback-v3224.css" in php
+    assert "Version: 3.22.8" in php
+    assert "map-engine-v3228.js" in php
+    assert "map-engine-v3228.css" in php
     assert "recoveryCachePrefix" in js
     assert "attempt < 3" in js
     assert "readRecoveredJson" in js

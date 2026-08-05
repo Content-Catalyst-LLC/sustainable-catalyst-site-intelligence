@@ -1,4 +1,4 @@
-# Site Intelligence v3.22.7 deployment audit
+# Site Intelligence v3.22.8 deployment audit
 
 ## Confirmed failure
 
@@ -8,14 +8,14 @@ As a result, WordPress could report a newer plugin version while the Render back
 
 ## Corrective architecture
 
-v3.22.7 establishes a single promotion sequence:
+v3.22.8 establishes a single promotion sequence:
 
 1. Verify the immutable repository manifest and full test suite.
 2. Clone `Content-Catalyst-LLC/sustainable-catalyst-site-intelligence` from GitHub.
 3. Resolve the repository's connected default branch.
 4. Synchronize the exact release tree without copying virtual environments, caches, or Git metadata.
 5. Re-run validation against the exact Git tree.
-6. Commit and tag v3.22.7.
+6. Commit and tag v3.22.8.
 7. Push the branch and release tag.
 8. Trigger Render through auto-deploy, a configured deploy hook, or the authenticated Render CLI.
 9. Poll `/public/build-info` until both release version and `RENDER_GIT_COMMIT` match the pushed commit.

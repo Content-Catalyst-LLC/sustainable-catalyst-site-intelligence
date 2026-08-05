@@ -1,4 +1,4 @@
-# Site Intelligence v3.22.7
+# Site Intelligence v3.22.8
 
 ## Production Map Runtime and Navigation Repair
 
@@ -14,7 +14,7 @@ This release repairs the production map and sidebar failures reported after v3.2
 - Keeps hidden map workspaces out of the overall health calculation.
 - Treats the functioning first-party interactive runtime as a healthy production mode rather than a degraded fallback.
 - Preserves explicit degradation reporting for actual visible map failures, imagery failures, endpoint failures, and browser errors.
-- Aligns the backend, application shell, service worker, WordPress plugin, Render release identifier, deployment gate, and promotion scripts to v3.22.7.
+- Aligns the backend, application shell, service worker, WordPress plugin, Render release identifier, deployment gate, and promotion scripts to v3.22.8.
 
 ### Release boundary
 

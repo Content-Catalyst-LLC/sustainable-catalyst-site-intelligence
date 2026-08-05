@@ -172,7 +172,7 @@
     try {
       const item = JSON.parse(sessionStorage.getItem(recoveryCacheKey(url)) || 'null');
       if (!item || !item.savedAt || Date.now() - item.savedAt > 21600000) return null;
-      window.dispatchEvent(new CustomEvent('scsi:service-fallback', {detail: {version: cfg.version || '3.22.7', group: 'wordpress-proxy', path: url, reason: 'last-known-good', staleAgeMs: Date.now() - item.savedAt}}));
+      window.dispatchEvent(new CustomEvent('scsi:service-fallback', {detail: {version: cfg.version || '3.22.8', group: 'wordpress-proxy', path: url, reason: 'last-known-good', staleAgeMs: Date.now() - item.savedAt}}));
       return item.data;
     } catch (e) { return null; }
   }
@@ -200,7 +200,7 @@
       return fetchJsonAttempt(url).catch(function (error) {
         const retryable = !error.status || recoveryStatuses.indexOf(Number(error.status)) !== -1;
         if (retryable && attempt < 3) {
-          window.dispatchEvent(new CustomEvent('scsi:service-retry', {detail: {version: cfg.version || '3.22.7', group: 'wordpress-proxy', path: url, attempt: attempt + 1}}));
+          window.dispatchEvent(new CustomEvent('scsi:service-retry', {detail: {version: cfg.version || '3.22.8', group: 'wordpress-proxy', path: url, attempt: attempt + 1}}));
           return new Promise(function (resolve) { setTimeout(resolve, attempt === 1 ? 600 : 1400); }).then(run);
         }
         const recovered = readRecoveredJson(url);
@@ -3587,28 +3587,28 @@
   }
 
 
-  function loadLocalMapFallback() {
+  function loadSelfHostedMapEngine() {
     if (window.L) return Promise.resolve(window.L);
     return new Promise(function(resolve, reject) {
-      if (cfg.mapFallbackCssUrl && !document.querySelector('link[data-scsi-map-fallback]')) {
-        var fallbackLink=document.createElement('link'); fallbackLink.rel='stylesheet'; fallbackLink.href=cfg.mapFallbackCssUrl; fallbackLink.setAttribute('data-scsi-map-fallback','1'); document.head.appendChild(fallbackLink);
+      if (cfg.mapEngineCssUrl && !document.querySelector('link[data-scsi-map-engine]')) {
+        var fallbackLink=document.createElement('link'); fallbackLink.rel='stylesheet'; fallbackLink.href=cfg.mapEngineCssUrl; fallbackLink.setAttribute('data-scsi-map-engine','1'); document.head.appendChild(fallbackLink);
       }
-      var existingFallback=document.querySelector('script[data-scsi-map-fallback]');
+      var existingFallback=document.querySelector('script[data-scsi-map-engine]');
       if (existingFallback) {
         if (window.L) return resolve(window.L);
         existingFallback.addEventListener('load',function(){resolve(window.L);},{once:true});
         existingFallback.addEventListener('error',reject,{once:true});
         return;
       }
-      if (!cfg.mapFallbackUrl) return reject(new Error('Local map fallback URL is unavailable.'));
-      var fallback=document.createElement('script'); fallback.src=cfg.mapFallbackUrl; fallback.async=true; fallback.setAttribute('data-scsi-map-fallback','1');
-      fallback.onload=function(){window.L?resolve(window.L):reject(new Error('Local map fallback did not initialize.'));}; fallback.onerror=reject; document.head.appendChild(fallback);
+      if (!cfg.mapEngineUrl) return reject(new Error('Self-hosted map engine URL is unavailable.'));
+      var fallback=document.createElement('script'); fallback.src=cfg.mapEngineUrl; fallback.async=true; fallback.setAttribute('data-scsi-map-engine','1');
+      fallback.onload=function(){window.L?resolve(window.L):reject(new Error('Self-hosted map engine did not initialize.'));}; fallback.onerror=reject; document.head.appendChild(fallback);
     });
   }
 
   function loadLeaflet() {
     if (window.L) return Promise.resolve(window.L);
-    return loadLocalMapFallback();
+    return loadSelfHostedMapEngine();
   }
 
   function geoTableHtml(features) {
@@ -3706,6 +3706,17 @@
       records.forEach(function (record) {
         if (!record.origin || event.origin !== record.origin) return;
         if (event.source !== record.frame.contentWindow) return;
+        var expectedVersion=String(cfg.version||'');
+        var observedVersion=String(event.data.version||'');
+        if (expectedVersion && observedVersion && observedVersion !== expectedVersion) {
+          if (record.wrapper) record.wrapper.classList.add('scsi-release-mismatch');
+          if (!record.reloadedForVersion) {
+            record.reloadedForVersion=true;
+            try { var next=new URL(record.frame.src); next.searchParams.set('release',expectedVersion); next.searchParams.set('embed','wordpress'); next.searchParams.set('cache_bust',String(Date.now())); record.frame.src=next.toString(); } catch (error) {}
+          }
+          return;
+        }
+        if (record.wrapper) record.wrapper.classList.remove('scsi-release-mismatch','scsi-embed-delayed');
         applyHeight(record, event.data.height);
       });
     });

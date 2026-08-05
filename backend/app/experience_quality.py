@@ -129,7 +129,7 @@ def experience_diagnostics() -> dict[str, Any]:
         "mobile_navigation_toggle": 'id="mobileNavToggle"' in html,
         "mobile_navigation_backdrop": 'id="mobileNavBackdrop"' in html,
         "route_live_region": 'id="routeAnnouncement"' in html and 'aria-live="polite"' in html,
-        "deferred_first_party_script": 'src="/app/assets/app.js" defer' in html,
+        "deferred_first_party_script": 'src="/app/assets/app.js?v=3.22.8" defer' in html,
         "optional_png_library_not_eager": "html2canvas.min.js" not in html,
         "reduced_motion_css": "prefers-reduced-motion:reduce" in css or "prefers-reduced-motion: reduce" in css,
         "forced_colors_css": "forced-colors:active" in css or "forced-colors: active" in css,
@@ -160,6 +160,6 @@ def experience_diagnostics() -> dict[str, Any]:
         "manual_review_required": True,
         "notes": [
             "Automated diagnostics verify release contracts, not full assistive-technology conformance.",
-            "External Leaflet, map-tile, imagery, and font delivery remain outside the first-party byte budgets.",
+            "Optional web tiles, imagery, and font delivery remain outside the first-party byte budgets; the local vector basemap is first-party.",
         ],
     }

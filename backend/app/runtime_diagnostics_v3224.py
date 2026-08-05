@@ -1,4 +1,4 @@
-"""Public-safe runtime diagnostics for Site Intelligence v3.22.7.
+"""Public-safe runtime diagnostics for Site Intelligence v3.22.8.
 
 The diagnostics intentionally avoid outbound network calls. They report the local
 application contract, required first-party assets, map surfaces, embed policy,
@@ -21,10 +21,11 @@ INDEX_FILE = PUBLIC_APP_DIR / "index.html"
 SERVICE_WORKER_FILE = PUBLIC_APP_DIR / "service-worker.js"
 
 REQUIRED_ASSETS = (
-    "assets/map-fallback-v3224.css",
-    "assets/map-fallback-v3224.js",
-    "assets/runtime-v3224.css",
-    "assets/runtime-v3224.js",
+    "assets/map-engine-v3228.css",
+    "assets/map-engine-v3228.js",
+    "assets/world-boundaries-v3228.geojson",
+    "assets/runtime-v3228.css",
+    "assets/runtime-v3228.js",
     "assets/service-recovery-v3224.js",
     "assets/app.css",
     "assets/app.js",
@@ -116,9 +117,9 @@ def build_runtime_health(settings: Settings) -> dict[str, Any]:
     assets = _asset_records()
     surfaces = _map_surfaces(index_html)
 
-    fallback_js = "/app/assets/map-fallback-v3224.js"
+    fallback_js = "/app/assets/map-engine-v3228.js"
     recovery_js = "/app/assets/service-recovery-v3224.js"
-    runtime_js = "/app/assets/runtime-v3224.js"
+    runtime_js = "/app/assets/runtime-v3228.js"
     app_js = "/app/assets/app.js"
     ordered_scripts = all(token in index_html for token in (fallback_js, recovery_js, runtime_js, app_js))
     if ordered_scripts:
@@ -152,13 +153,13 @@ def build_runtime_health(settings: Settings) -> dict[str, Any]:
         _check(
             "first-party-map-runtime",
             "Map startup has no blocking third-party JavaScript dependency",
-            "unpkg.com/leaflet" not in index_html and "cdn.jsdelivr.net/npm/leaflet" not in index_html and "__scsiFirstParty" in _read(PUBLIC_APP_DIR / "assets/map-fallback-v3224.js"),
-            "The interactive map runtime is packaged and starts before application modules.",
+            "unpkg.com/leaflet" not in index_html and "cdn.jsdelivr.net/npm/leaflet" not in index_html and "__scsiSelfHosted" in _read(PUBLIC_APP_DIR / "assets/map-engine-v3228.js") and (PUBLIC_APP_DIR / "assets/world-boundaries-v3228.geojson").is_file(),
+            "The self-hosted map engine, real tile renderer, and local world-boundary basemap are packaged before application modules.",
         ),
         _check(
             "offline-shell",
             "Offline shell contains the reliability assets",
-            all(name in worker for name in ("map-fallback-v3224.js", "runtime-v3224.js", "runtime-v3224.css", "service-recovery-v3224.js")) and f'const RELEASE="{APP_VERSION}"' in worker,
+            all(name in worker for name in ("map-engine-v3228.js", "map-engine-v3228.css", "world-boundaries-v3228.geojson", "runtime-v3228.js", "runtime-v3228.css", "service-recovery-v3224.js")) and f'const RELEASE="{APP_VERSION}"' in worker,
             "Service worker release and runtime assets are aligned." if worker else "Service worker is missing or unreadable.",
         ),
         _check(
@@ -202,10 +203,10 @@ def build_runtime_health(settings: Settings) -> dict[str, Any]:
             "allowed_origin_count": len(settings.cors_origin_list) if settings.public_embeds_enabled else 0,
         },
         "recovery_policy": {
-            "leaflet_unavailable": "Use the first-party interactive geographic runtime.",
+            "map_engine": "Use the self-hosted map engine with local Natural Earth country boundaries.",
             "carto_tiles_unavailable": "Retry with OpenStreetMap tiles.",
-            "openstreetmap_tiles_unavailable": "Retain verified overlays in the first-party interactive geographic runtime.",
-            "imagery_tiles_unavailable": "Keep other layers interactive and expose a degraded-imagery status.",
+            "openstreetmap_tiles_unavailable": "Retain local world boundaries, geographic controls, and verified overlays without lowering application health.",
+            "imagery_tiles_unavailable": "Keep the local basemap and other layers interactive; report imagery as limited without degrading the application.",
             "endpoint_unavailable": "Retry transient failures, isolate the affected service group, and use a marked last-known-good public JSON response when available.",
             "service_recovered": "Close the affected circuit and refresh the active workspace once without reloading the full application.",
         },

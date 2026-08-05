@@ -14,9 +14,9 @@ rm -rf "$BACKEND/backend"
 printf '
 ==> Verifying release identity and deployment contracts
 '
-grep -q 'APP_VERSION = "3.22.7"' "$BACKEND/app/version.py"
-grep -q 'Version: 3.22.7' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
-grep -q 'const RELEASE="3.22.7"' "$BACKEND/public_app/service-worker.js"
+grep -q 'APP_VERSION = "3.22.8"' "$BACKEND/app/version.py"
+grep -q 'Version: 3.22.8' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
+grep -q 'const RELEASE="3.22.8"' "$BACKEND/public_app/service-worker.js"
 grep -q '/public/deployment-receipt' "$BACKEND/app/main.py"
 grep -q 'expected_release_id' "$BACKEND/app/main.py"
 grep -q 'SC_SI_RUNTIME_STATE_ROOT' "$ROOT/render.yaml"
@@ -28,7 +28,7 @@ printf '
 from pathlib import Path
 import hashlib, json, sys
 root=Path(sys.argv[1]); manifest=json.loads((root/'MANIFEST.json').read_text())
-assert manifest['release']=='3.22.7'; assert manifest['file_count']==len(manifest['files'])
+assert manifest['release']=='3.22.8'; assert manifest['file_count']==len(manifest['files'])
 for e in manifest['files']:
     p=root/e['path']; data=p.read_bytes()
     assert len(data)==e['bytes'],e['path']
@@ -69,7 +69,7 @@ printf '
 (cd "$BACKEND" && "$PYTHON" -m pytest -q)
 [[ ! -e "$BACKEND/backend" ]] || { echo 'ERROR: tests wrote runtime state into the immutable checkout.' >&2; exit 1; }
 printf '
-SUCCESS: Site Intelligence v3.22.7 passed deterministic local validation.
+SUCCESS: Site Intelligence v3.22.8 passed deterministic local validation.
 Repository: %s
 Runtime sandbox: isolated and removed on exit
 ' "$ROOT"

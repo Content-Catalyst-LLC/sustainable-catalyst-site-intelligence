@@ -11,24 +11,24 @@ client = TestClient(app)
 
 def test_first_party_map_runtime_loads_before_application_without_blocking_cdn():
     html = (ROOT / "backend/public_app/index.html").read_text(encoding="utf-8")
-    runtime = html.index("/app/assets/map-fallback-v3224.js")
-    application = html.index('src="/app/assets/app.js" defer')
+    runtime = html.index("/app/assets/map-engine-v3228.js")
+    application = html.index('src="/app/assets/app.js?v=3.22.8" defer')
     assert runtime < application
     assert "unpkg.com/leaflet" not in html
     assert "cdn.jsdelivr.net/npm/leaflet" not in html
-    assert "/app/assets/map-fallback-v3224.css" in html
+    assert "/app/assets/map-engine-v3228.css" in html
 
 
 def test_map_runtime_assets_are_first_party_and_offline_cached():
-    js_response = client.get("/app/assets/map-fallback-v3224.js")
-    css_response = client.get("/app/assets/map-fallback-v3224.css")
+    js_response = client.get("/app/assets/map-engine-v3228.js")
+    css_response = client.get("/app/assets/map-engine-v3228.css")
     worker = (ROOT / "backend/public_app/service-worker.js").read_text(encoding="utf-8")
     assert js_response.status_code == css_response.status_code == 200
     assert "SCSIMapReliability" in js_response.text
-    assert "first-party-interactive" in js_response.text
+    assert "self-hosted-map-engine" in js_response.text
     assert "__scsiFirstParty" in js_response.text
-    assert "map-fallback-v3224.js" in worker
-    assert "map-fallback-v3224.css" in worker
+    assert "map-engine-v3228.js" in worker
+    assert "map-engine-v3228.css" in worker
 
 
 def test_spatial_evidence_has_a_real_map_surface_and_geometry_renderer():
@@ -63,9 +63,9 @@ def test_non_embeddable_app_keeps_same_origin_frame_protection(monkeypatch):
 def test_wordpress_map_loader_is_first_party_and_dependency_ordered():
     php = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text(encoding="utf-8")
     js = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js").read_text(encoding="utf-8")
-    assert "mapFallbackUrl" in php and "map-fallback-v3224.js" in php
-    assert "function loadLocalMapFallback" in js
-    assert "return loadLocalMapFallback();" in js
+    assert "mapEngineUrl" in php and "map-engine-v3228.js" in php
+    assert "function loadSelfHostedMapEngine" in js
+    assert "return loadSelfHostedMapEngine();" in js
     assert "unpkg.com/leaflet" not in js
-    assert "wp_enqueue_script('scsi-map-runtime'" in php
-    assert "['scsi-map-runtime']" in php
+    assert "wp_enqueue_script('scsi-map-engine'" in php
+    assert "['scsi-map-engine']" in php

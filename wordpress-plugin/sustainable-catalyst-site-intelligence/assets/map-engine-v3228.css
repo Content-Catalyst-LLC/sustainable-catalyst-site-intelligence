@@ -1,0 +1,20 @@
+.scsi-map-managed{position:relative;isolation:isolate;overflow:hidden;background:#07131d;color:#e8f4fb;min-height:280px;cursor:grab;touch-action:none;outline:none}
+.scsi-map-managed:focus-visible{box-shadow:inset 0 0 0 3px rgba(124,216,255,.78)}
+.scsi-map-managed.is-dragging{cursor:grabbing}
+.scsi-map-engine-canvas{position:absolute;inset:0;min-height:inherit;overflow:hidden;background:radial-gradient(circle at 50% 45%,rgba(28,89,120,.28),transparent 58%),linear-gradient(145deg,#07121b,#123044);user-select:none}
+.scsi-map-tile-root,.scsi-map-tile-layer,.scsi-map-html-markers{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.scsi-map-tile-layer{z-index:1}.scsi-map-tile{position:absolute;width:256px;height:256px;max-width:none;border:0;pointer-events:none;user-select:none}
+.scsi-map-engine-svg{position:absolute;inset:0;z-index:2;display:block;width:100%;height:100%;min-height:inherit;overflow:hidden}
+.scsi-local-basemap path{fill:rgba(35,77,94,.72);stroke:rgba(177,220,236,.72);stroke-width:.75;vector-effect:non-scaling-stroke}
+.scsi-map-grid path{fill:none;stroke:rgba(154,207,234,.15);stroke-width:.7;vector-effect:non-scaling-stroke}
+.scsi-map-overlay-root circle,.scsi-map-overlay-root path{vector-effect:non-scaling-stroke;cursor:pointer}
+.scsi-map-html-markers{z-index:4}.scsi-map-div-marker{position:absolute;transform:translate(-50%,-50%);pointer-events:auto;cursor:pointer}
+.scsi-map-engine-label{position:absolute;left:10px;top:10px;z-index:6;padding:6px 9px;border:1px solid rgba(255,255,255,.24);border-radius:4px;background:rgba(5,12,18,.88);color:#d8edf8;font:700 10px/1.2 system-ui,sans-serif;letter-spacing:.04em;text-transform:uppercase;pointer-events:none}
+.scsi-map-attribution{position:absolute;right:8px;bottom:6px;z-index:6;padding:3px 6px;border-radius:3px;background:rgba(5,12,18,.78);color:#d8edf8;font:500 9px/1.2 system-ui,sans-serif;pointer-events:none}
+.scsi-map-controls{position:absolute;right:10px;top:10px;z-index:7;display:grid;gap:4px}
+.scsi-map-controls button{width:34px;height:34px;border:1px solid rgba(255,255,255,.32);border-radius:4px;background:rgba(5,12,18,.92);color:#f5fbff;font:700 18px/1 system-ui,sans-serif;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.22)}
+.scsi-map-controls button:hover,.scsi-map-controls button:focus-visible{background:#18394d;outline:2px solid rgba(124,216,255,.7);outline-offset:1px}
+.scsi-map-popup{position:absolute;z-index:8;transform:translate(-50%,-110%);max-width:280px;padding:10px 12px;border:1px solid rgba(255,255,255,.3);border-radius:5px;background:#f9fcfe;color:#101820;box-shadow:0 8px 28px rgba(0,0,0,.35);font:500 12px/1.4 system-ui,sans-serif;user-select:text}.scsi-map-popup a{color:#7a1230}
+.scsi-map-managed.scsi-map-imagery-limited::after{content:"Live basemap imagery is unavailable; local world boundaries and verified overlays remain active.";position:absolute;z-index:7;left:10px;bottom:10px;max-width:min(72%,480px);padding:7px 10px;border:1px solid rgba(255,255,255,.28);border-radius:5px;background:rgba(8,16,24,.9);color:#e8f4fb;font:600 11px/1.35 system-ui,sans-serif;pointer-events:none}
+.scsi-map-managed.scsi-map-imagery-limited .scsi-map-attribution{bottom:48px}
+@media(prefers-reduced-motion:reduce){.scsi-map-managed *{scroll-behavior:auto!important}}

@@ -1,4 +1,4 @@
-# Site Intelligence v3.22.7 Release Notes
+# Site Intelligence v3.22.8 Release Notes
 
 ## Deployment Gate, Live Parity Lock, and Rollback Readiness
 

@@ -122,6 +122,6 @@ def test_public_interface_and_wordpress_contract():
     assert "SCEconomicsV220" in js
     assert "licensed real-time" not in js.lower()
     assert ".economics-studio" in css
-    assert 'const APP_VERSION="3.22.7"' in app_js
-    assert "Version: 3.22.7" in php
+    assert 'const APP_VERSION="3.22.8"' in app_js
+    assert "Version: 3.22.8" in php
     assert "sc_economics_sustainability_observatory" in php

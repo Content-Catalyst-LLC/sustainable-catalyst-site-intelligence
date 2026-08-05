@@ -1,4 +1,4 @@
-# Site Intelligence v3.22.7 Deployment Audit
+# Site Intelligence v3.22.8 Deployment Audit
 
 ## Problem closed
 
@@ -6,7 +6,7 @@ Earlier promotion scripts could stop after GitHub publication and then create an
 
 ## Controls added
 
-- Stable release id: `site-intelligence-v3.22.7`.
+- Stable release id: `site-intelligence-v3.22.8`.
 - Runtime-generated public deployment receipt.
 - Expected release-id verification in the release gate.
 - Atomic branch/tag publication.

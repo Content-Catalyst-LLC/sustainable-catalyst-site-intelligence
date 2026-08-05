@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.22.7
+ * Version: 3.22.8
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,8 +13,8 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.22.7';
-    const RELEASE_ID = 'site-intelligence-v3.22.7';
+    const VERSION = '3.22.8';
+    const RELEASE_ID = 'site-intelligence-v3.22.8';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -433,7 +433,7 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v3.22.7 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
+        // v3.22.8 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
         // Existing moving tickers remain moving unless an administrator selects static or manual presentation.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
@@ -4588,10 +4588,10 @@ final class SC_Site_Intelligence_Plugin {
     public function enqueue_assets() {
         $options = self::options();
         $base = plugin_dir_url(__FILE__) . 'assets/';
-        wp_enqueue_style('scsi-map-fallback', $base . 'map-fallback-v3224.css', [], self::VERSION);
-        wp_enqueue_style('sc-site-intelligence', $base . 'sc-site-intelligence.css', ['scsi-map-fallback'], self::VERSION);
-        wp_enqueue_script('scsi-map-runtime', $base . 'map-fallback-v3224.js', [], self::VERSION, true);
-        wp_enqueue_script('sc-site-intelligence', $base . 'sc-site-intelligence.js', ['scsi-map-runtime'], self::VERSION, true);
+        wp_enqueue_style('scsi-map-engine', $base . 'map-engine-v3228.css', [], self::VERSION);
+        wp_enqueue_style('sc-site-intelligence', $base . 'sc-site-intelligence.css', ['scsi-map-engine'], self::VERSION);
+        wp_enqueue_script('scsi-map-engine', $base . 'map-engine-v3228.js', [], self::VERSION, true);
+        wp_enqueue_script('sc-site-intelligence', $base . 'sc-site-intelligence.js', ['scsi-map-engine'], self::VERSION, true);
         wp_localize_script('sc-site-intelligence', 'SCSiteIntelligence', [
             'restBase' => esc_url_raw(rest_url(self::REST_NAMESPACE)),
             'restNonce' => wp_create_nonce('wp_rest'),
@@ -4600,8 +4600,9 @@ final class SC_Site_Intelligence_Plugin {
             'pageTitle' => wp_get_document_title(),
             'siteUrl' => home_url('/'),
             'version' => self::VERSION,
-            'mapFallbackUrl' => esc_url_raw($base . 'map-fallback-v3224.js'),
-            'mapFallbackCssUrl' => esc_url_raw($base . 'map-fallback-v3224.css'),
+            'mapEngineUrl' => esc_url_raw($base . 'map-engine-v3228.js'),
+            'mapWorldUrl' => esc_url_raw($base . 'world-boundaries-v3228.geojson'),
+            'mapEngineCssUrl' => esc_url_raw($base . 'map-engine-v3228.css'),
         ]);
     }
 
@@ -6080,7 +6081,7 @@ final class SC_Site_Intelligence_Plugin {
             $params['query'] = $query;
         }
 
-        $src = esc_url($backend . '/app/?' . http_build_query($params, '', '&', PHP_QUERY_RFC3986));
+        $src = $this->app_embed_url($backend, $params);
         $title = esc_attr((string) $atts['title']);
 
         return sprintf(
@@ -6105,7 +6106,7 @@ final class SC_Site_Intelligence_Plugin {
         }
 
         $height = max(760, min(1900, absint($atts['height'])));
-        $src = esc_url($backend . '/app/?view=saved');
+        $src = $this->app_embed_url($backend, ['view' => 'saved']);
         $title = esc_attr((string) $atts['title']);
 
         return sprintf(
@@ -6157,7 +6158,7 @@ final class SC_Site_Intelligence_Plugin {
             'country' => $country,
             'thematicDays' => $days,
         ];
-        $src = esc_url($backend . '/app/?' . http_build_query($query, '', '&', PHP_QUERY_RFC3986));
+        $src = $this->app_embed_url($backend, $query);
         $title = esc_attr((string) $atts['title']);
 
         return sprintf(
@@ -6241,7 +6242,7 @@ final class SC_Site_Intelligence_Plugin {
             }
         }
 
-        $src = esc_url($backend . '/app/?' . http_build_query($query, '', '&', PHP_QUERY_RFC3986));
+        $src = $this->app_embed_url($backend, $query);
         $title = esc_attr((string) $atts['title']);
 
         return sprintf(
@@ -6298,7 +6299,7 @@ final class SC_Site_Intelligence_Plugin {
         if ($indicator !== '') {
             $query['indicator'] = $indicator;
         }
-        $src = esc_url($backend . '/app/?' . http_build_query($query, '', '&', PHP_QUERY_RFC3986));
+        $src = $this->app_embed_url($backend, $query);
         $title = esc_attr((string) $atts['title']);
 
         return sprintf(
@@ -6327,7 +6328,7 @@ final class SC_Site_Intelligence_Plugin {
         if (strlen($country) !== 3) {
             $country = 'KEN';
         }
-        $src = esc_url($backend . '/app/?view=country&country=' . rawurlencode($country));
+        $src = $this->app_embed_url($backend, ['view' => 'country', 'country' => $country]);
         $title = esc_attr((string) $atts['title']);
 
         return sprintf(
@@ -6351,7 +6352,7 @@ final class SC_Site_Intelligence_Plugin {
         }
 
         $height = max(700, min(1600, absint($atts['height'])));
-        $src = esc_url($backend . '/app/?view=events');
+        $src = $this->app_embed_url($backend, ['view' => 'events']);
         $title = esc_attr((string) $atts['title']);
 
         return sprintf(
@@ -6375,7 +6376,7 @@ final class SC_Site_Intelligence_Plugin {
         }
 
         $height = max(700, min(1600, absint($atts['height'])));
-        $src = esc_url($backend . '/app/?view=earth');
+        $src = $this->app_embed_url($backend, ['view' => 'earth']);
         $title = esc_attr((string) $atts['title']);
 
         return sprintf(
@@ -6399,7 +6400,7 @@ final class SC_Site_Intelligence_Plugin {
         }
 
         $height = max(850, min(2000, absint($atts['height'])));
-        $src = esc_url($backend . '/app/?view=observatory');
+        $src = $this->app_embed_url($backend, ['view' => 'observatory']);
         $title = esc_attr((string) $atts['title']);
 
         return sprintf(
@@ -6423,7 +6424,7 @@ final class SC_Site_Intelligence_Plugin {
         }
 
         $height = max(800, min(1900, absint($atts['height'])));
-        $src = esc_url($backend . '/app/?view=launch');
+        $src = $this->app_embed_url($backend, ['view' => 'launch']);
         $title = esc_attr((string) $atts['title']);
 
         return sprintf(
@@ -6432,6 +6433,13 @@ final class SC_Site_Intelligence_Plugin {
             $title,
             $height
         );
+    }
+
+    private function app_embed_url($backend, $query = []) {
+        $query = is_array($query) ? $query : [];
+        $query['release'] = self::VERSION;
+        $query['embed'] = 'wordpress';
+        return esc_url(add_query_arg($query, rtrim((string) $backend, '/') . '/app/'));
     }
 
     public function standalone_app_shortcode($atts = []) {
@@ -6448,17 +6456,19 @@ final class SC_Site_Intelligence_Plugin {
         }
 
         $height = max(620, min(1400, absint($atts['height'])));
-        $src = esc_url($backend . '/' . ltrim((string) $atts['path'], '/'));
+        $raw_src = $backend . '/' . ltrim((string) $atts['path'], '/');
+        $src = esc_url(add_query_arg(['release' => self::VERSION, 'embed' => 'wordpress'], $raw_src));
         $title = esc_attr((string) $atts['title']);
 
         $frame_id = 'scsi-app-' . wp_generate_uuid4();
         return sprintf(
-            '<div class="scsi-standalone-app" data-scsi-responsive-app><div class="scsi-app-loading" role="status" aria-live="polite">Opening Site Intelligence…</div><iframe id="%4$s" src="%1$s" title="%2$s" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen; clipboard-write" data-scsi-embed-frame data-scsi-min-height="620" data-scsi-mobile-min-height="760" data-scsi-max-height="2600" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a"></iframe><p class="scsi-embed-fallback"><a href="%1$s" target="_blank" rel="noopener noreferrer">Open Site Intelligence in a new tab</a></p></div>',
+            '<div class="scsi-standalone-app" data-scsi-responsive-app data-scsi-release="%5$s"><div class="scsi-app-loading" role="status" aria-live="polite">Opening Site Intelligence…</div><iframe id="%4$s" src="%1$s" title="%2$s" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen; clipboard-write" data-scsi-embed-frame data-scsi-min-height="620" data-scsi-mobile-min-height="760" data-scsi-max-height="2600" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a"></iframe><p class="scsi-embed-fallback"><a href="%1$s" target="_blank" rel="noopener noreferrer">Open Site Intelligence in a new tab</a></p></div>',
             $src,
             $title,
             $height,
             esc_attr($frame_id),
-            wp_json_encode($frame_id)
+            wp_json_encode($frame_id),
+            esc_attr(self::VERSION)
         );
     }
 
@@ -7155,7 +7165,7 @@ if (!function_exists('scsi_global_conditions_observatory_shortcode_v210')) {
             return '<div class="scsi-notice">Configure the Site Intelligence backend URL before embedding the Global Conditions Observatory.</div>';
         }
         $height = max(760, min(1900, absint($atts['height'])));
-        $src = esc_url($backend . '/app/?view=global');
+        $src = $this->app_embed_url($backend, ['view' => 'global']);
         $title = esc_attr((string) $atts['title']);
         return sprintf(
             '<div class="scsi-app-shell"><iframe class="scsi-app-frame" src="%1$s" title="%2$s" loading="lazy" style="width:100%%;min-height:%3$dpx;border:0" allow="fullscreen; clipboard-write"></iframe><p class="scsi-app-fallback"><a href="%1$s" target="_blank" rel="noopener noreferrer">Open Global Conditions in a new tab</a></p></div>',
@@ -7181,7 +7191,7 @@ if (!function_exists('scsi_economics_sustainability_observatory_shortcode_v220')
             return '<div class="scsi-notice">Configure the Site Intelligence backend URL before embedding the Economics and Sustainability Observatory.</div>';
         }
         $height = max(820, min(2200, absint($atts['height'])));
-        $src = esc_url($backend . '/app/?view=economics');
+        $src = $this->app_embed_url($backend, ['view' => 'economics']);
         $title = esc_attr((string) $atts['title']);
         return sprintf(
             '<div class="scsi-app-shell"><iframe class="scsi-app-frame" src="%1$s" title="%2$s" loading="lazy" style="width:100%%;min-height:%3$dpx;border:0" allow="fullscreen; clipboard-write"></iframe><p class="scsi-app-fallback"><a href="%1$s" target="_blank" rel="noopener noreferrer">Open Economics and Sustainability Signals in a new tab</a></p></div>',
@@ -7207,7 +7217,7 @@ if (!function_exists('scsi_international_law_governance_observatory_shortcode_v2
             return '<div class="scsi-notice">Configure the Site Intelligence backend URL before embedding the International Law and Global Governance Observatory.</div>';
         }
         $height = max(860, min(2400, absint($atts['height'])));
-        $src = esc_url($backend . '/app/?view=law');
+        $src = $this->app_embed_url($backend, ['view' => 'law']);
         $title = esc_attr((string) $atts['title']);
         return sprintf(
             '<div class="scsi-app-shell"><iframe class="scsi-app-frame" src="%1$s" title="%2$s" loading="lazy" style="width:100%%;min-height:%3$dpx;border:0" allow="fullscreen; clipboard-write"></iframe><p class="scsi-app-fallback"><a href="%1$s" target="_blank" rel="noopener noreferrer">Open International Law and Global Governance in a new tab</a></p></div>',
@@ -7233,7 +7243,7 @@ if (!function_exists('scsi_scientific_earth_systems_observatory_shortcode_v240')
             return '<div class="scsi-notice">Configure the Site Intelligence backend URL before embedding the Scientific and Earth Systems Observatory.</div>';
         }
         $height = max(900, min(2600, absint($atts['height'])));
-        $src = esc_url($backend . '/app/?view=science');
+        $src = $this->app_embed_url($backend, ['view' => 'science']);
         $title = esc_attr((string) $atts['title']);
         return sprintf(
             '<div class="scsi-app-shell"><iframe class="scsi-app-frame" src="%1$s" title="%2$s" loading="lazy" style="width:100%%;min-height:%3$dpx;border:0" allow="fullscreen; clipboard-write"></iframe><p class="scsi-app-fallback"><a href="%1$s" target="_blank" rel="noopener noreferrer">Open Scientific and Earth Systems Observatory in a new tab</a></p></div>',
@@ -7260,7 +7270,7 @@ if (!function_exists('scsi_humanitarian_conflict_displacement_observatory_shortc
             return '<div class="scsi-notice">Configure the Site Intelligence backend URL before embedding the Humanitarian, Conflict, and Displacement Observatory.</div>';
         }
         $height = max(920, min(2800, absint($atts['height'])));
-        $src = esc_url($backend . '/app/?view=humanitarian');
+        $src = $this->app_embed_url($backend, ['view' => 'humanitarian']);
         $title = esc_attr((string) $atts['title']);
         return sprintf(
             '<div class="scsi-app-shell"><iframe class="scsi-app-frame" src="%1$s" title="%2$s" loading="lazy" style="width:100%%;min-height:%3$dpx;border:0" allow="fullscreen; clipboard-write"></iframe><p class="scsi-app-fallback"><a href="%1$s" target="_blank" rel="noopener noreferrer">Open Humanitarian, Conflict, and Displacement Observatory in a new tab</a></p></div>',
@@ -7285,7 +7295,7 @@ if (!function_exists('scsi_trade_energy_resource_security_observatory_shortcode_
             return '<div class="scsi-notice">Configure the Site Intelligence backend URL before embedding the Trade, Energy, and Resource Security Observatory.</div>';
         }
         $height = max(920, min(2800, absint($atts['height'])));
-        $src = esc_url($backend . '/app/?view=resources');
+        $src = $this->app_embed_url($backend, ['view' => 'resources']);
         $title = esc_attr((string) $atts['title']);
         return sprintf(
             '<div class="scsi-app-shell"><iframe class="scsi-app-frame" src="%1$s" title="%2$s" loading="lazy" style="width:100%%;min-height:%3$dpx;border:0" allow="fullscreen; clipboard-write"></iframe><p class="scsi-app-fallback"><a href="%1$s" target="_blank" rel="noopener noreferrer">Open Trade, Energy, and Resource Security Observatory in a new tab</a></p></div>',
@@ -7308,7 +7318,7 @@ if (!function_exists('scsi_country_regional_intelligence_dossiers_shortcode_v270
             return '<div class="scsi-notice">Configure the Site Intelligence backend URL before embedding Unified Country and Regional Intelligence Dossiers.</div>';
         }
         $height = max(950, min(3000, absint($atts['height'])));
-        $src = esc_url($backend . '/app/?view=dossiers');
+        $src = $this->app_embed_url($backend, ['view' => 'dossiers']);
         $title = esc_attr((string) $atts['title']);
         return sprintf(
             '<div class="scsi-app-shell"><iframe class="scsi-app-frame" src="%1$s" title="%2$s" loading="lazy" style="width:100%%;min-height:%3$dpx;border:0" allow="fullscreen; clipboard-write"></iframe><p class="scsi-app-fallback"><a href="%1$s" target="_blank" rel="noopener noreferrer">Open Unified Country and Regional Intelligence Dossiers in a new tab</a></p></div>',
@@ -7332,7 +7342,7 @@ if (!function_exists('scsi_alerts_monitoring_live_streams_shortcode_v280')) {
             return '<div class="scsi-notice">Configure the Site Intelligence backend URL before embedding Alerts, Monitoring, and Live Intelligence Streams.</div>';
         }
         $height = max(950, min(3200, absint($atts['height'])));
-        $src = esc_url($backend . '/app/?view=alerts');
+        $src = $this->app_embed_url($backend, ['view' => 'alerts']);
         $title = esc_attr((string) $atts['title']);
         return sprintf(
             '<div class="scsi-app-shell"><iframe class="scsi-app-frame" src="%1$s" title="%2$s" loading="lazy" style="width:100%%;min-height:%3$dpx;border:0" allow="fullscreen; clipboard-write"></iframe><p class="scsi-app-fallback"><a href="%1$s" target="_blank" rel="noopener noreferrer">Open Alerts, Monitoring, and Live Intelligence Streams in a new tab</a></p></div>',
@@ -7353,7 +7363,7 @@ if (!function_exists('scsi_comparative_scenario_studio_shortcode_v290')) {
         $height = max(800, min(2400, intval($atts['height'])));
         $backend = function_exists('scsi_backend_url') ? scsi_backend_url() : get_option('scsi_backend_url', '');
         if (!$backend) return '<div class="scsi-notice">Site Intelligence backend is not configured.</div>';
-        $src = esc_url(rtrim($backend, '/') . '/app/?view=scenarios');
+        $src = $this->app_embed_url($backend, ['view' => 'scenarios']);
         return '<div class="scsi-embed scsi-scenario-studio"><iframe title="Comparative Intelligence and Scenario Studio" src="' . $src . '" style="width:100%;height:' . esc_attr($height) . 'px;border:0" loading="lazy" allowfullscreen></iframe></div>';
     }
 }
@@ -7367,7 +7377,7 @@ if (!function_exists('scsi_research_paths_workflows_shortcode_v2100')) {
         $height = max(900, min(2800, intval($atts['height'])));
         $backend = function_exists('scsi_backend_url') ? scsi_backend_url() : get_option('scsi_backend_url', '');
         if (!$backend) return '<div class="scsi-notice">Site Intelligence backend is not configured.</div>';
-        $src = esc_url(rtrim($backend, '/') . '/app/?view=research');
+        $src = $this->app_embed_url($backend, ['view' => 'research']);
         return '<div class="scsi-embed scsi-research-workflows"><iframe title="Research Paths, Saved Investigations, and Briefing Workflows" src="' . $src . '" style="width:100%;height:' . esc_attr($height) . 'px;border:0" loading="lazy" allow="clipboard-write; fullscreen"></iframe></div>';
     }
 }
@@ -7380,7 +7390,7 @@ if (!function_exists('scsi_public_data_api_integration_shortcode_v2110')) {
         $height = max(760, min(2600, intval($atts['height'])));
         $backend = function_exists('scsi_backend_url') ? scsi_backend_url() : get_option('scsi_backend_url', '');
         if (!$backend) return '<div class="scsi-notice">Site Intelligence backend is not configured.</div>';
-        $src = esc_url(rtrim($backend, '/') . '/app/?view=integration');
+        $src = $this->app_embed_url($backend, ['view' => 'integration']);
         return '<div class="scsi-embed scsi-public-data-integration"><iframe title="Public Data API, Embeds, and Institutional Integration" src="' . $src . '" style="width:100%;height:' . esc_attr($height) . 'px;border:0" loading="lazy" allow="clipboard-write; fullscreen"></iframe></div>';
     }
 }
@@ -7399,7 +7409,7 @@ if (!function_exists('scsi_site_intelligence_embed_shortcode_v2110')) {
         if (!$backend) return '<div class="scsi-notice">Site Intelligence backend is not configured.</div>';
         $query = ['view' => $view, 'embed' => '1', 'theme' => $theme, 'chrome' => $chrome];
         if (!empty($atts['institution'])) $query['institution'] = sanitize_text_field($atts['institution']);
-        $src = esc_url(add_query_arg($query, rtrim($backend, '/') . '/app/'));
+        $src = $this->app_embed_url($backend, $query);
         return '<div class="scsi-embed scsi-generic-public-embed"><iframe title="Sustainable Catalyst Site Intelligence — ' . esc_attr($view) . '" src="' . $src . '" style="width:100%;height:' . esc_attr($height) . 'px;border:0" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="clipboard-write; fullscreen"></iframe></div>';
     }
 }
@@ -7413,7 +7423,7 @@ if (!function_exists('scsi_offline_mobile_accessibility_performance_shortcode_v2
         $backend = get_option('scsi_backend_url', '');
         if (!$backend) return '<div class="scsi-notice">Configure the Site Intelligence backend URL before embedding Offline, Mobile, Accessibility, and Performance.</div>';
         $height = max(700, min(2400, intval($atts['height'])));
-        $src = esc_url(rtrim($backend, '/') . '/app/?view=experience');
+        $src = $this->app_embed_url($backend, ['view' => 'experience']);
         return '<div class="scsi-embed scsi-offline-experience"><iframe title="Offline, Mobile, Accessibility, and Performance" src="' . $src . '" style="width:100%;height:' . esc_attr($height) . 'px;border:0" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="clipboard-write; fullscreen"></iframe></div>';
     }
 }

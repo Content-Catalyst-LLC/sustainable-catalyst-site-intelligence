@@ -1,4 +1,4 @@
-# Sustainable Catalyst Site Intelligence v3.22.7
+# Sustainable Catalyst Site Intelligence v3.22.8
 
 ## Self-Healing Data Services, Map Recovery, and Fault Isolation
 

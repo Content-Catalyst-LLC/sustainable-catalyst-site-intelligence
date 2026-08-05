@@ -1,4 +1,4 @@
-# Site Intelligence v3.22.7
+# Site Intelligence v3.22.8
 
 ## Resume-Safe Promotion, Deployment Receipts, and Runtime-State Isolation
 

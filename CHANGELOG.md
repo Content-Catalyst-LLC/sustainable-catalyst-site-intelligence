@@ -1,13 +1,13 @@
 # Changelog
 
-## 3.22.7 — Production Map Runtime and Navigation Repair
+## 3.22.8 — Production Map Runtime and Navigation Repair
 
 - Repaired the inert Global Conditions sidebar route with permanent markup and delegated navigation.
 - Removed blocking third-party Leaflet startup dependencies from the standalone app and WordPress map loader.
 - Added a healthy first-party interactive map runtime and visible-surface health classification.
-- Added exact v3.22.7 GitHub, Render, WordPress, offline-shell, and deployment-gate alignment.
+- Added exact v3.22.8 GitHub, Render, WordPress, offline-shell, and deployment-gate alignment.
 
-## 3.22.7 — Deployment Gate, Live Parity Lock, and Rollback Readiness
+## 3.22.8 — Deployment Gate, Live Parity Lock, and Rollback Readiness
 
 - Added an uncached public release gate that validates backend version, WordPress compatibility, Render identity, expected branch, expected commit, and production release channel.
 - Added release fingerprints and public-safe deployment identity to build diagnostics.
@@ -16,7 +16,7 @@
 - Changed the promotion workflow to verify `install_allowed=true` at the pushed commit before releasing the WordPress installation path.
 - Added seven deployment-gate regressions; 873 tests pass in total.
 
-## 3.22.7 — Self-Healing Data Services, Map Recovery, and Fault Isolation
+## 3.22.8 — Self-Healing Data Services, Map Recovery, and Fault Isolation
 
 - Added a public-safe runtime recovery contract and first-party browser recovery runtime.
 - Added bounded retries, service-group circuit breakers, automatic probes, and marked last-known-good public JSON responses.
@@ -1109,3 +1109,12 @@
 - Added the read-only `[sc_live_intelligence_registry_governance]` WordPress surface.
 - Preserved no-network-verification, no-remote-write, no-credential-storage, and no-certification boundaries.
 
+
+## 3.22.8 — Self-Hosted Mapping Engine and Production Browser Recovery
+
+- Replaced the false-positive tile stub with a first-party interactive map engine that creates real tile images.
+- Added a bundled Natural Earth world-boundary and coastline basemap for offline and tile-provider failure states.
+- Separated optional imagery degradation from application health and resolved recovered browser faults.
+- Added network-first service-worker recovery for the app shell and versioned map assets.
+- Added WordPress release-parity enforcement and one-time cache-busting iframe recovery.
+- Added Chromium rendering smoke coverage for maps, controls, overlays, local boundaries, and console errors.
