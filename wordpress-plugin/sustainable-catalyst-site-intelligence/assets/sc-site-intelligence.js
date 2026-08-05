@@ -172,7 +172,7 @@
     try {
       const item = JSON.parse(sessionStorage.getItem(recoveryCacheKey(url)) || 'null');
       if (!item || !item.savedAt || Date.now() - item.savedAt > 21600000) return null;
-      window.dispatchEvent(new CustomEvent('scsi:service-fallback', {detail: {version: cfg.version || '3.22.8', group: 'wordpress-proxy', path: url, reason: 'last-known-good', staleAgeMs: Date.now() - item.savedAt}}));
+      window.dispatchEvent(new CustomEvent('scsi:service-fallback', {detail: {version: cfg.version || '3.22.9', group: 'wordpress-proxy', path: url, reason: 'last-known-good', staleAgeMs: Date.now() - item.savedAt}}));
       return item.data;
     } catch (e) { return null; }
   }
@@ -200,7 +200,7 @@
       return fetchJsonAttempt(url).catch(function (error) {
         const retryable = !error.status || recoveryStatuses.indexOf(Number(error.status)) !== -1;
         if (retryable && attempt < 3) {
-          window.dispatchEvent(new CustomEvent('scsi:service-retry', {detail: {version: cfg.version || '3.22.8', group: 'wordpress-proxy', path: url, attempt: attempt + 1}}));
+          window.dispatchEvent(new CustomEvent('scsi:service-retry', {detail: {version: cfg.version || '3.22.9', group: 'wordpress-proxy', path: url, attempt: attempt + 1}}));
           return new Promise(function (resolve) { setTimeout(resolve, attempt === 1 ? 600 : 1400); }).then(run);
         }
         const recovered = readRecoveredJson(url);
@@ -3626,7 +3626,7 @@
       var select=root.querySelector('[data-scsi-geo-layer]'), dateInput=root.querySelector('[data-scsi-geo-date]');
       (manifest.satellite_layers||[]).forEach(function(layer){var option=document.createElement('option'); option.value=layer.id; option.textContent=layer.title; select.appendChild(option);});
       select.value=root.dataset.layer||'true-color';
-      function drawRaster(){var id=select.value, selected=(manifest.satellite_layers||[]).find(function(x){return x.id===id;}); if(currentRaster){map.removeLayer(currentRaster);currentRaster=null;} if(!selected)return; var url=selected.tile_url.replace('{time}',dateInput.value||new Date().toISOString().slice(0,10)); currentRaster=L.tileLayer(url,{opacity:selected.default_opacity||0.7,maxZoom:9,attribution:selected.attribution||selected.source}).addTo(map); currentRaster.bringToBack(); legend.innerHTML='<strong>'+escapeHtml(selected.title)+'</strong><span>'+escapeHtml(selected.description||'')+'</span><small>'+escapeHtml(selected.source||'')+' · '+escapeHtml(dateInput.value||'latest')+'</small>';}
+      function drawRaster(){var id=select.value, selected=(manifest.satellite_layers||[]).find(function(x){return x.id===id;}); if(currentRaster){map.removeLayer(currentRaster);currentRaster=null;} if(!selected)return; var url=selected.tile_url.replace('{time}',dateInput.value||new Date().toISOString().slice(0,10)); currentRaster=L.tileLayer(url,{opacity:selected.default_opacity||0.7,maxZoom:9,attribution:selected.attribution||selected.source,role:"imagery",layerId:id}).addTo(map); currentRaster.bringToFront(); legend.innerHTML='<strong>'+escapeHtml(selected.title)+'</strong><span>'+escapeHtml(selected.description||'')+'</span><small>'+escapeHtml(selected.source||'')+' · '+escapeHtml(dateInput.value||'latest')+'</small>';}
       function drawEvents(){markerLayer.clearLayers(); (events.features||[]).forEach(function(f){var c=(f.geometry||{}).coordinates||[],p=f.properties||{}; if(c.length<2)return; var marker=L.circleMarker([c[1],c[0]],{radius:6,weight:1,fillOpacity:.78}); marker.bindPopup('<strong>'+escapeHtml(p.title||'Event')+'</strong><br>'+escapeHtml(p.category||'')+'<br><small>'+escapeHtml(p.source||'')+' · '+escapeHtml(p.observed_at||'date unavailable')+'</small>'); marker.addTo(markerLayer);});}
       function drawHeat(){heatLayer.clearLayers(); (heat.points||[]).forEach(function(pt){L.circle([pt[0],pt[1]],{radius:Math.max(45000,pt[2]*160000),stroke:false,fillOpacity:.14}).addTo(heatLayer);});}
       drawRaster(); drawEvents(); drawHeat();

@@ -1,4 +1,4 @@
-# Site Intelligence v3.22.8 recovery audit
+# Site Intelligence v3.22.9 recovery audit
 
 ## Release objective
 
@@ -8,7 +8,7 @@ Prevent transient API, proxy, tile, or service-family failures from making Site 
 
 ### Fragmented request behavior
 
-Application modules previously implemented their own one-shot fetch helpers. Some core routes retried, while many specialized workspaces failed immediately. The v3.22.8 recovery runtime now wraps eligible same-origin public JSON requests before application modules load.
+Application modules previously implemented their own one-shot fetch helpers. Some core routes retried, while many specialized workspaces failed immediately. The v3.22.9 recovery runtime now wraps eligible same-origin public JSON requests before application modules load.
 
 ### Cascading failure perception
 

@@ -23,7 +23,7 @@
     }
     throw last;
   }
-  const APP_VERSION="3.22.8";
+  const APP_VERSION="3.22.9";
   let heightFrame=0;
   function documentHeight(){
     const body=document.body,root=document.documentElement;
@@ -149,8 +149,8 @@
     if(!layer)return;
     if(state.imagery)state.map.removeLayer(state.imagery);
     const url=layer.tile_url.replace("{time}",qs("#dateSelect").value||today());
-    state.imagery=L.tileLayer(url,{opacity:layer.default_opacity||.72,attribution:layer.attribution,maxZoom:9}).addTo(state.map);
-    state.imagery.bringToBack();
+    state.imagery=L.tileLayer(url,{opacity:layer.default_opacity||.72,attribution:layer.attribution,maxZoom:9,role:"imagery",layerId:id}).addTo(state.map);
+    state.imagery.bringToFront();
     qs("#layerName").textContent=layer.title;
     qs("#layerDate").textContent=cleanDate(qs("#dateSelect").value);
     qs("#legendSource").textContent=`${layer.source} imagery · USGS and NASA event records`;qs("#captionDetail").textContent=`${layer.title} · ${cleanDate(qs("#dateSelect").value)}`;
@@ -754,7 +754,7 @@
   function addEarthTile(map,existing,layer,dateValue){
     if(existing)map.removeLayer(existing);
     const url=layer.tile_url.replace("{time}",dateValue);
-    return L.tileLayer(url,{opacity:earthState.opacity,attribution:layer.attribution||layer.source,maxZoom:9,crossOrigin:true,errorTileUrl:""}).addTo(map);
+    return L.tileLayer(url,{opacity:earthState.opacity,attribution:layer.attribution||layer.source,maxZoom:9,crossOrigin:true,errorTileUrl:"",role:"imagery",layerId:layer.id||earthState.activeLayer}).addTo(map).bringToFront();
   }
   function renderEarthMetadata(layer){
     const rows=[
@@ -945,8 +945,8 @@
     if(thematicState.imagery)thematicState.map.removeLayer(thematicState.imagery);
     if(layer.tile_url){
       const url=layer.tile_url.replace("{time}",qs("#dateSelect").value||today());
-      thematicState.imagery=L.tileLayer(url,{opacity:layer.default_opacity||.68,attribution:layer.attribution,maxZoom:9}).addTo(thematicState.map);
-      thematicState.imagery.bringToBack();
+      thematicState.imagery=L.tileLayer(url,{opacity:layer.default_opacity||.68,attribution:layer.attribution,maxZoom:9,role:"imagery",layerId:id}).addTo(thematicState.map);
+      thematicState.imagery.bringToFront();
     }
     qsa(".thematic-layer-card").forEach(card=>card.classList.toggle("is-active",card.dataset.layerId===layerId));
   }
@@ -1747,7 +1747,7 @@
     const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const requestedView=params.get("view")||"overview";const initialView=[...Object.keys(savedViewDefinitions),"saved","launch","observatory"].includes(requestedView)?requestedView:"overview";const invalidRequestedView=requestedView!==initialView;qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";if(params.get("imageryDate"))qs("#dateSelect").value=params.get("imageryDate");try{setLaunch("Loading satellite imagery.",50);await loadLayers();await setImagery(params.get("imageryLayer")||"true-color");setLaunch("Connecting to live events and country evidence.",68);await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);setLaunch("Preparing the workspace.",88);await setRoute(initialView);applySharedControlState(initialView,params);finishLaunch();if(invalidRequestedView)toast("The requested view is unavailable; Overview was opened instead.")}
     catch(e){qs("#statusText").textContent="Partial public data";toast("Some optional public data is temporarily unavailable.");finishLaunch()}
   }
-  window.SCSIRouterV3228={version:"3.22.8",navigate:navigateToRoute,current:()=>state.route};
+  window.SCSIRouterV3228={version:"3.22.9",navigate:navigateToRoute,current:()=>state.route};
   document.addEventListener("DOMContentLoaded",init);
 })();
 
@@ -1766,5 +1766,5 @@ document.head.appendChild(visualStyle);
 
 window.addEventListener("load",reportHeight,{once:true});window.addEventListener("resize",reportHeight,{passive:true});window.visualViewport?.addEventListener("resize",reportHeight,{passive:true});window.addEventListener("message",event=>{if(event.data?.type==="SC_SI_REQUEST_HEIGHT")reportHeight()});if("ResizeObserver" in window)new ResizeObserver(reportHeight).observe(document.body);
 
-/* v3.22.8 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v3.22.8 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v3.22.9 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v3.22.9 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

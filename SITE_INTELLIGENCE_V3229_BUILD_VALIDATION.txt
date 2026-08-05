@@ -1,0 +1,51 @@
+SITE INTELLIGENCE v3.22.9 BUILD VALIDATION
+Build: Vector Cartography, Satellite Composition, and Map Presentation
+
+SOURCE VALIDATION
+- Python modules: compileall passed
+- JavaScript syntax: 39 files passed node --check
+- JSON and GeoJSON: 116 files parsed
+- WordPress PHP: syntax passed
+- Python test files: 168
+- Inherited and v3.22.9 regression suite: 907 tests passed
+- Runtime-state isolation: passed
+- Deployment, release-gate, rollback, receipt, and exact-commit contracts: passed
+
+CARTOGRAPHY AND BROWSER VALIDATION
+- Shared self-hosted vector-cartography engine: passed
+- Bundled enriched Natural Earth geography: 177 country features
+- Chromium map surfaces: 2
+- Local geographic paths per surface: 289
+- Country labels: 6 on focused map; 14 on world map
+- Base raster tiles: 20 on focused map
+- Satellite/imagery tiles: 20 on focused map
+- Evidence overlays on focused map: 2
+- Controls per surface: 3
+- Scale and coordinate readout: passed
+- Primary map dimensions: 1080 x 650
+- Secondary map dimensions: 1080 x 500
+- Renderer mode: vector-cartography-engine
+- Degraded map count: 0
+- Chromium console/page errors: 0
+- Screenshot color diversity: 7,335 distinct colors
+- Near-black pixel ratio: 5.2 percent
+
+PRESENTATION CONTRACT
+- Separate base, imagery, and overlay raster roles: passed
+- Satellite imagery retained above base geography: passed
+- Local vector geography retained without optional tiles: passed
+- Country label rank and cartography class metadata: passed
+- Map scale, coordinates, and quality status: passed
+- Oversized orbital glow and vignette masks disabled: passed
+- Controlled desktop map height of 520–720 pixels: passed
+- Standalone and WordPress cartography assets aligned: passed
+- Network-first service-worker recovery for current map assets: passed
+
+VALIDATION BOUNDARY
+- The Chromium test validates the exact shared renderer with deterministic local base and imagery tiles.
+- Managed Chromium blocks navigation to localhost, so full FastAPI route screenshots are not claimed.
+- The macOS installer performs GitHub promotion, Render verification, and the WordPress handoff on the user's machine.
+
+IMMUTABLE MANIFEST
+- Manifest entries: 953
+- Release: 3.22.9

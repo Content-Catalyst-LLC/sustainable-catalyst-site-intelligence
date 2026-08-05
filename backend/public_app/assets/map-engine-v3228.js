@@ -1,7 +1,7 @@
 (function (window, document) {
   "use strict";
 
-  const VERSION = "3.22.8";
+  const VERSION = "3.22.9";
   const TILE_SIZE = 256;
   const MAX_LAT = 85.05112878;
   const OSM_TILES = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
@@ -56,15 +56,15 @@
     return { lat: clamp(lat, -MAX_LAT, MAX_LAT), lng: normalizeLng(lng) };
   }
   function inferAssetUrl(filename) {
-    const script = document.currentScript || Array.from(document.scripts).find(item => /map-engine-v3228\.js/.test(item.src));
+    const script = document.currentScript || Array.from(document.scripts).find(item => /vector-cartography-v3229\.js/.test(item.src));
     if (script?.dataset?.worldUrl && filename.includes("world-boundaries")) return script.dataset.worldUrl;
-    if (script?.src) return script.src.replace(/map-engine-v3228\.js(?:\?.*)?$/, filename);
+    if (script?.src) return script.src.replace(/vector-cartography-v3229\.js(?:\?.*)?$/, filename);
     return `/app/assets/${filename}`;
   }
   function loadBoundaries() {
     if (boundaryCache.data) return Promise.resolve(boundaryCache.data);
     if (boundaryCache.promise) return boundaryCache.promise;
-    const url = inferAssetUrl("world-boundaries-v3228.geojson");
+    const url = inferAssetUrl("world-cartography-v3229.geojson");
     boundaryCache.promise = fetch(url, { cache: "force-cache", credentials: "same-origin" })
       .then(response => { if (!response.ok) throw new Error(`World boundaries returned ${response.status}`); return response.json(); })
       .then(data => { boundaryCache.data = data; dispatch("scsi:local-basemap-ready", { featureCount: data.features?.length || 0, url }); return data; })

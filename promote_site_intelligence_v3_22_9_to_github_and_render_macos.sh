@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-RELEASE="3.22.8"
+RELEASE="3.22.9"
 RELEASE_ID="site-intelligence-v${RELEASE}"
 REPO_SLUG="${SC_SI_GITHUB_REPOSITORY:-Content-Catalyst-LLC/sustainable-catalyst-site-intelligence}"
 RENDER_URL="${SC_SI_RENDER_URL:-https://sustainable-catalyst-site-intelligence.onrender.com}"
@@ -24,7 +24,7 @@ PYRECEIPT
 fail(){ write_receipt "failed" "${1:-unknown failure}"; printf '\nERROR: %s\n' "$1" >&2; exit 1; }
 for command in git curl python3 rsync; do command -v "$command" >/dev/null 2>&1 || fail "$command is required."; done
 printf '\n==> Validating release source before promotion\n'
-if [[ -x "$SOURCE_ROOT/.venv/bin/python" ]]; then PYTHON="$SOURCE_ROOT/.venv/bin/python" bash "$SOURCE_ROOT/verify_site_intelligence_v3_22_8_macos.sh"; else bash "$SOURCE_ROOT/verify_site_intelligence_v3_22_8_macos.sh"; fi
+if [[ -x "$SOURCE_ROOT/.venv/bin/python" ]]; then PYTHON="$SOURCE_ROOT/.venv/bin/python" bash "$SOURCE_ROOT/verify_site_intelligence_v3_22_9_macos.sh"; else bash "$SOURCE_ROOT/verify_site_intelligence_v3_22_9_macos.sh"; fi
 printf '\n==> Preparing a clean, resume-safe GitHub deployment clone\n'
 rm -rf "$CLONE_ROOT"; mkdir -p "$DEPLOY_ROOT"
 if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then gh repo clone "$REPO_SLUG" "$CLONE_ROOT" -- --quiet; else git clone --quiet "git@github.com:${REPO_SLUG}.git" "$CLONE_ROOT" || fail "GitHub clone failed."; fi
@@ -37,7 +37,7 @@ write_receipt "synchronizing" "Release source validated; preparing Git tree."
 printf '\n==> Synchronizing v%s into %s/%s\n' "$RELEASE" "$REPO_SLUG" "$BRANCH"
 rsync -a --delete --exclude '.git/' --exclude '.venv/' --exclude '.pytest_cache/' --exclude '__pycache__/' --exclude '*.pyc' --exclude '.runtime/' "$SOURCE_ROOT/" "$CLONE_ROOT/"
 printf '\n==> Revalidating the exact Git tree that will be pushed\n'
-if [[ -x "$SOURCE_ROOT/.venv/bin/python" ]]; then PYTHON="$SOURCE_ROOT/.venv/bin/python" bash "$CLONE_ROOT/verify_site_intelligence_v3_22_8_macos.sh"; else bash "$CLONE_ROOT/verify_site_intelligence_v3_22_8_macos.sh"; fi
+if [[ -x "$SOURCE_ROOT/.venv/bin/python" ]]; then PYTHON="$SOURCE_ROOT/.venv/bin/python" bash "$CLONE_ROOT/verify_site_intelligence_v3_22_9_macos.sh"; else bash "$CLONE_ROOT/verify_site_intelligence_v3_22_9_macos.sh"; fi
 cd "$CLONE_ROOT"
 find . -type d \( -name __pycache__ -o -name .pytest_cache \) -prune -exec rm -rf {} + 2>/dev/null || true
 find . -type f -name '*.pyc' -delete 2>/dev/null || true
@@ -45,7 +45,7 @@ git add -A
 if ! git diff --cached --quiet; then
   git config user.name >/dev/null 2>&1 || fail 'Git user.name is not configured.'
   git config user.email >/dev/null 2>&1 || fail 'Git user.email is not configured.'
-  git commit -m "Site Intelligence v${RELEASE} — self-hosted mapping engine and production browser recovery"
+  git commit -m "Site Intelligence v${RELEASE} — vector cartography, satellite composition, and map presentation"
 fi
 COMMIT="$(git rev-parse HEAD)"
 CURRENT_VERSION="$(python3 -c 'import re,pathlib;print(re.search(r"APP_VERSION\s*=\s*\"([^\"]+)",pathlib.Path("backend/app/version.py").read_text()).group(1))')"
@@ -70,20 +70,20 @@ for ((attempt=1; attempt<=ATTEMPTS; attempt++)); do
     read -r OBSERVED_VERSION OBSERVED_COMMIT OBSERVED_RELEASE_ID OBSERVED_GATE < <(python3 -c 'import json,sys;d=json.load(sys.stdin);dep=d.get("deployment",{});print(d.get("backend_version",d.get("version","unavailable")),dep.get("git_commit","unavailable"),d.get("release_id","unavailable"),"ready" if d.get("install_allowed") else d.get("gate_state","blocked"))' <<<"$payload" 2>/dev/null || printf 'unavailable unavailable unavailable unavailable\n')
     if [[ "$OBSERVED_VERSION" == "$RELEASE" && "$OBSERVED_RELEASE_ID" == "$RELEASE_ID" && "$OBSERVED_GATE" == "ready" && ( "$OBSERVED_COMMIT" == "$COMMIT" || "$COMMIT" == "$OBSERVED_COMMIT"* || "$OBSERVED_COMMIT" == "$COMMIT"* ) ]]; then
       app_html="$(curl -fsS --max-time 45 -H 'Cache-Control: no-cache, no-store' "${RENDER_URL%/}/app/?release=${RELEASE}&verify=${attempt}" 2>/dev/null || true)"
-      engine_js="$(curl -fsS --max-time 45 -H 'Cache-Control: no-cache, no-store' "${RENDER_URL%/}/app/assets/map-engine-v3228.js?verify=${attempt}" 2>/dev/null || true)"
-      world_geojson="$(curl -fsS --max-time 45 -H 'Cache-Control: no-cache, no-store' "${RENDER_URL%/}/app/assets/world-boundaries-v3228.geojson?verify=${attempt}" 2>/dev/null || true)"
+      engine_js="$(curl -fsS --max-time 45 -H 'Cache-Control: no-cache, no-store' "${RENDER_URL%/}/app/assets/vector-cartography-v3229.js?verify=${attempt}" 2>/dev/null || true)"
+      world_geojson="$(curl -fsS --max-time 45 -H 'Cache-Control: no-cache, no-store' "${RENDER_URL%/}/app/assets/world-cartography-v3229.geojson?verify=${attempt}" 2>/dev/null || true)"
       runtime_health="$(curl -fsS --max-time 45 -H 'Cache-Control: no-cache, no-store' "${RENDER_URL%/}/public/runtime-health?verify=${attempt}" 2>/dev/null || true)"
       app_ready=false; engine_ready=false; world_ready=false; health_ready=false
-      [[ "$app_html" == *'data-scsi-release="3.22.8"'* && "$app_html" == *'map-engine-v3228.js'* ]] && app_ready=true
-      [[ "$engine_js" == *'__scsiSelfHosted: true'* && "$engine_js" == *'world-boundaries-v3228.geojson'* ]] && engine_ready=true
+      [[ "$app_html" == *'data-scsi-release="3.22.9"'* && "$app_html" == *'vector-cartography-v3229.js'* ]] && app_ready=true
+      [[ "$engine_js" == *'__scsiSelfHosted: true'* && "$engine_js" == *'world-cartography-v3229.geojson'* ]] && engine_ready=true
       world_ready="$(python3 -c 'import json,sys; d=json.load(sys.stdin); print("true" if d.get("type")=="FeatureCollection" and len(d.get("features",[]))>=170 else "false")' <<<"$world_geojson" 2>/dev/null || printf false)"
-      health_ready="$(python3 -c 'import json,sys; d=json.load(sys.stdin); print("true" if d.get("ok") and d.get("status")=="healthy" and d.get("version")=="3.22.8" else "false")' <<<"$runtime_health" 2>/dev/null || printf false)"
+      health_ready="$(python3 -c 'import json,sys; d=json.load(sys.stdin); print("true" if d.get("ok") and d.get("status")=="healthy" and d.get("version")=="3.22.9" else "false")' <<<"$runtime_health" 2>/dev/null || printf false)"
       if [[ "$app_ready" == true && "$engine_ready" == true && "$world_ready" == true && "$health_ready" == true ]]; then
         write_receipt "verified" "GitHub, Render, the live app shell, self-hosted map engine, runtime health, and WordPress installation gate are synchronized."
         printf 'Render release gate and live map runtime are ready for v%s at commit %s.
 ' "$OBSERVED_VERSION" "${OBSERVED_COMMIT:0:12}"
         printf '
-SUCCESS: Site Intelligence v3.22.8 is live with the self-hosted map engine and production browser recovery.
+SUCCESS: Site Intelligence v3.22.9 is live with the vector cartography and production browser presentation.
 Deployment receipt: %s
 Rollback tag: %s (%s)
 ' "$DEPLOYMENT_RECEIPT" "$ROLLBACK_TAG" "${PREVIOUS_COMMIT:0:12}"

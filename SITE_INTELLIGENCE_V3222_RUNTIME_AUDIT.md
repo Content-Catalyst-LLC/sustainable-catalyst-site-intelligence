@@ -1,4 +1,4 @@
-# Site Intelligence v3.22.8 Runtime Audit
+# Site Intelligence v3.22.9 Runtime Audit
 
 ## Audit objective
 
@@ -14,7 +14,7 @@ The previous repair established three important foundations:
 
 Those changes improved continuity, but operators still lacked a single place to see which layer had failed.
 
-## v3.22.8 remediation
+## v3.22.9 remediation
 
 ### 1. Local runtime contract
 

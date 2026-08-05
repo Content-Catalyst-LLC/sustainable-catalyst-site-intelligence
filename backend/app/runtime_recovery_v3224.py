@@ -1,4 +1,4 @@
-"""Public-safe recovery contract for Site Intelligence v3.22.8.
+"""Public-safe recovery contract for Site Intelligence v3.22.9.
 
 This module describes the browser recovery policy without performing outbound
 network calls. The client runtime applies bounded retries, per-service circuit

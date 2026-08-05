@@ -7,17 +7,17 @@ if [[ -z "$PYTHON" ]]; then
   [[ -x "$ROOT/.venv/bin/python" ]] && PYTHON="$ROOT/.venv/bin/python" || PYTHON="$(command -v python3 || true)"
 fi
 [[ -n "$PYTHON" ]] || { echo "ERROR: Python 3 is required." >&2; exit 1; }
-RUNTIME_SANDBOX="$(mktemp -d "${TMPDIR:-/tmp}/scsi-v3228-runtime.XXXXXX")"
+RUNTIME_SANDBOX="$(mktemp -d "${TMPDIR:-/tmp}/scsi-v3229-runtime.XXXXXX")"
 trap 'rm -rf "$RUNTIME_SANDBOX" "$BACKEND/backend"' EXIT
 export SC_SI_RUNTIME_STATE_ROOT="$RUNTIME_SANDBOX"
 rm -rf "$BACKEND/backend"
 
-printf '\n==> Verifying v3.22.8 release identity and production contracts\n'
-grep -q 'APP_VERSION = "3.22.8"' "$BACKEND/app/version.py"
-grep -q 'Version: 3.22.8' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
-grep -q 'const RELEASE="3.22.8"' "$BACKEND/public_app/service-worker.js"
-grep -q 'map-engine-v3228.js' "$BACKEND/public_app/index.html"
-grep -q 'world-boundaries-v3228.geojson' "$BACKEND/public_app/service-worker.js"
+printf '\n==> Verifying v3.22.9 release identity and production contracts\n'
+grep -q 'APP_VERSION = "3.22.9"' "$BACKEND/app/version.py"
+grep -q 'Version: 3.22.9' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
+grep -q 'const RELEASE="3.22.9"' "$BACKEND/public_app/service-worker.js"
+grep -q 'vector-cartography-v3229.js' "$BACKEND/public_app/index.html"
+grep -q 'world-cartography-v3229.geojson' "$BACKEND/public_app/service-worker.js"
 grep -q 'networkFirstShell' "$BACKEND/public_app/service-worker.js"
 grep -q 'expected_release_id' "$BACKEND/app/main.py"
 grep -q 'SC_SI_RUNTIME_STATE_ROOT' "$ROOT/render.yaml"
@@ -27,7 +27,7 @@ printf '\n==> Verifying immutable repository manifest\n'
 from pathlib import Path
 import hashlib,json,sys
 root=Path(sys.argv[1]); manifest=json.loads((root/'MANIFEST.json').read_text())
-assert manifest['release']=='3.22.8'; assert manifest['file_count']==len(manifest['files'])
+assert manifest['release']=='3.22.9'; assert manifest['file_count']==len(manifest['files'])
 for entry in manifest['files']:
     path=root/entry['path']; data=path.read_bytes()
     assert len(data)==entry['bytes'],entry['path']
@@ -57,10 +57,10 @@ fi
 printf '\n==> Running all tests in isolated deterministic shards\n'
 SHARD_ARGS=(--python "$PYTHON" --shards 6 --timeout-seconds "${SC_SI_TEST_TIMEOUT_SECONDS:-12}")
 if [[ -n "${SC_SI_VERIFY_ONLY_SHARD:-}" ]]; then SHARD_ARGS+=(--only-shard "$SC_SI_VERIFY_ONLY_SHARD"); fi
-"$PYTHON" "$ROOT/scripts/run_test_shards_v3228.py" "${SHARD_ARGS[@]}"
+"$PYTHON" "$ROOT/scripts/run_test_shards_v3229.py" "${SHARD_ARGS[@]}"
 if [[ "${SC_SI_SKIP_BROWSER_SMOKE:-0}" != "1" ]]; then
-  printf '\n==> Running production map-engine Chromium smoke test when available\n'
-  "$PYTHON" "$ROOT/scripts/browser_smoke_v3228.py"
+  printf '\n==> Running vector-cartography Chromium visual smoke test when available\n'
+  "$PYTHON" "$ROOT/scripts/browser_smoke_v3229.py"
 fi
 [[ ! -e "$BACKEND/backend" ]] || { echo 'ERROR: tests wrote runtime state into the immutable checkout.' >&2; exit 1; }
-printf '\nSUCCESS: Site Intelligence v3.22.8 passed deterministic validation.\nRepository: %s\nRuntime sandbox: isolated and removed on exit\n' "$ROOT"
+printf '\nSUCCESS: Site Intelligence v3.22.9 passed deterministic validation.\nRepository: %s\nRuntime sandbox: isolated and removed on exit\n' "$ROOT"
