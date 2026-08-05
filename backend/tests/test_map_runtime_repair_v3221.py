@@ -11,24 +11,24 @@ client = TestClient(app)
 
 def test_first_party_map_runtime_loads_before_application_without_blocking_cdn():
     html = (ROOT / "backend/public_app/index.html").read_text(encoding="utf-8")
-    runtime = html.index("/app/assets/vector-cartography-v3229.js")
-    application = html.index('src="/app/assets/app.js?v=3.22.9" defer')
+    runtime = html.index("/app/assets/vector-cartography-v3230.js")
+    application = html.index('src="/app/assets/app.js?v=3.23.0" defer')
     assert runtime < application
     assert "unpkg.com/leaflet" not in html
     assert "cdn.jsdelivr.net/npm/leaflet" not in html
-    assert "/app/assets/vector-cartography-v3229.css" in html
+    assert "/app/assets/vector-cartography-v3230.css" in html
 
 
 def test_map_runtime_assets_are_first_party_and_offline_cached():
-    js_response = client.get("/app/assets/vector-cartography-v3229.js")
-    css_response = client.get("/app/assets/vector-cartography-v3229.css")
+    js_response = client.get("/app/assets/vector-cartography-v3230.js")
+    css_response = client.get("/app/assets/vector-cartography-v3230.css")
     worker = (ROOT / "backend/public_app/service-worker.js").read_text(encoding="utf-8")
     assert js_response.status_code == css_response.status_code == 200
     assert "SCSIMapReliability" in js_response.text
     assert "vector-cartography-engine" in js_response.text
     assert "__scsiFirstParty" in js_response.text
-    assert "vector-cartography-v3229.js" in worker
-    assert "vector-cartography-v3229.css" in worker
+    assert "vector-cartography-v3230.js" in worker
+    assert "vector-cartography-v3230.css" in worker
 
 
 def test_spatial_evidence_has_a_real_map_surface_and_geometry_renderer():
@@ -63,7 +63,7 @@ def test_non_embeddable_app_keeps_same_origin_frame_protection(monkeypatch):
 def test_wordpress_map_loader_is_first_party_and_dependency_ordered():
     php = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text(encoding="utf-8")
     js = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js").read_text(encoding="utf-8")
-    assert "mapEngineUrl" in php and "vector-cartography-v3229.js" in php
+    assert "mapEngineUrl" in php and "vector-cartography-v3230.js" in php
     assert "function loadSelfHostedMapEngine" in js
     assert "return loadSelfHostedMapEngine();" in js
     assert "unpkg.com/leaflet" not in js

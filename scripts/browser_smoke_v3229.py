@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Chromium visual smoke test for v3.22.9 vector cartography.
+"""Chromium visual smoke test for v3.23.0 vector cartography.
 
 The test is network-independent. It supplies deterministic local raster tiles,
 loads the packaged local country geometry, composes a satellite-like layer over
@@ -21,9 +21,9 @@ except ImportError:  # Optional local visual-validation dependency.
     ImageDraw = None
 
 ROOT = Path(__file__).resolve().parents[1]
-ENGINE = ROOT / "backend/public_app/assets/vector-cartography-v3229.js"
-CSS = ROOT / "backend/public_app/assets/vector-cartography-v3229.css"
-WORLD = ROOT / "backend/public_app/assets/world-cartography-v3229.geojson"
+ENGINE = ROOT / "backend/public_app/assets/vector-cartography-v3230.js"
+CSS = ROOT / "backend/public_app/assets/vector-cartography-v3230.css"
+WORLD = ROOT / "backend/public_app/assets/world-cartography-v3230.geojson"
 
 
 def tile_png(kind: str) -> bytes:
@@ -114,7 +114,7 @@ def main() -> int:
     dark_ratio = dark_pixels / (image.width * image.height)
     unique_colors = len(colors)
 
-    assert result["version"] == "3.22.9", result
+    assert result["version"] == "3.23.0", result
     assert result["snapshot"]["libraryMode"] == "vector-cartography-engine", result
     assert result["snapshot"]["degradedCount"] == 0, result
     assert result["first"]["boundaries"] > 150, result
@@ -133,7 +133,7 @@ def main() -> int:
     assert dark_ratio < 0.72, dark_ratio
     assert not errors, errors
     print(json.dumps({**result, "visual": {"unique_colors": unique_colors, "dark_ratio": round(dark_ratio, 4)}}, indent=2))
-    print("PASS: v3.22.9 rendered layered raster imagery, vector geography, country labels, overlays, scale, and controls in Chromium.")
+    print("PASS: v3.23.0 rendered layered raster imagery, vector geography, country labels, overlays, scale, and controls in Chromium.")
     return 0
 
 

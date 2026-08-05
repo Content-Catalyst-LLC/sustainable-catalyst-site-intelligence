@@ -13,7 +13,7 @@ def test_public_runtime_health_is_local_public_safe_and_versioned():
     assert response.status_code == 200
     data = response.json()
     assert data["ok"] is True
-    assert data["version"] == "3.22.9"
+    assert data["version"] == "3.23.0"
     assert data["scope"] == "local-runtime-contract"
     assert data["live_upstream_checks_performed"] is False
     assert data["summary"]["available_assets"] == data["summary"]["required_assets"]
@@ -22,16 +22,16 @@ def test_public_runtime_health_is_local_public_safe_and_versioned():
 
 def test_runtime_assets_load_between_map_reliability_and_application():
     html = (ROOT / "backend/public_app/index.html").read_text(encoding="utf-8")
-    fallback = html.index("/app/assets/vector-cartography-v3229.js")
-    runtime = html.index("/app/assets/runtime-v3229.js")
-    application = html.index('src="/app/assets/app.js?v=3.22.9" defer')
+    fallback = html.index("/app/assets/vector-cartography-v3230.js")
+    runtime = html.index("/app/assets/runtime-v3230.js")
+    application = html.index('src="/app/assets/app.js?v=3.23.0" defer')
     assert fallback < runtime < application
-    assert "/app/assets/runtime-v3229.css" in html
+    assert "/app/assets/runtime-v3230.css" in html
 
 
 def test_runtime_health_tray_has_rescan_copy_and_fault_capture():
-    js = (ROOT / "backend/public_app/assets/runtime-v3229.js").read_text(encoding="utf-8")
-    css = (ROOT / "backend/public_app/assets/runtime-v3229.css").read_text(encoding="utf-8")
+    js = (ROOT / "backend/public_app/assets/runtime-v3230.js").read_text(encoding="utf-8")
+    css = (ROOT / "backend/public_app/assets/runtime-v3230.css").read_text(encoding="utf-8")
     assert "window.SCSIRuntimeHealth" in js
     assert "/public/runtime-health" in js
     assert 'window.addEventListener("unhandledrejection"' in js
@@ -40,8 +40,8 @@ def test_runtime_health_tray_has_rescan_copy_and_fault_capture():
 
 
 def test_map_runtime_keeps_first_party_interactive_mode_without_openstreetmap():
-    js = (ROOT / "backend/public_app/assets/vector-cartography-v3229.js").read_text(encoding="utf-8")
-    css = (ROOT / "backend/public_app/assets/vector-cartography-v3229.css").read_text(encoding="utf-8")
+    js = (ROOT / "backend/public_app/assets/vector-cartography-v3230.js").read_text(encoding="utf-8")
+    css = (ROOT / "backend/public_app/assets/vector-cartography-v3230.css").read_text(encoding="utf-8")
     assert 'reason: this._isBase() ? "basemap-tiles-unavailable"' in js
     assert 'container.dataset.scsiMapMode = this._map._boundaries ? "self-hosted-vector-cartography" : "self-hosted-grid"' in js
     assert 'this._root.style.display = "none"' in js
@@ -51,17 +51,17 @@ def test_map_runtime_keeps_first_party_interactive_mode_without_openstreetmap():
 
 def test_runtime_assets_are_offline_cached_and_release_aligned():
     worker = (ROOT / "backend/public_app/service-worker.js").read_text(encoding="utf-8")
-    assert 'const RELEASE="3.22.9"' in worker
-    assert "runtime-v3229.js" in worker
-    assert "runtime-v3229.css" in worker
-    assert "vector-cartography-v3229.js" in worker
+    assert 'const RELEASE="3.23.0"' in worker
+    assert "runtime-v3230.js" in worker
+    assert "runtime-v3230.css" in worker
+    assert "vector-cartography-v3230.js" in worker
 
 
 def test_wordpress_package_uses_the_upgraded_map_runtime():
     php = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text(encoding="utf-8")
-    fallback = ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/vector-cartography-v3229.js"
-    assert "Version: 3.22.9" in php
-    assert "vector-cartography-v3229.js" in php
+    fallback = ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/vector-cartography-v3230.js"
+    assert "Version: 3.23.0" in php
+    assert "vector-cartography-v3230.js" in php
     assert fallback.is_file()
     assert "basemap-tiles-unavailable" in fallback.read_text(encoding="utf-8")
 

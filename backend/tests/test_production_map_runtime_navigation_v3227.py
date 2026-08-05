@@ -26,10 +26,10 @@ def test_global_conditions_is_a_permanent_sidebar_route():
 
 def test_map_startup_is_entirely_first_party():
     html = read("backend/public_app/index.html")
-    runtime = read("backend/public_app/assets/vector-cartography-v3229.js")
+    runtime = read("backend/public_app/assets/vector-cartography-v3230.js")
     assert "unpkg.com/leaflet" not in html
     assert "leaflet@1.9.4/dist/leaflet.js" not in html
-    assert html.index("vector-cartography-v3229.js") < html.index('src="/app/assets/app.js?v=3.22.9"')
+    assert html.index("vector-cartography-v3230.js") < html.index('src="/app/assets/app.js?v=3.23.0"')
     assert '__scsiFirstParty: true' in runtime
     assert 'mode: "vector-cartography-engine"' in runtime
     assert 'data-map-zoom-in' in runtime
@@ -37,7 +37,7 @@ def test_map_startup_is_entirely_first_party():
 
 
 def test_map_health_only_counts_visible_degraded_surfaces():
-    runtime = read("backend/public_app/assets/runtime-v3229.js")
+    runtime = read("backend/public_app/assets/runtime-v3230.js")
     assert "visibleSurfaces" in runtime
     assert 'surface.visible !== false' in runtime
     assert 'mode.indexOf("fallback")' not in runtime
@@ -57,7 +57,7 @@ def test_runtime_contract_reports_first_party_map_bootstrap():
 def test_wordpress_uses_the_same_first_party_runtime_before_map_features():
     php = read("wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php")
     js = read("wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js")
-    map_js = read("wordpress-plugin/sustainable-catalyst-site-intelligence/assets/vector-cartography-v3229.js")
+    map_js = read("wordpress-plugin/sustainable-catalyst-site-intelligence/assets/vector-cartography-v3230.js")
     assert "wp_enqueue_script('scsi-map-engine'" in php
     assert "['scsi-map-engine']" in php
     assert "return loadSelfHostedMapEngine();" in js
@@ -68,7 +68,7 @@ def test_wordpress_uses_the_same_first_party_runtime_before_map_features():
 def test_release_and_offline_shell_are_aligned():
     worker = read("backend/public_app/service-worker.js")
     html = read("backend/public_app/index.html")
-    assert 'const RELEASE="3.22.9"' in worker
-    assert 'data-scsi-release="3.22.9"' in html
-    assert "vector-cartography-v3229.js" in worker
+    assert 'const RELEASE="3.23.0"' in worker
+    assert 'data-scsi-release="3.23.0"' in html
+    assert "vector-cartography-v3230.js" in worker
     assert "global-conditions-v210.js" in worker

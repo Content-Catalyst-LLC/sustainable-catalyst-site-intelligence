@@ -1,4 +1,4 @@
-"""Homepage gateway contracts for Live Intelligence v3.22.9.
+"""Homepage gateway contracts for Live Intelligence v3.23.0.
 
 This module enriches the existing reliable signal feed with public-facing signal
 families, geography, and a deterministic destination hierarchy. It does not

@@ -1,4 +1,4 @@
-"""Public-safe runtime diagnostics for Site Intelligence v3.22.9.
+"""Public-safe runtime diagnostics for Site Intelligence v3.23.0.
 
 The diagnostics intentionally avoid outbound network calls. They report the local
 application contract, required first-party assets, map surfaces, embed policy,
@@ -21,11 +21,13 @@ INDEX_FILE = PUBLIC_APP_DIR / "index.html"
 SERVICE_WORKER_FILE = PUBLIC_APP_DIR / "service-worker.js"
 
 REQUIRED_ASSETS = (
-    "assets/vector-cartography-v3229.css",
-    "assets/vector-cartography-v3229.js",
-    "assets/world-cartography-v3229.geojson",
-    "assets/runtime-v3229.css",
-    "assets/runtime-v3229.js",
+    "assets/vector-cartography-v3230.css",
+    "assets/vector-cartography-v3230.js",
+    "assets/world-cartography-v3230.geojson",
+    "assets/runtime-v3230.css",
+    "assets/runtime-v3230.js",
+    "assets/cartographic-workspace-v3230.css",
+    "assets/cartographic-workspace-v3230.js",
     "assets/service-recovery-v3224.js",
     "assets/app.css",
     "assets/app.js",
@@ -117,13 +119,20 @@ def build_runtime_health(settings: Settings) -> dict[str, Any]:
     assets = _asset_records()
     surfaces = _map_surfaces(index_html)
 
-    fallback_js = "/app/assets/vector-cartography-v3229.js"
+    fallback_js = "/app/assets/vector-cartography-v3230.js"
     recovery_js = "/app/assets/service-recovery-v3224.js"
-    runtime_js = "/app/assets/runtime-v3229.js"
+    runtime_js = "/app/assets/runtime-v3230.js"
+    workspace_js = "/app/assets/cartographic-workspace-v3230.js"
     app_js = "/app/assets/app.js"
-    ordered_scripts = all(token in index_html for token in (fallback_js, recovery_js, runtime_js, app_js))
+    ordered_scripts = all(token in index_html for token in (fallback_js, recovery_js, runtime_js, workspace_js, app_js))
     if ordered_scripts:
-        ordered_scripts = index_html.index(fallback_js) < index_html.index(recovery_js) < index_html.index(runtime_js) < index_html.index(app_js)
+        ordered_scripts = (
+            index_html.index(fallback_js)
+            < index_html.index(recovery_js)
+            < index_html.index(runtime_js)
+            < index_html.index(app_js)
+            < index_html.index(workspace_js)
+        )
 
     checks = [
         _check(
@@ -148,18 +157,18 @@ def build_runtime_health(settings: Settings) -> dict[str, Any]:
             "script-order",
             "First-party map and fault-isolation runtimes load before application modules",
             ordered_scripts,
-            "First-party map runtime → service recovery → runtime diagnostics → application order is enforced." if ordered_scripts else "Required script order is incomplete.",
+            "First-party map runtime → service recovery → runtime diagnostics → application → cartographic workspace order is enforced." if ordered_scripts else "Required script order is incomplete.",
         ),
         _check(
             "first-party-map-runtime",
             "Map startup has no blocking third-party JavaScript dependency",
-            "unpkg.com/leaflet" not in index_html and "cdn.jsdelivr.net/npm/leaflet" not in index_html and "__scsiSelfHosted" in _read(PUBLIC_APP_DIR / "assets/vector-cartography-v3229.js") and (PUBLIC_APP_DIR / "assets/world-cartography-v3229.geojson").is_file(),
+            "unpkg.com/leaflet" not in index_html and "cdn.jsdelivr.net/npm/leaflet" not in index_html and "__scsiSelfHosted" in _read(PUBLIC_APP_DIR / "assets/vector-cartography-v3230.js") and (PUBLIC_APP_DIR / "assets/world-cartography-v3230.geojson").is_file(),
             "The vector cartography engine, real raster tile renderer, local country labels, and local world geometry are packaged before application modules.",
         ),
         _check(
             "offline-shell",
             "Offline shell contains the reliability assets",
-            all(name in worker for name in ("vector-cartography-v3229.js", "vector-cartography-v3229.css", "world-cartography-v3229.geojson", "runtime-v3229.js", "runtime-v3229.css", "service-recovery-v3224.js")) and f'const RELEASE="{APP_VERSION}"' in worker,
+            all(name in worker for name in ("vector-cartography-v3230.js", "vector-cartography-v3230.css", "world-cartography-v3230.geojson", "runtime-v3230.js", "runtime-v3230.css", "cartographic-workspace-v3230.js", "cartographic-workspace-v3230.css", "service-recovery-v3224.js")) and f'const RELEASE="{APP_VERSION}"' in worker,
             "Service worker release and runtime assets are aligned." if worker else "Service worker is missing or unreadable.",
         ),
         _check(

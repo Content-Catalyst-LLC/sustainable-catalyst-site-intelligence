@@ -23,7 +23,7 @@
     }
     throw last;
   }
-  const APP_VERSION="3.22.9";
+  const APP_VERSION="3.23.0";
   let heightFrame=0;
   function documentHeight(){
     const body=document.body,root=document.documentElement;
@@ -129,7 +129,7 @@
   function today(){const d=new Date();d.setUTCDate(d.getUTCDate()-1);return d.toISOString().slice(0,10)}
   function initMap(){
     if(!window.L)throw new Error("Mapping library unavailable after local fallback initialization.");
-    state.map=L.map("map",{zoomControl:true,worldCopyJump:true}).setView([12,20],2);
+    state.map=L.map("map",{zoomControl:true,worldCopyJump:true,minZoom:2}).setView([0,20],2);
     state.base=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"© OpenStreetMap contributors",maxZoom:19}).addTo(state.map);
     state.markers=L.layerGroup().addTo(state.map);
     if(window.L.__scsiFirstParty)reportMapReliability("First-party interactive map active; verified records remain available without third-party map code.");
@@ -183,6 +183,11 @@
       const domains=d.domain_summaries||d.domains||[];
       const normalized=Array.isArray(domains)?domains:Object.values(domains||{});
       qs("#countrySummary").innerHTML=normalized.slice(0,5).map(x=>`<div class="country-stat"><span>${escapeHtml(x.title||x.label||x.domain||"Evidence domain")}</span><strong>${escapeHtml(x.summary||x.description||x.data_state||"Source context available")}</strong></div>`).join("")||`<div class="loading-block">Country evidence structure is available; validated values appear as connectors return records.</div>`;
+      try{
+        const overview=await apiWithRetry(`/public/country/${code}/overview`,2);
+        const country=overview.country||{};
+        if(Number.isFinite(Number(country.latitude))&&Number.isFinite(Number(country.longitude))&&state.route==="overview")state.map?.flyTo?.([Number(country.latitude),Number(country.longitude)],Number(overview.map?.default_zoom||5));
+      }catch(_){}
     }catch{
       qs("#coverageCount").textContent="—";
       qs("#countrySummary").innerHTML=publicErrorBlock("Country evidence unavailable","The public country service did not respond.",()=>loadCountry(code));
@@ -1747,7 +1752,7 @@
     const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const requestedView=params.get("view")||"overview";const initialView=[...Object.keys(savedViewDefinitions),"saved","launch","observatory"].includes(requestedView)?requestedView:"overview";const invalidRequestedView=requestedView!==initialView;qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";if(params.get("imageryDate"))qs("#dateSelect").value=params.get("imageryDate");try{setLaunch("Loading satellite imagery.",50);await loadLayers();await setImagery(params.get("imageryLayer")||"true-color");setLaunch("Connecting to live events and country evidence.",68);await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);setLaunch("Preparing the workspace.",88);await setRoute(initialView);applySharedControlState(initialView,params);finishLaunch();if(invalidRequestedView)toast("The requested view is unavailable; Overview was opened instead.")}
     catch(e){qs("#statusText").textContent="Partial public data";toast("Some optional public data is temporarily unavailable.");finishLaunch()}
   }
-  window.SCSIRouterV3228={version:"3.22.9",navigate:navigateToRoute,current:()=>state.route};
+  window.SCSIRouterV3228={version:"3.23.0",navigate:navigateToRoute,current:()=>state.route};
   document.addEventListener("DOMContentLoaded",init);
 })();
 
@@ -1766,5 +1771,5 @@ document.head.appendChild(visualStyle);
 
 window.addEventListener("load",reportHeight,{once:true});window.addEventListener("resize",reportHeight,{passive:true});window.visualViewport?.addEventListener("resize",reportHeight,{passive:true});window.addEventListener("message",event=>{if(event.data?.type==="SC_SI_REQUEST_HEIGHT")reportHeight()});if("ResizeObserver" in window)new ResizeObserver(reportHeight).observe(document.body);
 
-/* v3.22.9 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v3.22.9 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v3.23.0 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v3.23.0 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

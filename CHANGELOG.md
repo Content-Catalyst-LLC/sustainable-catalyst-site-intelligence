@@ -1,3 +1,12 @@
+# v3.23.0 — Cartographic Workspace and Application Presentation
+
+- Converted the overview into a map-first workspace with a collapsible evidence rail.
+- Enforced routed visibility so hidden workspaces no longer create a massive stacked page.
+- Added country-aware automatic framing, minimum whole-world zoom, raster seam suppression, and label collision avoidance.
+- Removed decorative orbital and vignette treatments from the operational map.
+- Added active-map presentation health based on dimensions, visible geography, tiles, and controls.
+- Added stable dimensions and resize recovery for every routed map surface.
+
 # Changelog
 
 ## 3.22.9 — Production Map Runtime and Navigation Repair
