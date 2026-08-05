@@ -1,4 +1,4 @@
-# v3.23.0 — Cartographic Workspace and Application Presentation
+# v3.23.1 — Cartographic Workspace and Application Presentation
 
 - Converted the overview into a map-first workspace with a collapsible evidence rail.
 - Enforced routed visibility so hidden workspaces no longer create a massive stacked page.

@@ -23,7 +23,7 @@
     }
     throw last;
   }
-  const APP_VERSION="3.23.0";
+  const APP_VERSION="3.23.1";
   let heightFrame=0;
   function documentHeight(){
     const body=document.body,root=document.documentElement;
@@ -1752,7 +1752,7 @@
     const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const requestedView=params.get("view")||"overview";const initialView=[...Object.keys(savedViewDefinitions),"saved","launch","observatory"].includes(requestedView)?requestedView:"overview";const invalidRequestedView=requestedView!==initialView;qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";if(params.get("imageryDate"))qs("#dateSelect").value=params.get("imageryDate");try{setLaunch("Loading satellite imagery.",50);await loadLayers();await setImagery(params.get("imageryLayer")||"true-color");setLaunch("Connecting to live events and country evidence.",68);await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);setLaunch("Preparing the workspace.",88);await setRoute(initialView);applySharedControlState(initialView,params);finishLaunch();if(invalidRequestedView)toast("The requested view is unavailable; Overview was opened instead.")}
     catch(e){qs("#statusText").textContent="Partial public data";toast("Some optional public data is temporarily unavailable.");finishLaunch()}
   }
-  window.SCSIRouterV3228={version:"3.23.0",navigate:navigateToRoute,current:()=>state.route};
+  window.SCSIRouterV3228={version:"3.23.1",navigate:navigateToRoute,current:()=>state.route};
   document.addEventListener("DOMContentLoaded",init);
 })();
 
@@ -1771,5 +1771,5 @@ document.head.appendChild(visualStyle);
 
 window.addEventListener("load",reportHeight,{once:true});window.addEventListener("resize",reportHeight,{passive:true});window.visualViewport?.addEventListener("resize",reportHeight,{passive:true});window.addEventListener("message",event=>{if(event.data?.type==="SC_SI_REQUEST_HEIGHT")reportHeight()});if("ResizeObserver" in window)new ResizeObserver(reportHeight).observe(document.body);
 
-/* v3.23.0 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v3.23.0 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v3.23.1 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v3.23.1 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

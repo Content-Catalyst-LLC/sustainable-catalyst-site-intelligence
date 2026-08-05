@@ -1,7 +1,7 @@
 (function (window, document) {
   "use strict";
 
-  const VERSION = "3.23.0";
+  const VERSION = "3.23.1";
   const TILE_SIZE = 256;
   const MAX_LAT = 85.05112878;
   const OSM_TILES = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
