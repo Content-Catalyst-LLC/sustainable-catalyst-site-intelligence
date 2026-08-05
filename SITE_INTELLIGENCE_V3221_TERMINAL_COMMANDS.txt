@@ -1,0 +1,18 @@
+# Full automated test suite
+cd backend
+PYTHONPATH=. python3 -m pytest -q
+
+# Static release validation
+cd ..
+python3 scripts/validate_v3221_release.py
+
+# Start local backend/public app
+cd backend
+PYTHONPATH=. python3 -m uvicorn app.main:app --host 127.0.0.1 --port 8091
+
+# JavaScript syntax checks
+cd ..
+find backend/public_app/assets wordpress-plugin/sustainable-catalyst-site-intelligence/assets -name '*.js' -print0 | xargs -0 -n1 node --check
+
+# PHP syntax check
+php -l wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php

@@ -1,3 +1,14 @@
+# Local Python and test artifacts.
+.venv/
+**/.venv/
+__pycache__/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+**/.pytest_cache/
+
+# Erroneous nested runtime state created by backend-relative defaults.
+backend/backend/
 
 backend/data/platform_core_queue.jsonl
 

@@ -1,0 +1,12 @@
+.scsi-map-managed{position:relative;isolation:isolate;background-color:#0b1520;background-image:linear-gradient(rgba(121,178,211,.11) 1px,transparent 1px),linear-gradient(90deg,rgba(121,178,211,.11) 1px,transparent 1px);background-size:12.5% 25%;overflow:hidden}
+.scsi-map-managed.scsi-map-tile-degraded::after{content:"Map tiles are degraded; verified data layers remain available.";position:absolute;z-index:900;left:10px;bottom:10px;max-width:min(78%,460px);padding:7px 10px;border:1px solid rgba(255,255,255,.28);border-radius:5px;background:rgba(8,16,24,.88);color:#e8f4fb;font:600 11px/1.35 system-ui,sans-serif;pointer-events:none}
+.scsi-map-managed.scsi-map-tile-fallback::after{content:"OpenStreetMap fallback active."}
+.scsi-static-map{min-height:280px;color:#e8f4fb}
+.scsi-static-map-canvas{position:absolute;inset:0;min-height:inherit;background:radial-gradient(circle at 50% 45%,rgba(28,89,120,.28),transparent 55%),linear-gradient(145deg,#08121b,#102838)}
+.scsi-static-map-svg{display:block;width:100%;height:100%;min-height:inherit}
+.scsi-static-grid line{stroke:rgba(154,207,234,.18);stroke-width:1;vector-effect:non-scaling-stroke}
+.scsi-static-layers circle,.scsi-static-layers path{vector-effect:non-scaling-stroke;cursor:pointer}
+.scsi-static-map-label{position:absolute;left:10px;top:10px;z-index:3;padding:6px 9px;border:1px solid rgba(255,255,255,.24);border-radius:4px;background:rgba(5,12,18,.82);color:#d8edf8;font:700 10px/1.2 system-ui,sans-serif;letter-spacing:.04em;text-transform:uppercase;pointer-events:none}
+.scsi-static-popup{position:absolute;z-index:5;transform:translate(-50%,-110%);max-width:260px;padding:10px 12px;border:1px solid rgba(255,255,255,.3);border-radius:5px;background:#f9fcfe;color:#101820;box-shadow:0 8px 28px rgba(0,0,0,.35);font:500 12px/1.4 system-ui,sans-serif}
+.scsi-static-popup a{color:#7a1230}
+@media(prefers-reduced-motion:reduce){.scsi-map-managed *{scroll-behavior:auto!important}}

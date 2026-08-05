@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.22.0
+ * Version: 3.22.4
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.22.0';
+    const VERSION = '3.22.4';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -430,7 +430,7 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v3.22.0 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
+        // v3.22.4 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
         // Existing moving tickers remain moving unless an administrator selects static or manual presentation.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
@@ -4533,7 +4533,8 @@ final class SC_Site_Intelligence_Plugin {
     public function enqueue_assets() {
         $options = self::options();
         $base = plugin_dir_url(__FILE__) . 'assets/';
-        wp_enqueue_style('sc-site-intelligence', $base . 'sc-site-intelligence.css', [], self::VERSION);
+        wp_enqueue_style('scsi-map-fallback', $base . 'map-fallback-v3224.css', [], self::VERSION);
+        wp_enqueue_style('sc-site-intelligence', $base . 'sc-site-intelligence.css', ['scsi-map-fallback'], self::VERSION);
         wp_enqueue_script('sc-site-intelligence', $base . 'sc-site-intelligence.js', [], self::VERSION, true);
         wp_localize_script('sc-site-intelligence', 'SCSiteIntelligence', [
             'restBase' => esc_url_raw(rest_url(self::REST_NAMESPACE)),
@@ -4543,6 +4544,8 @@ final class SC_Site_Intelligence_Plugin {
             'pageTitle' => wp_get_document_title(),
             'siteUrl' => home_url('/'),
             'version' => self::VERSION,
+            'mapFallbackUrl' => esc_url_raw($base . 'map-fallback-v3224.js'),
+            'mapFallbackCssUrl' => esc_url_raw($base . 'map-fallback-v3224.css'),
         ]);
     }
 

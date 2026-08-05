@@ -1,0 +1,58 @@
+SUSTAINABLE CATALYST SITE INTELLIGENCE v3.22.1
+MAP RUNTIME RELIABILITY, SPATIAL EVIDENCE MAPPING, AND EMBED REPAIR
+Validation date: 2026-08-04
+
+SOURCE
+- Uploaded repository: sustainable-catalyst-site-intelligence-main (5).zip
+- Source release identified: 3.22.0
+- Repaired release: 3.22.1
+
+AUTOMATED TESTS
+PASS - 847 pytest tests
+PASS - 6 new map/embed regression tests included in total
+PASS - inherited platform contracts
+
+STATIC VALIDATION
+PASS - 28 JavaScript files parsed with Node
+PASS - WordPress PHP parsed with php -l
+PASS - backend/app and scripts compiled with Python
+PASS - 114 JSON files parsed
+PASS - v3.22.1 release contract validator
+PASS - immutable release manifest generated and verified
+
+ENDPOINT SMOKE VALIDATION
+PASS - /
+PASS - /health
+PASS - /app/
+PASS - /app/service-worker.js
+PASS - /app/assets/map-fallback-v3221.js
+PASS - /app/assets/map-fallback-v3221.css
+PASS - /public/geospatial/layers
+PASS - /public/geospatial/events
+PASS - /public/earth-observation/layers
+PASS - /public/events
+PASS - /public/countries
+PASS - /public/spatial
+PASS - /public/spatial/layers
+PASS - /public/spatial/areas
+PASS - /public/spatial/datasets
+
+HEADER VALIDATION
+PASS - embeddable /app/ response uses frame-ancestors without conflicting X-Frame-Options
+PASS - non-embeddable /app/ response retains SAMEORIGIN and frame-ancestors 'self'
+PASS - X-SC-Site-Intelligence-Version reports 3.22.1
+
+MAP REPAIRS
+PASS - first-party map fallback runtime
+PASS - static geographic-grid rendering path
+PASS - CARTO to OpenStreetMap failover
+PASS - degraded imagery status events
+PASS - offline shell includes map fallback assets
+PASS - WordPress bounded local failover
+PASS - Spatial Evidence map and GeoJSON renderer
+
+KNOWN VALIDATION LIMITATION
+NOT CLAIMED - real-browser visual validation. Chromium navigation is administrator-blocked in this environment, including localhost. Production browser verification steps are included in SITE_INTELLIGENCE_V3221_INSTALL_AND_TEST.md.
+
+FINAL RESULT
+PASS - release package is internally consistent and automated validation is green.

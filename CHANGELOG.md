@@ -1,3 +1,31 @@
+# Changelog
+
+## 3.22.4 — Self-Healing Data Services, Map Recovery, and Fault Isolation
+
+- Added a public-safe runtime recovery contract and first-party browser recovery runtime.
+- Added bounded retries, service-group circuit breakers, automatic probes, and marked last-known-good public JSON responses.
+- Added active-workspace-only refresh after a failed service recovers.
+- Added map-by-map health, named map states, scheduled OpenStreetMap recovery probes, and manual map retry hooks.
+- Added WordPress proxy retries and session-scoped last-known-good continuity.
+- Added service recovery to the offline shell and eight targeted regressions; 862 tests pass in total.
+
+## 3.22.2 — Runtime Diagnostics, Map Health, and Fault Isolation
+
+- Added a public-safe local runtime health contract with asset, map-surface, script-order, embed-policy, and offline-shell checks.
+- Added an in-application health tray with endpoint latency, browser faults, map modes, service-worker state, and copyable support reports.
+- Added OpenStreetMap failure isolation that retains verified overlays on the first-party geographic grid.
+- Added first-party diagnostics assets to the offline shell and upgraded the WordPress map fallback package.
+- Added seven targeted runtime-diagnostics regressions; 854 tests pass in total.
+
+## 3.22.1 — Map Runtime Reliability, Spatial Evidence Mapping, and Embed Repair
+
+- Added a first-party static map runtime for Leaflet or network failure.
+- Added CARTO basemap failover and explicit degraded-imagery status events.
+- Added map runtime assets to the offline shell and WordPress fallback loader.
+- Converted Spatial Evidence into a map-backed GeoJSON workspace.
+- Repaired approved cross-origin embedding by removing conflicting `X-Frame-Options` on embeddable app responses.
+- Added six targeted map/embed regression tests; 847 tests pass in total.
+
 ## 3.22.0 — Collection Publication, Citation Exports, and Research Brief Packages
 
 - Added human-governed research briefs over approved public registry collections.

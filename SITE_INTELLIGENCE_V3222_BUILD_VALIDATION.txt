@@ -1,0 +1,77 @@
+SUSTAINABLE CATALYST SITE INTELLIGENCE v3.22.4
+BUILD VALIDATION
+
+Release name
+------------
+Runtime Diagnostics, Map Health, and Fault Isolation
+
+Automated test suite
+--------------------
+PASS — 854 tests passed.
+
+Runtime contract
+----------------
+PASS — /public/runtime-health returned HTTP 200.
+PASS — Runtime status: healthy.
+PASS — 6 of 6 local runtime checks passed.
+PASS — 8 of 8 required runtime assets available.
+PASS — 14 of 14 known map surfaces declared.
+PASS — No outbound upstream checks are performed by the runtime contract.
+
+Endpoint and asset smoke checks
+-------------------------------
+PASS — 16 of 16 critical local routes returned HTTP 200:
+  /
+  /health
+  /public/build-info
+  /public/runtime-health
+  /app/
+  /app/service-worker.js
+  /app/assets/map-fallback-v3222.js
+  /app/assets/map-fallback-v3222.css
+  /app/assets/runtime-v3222.js
+  /app/assets/runtime-v3222.css
+  /public/geospatial
+  /public/geospatial/events
+  /public/geospatial/diagnostics
+  /public/spatial
+  /public/spatial/areas
+  /public/spatial/datasets
+
+Static validation
+-----------------
+PASS — Python application and test modules compiled.
+PASS — 32 JavaScript files passed Node syntax validation.
+PASS — 114 JSON files parsed successfully.
+PASS — WordPress PHP passed php -l.
+
+Release alignment
+-----------------
+PASS — Backend version: 3.22.4.
+PASS — Public application version: 3.22.4.
+PASS — Service worker release: 3.22.4.
+PASS — WordPress plugin version: 3.22.4.
+PASS — v3.22.4 map fallback packaged in the backend and WordPress plugin.
+PASS — v3.22.4 diagnostics runtime included in the application shell and offline cache.
+
+Functional contracts added
+--------------------------
+PASS — Public-safe local runtime health endpoint.
+PASS — In-application Site Health tray.
+PASS — Critical endpoint latency and status checks.
+PASS — Browser script-error and unhandled-rejection capture.
+PASS — Map degradation, fallback, and imagery events.
+PASS — Service-worker and browser connectivity state.
+PASS — Copyable support report.
+PASS — OpenStreetMap-to-first-party-grid fallback while retaining overlays.
+
+Environment boundary
+--------------------
+This validation proves local package, application, route, and source-code contracts.
+It does not prove current third-party API availability, production CDN behavior,
+hosting-edge headers, real basemap rendering, or theme-specific browser layout.
+Those items require testing on the deployed domain.
+
+Immutable repository manifest
+-----------------------------
+PASS — 891 repository files recorded with byte counts and SHA-256 hashes.

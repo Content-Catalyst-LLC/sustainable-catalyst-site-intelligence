@@ -11,7 +11,9 @@ from fastapi.responses import PlainTextResponse, FileResponse, Response, HTMLRes
 
 from .config import Settings, get_settings
 from .version import APP_VERSION
-from .build_info import public_build_info as build_public_build_info
+from .build_info import public_build_info as build_public_build_info, public_deployment_status as build_public_deployment_status
+from .runtime_diagnostics_v3224 import build_runtime_health
+from .runtime_recovery_v3224 import build_runtime_recovery_contract
 from .platform_core_integration import PlatformCoreClient, platform_core_status as build_platform_core_status
 from .ga4_client import GA4Client, get_ga4_client
 from .metrics import build_page_metrics, dashboard_totals, hub_summary, mapping_coverage, unmapped_suggestions
@@ -431,10 +433,15 @@ async def public_experience_headers(request, call_next):
     response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
     response.headers.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
     response.headers.setdefault("Cross-Origin-Opener-Policy", "same-origin")
-    response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
     response.headers.setdefault("Vary", "Accept-Encoding")
 
     path = request.url.path
+    is_app_surface = path == "/app" or path.startswith("/app/")
+    if not (is_app_surface and settings.public_embeds_enabled):
+        response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
+    else:
+        if "X-Frame-Options" in response.headers:
+            del response.headers["X-Frame-Options"]
     response.headers.setdefault("X-SC-Site-Intelligence-Version", APP_VERSION)
     if path == "/app/service-worker.js":
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
@@ -446,13 +453,17 @@ async def public_experience_headers(request, call_next):
         response.headers["Cache-Control"] = "no-cache, max-age=0, must-revalidate"
     elif path.startswith("/app/assets/"):
         response.headers.setdefault("Cache-Control", "public, max-age=3600, stale-while-revalidate=86400, stale-if-error=604800")
-    elif path == "/app" or path.startswith("/app/"):
+    elif is_app_surface:
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         if settings.public_embeds_enabled:
-            frame_ancestors = ["'self'"] + [origin for origin in settings.public_embed_allowed_origins.split(",") if origin.strip()]
-            response.headers.setdefault("Content-Security-Policy", "frame-ancestors " + (" ".join(item.strip() for item in frame_ancestors) if len(frame_ancestors) > 1 else "*"))
+            allowed_origins = [origin for origin in settings.cors_origin_list if origin.startswith(("http://", "https://"))]
+            frame_ancestors = list(dict.fromkeys(["'self'", *allowed_origins]))
+            response.headers["Content-Security-Policy"] = "frame-ancestors " + " ".join(frame_ancestors)
+            if "X-Frame-Options" in response.headers:
+                del response.headers["X-Frame-Options"]
         else:
-            response.headers.setdefault("Content-Security-Policy", "frame-ancestors 'self'")
+            response.headers["Content-Security-Policy"] = "frame-ancestors 'self'"
+            response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
     elif path.startswith("/public/experience-profile") or path.startswith("/public/launch-profile") or path.startswith("/public/observatory"):
         response.headers.setdefault("Cache-Control", "public, max-age=300")
     return response
@@ -485,6 +496,21 @@ def health(settings: Settings = Depends(get_settings), ga4: GA4Client = Depends(
 @app.get("/public/build-info")
 def public_build_info():
     return build_public_build_info()
+
+
+@app.get("/public/deployment-status")
+def public_deployment_status():
+    return build_public_deployment_status()
+
+
+@app.get("/public/runtime-health")
+def public_runtime_health(settings: Settings = Depends(get_settings)):
+    return build_runtime_health(settings)
+
+
+@app.get("/public/runtime-recovery")
+def public_runtime_recovery(settings: Settings = Depends(get_settings)):
+    return build_runtime_recovery_contract(settings)
 
 
 @app.get("/diagnostics/ga4")
@@ -2303,7 +2329,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.22.0 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v3.22.4 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -2445,7 +2471,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.22.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v3.22.4 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -2562,7 +2588,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.22.0 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v3.22.4 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -2684,7 +2710,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.22.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v3.22.4 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -2820,7 +2846,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.22.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v3.22.4 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -5997,7 +6023,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v3.22.0 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v3.22.4 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -6231,7 +6257,7 @@ def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     return build_reliability(settings)
 
 
-# Site Intelligence v3.22.0 — Open Standards, Federation, and Institutional Data Exchange.
+# Site Intelligence v3.22.4 — Open Standards, Federation, and Institutional Data Exchange.
 def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
     if not settings.federation_exchange_enabled:
         raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
@@ -6321,7 +6347,7 @@ def admin_federation_accept_import_endpoint(request: dict = Body(default={}), se
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.22.0 — Security, Privacy, Governance, and Production Scale.
+# Site Intelligence v3.22.4 — Security, Privacy, Governance, and Production Scale.
 def _production_governance(settings: Settings) -> ProductionGovernanceCenter:
     if not settings.production_governance_enabled:
         raise HTTPException(status_code=503, detail="Production governance is disabled.")
@@ -6470,7 +6496,7 @@ def admin_production_governance_deployment_endpoint(request: dict = Body(default
 def admin_production_governance_load_probe_endpoint(requests: int = Query(default=250, ge=1, le=5000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return _production_governance(settings).load_probe(requests)
 
-# Site Intelligence v3.22.0 — Connected Live Intelligence Surface.
+# Site Intelligence v3.22.4 — Connected Live Intelligence Surface.
 def _connected_platform(settings: Settings) -> ConnectedPublicIntelligencePlatform:
     if not settings.connected_platform_enabled:
         raise HTTPException(status_code=404, detail="Connected platform is disabled.")

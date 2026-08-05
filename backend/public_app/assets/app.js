@@ -23,7 +23,7 @@
     }
     throw last;
   }
-  const APP_VERSION="3.22.0";
+  const APP_VERSION="3.22.4";
   let heightFrame=0;
   function documentHeight(){
     const body=document.body,root=document.documentElement;
@@ -83,7 +83,14 @@
   const SAVED_VIEW_LIMIT=50;
   const names = {KEN:"Kenya",GHA:"Ghana",USA:"United States",IND:"India",BRA:"Brazil"};
   const qs = (s)=>document.querySelector(s), qsa=(s)=>[...document.querySelectorAll(s)];
-  const toast=(msg)=>{const el=qs("#toast");el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),1800)};
+  const toast=(msg)=>{const el=qs("#toast");if(!el)return;el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),1800)};
+  let mapReliabilityNoticeShown=false;
+  function reportMapReliability(message){
+    const status=qs("#statusText");if(status)status.textContent=message;
+    if(!mapReliabilityNoticeShown){mapReliabilityNoticeShown=true;toast(message)}
+  }
+  window.addEventListener("scsi:map-fallback",()=>reportMapReliability("Map fallback active; verified data layers remain available."));
+  window.addEventListener("scsi:imagery-degraded",()=>reportMapReliability("Satellite imagery is degraded; base maps and evidence remain available."));
   function setMobileNavigation(open,{restoreFocus=false}={}){
     const toggle=qs("#mobileNavToggle"),backdrop=qs("#mobileNavBackdrop"),main=qs("#main");
     const shouldOpen=Boolean(open)&&window.matchMedia("(max-width: 760px)").matches;
@@ -116,9 +123,11 @@
 
   function today(){const d=new Date();d.setUTCDate(d.getUTCDate()-1);return d.toISOString().slice(0,10)}
   function initMap(){
+    if(!window.L)throw new Error("Mapping library unavailable after local fallback initialization.");
     state.map=L.map("map",{zoomControl:true,worldCopyJump:true}).setView([12,20],2);
     state.base=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"© OpenStreetMap contributors",maxZoom:19}).addTo(state.map);
     state.markers=L.layerGroup().addTo(state.map);
+    if(window.L.__scsiFallback)reportMapReliability("Static map mode active; verified records remain mapped on a geographic grid.");
   }
   function markerIcon(category){
     const quake=String(category).toLowerCase().includes("earthquake");
@@ -1635,6 +1644,18 @@
       panel.innerHTML=`<p class="eyebrow">PUBLIC WORKSPACE</p><h2>View unavailable</h2><p>The requested public workspace is not registered.</p>`;
     }
   }
+  let recoveryRefreshTimer=0;
+  window.addEventListener("scsi:service-fallback",event=>{
+    const group=event.detail?.group||"public data";
+    const status=qs("#statusText");if(status)status.textContent=`Recovered ${group} data`;
+  });
+  window.addEventListener("scsi:service-recovered",event=>{
+    if(document.hidden||event.detail?.path==="/public/runtime-health"||event.detail?.path==="/public/runtime-recovery")return;
+    clearTimeout(recoveryRefreshTimer);
+    recoveryRefreshTimer=setTimeout(async()=>{
+      try{toast(`${event.detail?.group||"Data"} service recovered; refreshing this workspace.`);await setRoute(state.route);reportHeight()}catch(error){console.warn("[Site Intelligence] Recovered workspace refresh failed.",error)}
+    },1200);
+  });
   async function init(){setLaunch("Preparing the map and public evidence services.",18);
     qs("#dateSelect").value=today();initMap();setLaunch("Loading map layers.",34);
     qsa(".layer-tab").forEach(b=>b.addEventListener("click",()=>setImagery(b.dataset.layer)));
@@ -1738,5 +1759,5 @@ document.head.appendChild(visualStyle);
 
 window.addEventListener("load",reportHeight,{once:true});window.addEventListener("resize",reportHeight,{passive:true});window.visualViewport?.addEventListener("resize",reportHeight,{passive:true});window.addEventListener("message",event=>{if(event.data?.type==="SC_SI_REQUEST_HEIGHT")reportHeight()});if("ResizeObserver" in window)new ResizeObserver(reportHeight).observe(document.body);
 
-/* v3.22.0 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v3.22.0 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v3.22.4 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v3.22.4 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

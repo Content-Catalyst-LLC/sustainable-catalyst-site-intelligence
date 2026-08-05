@@ -1,0 +1,27 @@
+{
+  "schema": "sc-site-intelligence-capability-release/1.0",
+  "version": "3.22.4",
+  "release_name": "Map Runtime Reliability, Spatial Evidence Mapping, and Embed Repair",
+  "capabilities": [
+    "first-party static map fallback",
+    "CARTO basemap failover to OpenStreetMap",
+    "degraded imagery signaling",
+    "offline-cached map runtime",
+    "WordPress bounded Leaflet failover",
+    "mapped Spatial Evidence areas and GeoJSON results",
+    "frame-ancestors embed repair"
+  ],
+  "validation": {
+    "pytest_passed": 847,
+    "javascript_syntax": "passed",
+    "php_syntax": "passed",
+    "python_compile": "passed",
+    "browser_automation": "not available: administrator-blocked Chromium navigation"
+  },
+  "boundaries": {
+    "fallback_is_full_cartographic_basemap": false,
+    "satellite_upstream_availability_guaranteed": false,
+    "context_locations_are_evidence_matches": false,
+    "visual_browser_validation_claimed": false
+  }
+}

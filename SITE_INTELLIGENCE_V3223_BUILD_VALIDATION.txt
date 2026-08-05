@@ -1,0 +1,27 @@
+SUSTAINABLE CATALYST SITE INTELLIGENCE v3.22.4
+BUILD VALIDATION
+
+Release: Self-Healing Data Services, Map Recovery, and Fault Isolation
+Validation date: 2026-08-04 America/Chicago
+
+PASS - release identity aligned to 3.22.4
+PASS - Python application and tests compiled
+PASS - 114 JSON files parsed
+PASS - 33 JavaScript files passed Node syntax validation
+PASS - WordPress PHP passed php -l
+PASS - 862 automated tests passed
+PASS - 17 critical application, recovery, map, and asset routes returned HTTP 200
+PASS - runtime-health status healthy
+PASS - 6 of 6 runtime-health checks passed
+PASS - 9 of 9 required runtime assets available
+PASS - 14 of 14 known map surfaces declared
+PASS - runtime-recovery status ready
+PASS - 6 isolated public service groups declared
+PASS - service recovery loads before diagnostics and application modules
+PASS - service-recovery asset included in offline shell
+PASS - WordPress proxy retry and last-known-good controls packaged
+PASS - map-by-map state and scheduled tile recovery packaged
+
+Browser screenshot validation was not performed in this container. The release includes a production browser checklist and does not claim visual browser sign-off.
+
+Repository manifest file count: 899

@@ -162,17 +162,53 @@
     }
   }
 
-  function fetchJson(url) {
-    return fetch(url, {headers: headers}).then(function (r) {
+  const recoveryCachePrefix = 'scsi_wp_lkg_v3_22_3:';
+  const recoveryStatuses = [408, 425, 429, 500, 502, 503, 504];
+  function recoveryCacheKey(url) { return recoveryCachePrefix + url; }
+  function saveRecoveredJson(url, data) {
+    try { sessionStorage.setItem(recoveryCacheKey(url), JSON.stringify({savedAt: Date.now(), data: data})); } catch (e) {}
+  }
+  function readRecoveredJson(url) {
+    try {
+      const item = JSON.parse(sessionStorage.getItem(recoveryCacheKey(url)) || 'null');
+      if (!item || !item.savedAt || Date.now() - item.savedAt > 21600000) return null;
+      window.dispatchEvent(new CustomEvent('scsi:service-fallback', {detail: {version: cfg.version || '3.22.4', group: 'wordpress-proxy', path: url, reason: 'last-known-good', staleAgeMs: Date.now() - item.savedAt}}));
+      return item.data;
+    } catch (e) { return null; }
+  }
+  function fetchJsonAttempt(url) {
+    const controller = new AbortController();
+    const timeout = setTimeout(function () { controller.abort(); }, 12000);
+    return fetch(url, {headers: headers, signal: controller.signal}).then(function (r) {
       return r.text().then(function (text) {
         let data = null;
         try { data = text ? JSON.parse(text) : null; } catch (e) { data = {message: text}; }
         if (!r.ok || (data && data.code)) {
-          throw new Error(errorMessageFromResponse(data, 'Site Intelligence request failed. HTTP ' + r.status));
+          const error = new Error(errorMessageFromResponse(data, 'Site Intelligence request failed. HTTP ' + r.status));
+          error.status = r.status;
+          throw error;
         }
+        saveRecoveredJson(url, data || {});
         return data || {};
       });
-    });
+    }).finally(function () { clearTimeout(timeout); });
+  }
+  function fetchJson(url) {
+    let attempt = 0;
+    function run() {
+      attempt += 1;
+      return fetchJsonAttempt(url).catch(function (error) {
+        const retryable = !error.status || recoveryStatuses.indexOf(Number(error.status)) !== -1;
+        if (retryable && attempt < 3) {
+          window.dispatchEvent(new CustomEvent('scsi:service-retry', {detail: {version: cfg.version || '3.22.4', group: 'wordpress-proxy', path: url, attempt: attempt + 1}}));
+          return new Promise(function (resolve) { setTimeout(resolve, attempt === 1 ? 600 : 1400); }).then(run);
+        }
+        const recovered = readRecoveredJson(url);
+        if (recovered) return recovered;
+        throw error;
+      });
+    }
+    return run();
   }
 
   function statusBadge(status) {
@@ -3551,15 +3587,38 @@
   }
 
 
+  function loadLocalMapFallback() {
+    if (window.L) return Promise.resolve(window.L);
+    return new Promise(function(resolve, reject) {
+      if (cfg.mapFallbackCssUrl && !document.querySelector('link[data-scsi-map-fallback]')) {
+        var fallbackLink=document.createElement('link'); fallbackLink.rel='stylesheet'; fallbackLink.href=cfg.mapFallbackCssUrl; fallbackLink.setAttribute('data-scsi-map-fallback','1'); document.head.appendChild(fallbackLink);
+      }
+      var existingFallback=document.querySelector('script[data-scsi-map-fallback]');
+      if (existingFallback) {
+        if (window.L) return resolve(window.L);
+        existingFallback.addEventListener('load',function(){resolve(window.L);},{once:true});
+        existingFallback.addEventListener('error',reject,{once:true});
+        return;
+      }
+      if (!cfg.mapFallbackUrl) return reject(new Error('Local map fallback URL is unavailable.'));
+      var fallback=document.createElement('script'); fallback.src=cfg.mapFallbackUrl; fallback.async=true; fallback.setAttribute('data-scsi-map-fallback','1');
+      fallback.onload=function(){window.L?resolve(window.L):reject(new Error('Local map fallback did not initialize.'));}; fallback.onerror=reject; document.head.appendChild(fallback);
+    });
+  }
+
   function loadLeaflet() {
     if (window.L) return Promise.resolve(window.L);
     return new Promise(function(resolve, reject) {
+      var settled=false;
+      function finish(value){if(settled)return;settled=true;clearTimeout(timer);resolve(value);}
+      function useFallback(){if(settled)return;loadLocalMapFallback().then(finish,reject);}
       if (!document.querySelector('link[data-scsi-leaflet]')) {
         var link=document.createElement('link'); link.rel='stylesheet'; link.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'; link.setAttribute('data-scsi-leaflet','1'); document.head.appendChild(link);
       }
+      var timer=setTimeout(useFallback,3500);
       var existing=document.querySelector('script[data-scsi-leaflet]');
-      if (existing) { existing.addEventListener('load',function(){resolve(window.L);}); return; }
-      var script=document.createElement('script'); script.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'; script.async=true; script.setAttribute('data-scsi-leaflet','1'); script.onload=function(){resolve(window.L);}; script.onerror=reject; document.head.appendChild(script);
+      if (existing) { existing.addEventListener('load',function(){window.L?finish(window.L):useFallback();},{once:true}); existing.addEventListener('error',useFallback,{once:true}); return; }
+      var script=document.createElement('script'); script.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'; script.async=true; script.setAttribute('data-scsi-leaflet','1'); script.onload=function(){window.L?finish(window.L):useFallback();}; script.onerror=useFallback; document.head.appendChild(script);
     });
   }
 

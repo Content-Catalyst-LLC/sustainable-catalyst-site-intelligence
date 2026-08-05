@@ -1,6 +1,6 @@
-# Site Intelligence v3.22.0 — Corrections, Retractions, and Public Change History
+# Site Intelligence v3.22.1 — Corrections, Retractions, and Public Change History
 
-Live Intelligence v3.22.0 adds an append-only public integrity layer above the approved correction workflow introduced in v3.13.0.
+Live Intelligence v3.22.1 adds an append-only public integrity layer above the approved correction workflow introduced in v3.13.0.
 
 ## Workflow
 

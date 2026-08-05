@@ -1,4 +1,4 @@
-const RELEASE="3.22.0";
+const RELEASE="3.22.4";
 const CACHE_PREFIX="scsi-";
 const VERSION=`${CACHE_PREFIX}v${RELEASE}`;
 const SHELL=`${VERSION}-shell`;
@@ -8,7 +8,7 @@ const APP_HOME="/app/";
 const MAX_DATA_ENTRIES=120;
 const MAX_SHELL_ENTRIES=80;
 const MAX_DATA_AGE_MS=24*60*60*1000;
-const SHELL_URLS=["/app/","/app/offline.html","/app/manifest.webmanifest","/app/assets/alerts-v280.css","/app/assets/alerts-v280.js","/app/assets/app.css","/app/assets/app.js","/app/assets/dossiers-v270.css","/app/assets/dossiers-v270.js","/app/assets/economics-v220.css","/app/assets/economics-v220.js","/app/assets/experience-v2120.css","/app/assets/experience-v2120.js","/app/assets/global-conditions-v210.css","/app/assets/global-conditions-v210.js","/app/assets/humanitarian-v250.css","/app/assets/humanitarian-v250.js","/app/assets/icon-192.png","/app/assets/icon-512.png","/app/assets/integration-v2110.css","/app/assets/integration-v2110.js","/app/assets/law-v230.css","/app/assets/law-v230.js","/app/assets/research-v2100.css","/app/assets/research-v2100.js","/app/assets/resources-v260.css","/app/assets/resources-v260.js","/app/assets/scenarios-v290.css","/app/assets/scenarios-v290.js","/app/assets/science-v240.css","/app/assets/science-v240.js","/app/assets/spatial-v2150.css","/app/assets/spatial-v2150.js","/app/assets/harmonization-v2160.css","/app/assets/harmonization-v2160.js","/app/assets/models-v2170.css","/app/assets/models-v2170.js","/app/assets/evidence-v2180.css","/app/assets/evidence-v2180.js","/app/assets/graph-v2190.css","/app/assets/graph-v2190.js","/app/assets/publishing-v2200.css","/app/assets/publishing-v2200.js","/app/assets/monitoring-v2210.css","/app/assets/monitoring-v2210.js","/app/assets/workspaces-v2220.css","/app/assets/workspaces-v2220.js","/app/assets/workflows-v2230.css","/app/assets/workflows-v2230.js","/app/assets/federation-v2240.css","/app/assets/federation-v2240.js","/app/assets/governance-v2250.css","/app/assets/governance-v2250.js","/app/assets/platform-v300.css","/app/assets/platform-v300.js"];
+const SHELL_URLS=["/app/","/app/offline.html","/app/manifest.webmanifest","/app/assets/alerts-v280.css","/app/assets/alerts-v280.js","/app/assets/app.css","/app/assets/app.js","/app/assets/map-fallback-v3224.css","/app/assets/map-fallback-v3224.js","/app/assets/runtime-v3224.css","/app/assets/runtime-v3224.js","/app/assets/service-recovery-v3224.js","/app/assets/dossiers-v270.css","/app/assets/dossiers-v270.js","/app/assets/economics-v220.css","/app/assets/economics-v220.js","/app/assets/experience-v2120.css","/app/assets/experience-v2120.js","/app/assets/global-conditions-v210.css","/app/assets/global-conditions-v210.js","/app/assets/humanitarian-v250.css","/app/assets/humanitarian-v250.js","/app/assets/icon-192.png","/app/assets/icon-512.png","/app/assets/integration-v2110.css","/app/assets/integration-v2110.js","/app/assets/law-v230.css","/app/assets/law-v230.js","/app/assets/research-v2100.css","/app/assets/research-v2100.js","/app/assets/resources-v260.css","/app/assets/resources-v260.js","/app/assets/scenarios-v290.css","/app/assets/scenarios-v290.js","/app/assets/science-v240.css","/app/assets/science-v240.js","/app/assets/spatial-v2150.css","/app/assets/spatial-v2150.js","/app/assets/harmonization-v2160.css","/app/assets/harmonization-v2160.js","/app/assets/models-v2170.css","/app/assets/models-v2170.js","/app/assets/evidence-v2180.css","/app/assets/evidence-v2180.js","/app/assets/graph-v2190.css","/app/assets/graph-v2190.js","/app/assets/publishing-v2200.css","/app/assets/publishing-v2200.js","/app/assets/monitoring-v2210.css","/app/assets/monitoring-v2210.js","/app/assets/workspaces-v2220.css","/app/assets/workspaces-v2220.js","/app/assets/workflows-v2230.css","/app/assets/workflows-v2230.js","/app/assets/federation-v2240.css","/app/assets/federation-v2240.js","/app/assets/governance-v2250.css","/app/assets/governance-v2250.js","/app/assets/platform-v300.css","/app/assets/platform-v300.js"];
 
 function cacheable(response){
   if(!response||!response.ok||response.type==="opaque")return false;
@@ -22,6 +22,16 @@ async function stamped(response){
   headers.set("X-SCSI-Cached-At",String(Date.now()));
   headers.set("X-SCSI-Release",RELEASE);
   return new Response(body,{status:response.status,statusText:response.statusText,headers});
+}
+
+async function recovered(response,reason){
+  const body=await response.clone().blob();
+  const headers=new Headers(response.headers);
+  const saved=cachedAt(response);
+  headers.set("X-SCSI-Recovery",reason||"service-worker-cache");
+  headers.set("X-SCSI-Stale-Age-Ms",String(saved?Math.max(0,Date.now()-saved):0));
+  headers.set("X-SCSI-Recovery-Version",RELEASE);
+  return new Response(body,{status:200,statusText:"Recovered",headers});
 }
 
 function cachedAt(response){
@@ -122,7 +132,7 @@ async function networkFirstData(request){
     return await fetchAndCache(request,DATA,MAX_DATA_ENTRIES);
   }catch(error){
     const cached=await cachedResponse(DATA,request,{maximumAgeMs:MAX_DATA_AGE_MS});
-    if(cached)return cached;
+    if(cached)return recovered(cached,"service-worker-cache");
     throw error;
   }
 }

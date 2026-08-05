@@ -1,0 +1,27 @@
+Site Intelligence v3.22.4 — Build Validation
+Build: Render Deployment Parity and Release Promotion
+
+Validated release identity:
+- Backend: 3.22.4
+- WordPress plugin: 3.22.4
+- Service worker: 3.22.4
+- Runtime recovery assets: v3224
+
+Validated deployment controls:
+- Explicit Render commit auto-deploy contract
+- /health Render health check
+- GitHub clean-clone synchronization
+- Commit and annotated tag promotion
+- Render auto-deploy, deploy-hook, and CLI trigger paths
+- Live backend version and commit verification
+- WordPress handoff blocked until backend parity
+
+Automated validation:
+- 905 immutable repository files verified
+- 866 tests passed
+- 112 JSON files parsed
+- 33 JavaScript files passed syntax validation
+- WordPress PHP passed syntax validation
+- Public deployment status endpoint passed contract tests
+
+The environment used to build this package cannot authenticate to the user's GitHub or Render accounts. The promotion script was therefore syntax- and contract-tested but not used to modify the live service during package construction.
