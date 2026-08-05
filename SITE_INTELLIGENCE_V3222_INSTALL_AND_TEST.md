@@ -1,4 +1,4 @@
-# Site Intelligence v3.22.5 Installation and Test Guide
+# Site Intelligence v3.22.6 Installation and Test Guide
 
 ## Recommended path
 
@@ -8,7 +8,7 @@ Use the supplied macOS installer from Terminal. It verifies bundle checksums, ex
 cd ~/Downloads
 
 INSTALLER="$(ls -t install_and_validate_site_intelligence_v3_22_2_macos*.sh | head -1)"
-BUNDLE="$(ls -t sustainable-catalyst-site-intelligence-v3.22.5-release-bundle*.zip | head -1)"
+BUNDLE="$(ls -t sustainable-catalyst-site-intelligence-v3.22.6-release-bundle*.zip | head -1)"
 
 chmod +x "$INSTALLER"
 bash "$INSTALLER" "$BUNDLE"
@@ -18,14 +18,14 @@ Expected final result:
 
 ```text
 854 passed
-SUCCESS: Site Intelligence v3.22.5 passed local validation.
+SUCCESS: Site Intelligence v3.22.6 passed local validation.
 ```
 
 ## WordPress update
 
 1. Open WordPress administration.
 2. Go to Plugins → Add New → Upload Plugin.
-3. Upload `sustainable-catalyst-site-intelligence-v3.22.5-wordpress-plugin.zip`.
+3. Upload `sustainable-catalyst-site-intelligence-v3.22.6-wordpress-plugin.zip`.
 4. Replace the existing plugin when prompted.
 5. Purge WordPress, hosting, CDN, and browser caches.
 

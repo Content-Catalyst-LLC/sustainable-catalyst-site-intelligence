@@ -27,8 +27,9 @@ def public_build_info() -> dict[str, Any]:
     build_timestamp = _value("SC_SI_BUILD_TIMESTAMP", _BUILD_STARTED_AT)
     platform = "render" if service_id != "unavailable" or external_url != "unavailable" else "local"
     release_channel = _value("SC_SI_RELEASE_CHANNEL", "production")
+    release_id = _value("SC_SI_RELEASE_ID", f"site-intelligence-v{APP_VERSION}")
     expected_branch = _value("SC_SI_EXPECTED_GIT_BRANCH", "main")
-    fingerprint_material = "|".join([APP_VERSION, repo_slug, branch, commit, release_channel])
+    fingerprint_material = "|".join([APP_VERSION, release_id, repo_slug, branch, commit, release_channel])
     release_fingerprint = sha256(fingerprint_material.encode("utf-8")).hexdigest()[:20]
 
     deployment = {
@@ -42,6 +43,7 @@ def public_build_info() -> dict[str, Any]:
         "git_commit": commit,
         "git_commit_short": commit[:12] if commit != "unavailable" else "unavailable",
         "release_version": APP_VERSION,
+        "release_id": release_id,
         "auto_deploy_contract": "commit",
         "health_check_path": "/health",
         "expected_git_branch": expected_branch,
@@ -61,6 +63,7 @@ def public_build_info() -> dict[str, Any]:
         "git_repository": repo_slug,
         "build_timestamp": build_timestamp,
         "release_channel": release_channel,
+        "release_id": release_id,
         "release_fingerprint": release_fingerprint,
         "cache_policy": "no-store",
         "platform_core_optional": True,
@@ -75,11 +78,13 @@ def public_deployment_status() -> dict[str, Any]:
         "version": APP_VERSION,
         "backend_version": build["backend_version"],
         "expected_wordpress_plugin_version": build["expected_wordpress_plugin_version"],
+        "release_id": build["release_id"],
         "deployment": build["deployment"],
         "verification_endpoints": {
             "health": "/health",
             "build_info": "/public/build-info",
             "deployment_status": "/public/deployment-status",
+            "deployment_receipt": "/public/deployment-receipt",
             "release_gate": "/public/release-gate",
         },
     }

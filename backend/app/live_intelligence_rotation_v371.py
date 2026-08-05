@@ -1,4 +1,4 @@
-"""Governed relevance and rotation selection for Live Intelligence v3.22.5.
+"""Governed relevance and rotation selection for Live Intelligence v3.22.6.
 
 The rotation layer operates only on public-safe, validated signals returned by the
 existing reliability and gateway pipeline. It records aggregate display history,
@@ -16,6 +16,7 @@ from typing import Any, Iterable, Mapping
 
 from .config import Settings
 from .version import APP_VERSION
+from .runtime_paths_v3226 import resolve_runtime_path
 
 ROTATION_SCHEMA_VERSION = "sc-site-intelligence-live-intelligence-rotation/1.0"
 DEFAULT_ROTATION_WINDOW_HOURS = 168
@@ -73,7 +74,7 @@ class LiveIntelligenceRotationStore:
     """Atomic public-safe store for aggregate display history and human overrides."""
 
     def __init__(self, settings: Settings):
-        self.path = Path(settings.live_intelligence_rotation_state_path)
+        self.path = resolve_runtime_path(settings.live_intelligence_rotation_state_path, settings.runtime_state_root)
         self.max_history = int(settings.live_intelligence_rotation_max_history)
 
     def _empty(self) -> dict[str, Any]:

@@ -1,11 +1,11 @@
 cd ~/Downloads
 
 INSTALLER="$(ls -t install_and_validate_site_intelligence_v3_22_2_macos*.sh | head -1)"
-BUNDLE="$(ls -t sustainable-catalyst-site-intelligence-v3.22.5-release-bundle*.zip | head -1)"
+BUNDLE="$(ls -t sustainable-catalyst-site-intelligence-v3.22.6-release-bundle*.zip | head -1)"
 
 chmod +x "$INSTALLER"
 bash "$INSTALLER" "$BUNDLE"
 
 # Expected result:
 # 854 passed
-# SUCCESS: Site Intelligence v3.22.5 passed local validation.
+# SUCCESS: Site Intelligence v3.22.6 passed local validation.

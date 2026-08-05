@@ -1,6 +1,6 @@
 """Preservation interoperability, external verification, and institutional exchange.
 
-Site Intelligence v3.22.5 prepares standards-aligned, checksum-bound exchange
+Site Intelligence v3.22.6 prepares standards-aligned, checksum-bound exchange
 packages from approved institutional custody records. Exchange, verification,
 and receipt records are append-only and human-governed. The workflow performs
 no remote deposit, network verification, destination write, credential storage,

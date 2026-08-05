@@ -1,6 +1,6 @@
 """Reliability, freshness, and last-known-good delivery for Live Intelligence.
 
-Site Intelligence v3.22.5 keeps the v3.5.0 channel and ranking engine intact and
+Site Intelligence v3.22.6 keeps the v3.5.0 channel and ranking engine intact and
 adds a public-safe reliability boundary around it. The boundary validates each
 signal, assigns explicit freshness states, suppresses expired observations, and
 recovers only from a last-known-good payload created for the same query.
@@ -16,6 +16,7 @@ from typing import Any, Iterable, Mapping
 
 from .config import Settings
 from .version import APP_VERSION
+from .runtime_paths_v3226 import resolve_runtime_path
 from . import live_intelligence_channels_v350 as base
 from .live_intelligence_gateway_v370 import apply_gateway_policy
 
@@ -70,7 +71,7 @@ class LiveIntelligenceReliabilityStore:
     """Small atomic JSON store for same-query last-known-good payloads."""
 
     def __init__(self, settings: Settings):
-        self.path = Path(settings.live_intelligence_last_known_good_path)
+        self.path = resolve_runtime_path(settings.live_intelligence_last_known_good_path, settings.runtime_state_root)
         self.max_entries = int(settings.live_intelligence_last_known_good_max_entries)
 
     def _read(self) -> dict[str, Any]:

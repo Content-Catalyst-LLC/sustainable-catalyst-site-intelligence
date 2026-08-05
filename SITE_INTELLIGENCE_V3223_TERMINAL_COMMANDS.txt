@@ -1,7 +1,7 @@
 cd ~/Downloads
 
 INSTALLER="$(ls -t install_and_validate_site_intelligence_v3_22_3_macos*.sh | head -1)"
-BUNDLE="$(ls -t sustainable-catalyst-site-intelligence-v3.22.5-release-bundle*.zip | head -1)"
+BUNDLE="$(ls -t sustainable-catalyst-site-intelligence-v3.22.6-release-bundle*.zip | head -1)"
 
 chmod +x "$INSTALLER"
 bash "$INSTALLER" "$BUNDLE"
