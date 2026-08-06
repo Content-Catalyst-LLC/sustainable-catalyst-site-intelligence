@@ -23,7 +23,7 @@
     }
     throw last;
   }
-  const APP_VERSION="3.23.4";
+  const APP_VERSION="3.23.5";
   let heightFrame=0;
   function documentHeight(){
     const body=document.body,root=document.documentElement;
@@ -1790,7 +1790,7 @@
     catch(e){qs("#statusText").textContent="Partial public data";toast("Some optional public data is temporarily unavailable.");finishLaunch()}
   }
   window.SCSIOverviewMapV3232={version:APP_VERSION,getMap:()=>state.map,getEvents:()=>state.events?.features||[],getFilteredEvents:()=>state.filteredEvents.slice(),getFilters:()=>({...state.overviewFilters}),setFilters:setOverviewFilters,selectEvent:selectOverviewEvent,fitResults:fitOverviewResults,setImageryOpacity:value=>state.imagery?.setOpacity?.(Math.max(0,Math.min(1,Number(value)))),setBaseStyle:style=>{const map=qs("#map");if(map)map.dataset.mapStyle=String(style||"institutional-dark");syncOverviewMapUrl()},syncUrl:syncOverviewMapUrl,render:renderOverviewFeatures};
-  window.SCSIRouterV3228={version:"3.23.4",navigate:navigateToRoute,current:()=>state.route};
+  window.SCSIRouterV3228={version:"3.23.5",navigate:navigateToRoute,current:()=>state.route};
   document.addEventListener("DOMContentLoaded",init);
 })();
 
@@ -1809,5 +1809,5 @@ document.head.appendChild(visualStyle);
 
 window.addEventListener("load",reportHeight,{once:true});window.addEventListener("resize",reportHeight,{passive:true});window.visualViewport?.addEventListener("resize",reportHeight,{passive:true});window.addEventListener("message",event=>{if(event.data?.type==="SC_SI_REQUEST_HEIGHT")reportHeight()});if("ResizeObserver" in window)new ResizeObserver(reportHeight).observe(document.body);
 
-/* v3.23.4 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v3.23.4 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v3.23.5 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v3.23.5 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

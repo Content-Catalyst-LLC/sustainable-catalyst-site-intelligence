@@ -1,0 +1,21 @@
+/* Site Intelligence v3.23.5 — browser reliability, mobile, and accessibility. */
+:root{--scsi-touch-target:44px;--scsi-safe-bottom:env(safe-area-inset-bottom,0px)}
+:where(button,a,input,select,textarea):focus-visible{outline:3px solid #fff;outline-offset:3px;box-shadow:0 0 0 5px #111}
+.skip-link{z-index:100000}
+.scsi-a11y-status{position:fixed;right:16px;bottom:calc(16px + var(--scsi-safe-bottom));z-index:1200;display:flex;gap:8px;align-items:center;max-width:min(420px,calc(100vw - 32px));padding:8px 10px;border:1px solid rgba(255,255,255,.2);background:#101417;color:#f3f6f7;font-size:.78rem}
+.scsi-a11y-status[hidden]{display:none}.scsi-a11y-status button{min-height:var(--scsi-touch-target);padding:8px 10px}
+.scsi-map-summary{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+html[data-scsi-low-bandwidth="true"] [data-optional-imagery],html[data-scsi-low-bandwidth="true"] .imagery-pane,html[data-scsi-low-bandwidth="true"] .map-imagery-pane{display:none!important}
+html[data-scsi-low-bandwidth="true"] .launch-orbit,html[data-scsi-low-bandwidth="true"] .loading-shimmer{animation:none!important;background-image:none!important}
+html[data-scsi-input="coarse"] :where(button,a,.nav-item,input,select){min-height:var(--scsi-touch-target)}
+html[data-scsi-viewport="phone"] .topbar{align-items:flex-start;gap:8px}
+html[data-scsi-viewport="phone"] .topbar-controls{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:8px}
+html[data-scsi-viewport="phone"] .topbar-controls .compact-field{min-width:0}
+html[data-scsi-viewport="phone"] .topbar-controls button{width:100%}
+html[data-scsi-viewport="phone"] .evidence-drawer{inset:auto 0 0 0;width:100%;max-width:none;max-height:min(82vh,720px);border-radius:14px 14px 0 0;padding-bottom:var(--scsi-safe-bottom)}
+html[data-scsi-viewport="phone"] .map-workspace,html[data-scsi-viewport="phone"] .workspace-map{min-height:420px}
+html[data-scsi-viewport="tablet"] .evidence-drawer{width:min(480px,88vw)}
+html[data-scsi-route-focus="true"] [data-route-panel]:not([hidden]) h1:focus,html[data-scsi-route-focus="true"] [data-route-panel]:not([hidden]) h2:focus{scroll-margin-top:96px}
+@media(max-width:599px){.scsi-a11y-status{left:8px;right:8px;bottom:calc(8px + var(--scsi-safe-bottom));max-width:none}.sidebar{overscroll-behavior:contain}.nav-item{min-height:48px}.evidence-drawer-body{overscroll-behavior:contain}}
+@media(prefers-reduced-motion:reduce){html:focus-within{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+@media(forced-colors:active){.nav-item.active,.ghost-button,.earth-primary-button,.icon-button{forced-color-adjust:auto;border:1px solid ButtonText}.brand-mark,.map-event-marker{forced-color-adjust:none}.scsi-a11y-status{border:1px solid CanvasText;background:Canvas;color:CanvasText}}

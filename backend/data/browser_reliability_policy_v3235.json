@@ -1,0 +1,46 @@
+{
+  "version": "3.23.5",
+  "release_id": "site-intelligence-v3.23.5",
+  "schema": "sc-site-intelligence-browser-reliability/1.0",
+  "contract": "browser-reliability-mobile-accessibility",
+  "supported_browsers": [
+    {"family":"Chromium","minimum":"120","status":"supported"},
+    {"family":"Safari","minimum":"17","status":"supported"},
+    {"family":"Firefox","minimum":"121","status":"supported"},
+    {"family":"Edge","minimum":"120","status":"supported"}
+  ],
+  "viewport_profiles": [
+    {"id":"phone","minimum_width":320,"maximum_width":599,"navigation":"drawer","evidence":"modal-sheet"},
+    {"id":"tablet","minimum_width":600,"maximum_width":1023,"navigation":"collapsible","evidence":"overlay-drawer"},
+    {"id":"desktop","minimum_width":1024,"maximum_width":null,"navigation":"persistent","evidence":"side-drawer"}
+  ],
+  "accessibility": {
+    "keyboard_routes": true,
+    "route_focus_management": true,
+    "dialog_focus_containment": true,
+    "focus_restoration": true,
+    "map_text_summaries": true,
+    "reduced_motion": true,
+    "forced_colors": true,
+    "minimum_touch_target_px": 44,
+    "live_region_updates": true
+  },
+  "reliability": {
+    "resize_recovery": true,
+    "orientation_recovery": true,
+    "visibility_recovery": true,
+    "long_session_heartbeat_seconds": 30,
+    "stale_session_threshold_seconds": 180,
+    "low_bandwidth_mode": true,
+    "save_data_detection": true,
+    "slow_connection_detection": true,
+    "optional_imagery_suppressed_in_low_bandwidth": true
+  },
+  "health_gate": {
+    "requires_application_root": true,
+    "requires_active_route": true,
+    "requires_focus_target": true,
+    "requires_map_summary_for_visible_maps": true,
+    "requires_no_unhandled_browser_error": true
+  }
+}

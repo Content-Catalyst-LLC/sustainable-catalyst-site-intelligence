@@ -14,17 +14,17 @@ client = TestClient(app)
 
 
 def test_runtime_receipt_has_release_identity(monkeypatch):
-    monkeypatch.setenv("SC_SI_RELEASE_ID", "site-intelligence-v3.23.4")
+    monkeypatch.setenv("SC_SI_RELEASE_ID", "site-intelligence-v3.23.5")
     data = public_deployment_receipt()
-    assert data["version"] == "3.23.4"
-    assert data["release_id"] == "site-intelligence-v3.23.4"
+    assert data["version"] == "3.23.5"
+    assert data["release_id"] == "site-intelligence-v3.23.5"
     assert len(data["receipt_fingerprint"]) == 24
 
 
 def test_release_gate_checks_expected_release_id(monkeypatch):
-    monkeypatch.setenv("SC_SI_RELEASE_ID", "site-intelligence-v3.23.4")
-    ready = build_release_gate(plugin_version="3.23.4", expected_release_id="site-intelligence-v3.23.4")
-    blocked = build_release_gate(plugin_version="3.23.4", expected_release_id="wrong-release")
+    monkeypatch.setenv("SC_SI_RELEASE_ID", "site-intelligence-v3.23.5")
+    ready = build_release_gate(plugin_version="3.23.5", expected_release_id="site-intelligence-v3.23.5")
+    blocked = build_release_gate(plugin_version="3.23.5", expected_release_id="wrong-release")
     assert ready["checks"]["release_id_verified"] is True
     assert blocked["checks"]["release_id_verified"] is False
     assert blocked["install_allowed"] is False
@@ -33,7 +33,7 @@ def test_release_gate_checks_expected_release_id(monkeypatch):
 def test_deployment_receipt_endpoint_is_uncacheable():
     response = client.get("/public/deployment-receipt")
     assert response.status_code == 200
-    assert response.json()["version"] == "3.23.4"
+    assert response.json()["version"] == "3.23.5"
     assert response.headers["cache-control"] == "no-cache, no-store, must-revalidate"
 
 
@@ -48,7 +48,7 @@ def test_runtime_root_isolates_last_known_good(tmp_path):
 def test_render_blueprint_declares_release_and_runtime_identity():
     text = (ROOT / "render.yaml").read_text(encoding="utf-8")
     assert "SC_SI_RELEASE_ID" in text
-    assert "site-intelligence-v3.23.4" in text
+    assert "site-intelligence-v3.23.5" in text
     assert "SC_SI_RUNTIME_STATE_ROOT" in text
 
 
@@ -64,16 +64,16 @@ def test_promotion_is_resume_safe_and_writes_receipt():
 
 def test_wordpress_requests_release_id_and_reads_receipt():
     text = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text(encoding="utf-8")
-    assert "const RELEASE_ID = 'site-intelligence-v3.23.4';" in text
+    assert "const RELEASE_ID = 'site-intelligence-v3.23.5';" in text
     assert "'expected_release_id' => self::RELEASE_ID" in text
     assert "receipt_fingerprint" in text
 
 
 def test_build_info_and_status_publish_release_id(monkeypatch):
-    monkeypatch.setenv("SC_SI_RELEASE_ID", "site-intelligence-v3.23.4")
+    monkeypatch.setenv("SC_SI_RELEASE_ID", "site-intelligence-v3.23.5")
     build = client.get("/public/build-info").json()
     status = client.get("/public/deployment-status").json()
-    assert build["release_id"] == "site-intelligence-v3.23.4"
-    assert build["deployment"]["release_id"] == "site-intelligence-v3.23.4"
-    assert status["release_id"] == "site-intelligence-v3.23.4"
+    assert build["release_id"] == "site-intelligence-v3.23.5"
+    assert build["deployment"]["release_id"] == "site-intelligence-v3.23.5"
+    assert status["release_id"] == "site-intelligence-v3.23.5"
     assert status["verification_endpoints"]["deployment_receipt"] == "/public/deployment-receipt"

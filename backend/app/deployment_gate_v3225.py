@@ -1,4 +1,4 @@
-"""Release-installation gate and deployment identity for v3.23.4."""
+"""Release-installation gate and deployment identity for v3.23.5."""
 
 from __future__ import annotations
 

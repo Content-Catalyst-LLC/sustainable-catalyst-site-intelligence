@@ -1,4 +1,4 @@
-"""Public-safe runtime diagnostics for Site Intelligence v3.23.4.
+"""Public-safe runtime diagnostics for Site Intelligence v3.23.5.
 
 The diagnostics intentionally avoid outbound network calls. They report the local
 application contract, required first-party assets, map surfaces, embed policy,
@@ -32,6 +32,8 @@ REQUIRED_ASSETS = (
     "assets/cartographic-interaction-v3232.js",
     "assets/analytical-workspaces-v3234.css",
     "assets/analytical-workspaces-v3234.js",
+    "assets/browser-reliability-v3235.css",
+    "assets/browser-reliability-v3235.js",
     "assets/data-truth-v3233.css",
     "assets/data-truth-v3233.js",
     "assets/production-truth-v3231.css",
@@ -56,6 +58,7 @@ CRITICAL_PUBLIC_ENDPOINTS = (
     "/public/workspaces/production-truth",
     "/public/maps/interaction",
     "/public/workflows/analytical",
+    "/public/browser-reliability",
     "/public/data-truth",
 )
 
@@ -137,9 +140,10 @@ def build_runtime_health(settings: Settings) -> dict[str, Any]:
     workspace_js = "/app/assets/cartographic-workspace-v3230.js"
     interaction_js = "/app/assets/cartographic-interaction-v3232.js"
     app_js = "/app/assets/app.js"
+    browser_reliability_js = "/app/assets/browser-reliability-v3235.js"
     data_truth_js = "/app/assets/data-truth-v3233.js"
     production_truth_js = "/app/assets/production-truth-v3231.js"
-    ordered_scripts = all(token in index_html for token in (fallback_js, recovery_js, runtime_js, workspace_js, interaction_js, app_js, data_truth_js, production_truth_js))
+    ordered_scripts = all(token in index_html for token in (fallback_js, recovery_js, runtime_js, workspace_js, interaction_js, app_js, browser_reliability_js, data_truth_js, production_truth_js))
     if ordered_scripts:
         ordered_scripts = (
             index_html.index(fallback_js)
@@ -148,6 +152,7 @@ def build_runtime_health(settings: Settings) -> dict[str, Any]:
             < index_html.index(app_js)
             < index_html.index(workspace_js)
             < index_html.index(interaction_js)
+            < index_html.index(browser_reliability_js)
             < index_html.index(data_truth_js)
             < index_html.index(production_truth_js)
         )

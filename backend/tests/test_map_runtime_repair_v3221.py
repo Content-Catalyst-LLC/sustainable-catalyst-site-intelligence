@@ -12,7 +12,7 @@ client = TestClient(app)
 def test_first_party_map_runtime_loads_before_application_without_blocking_cdn():
     html = (ROOT / "backend/public_app/index.html").read_text(encoding="utf-8")
     runtime = html.index("/app/assets/vector-cartography-v3230.js")
-    application = html.index('src="/app/assets/app.js?v=3.23.4" defer')
+    application = html.index('src="/app/assets/app.js?v=3.23.5" defer')
     assert runtime < application
     assert "unpkg.com/leaflet" not in html
     assert "cdn.jsdelivr.net/npm/leaflet" not in html
