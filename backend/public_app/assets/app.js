@@ -25,7 +25,7 @@
     }
     throw last;
   }
-  const APP_VERSION="3.23.7";
+  const APP_VERSION="3.23.7.1";
   const FIXED_WORDPRESS_EMBED=window.SCSI_FIXED_WORDPRESS_EMBED===true;
   let heightFrame=0;
   function documentHeight(){
@@ -473,19 +473,43 @@
   function closeEventStudio(){qs("#eventStudio").hidden=true;stopEventTimeline();closeEventDrawer()}
 
 
-  const globalCountryState={catalog:[],regions:[],overviewMap:null,overviewBase:null,overviewMarker:null,events:[],trends:[],activeCode:"KEN",selectionController:null,searchController:null,requestSequence:0,searchTimer:null};
+  const globalCountryState={catalog:[],regions:[],catalogPromise:null,overviewMap:null,overviewBase:null,overviewMarker:null,events:[],trends:[],activeCode:"KEN",selectionController:null,searchController:null,requestSequence:0,searchTimer:null};
 
   async function loadCountryCatalog(){
-    if(globalCountryState.catalog.length)return;
-    const [catalog,regions]=await Promise.all([
-      apiWithRetry("/public/countries",3),
-      apiWithRetry("/public/countries/regions",3)
-    ]);
-    globalCountryState.catalog=catalog.countries||[];
-    globalCountryState.regions=regions.regions||[];
-    globalCountryState.catalog.forEach(item=>{names[item.code]=item.name});
-    qs("#countrySelect").innerHTML=globalCountryState.catalog.map(item=>`<option value="${escapeHtml(item.code)}">${escapeHtml(item.name)}</option>`).join("");
-    qs("#countryRegionFilter").innerHTML='<option value="">All regions</option>'+globalCountryState.regions.map(item=>`<option value="${escapeHtml(item.name)}">${escapeHtml(item.name)} (${item.country_count})</option>`).join("");
+    if(globalCountryState.catalog.length)return globalCountryState.catalog;
+    if(globalCountryState.catalogPromise)return globalCountryState.catalogPromise;
+    globalCountryState.catalogPromise=(async()=>{
+      const bundled=await apiWithRetry("/public/data-truth/countries",2);
+      let primary={countries:[]};
+      try{primary=await apiWithRetry("/public/countries",3)}catch(primaryError){console.warn("[Site Intelligence] Live country metadata is unavailable; the bundled global selector remains active.",primaryError)}
+      const merged=new Map();
+      (bundled.countries||[]).forEach(item=>{if(item?.code&&item?.name)merged.set(item.code,{...item})});
+      (primary.countries||[]).forEach(item=>{if(item?.code&&item?.name)merged.set(item.code,{...(merged.get(item.code)||{}),...item})});
+      globalCountryState.catalog=[...merged.values()].sort((a,b)=>String(a.name).localeCompare(String(b.name)));
+      if(!globalCountryState.catalog.length)throw new Error("The global country catalog returned no selectable countries.");
+      globalCountryState.catalog.forEach(item=>{names[item.code]=item.name});
+      const select=qs("#countrySelect"),requested=String(select?.value||state.country||"KEN").trim().toUpperCase();
+      if(select){select.innerHTML=globalCountryState.catalog.map(item=>`<option value="${escapeHtml(item.code)}">${escapeHtml(item.name)}</option>`).join("");select.value=globalCountryState.catalog.some(item=>item.code===requested)?requested:(globalCountryState.catalog.some(item=>item.code==="KEN")?"KEN":globalCountryState.catalog[0].code)}
+      try{const regions=await apiWithRetry("/public/countries/regions",2);globalCountryState.regions=regions.regions||[]}catch(error){globalCountryState.regions=[];console.warn("[Site Intelligence] Country region facets are temporarily unavailable.",error)}
+      const regionFilter=qs("#countryRegionFilter");if(regionFilter)regionFilter.innerHTML='<option value="">All regions</option>'+globalCountryState.regions.map(item=>`<option value="${escapeHtml(item.name)}">${escapeHtml(item.name)} (${item.country_count})</option>`).join("");
+      return globalCountryState.catalog;
+    })();
+    try{return await globalCountryState.catalogPromise}finally{globalCountryState.catalogPromise=null}
+  }
+  async function hydrateCountrySelector(requestedCode="KEN"){
+    const select=qs("#countrySelect"),requested=String(requestedCode||"KEN").trim().toUpperCase();
+    try{
+      const catalog=await loadCountryCatalog();
+      const normalized=catalog.some(item=>item.code===requested)?requested:(catalog.some(item=>item.code==="KEN")?"KEN":catalog[0].code);
+      if(select)select.value=normalized;state.country=normalized;globalCountryState.activeCode=normalized;
+      window.dispatchEvent(new CustomEvent("scsi:country-catalog-ready",{detail:{version:APP_VERSION,count:catalog.length,country:normalized}}));
+      return normalized;
+    }catch(error){
+      const retained=String(select?.value||state.country||"KEN").trim().toUpperCase()||"KEN";state.country=retained;
+      console.warn("[Site Intelligence] Global country selector retained its safe fallback while the catalog recovers.",error);
+      window.dispatchEvent(new CustomEvent("scsi:country-catalog-ready",{detail:{version:APP_VERSION,count:Number(select?.options?.length||0),country:retained,state:"degraded"}}));
+      return retained;
+    }
   }
   function initCountryOverviewMap(){
     if(globalCountryState.overviewMap)return;
@@ -1781,18 +1805,20 @@
     qs("#savedCreate").addEventListener("click",openSaveViewDialog);qs("#savedImport").addEventListener("click",()=>qs("#savedImportFile").click());qs("#savedImportFile").addEventListener("change",event=>{const file=event.target.files?.[0];importSavedViewFile(file);event.target.value=""});qs("#savedExportAll").addEventListener("click",()=>downloadSavedJson({schema:"sc-saved-view-collection/1.0",application_version:APP_VERSION,exported_at:savedIso(),views:savedViewsState.items},"site-intelligence-saved-views.json"));qs("#savedClearAll").addEventListener("click",()=>{if(!savedViewsState.items.length)return;if(confirm("Delete all locally saved Site Intelligence views from this browser?")){savedViewsState.items=[];try{persistSavedViews();renderSavedViews();toast("Local saved views cleared")}catch{}}});qs("#saveViewCancel").addEventListener("click",()=>qs("#saveViewDialog").close());qs("#saveViewForm").addEventListener("submit",event=>{event.preventDefault();if(saveCurrentManifest(qs("#saveViewName").value))qs("#saveViewDialog").close()});
     qs("#closeEvidenceDrawer").addEventListener("click",closeEvidenceDrawer);qs("#evidenceBackdrop").addEventListener("click",closeEvidenceDrawer);document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeEvidenceDrawer();setMobileNavigation(false,{restoreFocus:true})}});
     window.matchMedia("(max-width: 760px)").addEventListener?.("change",event=>{if(!event.matches)setMobileNavigation(false)});
-    const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const requestedView=params.get("view")||"overview";const initialView=[...Object.keys(savedViewDefinitions),"saved","launch","observatory"].includes(requestedView)?requestedView:"overview";const invalidRequestedView=requestedView!==initialView;qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";if(params.get("imageryDate"))qs("#dateSelect").value=params.get("imageryDate");
+    const params=new URLSearchParams(location.search);const initialCountry=String(params.get("country")||"KEN").trim().toUpperCase();const requestedView=params.get("view")||"overview";const initialView=[...Object.keys(savedViewDefinitions),"saved","launch","observatory"].includes(requestedView)?requestedView:"overview";const invalidRequestedView=requestedView!==initialView;qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";if(params.get("imageryDate"))qs("#dateSelect").value=params.get("imageryDate");
     setLaunch("Opening the application shell.",82);
     const routeTask=Promise.resolve().then(()=>setRoute(initialView));
     applySharedControlState(initialView,params);
     finishLaunch({message:"Site Intelligence is ready. Public data services are connecting."});
     if(invalidRequestedView)toast("The requested view is unavailable; Overview was opened instead.");
     const layerTask=Promise.resolve().then(()=>loadLayers()).then(()=>setImagery(params.get("imageryLayer")||"true-color"));
-    const hydration=Promise.allSettled([layerTask,loadEvents(),loadCountry(qs("#countrySelect").value),routeTask]);
+    const countryCatalogTask=hydrateCountrySelector(initialCountry);
+    const countryTask=countryCatalogTask.then(code=>loadCountry(code));
+    const hydration=Promise.allSettled([layerTask,loadEvents(),countryCatalogTask,countryTask,routeTask]);
     hydration.then(results=>{const failed=results.filter(result=>result.status==="rejected");const status=qs("#statusText");if(failed.length){console.warn("[Site Intelligence] Startup hydration completed with limited services.",failed.map(result=>result.reason));if(status)status.textContent="Partial public data";toast("Some optional public data is temporarily unavailable.")}else if(status)status.textContent="Live public data";window.dispatchEvent(new CustomEvent("scsi:startup-hydrated",{detail:{version:APP_VERSION,state:failed.length?"limited":"ready",failed:failed.length}}));reportHeight()});
   }
   window.SCSIOverviewMapV3232={version:APP_VERSION,getMap:()=>state.map,getEvents:()=>state.events?.features||[],getFilteredEvents:()=>state.filteredEvents.slice(),getFilters:()=>({...state.overviewFilters}),setFilters:setOverviewFilters,selectEvent:selectOverviewEvent,fitResults:fitOverviewResults,setImageryOpacity:value=>state.imagery?.setOpacity?.(Math.max(0,Math.min(1,Number(value)))),setBaseStyle:style=>{const map=qs("#map");if(map)map.dataset.mapStyle=String(style||"institutional-dark");syncOverviewMapUrl()},syncUrl:syncOverviewMapUrl,render:renderOverviewFeatures};
-  window.SCSIRouterV3228={version:"3.23.7",navigate:navigateToRoute,current:()=>state.route};
+  window.SCSIRouterV3228={version:"3.23.7.1",navigate:navigateToRoute,current:()=>state.route};
   if(!FIXED_WORDPRESS_EMBED){
     window.addEventListener("load",reportHeight,{once:true});
     window.addEventListener("resize",reportHeight,{passive:true});
@@ -1818,5 +1844,5 @@ visualStyle.textContent=`
 document.head.appendChild(visualStyle);
 
 
-/* v3.23.7 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v3.23.7 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v3.23.7.1 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v3.23.7.1 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

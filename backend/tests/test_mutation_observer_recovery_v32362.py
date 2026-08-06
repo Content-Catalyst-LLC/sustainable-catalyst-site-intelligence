@@ -10,7 +10,7 @@ def test_public_mutation_observer_recovery_contract():
     assert response.status_code==200
     payload=response.json()
     assert payload["ok"] is True
-    assert payload["version"]=="3.23.7"
+    assert payload["version"]=="3.23.7.1"
     assert payload["mutation_observer"]["self_observation_prevented"] is True
     assert payload["complete_shell_gate"]["required"] is True
     assert payload["complete_shell_gate"]["skip_allowed"] is False
@@ -23,7 +23,7 @@ def test_browser_reliability_observer_is_idempotent_debounced_and_bounded():
 def test_runtime_health_and_version_include_recovery_contract():
     health=CLIENT.get("/public/runtime-health").json()
     assert health["ok"] is True
-    assert health["version"]=="3.23.7"
+    assert health["version"]=="3.23.7.1"
     assert "/public/mutation-observer-recovery" in {row["path"] for row in health["endpoint_contracts"]}
     check={row["id"]:row for row in health["checks"]}["mutation-observer-recovery"]
     assert check["status"]=="pass"
@@ -34,8 +34,8 @@ def test_complete_shell_browser_gate_is_mandatory_in_release_verifier():
     gate=read("scripts/browser_complete_shell_gate_v32362.py")
     assert "ERROR: Chromium or Chrome is required" in gate
     assert "ERROR: Playwright is required" in gate
-    assert "SCSIDataTruthV3237" in gate and "SCSIProductionTruthV3231" in gate
+    assert "SCSIDataTruthV32371" in gate and "SCSIProductionTruthV3231" in gate
 def test_wordpress_release_is_current_and_host_isolated():
     php=read("wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php")
-    assert "Version: 3.23.7" in php
+    assert "Version: 3.23.7.1" in php
     assert "wp_enqueue_script('scsi-browser-reliability'" not in php

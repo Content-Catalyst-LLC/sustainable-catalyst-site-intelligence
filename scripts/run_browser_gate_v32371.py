@@ -24,7 +24,7 @@ def terminate_group(process: subprocess.Popen[object]) -> None:
 
 def main() -> int:
     if len(sys.argv) != 2:
-        print("Usage: run_browser_gate_v3237.py <gate-script>", file=sys.stderr)
+        print("Usage: run_browser_gate_v32371.py <gate-script>", file=sys.stderr)
         return 2
     target = (ROOT / "scripts" / sys.argv[1]).resolve()
     if not target.is_file() or target.parent != (ROOT / "scripts").resolve():

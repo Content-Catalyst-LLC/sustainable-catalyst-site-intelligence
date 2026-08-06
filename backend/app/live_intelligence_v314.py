@@ -1,4 +1,4 @@
-"""Selectable, balanced public-interest ticker feed for Site Intelligence v3.23.7.
+"""Selectable, balanced public-interest ticker feed for Site Intelligence v3.23.7.1.
 
 The feed combines verified public events, weather/environment observations,
 open-research metadata, and periodic development indicators. Administrators

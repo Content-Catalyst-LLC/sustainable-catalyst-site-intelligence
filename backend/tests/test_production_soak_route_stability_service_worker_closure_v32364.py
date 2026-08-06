@@ -11,7 +11,7 @@ def read(path: str) -> str:
 def test_public_startup_stability_contract():
     payload = CLIENT.get("/public/startup-stability").json()
     assert payload["ok"] is True
-    assert payload["version"] == "3.23.7"
+    assert payload["version"] == "3.23.7.1"
     assert payload["startup"]["network_data_blocks_shell"] is False
     assert payload["startup"]["initial_data_strategy"] == "background-all-settled"
     assert payload["service_worker"]["automatic_controllerchange_reload"] is False
@@ -21,9 +21,9 @@ def test_startup_is_not_blocked_by_network_hydration():
     js = read("backend/public_app/assets/app.js")
     assert "launchFinished" in js
     assert 'finishLaunch({message:"Site Intelligence is ready. Public data services are connecting."})' in js
-    assert "Promise.allSettled([layerTask,loadEvents(),loadCountry" in js
+    assert "Promise.allSettled([layerTask,loadEvents(),countryCatalogTask,countryTask,routeTask])" in js
     launch = js.index('finishLaunch({message:"Site Intelligence is ready. Public data services are connecting."})')
-    hydrate = js.index("Promise.allSettled([layerTask,loadEvents(),loadCountry")
+    hydrate = js.index("Promise.allSettled([layerTask,loadEvents(),countryCatalogTask,countryTask,routeTask])")
     assert launch < hydrate
     assert "const effectiveAttempts=window.SCSIServiceRecovery?1" in js
 

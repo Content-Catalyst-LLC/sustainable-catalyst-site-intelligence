@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Mandatory complete production-shell browser gate for Site Intelligence v3.23.7.
+"""Mandatory complete production-shell browser gate for Site Intelligence v3.23.7.1.
 
 The harness uses the exact shipped index HTML and every first-party script in document
 order. It runs in-memory because some managed validation environments administratively
@@ -19,7 +19,7 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
 APP=ROOT/'backend/public_app'
-VERSION='3.23.7'
+VERSION='3.23.7.1'
 
 def find_browser():
     candidates=[
@@ -43,7 +43,7 @@ def endpoint_payloads():
     from fastapi.testclient import TestClient
     from app.main import app
     client=TestClient(app)
-    paths=['/public/browser-reliability','/public/performance-offline','/public/bootstrap-recovery','/public/mutation-observer-recovery','/public/startup-stability','/public/data-truth','/public/workspaces/production-truth','/public/maps/interaction','/public/workflows/analytical','/public/runtime-health']
+    paths=['/public/browser-reliability','/public/performance-offline','/public/bootstrap-recovery','/public/mutation-observer-recovery','/public/startup-stability','/public/data-truth','/public/data-truth/countries','/public/data-truth/country/KEN','/public/data-truth/country/BRA','/public/countries','/public/countries/regions','/public/workspaces/production-truth','/public/maps/interaction','/public/workflows/analytical','/public/runtime-health']
     return {path:client.get(path).json() for path in paths}
 
 def worker_setup(mode):
@@ -75,7 +75,7 @@ def document(mode='disabled'):
     return html,len(script_paths)
 
 def snapshot(page):
-    return page.evaluate("""()=>{const app=document.querySelector('#app'),map=document.querySelector('#map'),r=window.SCSIBrowserReliabilityV3235?.getState?.()||{};return{release:app?.dataset.scsiRelease||'',startup:app?.dataset.startupState||'',ready:Boolean(app?.classList.contains('app-ready')),launchHidden:Boolean(document.querySelector('#launchScreen')?.classList.contains('hidden')),mapWidth:Math.round(map?.getBoundingClientRect().width||0),mapHeight:Math.round(map?.getBoundingClientRect().height||0),reliabilityReady:Boolean(window.SCSIBrowserReliabilityV3235),dataTruthReady:Boolean(window.SCSIDataTruthV3237),productionTruthReady:Boolean(window.SCSIProductionTruthV3231),bootstrapReady:Boolean(window.SCSIBootstrapV32361),summaryPasses:Number(r.summaryPasses||0),summaryWrites:Number(r.summaryWrites||0),summarySuppressed:Number(r.summarySuppressed||0),summaryCount:document.querySelectorAll('.scsi-map-summary').length,executedScripts:(window.__executedScripts||[]).length,expectedScripts:Number(window.__expectedScriptCount||0)}}""")
+    return page.evaluate("""()=>{const app=document.querySelector('#app'),map=document.querySelector('#map'),r=window.SCSIBrowserReliabilityV3235?.getState?.()||{};return{release:app?.dataset.scsiRelease||'',startup:app?.dataset.startupState||'',ready:Boolean(app?.classList.contains('app-ready')),launchHidden:Boolean(document.querySelector('#launchScreen')?.classList.contains('hidden')),mapWidth:Math.round(map?.getBoundingClientRect().width||0),mapHeight:Math.round(map?.getBoundingClientRect().height||0),reliabilityReady:Boolean(window.SCSIBrowserReliabilityV3235),dataTruthReady:Boolean(window.SCSIDataTruthV32371),productionTruthReady:Boolean(window.SCSIProductionTruthV3231),bootstrapReady:Boolean(window.SCSIBootstrapV32361),summaryPasses:Number(r.summaryPasses||0),summaryWrites:Number(r.summaryWrites||0),summarySuppressed:Number(r.summarySuppressed||0),summaryCount:document.querySelectorAll('.scsi-map-summary').length,countryOptionCount:document.querySelectorAll('#countrySelect option').length,countryValue:document.querySelector('#countrySelect')?.value||'',executedScripts:(window.__executedScripts||[]).length,expectedScripts:Number(window.__expectedScriptCount||0)}}""")
 
 def assert_ready(label,result):
     assert result['release']==VERSION,(label,result)
@@ -84,6 +84,8 @@ def assert_ready(label,result):
     assert result['mapWidth']>300 and result['mapHeight']>300,(label,result)
     assert result['reliabilityReady'] and result['dataTruthReady'] and result['productionTruthReady'] and result['bootstrapReady'],(label,result)
     assert result['summaryCount']>=1,(label,result)
+    assert result['countryOptionCount']>=170,(label,result)
+    assert result['countryValue']=='KEN',(label,result)
     assert result['executedScripts']==result['expectedScripts'] and result['expectedScripts']>=30,(label,result)
 
 def main():
@@ -101,7 +103,7 @@ def main():
             page=browser.new_page(viewport={'width':1280,'height':900});page.on('pageerror',lambda e,m=mode:errors.append(f'{m}:{e}'));page.on('console',lambda msg,m=mode:console.append(f'{m}:{msg.text}') if msg.type=='error' else None)
             page.set_content(html,wait_until='domcontentloaded',timeout=45000)
             page.wait_for_function("document.querySelector('#app')?.classList.contains('app-ready')",timeout=20000)
-            page.wait_for_function("window.SCSIDataTruthV3237 && window.SCSIProductionTruthV3231",timeout=12000)
+            page.wait_for_function("window.SCSIDataTruthV32371 && window.SCSIProductionTruthV3231",timeout=12000)
             page.wait_for_timeout(500)
             before=snapshot(page)
             page.evaluate("""()=>{const map=document.querySelector('#map');for(let i=0;i<80;i++){const n=document.createElement('i');n.className='observer-gate-probe';map.append(n);n.remove()}}""")
@@ -113,12 +115,12 @@ def main():
             results[mode]={'before':before,'after':after,'scriptCount':script_count};page.close()
         # iframe document, exact same complete shell.
         outer=browser.new_page(viewport={'width':1280,'height':920});outer.set_content('<iframe id="gate" style="width:1180px;height:820px;border:0"></iframe>');frame=outer.query_selector('#gate').content_frame();html,script_count=document('disabled');frame.set_content(html,wait_until='domcontentloaded',timeout=45000)
-        frame.wait_for_function("document.querySelector('#app')?.classList.contains('app-ready')",timeout=20000);frame.wait_for_function("window.SCSIDataTruthV3237 && window.SCSIProductionTruthV3231",timeout=12000);frame.wait_for_timeout(500);results['iframe']=snapshot(frame);assert_ready('iframe',results['iframe']);outer.close();browser.close()
+        frame.wait_for_function("document.querySelector('#app')?.classList.contains('app-ready')",timeout=20000);frame.wait_for_function("window.SCSIDataTruthV32371 && window.SCSIProductionTruthV3231",timeout=12000);frame.wait_for_timeout(500);results['iframe']=snapshot(frame);assert_ready('iframe',results['iframe']);outer.close();browser.close()
     assert not errors,errors
     actionable=[item for item in console if not any(token in item.lower() for token in ('failed to load resource','net::err_','favicon'))]
     assert not actionable,actionable
     print(json.dumps({'browser':browser_path,'results':results,'filteredConsoleErrors':console},indent=2))
-    print('PASS: complete v3.23.7 production shell is responsive, observer-bounded, and fully initialized in direct and iframe modes.')
+    print('PASS: complete v3.23.7.1 production shell is responsive, observer-bounded, and fully initialized in direct and iframe modes.')
     return 0
 if __name__ == "__main__":
     try:

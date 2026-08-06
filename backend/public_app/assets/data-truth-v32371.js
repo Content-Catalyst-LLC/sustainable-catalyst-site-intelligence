@@ -1,6 +1,6 @@
 (function(){
   "use strict";
-  const VERSION="3.23.7";
+  const VERSION="3.23.7.1";
   const root=document.querySelector('#app[data-scsi-release]');
   if(!root)return;
   let panel=null,toggle=null,activeView='country',previousFocus=null,matrixPayload=null;
@@ -13,11 +13,12 @@
     toggle=document.createElement('button');toggle.type='button';toggle.id='dataTruthToggle';toggle.className='ghost-button scsi-data-truth-toggle';toggle.setAttribute('aria-controls','dataTruthPanel');toggle.setAttribute('aria-expanded','false');toggle.innerHTML='<span>Data truth</span><small id="dataTruthBadge">global</small>';
     const controls=root.querySelector('.topbar-controls')||root.querySelector('.map-actions')||root;controls.insertBefore(toggle,controls.firstChild);
     panel=document.createElement('aside');panel.id='dataTruthPanel';panel.className='scsi-data-truth-panel';panel.hidden=true;panel.setAttribute('aria-label','Global country data truth and coverage matrix');
-    panel.innerHTML=`<div class="scsi-data-truth-head"><div><p class="eyebrow">GLOBAL COUNTRY DATA TRUTH · v3.23.7</p><h2>Eligibility, observed coverage, and missing data</h2></div><button id="dataTruthClose" type="button" class="icon-button" aria-label="Close data truth panel">×</button></div><div class="scsi-data-truth-tabs" role="tablist"><button type="button" data-truth-view="country" aria-selected="true">Selected country</button><button type="button" data-truth-view="matrix" aria-selected="false">Coverage matrix</button><button type="button" data-truth-view="sources" aria-selected="false">Source directory</button></div><div id="dataTruthBody" aria-live="polite"><p>Checking country and source contracts…</p></div>`;
+    panel.innerHTML=`<div class="scsi-data-truth-head"><div><p class="eyebrow">GLOBAL COUNTRY DATA TRUTH · v3.23.7.1</p><h2>Eligibility, observed coverage, and missing data</h2></div><button id="dataTruthClose" type="button" class="icon-button" aria-label="Close data truth panel">×</button></div><div class="scsi-data-truth-tabs" role="tablist"><button type="button" data-truth-view="country" aria-selected="true">Selected country</button><button type="button" data-truth-view="matrix" aria-selected="false">Coverage matrix</button><button type="button" data-truth-view="sources" aria-selected="false">Source directory</button></div><div id="dataTruthBody" aria-live="polite"><p>Checking country and source contracts…</p></div>`;
     root.appendChild(panel);toggle.addEventListener('click',()=>panel.hidden?open():close());panel.querySelector('#dataTruthClose').addEventListener('click',close);
     panel.querySelectorAll('[data-truth-view]').forEach(button=>button.addEventListener('click',()=>switchView(button.dataset.truthView)));
     document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!panel.hidden)close()});
     document.querySelector('#countrySelect')?.addEventListener('change',()=>{document.querySelector('#dataTruthBadge').textContent=selectedCountry();if(!panel.hidden&&activeView==='country')loadCountry()});
+    window.addEventListener('scsi:country-catalog-ready',event=>{const code=event.detail?.country||selectedCountry();const badge=document.querySelector('#dataTruthBadge');if(badge)badge.textContent=code;if(!panel.hidden&&activeView==='country')loadCountry()});
   }
   function summaryCards(summary){const keys=['available','partial','historical_only','no_recent_records','unknown','unavailable','not_applicable'];return `<div class="scsi-data-truth-summary">${keys.map(key=>`<article><span>${esc(label(key))}</span><strong>${Number(summary?.[key]||0)}</strong></article>`).join('')}</div>`}
   function sourceCard(source){return `<article class="scsi-data-source" data-truth-state="${esc(source.coverage_state)}"><div class="scsi-data-source-title"><div><strong>${esc(source.label)}</strong><small>${esc(source.publisher||source.domain||'')}</small></div>${stateChip(source.coverage_state)}</div><p>${esc(source.reason)}</p><dl><div><dt>Eligibility</dt><dd>${esc(label(source.eligibility))}</dd></div><div><dt>Evidence</dt><dd>${esc(label(source.evidence_level))}</dd></div><div><dt>Resolution</dt><dd>${esc(label(source.country_resolution))}</dd></div><div><dt>Operation</dt><dd>${esc(label(source.operational_state))}</dd></div></dl></article>`}
@@ -37,5 +38,5 @@
   async function open(){create();previousFocus=document.activeElement;panel.hidden=false;toggle.setAttribute('aria-expanded','true');panel.querySelector('#dataTruthClose').focus();await switchView(activeView)}
   function close(){if(!panel)return;panel.hidden=true;toggle.setAttribute('aria-expanded','false');previousFocus?.focus?.()}
   create();document.querySelector('#dataTruthBadge').textContent=selectedCountry();
-  window.SCSIDataTruthV3237={version:VERSION,open,close,loadCountry,loadMatrix,loadSources,getMatrix:()=>matrixPayload};
+  window.SCSIDataTruthV32371={version:VERSION,open,close,loadCountry,loadMatrix,loadSources,getMatrix:()=>matrixPayload};
 })();

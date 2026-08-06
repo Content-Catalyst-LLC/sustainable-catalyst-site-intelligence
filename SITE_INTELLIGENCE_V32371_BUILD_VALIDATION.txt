@@ -1,0 +1,31 @@
+Site Intelligence v3.23.7.1 — Country Selector Hydration and Global Selection Repair
+Build validation status: PASS
+
+Defect reproduced
+- v3.23.7 could render the Connected Platform/Overview shell with only the static Kenya option in the main country selector.
+- The backend Global Data Truth catalog was present; the selector was not hydrated on every startup route.
+
+Repair verified
+- Main country selector hydrates during every startup route.
+- Bundled Global Data Truth country catalog is the deterministic baseline.
+- Primary country metadata enriches matching ISO records when available.
+- Region-facet failure does not block selector hydration.
+- Valid URL country selection is retained.
+- Data Truth receives the country-catalog-ready event.
+
+Automated validation
+- 989 Python tests passed across 10 bounded, file-backed process groups.
+- Selector browser gate: 173 options; Kenya default; Brazil present and selectable.
+- Data Truth changed to Brazil (BRA) with badge BRA and no page reload.
+- Global Country Data Truth browser gate passed.
+- Complete-shell direct and iframe gates passed with all 38 scripts initialized.
+- Production-soak route gate passed with zero route failures and zero automatic service-worker reloads.
+- Long-page WordPress embed gate passed at a fixed 1100px application viewport.
+- 127 JSON/GeoJSON files parsed.
+- 61 JavaScript files passed syntax validation.
+- WordPress PHP syntax passed.
+- 1171 immutable repository entries verified.
+
+Production deployment
+- Not performed in the build environment.
+- The macOS installer performs two validations, GitHub promotion, Render live-gate verification, and WordPress handoff.
