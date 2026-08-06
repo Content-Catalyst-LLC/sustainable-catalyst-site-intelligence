@@ -1,4 +1,4 @@
-# Site Intelligence v3.23.6 Analytical Workspace Audit
+# Site Intelligence v3.23.6.1 Analytical Workspace Audit
 
 - Five required workflows declared and operational.
 - Five runtime states required for every workflow.

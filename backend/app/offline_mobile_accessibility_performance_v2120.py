@@ -250,6 +250,7 @@ def build_diagnostics(settings: Any = None) -> dict[str, Any]:
         "workspace_js": root / "backend/public_app/assets/experience-v2120.js",
         "workspace_css": root / "backend/public_app/assets/experience-v2120.css",
         "application_js": root / "backend/public_app/assets/app.js",
+        "bootstrap_js": root / "backend/public_app/assets/bootstrap-v32361.js",
         "wordpress_plugin": root / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php",
         "wordpress_js": root / "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js",
     }
@@ -279,10 +280,12 @@ def build_diagnostics(settings: Any = None) -> dict[str, Any]:
         )
     if files["application_js"].exists():
         app_js = files["application_js"].read_text(encoding="utf-8")
+        bootstrap_js = files["bootstrap_js"].read_text(encoding="utf-8") if files["bootstrap_js"].exists() else ""
         checks.update(
             {
-                "frontend_version_aligned": f'APP_VERSION="{VERSION}"' in app_js,
-                "service_worker_update_cache_disabled": 'updateViaCache:"none"' in app_js,
+                "frontend_version_aligned": f'APP_VERSION="{VERSION}"' in app_js and f"const VERSION='{VERSION}'" in bootstrap_js,
+                "service_worker_update_cache_disabled": "updateViaCache:'none'" in bootstrap_js,
+                "single_service_worker_owner": "serviceWorker.register" in bootstrap_js and "serviceWorker.register" not in app_js,
                 "embed_height_release_message": "scsi-height" in app_js and "version:APP_VERSION" in app_js,
             }
         )

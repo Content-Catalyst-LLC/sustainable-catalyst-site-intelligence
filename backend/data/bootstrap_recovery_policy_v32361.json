@@ -1,0 +1,28 @@
+{
+  "version": "3.23.6.1",
+  "release_id": "site-intelligence-v3.23.6.1",
+  "contract": "single-owner-bootstrap-and-loading-recovery",
+  "service_worker": {
+    "registration_owner": "bootstrap-v32361.js",
+    "registration_owner_count": 1,
+    "application_render_blocked_by_worker": false,
+    "controller_change_listener_count": 1,
+    "single_reload_guard": true
+  },
+  "startup": {
+    "deadline_ms": 9000,
+    "fail_open": true,
+    "degraded_workspace_available": true,
+    "optional_imagery_blocks_launch": false,
+    "optional_public_feeds_block_launch": false
+  },
+  "validated_conditions": [
+    "no-existing-worker",
+    "older-worker",
+    "current-worker",
+    "service-workers-disabled",
+    "worker-registration-failure",
+    "application-in-iframe",
+    "startup-exception"
+  ]
+}

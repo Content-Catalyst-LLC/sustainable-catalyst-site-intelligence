@@ -1,6 +1,6 @@
 (function(window,document){
   "use strict";
-  const VERSION="3.23.6";
+  const VERSION="3.23.6.1";
   const OVERVIEW_IDS=["map"];
   let overviewLayout=null;
   let evidenceRail=null;

@@ -11,13 +11,13 @@
   async function get(path){const response=await fetch(API+path,{headers:{Accept:"application/json"},cache:"no-store"});if(!response.ok)throw new Error(String(response.status));return response.json()}
   function apply(){document.documentElement.dataset.lowBandwidth=state.lowBandwidth?"1":"0";if(q("#experienceLowBandwidth"))q("#experienceLowBandwidth").checked=state.lowBandwidth;if(q("#experienceOfflineEnabled"))q("#experienceOfflineEnabled").checked=state.offlineEnabled;write()}
 
-  async function register(){
-    if(!("serviceWorker" in navigator)||!state.offlineEnabled)return null;
-    const registration=await navigator.serviceWorker.register(`/app/service-worker.js?v=${RELEASE}`,{scope:"/app/",updateViaCache:"none"});
-    registration.update().catch(()=>{});
-    if(registration.waiting)registration.waiting.postMessage({type:"SC_SI_ACTIVATE_UPDATE"});
-    return registration;
+  async function ensureOfflineShell(){
+    if(!state.offlineEnabled)return null;
+    const owner=window.SCSIBootstrapV32361;
+    if(!owner?.ensureWorker)throw new Error("Bootstrap service-worker owner is unavailable");
+    return owner.ensureWorker();
   }
+
 
   function messageWorker(worker,message,timeout=2500){
     return new Promise((resolve,reject)=>{
@@ -69,7 +69,7 @@
       q("#experiencePwaState").textContent=cache.enabled?"Available":"Disabled";
       q("#experienceSummary").textContent="Install the release-aligned application shell, inspect bounded cache behavior, recover browser-local offline data, and verify responsive WordPress embed delivery.";
       renderLists(accessibility,performance,cache,reliability);
-      if(state.offlineEnabled)await register();
+      if(state.offlineEnabled)await ensureOfflineShell();
     }catch(error){
       q("#experienceSummary").textContent="The static experience controls remain available, but diagnostics could not be refreshed.";
     }finally{panel.setAttribute("aria-busy","false")}
@@ -78,7 +78,7 @@
   function close(){const panel=q("#offlineExperienceStudio");if(panel)panel.hidden=true}
   function init(){
     q("#experienceLowBandwidth")?.addEventListener("change",event=>{state.lowBandwidth=event.target.checked;apply()});
-    q("#experienceOfflineEnabled")?.addEventListener("change",async event=>{state.offlineEnabled=event.target.checked;apply();if(state.offlineEnabled)await register().catch(()=>setStatus("Offline shell registration failed",false))});
+    q("#experienceOfflineEnabled")?.addEventListener("change",async event=>{state.offlineEnabled=event.target.checked;apply();if(state.offlineEnabled)await ensureOfflineShell().catch(()=>setStatus("Offline shell registration failed",false))});
     q("#experienceClearCache")?.addEventListener("click",clearCaches);
     q("#experienceInstall")?.addEventListener("click",()=>{q("#experienceInstallHelp").hidden=false});
     addEventListener("online",()=>setStatus("Online",true));

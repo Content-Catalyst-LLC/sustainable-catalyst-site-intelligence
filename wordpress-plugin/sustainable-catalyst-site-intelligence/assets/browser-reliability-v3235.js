@@ -1,5 +1,5 @@
 (()=>{"use strict";
-  const VERSION="3.23.6",ENDPOINT="/public/browser-reliability";
+  const VERSION="3.23.6.1",ENDPOINT="/public/browser-reliability";
   const qs=(s,r=document)=>r.querySelector(s),qsa=(s,r=document)=>[...r.querySelectorAll(s)];
   const root=()=>qs('#app[data-scsi-release]');
   const insideApp=()=>Boolean(root()&&root().dataset.scsiRelease===VERSION);

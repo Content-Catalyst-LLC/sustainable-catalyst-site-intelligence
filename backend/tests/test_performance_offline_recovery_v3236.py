@@ -17,8 +17,8 @@ def test_performance_offline_contract_is_public_release_aligned_and_bounded():
     assert response.status_code == 200
     payload = response.json()
     assert payload["ok"] is True
-    assert payload["version"] == "3.23.6"
-    assert payload["release_id"] == "site-intelligence-v3.23.6"
+    assert payload["version"] == "3.23.6.1"
+    assert payload["release_id"] == "site-intelligence-v3.23.6.1"
     assert payload["contract"] == "performance-and-offline-recovery"
     assert payload["performance_budgets"]["first_useful_map_ms"] == 3500
     assert payload["performance_budgets"]["api_network_timeout_ms"] == 5500
@@ -29,8 +29,8 @@ def test_performance_offline_contract_is_public_release_aligned_and_bounded():
 
 def test_app_shell_places_performance_runtime_before_application_fetches():
     html = read("backend/public_app/index.html")
-    assert '/app/assets/performance-offline-v3236.css?v=3.23.6' in html
-    assert '/app/assets/performance-offline-v3236.js?v=3.23.6' in html
+    assert '/app/assets/performance-offline-v3236.css?v=3.23.6.1' in html
+    assert '/app/assets/performance-offline-v3236.js?v=3.23.6.1' in html
     assert html.index("runtime-v3230.js") < html.index("performance-offline-v3236.js") < html.index("app.js")
     js = read("backend/public_app/assets/performance-offline-v3236.js")
     for token in (
@@ -38,8 +38,7 @@ def test_app_shell_places_performance_runtime_before_application_fetches():
         "scsi:route-interactive",
         "route-changed",
         "duplicate",
-        "controllerchange",
-        "single",
+        "scsi:bootstrap-state",
         "insideApp",
     ):
         assert token.lower() in js.lower()
@@ -47,12 +46,13 @@ def test_app_shell_places_performance_runtime_before_application_fetches():
 
 def test_service_worker_uses_distinct_release_shell_immutable_and_data_strategies():
     worker = read("backend/public_app/service-worker.js")
-    assert 'const RELEASE="3.23.6"' in worker
+    assert 'const RELEASE="3.23.6.1"' in worker
     assert 'const IMMUTABLE=`${VERSION}-immutable`' in worker
     assert "cacheFirstImmutable" in worker
     assert "networkFirstData" in worker
     assert "NETWORK_TIMEOUT_MS=5500" in worker
     assert 'headers.set("X-SCSI-Data-State","offline-cached")' in worker
+    assert "bootstrap-v32361.js" in worker
     assert "performance-offline-v3236.js" in worker
     assert "!key.startsWith(VERSION)" in worker
 
@@ -69,7 +69,7 @@ def test_runtime_health_includes_performance_assets_and_endpoint():
 
 def test_wordpress_packages_assets_without_executing_app_runtime_in_host_page():
     php = read("wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php")
-    assert "Version: 3.23.6" in php
+    assert "Version: 3.23.6.1" in php
     assert "performanceOfflineCssUrl" in php
     assert "performanceOfflineJsUrl" in php
     assert "wp_enqueue_script('scsi-performance-offline'" not in php

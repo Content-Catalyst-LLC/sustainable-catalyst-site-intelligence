@@ -11,7 +11,7 @@
     console.info(`[Site Intelligence] ${title}: ${text}`);
   }
   function hideGlobalNotice(){}
-  function finishLaunch(){qs("#app").classList.remove("app-loading");qs("#app").classList.add("app-ready");setLaunch("Site Intelligence is ready.",100);setTimeout(()=>qs("#launchScreen").classList.add("hidden"),320);reportHeight()}
+  function finishLaunch(options={}){const mode=options.state==="limited"?"limited":"ready";const text=options.message||(mode==="limited"?"Site Intelligence opened with limited services.":"Site Intelligence is ready.");const app=qs("#app");if(app){app.classList.remove("app-loading");app.classList.add("app-ready");app.dataset.startupState=mode;app.removeAttribute("aria-busy")}setLaunch(text,100);window.dispatchEvent(new CustomEvent("scsi:application-ready",{detail:{version:APP_VERSION,state:mode,message:text}}));setTimeout(()=>{const screen=qs("#launchScreen");if(screen){screen.classList.add("hidden");screen.setAttribute("aria-hidden","true")}},80);reportHeight()}
   async function apiWithRetry(path,attempts=3,options={}){
     let last;
     for(let i=0;i<attempts;i++){
@@ -23,7 +23,7 @@
     }
     throw last;
   }
-  const APP_VERSION="3.23.6";
+  const APP_VERSION="3.23.6.1";
   let heightFrame=0;
   function documentHeight(){
     const body=document.body,root=document.documentElement;
@@ -34,30 +34,6 @@
     heightFrame=requestAnimationFrame(()=>{heightFrame=0;window.parent?.postMessage({type:"scsi-height",height:documentHeight(),version:APP_VERSION,path:location.pathname+location.search},"*")});
   }
   const reducedMotion=window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches===true;
-  async function registerServiceWorkerReliably(){
-    if(!("serviceWorker" in navigator))return null;
-    const hadController=Boolean(navigator.serviceWorker.controller);
-    const registration=await navigator.serviceWorker.register(`/app/service-worker.js?v=${encodeURIComponent(APP_VERSION)}`,{scope:"/app/",updateViaCache:"none"});
-    registration.update().catch(()=>{});
-    const activateWaiting=()=>registration.waiting?.postMessage({type:"SC_SI_ACTIVATE_UPDATE"});
-    if(registration.waiting)activateWaiting();
-    registration.addEventListener("updatefound",()=>{
-      const worker=registration.installing;if(!worker)return;
-      worker.addEventListener("statechange",()=>{if(worker.state==="installed"&&navigator.serviceWorker.controller)activateWaiting()});
-    });
-    let reloading=false;
-    navigator.serviceWorker.addEventListener("controllerchange",()=>{
-      if(!hadController||reloading)return;
-      reloading=true;
-      const key=`scsi-sw-reloaded-${APP_VERSION}`;
-      if(sessionStorage.getItem(key)!=="1"){sessionStorage.setItem(key,"1");location.reload()}
-    });
-    navigator.serviceWorker.addEventListener("message",event=>{
-      if(event.data?.type==="SC_SI_SW_READY"&&event.data.version===APP_VERSION)console.info(`[Site Intelligence] Offline shell ${APP_VERSION} active.`);
-    });
-    return registration;
-  }
-  window.addEventListener("load",()=>registerServiceWorkerReliably().catch(error=>console.warn("[Site Intelligence] Service worker registration failed.",error)),{once:true});
   if(navigator.connection?.saveData||localStorage.getItem("scsi_experience_v2120")?.includes('"lowBandwidth":true'))document.documentElement.dataset.lowBandwidth="1";
   let html2CanvasPromise=null;
   function loadScriptOnce(src,globalName){
@@ -1787,11 +1763,17 @@
     qs("#closeEvidenceDrawer").addEventListener("click",closeEvidenceDrawer);qs("#evidenceBackdrop").addEventListener("click",closeEvidenceDrawer);document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeEvidenceDrawer();setMobileNavigation(false,{restoreFocus:true})}});
     window.matchMedia("(max-width: 760px)").addEventListener?.("change",event=>{if(!event.matches)setMobileNavigation(false)});
     const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const requestedView=params.get("view")||"overview";const initialView=[...Object.keys(savedViewDefinitions),"saved","launch","observatory"].includes(requestedView)?requestedView:"overview";const invalidRequestedView=requestedView!==initialView;qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";if(params.get("imageryDate"))qs("#dateSelect").value=params.get("imageryDate");try{setLaunch("Loading satellite imagery.",50);await loadLayers();await setImagery(params.get("imageryLayer")||"true-color");setLaunch("Connecting to live events and country evidence.",68);await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);setLaunch("Preparing the workspace.",88);await setRoute(initialView);applySharedControlState(initialView,params);finishLaunch();if(invalidRequestedView)toast("The requested view is unavailable; Overview was opened instead.")}
-    catch(e){qs("#statusText").textContent="Partial public data";toast("Some optional public data is temporarily unavailable.");finishLaunch()}
+    catch(e){console.warn("[Site Intelligence] Optional startup service failed; opening a limited workspace.",e);const status=qs("#statusText");if(status)status.textContent="Partial public data";toast("Some optional public data is temporarily unavailable.");finishLaunch({state:"limited",message:"Site Intelligence opened; some optional public services are limited."})}
   }
   window.SCSIOverviewMapV3232={version:APP_VERSION,getMap:()=>state.map,getEvents:()=>state.events?.features||[],getFilteredEvents:()=>state.filteredEvents.slice(),getFilters:()=>({...state.overviewFilters}),setFilters:setOverviewFilters,selectEvent:selectOverviewEvent,fitResults:fitOverviewResults,setImageryOpacity:value=>state.imagery?.setOpacity?.(Math.max(0,Math.min(1,Number(value)))),setBaseStyle:style=>{const map=qs("#map");if(map)map.dataset.mapStyle=String(style||"institutional-dark");syncOverviewMapUrl()},syncUrl:syncOverviewMapUrl,render:renderOverviewFeatures};
-  window.SCSIRouterV3228={version:"3.23.6",navigate:navigateToRoute,current:()=>state.route};
-  document.addEventListener("DOMContentLoaded",init);
+  window.SCSIRouterV3228={version:"3.23.6.1",navigate:navigateToRoute,current:()=>state.route};
+  window.addEventListener("load",reportHeight,{once:true});
+  window.addEventListener("resize",reportHeight,{passive:true});
+  window.visualViewport?.addEventListener("resize",reportHeight,{passive:true});
+  window.addEventListener("message",event=>{if(event.data?.type==="SC_SI_REQUEST_HEIGHT")reportHeight()});
+  if("ResizeObserver" in window)new ResizeObserver(reportHeight).observe(document.body);
+  async function startApplication(){try{await init()}catch(error){console.error("[Site Intelligence] Application startup recovered.",error);const status=qs("#statusText");if(status)status.textContent="Limited startup";finishLaunch({state:"limited",message:"Site Intelligence opened in recovery mode. Retry individual services from the active workspace."})}}
+  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",()=>{startApplication()},{once:true});else startApplication();
 })();
 
 const visualStyle=document.createElement("style");
@@ -1807,7 +1789,6 @@ visualStyle.textContent=`
 `;
 document.head.appendChild(visualStyle);
 
-window.addEventListener("load",reportHeight,{once:true});window.addEventListener("resize",reportHeight,{passive:true});window.visualViewport?.addEventListener("resize",reportHeight,{passive:true});window.addEventListener("message",event=>{if(event.data?.type==="SC_SI_REQUEST_HEIGHT")reportHeight()});if("ResizeObserver" in window)new ResizeObserver(reportHeight).observe(document.body);
 
-/* v3.23.6 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v3.23.6 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v3.23.6.1 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v3.23.6.1 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

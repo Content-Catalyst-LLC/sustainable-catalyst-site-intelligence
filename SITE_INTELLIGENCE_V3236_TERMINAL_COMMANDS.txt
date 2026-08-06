@@ -1,5 +1,5 @@
 cd ~/Downloads
 INSTALLER="$(find . -maxdepth 1 -type f -name 'deploy_and_validate_site_intelligence_v3_23_6_macos*.sh' -print0 | xargs -0 ls -t | head -1)"
-BUNDLE="$(find . -maxdepth 1 -type f -name 'sustainable-catalyst-site-intelligence-v3.23.6-release-bundle*.zip' -print0 | xargs -0 ls -t | head -1)"
+BUNDLE="$(find . -maxdepth 1 -type f -name 'sustainable-catalyst-site-intelligence-v3.23.6.1-release-bundle*.zip' -print0 | xargs -0 ls -t | head -1)"
 chmod +x "$INSTALLER"
 bash "$INSTALLER" "$BUNDLE"

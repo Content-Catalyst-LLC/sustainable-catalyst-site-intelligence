@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Network-independent Chromium smoke test for v3.23.6 data truth presentation."""
+"""Network-independent Chromium smoke test for v3.23.6.1 data truth presentation."""
 from __future__ import annotations
 
 import json
@@ -22,7 +22,7 @@ def main() -> int:
         print("SKIP: Playwright is unavailable.")
         return 0
     payload = {
-        "ok": True, "version": "3.23.6", "release_id": "site-intelligence-v3.23.6",
+        "ok": True, "version": "3.23.6.1", "release_id": "site-intelligence-v3.23.6.1",
         "application_mode": "demonstration", "source_count": 3,
         "summary": {"live": 0, "recently_cached": 1, "historical_snapshot": 1, "demonstration": 1, "context_only": 0, "unavailable": 0},
         "sources": [
@@ -37,7 +37,7 @@ def main() -> int:
         page = browser.new_page(viewport={"width":1280,"height":820})
         page.on("console", lambda message: errors.append(f"console:{message.type}:{message.text}") if message.type == "error" else None)
         page.on("pageerror", lambda error: errors.append(f"pageerror:{error}"))
-        page.set_content('<!doctype html><html><body><div id="app" data-scsi-release="3.23.6" style="position:relative;height:760px;background:#111;color:#fff"><header><div class="topbar-controls"></div></header></div></body></html>')
+        page.set_content('<!doctype html><html><body><div id="app" data-scsi-release="3.23.6.1" style="position:relative;height:760px;background:#111;color:#fff"><header><div class="topbar-controls"></div></header></div></body></html>')
         page.add_style_tag(content=CSS.read_text())
         page.evaluate("payload => { window.fetch=async()=>({ok:true,json:async()=>payload}); }", payload)
         page.add_script_tag(content=JS.read_text())
@@ -50,7 +50,7 @@ def main() -> int:
     assert "recently cached" in result["states"] and "historical snapshot" in result["states"] and "demonstration" in result["states"], result
     assert not errors, errors
     print(json.dumps(result, indent=2))
-    print("PASS: v3.23.6 rendered explicit live, cached, historical, demonstration, coverage, and schema states without host-document leakage.")
+    print("PASS: v3.23.6.1 rendered explicit live, cached, historical, demonstration, coverage, and schema states without host-document leakage.")
     return 0
 
 if __name__ == "__main__":

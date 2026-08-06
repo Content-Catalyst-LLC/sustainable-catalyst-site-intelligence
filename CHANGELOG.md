@@ -1,4 +1,4 @@
-## 3.23.6 — Performance and Offline Recovery
+## 3.23.6.1 — Performance and Offline Recovery
 
 - Added first-useful-map and active-route performance measurement.
 - Added route-scoped request cancellation and duplicate GET coalescing.
@@ -6,21 +6,21 @@
 - Added labeled offline-cached recovery and service-worker release migration.
 - Added the public `/public/performance-offline` contract.
 
-## 3.23.6 — Browser Reliability, Mobile, and Accessibility
+## 3.23.6.1 — Browser Reliability, Mobile, and Accessibility
 
 - Added browser capability, mobile viewport, keyboard focus, map summary, reduced-motion, forced-color, low-bandwidth, and long-session recovery contracts.
 - Preserved WordPress host isolation and the completed v3.23.4 analytical workflows.
 
 # Changelog
 
-## 3.23.6 — Analytical Workspace Completion
+## 3.23.6.1 — Analytical Workspace Completion
 
 - Completed the five core public analytical workflow contracts.
 - Added unified workflow directory, details, bounded snapshots, deep links, source-truth boundaries, and exports.
 - Added an application-scoped Core workflows panel while preserving WordPress host isolation.
 
 
-## 3.23.6 — Cartographic Interaction and Layer Control
+## 3.23.6.1 — Cartographic Interaction and Layer Control
 
 - Added a map layer and evidence-control panel with base presentation and imagery opacity.
 - Added semantic event symbols, magnitude/severity treatment, and low-zoom clustering.
@@ -30,7 +30,7 @@
 - Preserved the v3.23.1 WordPress host-isolation repair.
 - Added a public map-interaction contract and live Render verification.
 
-# v3.23.6 — Cartographic Workspace and Application Presentation
+# v3.23.6.1 — Cartographic Workspace and Application Presentation
 
 - Converted the overview into a map-first workspace with a collapsible evidence rail.
 - Enforced routed visibility so hidden workspaces no longer create a massive stacked page.
@@ -1159,3 +1159,11 @@
 - Removed the oversized orbital map mask and established a controlled 520–720 pixel desktop map height.
 - Added country labels, scale, coordinates, cartographic hierarchy, and map-quality metadata.
 - Added Chromium visual thresholds for boundaries, labels, layer order, color diversity, dark-pixel ratio, dimensions, and console errors.
+
+## 3.23.6.1 — Single-Owner Bootstrap and Loading Recovery
+
+- Consolidated service-worker registration and controller-change recovery into one bootstrap owner.
+- Added a bounded fail-open startup deadline and limited-workspace fallback.
+- Wrapped full application initialization in a recovery boundary.
+- Corrected global-scope iframe height listeners that referenced a private function.
+- Added bootstrap recovery API, runtime-health, offline-shell, package, and browser validation contracts.
