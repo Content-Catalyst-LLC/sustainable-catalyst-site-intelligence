@@ -1,6 +1,13 @@
 # Changelog
 
-## 3.23.3 — Cartographic Interaction and Layer Control
+## 3.23.4 — Analytical Workspace Completion
+
+- Completed the five core public analytical workflow contracts.
+- Added unified workflow directory, details, bounded snapshots, deep links, source-truth boundaries, and exports.
+- Added an application-scoped Core workflows panel while preserving WordPress host isolation.
+
+
+## 3.23.4 — Cartographic Interaction and Layer Control
 
 - Added a map layer and evidence-control panel with base presentation and imagery opacity.
 - Added semantic event symbols, magnitude/severity treatment, and low-zoom clustering.
@@ -10,7 +17,7 @@
 - Preserved the v3.23.1 WordPress host-isolation repair.
 - Added a public map-interaction contract and live Render verification.
 
-# v3.23.3 — Cartographic Workspace and Application Presentation
+# v3.23.4 — Cartographic Workspace and Application Presentation
 
 - Converted the overview into a map-first workspace with a collapsible evidence rail.
 - Enforced routed visibility so hidden workspaces no longer create a massive stacked page.

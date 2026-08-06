@@ -1,0 +1,240 @@
+{
+  "schema": "sc-site-intelligence-analytical-workspaces/1.0",
+  "version": "3.23.4",
+  "release_id": "site-intelligence-v3.23.4",
+  "workflows": [
+    {
+      "workflow_id": "global_conditions",
+      "label": "Global Conditions",
+      "route": "global",
+      "status": "operational",
+      "purpose": "Review current global event concentrations, environmental and humanitarian signals, changes, source coverage, and limitations.",
+      "inputs": [
+        {
+          "name": "country",
+          "required": false,
+          "default": "KEN"
+        },
+        {
+          "name": "days",
+          "required": false,
+          "default": 30
+        }
+      ],
+      "stages": [
+        "load overview",
+        "load signals",
+        "load mapped features",
+        "disclose source coverage",
+        "prepare briefing context"
+      ],
+      "outputs": [
+        "condition summary",
+        "mapped evidence",
+        "signal stream",
+        "source coverage",
+        "method limitations"
+      ],
+      "export_endpoint": "/public/source-aware-briefs/site-intelligence",
+      "supporting_endpoints": [
+        "/public/workspaces/global-conditions",
+        "/public/events/summary",
+        "/public/geospatial/events",
+        "/public/data-truth"
+      ],
+      "empty_state": "The global basemap remains available when no events match the active period or filters.",
+      "degraded_state": "Last-known-good signals remain visibly marked while unavailable sources are listed separately."
+    },
+    {
+      "workflow_id": "country_intelligence",
+      "label": "Country Intelligence",
+      "route": "country",
+      "status": "operational",
+      "purpose": "Investigate one country through indicators, trends, recent events, environmental and humanitarian context, and source truth.",
+      "inputs": [
+        {
+          "name": "country",
+          "required": true,
+          "default": "KEN"
+        }
+      ],
+      "stages": [
+        "resolve country",
+        "load overview",
+        "load indicators",
+        "load trends",
+        "load events",
+        "assemble evidence brief"
+      ],
+      "outputs": [
+        "country profile",
+        "indicator table",
+        "trend series",
+        "event context",
+        "source-aware brief"
+      ],
+      "export_endpoint": "/public/country/{country}/brief",
+      "supporting_endpoints": [
+        "/public/country/{country}/overview",
+        "/public/country/{country}/indicators",
+        "/public/country/{country}/trends",
+        "/public/country/{country}/brief"
+      ],
+      "empty_state": "Country identity and source coverage remain visible when indicators or events are unavailable.",
+      "degraded_state": "Unavailable indicator families are separated from cached or historical observations."
+    },
+    {
+      "workflow_id": "compare",
+      "label": "Country and Indicator Comparison",
+      "route": "compare",
+      "status": "operational",
+      "purpose": "Compare two countries without hiding unit, period, definition, source, or missing-data differences.",
+      "inputs": [
+        {
+          "name": "country",
+          "required": true,
+          "default": "KEN"
+        },
+        {
+          "name": "compare",
+          "required": true,
+          "default": "GHA"
+        }
+      ],
+      "stages": [
+        "resolve pair",
+        "align definitions",
+        "compare indicators",
+        "compare trends",
+        "compare events",
+        "assemble comparison brief"
+      ],
+      "outputs": [
+        "compatibility table",
+        "aligned trends",
+        "event context",
+        "method warnings",
+        "comparison export"
+      ],
+      "export_endpoint": "/public/compare/export",
+      "supporting_endpoints": [
+        "/public/compare",
+        "/public/compare/indicators",
+        "/public/compare/trends",
+        "/public/compare/events",
+        "/public/compare/brief",
+        "/public/compare/export"
+      ],
+      "empty_state": "The comparison explains which fields are unavailable or non-comparable instead of substituting values.",
+      "degraded_state": "Each country retains an independent data-state disclosure and source lineage."
+    },
+    {
+      "workflow_id": "spatial_evidence",
+      "label": "Spatial Evidence",
+      "route": "spatial",
+      "status": "operational",
+      "purpose": "Select a public area and dataset, inspect intersections or proximity, and export an evidence packet with methods and CRS.",
+      "inputs": [
+        {
+          "name": "area_id",
+          "required": false,
+          "default": ""
+        },
+        {
+          "name": "dataset_id",
+          "required": false,
+          "default": ""
+        }
+      ],
+      "stages": [
+        "load public catalog",
+        "select area",
+        "select dataset",
+        "run evidence analysis",
+        "review methods",
+        "export evidence"
+      ],
+      "outputs": [
+        "mapped area",
+        "matched geometries",
+        "analysis counts",
+        "method and CRS disclosure",
+        "evidence export"
+      ],
+      "export_endpoint": "/admin/spatial/export",
+      "supporting_endpoints": [
+        "/public/spatial",
+        "/public/spatial/layers",
+        "/public/spatial/areas",
+        "/public/spatial/datasets",
+        "/public/spatial/evidence"
+      ],
+      "empty_state": "The public area and layer catalogs remain usable when an analysis returns no intersections.",
+      "degraded_state": "Context geography remains visible while unavailable analytical datasets are identified by name."
+    },
+    {
+      "workflow_id": "earth_observation",
+      "label": "Earth Observation",
+      "route": "earth",
+      "status": "operational",
+      "purpose": "Choose imagery, compare dates, inspect provenance and coverage limits, and preserve the selected view in an export manifest.",
+      "inputs": [
+        {
+          "name": "layer_id",
+          "required": false,
+          "default": "true-color"
+        },
+        {
+          "name": "date_a",
+          "required": false,
+          "default": ""
+        },
+        {
+          "name": "date_b",
+          "required": false,
+          "default": ""
+        }
+      ],
+      "stages": [
+        "load imagery catalog",
+        "select layer",
+        "resolve dates",
+        "compose imagery",
+        "compare observations",
+        "prepare export manifest"
+      ],
+      "outputs": [
+        "imagery view",
+        "date comparison",
+        "timeline",
+        "provenance",
+        "coverage limitations",
+        "export manifest"
+      ],
+      "export_endpoint": "/public/earth-observation/export-manifest",
+      "supporting_endpoints": [
+        "/public/earth-observation",
+        "/public/earth-observation/layers",
+        "/public/earth-observation/compare",
+        "/public/earth-observation/timeline",
+        "/public/earth-observation/export-manifest"
+      ],
+      "empty_state": "Vector geography and imagery provenance remain visible when a requested imagery date has no coverage.",
+      "degraded_state": "Imagery failure does not remove the basemap or suppress date, layer, and source disclosures."
+    }
+  ],
+  "completion_gate": {
+    "required_workflows": 5,
+    "required_states": [
+      "initial",
+      "ready",
+      "empty",
+      "degraded",
+      "unavailable"
+    ],
+    "export_required": true,
+    "source_truth_required": true,
+    "deep_link_required": true,
+    "principle": "No workflow may convert missing, cached, historical, contextual, or demonstration records into a live claim."
+  }
+}

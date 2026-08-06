@@ -1,4 +1,4 @@
-"""Public-safe runtime diagnostics for Site Intelligence v3.23.3.
+"""Public-safe runtime diagnostics for Site Intelligence v3.23.4.
 
 The diagnostics intentionally avoid outbound network calls. They report the local
 application contract, required first-party assets, map surfaces, embed policy,
@@ -30,6 +30,8 @@ REQUIRED_ASSETS = (
     "assets/cartographic-workspace-v3230.js",
     "assets/cartographic-interaction-v3232.css",
     "assets/cartographic-interaction-v3232.js",
+    "assets/analytical-workspaces-v3234.css",
+    "assets/analytical-workspaces-v3234.js",
     "assets/data-truth-v3233.css",
     "assets/data-truth-v3233.js",
     "assets/production-truth-v3231.css",
@@ -53,6 +55,7 @@ CRITICAL_PUBLIC_ENDPOINTS = (
     "/public/runtime-recovery",
     "/public/workspaces/production-truth",
     "/public/maps/interaction",
+    "/public/workflows/analytical",
     "/public/data-truth",
 )
 
@@ -183,7 +186,7 @@ def build_runtime_health(settings: Settings) -> dict[str, Any]:
         _check(
             "offline-shell",
             "Offline shell contains the reliability assets",
-            all(name in worker for name in ("vector-cartography-v3230.js", "vector-cartography-v3230.css", "world-cartography-v3230.geojson", "runtime-v3230.js", "runtime-v3230.css", "cartographic-workspace-v3230.js", "cartographic-workspace-v3230.css", "cartographic-interaction-v3232.js", "cartographic-interaction-v3232.css", "data-truth-v3233.js", "data-truth-v3233.css", "production-truth-v3231.js", "production-truth-v3231.css", "service-recovery-v3224.js")) and f'const RELEASE="{APP_VERSION}"' in worker,
+            all(name in worker for name in ("vector-cartography-v3230.js", "vector-cartography-v3230.css", "world-cartography-v3230.geojson", "runtime-v3230.js", "runtime-v3230.css", "cartographic-workspace-v3230.js", "cartographic-workspace-v3230.css", "cartographic-interaction-v3232.js", "cartographic-interaction-v3232.css", "analytical-workspaces-v3234.js", "analytical-workspaces-v3234.css", "data-truth-v3233.js", "data-truth-v3233.css", "production-truth-v3231.js", "production-truth-v3231.css", "service-recovery-v3224.js")) and f'const RELEASE="{APP_VERSION}"' in worker,
             "Service worker release and runtime assets are aligned." if worker else "Service worker is missing or unreadable.",
         ),
         _check(

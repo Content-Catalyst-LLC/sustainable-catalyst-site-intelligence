@@ -1,0 +1,26 @@
+Site Intelligence v3.23.4 — Build Validation
+================================================
+Release: Analytical Workspace Completion
+
+SOURCE VALIDATION
+- 1,045 immutable repository files verified by size and SHA-256.
+- 942 tests collected.
+- All 942 tests passed across 173 independently exiting pytest processes.
+- Release-specific analytical-workspace tests passed.
+- All inherited v3.23.0–v3.23.3 map, route, host-isolation, interaction, and source-truth tests passed.
+- 52 JavaScript files passed Node syntax validation.
+- 121 JSON and GeoJSON files parsed successfully after manifest sealing.
+- WordPress PHP passed syntax validation.
+
+CHROMIUM VALIDATION
+- Bounded cartographic workspace passed.
+- Production-truth route handling passed.
+- Layer, filter, selection, and URL-state controls passed.
+- Data-truth presentation passed.
+- Five analytical workflow cards, direct links, route actions, runtime-state language, and application-root isolation passed.
+- No console or page errors were recorded by the five browser smoke tests.
+
+BOUNDARIES
+- No live GitHub, Render, or WordPress deployment was performed in this build environment.
+- External data availability was not treated as proof of analytical completeness.
+- Missing, cached, historical, contextual, and demonstration records remain distinguishable.

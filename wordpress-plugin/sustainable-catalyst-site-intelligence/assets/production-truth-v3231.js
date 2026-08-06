@@ -1,6 +1,6 @@
 (function(window,document){
   "use strict";
-  const VERSION="3.23.3";
+  const VERSION="3.23.4";
   const APP_ROOT=document.querySelector('#app[data-scsi-release]');
   if(!APP_ROOT||!document.querySelector('#primaryNavigation')||!document.querySelector('#main.workspace'))return;
   const ENDPOINT="/public/workspaces/production-truth";

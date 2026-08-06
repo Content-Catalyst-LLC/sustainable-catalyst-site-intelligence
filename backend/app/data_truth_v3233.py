@@ -1,4 +1,4 @@
-"""Data freshness, coverage, and source-truth contract for Site Intelligence v3.23.3."""
+"""Data freshness, coverage, and source-truth contract for Site Intelligence v3.23.4."""
 from __future__ import annotations
 
 from datetime import datetime, timezone
