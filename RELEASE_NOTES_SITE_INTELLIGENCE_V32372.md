@@ -1,4 +1,4 @@
-# Site Intelligence v3.23.8 — Country Dropdown Interaction and Focus Safety
+# Site Intelligence v3.24.0 — Country Dropdown Interaction and Focus Safety
 
 ## Purpose
 

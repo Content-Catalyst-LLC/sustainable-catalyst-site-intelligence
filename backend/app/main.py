@@ -20,6 +20,7 @@ from .production_truth_v3231 import public_production_truth as build_public_prod
 from .cartographic_interaction_v3232 import public_map_interaction_contract as build_public_map_interaction_contract
 from .data_truth_v32371 import (public_data_truth as build_public_data_truth, public_data_truth_source as build_public_data_truth_source, public_data_truth_countries as build_public_data_truth_countries, public_country_data_truth as build_public_country_data_truth, public_country_source_truth as build_public_country_source_truth, public_country_indicator_truth as build_public_country_indicator_truth, public_coverage_matrix as build_public_coverage_matrix)
 from .record_provenance_v3238 import (public_indicator_record_truth as build_public_indicator_record_truth, public_country_record_truth as build_public_country_record_truth, public_map_layer_truth as build_public_map_layer_truth, public_normalized_record_truth as build_public_normalized_record_truth, public_record_truth_manifest as build_public_record_truth_manifest)
+from .data_truth_control_plane_v3240 import (public_control_plane as build_public_control_plane, public_control_plane_sources as build_public_control_plane_sources, public_control_plane_source as build_public_control_plane_source, public_control_plane_history as build_public_control_plane_history, public_control_plane_schema_drift as build_public_control_plane_schema_drift, public_control_plane_outages as build_public_control_plane_outages, public_control_plane_coverage as build_public_control_plane_coverage, public_control_plane_workspaces as build_public_control_plane_workspaces, public_control_plane_export as build_public_control_plane_export)
 from .analytical_workspaces_v3234 import public_analytical_workspaces as build_public_analytical_workspaces, public_analytical_workspace as build_public_analytical_workspace, public_analytical_snapshot as build_public_analytical_snapshot
 from .browser_reliability_v3235 import public_browser_reliability_contract as build_public_browser_reliability_contract
 from .performance_offline_v3236 import public_performance_offline_contract as build_public_performance_offline_contract
@@ -460,7 +461,7 @@ async def public_experience_headers(request, call_next):
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
-        response.headers["X-SC-Release-Gate"] = "v3.23.8"
+        response.headers["X-SC-Release-Gate"] = "v3.24.0"
     elif path == "/app/service-worker.js":
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
@@ -601,6 +602,74 @@ def public_country_indicator_truth_endpoint(country_code: str, settings: Setting
         return build_public_country_indicator_truth(settings, country_code)
     except KeyError as exc:
         raise HTTPException(status_code=404, detail="Country not found.") from exc
+
+
+@app.get("/public/data-truth/control-plane")
+def public_data_truth_control_plane_endpoint(settings: Settings = Depends(get_settings)):
+    return build_public_control_plane(settings)
+
+
+@app.get("/public/data-truth/control-plane/sources")
+def public_data_truth_control_plane_sources_endpoint(settings: Settings = Depends(get_settings)):
+    return build_public_control_plane_sources(settings)
+
+
+@app.get("/public/data-truth/control-plane/source/{feed_id}")
+def public_data_truth_control_plane_source_endpoint(feed_id: str, settings: Settings = Depends(get_settings)):
+    try:
+        return build_public_control_plane_source(settings, feed_id)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Data source not found.") from exc
+
+
+@app.get("/public/data-truth/control-plane/history")
+def public_data_truth_control_plane_history_endpoint(
+    source: str | None = Query(default=None), limit: int = Query(default=100, ge=1, le=500),
+    settings: Settings = Depends(get_settings),
+):
+    try:
+        return build_public_control_plane_history(settings, source, limit)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Data source not found.") from exc
+
+
+@app.get("/public/data-truth/control-plane/schema-drift")
+def public_data_truth_control_plane_schema_drift_endpoint(settings: Settings = Depends(get_settings)):
+    return build_public_control_plane_schema_drift(settings)
+
+
+@app.get("/public/data-truth/control-plane/outages")
+def public_data_truth_control_plane_outages_endpoint(settings: Settings = Depends(get_settings)):
+    return build_public_control_plane_outages(settings)
+
+
+@app.get("/public/data-truth/control-plane/coverage")
+def public_data_truth_control_plane_coverage_endpoint(
+    countries: str = Query(default=""), settings: Settings = Depends(get_settings),
+):
+    country_codes = [item.strip().upper() for item in countries.split(",") if item.strip()] or None
+    return build_public_control_plane_coverage(settings, country_codes)
+
+
+@app.get("/public/data-truth/control-plane/workspaces")
+def public_data_truth_control_plane_workspaces_endpoint(
+    country: str = Query(default="KEN"), settings: Settings = Depends(get_settings),
+):
+    try:
+        return build_public_control_plane_workspaces(settings, country)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Country not found.") from exc
+
+
+@app.get("/public/data-truth/control-plane/export")
+def public_data_truth_control_plane_export_endpoint(
+    countries: str = Query(default=""), country: str = Query(default="KEN"), settings: Settings = Depends(get_settings),
+):
+    country_codes = [item.strip().upper() for item in countries.split(",") if item.strip()] or None
+    try:
+        return build_public_control_plane_export(settings, country_codes, country)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Country or source not found.") from exc
 
 
 @app.get("/public/data-truth/{feed_id}")
@@ -2560,7 +2629,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.23.8 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v3.24.0 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -2702,7 +2771,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.23.8 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v3.24.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -2819,7 +2888,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.23.8 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v3.24.0 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -2941,7 +3010,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.23.8 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v3.24.0 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -3077,7 +3146,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v3.23.8 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v3.24.0 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -6254,7 +6323,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v3.23.8 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v3.24.0 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -6488,7 +6557,7 @@ def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     return build_reliability(settings)
 
 
-# Site Intelligence v3.23.8 — Open Standards, Federation, and Institutional Data Exchange.
+# Site Intelligence v3.24.0 — Open Standards, Federation, and Institutional Data Exchange.
 def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
     if not settings.federation_exchange_enabled:
         raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
@@ -6578,7 +6647,7 @@ def admin_federation_accept_import_endpoint(request: dict = Body(default={}), se
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-# Site Intelligence v3.23.8 — Security, Privacy, Governance, and Production Scale.
+# Site Intelligence v3.24.0 — Security, Privacy, Governance, and Production Scale.
 def _production_governance(settings: Settings) -> ProductionGovernanceCenter:
     if not settings.production_governance_enabled:
         raise HTTPException(status_code=503, detail="Production governance is disabled.")
@@ -6727,7 +6796,7 @@ def admin_production_governance_deployment_endpoint(request: dict = Body(default
 def admin_production_governance_load_probe_endpoint(requests: int = Query(default=250, ge=1, le=5000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return _production_governance(settings).load_probe(requests)
 
-# Site Intelligence v3.23.8 — Connected Live Intelligence Surface.
+# Site Intelligence v3.24.0 — Connected Live Intelligence Surface.
 def _connected_platform(settings: Settings) -> ConnectedPublicIntelligencePlatform:
     if not settings.connected_platform_enabled:
         raise HTTPException(status_code=404, detail="Connected platform is disabled.")

@@ -5,7 +5,7 @@ import traceback
 import json,os,shutil,sys
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
-VERSION='3.23.8'
+VERSION='3.24.0'
 def browser_path():
  candidates=[os.getenv('SC_SI_CHROMIUM',''),shutil.which('chromium') or '',shutil.which('google-chrome') or '',shutil.which('google-chrome-stable') or '','/Applications/Google Chrome.app/Contents/MacOS/Google Chrome','/Applications/Chromium.app/Contents/MacOS/Chromium']
  return next((x for x in candidates if x and Path(x).is_file() and os.access(x,os.X_OK)),None)
@@ -35,7 +35,7 @@ def main():
    results[mode]={'readyMs':ready_ms,'snapshot':snapshot};page.close()
   browser.close()
  assert not errors,errors
- print(json.dumps({'browser':executable,'results':results},indent=2));print('PASS: v3.23.8 opened its shell without network dependency, serialized route churn, and performed no service-worker reload.');return 0
+ print(json.dumps({'browser':executable,'results':results},indent=2));print('PASS: v3.24.0 opened its shell without network dependency, serialized route churn, and performed no service-worker reload.');return 0
 if __name__ == "__main__":
     try:
         status = int(main())

@@ -25,7 +25,7 @@ def test_build_info_exposes_public_render_commit_metadata(monkeypatch):
     monkeypatch.setenv("RENDER_GIT_BRANCH", "main")
     monkeypatch.setenv("RENDER_GIT_COMMIT", "0123456789abcdef")
     data = public_build_info()
-    assert data["backend_version"] == "3.23.8"
+    assert data["backend_version"] == "3.24.0"
     assert data["git_commit"] == "0123456789abcdef"
     assert data["deployment"]["platform"] == "render"
     assert data["deployment"]["git_commit_short"] == "0123456789ab"
@@ -38,10 +38,10 @@ def test_public_deployment_status_endpoint_is_available():
     assert response.status_code == 200
     payload = response.json()
     assert payload["ok"] is True
-    assert payload["version"] == "3.23.8"
-    assert payload["expected_wordpress_plugin_version"] == "3.23.8"
+    assert payload["version"] == "3.24.0"
+    assert payload["expected_wordpress_plugin_version"] == "3.24.0"
     assert payload["verification_endpoints"]["build_info"] == "/public/build-info"
-    assert payload["deployment"]["release_version"] == "3.23.8"
+    assert payload["deployment"]["release_version"] == "3.24.0"
 
 
 def test_promotion_script_pushes_before_render_verification():

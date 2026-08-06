@@ -1,4 +1,4 @@
-# Install and Test — Site Intelligence v3.23.8
+# Install and Test — Site Intelligence v3.24.0
 
 1. Place the release bundle and macOS installer in `~/Downloads`.
 2. Run the installer command provided with the release.

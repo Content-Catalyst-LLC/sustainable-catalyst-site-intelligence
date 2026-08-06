@@ -1,0 +1,44 @@
+Site Intelligence v3.24.0 — Global Data Truth Control Plane
+
+SOURCE VALIDATION: PASS
+
+Python inventory
+- 1,013 tests passed
+- 184 test files collected
+- Complete file-backed suite exited cleanly
+
+Repository integrity
+- 1,234 immutable manifest entries
+- 127 JSON/GeoJSON files
+- 65 JavaScript files across the public application and WordPress assets
+- Python module compilation passed
+- JavaScript syntax checks passed
+- WordPress PHP syntax passed
+- Installer, verifier, and promotion shell syntax passed
+
+Global Data Truth Control Plane
+- Eight registered source contracts rendered
+- Operational/degraded/review/unavailable/unknown summary totals reconcile to eight
+- Source status fingerprints are 64-character SHA-256 values
+- Derived history explicitly reports that it is not a complete event log
+- Schema-drift register covers all eight sources
+- Source-attention register does not claim a worldwide publisher outage
+- Three-country coverage monitor produces 24 country-source cells
+- Twelve cross-workspace truth contracts follow the selected country
+- Export contains overview, schema drift, incidents, coverage, and workspaces with a 64-character fingerprint
+
+Browser gates
+- Global country selector: 173 unique countries, Afghanistan through Zimbabwe
+- Country selector focus retained and wheel interaction unblocked
+- Kenya-to-Brazil truth selection passed
+- Global country truth and coverage matrix passed
+- Complete shell initialized all 40 shipped scripts in direct, failed-service-worker, and iframe modes
+- Production route soak completed with zero route failures and zero automatic service-worker reloads
+- WordPress application frame remained fixed at 1,100 px without moving the host page
+- WordPress release bar reports Global Data Truth Control Plane
+- Indicator, map-layer, and event Record Truth passed in direct and iframe modes
+- Global Data Truth Control Plane passed in direct and iframe modes
+
+Deployment
+- GitHub and Render promotion was not performed in the build environment
+- The macOS installer validates twice and verifies the exact live release before WordPress installation

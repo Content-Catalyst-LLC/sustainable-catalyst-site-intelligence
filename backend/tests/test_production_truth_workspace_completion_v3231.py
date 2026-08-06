@@ -20,8 +20,8 @@ def test_production_truth_directory_is_complete_and_honest():
     assert response.status_code == 200
     payload = response.json()
     assert payload["ok"] is True
-    assert payload["version"] == "3.23.8"
-    assert payload["release_id"] == "site-intelligence-v3.23.8"
+    assert payload["version"] == "3.24.0"
+    assert payload["release_id"] == "site-intelligence-v3.24.0"
     assert payload["contract"] == "production-truth-and-workspace-completion"
     assert payload["route_count"] == 35 == len(ROUTES)
     assert payload["summary"]["operational"] == 19
@@ -59,7 +59,7 @@ def test_route_detail_rejects_unknown_routes():
 def test_frontend_enforces_route_truth_history_and_recovery():
     js = read("backend/public_app/assets/production-truth-v3231.js")
     for token in (
-        'const VERSION="3.23.8"',
+        'const VERSION="3.24.0"',
         'ENDPOINT="/public/workspaces/production-truth"',
         "productionTruthBar",
         "initial:\"Opening workspace\"",
@@ -91,12 +91,12 @@ def test_frontend_disables_missing_controllers_instead_of_false_success():
 
 def test_app_shell_and_offline_cache_include_production_truth_assets():
     html = read("backend/public_app/index.html")
-    assert 'data-scsi-release="3.23.8"' in html
-    assert '/app/assets/production-truth-v3231.css?v=3.23.8' in html
-    assert '/app/assets/production-truth-v3231.js?v=3.23.8' in html
+    assert 'data-scsi-release="3.24.0"' in html
+    assert '/app/assets/production-truth-v3231.css?v=3.24.0' in html
+    assert '/app/assets/production-truth-v3231.js?v=3.24.0' in html
     assert html.index("app.js") < html.index("cartographic-workspace-v3230.js") < html.index("production-truth-v3231.js")
     worker = read("backend/public_app/service-worker.js")
-    assert 'const RELEASE="3.23.8"' in worker
+    assert 'const RELEASE="3.24.0"' in worker
     assert "production-truth-v3231.js" in worker
     assert "production-truth-v3231.css" in worker
 
@@ -114,8 +114,8 @@ def test_runtime_health_requires_the_production_truth_contract():
 
 def test_wordpress_packages_production_truth_assets_without_running_them_in_the_host_document():
     php = read("wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php")
-    assert "Version: 3.23.8" in php
-    assert "site-intelligence-v3.23.8" in php
+    assert "Version: 3.24.0" in php
+    assert "site-intelligence-v3.24.0" in php
     assert "wp_enqueue_style('scsi-production-truth'" not in php
     assert "wp_enqueue_script('scsi-production-truth'" not in php
     for name in ("production-truth-v3231.js", "production-truth-v3231.css"):

@@ -1,4 +1,12 @@
-## 3.23.8 — Record Provenance and Indicator Truth
+## 3.24.0 — Global Data Truth Control Plane
+
+- Composes all eight registered public source contracts into operational, degraded, review, unavailable, and unknown attention states.
+- Adds public-safe derived status history without claiming a complete source event log.
+- Adds schema-drift, source-attention, country-coverage, and cross-workspace truth registers.
+- Adds a fingerprint-bound control-plane export and a fourth Data Truth application view.
+- Preserves explicit boundaries between source health, geographic eligibility, observed records, and source authority.
+
+## 3.24.0 — Record Provenance and Indicator Truth
 
 - Added record-level truth contracts for country indicators, map layers, events, charts, and table records.
 - Added source, date, unit, transformation, lineage, limitation, and truth-state disclosure.

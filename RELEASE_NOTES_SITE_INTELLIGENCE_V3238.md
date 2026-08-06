@@ -1,4 +1,4 @@
-# Site Intelligence v3.23.8 — Record Provenance and Indicator Truth
+# Site Intelligence v3.24.0 — Record Provenance and Indicator Truth
 
 ## Purpose
 

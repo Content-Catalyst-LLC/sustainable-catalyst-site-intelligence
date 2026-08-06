@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.23.8
+ * Version: 3.24.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,8 +13,8 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.23.8';
-    const RELEASE_ID = 'site-intelligence-v3.23.8';
+    const VERSION = '3.24.0';
+    const RELEASE_ID = 'site-intelligence-v3.24.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -433,7 +433,7 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v3.23.8 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
+        // v3.24.0 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
         // Existing moving tickers remain moving unless an administrator selects static or manual presentation.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
@@ -4614,6 +4614,8 @@ final class SC_Site_Intelligence_Plugin {
             'performanceOfflineJsUrl' => esc_url_raw($base . 'performance-offline-v3236.js'),
             'dataTruthCssUrl' => esc_url_raw($base . 'data-truth-v32371.css'),
             'dataTruthJsUrl' => esc_url_raw($base . 'data-truth-v32371.js'),
+            'dataTruthControlPlaneCssUrl' => esc_url_raw($base . 'data-truth-control-plane-v3240.css'),
+            'dataTruthControlPlaneJsUrl' => esc_url_raw($base . 'data-truth-control-plane-v3240.js'),
         ]);
     }
 

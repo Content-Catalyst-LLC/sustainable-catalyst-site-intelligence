@@ -1,4 +1,4 @@
-"""Fixed application viewport and WordPress embed-isolation contract for v3.23.8."""
+"""Fixed application viewport and WordPress embed-isolation contract for v3.24.0."""
 from __future__ import annotations
 
 from copy import deepcopy
