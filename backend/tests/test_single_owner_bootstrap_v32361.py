@@ -15,7 +15,7 @@ def test_bootstrap_recovery_contract_is_public_and_release_aligned():
     assert response.status_code == 200
     payload = response.json()
     assert payload["ok"] is True
-    assert payload["version"] == "3.23.6.1"
+    assert payload["version"] == "3.23.6.2"
     assert payload["contract"] == "single-owner-bootstrap-and-loading-recovery"
     assert payload["service_worker"]["registration_owner_count"] == 1
     assert payload["startup"]["fail_open"] is True
@@ -39,7 +39,7 @@ def test_only_bootstrap_registers_and_listens_for_controller_changes():
 
 def test_bootstrap_precedes_performance_and_application_and_is_fail_open():
     html = read("backend/public_app/index.html")
-    assert '/app/assets/bootstrap-v32361.js?v=3.23.6.1' in html
+    assert '/app/assets/bootstrap-v32361.js?v=3.23.6.2' in html
     assert html.index("bootstrap-v32361.js") < html.index("performance-offline-v3236.js") < html.index("app.js")
     bootstrap = read("backend/public_app/assets/bootstrap-v32361.js")
     for token in ("startup deadline exceeded", "failOpen", "service-workers-disabled", "scsi:application-ready"):
@@ -61,6 +61,6 @@ def test_runtime_health_includes_bootstrap_asset_and_endpoint():
 
 def test_wordpress_package_preserves_host_isolation_and_carries_bootstrap_asset():
     php = read("wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php")
-    assert "Version: 3.23.6.1" in php
+    assert "Version: 3.23.6.2" in php
     assert "wp_enqueue_script('scsi-bootstrap" not in php
     assert (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/bootstrap-v32361.js").is_file()

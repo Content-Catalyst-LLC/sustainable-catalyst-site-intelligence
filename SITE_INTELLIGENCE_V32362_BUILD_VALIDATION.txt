@@ -1,0 +1,37 @@
+SITE INTELLIGENCE v3.23.6.2 BUILD VALIDATION
+
+Release: Mutation Observer Recovery and Complete-Shell Browser Gate
+
+SOURCE VALIDATION
+- Application version: 3.23.6.2
+- Pytest: 964 passed
+- Test files: 177
+- JavaScript syntax inventory: 58 files
+- JSON and GeoJSON inventory: 127 files before packaging
+- WordPress plugin PHP syntax: validated when PHP is available
+- Browser gate: mandatory; cannot be skipped
+
+COMPLETE-SHELL CHROMIUM RESULT
+- Exact production script chain: 36 of 36 scripts executed
+- Direct shell with service workers disabled: app visible, limited state, launch screen closed
+- Direct shell with registration failure: app visible, limited state, launch screen closed
+- WordPress-style iframe shell: app visible, limited state, launch screen closed
+- Data Truth runtime initialized
+- Production Truth runtime initialized
+- Single-owner bootstrap initialized
+- Primary map dimensions: 666 x 690 direct; 736 x 610 iframe
+- Rapid mutation probe: 80 add/remove cycles
+- Observer work caused by probe: 2 scheduled passes
+- Additional map-summary writes: 0
+- Browser page errors: 0
+- Actionable console errors: 0
+
+OBSERVER REPAIR
+- Summary text written only when changed
+- One requestAnimationFrame queue owner
+- Observer disconnected during generated DOM writes
+- Generated summary subtree ignored
+- Maximum eight summary passes per second
+- Runtime suppression count exposed for diagnostics
+
+Immutable manifest entries: 1113

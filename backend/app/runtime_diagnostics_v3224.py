@@ -1,4 +1,4 @@
-"""Public-safe runtime diagnostics for Site Intelligence v3.23.6.1.
+"""Public-safe runtime diagnostics for Site Intelligence v3.23.6.2.
 
 The diagnostics intentionally avoid outbound network calls. They report the local
 application contract, required first-party assets, map surfaces, embed policy,
@@ -64,6 +64,7 @@ CRITICAL_PUBLIC_ENDPOINTS = (
     "/public/browser-reliability",
     "/public/performance-offline",
     "/public/bootstrap-recovery",
+    "/public/mutation-observer-recovery",
     "/public/data-truth",
 )
 
@@ -202,6 +203,12 @@ def build_runtime_health(settings: Settings) -> dict[str, Any]:
             "Offline shell contains the reliability assets",
             all(name in worker for name in ("vector-cartography-v3230.js", "vector-cartography-v3230.css", "world-cartography-v3230.geojson", "runtime-v3230.js", "runtime-v3230.css", "cartographic-workspace-v3230.js", "cartographic-workspace-v3230.css", "cartographic-interaction-v3232.js", "cartographic-interaction-v3232.css", "analytical-workspaces-v3234.js", "analytical-workspaces-v3234.css", "bootstrap-v32361.js", "performance-offline-v3236.js", "performance-offline-v3236.css", "data-truth-v3233.js", "data-truth-v3233.css", "production-truth-v3231.js", "production-truth-v3231.css", "service-recovery-v3224.js")) and f'const RELEASE="{APP_VERSION}"' in worker,
             "Service worker release and runtime assets are aligned." if worker else "Service worker is missing or unreadable.",
+        ),
+        _check(
+            "mutation-observer-recovery",
+            "Map summaries cannot trigger an unbounded observer loop",
+            all(token in _read(PUBLIC_APP_DIR / "assets/browser-reliability-v3235.js") for token in ("summary.textContent!==nextText", "requestAnimationFrame(flushMapSummaries)", "state.observer?.disconnect()", "MAX_SUMMARY_PASSES_PER_SECOND=8")),
+            "Map-summary updates are idempotent, frame-debounced, disconnected during writes, and bounded per second.",
         ),
         _check(
             "map-surfaces",

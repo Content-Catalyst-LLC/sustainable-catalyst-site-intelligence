@@ -23,7 +23,7 @@
     }
     throw last;
   }
-  const APP_VERSION="3.23.6.1";
+  const APP_VERSION="3.23.6.2";
   let heightFrame=0;
   function documentHeight(){
     const body=document.body,root=document.documentElement;
@@ -1766,7 +1766,7 @@
     catch(e){console.warn("[Site Intelligence] Optional startup service failed; opening a limited workspace.",e);const status=qs("#statusText");if(status)status.textContent="Partial public data";toast("Some optional public data is temporarily unavailable.");finishLaunch({state:"limited",message:"Site Intelligence opened; some optional public services are limited."})}
   }
   window.SCSIOverviewMapV3232={version:APP_VERSION,getMap:()=>state.map,getEvents:()=>state.events?.features||[],getFilteredEvents:()=>state.filteredEvents.slice(),getFilters:()=>({...state.overviewFilters}),setFilters:setOverviewFilters,selectEvent:selectOverviewEvent,fitResults:fitOverviewResults,setImageryOpacity:value=>state.imagery?.setOpacity?.(Math.max(0,Math.min(1,Number(value)))),setBaseStyle:style=>{const map=qs("#map");if(map)map.dataset.mapStyle=String(style||"institutional-dark");syncOverviewMapUrl()},syncUrl:syncOverviewMapUrl,render:renderOverviewFeatures};
-  window.SCSIRouterV3228={version:"3.23.6.1",navigate:navigateToRoute,current:()=>state.route};
+  window.SCSIRouterV3228={version:"3.23.6.2",navigate:navigateToRoute,current:()=>state.route};
   window.addEventListener("load",reportHeight,{once:true});
   window.addEventListener("resize",reportHeight,{passive:true});
   window.visualViewport?.addEventListener("resize",reportHeight,{passive:true});
@@ -1790,5 +1790,5 @@ visualStyle.textContent=`
 document.head.appendChild(visualStyle);
 
 
-/* v3.23.6.1 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v3.23.6.1 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v3.23.6.2 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v3.23.6.2 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

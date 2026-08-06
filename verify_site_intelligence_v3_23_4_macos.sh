@@ -6,11 +6,11 @@ if [[ -z "$PYTHON" ]]; then [[ -x "$ROOT/.venv/bin/python" ]] && PYTHON="$ROOT/.
 RUNTIME_SANDBOX="$(mktemp -d "${TMPDIR:-/tmp}/scsi-v3234-runtime.XXXXXX")"; trap 'rm -rf "$RUNTIME_SANDBOX" "$BACKEND/backend"' EXIT
 export SC_SI_RUNTIME_STATE_ROOT="$RUNTIME_SANDBOX"; rm -rf "$BACKEND/backend"
 printf '
-==> Verifying v3.23.6.1 analytical workspace contracts
+==> Verifying v3.23.6.2 analytical workspace contracts
 '
-grep -q 'APP_VERSION = "3.23.6.1"' "$BACKEND/app/version.py"
-grep -q 'Version: 3.23.6.1' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
-grep -q 'const RELEASE="3.23.6.1"' "$BACKEND/public_app/service-worker.js"
+grep -q 'APP_VERSION = "3.23.6.2"' "$BACKEND/app/version.py"
+grep -q 'Version: 3.23.6.2' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
+grep -q 'const RELEASE="3.23.6.2"' "$BACKEND/public_app/service-worker.js"
 grep -q 'analytical-workspaces-v3234.js' "$BACKEND/public_app/index.html"
 grep -q '/public/workflows/analytical' "$BACKEND/app/main.py"
 grep -q 'SCSIAnalyticalWorkspacesV3234' "$BACKEND/public_app/assets/analytical-workspaces-v3234.js"
@@ -22,7 +22,7 @@ printf '
 "$PYTHON" - "$ROOT" <<'PYVERIFY'
 from pathlib import Path
 import hashlib,json,sys
-root=Path(sys.argv[1]);m=json.loads((root/'MANIFEST.json').read_text());assert m['release']=='3.23.6.1';assert m['file_count']==len(m['files'])
+root=Path(sys.argv[1]);m=json.loads((root/'MANIFEST.json').read_text());assert m['release']=='3.23.6.2';assert m['file_count']==len(m['files'])
 for e in m['files']:
  p=root/e['path'];d=p.read_bytes();assert len(d)==e['bytes'],e['path'];assert hashlib.sha256(d).hexdigest()==e['sha256'],e['path']
 print(f"Verified {len(m['files'])} manifest entries.")
@@ -55,6 +55,6 @@ if [[ "${SC_SI_SKIP_BROWSER_SMOKE:-0}" != "1" ]];then printf '
 ';for n in 3230 3231 3232 3233 3234;do "$PYTHON" "$ROOT/scripts/browser_smoke_v${n}.py";done;fi
 [[ ! -e "$BACKEND/backend" ]] || { echo 'ERROR: tests wrote runtime state into immutable checkout.' >&2;exit 1; }
 printf '
-SUCCESS: Site Intelligence v3.23.6.1 passed deterministic validation.
+SUCCESS: Site Intelligence v3.23.6.2 passed deterministic validation.
 Repository: %s
 ' "$ROOT"

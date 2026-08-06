@@ -1,6 +1,6 @@
 (()=>{
   'use strict';
-  const VERSION='3.23.6.1';
+  const VERSION='3.23.6.2';
   const ROOT_SELECTOR=`#app[data-scsi-release="${VERSION}"]`;
   const root=()=>document.querySelector(ROOT_SELECTOR);
   const launch=()=>document.querySelector('#launchScreen');

@@ -6,11 +6,11 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'backend'))
 from app.main import app
 required={
- 'backend/app/version.py':['APP_VERSION = "3.23.6.1"'],
+ 'backend/app/version.py':['APP_VERSION = "3.23.6.2"'],
  'backend/app/data_truth_v3233.py':['data-freshness-coverage-and-source-truth','stale_marker_required','circuit_breaker_state'],
- 'backend/public_app/index.html':['data-truth-v3233.css?v=3.23.6.1','data-truth-v3233.js?v=3.23.6.1'],
- 'backend/public_app/service-worker.js':['const RELEASE="3.23.6.1"','data-truth-v3233.js'],
- 'wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php':['Version: 3.23.6.1','dataTruthJsUrl'],
+ 'backend/public_app/index.html':['data-truth-v3233.css?v=3.23.6.2','data-truth-v3233.js?v=3.23.6.2'],
+ 'backend/public_app/service-worker.js':['const RELEASE="3.23.6.2"','data-truth-v3233.js'],
+ 'wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php':['Version: 3.23.6.2','dataTruthJsUrl'],
  'RELEASE_NOTES_SITE_INTELLIGENCE_V3233.md':['Data Freshness, Coverage, and Source Truth'],
 }
 for rel,tokens in required.items():
@@ -20,7 +20,7 @@ for rel,tokens in required.items():
  for token in tokens:
   if token not in text: raise SystemExit(f'Missing {token!r} in {rel}')
 payload=TestClient(app).get('/public/data-truth').json()
-if not payload.get('ok') or payload.get('version')!='3.23.6.1' or payload.get('source_count')!=8: raise SystemExit('Data truth endpoint failed')
+if not payload.get('ok') or payload.get('version')!='3.23.6.2' or payload.get('source_count')!=8: raise SystemExit('Data truth endpoint failed')
 manifest=json.loads((ROOT/'MANIFEST.json').read_text()) if (ROOT/'MANIFEST.json').is_file() else None
-if manifest and manifest.get('release')!='3.23.6.1': raise SystemExit('Manifest release mismatch')
-print('Site Intelligence v3.23.6.1 data truth release contract passed.')
+if manifest and manifest.get('release')!='3.23.6.2': raise SystemExit('Manifest release mismatch')
+print('Site Intelligence v3.23.6.2 data truth release contract passed.')

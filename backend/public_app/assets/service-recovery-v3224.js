@@ -1,8 +1,8 @@
 (function (window) {
   "use strict";
 
-  const VERSION = "3.23.6.1";
-  const CACHE_NAME = "scsi-runtime-recovery-v3.23.6.1";
+  const VERSION = "3.23.6.2";
+  const CACHE_NAME = "scsi-runtime-recovery-v3.23.6.2";
   const MAX_ATTEMPTS = 3;
   const TIMEOUT_MS = 12000;
   const BACKOFF_MS = [600, 1400];

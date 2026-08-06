@@ -1,0 +1,33 @@
+{
+  "version": "3.23.6.2",
+  "release_id": "site-intelligence-v3.23.6.2",
+  "contract": "mutation-observer-recovery-and-complete-shell-browser-gate",
+  "mutation_observer": {
+    "self_observation_prevented": true,
+    "summary_text_idempotent": true,
+    "animation_frame_debounce": true,
+    "disconnect_during_writes": true,
+    "maximum_summary_passes_per_second": 8,
+    "summary_subtree_ignored": true,
+    "bounded_activity_exposed": true
+  },
+  "complete_shell_gate": {
+    "required": true,
+    "skip_allowed": false,
+    "loads_all_production_scripts": true,
+    "requires_application_ready": true,
+    "requires_launch_screen_closed": true,
+    "requires_data_truth_runtime": true,
+    "requires_production_truth_runtime": true,
+    "requires_no_console_or_page_errors": true,
+    "requires_bounded_observer_activity": true,
+    "iframe_mode": true,
+    "service_worker_failure_mode": true
+  },
+  "preserved_repairs": [
+    "single-owner-service-worker",
+    "startup-deadline",
+    "fail-open-workspace",
+    "wordpress-host-isolation"
+  ]
+}
