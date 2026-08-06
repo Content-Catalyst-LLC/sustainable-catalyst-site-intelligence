@@ -1,6 +1,6 @@
 {
   "schema": "sc-site-intelligence-live-source-registry/1.0",
-  "version": "3.23.6.4",
+  "version": "3.23.7",
   "generated_at": "2026-08-05T23:40:00Z",
   "sources": [
     {
@@ -57,6 +57,16 @@
         "maximum_attempts": 3,
         "circuit_breaker_failures": 3,
         "automatic_fallback_claims_live": false
+      },
+      "geographic_policy": {
+        "scope": "global_event",
+        "eligible": "global",
+        "country_resolution": "event_coordinates",
+        "observation_mode": "event_driven",
+        "default_country_state": "unknown",
+        "domain": "events",
+        "country_counts_runtime_field": "country_record_counts",
+        "boundary": "Global eligibility does not mean an earthquake record exists for every country or period."
       }
     },
     {
@@ -112,6 +122,16 @@
         "maximum_attempts": 3,
         "circuit_breaker_failures": 3,
         "automatic_fallback_claims_live": false
+      },
+      "geographic_policy": {
+        "scope": "global_event",
+        "eligible": "global",
+        "country_resolution": "report_geography",
+        "observation_mode": "event_driven",
+        "default_country_state": "unknown",
+        "domain": "humanitarian",
+        "country_counts_runtime_field": "country_record_counts",
+        "boundary": "Reporting is uneven by crisis, organization, language, country, and date."
       }
     },
     {
@@ -168,6 +188,18 @@
         "maximum_attempts": 3,
         "circuit_breaker_failures": 3,
         "automatic_fallback_claims_live": false
+      },
+      "geographic_policy": {
+        "scope": "country_limited",
+        "eligible_iso3": [
+          "USA"
+        ],
+        "country_resolution": "alert_area",
+        "observation_mode": "event_driven",
+        "default_country_state": "unknown",
+        "domain": "weather",
+        "country_counts_runtime_field": "country_record_counts",
+        "boundary": "The public National Weather Service alert feed is treated as United States coverage only."
       }
     },
     {
@@ -223,6 +255,16 @@
         "maximum_attempts": 3,
         "circuit_breaker_failures": 3,
         "automatic_fallback_claims_live": false
+      },
+      "geographic_policy": {
+        "scope": "global_event",
+        "eligible": "global",
+        "country_resolution": "event_coordinates",
+        "observation_mode": "event_driven",
+        "default_country_state": "unknown",
+        "domain": "earth_observation",
+        "country_counts_runtime_field": "country_record_counts",
+        "boundary": "Natural-event presence is event-driven; zero records is not evidence that hazards are absent."
       }
     },
     {
@@ -279,6 +321,15 @@
         "maximum_attempts": 3,
         "circuit_breaker_failures": 3,
         "automatic_fallback_claims_live": false
+      },
+      "geographic_policy": {
+        "scope": "global_point",
+        "eligible": "global",
+        "country_resolution": "representative_point",
+        "observation_mode": "periodic",
+        "default_country_state": "unknown",
+        "domain": "earth_observation",
+        "boundary": "Eligibility means a representative coordinate can be queried; it does not establish national coverage or a local instrument reading."
       }
     },
     {
@@ -333,6 +384,15 @@
         "maximum_attempts": 3,
         "circuit_breaker_failures": 3,
         "automatic_fallback_claims_live": false
+      },
+      "geographic_policy": {
+        "scope": "global_context",
+        "eligible": "global",
+        "country_resolution": "research_affiliation_and_topic",
+        "observation_mode": "context",
+        "default_country_state": "partial",
+        "domain": "research",
+        "boundary": "Country association in scholarly metadata is incomplete and is context, not a national condition."
       }
     },
     {
@@ -388,6 +448,15 @@
         "maximum_attempts": 3,
         "circuit_breaker_failures": 3,
         "automatic_fallback_claims_live": false
+      },
+      "geographic_policy": {
+        "scope": "global_country",
+        "eligible": "global",
+        "country_resolution": "national_indicator",
+        "observation_mode": "periodic",
+        "default_country_state": "unknown",
+        "domain": "indicators",
+        "boundary": "Indicator availability and reporting year vary by country and series; missing values are not imputed."
       }
     },
     {
@@ -441,6 +510,15 @@
         "maximum_attempts": 3,
         "circuit_breaker_failures": 3,
         "automatic_fallback_claims_live": false
+      },
+      "geographic_policy": {
+        "scope": "platform",
+        "eligible": "none",
+        "country_resolution": "none",
+        "observation_mode": "platform",
+        "default_country_state": "not_applicable",
+        "domain": "platform",
+        "boundary": "Platform status is not geographic evidence."
       }
     }
   ]

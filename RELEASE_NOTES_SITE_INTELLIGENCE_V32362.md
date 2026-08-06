@@ -1,4 +1,4 @@
-# Site Intelligence v3.23.6.4
+# Site Intelligence v3.23.7
 
 ## Mutation Observer Recovery and Complete-Shell Browser Gate
 

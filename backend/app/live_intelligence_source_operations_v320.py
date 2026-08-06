@@ -1,4 +1,4 @@
-"""Live Intelligence source operations for Site Intelligence v3.23.6.4.
+"""Live Intelligence source operations for Site Intelligence v3.23.7.
 
 This module provides a public-safe source registry and a protected operational
 control plane for the electronic Live Intelligence board. Runtime state is
@@ -212,6 +212,7 @@ class LiveIntelligenceSourceOperations:
                 "observed_schema_fingerprint": runtime.get("observed_schema_fingerprint"),
                 "last_schema_check_at": runtime.get("last_schema_check_at"),
                 "last_schema_change_at": runtime.get("last_schema_change_at"),
+                "country_record_counts": {str(k).upper(): max(0, int(v or 0)) for k, v in list((runtime.get("country_record_counts") or {}).items())[:250]} if isinstance(runtime.get("country_record_counts"), dict) else {},
             }
             if not public:
                 row["runtime"]["last_error"] = runtime.get("last_error")
@@ -294,6 +295,7 @@ class LiveIntelligenceSourceOperations:
         error: str = "",
         http_status: int | None = None,
         mode: str = "feed",
+        country_record_counts: Mapping[str, int] | None = None,
     ) -> dict[str, Any]:
         feed_id = str(feed_id or "").strip().lower().replace("-", "_")
         if feed_id not in self._source_map():
@@ -316,6 +318,12 @@ class LiveIntelligenceSourceOperations:
             runtime["last_record_count"] = max(0, int(record_count or 0))
             runtime["last_duration_ms"] = round(float(duration_ms), 2) if duration_ms is not None else None
             runtime["last_http_status"] = int(http_status) if http_status is not None else None
+            if country_record_counts is not None:
+                runtime["country_record_counts"] = {
+                    str(code).strip().upper(): max(0, int(count or 0))
+                    for code, count in list(country_record_counts.items())[:250]
+                    if len(str(code).strip()) == 3 and str(code).strip().isalpha()
+                }
             if ok:
                 runtime["last_success_at"] = _iso(now)
                 runtime["consecutive_failures"] = 0
@@ -335,6 +343,7 @@ class LiveIntelligenceSourceOperations:
                 "record_count": max(0, int(record_count or 0)),
                 "duration_ms": runtime["last_duration_ms"],
                 "http_status": runtime["last_http_status"],
+                "country_count": len(runtime.get("country_record_counts") or {}),
                 "error_class": str(error or "")[:120] if not ok else "",
             }
             _append_jsonl(self.history_path, receipt)

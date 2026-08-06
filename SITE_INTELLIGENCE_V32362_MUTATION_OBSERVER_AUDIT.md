@@ -1,4 +1,4 @@
-# Site Intelligence v3.23.6.4 Mutation Observer Audit
+# Site Intelligence v3.23.7 Mutation Observer Audit
 
 ## Failure reproduced
 

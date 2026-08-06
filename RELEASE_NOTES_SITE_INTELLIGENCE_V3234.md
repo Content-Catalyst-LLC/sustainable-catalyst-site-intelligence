@@ -1,4 +1,4 @@
-# Site Intelligence v3.23.6.4
+# Site Intelligence v3.23.7
 
 ## Analytical Workspace Completion
 

@@ -1,4 +1,4 @@
-# v3.23.6.4 Bootstrap Recovery Audit
+# v3.23.7 Bootstrap Recovery Audit
 
 ## Confirmed v3.23.6 defect
 
@@ -10,7 +10,7 @@ The v3.23.6 package contained three service-worker registration paths:
 
 It also registered more than one controller-change recovery path. In addition, responsive height listeners at the end of `app.js` referenced the closure-private `reportHeight` function from global scope.
 
-## v3.23.6.4 ownership contract
+## v3.23.7 ownership contract
 
 `bootstrap-v32361.js` is now the only file under `backend/public_app/assets` containing either:
 

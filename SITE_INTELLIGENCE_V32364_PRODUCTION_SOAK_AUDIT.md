@@ -1,4 +1,4 @@
-# Site Intelligence v3.23.6.4 Production Soak Audit
+# Site Intelligence v3.23.7 Production Soak Audit
 
 The release separates shell readiness from data hydration, bounds effective request retries, serializes route transitions, and closes the service-worker update lifecycle so no controller change can force a current-session reload.
 

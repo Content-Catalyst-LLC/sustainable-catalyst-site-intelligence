@@ -1,6 +1,6 @@
-# Install and test Site Intelligence v3.23.6.4
+# Install and test Site Intelligence v3.23.7
 
-1. Run the macOS deployment installer with the v3.23.6.4 release bundle.
+1. Run the macOS deployment installer with the v3.23.7 release bundle.
 2. Wait for exact live release-gate verification.
 3. Upload the verified WordPress ZIP only after Terminal reports success.
 4. Open Core workflows in the application and verify all five workflow cards.

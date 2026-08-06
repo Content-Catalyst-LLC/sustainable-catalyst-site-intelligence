@@ -5,21 +5,28 @@ BACKEND="$ROOT/backend"
 PYTHON="${PYTHON:-}"
 if [[ -z "$PYTHON" ]]; then [[ -x "$ROOT/.venv/bin/python" ]] && PYTHON="$ROOT/.venv/bin/python" || PYTHON="$(command -v python3 || true)"; fi
 [[ -n "$PYTHON" ]] || { echo "ERROR: Python 3 is required." >&2; exit 1; }
-RUNTIME_SANDBOX="$(mktemp -d "${TMPDIR:-/tmp}/scsi-v32364-runtime.XXXXXX")"
+RUNTIME_SANDBOX="$(mktemp -d "${TMPDIR:-/tmp}/scsi-v3237-runtime.XXXXXX")"
 trap 'rm -rf "$RUNTIME_SANDBOX" "$BACKEND/backend"' EXIT
 export SC_SI_RUNTIME_STATE_ROOT="$RUNTIME_SANDBOX"
+
+printf '\n==> Running mandatory v3.23.7 global country truth browser gate\n'
+"$PYTHON" "$ROOT/scripts/run_browser_gate_v3237.py" browser_global_country_data_truth_v3237.py
+
 rm -rf "$BACKEND/backend"
 printf '
-==> Running complete inherited and v3.23.6.4 test suite with process-isolated teardown
+==> Running complete inherited and v3.23.7 test suite with process-isolated teardown
 '
-PYTHONPATH="$BACKEND" PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 "$PYTHON" "$ROOT/scripts/run_pytest_isolated_v32364.py"
+PYTHONPATH="$BACKEND" PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 "$PYTHON" "$ROOT/scripts/run_pytest_isolated_v3237.py"
 printf '
-==> Verifying v3.23.6.4 production soak, route stability, and service-worker closure
+==> Verifying v3.23.7 global country data truth and coverage matrix
 '
-"$PYTHON" "$ROOT/scripts/validate_v32364_release.py"
-grep -q 'APP_VERSION = "3.23.6.4"' "$BACKEND/app/version.py"
-grep -q 'Version: 3.23.6.4' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
-grep -q 'const RELEASE="3.23.6.4"' "$BACKEND/public_app/service-worker.js"
+"$PYTHON" "$ROOT/scripts/validate_v3237_release.py"
+grep -q 'APP_VERSION = "3.23.7"' "$BACKEND/app/version.py"
+grep -q 'Version: 3.23.7' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
+grep -q 'const RELEASE="3.23.7"' "$BACKEND/public_app/service-worker.js"
+grep -q '/public/data-truth/coverage-matrix' "$BACKEND/app/main.py"
+grep -q 'data-truth-v3237.js?v=3.23.7' "$BACKEND/public_app/index.html"
+grep -q 'data-truth-v3237.js' "$BACKEND/public_app/service-worker.js"
 grep -q '/public/mutation-observer-recovery' "$BACKEND/app/main.py"
 grep -q 'summary.textContent!==nextText' "$BACKEND/public_app/assets/browser-reliability-v3235.js"
 grep -q 'requestAnimationFrame(flushMapSummaries)' "$BACKEND/public_app/assets/browser-reliability-v3235.js"
@@ -36,7 +43,7 @@ printf '
 "$PYTHON" - "$ROOT" <<'PYVERIFY'
 from pathlib import Path
 import hashlib,json,sys
-root=Path(sys.argv[1]);m=json.loads((root/'MANIFEST.json').read_text());assert m['release']=='3.23.6.4';assert m['file_count']==len(m['files'])
+root=Path(sys.argv[1]);m=json.loads((root/'MANIFEST.json').read_text());assert m['release']=='3.23.7';assert m['file_count']==len(m['files'])
 for e in m['files']:
  p=root/e['path'];d=p.read_bytes();assert len(d)==e['bytes'],e['path'];assert hashlib.sha256(d).hexdigest()==e['sha256'],e['path']
 print(f"Verified {len(m['files'])} manifest entries.")
@@ -69,14 +76,14 @@ if command -v php >/dev/null 2>&1; then printf '
 printf '
 ==> Running mandatory complete-shell Chromium browser gate
 '
-"$PYTHON" "$ROOT/scripts/run_browser_gate_v32364.py" browser_complete_shell_gate_v32362.py
-printf '\n==> Running mandatory v3.23.6.4 production-soak route and service-worker gate\n'
-"$PYTHON" "$ROOT/scripts/run_browser_gate_v32364.py" browser_production_soak_gate_v32364.py
+"$PYTHON" "$ROOT/scripts/run_browser_gate_v3237.py" browser_complete_shell_gate_v32362.py
+printf '\n==> Running mandatory v3.23.7 production-soak route and service-worker gate\n'
+"$PYTHON" "$ROOT/scripts/run_browser_gate_v3237.py" browser_production_soak_gate_v32364.py
 printf '\n==> Running mandatory long-page WordPress embed gate\n'
-"$PYTHON" "$ROOT/scripts/run_browser_gate_v32364.py" browser_wordpress_embed_gate_v32363.py
+"$PYTHON" "$ROOT/scripts/run_browser_gate_v3237.py" browser_wordpress_embed_gate_v32363.py
 rm -rf "$BACKEND/backend"
 [[ ! -e "$BACKEND/backend" ]] || { echo 'ERROR: runtime state cleanup failed.' >&2; exit 1; }
 printf '
-SUCCESS: Site Intelligence v3.23.6.4 passed production soak, route stability, and service-worker closure validation.
+SUCCESS: Site Intelligence v3.23.7 passed global country data truth and coverage matrix validation.
 Repository: %s
 ' "$ROOT"

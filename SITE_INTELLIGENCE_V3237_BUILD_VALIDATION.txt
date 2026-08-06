@@ -1,0 +1,36 @@
+Site Intelligence v3.23.7 — Global Country Data Truth and Coverage Matrix
+Build validation: PASS
+
+Release identity
+- Backend version: 3.23.7
+- WordPress plugin version: 3.23.7
+- Service-worker release: 3.23.7
+- Release id: site-intelligence-v3.23.7
+
+Global data-truth scope
+- 177 bundled country and territory geographies
+- 8 registered public source contracts
+- 7 explicit country-coverage states
+- Country, country-source, country-indicator, and coverage-matrix endpoints
+- Geographic eligibility kept separate from observed country-linked records
+- Kenya and Ghana packaged indicator fallbacks classified historical-only
+- Runtime country-count evidence can upgrade event coverage to available or no-recent-records
+
+Deterministic validation
+- 987 automated tests passed
+- 1,160 immutable manifest entries verified
+- 127 JSON/GeoJSON files parsed
+- 61 JavaScript files syntax-validated
+- WordPress PHP syntax passed
+
+Mandatory browser gates
+- Global country truth UI: PASS
+- Complete direct and iframe application shell: PASS
+- Production-soak route and service-worker closure: PASS
+- Long-page WordPress embed isolation: PASS
+- 38 of 38 application scripts initialized
+- Automatic service-worker reloads: 0
+- Route failures during soak: 0
+- WordPress application viewport remained fixed at 1,100 px
+
+Production deployment was not performed in the build environment. The macOS installer performs two deterministic validation passes, promotes the exact Git tree, verifies Render, and only then authorizes WordPress installation.

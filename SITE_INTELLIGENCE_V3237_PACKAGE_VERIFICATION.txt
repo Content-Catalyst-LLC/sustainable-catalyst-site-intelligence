@@ -1,0 +1,17 @@
+Site Intelligence v3.23.7 package verification
+
+Repository package requirements
+- Contains sustainable-catalyst-site-intelligence-v3.23.7 as the package root.
+- Includes MANIFEST.json with release 3.23.7.
+- Excludes virtual environments, caches, runtime state, and Python bytecode.
+
+WordPress package requirements
+- Contains one sustainable-catalyst-site-intelligence plugin folder.
+- Plugin header version is 3.23.7.
+- Includes data-truth-v3237.js and data-truth-v3237.css.
+- Preserves fixed application viewport and host-page isolation.
+
+Release bundle requirements
+- Contains repository ZIP, WordPress ZIP, installer, release notes, audits, installation instructions, build validation, package verification, terminal commands, and SHA256SUMS.txt.
+- Installer supports checksum-only verification through SC_VERIFY_BUNDLE_ONLY=1.
+- Installer validates twice before GitHub/Render promotion.

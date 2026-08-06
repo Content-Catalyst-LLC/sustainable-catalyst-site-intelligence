@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
-RELEASE="3.23.6.4"
+RELEASE="3.23.7"
 RELEASE_ID="site-intelligence-v${RELEASE}"
 BUNDLE="${1:-}"
 fail(){ printf '\nERROR: %s\n' "$1" >&2; exit 1; }
 if [[ -z "$BUNDLE" ]]; then
-  BUNDLE="$(find "$HOME/Downloads" -maxdepth 1 -type f -name 'sustainable-catalyst-site-intelligence-v3.23.6.4-release-bundle*.zip' -print0 2>/dev/null | xargs -0 ls -t 2>/dev/null | head -1 || true)"
+  BUNDLE="$(find "$HOME/Downloads" -maxdepth 1 -type f -name 'sustainable-catalyst-site-intelligence-v3.23.7-release-bundle*.zip' -print0 2>/dev/null | xargs -0 ls -t 2>/dev/null | head -1 || true)"
 fi
 [[ -n "$BUNDLE" && -f "$BUNDLE" ]] || fail "The Site Intelligence v${RELEASE} release bundle was not found in Downloads."
 for command_name in unzip shasum python3 git curl rsync; do command -v "$command_name" >/dev/null 2>&1 || fail "$command_name is required."; done
@@ -34,15 +34,15 @@ python3 -m venv "$ROOT/.venv"
 "$ROOT/.venv/bin/python" -m pip install --upgrade pip
 "$ROOT/.venv/bin/python" -m pip install -r "$ROOT/backend/requirements.txt" -r "$ROOT/backend/requirements-dev.txt"
 printf '\n==> Running deterministic validation pass 1\n'
-PYTHON="$ROOT/.venv/bin/python" bash "$ROOT/verify_site_intelligence_v3_23_6_4_macos.sh"
+PYTHON="$ROOT/.venv/bin/python" bash "$ROOT/verify_site_intelligence_v3_23_7_macos.sh"
 printf '\n==> Running deterministic validation pass 2\n'
-PYTHON="$ROOT/.venv/bin/python" bash "$ROOT/verify_site_intelligence_v3_23_6_4_macos.sh"
+PYTHON="$ROOT/.venv/bin/python" bash "$ROOT/verify_site_intelligence_v3_23_7_macos.sh"
 printf '\n==> Promoting the backend through GitHub and Render\n'
-PYTHON="$ROOT/.venv/bin/python" bash "$ROOT/promote_site_intelligence_v3_23_6_4_to_github_and_render_macos.sh"
+PYTHON="$ROOT/.venv/bin/python" bash "$ROOT/promote_site_intelligence_v3_23_7_to_github_and_render_macos.sh"
 RECEIPT="$HOME/Downloads/sustainable-catalyst-site-intelligence-v${RELEASE}-github-deploy/site-intelligence-v${RELEASE}-deployment-receipt.json"
 cat <<DONE
 
-SUCCESS: Site Intelligence v${RELEASE} is live with production soak, route stability, and service-worker closure.
+SUCCESS: Site Intelligence v${RELEASE} is live with global country data truth and coverage matrix.
 Release id: ${RELEASE_ID}
 
 Deployment receipt:

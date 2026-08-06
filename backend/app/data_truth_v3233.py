@@ -1,4 +1,4 @@
-"""Data freshness, coverage, and source-truth contract for Site Intelligence v3.23.6.4."""
+"""Data freshness, coverage, and source-truth contract for Site Intelligence v3.23.7."""
 from __future__ import annotations
 
 from datetime import datetime, timezone
@@ -23,7 +23,7 @@ CLASSIFICATIONS = (
 _REQUIRED_METADATA = (
     "feed_id", "label", "provider", "endpoint", "license", "coverage",
     "default_refresh_minutes", "default_cache_ttl_minutes", "stale_after_minutes",
-    "data_classification", "schema_contract", "retry_policy",
+    "data_classification", "schema_contract", "retry_policy", "geographic_policy",
 )
 
 
@@ -164,6 +164,8 @@ class DataTruthCenter:
             },
             "license": source.get("license") or {},
             "coverage": source.get("coverage") or {},
+            "geographic_policy": source.get("geographic_policy") or {},
+            "runtime": {"country_record_counts": (runtime.get("country_record_counts") or {}) if isinstance(runtime.get("country_record_counts"), Mapping) else {}},
             "refresh_policy": {
                 "refresh_minutes": _safe_int(effective.get("refresh_minutes"), _safe_int(source.get("default_refresh_minutes"), 60)),
                 "cache_ttl_minutes": _safe_int(effective.get("cache_ttl_minutes"), _safe_int(source.get("default_cache_ttl_minutes"), 60)),

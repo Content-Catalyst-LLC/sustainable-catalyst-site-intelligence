@@ -38,10 +38,10 @@ def test_local_world_boundary_asset_is_real_and_publicly_served():
 
 def test_application_loads_engine_before_all_map_modules():
     html = read("backend/public_app/index.html")
-    engine = html.index("/app/assets/vector-cartography-v3230.js?v=3.23.6.4")
-    recovery = html.index("/app/assets/service-recovery-v3224.js?v=3.23.6.4")
-    runtime = html.index("/app/assets/runtime-v3230.js?v=3.23.6.4")
-    application = html.index("/app/assets/app.js?v=3.23.6.4")
+    engine = html.index("/app/assets/vector-cartography-v3230.js?v=3.23.7")
+    recovery = html.index("/app/assets/service-recovery-v3224.js?v=3.23.7")
+    runtime = html.index("/app/assets/runtime-v3230.js?v=3.23.7")
+    application = html.index("/app/assets/app.js?v=3.23.7")
     assert engine < recovery < runtime < application
     assert 'data-map-runtime="vector-cartography-engine"' in html
 
@@ -59,7 +59,7 @@ def test_runtime_health_separates_optional_imagery_from_application_health():
 
 def test_service_worker_uses_network_first_for_versioned_map_assets():
     worker = read("backend/public_app/service-worker.js")
-    assert 'const RELEASE="3.23.6.4"' in worker
+    assert 'const RELEASE="3.23.7"' in worker
     assert "vector-cartography-v3230.js" in worker
     assert "world-cartography-v3230.geojson" in worker
     assert "networkFirstShell" in worker

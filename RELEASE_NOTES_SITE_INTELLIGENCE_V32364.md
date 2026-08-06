@@ -1,4 +1,4 @@
-# Site Intelligence v3.23.6.4 — Production Soak, Route Stability, and Service-Worker Closure
+# Site Intelligence v3.23.7 — Production Soak, Route Stability, and Service-Worker Closure
 
 This patch removes network access and service-worker lifecycle changes from the critical application-opening path. The application shell now opens first, while imagery, event, country, and requested-workspace data hydrate independently in the background.
 

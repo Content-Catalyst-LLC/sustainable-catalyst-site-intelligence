@@ -1,6 +1,6 @@
-# Site Intelligence v3.23.6.4 Installation and Test Guide
+# Site Intelligence v3.23.7 Installation and Test Guide
 
-1. Download the v3.23.6.4 release bundle and macOS installer into `~/Downloads`.
+1. Download the v3.23.7 release bundle and macOS installer into `~/Downloads`.
 2. Run the installer with the release bundle path.
 3. Allow the installer to verify checksums, create an isolated Python environment, run the deterministic validation twice, publish GitHub refs, and wait for the Render release gate.
 4. Install the WordPress ZIP only after Terminal reports success.

@@ -11,7 +11,7 @@ from typing import Any, Iterable
 
 from .config import Settings
 
-RELEASE_VERSION = "3.23.6.4"
+RELEASE_VERSION = "3.23.7"
 SCHEMA_VERSION = "sc-connected-public-intelligence/1.0"
 
 
