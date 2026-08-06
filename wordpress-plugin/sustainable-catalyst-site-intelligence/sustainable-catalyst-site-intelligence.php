@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.23.6.2
+ * Version: 3.23.6.3
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,8 +13,8 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.23.6.2';
-    const RELEASE_ID = 'site-intelligence-v3.23.6.2';
+    const VERSION = '3.23.6.3';
+    const RELEASE_ID = 'site-intelligence-v3.23.6.3';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -433,7 +433,7 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v3.23.6.2 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
+        // v3.23.6.3 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
         // Existing moving tickers remain moving unless an administrator selects static or manual presentation.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
@@ -6473,12 +6473,11 @@ final class SC_Site_Intelligence_Plugin {
 
         $frame_id = 'scsi-app-' . wp_generate_uuid4();
         return sprintf(
-            '<div class="scsi-standalone-app" data-scsi-responsive-app data-scsi-release="%5$s"><div class="scsi-app-loading" role="status" aria-live="polite">Opening Site Intelligence…</div><iframe id="%4$s" src="%1$s" title="%2$s" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen; clipboard-write" data-scsi-embed-frame data-scsi-min-height="620" data-scsi-mobile-min-height="760" data-scsi-max-height="2600" style="width:100%%;height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a"></iframe><p class="scsi-embed-fallback"><a href="%1$s" target="_blank" rel="noopener noreferrer">Open Site Intelligence in a new tab</a></p></div>',
+            '<div class="scsi-standalone-app scsi-fixed-application-viewport" data-scsi-fixed-app data-scsi-embed-mode="fixed" data-scsi-fixed-height="%3$d" data-scsi-release="%5$s" style="--scsi-fixed-app-height:%3$dpx"><div class="scsi-app-loading" role="status" aria-live="polite">Opening Site Intelligence…</div><iframe id="%4$s" src="%1$s" title="%2$s" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen; clipboard-write" scrolling="yes" data-scsi-embed-frame data-scsi-embed-mode="fixed" data-scsi-fixed-height="%3$d" data-scsi-min-height="%3$d" data-scsi-mobile-min-height="%3$d" data-scsi-max-height="%3$d" style="width:100%%;height:%3$dpx;min-height:%3$dpx;max-height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a"></iframe><p class="scsi-embed-fallback"><a href="%1$s" target="_blank" rel="noopener noreferrer">Open Site Intelligence in a new tab</a></p></div>',
             $src,
             $title,
             $height,
             esc_attr($frame_id),
-            wp_json_encode($frame_id),
             esc_attr(self::VERSION)
         );
     }

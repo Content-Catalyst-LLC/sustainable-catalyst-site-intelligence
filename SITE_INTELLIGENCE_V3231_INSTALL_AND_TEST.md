@@ -1,8 +1,8 @@
-# Install and test Site Intelligence v3.23.6.2
+# Install and test Site Intelligence v3.23.6.3
 
 ## Required files
 
-- `sustainable-catalyst-site-intelligence-v3.23.6.2-release-bundle.zip`
+- `sustainable-catalyst-site-intelligence-v3.23.6.3-release-bundle.zip`
 - `deploy_and_validate_site_intelligence_v3_23_1_macos.sh`
 
 Place both files in `~/Downloads`.
@@ -17,7 +17,7 @@ INSTALLER="$(find . -maxdepth 1 -type f \
   -print0 | xargs -0 ls -t | head -1)"
 
 BUNDLE="$(find . -maxdepth 1 -type f \
-  -name 'sustainable-catalyst-site-intelligence-v3.23.6.2-release-bundle*.zip' \
+  -name 'sustainable-catalyst-site-intelligence-v3.23.6.3-release-bundle*.zip' \
   -print0 | xargs -0 ls -t | head -1)"
 
 chmod +x "$INSTALLER"

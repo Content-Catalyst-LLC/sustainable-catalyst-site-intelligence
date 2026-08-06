@@ -1,5 +1,5 @@
 (() => {
-  const VERSION="3.23.6.2", API=window.SC_SITE_INTELLIGENCE_API||window.location.origin;
+  const VERSION="3.23.6.3", API=window.SC_SITE_INTELLIGENCE_API||window.location.origin;
   const qs=s=>document.querySelector(s), esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
   const state={loaded:false,summary:null,models:[],forecasts:[],evaluations:[],warnings:null};
   async function get(path){const r=await fetch(`${API}${path}`,{headers:{Accept:"application/json"}});if(!r.ok)throw new Error(`${r.status} ${path}`);return r.json()}
@@ -14,7 +14,7 @@
     qs("#warningList").innerHTML=events.length?events.slice(-12).reverse().map(x=>row(x.rule_id,`${x.latest_period||"period"} · value ${x.latest_value} · threshold ${x.direction} ${x.threshold}`,x.matched?x.severity:"clear")).join(""):row("No public warning events","Threshold indicators are review signals, not emergency instructions.");
     qs("#modelStatus").textContent="Model cards, forecasts, evaluations, and warning boundaries loaded.";
   }
-  async function load(){const p=qs("#modelGovernanceStudio");if(!p)return;p.setAttribute("aria-busy","true");try{const [summary,models,forecasts,evaluations,warnings]=await Promise.all([get("/public/model-governance"),get("/public/models"),get("/public/forecasts"),get("/public/forecast-evaluations"),get("/public/early-warning")]);state.summary=summary;state.models=models.models||[];state.forecasts=forecasts.forecasts||[];state.evaluations=evaluations.evaluations||[];state.warnings=warnings;state.loaded=true;render()}catch(e){qs("#modelStatus").textContent="Model-governance services could not be refreshed. No forecast or warning should be treated as current without source verification.";console.warn(e)}finally{p.setAttribute("aria-busy","false");window.parent?.postMessage({type:"scsi-height",height:document.documentElement.scrollHeight,version:VERSION},"*")}}
+  async function load(){const p=qs("#modelGovernanceStudio");if(!p)return;p.setAttribute("aria-busy","true");try{const [summary,models,forecasts,evaluations,warnings]=await Promise.all([get("/public/model-governance"),get("/public/models"),get("/public/forecasts"),get("/public/forecast-evaluations"),get("/public/early-warning")]);state.summary=summary;state.models=models.models||[];state.forecasts=forecasts.forecasts||[];state.evaluations=evaluations.evaluations||[];state.warnings=warnings;state.loaded=true;render()}catch(e){qs("#modelStatus").textContent="Model-governance services could not be refreshed. No forecast or warning should be treated as current without source verification.";console.warn(e)}finally{p.setAttribute("aria-busy","false");if(!window.SCSI_FIXED_WORDPRESS_EMBED)window.parent?.postMessage({type:"scsi-height",height:document.documentElement.scrollHeight,version:VERSION},"*")}}
   function open(){const p=qs("#modelGovernanceStudio");if(!p)return;p.hidden=false;if(!state.loaded)load()}
   function close(){const p=qs("#modelGovernanceStudio");if(p)p.hidden=true}
   window.SCModelsV2170={open,close,status:()=>({version:VERSION,loaded:state.loaded,models:state.models.length})};

@@ -1,4 +1,4 @@
-const RELEASE="3.23.6.2";
+const RELEASE="3.23.6.3";
 const CACHE_PREFIX="scsi-";
 const VERSION=`${CACHE_PREFIX}v${RELEASE}`;
 const IMMUTABLE=`${VERSION}-immutable`;
@@ -11,7 +11,7 @@ const MAX_DATA_ENTRIES=120;
 const MAX_RUNTIME_DATA_ENTRIES=160;
 const MAX_IMMUTABLE_ENTRIES=180;
 const MAX_DATA_AGE_MS=24*60*60*1000;
-const CRITICAL_SHELL=["/app/","/app/offline.html","/app/manifest.webmanifest","/app/assets/app.css","/app/assets/vector-cartography-v3230.css","/app/assets/vector-cartography-v3230.js","/app/assets/world-cartography-v3230.geojson","/app/assets/runtime-v3230.css","/app/assets/runtime-v3230.js","/app/assets/cartographic-workspace-v3230.css","/app/assets/cartographic-workspace-v3230.js","/app/assets/performance-offline-v3236.css","/app/assets/bootstrap-v32361.js","/app/assets/performance-offline-v3236.js","/app/assets/app.js"];
+const CRITICAL_SHELL=["/app/","/app/offline.html","/app/manifest.webmanifest","/app/assets/app.css","/app/assets/embed-isolation-v32363.css","/app/assets/embed-isolation-v32363.js","/app/assets/vector-cartography-v3230.css","/app/assets/vector-cartography-v3230.js","/app/assets/world-cartography-v3230.geojson","/app/assets/runtime-v3230.css","/app/assets/runtime-v3230.js","/app/assets/cartographic-workspace-v3230.css","/app/assets/cartographic-workspace-v3230.js","/app/assets/performance-offline-v3236.css","/app/assets/bootstrap-v32361.js","/app/assets/performance-offline-v3236.js","/app/assets/app.js"];
 const IMMUTABLE_SUFFIXES=/\.(?:js|css|geojson|json|png|svg|webp|woff2?)$/i;
 
 // Route assets are cached on first use rather than during install. Keeping the

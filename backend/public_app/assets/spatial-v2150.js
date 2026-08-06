@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = "3.23.6.2";
+  const VERSION = "3.23.6.3";
   const API = window.SC_SITE_INTELLIGENCE_API || window.location.origin;
   const qs = (selector, root = document) => root.querySelector(selector);
   const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
@@ -102,7 +102,7 @@
       mapStatus("Spatial services are unavailable; the map remains in diagnostic mode.");console.warn("Spatial evidence load failed",error)
     }finally{
       panel.setAttribute("aria-busy","false");setTimeout(()=>state.map?.invalidateSize(),100);
-      window.parent?.postMessage({type:"scsi-height",height:document.documentElement.scrollHeight,version:VERSION},"*")
+      if(!window.SCSI_FIXED_WORDPRESS_EMBED)window.parent?.postMessage({type:"scsi-height",height:document.documentElement.scrollHeight,version:VERSION},"*")
     }
   }
   async function runEvidence(){

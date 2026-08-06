@@ -172,7 +172,7 @@
     try {
       const item = JSON.parse(sessionStorage.getItem(recoveryCacheKey(url)) || 'null');
       if (!item || !item.savedAt || Date.now() - item.savedAt > 21600000) return null;
-      window.dispatchEvent(new CustomEvent('scsi:service-fallback', {detail: {version: cfg.version || '3.23.6.2', group: 'wordpress-proxy', path: url, reason: 'last-known-good', staleAgeMs: Date.now() - item.savedAt}}));
+      window.dispatchEvent(new CustomEvent('scsi:service-fallback', {detail: {version: cfg.version || '3.23.6.3', group: 'wordpress-proxy', path: url, reason: 'last-known-good', staleAgeMs: Date.now() - item.savedAt}}));
       return item.data;
     } catch (e) { return null; }
   }
@@ -200,7 +200,7 @@
       return fetchJsonAttempt(url).catch(function (error) {
         const retryable = !error.status || recoveryStatuses.indexOf(Number(error.status)) !== -1;
         if (retryable && attempt < 3) {
-          window.dispatchEvent(new CustomEvent('scsi:service-retry', {detail: {version: cfg.version || '3.23.6.2', group: 'wordpress-proxy', path: url, attempt: attempt + 1}}));
+          window.dispatchEvent(new CustomEvent('scsi:service-retry', {detail: {version: cfg.version || '3.23.6.3', group: 'wordpress-proxy', path: url, attempt: attempt + 1}}));
           return new Promise(function (resolve) { setTimeout(resolve, attempt === 1 ? 600 : 1400); }).then(run);
         }
         const recovered = readRecoveredJson(url);
@@ -3677,12 +3677,14 @@
         minimum: Number(frame.dataset.scsiMinHeight || 620),
         mobileMinimum: Number(frame.dataset.scsiMobileMinHeight || 760),
         maximum: Number(frame.dataset.scsiMaxHeight || 2600),
+        fixed: frame.dataset.scsiEmbedMode === 'fixed' || Boolean(wrapper && wrapper.hasAttribute('data-scsi-fixed-app')),
+        fixedHeight: Number(frame.dataset.scsiFixedHeight || (wrapper && wrapper.dataset.scsiFixedHeight) || frame.style.height.replace('px','') || 900),
         loaded: false
       };
       frame.addEventListener('load', function () {
         record.loaded = true;
         if (wrapper) wrapper.classList.add('is-loaded');
-        try { frame.contentWindow.postMessage({type: 'SC_SI_REQUEST_HEIGHT', hostVersion: cfg.version || ''}, origin || '*'); } catch (error) {}
+        if (!record.fixed) { try { frame.contentWindow.postMessage({type: 'SC_SI_REQUEST_HEIGHT', hostVersion: cfg.version || ''}, origin || '*'); } catch (error) {} }
       });
       window.setTimeout(function () {
         if (!record.loaded && wrapper) wrapper.classList.add('scsi-embed-delayed');
@@ -3696,7 +3698,8 @@
     function applyHeight(record, value) {
       var parsed = Number.parseInt(value, 10);
       if (!Number.isFinite(parsed) || parsed <= 0) return;
-      var height = Math.max(minimumFor(record), Math.min(record.maximum, parsed + 8));
+      if (record.fixed) return;
+      var height = Math.max(minimumFor(record), Math.min(record.maximum, parsed));
       record.frame.style.height = height + 'px';
       record.frame.setAttribute('height', String(height));
       if (record.wrapper) record.wrapper.style.setProperty('--scsi-embed-height', height + 'px');
@@ -3717,15 +3720,30 @@
           return;
         }
         if (record.wrapper) record.wrapper.classList.remove('scsi-release-mismatch','scsi-embed-delayed');
-        applyHeight(record, event.data.height);
+        if (!record.fixed) applyHeight(record, event.data.height);
       });
     });
+    function enforceFixedViewport(record) {
+      if (!record.fixed) return;
+      var height = Math.max(620, Math.min(1400, Number(record.fixedHeight || 900)));
+      record.frame.style.height = height + 'px';
+      record.frame.style.minHeight = height + 'px';
+      record.frame.style.maxHeight = height + 'px';
+      record.frame.setAttribute('height', String(height));
+      if (record.wrapper) record.wrapper.style.setProperty('--scsi-fixed-app-height', height + 'px');
+    }
+    records.forEach(enforceFixedViewport);
     window.addEventListener('resize', function () {
-      records.forEach(function (record) {
-        var current = Number.parseInt(record.frame.style.height || record.frame.getAttribute('height') || 0, 10);
-        if (current) applyHeight(record, current);
-      });
+      records.forEach(enforceFixedViewport);
     }, {passive: true});
+  }
+
+  function syncSiteIntelligencePublicRelease() {
+    var page=document.querySelector('.ccp-site-intelligence-public');
+    if(!page||!cfg.version)return;
+    page.querySelectorAll('.ccp-status-item').forEach(function(item){var label=item.querySelector('.ccp-status-label');if(label&&label.textContent.trim()==='Current version'){var value=item.querySelector('strong');if(value)value.textContent=cfg.version;}});
+    var release=page.querySelector('.ccp-release-bar strong');
+    if(release)release.textContent='Site Intelligence v'+cfg.version+' — Fixed Application Viewport and WordPress Embed Isolation';
   }
 
   function setupLiveIntelligence() {
@@ -4835,6 +4853,7 @@
     setupLiveIntelligenceRegistryPublications();
     setupLaunchActions();
     setupResponsiveEmbeds();
+    syncSiteIntelligencePublicRelease();
     setupLiveIntelligence();
     fetchDashboards();
     initGeospatialExtras();

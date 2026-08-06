@@ -1,0 +1,43 @@
+{
+  "version": "3.23.6.3",
+  "release_id": "site-intelligence-v3.23.6.3",
+  "contract": "fixed-application-viewport-and-wordpress-embed-isolation",
+  "application_embed": {
+    "mode": "wordpress-fixed",
+    "shortcode": "sc_site_intelligence_app",
+    "default_height_px": 900,
+    "supported_height_px": {"minimum": 620, "maximum": 1400},
+    "document_auto_resize": false,
+    "internal_scrolling": true,
+    "height_transition": false,
+    "content_visibility_auto": false
+  },
+  "message_policy": {
+    "child_height_messages_enabled": false,
+    "parent_height_messages_applied": false,
+    "release_handshake_enabled": true,
+    "origin_checked": true,
+    "additive_height_adjustment_px": 0
+  },
+  "host_isolation": {
+    "application_assets_execute_in_host": false,
+    "production_truth_executes_in_host": false,
+    "data_truth_executes_in_host": false,
+    "browser_reliability_executes_in_host": false
+  },
+  "browser_gate": {
+    "required": true,
+    "skip_allowed": false,
+    "long_wordpress_page": true,
+    "direct_and_iframe_modes": true,
+    "route_changes": true,
+    "drawer_changes": true,
+    "host_scroll_stability": true,
+    "viewport_resize_stability": true
+  },
+  "boundaries": [
+    "The fixed viewport applies only to the complete Site Intelligence application shortcode.",
+    "Document-oriented embeds may continue to use bounded automatic height negotiation.",
+    "The WordPress page remains responsible for its surrounding editorial content and static release copy."
+  ]
+}

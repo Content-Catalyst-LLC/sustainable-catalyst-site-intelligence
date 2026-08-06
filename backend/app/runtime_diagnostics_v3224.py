@@ -1,4 +1,4 @@
-"""Public-safe runtime diagnostics for Site Intelligence v3.23.6.2.
+"""Public-safe runtime diagnostics for Site Intelligence v3.23.6.3.
 
 The diagnostics intentionally avoid outbound network calls. They report the local
 application contract, required first-party assets, map surfaces, embed policy,
@@ -26,6 +26,8 @@ REQUIRED_ASSETS = (
     "assets/world-cartography-v3230.geojson",
     "assets/runtime-v3230.css",
     "assets/runtime-v3230.js",
+    "assets/embed-isolation-v32363.css",
+    "assets/embed-isolation-v32363.js",
     "assets/cartographic-workspace-v3230.css",
     "assets/cartographic-workspace-v3230.js",
     "assets/cartographic-interaction-v3232.css",
@@ -65,6 +67,7 @@ CRITICAL_PUBLIC_ENDPOINTS = (
     "/public/performance-offline",
     "/public/bootstrap-recovery",
     "/public/mutation-observer-recovery",
+    "/public/embed-isolation",
     "/public/data-truth",
 )
 
@@ -209,6 +212,12 @@ def build_runtime_health(settings: Settings) -> dict[str, Any]:
             "Map summaries cannot trigger an unbounded observer loop",
             all(token in _read(PUBLIC_APP_DIR / "assets/browser-reliability-v3235.js") for token in ("summary.textContent!==nextText", "requestAnimationFrame(flushMapSummaries)", "state.observer?.disconnect()", "MAX_SUMMARY_PASSES_PER_SECOND=8")),
             "Map-summary updates are idempotent, frame-debounced, disconnected during writes, and bounded per second.",
+        ),
+        _check(
+            "fixed-wordpress-embed-isolation",
+            "The complete WordPress application uses a fixed isolated viewport",
+            all(token in _read(PUBLIC_APP_DIR / "assets/embed-isolation-v32363.js") for token in ("wordpress-fixed", "SCSI_FIXED_WORDPRESS_EMBED", "heightMessagesEnabled")) and all(token in _read(PUBLIC_APP_DIR / "assets/app.js") for token in ("FIXED_WORDPRESS_EMBED", "if(FIXED_WORDPRESS_EMBED)return")),
+            "WordPress application mode disables child height negotiation and keeps scrolling inside the fixed viewport.",
         ),
         _check(
             "map-surfaces",

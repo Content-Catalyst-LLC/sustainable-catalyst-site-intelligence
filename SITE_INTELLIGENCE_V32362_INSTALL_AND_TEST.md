@@ -1,4 +1,4 @@
-# Site Intelligence v3.23.6.2 installation
+# Site Intelligence v3.23.6.3 installation
 
 1. Download the release bundle and macOS installer into Downloads.
 2. Run the Terminal block provided with the release.

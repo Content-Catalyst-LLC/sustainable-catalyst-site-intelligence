@@ -23,15 +23,17 @@
     }
     throw last;
   }
-  const APP_VERSION="3.23.6.2";
+  const APP_VERSION="3.23.6.3";
+  const FIXED_WORDPRESS_EMBED=window.SCSI_FIXED_WORDPRESS_EMBED===true;
   let heightFrame=0;
   function documentHeight(){
     const body=document.body,root=document.documentElement;
     return Math.max(620,Math.min(2600,Math.ceil(Math.max(body?.scrollHeight||0,body?.offsetHeight||0,root?.scrollHeight||0,root?.offsetHeight||0,root?.getBoundingClientRect?.().height||0))));
   }
   function reportHeight(){
+    if(FIXED_WORDPRESS_EMBED)return;
     if(heightFrame)cancelAnimationFrame(heightFrame);
-    heightFrame=requestAnimationFrame(()=>{heightFrame=0;window.parent?.postMessage({type:"scsi-height",height:documentHeight(),version:APP_VERSION,path:location.pathname+location.search},"*")});
+    heightFrame=requestAnimationFrame(()=>{heightFrame=0;if(!window.SCSI_FIXED_WORDPRESS_EMBED)window.parent?.postMessage({type:"scsi-height",height:documentHeight(),version:APP_VERSION,path:location.pathname+location.search},"*")});
   }
   const reducedMotion=window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches===true;
   if(navigator.connection?.saveData||localStorage.getItem("scsi_experience_v2120")?.includes('"lowBandwidth":true'))document.documentElement.dataset.lowBandwidth="1";
@@ -1766,12 +1768,14 @@
     catch(e){console.warn("[Site Intelligence] Optional startup service failed; opening a limited workspace.",e);const status=qs("#statusText");if(status)status.textContent="Partial public data";toast("Some optional public data is temporarily unavailable.");finishLaunch({state:"limited",message:"Site Intelligence opened; some optional public services are limited."})}
   }
   window.SCSIOverviewMapV3232={version:APP_VERSION,getMap:()=>state.map,getEvents:()=>state.events?.features||[],getFilteredEvents:()=>state.filteredEvents.slice(),getFilters:()=>({...state.overviewFilters}),setFilters:setOverviewFilters,selectEvent:selectOverviewEvent,fitResults:fitOverviewResults,setImageryOpacity:value=>state.imagery?.setOpacity?.(Math.max(0,Math.min(1,Number(value)))),setBaseStyle:style=>{const map=qs("#map");if(map)map.dataset.mapStyle=String(style||"institutional-dark");syncOverviewMapUrl()},syncUrl:syncOverviewMapUrl,render:renderOverviewFeatures};
-  window.SCSIRouterV3228={version:"3.23.6.2",navigate:navigateToRoute,current:()=>state.route};
-  window.addEventListener("load",reportHeight,{once:true});
-  window.addEventListener("resize",reportHeight,{passive:true});
-  window.visualViewport?.addEventListener("resize",reportHeight,{passive:true});
-  window.addEventListener("message",event=>{if(event.data?.type==="SC_SI_REQUEST_HEIGHT")reportHeight()});
-  if("ResizeObserver" in window)new ResizeObserver(reportHeight).observe(document.body);
+  window.SCSIRouterV3228={version:"3.23.6.3",navigate:navigateToRoute,current:()=>state.route};
+  if(!FIXED_WORDPRESS_EMBED){
+    window.addEventListener("load",reportHeight,{once:true});
+    window.addEventListener("resize",reportHeight,{passive:true});
+    window.visualViewport?.addEventListener("resize",reportHeight,{passive:true});
+    window.addEventListener("message",event=>{if(event.data?.type==="SC_SI_REQUEST_HEIGHT")reportHeight()});
+    if("ResizeObserver" in window)new ResizeObserver(reportHeight).observe(document.body);
+  }
   async function startApplication(){try{await init()}catch(error){console.error("[Site Intelligence] Application startup recovered.",error);const status=qs("#statusText");if(status)status.textContent="Limited startup";finishLaunch({state:"limited",message:"Site Intelligence opened in recovery mode. Retry individual services from the active workspace."})}}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",()=>{startApplication()},{once:true});else startApplication();
 })();
@@ -1790,5 +1794,5 @@ visualStyle.textContent=`
 document.head.appendChild(visualStyle);
 
 
-/* v3.23.6.2 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v3.23.6.2 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v3.23.6.3 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v3.23.6.3 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
