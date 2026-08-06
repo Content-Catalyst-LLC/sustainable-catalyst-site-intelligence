@@ -1,18 +1,26 @@
-## 3.23.5 — Browser Reliability, Mobile, and Accessibility
+## 3.23.6 — Performance and Offline Recovery
+
+- Added first-useful-map and active-route performance measurement.
+- Added route-scoped request cancellation and duplicate GET coalescing.
+- Added cache-first immutable assets, network-first app HTML, and bounded network-first public data.
+- Added labeled offline-cached recovery and service-worker release migration.
+- Added the public `/public/performance-offline` contract.
+
+## 3.23.6 — Browser Reliability, Mobile, and Accessibility
 
 - Added browser capability, mobile viewport, keyboard focus, map summary, reduced-motion, forced-color, low-bandwidth, and long-session recovery contracts.
 - Preserved WordPress host isolation and the completed v3.23.4 analytical workflows.
 
 # Changelog
 
-## 3.23.5 — Analytical Workspace Completion
+## 3.23.6 — Analytical Workspace Completion
 
 - Completed the five core public analytical workflow contracts.
 - Added unified workflow directory, details, bounded snapshots, deep links, source-truth boundaries, and exports.
 - Added an application-scoped Core workflows panel while preserving WordPress host isolation.
 
 
-## 3.23.5 — Cartographic Interaction and Layer Control
+## 3.23.6 — Cartographic Interaction and Layer Control
 
 - Added a map layer and evidence-control panel with base presentation and imagery opacity.
 - Added semantic event symbols, magnitude/severity treatment, and low-zoom clustering.
@@ -22,7 +30,7 @@
 - Preserved the v3.23.1 WordPress host-isolation repair.
 - Added a public map-interaction contract and live Render verification.
 
-# v3.23.5 — Cartographic Workspace and Application Presentation
+# v3.23.6 — Cartographic Workspace and Application Presentation
 
 - Converted the overview into a map-first workspace with a collapsible evidence rail.
 - Enforced routed visibility so hidden workspaces no longer create a massive stacked page.

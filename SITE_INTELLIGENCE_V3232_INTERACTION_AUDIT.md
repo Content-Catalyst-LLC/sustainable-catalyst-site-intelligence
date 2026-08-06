@@ -1,4 +1,4 @@
-# Site Intelligence v3.23.5 interaction audit
+# Site Intelligence v3.23.6 interaction audit
 
 ## Baseline
 

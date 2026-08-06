@@ -1,0 +1,54 @@
+{
+  "version": "3.23.6",
+  "release_id": "site-intelligence-v3.23.6",
+  "contract": "performance-and-offline-recovery",
+  "performance_budgets": {
+    "first_useful_map_ms": 3500,
+    "route_interactive_ms": 1800,
+    "api_network_timeout_ms": 5500,
+    "long_task_ms": 50,
+    "maximum_long_tasks_before_limited": 5,
+    "maximum_runtime_data_entries": 160,
+    "maximum_immutable_entries": 180,
+    "maximum_offline_snapshot_age_hours": 24
+  },
+  "loading": {
+    "active_workspace_only": true,
+    "inactive_workspaces_inert": true,
+    "route_request_cancellation": true,
+    "duplicate_get_coalescing": true,
+    "optional_imagery_deferred": true,
+    "geography_preloaded": true
+  },
+  "cache_strategies": {
+    "navigation_and_app_html": "network-first",
+    "release_javascript_css_and_geography": "cache-first-immutable",
+    "public_api_data": "network-first-timeout-cached-fallback",
+    "external_tiles_and_imagery": "network-only-with-local-geography-fallback",
+    "offline_document": "cache-first"
+  },
+  "offline_states": [
+    "online-current",
+    "online-recovered",
+    "offline-cached",
+    "offline-shell-only",
+    "update-ready",
+    "migration-required"
+  ],
+  "recovery": {
+    "remove_previous_release_caches": true,
+    "claim_clients_after_activation": true,
+    "controlled_reload_on_controller_change": true,
+    "single_reload_guard": true,
+    "stale_release_detection": true,
+    "user_cache_reset": true,
+    "last_successful_public_get_snapshot": true
+  },
+  "boundaries": {
+    "offline_data_may_be_stale": true,
+    "cached_response_must_be_labeled": true,
+    "external_imagery_not_guaranteed_offline": true,
+    "offline_shell_does_not_imply_current_data": true,
+    "performance_budget_is_an_operational_target_not_a_certification": true
+  }
+}

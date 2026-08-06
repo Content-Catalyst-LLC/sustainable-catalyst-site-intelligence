@@ -1,0 +1,30 @@
+Site Intelligence v3.23.6 — Build Validation
+Build: Performance and Offline Recovery
+
+SOURCE VALIDATION
+- Application version: 3.23.6
+- Public contract: /public/performance-offline
+- Complete pytest suite: 954 passed
+- Python module compilation: passed
+- JavaScript syntax: 56 files passed
+- JSON and GeoJSON parsing: 123 files passed
+- WordPress PHP syntax: passed
+- WordPress host isolation: passed
+- Runtime health performance assets and endpoint: passed
+
+CHROMIUM VALIDATION
+- Vector cartography and satellite composition: passed
+- Bounded map-first workspace and Kenya framing: passed
+- Production-truth routing: passed
+- Layer controls, filtering, and selection: passed
+- Data-truth presentation: passed
+- Five analytical workflows: passed
+- Mobile accessibility and route focus: passed
+- First-useful-map and route-isolation runtime: passed
+- Deterministic first-useful-map measurement: 112 ms
+- Browser console/page errors: 0
+
+BOUNDARIES
+- Live GitHub, Render, WordPress, Safari, Firefox, Edge, and physical-device deployment were not performed in the build environment.
+- Performance values from the deterministic Chromium harness are regression checks, not public internet field measurements.
+- External imagery and changing public data are not guaranteed offline.

@@ -1,0 +1,7 @@
+:root{--scsi-performance-good:#8fd6b5;--scsi-performance-watch:#e8c56d;--scsi-performance-bad:#ef9c9c}
+.scsi-performance-status{position:fixed;right:16px;bottom:16px;z-index:2147482000;display:flex;align-items:center;gap:8px;max-width:min(92vw,520px);padding:8px 10px;border:1px solid rgba(255,255,255,.18);border-radius:10px;background:rgba(10,14,18,.94);color:#f4f6f7;font-size:12px;box-shadow:0 8px 30px rgba(0,0,0,.28)}
+.scsi-performance-status[hidden]{display:none}.scsi-performance-status button{min-height:36px;border:1px solid rgba(255,255,255,.24);border-radius:7px;background:transparent;color:inherit;padding:0 10px}.scsi-performance-dot{width:8px;height:8px;border-radius:50%;background:var(--scsi-performance-good);flex:0 0 auto}.scsi-performance-status[data-state="limited"] .scsi-performance-dot,.scsi-performance-status[data-state="offline"] .scsi-performance-dot{background:var(--scsi-performance-watch)}.scsi-performance-status[data-state="recovering"] .scsi-performance-dot{background:var(--scsi-performance-bad)}
+[data-scsi-route-active="false"]{content-visibility:auto;contain-intrinsic-size:1px 640px}
+html[data-scsi-offline="true"] .optional-imagery-layer,html[data-scsi-low-bandwidth="true"] .optional-imagery-layer{visibility:hidden!important}
+@media(max-width:640px){.scsi-performance-status{left:8px;right:8px;bottom:8px;flex-wrap:wrap}.scsi-performance-status .scsi-performance-copy{flex:1 1 180px}}
+@media(prefers-reduced-motion:reduce){.scsi-performance-status{transition:none!important}}

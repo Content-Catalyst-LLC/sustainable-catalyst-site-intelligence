@@ -1,8 +1,8 @@
-# Site Intelligence v3.23.5 installation and test guide
+# Site Intelligence v3.23.6 installation and test guide
 
 ## Required downloads
 
-- `sustainable-catalyst-site-intelligence-v3.23.5-release-bundle.zip`
+- `sustainable-catalyst-site-intelligence-v3.23.6-release-bundle.zip`
 - `deploy_and_validate_site_intelligence_v3_23_2_macos.sh`
 
 ## Terminal deployment
@@ -15,7 +15,7 @@ INSTALLER="$(find . -maxdepth 1 -type f \
   -print0 | xargs -0 ls -t | head -1)"
 
 BUNDLE="$(find . -maxdepth 1 -type f \
-  -name 'sustainable-catalyst-site-intelligence-v3.23.5-release-bundle*.zip' \
+  -name 'sustainable-catalyst-site-intelligence-v3.23.6-release-bundle*.zip' \
   -print0 | xargs -0 ls -t | head -1)"
 
 chmod +x "$INSTALLER"
@@ -26,7 +26,7 @@ The installer validates twice, synchronizes the GitHub branch, waits for Render,
 
 ## WordPress installation
 
-Install the WordPress ZIP only after Terminal reports that v3.23.5 is live. Replace the current plugin, purge WordPress and CDN caches, and open the page in a new Incognito window.
+Install the WordPress ZIP only after Terminal reports that v3.23.6 is live. Replace the current plugin, purge WordPress and CDN caches, and open the page in a new Incognito window.
 
 ## Production browser checklist
 

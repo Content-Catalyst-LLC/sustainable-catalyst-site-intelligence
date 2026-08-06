@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 3.23.5
+ * Version: 3.23.6
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,8 +13,8 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '3.23.5';
-    const RELEASE_ID = 'site-intelligence-v3.23.5';
+    const VERSION = '3.23.6';
+    const RELEASE_ID = 'site-intelligence-v3.23.6';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -433,7 +433,7 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v3.23.5 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
+        // v3.23.6 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
         // Existing moving tickers remain moving unless an administrator selects static or manual presentation.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
@@ -4610,6 +4610,8 @@ final class SC_Site_Intelligence_Plugin {
             'analyticalWorkspacesJsUrl' => esc_url_raw($base . 'analytical-workspaces-v3234.js'),
             'browserReliabilityCssUrl' => esc_url_raw($base . 'browser-reliability-v3235.css'),
             'browserReliabilityJsUrl' => esc_url_raw($base . 'browser-reliability-v3235.js'),
+            'performanceOfflineCssUrl' => esc_url_raw($base . 'performance-offline-v3236.css'),
+            'performanceOfflineJsUrl' => esc_url_raw($base . 'performance-offline-v3236.js'),
             'dataTruthCssUrl' => esc_url_raw($base . 'data-truth-v3233.css'),
             'dataTruthJsUrl' => esc_url_raw($base . 'data-truth-v3233.js'),
         ]);

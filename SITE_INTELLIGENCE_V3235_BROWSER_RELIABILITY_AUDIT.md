@@ -1,4 +1,4 @@
-# Site Intelligence v3.23.5 Browser Reliability Audit
+# Site Intelligence v3.23.6 Browser Reliability Audit
 
 ## Objective
 

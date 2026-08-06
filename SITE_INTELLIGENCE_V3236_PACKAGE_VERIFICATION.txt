@@ -1,0 +1,16 @@
+Site Intelligence v3.23.6 — Package Verification
+
+The final repository and WordPress ZIPs are required to pass:
+- ZIP integrity
+- Exact version and release identity
+- Immutable repository manifest byte and SHA-256 verification
+- Complete 954-test suite from a fresh repository extraction
+- JavaScript, JSON/GeoJSON, and PHP validation
+- WordPress application-runtime host isolation
+- Chromium v3.23.6 performance/offline smoke test
+- Flat release-bundle SHA256SUMS.txt verification through the installer checksum-only path
+
+Final package names:
+- sustainable-catalyst-site-intelligence-v3.23.6-repository.zip
+- sustainable-catalyst-site-intelligence-v3.23.6-wordpress-plugin.zip
+- sustainable-catalyst-site-intelligence-v3.23.6-release-bundle.zip

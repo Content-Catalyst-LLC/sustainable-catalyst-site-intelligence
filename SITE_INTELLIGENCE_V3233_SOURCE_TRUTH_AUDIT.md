@@ -1,4 +1,4 @@
-# Site Intelligence v3.23.5 source-truth audit
+# Site Intelligence v3.23.6 source-truth audit
 
 ## Production problem addressed
 

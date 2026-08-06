@@ -1,4 +1,4 @@
-"""Public-safe runtime diagnostics for Site Intelligence v3.23.5.
+"""Public-safe runtime diagnostics for Site Intelligence v3.23.6.
 
 The diagnostics intentionally avoid outbound network calls. They report the local
 application contract, required first-party assets, map surfaces, embed policy,
@@ -34,6 +34,8 @@ REQUIRED_ASSETS = (
     "assets/analytical-workspaces-v3234.js",
     "assets/browser-reliability-v3235.css",
     "assets/browser-reliability-v3235.js",
+    "assets/performance-offline-v3236.css",
+    "assets/performance-offline-v3236.js",
     "assets/data-truth-v3233.css",
     "assets/data-truth-v3233.js",
     "assets/production-truth-v3231.css",
@@ -59,6 +61,7 @@ CRITICAL_PUBLIC_ENDPOINTS = (
     "/public/maps/interaction",
     "/public/workflows/analytical",
     "/public/browser-reliability",
+    "/public/performance-offline",
     "/public/data-truth",
 )
 
@@ -141,14 +144,16 @@ def build_runtime_health(settings: Settings) -> dict[str, Any]:
     interaction_js = "/app/assets/cartographic-interaction-v3232.js"
     app_js = "/app/assets/app.js"
     browser_reliability_js = "/app/assets/browser-reliability-v3235.js"
+    performance_offline_js = "/app/assets/performance-offline-v3236.js"
     data_truth_js = "/app/assets/data-truth-v3233.js"
     production_truth_js = "/app/assets/production-truth-v3231.js"
-    ordered_scripts = all(token in index_html for token in (fallback_js, recovery_js, runtime_js, workspace_js, interaction_js, app_js, browser_reliability_js, data_truth_js, production_truth_js))
+    ordered_scripts = all(token in index_html for token in (fallback_js, recovery_js, runtime_js, performance_offline_js, workspace_js, interaction_js, app_js, browser_reliability_js, data_truth_js, production_truth_js))
     if ordered_scripts:
         ordered_scripts = (
             index_html.index(fallback_js)
             < index_html.index(recovery_js)
             < index_html.index(runtime_js)
+            < index_html.index(performance_offline_js)
             < index_html.index(app_js)
             < index_html.index(workspace_js)
             < index_html.index(interaction_js)
@@ -191,7 +196,7 @@ def build_runtime_health(settings: Settings) -> dict[str, Any]:
         _check(
             "offline-shell",
             "Offline shell contains the reliability assets",
-            all(name in worker for name in ("vector-cartography-v3230.js", "vector-cartography-v3230.css", "world-cartography-v3230.geojson", "runtime-v3230.js", "runtime-v3230.css", "cartographic-workspace-v3230.js", "cartographic-workspace-v3230.css", "cartographic-interaction-v3232.js", "cartographic-interaction-v3232.css", "analytical-workspaces-v3234.js", "analytical-workspaces-v3234.css", "data-truth-v3233.js", "data-truth-v3233.css", "production-truth-v3231.js", "production-truth-v3231.css", "service-recovery-v3224.js")) and f'const RELEASE="{APP_VERSION}"' in worker,
+            all(name in worker for name in ("vector-cartography-v3230.js", "vector-cartography-v3230.css", "world-cartography-v3230.geojson", "runtime-v3230.js", "runtime-v3230.css", "cartographic-workspace-v3230.js", "cartographic-workspace-v3230.css", "cartographic-interaction-v3232.js", "cartographic-interaction-v3232.css", "analytical-workspaces-v3234.js", "analytical-workspaces-v3234.css", "performance-offline-v3236.js", "performance-offline-v3236.css", "data-truth-v3233.js", "data-truth-v3233.css", "production-truth-v3231.js", "production-truth-v3231.css", "service-recovery-v3224.js")) and f'const RELEASE="{APP_VERSION}"' in worker,
             "Service worker release and runtime assets are aligned." if worker else "Service worker is missing or unreadable.",
         ),
         _check(

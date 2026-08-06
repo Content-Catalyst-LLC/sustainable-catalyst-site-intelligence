@@ -1,6 +1,6 @@
 (function(){
   "use strict";
-  const VERSION="3.23.5";
+  const VERSION="3.23.6";
   const root=document.querySelector('#app[data-scsi-release]');
   if(!root)return;
   let payload=null;
@@ -25,7 +25,7 @@
     panel.className='scsi-data-truth-panel';
     panel.hidden=true;
     panel.setAttribute('aria-label','Data freshness, coverage, and source truth');
-    panel.innerHTML='<div class="scsi-data-truth-head"><div><p class="eyebrow">SOURCE TRUTH · v3.23.5</p><h2>Data condition and coverage</h2></div><button id="dataTruthClose" type="button" class="icon-button" aria-label="Close data truth panel">×</button></div><div id="dataTruthBody" aria-live="polite"><p>Checking public source contracts…</p></div>';
+    panel.innerHTML='<div class="scsi-data-truth-head"><div><p class="eyebrow">SOURCE TRUTH · v3.23.6</p><h2>Data condition and coverage</h2></div><button id="dataTruthClose" type="button" class="icon-button" aria-label="Close data truth panel">×</button></div><div id="dataTruthBody" aria-live="polite"><p>Checking public source contracts…</p></div>';
     root.appendChild(panel);
     toggle.addEventListener('click',()=>panel.hidden?open():close());
     panel.querySelector('#dataTruthClose').addEventListener('click',close);
