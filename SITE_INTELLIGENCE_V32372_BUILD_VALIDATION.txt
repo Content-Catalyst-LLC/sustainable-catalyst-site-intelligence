@@ -1,0 +1,39 @@
+Site Intelligence v3.23.7.2 build validation
+Release: Country Dropdown Interaction and Focus Safety
+Package state: repaired validator; internal release identity unchanged
+
+Root cause reproduced
+- The native country selector received focus and then lost it to #viewTitle approximately 250 ms later.
+- Repeated scsi:workspace-state events from background production-truth evaluation retriggered route-heading focus.
+- Native browser option menus closed when the selector lost focus, preventing mouse-wheel, trackpad, touch, and keyboard navigation.
+
+Implemented repair
+- Form-control focus is protected during background workspace, map, truth, and recovery updates.
+- Route-heading focus is deduplicated and runs only for genuine route changes.
+- Browser-managed scrolling and keyboard behavior are explicitly preserved for #countrySelect.
+- Direct-shell and WordPress-iframe behavior use the same repaired reliability runtime.
+
+Validator repair
+- Removed nonportable Home/End assertions for a closed native select in headless macOS Chrome.
+- Added unique-catalog, enabled/visible control, pointer-events, uncancelled wheel-event, focus-retention, first-option, last-option, and Brazil-selection checks.
+- The failed installer never reached GitHub, Render, or WordPress promotion, so the internal version remains 3.23.7.2.
+
+Validation results
+- 993 automated tests passed.
+- 1,190 immutable manifest entries verified.
+- 127 JSON/GeoJSON files parsed.
+- 61 JavaScript files syntax-validated.
+- WordPress PHP syntax passed.
+- Country-selector interaction gate passed in direct and iframe modes.
+- Selector exposed 173 unique country options in the packaged browser fixture.
+- Focus remained on #countrySelect through repeated background state updates.
+- Wheel interaction was not cancelled.
+- The first catalog option (AFG), last catalog option (ZWE), and Brazil (BRA) were selected successfully.
+- Every selection propagated to Data Truth.
+- Complete-shell Chromium gate passed with 38 of 38 scripts initialized in direct and iframe modes.
+- Production-soak gate passed with 12 route transitions, zero route failures, and zero automatic service-worker reloads.
+- Long-page WordPress embed gate passed with a fixed 1,100 px application frame and stable host-page scroll.
+
+Deployment status
+- Production deployment was not performed during package construction.
+- The repaired macOS installer performs two deterministic validation passes, promotes the exact Git commit, verifies Render, and only then identifies the WordPress ZIP for installation.

@@ -1,0 +1,20 @@
+Site Intelligence v3.23.7.2 package verification
+Release: Country Dropdown Interaction and Focus Safety
+Package state: repaired validator
+
+The distributable is accepted only when all of the following are true:
+- Release-bundle SHA-256 checksums pass.
+- Repository ZIP extracts under sustainable-catalyst-site-intelligence-v3.23.7.2.
+- Immutable MANIFEST.json validates all 1,190 tracked entries.
+- The complete test inventory passes: 993 tests.
+- The direct and iframe country-selector interaction gates pass.
+- The selector exposes at least 170 unique options and retains focus during repeated workspace-state updates.
+- Pointer and wheel interaction remain unblocked.
+- The first and last catalog entries are selectable.
+- Selecting Brazil updates Data Truth to BRA.
+- Global country-selector hydration and country-truth browser gates pass.
+- Complete-shell Chromium initializes all 38 scripts in direct and iframe modes.
+- Production-soak, service-worker closure, and WordPress embed-isolation gates pass.
+- Python compilation, JSON/GeoJSON parsing, JavaScript syntax, and WordPress PHP syntax pass.
+
+The original package's Home/End assertion was replaced because native select popup keyboard handling varies by host operating system. No production deployment is represented by this receipt. Live deployment remains the responsibility of the supplied installer and promotion gate.

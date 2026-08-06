@@ -1,3 +1,10 @@
+## 3.23.7.2 — Country Dropdown Interaction and Focus Safety
+
+- Stops background workspace-state checks from moving focus away from the global country selector.
+- Keeps the native country menu open long enough for mouse, trackpad, touch, and keyboard navigation.
+- Deduplicates route-heading focus so accessibility announcements occur on route changes, not repeated data-state mutations.
+- Adds direct and WordPress-iframe browser gates covering 173-country navigation from Afghanistan through Zimbabwe.
+
 ## 3.23.7 — Global Country Data Truth and Coverage Matrix
 
 - Added a bundled 177-geography truth catalog.

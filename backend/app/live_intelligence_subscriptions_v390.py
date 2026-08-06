@@ -1,6 +1,6 @@
 """Governed signal subscriptions, watchlists, alerts, and digest handoffs.
 
-Site Intelligence v3.23.7.1 connects the canonical Live Intelligence signal
+Site Intelligence v3.23.7.2 connects the canonical Live Intelligence signal
 contract to reusable watchlists and scheduled review workflows. It deliberately
 does not store subscriber profiles, send email, call webhooks, or automatically
 publish alerts. Delivery remains provider-neutral and human-controlled.

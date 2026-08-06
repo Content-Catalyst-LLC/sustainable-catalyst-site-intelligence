@@ -1,5 +1,5 @@
 (() => {
-  const VERSION = "3.23.7.1";
+  const VERSION = "3.23.7.2";
   const API = window.SC_SITE_INTELLIGENCE_API || window.location.origin;
   const qs = (selector, root = document) => root.querySelector(selector);
   const escapeHtml = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));

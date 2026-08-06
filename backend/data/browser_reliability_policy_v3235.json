@@ -1,6 +1,6 @@
 {
-  "version": "3.23.7.1",
-  "release_id": "site-intelligence-v3.23.7.1",
+  "version": "3.23.7.2",
+  "release_id": "site-intelligence-v3.23.7.2",
   "schema": "sc-site-intelligence-browser-reliability/1.0",
   "contract": "browser-reliability-mobile-accessibility",
   "supported_browsers": [
@@ -57,7 +57,10 @@
     "reduced_motion": true,
     "forced_colors": true,
     "minimum_touch_target_px": 44,
-    "live_region_updates": true
+    "live_region_updates": true,
+    "form_control_focus_protection": true,
+    "native_select_scroll_preserved": true,
+    "route_focus_only_on_route_change": true
   },
   "reliability": {
     "resize_recovery": true,
@@ -71,7 +74,8 @@
     "optional_imagery_suppressed_in_low_bandwidth": true,
     "mutation_observer_self_writes_ignored": true,
     "map_summary_animation_frame_debounce": true,
-    "maximum_map_summary_passes_per_second": 8
+    "maximum_map_summary_passes_per_second": 8,
+    "repeated_workspace_state_does_not_refocus": true
   },
   "health_gate": {
     "requires_application_root": true,
@@ -79,6 +83,7 @@
     "requires_focus_target": true,
     "requires_map_summary_for_visible_maps": true,
     "requires_no_unhandled_browser_error": true,
-    "requires_bounded_mutation_observer": true
+    "requires_bounded_mutation_observer": true,
+    "requires_country_picker_focus_retention": true
   }
 }

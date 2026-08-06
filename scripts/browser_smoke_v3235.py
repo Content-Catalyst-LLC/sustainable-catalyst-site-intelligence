@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Network-independent Chromium smoke test for v3.23.7.1 browser reliability."""
+"""Network-independent Chromium smoke test for v3.23.7.2 browser reliability."""
 from __future__ import annotations
 
 import json
@@ -25,7 +25,7 @@ def main() -> int:
     errors: list[str] = []
     contract = {
         "ok": True,
-        "version": "3.23.7.1",
+        "version": "3.23.7.2",
         "contract": "browser-reliability-mobile-accessibility",
     }
     with sync_playwright() as pw:
@@ -40,7 +40,7 @@ def main() -> int:
         page.set_content(
             '<!doctype html><html><body>'
             '<div id="routeAnnouncement" role="status"></div>'
-            '<div id="app" data-scsi-release="3.23.7.1">'
+            '<div id="app" data-scsi-release="3.23.7.2">'
             '<header class="topbar"><div class="topbar-controls"></div></header>'
             '<nav id="primaryNavigation"><button class="nav-item" data-route="overview" aria-current="page">Overview</button></nav>'
             '<main><section data-route-panel><h1>Live intelligence workspace</h1>'
@@ -80,7 +80,7 @@ def main() -> int:
     assert focused == "Live intelligence workspace", focused
     assert not errors, errors
     print(json.dumps({**result, "low_after": low_after, "focused": focused}, indent=2))
-    print("PASS: v3.23.7.1 mobile viewport, map summary, low-bandwidth mode, and route focus rendered without browser errors.")
+    print("PASS: v3.23.7.2 mobile viewport, map summary, low-bandwidth mode, and route focus rendered without browser errors.")
     return 0
 
 

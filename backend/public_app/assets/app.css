@@ -706,3 +706,6 @@ html[data-low-bandwidth="1"] .orbital-glow,html[data-low-bandwidth="1"] .launch-
 @media(max-width:760px){#map{height:58dvh;min-height:430px}.map-caption{display:none}}
 
 /* Immersive visual foundation */
+
+/* v3.23.7.2: native country picker must retain browser-managed scrolling and gestures. */
+#countrySelect{touch-action:auto;overscroll-behavior:auto;scroll-behavior:auto}

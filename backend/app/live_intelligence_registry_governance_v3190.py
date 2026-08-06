@@ -1,6 +1,6 @@
 """Registry governance, challenges, revocation, and appeals.
 
-Site Intelligence v3.23.7.1 adds an append-only governance layer above the
+Site Intelligence v3.23.7.2 adds an append-only governance layer above the
 federated preservation registry. Public-safe challenges can be reviewed and
 resolved through separated human roles. Institutional suspension, revocation,
 trust-profile change, or reinstatement appends a new registry state; it never
