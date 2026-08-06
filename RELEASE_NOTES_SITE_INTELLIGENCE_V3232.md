@@ -1,4 +1,4 @@
-# Site Intelligence v3.23.2
+# Site Intelligence v3.23.3
 
 ## Cartographic Interaction and Layer Control
 
@@ -18,7 +18,7 @@ This release finishes the primary map as an analytical control surface rather th
 - Persistent map center, zoom, imagery, filter, cluster, and selected-record state.
 - Map interaction contract at `/public/maps/interaction`.
 - WordPress host isolation retained: app-only production-truth and interaction runtimes are packaged but are not executed in the WordPress host document.
-- Runtime health, offline shell, GitHub promotion, and Render verification expanded to require the v3.23.2 interaction assets and contract.
+- Runtime health, offline shell, GitHub promotion, and Render verification expanded to require the v3.23.3 interaction assets and contract.
 
 ### Responsible-use boundaries
 

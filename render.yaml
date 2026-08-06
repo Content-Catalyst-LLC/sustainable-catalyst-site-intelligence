@@ -14,12 +14,14 @@ services:
       - key: SC_SI_RELEASE_CHANNEL
         value: production
       - key: SC_SI_RELEASE_ID
-        value: site-intelligence-v3.23.2
+        value: site-intelligence-v3.23.3
       - key: SC_SI_RUNTIME_STATE_ROOT
         value: /tmp/site-intelligence-runtime
       - key: SC_SI_EXPECTED_GIT_BRANCH
         value: main
       - key: SC_SI_DEMO_MODE
+        value: "true"
+      - key: SC_SI_DATA_TRUTH_ENABLED
         value: "true"
       - key: SC_SI_CORS_ORIGINS
         value: https://sustainablecatalyst.com

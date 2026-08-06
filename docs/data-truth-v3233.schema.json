@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sustainablecatalyst.com/schemas/site-intelligence-data-truth-v3233.schema.json",
+  "title": "Site Intelligence data truth contract",
+  "type": "object",
+  "required": [
+    "ok",
+    "version",
+    "release_id",
+    "contract",
+    "application_mode",
+    "source_count",
+    "summary",
+    "sources",
+    "classification_policy"
+  ],
+  "properties": {
+    "version": {
+      "const": "3.23.3"
+    },
+    "release_id": {
+      "const": "site-intelligence-v3.23.3"
+    },
+    "contract": {
+      "const": "data-freshness-coverage-and-source-truth"
+    },
+    "application_mode": {
+      "enum": [
+        "production",
+        "demonstration"
+      ]
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "feed_id",
+          "publisher",
+          "endpoint",
+          "license",
+          "coverage",
+          "refresh_policy",
+          "retrieval",
+          "data_state",
+          "completeness",
+          "schema",
+          "resilience"
+        ]
+      }
+    }
+  }
+}

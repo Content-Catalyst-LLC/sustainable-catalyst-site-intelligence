@@ -1,4 +1,4 @@
-"""Live Intelligence source operations for Site Intelligence v3.23.2.
+"""Live Intelligence source operations for Site Intelligence v3.23.3.
 
 This module provides a public-safe source registry and a protected operational
 control plane for the electronic Live Intelligence board. Runtime state is
@@ -209,6 +209,9 @@ class LiveIntelligenceSourceOperations:
                 "request_day": runtime.get("request_day"),
                 "last_test_at": runtime.get("last_test_at"),
                 "last_test_status": runtime.get("last_test_status"),
+                "observed_schema_fingerprint": runtime.get("observed_schema_fingerprint"),
+                "last_schema_check_at": runtime.get("last_schema_check_at"),
+                "last_schema_change_at": runtime.get("last_schema_change_at"),
             }
             if not public:
                 row["runtime"]["last_error"] = runtime.get("last_error")

@@ -1,7 +1,7 @@
 {
   "schema": "sc-site-intelligence-live-source-registry/1.0",
-  "version": "3.23.2",
-  "generated_at": "2026-07-20T00:00:00Z",
+  "version": "3.23.3",
+  "generated_at": "2026-08-05T23:40:00Z",
   "sources": [
     {
       "feed_id": "usgs_earthquakes",
@@ -14,11 +14,50 @@
       "default_refresh_minutes": 10,
       "default_cache_ttl_minutes": 15,
       "stale_after_minutes": 60,
-      "rate_limit": {"requests_per_minute": 5, "requests_per_day": 1000},
-      "license": {"name": "U.S. public domain", "url": "https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits", "attribution": "Source: U.S. Geological Survey"},
-      "coverage": {"geographic": "Global", "temporal": "Near-real-time event feed and 14-day summaries"},
-      "quality": {"status": "official_event_source", "limitations": "Magnitude, location, and status can be revised by USGS."},
-      "public_note": "Informational earthquake context; follow official emergency authorities for safety instructions."
+      "rate_limit": {
+        "requests_per_minute": 5,
+        "requests_per_day": 1000
+      },
+      "license": {
+        "name": "U.S. public domain",
+        "url": "https://www.usgs.gov/information-policies-and-instructions/copyrights-and-credits",
+        "attribution": "Source: U.S. Geological Survey"
+      },
+      "coverage": {
+        "geographic": "Global",
+        "temporal": "Near-real-time event feed and 14-day summaries"
+      },
+      "quality": {
+        "status": "official_event_source",
+        "limitations": "Magnitude, location, and status can be revised by USGS."
+      },
+      "public_note": "Informational earthquake context; follow official emergency authorities for safety instructions.",
+      "endpoint": {
+        "url": "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson",
+        "access": "public",
+        "credentials_required": false,
+        "machine_readable": true
+      },
+      "data_classification": "live",
+      "schema_contract": {
+        "record_type": "earthquake_event",
+        "required_fields": [
+          "id",
+          "title",
+          "observed_at",
+          "latitude",
+          "longitude",
+          "magnitude",
+          "source_url"
+        ],
+        "change_policy": "flag_and_review"
+      },
+      "retry_policy": {
+        "strategy": "bounded_exponential",
+        "maximum_attempts": 3,
+        "circuit_breaker_failures": 3,
+        "automatic_fallback_claims_live": false
+      }
     },
     {
       "feed_id": "reliefweb",
@@ -31,11 +70,49 @@
       "default_refresh_minutes": 30,
       "default_cache_ttl_minutes": 30,
       "stale_after_minutes": 180,
-      "rate_limit": {"requests_per_minute": 5, "requests_per_day": 500},
-      "license": {"name": "ReliefWeb terms; originating-content rights may vary", "url": "https://reliefweb.int/terms-conditions", "attribution": "Source: ReliefWeb and the named originating organization"},
-      "coverage": {"geographic": "Global humanitarian reporting", "temporal": "Recent reports and 14-day summaries"},
-      "quality": {"status": "curated_humanitarian_metadata", "limitations": "Reports reflect named publishers and may differ in scope, verification, and publication timing."},
-      "public_note": "Humanitarian reporting metadata is preserved with publisher attribution and does not establish an independent factual determination."
+      "rate_limit": {
+        "requests_per_minute": 5,
+        "requests_per_day": 500
+      },
+      "license": {
+        "name": "ReliefWeb terms; originating-content rights may vary",
+        "url": "https://reliefweb.int/terms-conditions",
+        "attribution": "Source: ReliefWeb and the named originating organization"
+      },
+      "coverage": {
+        "geographic": "Global humanitarian reporting",
+        "temporal": "Recent reports and 14-day summaries"
+      },
+      "quality": {
+        "status": "curated_humanitarian_metadata",
+        "limitations": "Reports reflect named publishers and may differ in scope, verification, and publication timing."
+      },
+      "public_note": "Humanitarian reporting metadata is preserved with publisher attribution and does not establish an independent factual determination.",
+      "endpoint": {
+        "url": "https://api.reliefweb.int/v1/reports",
+        "access": "public",
+        "credentials_required": false,
+        "machine_readable": true
+      },
+      "data_classification": "live",
+      "schema_contract": {
+        "record_type": "humanitarian_report",
+        "required_fields": [
+          "id",
+          "title",
+          "published_at",
+          "publisher",
+          "country",
+          "source_url"
+        ],
+        "change_policy": "flag_and_review"
+      },
+      "retry_policy": {
+        "strategy": "bounded_exponential",
+        "maximum_attempts": 3,
+        "circuit_breaker_failures": 3,
+        "automatic_fallback_claims_live": false
+      }
     },
     {
       "feed_id": "noaa_nws",
@@ -48,11 +125,50 @@
       "default_refresh_minutes": 10,
       "default_cache_ttl_minutes": 15,
       "stale_after_minutes": 90,
-      "rate_limit": {"requests_per_minute": 5, "requests_per_day": 1000},
-      "license": {"name": "U.S. public domain unless specifically noted", "url": "https://www.weather.gov/disclaimer", "attribution": "Source: NOAA / National Weather Service"},
-      "coverage": {"geographic": "United States and supported NOAA/NWS forecast locations", "temporal": "Active alerts and current forecast context"},
-      "quality": {"status": "official_weather_source", "limitations": "The ticker is not an emergency-warning service; official alerts and local authorities remain authoritative."},
-      "public_note": "Weather summaries preserve official source links and should not replace NOAA/NWS alert products."
+      "rate_limit": {
+        "requests_per_minute": 5,
+        "requests_per_day": 1000
+      },
+      "license": {
+        "name": "U.S. public domain unless specifically noted",
+        "url": "https://www.weather.gov/disclaimer",
+        "attribution": "Source: NOAA / National Weather Service"
+      },
+      "coverage": {
+        "geographic": "United States and supported NOAA/NWS forecast locations",
+        "temporal": "Active alerts and current forecast context"
+      },
+      "quality": {
+        "status": "official_weather_source",
+        "limitations": "The ticker is not an emergency-warning service; official alerts and local authorities remain authoritative."
+      },
+      "public_note": "Weather summaries preserve official source links and should not replace NOAA/NWS alert products.",
+      "endpoint": {
+        "url": "https://api.weather.gov/alerts/active",
+        "access": "public",
+        "credentials_required": false,
+        "machine_readable": true
+      },
+      "data_classification": "live",
+      "schema_contract": {
+        "record_type": "weather_alert",
+        "required_fields": [
+          "id",
+          "headline",
+          "effective_at",
+          "expires_at",
+          "area",
+          "severity",
+          "source_url"
+        ],
+        "change_policy": "flag_and_review"
+      },
+      "retry_policy": {
+        "strategy": "bounded_exponential",
+        "maximum_attempts": 3,
+        "circuit_breaker_failures": 3,
+        "automatic_fallback_claims_live": false
+      }
     },
     {
       "feed_id": "nasa_eonet",
@@ -65,11 +181,49 @@
       "default_refresh_minutes": 30,
       "default_cache_ttl_minutes": 60,
       "stale_after_minutes": 360,
-      "rate_limit": {"requests_per_minute": 4, "requests_per_day": 500},
-      "license": {"name": "NASA data/media usage guidance", "url": "https://www.nasa.gov/nasa-brand-center/images-and-media/", "attribution": "Source: NASA EONET"},
-      "coverage": {"geographic": "Global natural events", "temporal": "Open-event snapshots and current category counts"},
-      "quality": {"status": "curated_natural_event_catalog", "limitations": "Event completeness and closure timing vary by source and category."},
-      "public_note": "Natural-event metadata is informational and retains links to the NASA EONET record."
+      "rate_limit": {
+        "requests_per_minute": 4,
+        "requests_per_day": 500
+      },
+      "license": {
+        "name": "NASA data/media usage guidance",
+        "url": "https://www.nasa.gov/nasa-brand-center/images-and-media/",
+        "attribution": "Source: NASA EONET"
+      },
+      "coverage": {
+        "geographic": "Global natural events",
+        "temporal": "Open-event snapshots and current category counts"
+      },
+      "quality": {
+        "status": "curated_natural_event_catalog",
+        "limitations": "Event completeness and closure timing vary by source and category."
+      },
+      "public_note": "Natural-event metadata is informational and retains links to the NASA EONET record.",
+      "endpoint": {
+        "url": "https://eonet.gsfc.nasa.gov/api/v3/events?status=open&limit=100",
+        "access": "public",
+        "credentials_required": false,
+        "machine_readable": true
+      },
+      "data_classification": "live",
+      "schema_contract": {
+        "record_type": "natural_event",
+        "required_fields": [
+          "id",
+          "title",
+          "category",
+          "observed_at",
+          "geometry",
+          "source_url"
+        ],
+        "change_policy": "flag_and_review"
+      },
+      "retry_policy": {
+        "strategy": "bounded_exponential",
+        "maximum_attempts": 3,
+        "circuit_breaker_failures": 3,
+        "automatic_fallback_claims_live": false
+      }
     },
     {
       "feed_id": "nasa_power",
@@ -82,11 +236,50 @@
       "default_refresh_minutes": 360,
       "default_cache_ttl_minutes": 360,
       "stale_after_minutes": 2160,
-      "rate_limit": {"requests_per_minute": 4, "requests_per_day": 250},
-      "license": {"name": "NASA scientific data usage and referencing guidance", "url": "https://power.larc.nasa.gov/docs/referencing/", "attribution": "NASA Langley Research Center POWER Project"},
-      "coverage": {"geographic": "Configured latitude and longitude", "temporal": "Recent seven-day observational averages"},
-      "quality": {"status": "modeled_and_observational_context", "limitations": "Values are contextual summaries near the configured point and are not local instrument readings or forecasts."},
-      "public_note": "Temperature, precipitation, and solar-resource context includes location and observation-window boundaries."
+      "rate_limit": {
+        "requests_per_minute": 4,
+        "requests_per_day": 250
+      },
+      "license": {
+        "name": "NASA scientific data usage and referencing guidance",
+        "url": "https://power.larc.nasa.gov/docs/referencing/",
+        "attribution": "NASA Langley Research Center POWER Project"
+      },
+      "coverage": {
+        "geographic": "Configured latitude and longitude",
+        "temporal": "Recent seven-day observational averages"
+      },
+      "quality": {
+        "status": "modeled_and_observational_context",
+        "limitations": "Values are contextual summaries near the configured point and are not local instrument readings or forecasts."
+      },
+      "public_note": "Temperature, precipitation, and solar-resource context includes location and observation-window boundaries.",
+      "endpoint": {
+        "url": "https://power.larc.nasa.gov/api/temporal/daily/point",
+        "access": "public",
+        "credentials_required": false,
+        "machine_readable": true
+      },
+      "data_classification": "historical_snapshot",
+      "schema_contract": {
+        "record_type": "earth_observation_summary",
+        "required_fields": [
+          "parameter",
+          "value",
+          "unit",
+          "latitude",
+          "longitude",
+          "observation_date",
+          "source_url"
+        ],
+        "change_policy": "flag_and_review"
+      },
+      "retry_policy": {
+        "strategy": "bounded_exponential",
+        "maximum_attempts": 3,
+        "circuit_breaker_failures": 3,
+        "automatic_fallback_claims_live": false
+      }
     },
     {
       "feed_id": "openalex",
@@ -99,11 +292,48 @@
       "default_refresh_minutes": 360,
       "default_cache_ttl_minutes": 360,
       "stale_after_minutes": 2880,
-      "rate_limit": {"requests_per_minute": 4, "requests_per_day": 250},
-      "license": {"name": "CC0", "url": "https://help.openalex.org/hc/en-us/articles/24396686889751-About-us", "attribution": "Metadata source: OpenAlex"},
-      "coverage": {"geographic": "Global scholarly metadata", "temporal": "Recent open-access works matching configured topics"},
-      "quality": {"status": "aggregated_research_metadata", "limitations": "Inclusion, citation counts, and open-access status are metadata signals and not quality or authority endorsements."},
-      "public_note": "Research items link to the underlying work or OpenAlex record and retain publication dates."
+      "rate_limit": {
+        "requests_per_minute": 4,
+        "requests_per_day": 250
+      },
+      "license": {
+        "name": "CC0",
+        "url": "https://help.openalex.org/hc/en-us/articles/24396686889751-About-us",
+        "attribution": "Metadata source: OpenAlex"
+      },
+      "coverage": {
+        "geographic": "Global scholarly metadata",
+        "temporal": "Recent open-access works matching configured topics"
+      },
+      "quality": {
+        "status": "aggregated_research_metadata",
+        "limitations": "Inclusion, citation counts, and open-access status are metadata signals and not quality or authority endorsements."
+      },
+      "public_note": "Research items link to the underlying work or OpenAlex record and retain publication dates.",
+      "endpoint": {
+        "url": "https://api.openalex.org/works",
+        "access": "public",
+        "credentials_required": false,
+        "machine_readable": true
+      },
+      "data_classification": "context_only",
+      "schema_contract": {
+        "record_type": "research_metadata",
+        "required_fields": [
+          "id",
+          "title",
+          "publication_date",
+          "authorship",
+          "landing_page_url"
+        ],
+        "change_policy": "flag_and_review"
+      },
+      "retry_policy": {
+        "strategy": "bounded_exponential",
+        "maximum_attempts": 3,
+        "circuit_breaker_failures": 3,
+        "automatic_fallback_claims_live": false
+      }
     },
     {
       "feed_id": "world_bank",
@@ -116,11 +346,49 @@
       "default_refresh_minutes": 1440,
       "default_cache_ttl_minutes": 1440,
       "stale_after_minutes": 10080,
-      "rate_limit": {"requests_per_minute": 4, "requests_per_day": 250},
-      "license": {"name": "CC BY 4.0 for World Bank open datasets unless labeled otherwise", "url": "https://www.worldbank.org/ext/en/legal/terms-conditions/datasets", "attribution": "Source: World Bank"},
-      "coverage": {"geographic": "Global and World aggregate indicators", "temporal": "Periodic indicators with explicit data years"},
-      "quality": {"status": "official_periodic_indicator", "limitations": "Reporting years differ by indicator and are not real-time measurements."},
-      "public_note": "Every periodic value displays its data year and links to the indicator source page."
+      "rate_limit": {
+        "requests_per_minute": 4,
+        "requests_per_day": 250
+      },
+      "license": {
+        "name": "CC BY 4.0 for World Bank open datasets unless labeled otherwise",
+        "url": "https://www.worldbank.org/ext/en/legal/terms-conditions/datasets",
+        "attribution": "Source: World Bank"
+      },
+      "coverage": {
+        "geographic": "Global and World aggregate indicators",
+        "temporal": "Periodic indicators with explicit data years"
+      },
+      "quality": {
+        "status": "official_periodic_indicator",
+        "limitations": "Reporting years differ by indicator and are not real-time measurements."
+      },
+      "public_note": "Every periodic value displays its data year and links to the indicator source page.",
+      "endpoint": {
+        "url": "https://api.worldbank.org/v2",
+        "access": "public",
+        "credentials_required": false,
+        "machine_readable": true
+      },
+      "data_classification": "historical_snapshot",
+      "schema_contract": {
+        "record_type": "development_indicator",
+        "required_fields": [
+          "indicator_id",
+          "country_code",
+          "value",
+          "unit",
+          "data_year",
+          "source_url"
+        ],
+        "change_policy": "flag_and_review"
+      },
+      "retry_policy": {
+        "strategy": "bounded_exponential",
+        "maximum_attempts": 3,
+        "circuit_breaker_failures": 3,
+        "automatic_fallback_claims_live": false
+      }
     },
     {
       "feed_id": "platform_status",
@@ -133,11 +401,47 @@
       "default_refresh_minutes": 5,
       "default_cache_ttl_minutes": 5,
       "stale_after_minutes": 30,
-      "rate_limit": {"requests_per_minute": 60, "requests_per_day": 10000},
-      "license": {"name": "Sustainable Catalyst platform terms", "url": "/terms-of-use/", "attribution": "Sustainable Catalyst Site Intelligence"},
-      "coverage": {"geographic": "Platform", "temporal": "Current deployed-version status"},
-      "quality": {"status": "first_party_operational_status", "limitations": "Platform availability does not establish upstream source freshness or completeness."},
-      "public_note": "Optional quiet status signal; disabled in the WordPress ticker selection by default."
+      "rate_limit": {
+        "requests_per_minute": 60,
+        "requests_per_day": 10000
+      },
+      "license": {
+        "name": "Sustainable Catalyst platform terms",
+        "url": "/terms-of-use/",
+        "attribution": "Sustainable Catalyst Site Intelligence"
+      },
+      "coverage": {
+        "geographic": "Platform",
+        "temporal": "Current deployed-version status"
+      },
+      "quality": {
+        "status": "first_party_operational_status",
+        "limitations": "Platform availability does not establish upstream source freshness or completeness."
+      },
+      "public_note": "Optional quiet status signal; disabled in the WordPress ticker selection by default.",
+      "endpoint": {
+        "url": "/public/runtime-health",
+        "access": "public",
+        "credentials_required": false,
+        "machine_readable": true
+      },
+      "data_classification": "live",
+      "schema_contract": {
+        "record_type": "platform_status",
+        "required_fields": [
+          "version",
+          "status",
+          "generated_at",
+          "checks"
+        ],
+        "change_policy": "flag_and_review"
+      },
+      "retry_policy": {
+        "strategy": "bounded_exponential",
+        "maximum_attempts": 3,
+        "circuit_breaker_failures": 3,
+        "automatic_fallback_claims_live": false
+      }
     }
   ]
 }
