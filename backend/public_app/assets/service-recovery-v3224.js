@@ -1,14 +1,14 @@
 (function (window) {
   "use strict";
 
-  const VERSION = "3.23.6.3";
-  const CACHE_NAME = "scsi-runtime-recovery-v3.23.6.3";
-  const MAX_ATTEMPTS = 3;
-  const TIMEOUT_MS = 12000;
-  const BACKOFF_MS = [600, 1400];
+  const VERSION = "3.23.6.4";
+  const CACHE_NAME = "scsi-runtime-recovery-v3.23.6.4";
+  const MAX_ATTEMPTS = 2;
+  const TIMEOUT_MS = 6500;
+  const BACKOFF_MS = [450];
   const FAILURE_THRESHOLD = 3;
   const CIRCUIT_COOLDOWN_MS = 30000;
-  const PROBE_INTERVAL_MS = 30000;
+  const PROBE_INTERVAL_MS = 60000;
   const DEFAULT_STALE_TTL_MS = 6 * 60 * 60 * 1000;
   const RECOVERABLE_STATUS = new Set([408, 425, 429, 500, 502, 503, 504]);
   const nativeFetch = window.fetch.bind(window);

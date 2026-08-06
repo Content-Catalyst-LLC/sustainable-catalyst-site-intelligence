@@ -1,4 +1,4 @@
-# Site Intelligence v3.23.6.3 performance and offline audit
+# Site Intelligence v3.23.6.4 performance and offline audit
 
 ## Completion target
 
@@ -16,7 +16,7 @@ The release targets operational performance and recovery rather than new analyti
 8. **Truthful fallback headers** — recovered responses include `X-SCSI-Data-State: offline-cached`, stale age, recovery reason, and release identity.
 9. **Release migration** — activation removes earlier `scsi-` cache generations and claims open application clients.
 10. **Controlled reload** — browser controller changes allow one release-scoped reload, guarded by session state.
-11. **WordPress isolation** — v3.23.6.3 assets are available to the embedded app but are not enqueued as application runtimes in the WordPress host page.
+11. **WordPress isolation** — v3.23.6.4 assets are available to the embedded app but are not enqueued as application runtimes in the WordPress host page.
 
 ## Operational budgets
 

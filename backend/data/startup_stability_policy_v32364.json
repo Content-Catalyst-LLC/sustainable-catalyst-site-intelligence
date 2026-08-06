@@ -1,0 +1,50 @@
+{
+  "version": "3.23.6.4",
+  "release_id": "site-intelligence-v3.23.6.4",
+  "contract": "production-soak-route-stability-and-service-worker-closure",
+  "startup": {
+    "shell_ready_target_ms": 1500,
+    "hard_fail_open_ms": 4500,
+    "network_data_blocks_shell": false,
+    "initial_data_strategy": "background-all-settled",
+    "duplicate_retry_layers_allowed": false,
+    "maximum_effective_request_attempts": 2
+  },
+  "route_stability": {
+    "concurrent_route_transitions": false,
+    "latest_pending_route_wins": true,
+    "route_busy_state_visible": true,
+    "service_recovery_refresh_uses_route_queue": true
+  },
+  "service_worker": {
+    "install_calls_skip_waiting": false,
+    "automatic_controllerchange_reload": false,
+    "updates_activate_on_explicit_request_or_next_navigation": true,
+    "registration_deferred_until_window_load": true,
+    "cache_cleanup_scoped_to_release_prefix": true
+  },
+  "wordpress_embed": {
+    "complete_application_loading": "eager",
+    "fetch_priority": "high",
+    "fixed_viewport": true,
+    "host_page_height_negotiation": false,
+    "application_ready_message_required": true
+  },
+  "production_soak": {
+    "browser_gate_required": true,
+    "cold_start_modes": [
+      "service-worker-disabled",
+      "service-worker-registration-failure",
+      "service-worker-update-waiting"
+    ],
+    "route_rotation_cycles": 3,
+    "host_scroll_stability": true,
+    "reload_loop_tolerance": 0
+  },
+  "boundaries": [
+    "The application shell opens without waiting for public data, imagery, or country endpoints.",
+    "Data failures remain visible at the affected workspace and do not restore the full-screen launch blocker.",
+    "A newly installed service worker never forces an automatic page reload during the active session.",
+    "The complete WordPress application iframe is loaded eagerly; smaller document embeds retain their inherited behavior."
+  ]
+}

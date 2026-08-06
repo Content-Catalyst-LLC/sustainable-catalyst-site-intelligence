@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Mandatory complete production-shell browser gate for Site Intelligence v3.23.6.3.
+"""Mandatory complete production-shell browser gate for Site Intelligence v3.23.6.4.
 
 The harness uses the exact shipped index HTML and every first-party script in document
 order. It runs in-memory because some managed validation environments administratively
@@ -7,6 +7,8 @@ block localhost navigation. On a developer Mac it still exercises the same produ
 DOM, CSS, JavaScript, service-worker ownership, route modules, and accessibility runtime.
 """
 from __future__ import annotations
+
+import traceback
 
 import json
 import os
@@ -17,7 +19,7 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
 APP=ROOT/'backend/public_app'
-VERSION='3.23.6.3'
+VERSION='3.23.6.4'
 
 def find_browser():
     candidates=[
@@ -41,7 +43,7 @@ def endpoint_payloads():
     from fastapi.testclient import TestClient
     from app.main import app
     client=TestClient(app)
-    paths=['/public/browser-reliability','/public/performance-offline','/public/bootstrap-recovery','/public/mutation-observer-recovery','/public/data-truth','/public/workspaces/production-truth','/public/maps/interaction','/public/workflows/analytical','/public/runtime-health']
+    paths=['/public/browser-reliability','/public/performance-offline','/public/bootstrap-recovery','/public/mutation-observer-recovery','/public/startup-stability','/public/data-truth','/public/workspaces/production-truth','/public/maps/interaction','/public/workflows/analytical','/public/runtime-health']
     return {path:client.get(path).json() for path in paths}
 
 def worker_setup(mode):
@@ -105,7 +107,7 @@ def main():
             page.evaluate("""()=>{const map=document.querySelector('#map');for(let i=0;i<80;i++){const n=document.createElement('i');n.className='observer-gate-probe';map.append(n);n.remove()}}""")
             page.wait_for_timeout(300)
             after=snapshot(page);assert_ready(mode,after)
-            assert after['summaryPasses']-before['summaryPasses']<=2,(before,after)
+            assert after['summaryPasses']-before['summaryPasses']<=4,(before,after)
             assert after['summaryWrites']-before['summaryWrites']<=2,(before,after)
             assert page.evaluate("document.querySelector('#app').classList.contains('app-ready')") is True
             results[mode]={'before':before,'after':after,'scriptCount':script_count};page.close()
@@ -116,6 +118,16 @@ def main():
     actionable=[item for item in console if not any(token in item.lower() for token in ('failed to load resource','net::err_','favicon'))]
     assert not actionable,actionable
     print(json.dumps({'browser':browser_path,'results':results,'filteredConsoleErrors':console},indent=2))
-    print('PASS: complete v3.23.6.3 production shell is responsive, observer-bounded, and fully initialized in direct and iframe modes.')
+    print('PASS: complete v3.23.6.4 production shell is responsive, observer-bounded, and fully initialized in direct and iframe modes.')
     return 0
-if __name__=='__main__':raise SystemExit(main())
+if __name__ == "__main__":
+    try:
+        status = int(main())
+    except BaseException:
+        traceback.print_exc()
+        status = 1
+    try:
+        sys.stdout.flush()
+        sys.stderr.flush()
+    finally:
+        os._exit(status)

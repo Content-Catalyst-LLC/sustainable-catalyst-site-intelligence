@@ -188,15 +188,26 @@ class ContentRegistry:
     def __init__(self, registry_path: str):
         self.registry_path = Path(registry_path)
         if not self.registry_path.is_absolute():
-            cwd_candidate = Path.cwd() / self.registry_path
-            backend_candidate = Path.cwd() / "backend" / self.registry_path.name
-            data_candidate = Path.cwd() / "data" / self.registry_path.name
-            if cwd_candidate.exists():
-                self.registry_path = cwd_candidate
-            elif backend_candidate.exists():
-                self.registry_path = backend_candidate
-            elif data_candidate.exists():
-                self.registry_path = data_candidate
+            # Resolve packaged registry data independently of the caller's CWD.
+            # Installer validation runs from the release-bundle root, while the
+            # application commonly runs from backend/. Both must load the same
+            # explicit registry rather than silently falling back to inference.
+            backend_root = Path(__file__).resolve().parents[1]
+            repository_root = backend_root.parent
+            candidates = (
+                Path.cwd() / self.registry_path,
+                Path.cwd() / "backend" / self.registry_path,
+                Path.cwd() / "backend" / "data" / self.registry_path.name,
+                Path.cwd() / "data" / self.registry_path.name,
+                backend_root / self.registry_path,
+                backend_root / "data" / self.registry_path.name,
+                repository_root / self.registry_path,
+                repository_root / "backend" / self.registry_path,
+            )
+            self.registry_path = next(
+                (candidate.resolve() for candidate in candidates if candidate.exists()),
+                self.registry_path,
+            )
         self.registry = self._load()
         self.by_path: Dict[str, ContentItem] = {self._norm(item.url_path): item for item in self.registry.items}
 

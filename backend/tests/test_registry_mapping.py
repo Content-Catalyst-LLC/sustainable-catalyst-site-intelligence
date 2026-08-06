@@ -31,3 +31,12 @@ def test_mapping_coverage_reports_unmapped_and_inferred_pages():
     assert coverage["inferred_pages"] >= 1
     suggestions = unmapped_suggestions(metrics, registry, limit=10)
     assert suggestions
+
+def test_registry_path_is_independent_of_process_working_directory(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    registry = ContentRegistry("data/site_registry.seed.json")
+    pub = registry.resolve("/publications/", "Publications - Sustainable Catalyst")
+    assert registry.registry_path.is_absolute()
+    assert pub.status == "explicit"
+    assert pub.item.hub == "Publications"
+

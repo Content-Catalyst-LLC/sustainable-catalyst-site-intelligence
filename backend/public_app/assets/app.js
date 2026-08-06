@@ -3,6 +3,7 @@
   const API = window.SC_SITE_INTELLIGENCE_API || window.location.origin;
 
   const boot={progress:10};
+  let launchFinished=false;
   function setLaunch(message,progress,retry=false){
     const m=qs("#launchMessage"),b=qs("#launchProgressBar"),r=qs("#launchRetry");
     if(m)m.textContent=message;if(b){boot.progress=Math.max(boot.progress,progress||boot.progress);b.style.width=`${Math.min(100,boot.progress)}%`}if(r)r.hidden=!retry;
@@ -11,19 +12,20 @@
     console.info(`[Site Intelligence] ${title}: ${text}`);
   }
   function hideGlobalNotice(){}
-  function finishLaunch(options={}){const mode=options.state==="limited"?"limited":"ready";const text=options.message||(mode==="limited"?"Site Intelligence opened with limited services.":"Site Intelligence is ready.");const app=qs("#app");if(app){app.classList.remove("app-loading");app.classList.add("app-ready");app.dataset.startupState=mode;app.removeAttribute("aria-busy")}setLaunch(text,100);window.dispatchEvent(new CustomEvent("scsi:application-ready",{detail:{version:APP_VERSION,state:mode,message:text}}));setTimeout(()=>{const screen=qs("#launchScreen");if(screen){screen.classList.add("hidden");screen.setAttribute("aria-hidden","true")}},80);reportHeight()}
+  function finishLaunch(options={}){if(launchFinished)return;launchFinished=true;const mode=options.state==="limited"?"limited":"ready";const text=options.message||(mode==="limited"?"Site Intelligence opened with limited services.":"Site Intelligence is ready.");const app=qs("#app");if(app){app.classList.remove("app-loading");app.classList.add("app-ready");app.dataset.startupState=mode;app.removeAttribute("aria-busy")}setLaunch(text,100);window.dispatchEvent(new CustomEvent("scsi:application-ready",{detail:{version:APP_VERSION,state:mode,message:text}}));window.parent?.postMessage({type:"scsi-bootstrap-ready",version:APP_VERSION,state:mode},"*");setTimeout(()=>{const screen=qs("#launchScreen");if(screen){screen.classList.add("hidden");screen.setAttribute("aria-hidden","true")}},40);reportHeight()}
   async function apiWithRetry(path,attempts=3,options={}){
     let last;
-    for(let i=0;i<attempts;i++){
+    const effectiveAttempts=window.SCSIServiceRecovery?1:Math.max(1,attempts);
+    for(let i=0;i<effectiveAttempts;i++){
       try{return await api(path,options)}catch(e){
         if(e?.name==="AbortError")throw e;
         last=e;
-        if(i<attempts-1)await new Promise(r=>setTimeout(r,700*(i+1)));
+        if(i<effectiveAttempts-1)await new Promise(r=>setTimeout(r,500*(i+1)));
       }
     }
     throw last;
   }
-  const APP_VERSION="3.23.6.3";
+  const APP_VERSION="3.23.6.4";
   const FIXED_WORDPRESS_EMBED=window.SCSI_FIXED_WORDPRESS_EMBED===true;
   let heightFrame=0;
   function documentHeight(){
@@ -83,10 +85,25 @@
     qsa(".nav-item").forEach(button=>{const active=button.dataset.route===route;button.classList.toggle("active",active);if(active)button.setAttribute("aria-current","page");else button.removeAttribute("aria-current")});
     const announcement=qs("#routeAnnouncement");if(announcement)announcement.textContent=`${routeMeta(route)[1]} workspace opened`;
   }
+  let routeTransitionActive=false,pendingRoute="",activeRoutePromise=Promise.resolve(true);
   function navigateToRoute(route){
     const target=String(route||"").trim();if(!target)return Promise.resolve(false);
-    history.replaceState(null,"",`?country=${encodeURIComponent(state.country)}&view=${encodeURIComponent(target)}`);
-    return Promise.resolve(setRoute(target)).then(()=>true).catch(error=>{console.error("[Site Intelligence] Route failed",target,error);toast("That workspace could not be opened.");return false});
+    pendingRoute=target;
+    if(routeTransitionActive)return activeRoutePromise;
+    routeTransitionActive=true;
+    activeRoutePromise=(async()=>{
+      let ok=true;
+      while(pendingRoute){
+        const current=pendingRoute;pendingRoute="";
+        document.documentElement.dataset.scsiRouteBusy="true";
+        window.dispatchEvent(new CustomEvent("scsi:route-transition-start",{detail:{version:APP_VERSION,route:current}}));
+        history.replaceState(null,"",`?country=${encodeURIComponent(state.country)}&view=${encodeURIComponent(current)}`);
+        try{await setRoute(current)}catch(error){ok=false;console.error("[Site Intelligence] Route failed",current,error);toast("That workspace could not be opened.")}
+        window.dispatchEvent(new CustomEvent("scsi:route-transition-end",{detail:{version:APP_VERSION,route:current,ok}}));
+      }
+      return ok;
+    })().finally(()=>{routeTransitionActive=false;document.documentElement.dataset.scsiRouteBusy="false"});
+    return activeRoutePromise;
   }
   const cleanDate=(v)=>{if(!v)return "Date unavailable";try{return new Date(v).toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"})}catch{return v}};
   const api=async(path,{signal,timeout=12000}={})=>{
@@ -1677,7 +1694,7 @@
     if(document.hidden||event.detail?.path==="/public/runtime-health"||event.detail?.path==="/public/runtime-recovery")return;
     clearTimeout(recoveryRefreshTimer);
     recoveryRefreshTimer=setTimeout(async()=>{
-      try{toast(`${event.detail?.group||"Data"} service recovered; refreshing this workspace.`);await setRoute(state.route);reportHeight()}catch(error){console.warn("[Site Intelligence] Recovered workspace refresh failed.",error)}
+      try{toast(`${event.detail?.group||"Data"} service recovered; refreshing this workspace.`);await navigateToRoute(state.route);reportHeight()}catch(error){console.warn("[Site Intelligence] Recovered workspace refresh failed.",error)}
     },1200);
   });
   async function init(){setLaunch("Preparing the map and public evidence services.",18);
@@ -1764,11 +1781,18 @@
     qs("#savedCreate").addEventListener("click",openSaveViewDialog);qs("#savedImport").addEventListener("click",()=>qs("#savedImportFile").click());qs("#savedImportFile").addEventListener("change",event=>{const file=event.target.files?.[0];importSavedViewFile(file);event.target.value=""});qs("#savedExportAll").addEventListener("click",()=>downloadSavedJson({schema:"sc-saved-view-collection/1.0",application_version:APP_VERSION,exported_at:savedIso(),views:savedViewsState.items},"site-intelligence-saved-views.json"));qs("#savedClearAll").addEventListener("click",()=>{if(!savedViewsState.items.length)return;if(confirm("Delete all locally saved Site Intelligence views from this browser?")){savedViewsState.items=[];try{persistSavedViews();renderSavedViews();toast("Local saved views cleared")}catch{}}});qs("#saveViewCancel").addEventListener("click",()=>qs("#saveViewDialog").close());qs("#saveViewForm").addEventListener("submit",event=>{event.preventDefault();if(saveCurrentManifest(qs("#saveViewName").value))qs("#saveViewDialog").close()});
     qs("#closeEvidenceDrawer").addEventListener("click",closeEvidenceDrawer);qs("#evidenceBackdrop").addEventListener("click",closeEvidenceDrawer);document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeEvidenceDrawer();setMobileNavigation(false,{restoreFocus:true})}});
     window.matchMedia("(max-width: 760px)").addEventListener?.("change",event=>{if(!event.matches)setMobileNavigation(false)});
-    const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const requestedView=params.get("view")||"overview";const initialView=[...Object.keys(savedViewDefinitions),"saved","launch","observatory"].includes(requestedView)?requestedView:"overview";const invalidRequestedView=requestedView!==initialView;qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";if(params.get("imageryDate"))qs("#dateSelect").value=params.get("imageryDate");try{setLaunch("Loading satellite imagery.",50);await loadLayers();await setImagery(params.get("imageryLayer")||"true-color");setLaunch("Connecting to live events and country evidence.",68);await Promise.all([loadEvents(),loadCountry(qs("#countrySelect").value)]);setLaunch("Preparing the workspace.",88);await setRoute(initialView);applySharedControlState(initialView,params);finishLaunch();if(invalidRequestedView)toast("The requested view is unavailable; Overview was opened instead.")}
-    catch(e){console.warn("[Site Intelligence] Optional startup service failed; opening a limited workspace.",e);const status=qs("#statusText");if(status)status.textContent="Partial public data";toast("Some optional public data is temporarily unavailable.");finishLaunch({state:"limited",message:"Site Intelligence opened; some optional public services are limited."})}
+    const params=new URLSearchParams(location.search);const initialCountry=params.get("country")||"KEN";const requestedView=params.get("view")||"overview";const initialView=[...Object.keys(savedViewDefinitions),"saved","launch","observatory"].includes(requestedView)?requestedView:"overview";const invalidRequestedView=requestedView!==initialView;qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";if(params.get("imageryDate"))qs("#dateSelect").value=params.get("imageryDate");
+    setLaunch("Opening the application shell.",82);
+    const routeTask=Promise.resolve().then(()=>setRoute(initialView));
+    applySharedControlState(initialView,params);
+    finishLaunch({message:"Site Intelligence is ready. Public data services are connecting."});
+    if(invalidRequestedView)toast("The requested view is unavailable; Overview was opened instead.");
+    const layerTask=Promise.resolve().then(()=>loadLayers()).then(()=>setImagery(params.get("imageryLayer")||"true-color"));
+    const hydration=Promise.allSettled([layerTask,loadEvents(),loadCountry(qs("#countrySelect").value),routeTask]);
+    hydration.then(results=>{const failed=results.filter(result=>result.status==="rejected");const status=qs("#statusText");if(failed.length){console.warn("[Site Intelligence] Startup hydration completed with limited services.",failed.map(result=>result.reason));if(status)status.textContent="Partial public data";toast("Some optional public data is temporarily unavailable.")}else if(status)status.textContent="Live public data";window.dispatchEvent(new CustomEvent("scsi:startup-hydrated",{detail:{version:APP_VERSION,state:failed.length?"limited":"ready",failed:failed.length}}));reportHeight()});
   }
   window.SCSIOverviewMapV3232={version:APP_VERSION,getMap:()=>state.map,getEvents:()=>state.events?.features||[],getFilteredEvents:()=>state.filteredEvents.slice(),getFilters:()=>({...state.overviewFilters}),setFilters:setOverviewFilters,selectEvent:selectOverviewEvent,fitResults:fitOverviewResults,setImageryOpacity:value=>state.imagery?.setOpacity?.(Math.max(0,Math.min(1,Number(value)))),setBaseStyle:style=>{const map=qs("#map");if(map)map.dataset.mapStyle=String(style||"institutional-dark");syncOverviewMapUrl()},syncUrl:syncOverviewMapUrl,render:renderOverviewFeatures};
-  window.SCSIRouterV3228={version:"3.23.6.3",navigate:navigateToRoute,current:()=>state.route};
+  window.SCSIRouterV3228={version:"3.23.6.4",navigate:navigateToRoute,current:()=>state.route};
   if(!FIXED_WORDPRESS_EMBED){
     window.addEventListener("load",reportHeight,{once:true});
     window.addEventListener("resize",reportHeight,{passive:true});
@@ -1794,5 +1818,5 @@ visualStyle.textContent=`
 document.head.appendChild(visualStyle);
 
 
-/* v3.23.6.3 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v3.23.6.3 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v3.23.6.4 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v3.23.6.4 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

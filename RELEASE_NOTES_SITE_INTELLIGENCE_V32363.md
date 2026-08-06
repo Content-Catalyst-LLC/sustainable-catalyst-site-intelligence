@@ -1,4 +1,4 @@
-# Site Intelligence v3.23.6.3 — Fixed Application Viewport and WordPress Embed Isolation
+# Site Intelligence v3.23.6.4 — Fixed Application Viewport and WordPress Embed Isolation
 
 This patch isolates the complete Site Intelligence application from WordPress document-height negotiation. The standalone application remains full-document in its own tab, while `[sc_site_intelligence_app]` now renders as a fixed-height application viewport with internal scrolling.
 

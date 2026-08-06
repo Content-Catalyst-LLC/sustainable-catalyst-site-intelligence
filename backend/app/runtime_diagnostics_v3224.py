@@ -1,4 +1,4 @@
-"""Public-safe runtime diagnostics for Site Intelligence v3.23.6.3.
+"""Public-safe runtime diagnostics for Site Intelligence v3.23.6.4.
 
 The diagnostics intentionally avoid outbound network calls. They report the local
 application contract, required first-party assets, map surfaces, embed policy,
@@ -38,6 +38,7 @@ REQUIRED_ASSETS = (
     "assets/browser-reliability-v3235.js",
     "assets/performance-offline-v3236.css",
     "assets/bootstrap-v32361.js",
+    "assets/startup-stability-v32364.js",
     "assets/performance-offline-v3236.js",
     "assets/data-truth-v3233.css",
     "assets/data-truth-v3233.js",
@@ -68,6 +69,7 @@ CRITICAL_PUBLIC_ENDPOINTS = (
     "/public/bootstrap-recovery",
     "/public/mutation-observer-recovery",
     "/public/embed-isolation",
+    "/public/startup-stability",
     "/public/data-truth",
 )
 
@@ -152,14 +154,16 @@ def build_runtime_health(settings: Settings) -> dict[str, Any]:
     browser_reliability_js = "/app/assets/browser-reliability-v3235.js"
     bootstrap_js = "/app/assets/bootstrap-v32361.js"
     performance_offline_js = "/app/assets/performance-offline-v3236.js"
+    startup_stability_js = "/app/assets/startup-stability-v32364.js"
     data_truth_js = "/app/assets/data-truth-v3233.js"
     production_truth_js = "/app/assets/production-truth-v3231.js"
-    ordered_scripts = all(token in index_html for token in (fallback_js, recovery_js, runtime_js, bootstrap_js, performance_offline_js, workspace_js, interaction_js, app_js, browser_reliability_js, data_truth_js, production_truth_js))
+    ordered_scripts = all(token in index_html for token in (fallback_js, recovery_js, runtime_js, startup_stability_js, bootstrap_js, performance_offline_js, workspace_js, interaction_js, app_js, browser_reliability_js, data_truth_js, production_truth_js))
     if ordered_scripts:
         ordered_scripts = (
             index_html.index(fallback_js)
             < index_html.index(recovery_js)
             < index_html.index(runtime_js)
+            < index_html.index(startup_stability_js)
             < index_html.index(bootstrap_js)
             < index_html.index(performance_offline_js)
             < index_html.index(app_js)
@@ -204,7 +208,7 @@ def build_runtime_health(settings: Settings) -> dict[str, Any]:
         _check(
             "offline-shell",
             "Offline shell contains the reliability assets",
-            all(name in worker for name in ("vector-cartography-v3230.js", "vector-cartography-v3230.css", "world-cartography-v3230.geojson", "runtime-v3230.js", "runtime-v3230.css", "cartographic-workspace-v3230.js", "cartographic-workspace-v3230.css", "cartographic-interaction-v3232.js", "cartographic-interaction-v3232.css", "analytical-workspaces-v3234.js", "analytical-workspaces-v3234.css", "bootstrap-v32361.js", "performance-offline-v3236.js", "performance-offline-v3236.css", "data-truth-v3233.js", "data-truth-v3233.css", "production-truth-v3231.js", "production-truth-v3231.css", "service-recovery-v3224.js")) and f'const RELEASE="{APP_VERSION}"' in worker,
+            all(name in worker for name in ("vector-cartography-v3230.js", "vector-cartography-v3230.css", "world-cartography-v3230.geojson", "runtime-v3230.js", "runtime-v3230.css", "cartographic-workspace-v3230.js", "cartographic-workspace-v3230.css", "cartographic-interaction-v3232.js", "cartographic-interaction-v3232.css", "analytical-workspaces-v3234.js", "analytical-workspaces-v3234.css", "bootstrap-v32361.js", "startup-stability-v32364.js", "performance-offline-v3236.js", "performance-offline-v3236.css", "data-truth-v3233.js", "data-truth-v3233.css", "production-truth-v3231.js", "production-truth-v3231.css", "service-recovery-v3224.js")) and f'const RELEASE="{APP_VERSION}"' in worker,
             "Service worker release and runtime assets are aligned." if worker else "Service worker is missing or unreadable.",
         ),
         _check(
@@ -218,6 +222,12 @@ def build_runtime_health(settings: Settings) -> dict[str, Any]:
             "The complete WordPress application uses a fixed isolated viewport",
             all(token in _read(PUBLIC_APP_DIR / "assets/embed-isolation-v32363.js") for token in ("wordpress-fixed", "SCSI_FIXED_WORDPRESS_EMBED", "heightMessagesEnabled")) and all(token in _read(PUBLIC_APP_DIR / "assets/app.js") for token in ("FIXED_WORDPRESS_EMBED", "if(FIXED_WORDPRESS_EMBED)return")),
             "WordPress application mode disables child height negotiation and keeps scrolling inside the fixed viewport.",
+        ),
+        _check(
+            "startup-stability-and-worker-closure",
+            "The application shell is independent from data hydration and service-worker updates cannot force reloads",
+            all(token in _read(PUBLIC_APP_DIR / "assets/app.js") for token in ("Promise.allSettled", "launchFinished", "routeTransitionActive")) and all(token in _read(PUBLIC_APP_DIR / "assets/bootstrap-v32361.js") for token in ("automaticReloads:0", "activateWaitingWorker", "automaticReload:false")) and "event.waitUntil(installCritical())" in worker and "installCritical().then(()=>self.skipWaiting())" not in worker,
+            "The shell fail-opens, startup data hydrates in the background, route changes are serialized, and service-worker activation never forces a current-session reload.",
         ),
         _check(
             "map-surfaces",
@@ -265,7 +275,8 @@ def build_runtime_health(settings: Settings) -> dict[str, Any]:
             "openstreetmap_tiles_unavailable": "Retain local world boundaries, geographic controls, and verified overlays without lowering application health.",
             "imagery_tiles_unavailable": "Keep the local basemap and other layers interactive; report imagery as limited without degrading the application.",
             "endpoint_unavailable": "Retry transient failures, isolate the affected service group, and use a marked last-known-good public JSON response when available.",
-            "service_recovered": "Close the affected circuit and refresh the active workspace once without reloading the full application.",
+            "service_recovered": "Close the affected circuit and refresh the active workspace through the serialized route queue without reloading the full application.",
+            "service_worker_update": "Keep the current application session stable; activate explicitly or on a later navigation without an automatic reload.",
         },
         "limitations": [
             "This endpoint does not contact third-party APIs or tile providers.",

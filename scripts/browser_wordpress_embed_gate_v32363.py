@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
-"""Mandatory long-page WordPress embed stability gate for Site Intelligence v3.23.6.3."""
+"""Mandatory long-page WordPress embed stability gate for Site Intelligence v3.23.6.4."""
 from __future__ import annotations
+
+import traceback
 
 import json
 import os
@@ -10,7 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 WP = ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence"
-VERSION = "3.23.6.3"
+VERSION = "3.23.6.4"
 
 
 def browser_path() -> str | None:
@@ -37,12 +39,12 @@ def host_document() -> str:
 <main class=\"ccp-site-intelligence-public\">
 <div class=\"ccp-status-item\"><span class=\"ccp-status-label\">Current version</span><strong>3.22.0</strong></div>
 <div class=\"ccp-release-bar\"><strong>Site Intelligence v3.22.0 - stale</strong></div>
-<div class=\"scsi-standalone-app scsi-fixed-application-viewport\" data-scsi-fixed-app data-scsi-embed-mode=\"fixed\" data-scsi-fixed-height=\"1100\" data-scsi-release=\"3.23.6.3\" style=\"--scsi-fixed-app-height:1100px\">
+<div class=\"scsi-standalone-app scsi-fixed-application-viewport\" data-scsi-fixed-app data-scsi-embed-mode=\"fixed\" data-scsi-fixed-height=\"1100\" data-scsi-release=\"3.23.6.4\" style=\"--scsi-fixed-app-height:1100px\">
 <div class=\"scsi-app-loading\">Opening Site Intelligence...</div>
 <iframe id=\"appframe\" data-scsi-embed-frame data-scsi-embed-mode=\"fixed\" data-scsi-fixed-height=\"1100\" data-scsi-min-height=\"1100\" data-scsi-mobile-min-height=\"1100\" data-scsi-max-height=\"1100\" style=\"width:100%;height:1100px;min-height:1100px;max-height:1100px;border:0;display:block\"></iframe>
 <p class=\"scsi-embed-fallback\"><a href=\"https://example.invalid/app/\">Open in new tab</a></p></div></main>
 <section style=\"height:2200px;padding:40px\"><h2>Long WordPress page after application</h2></section>
-<script>window.SCSiteIntelligence={{version:\"3.23.6.3\",restBase:\"\",backendUrl:\"https://example.invalid\"}};</script>
+<script>window.SCSiteIntelligence={{version:\"3.23.6.4\",restBase:\"\",backendUrl:\"https://example.invalid\"}};</script>
 <script>{js}</script></body></html>"""
 
 
@@ -130,9 +132,18 @@ def main() -> int:
     assert not errors, errors
     assert not actionable, actionable
     print(json.dumps({"browser": executable, "before": before, "anchor": anchor, "postResize": post_resize, "after": after, "child": child_state, "consoleErrors": console_errors}, indent=2))
-    print("PASS: v3.23.6.3 fixed WordPress application viewport remained 1100px and the long host page did not jump during route, mutation, scroll, or viewport changes.")
+    print("PASS: v3.23.6.4 fixed WordPress application viewport remained 1100px and the long host page did not jump during route, mutation, scroll, or viewport changes.")
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    try:
+        status = int(main())
+    except BaseException:
+        traceback.print_exc()
+        status = 1
+    try:
+        sys.stdout.flush()
+        sys.stderr.flush()
+    finally:
+        os._exit(status)
