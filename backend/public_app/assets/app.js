@@ -25,7 +25,7 @@
     }
     throw last;
   }
-  const APP_VERSION="3.23.7.2";
+  const APP_VERSION="3.23.8";
   const FIXED_WORDPRESS_EMBED=window.SCSI_FIXED_WORDPRESS_EMBED===true;
   let heightFrame=0;
   function documentHeight(){
@@ -161,6 +161,7 @@
     state.imagery.bringToFront();
     qs("#layerName").textContent=layer.title;
     qs("#layerDate").textContent=cleanDate(qs("#dateSelect").value);
+    const layerTruth=qs("#mapLayerTruthButton");if(layerTruth){layerTruth.dataset.recordTruthLayer=id;layerTruth.dataset.recordTruthDate=qs("#dateSelect").value||today();}
     qs("#legendSource").textContent=`${layer.source} imagery · USGS and NASA event records`;qs("#captionDetail").textContent=`${layer.title} · ${cleanDate(qs("#dateSelect").value)}`;
     qsa(".layer-tab").forEach(b=>b.classList.toggle("active",b.dataset.layer===id));
   }
@@ -404,8 +405,10 @@
       field("Severity or magnitude",escapeHtml(event.magnitude!=null?`${event.magnitude} · ${event.severity}`:event.severity)),
       field("Record type",escapeHtml(event.record_type)),
       field("Summary",escapeHtml(event.summary||"No summary provided.")),
-      field("Interpretation","Public source record for orientation and research. Not an operational alert or professional recommendation.")
+      field("Interpretation","Public source record for orientation and research. Not an operational alert or professional recommendation."),
+      `<button id="eventRecordTruthButton" type="button" class="ghost-button scsi-record-truth-button">Open record truth</button>`
     ].join("");
+    qs("#eventRecordTruthButton")?.addEventListener("click",()=>window.dispatchEvent(new CustomEvent("scsi:record-truth",{detail:{record:{record_type:"event",id:event.id,title:event.title,source:event.source_name,source_id:event.source_id,source_url:event.source_url,observed_at:event.observed_at,retrieved_at:event.retrieved_at,country_code:event.country_code,country:event.country,summary:event.summary,data_state:event.data_state,magnitude:event.magnitude,severity:event.severity,license:event.license}}})));
     backdrop.hidden=false;drawer.classList.add("open");drawer.setAttribute("aria-hidden","false");qs("#closeEventDrawer").focus();
   }
   function closeEventDrawer(){qs("#eventDetailDrawer").classList.remove("open");qs("#eventDetailDrawer").setAttribute("aria-hidden","true");qs("#eventDetailBackdrop").hidden=true}
@@ -591,7 +594,7 @@
       qs("#countryIdentityName").textContent=country.name;
       qs("#countryIdentityMeta").textContent=`Capital: ${country.capital||"Unavailable"}${country.income_level?` · ${country.income_level}`:""} · ${overview.data_state||"unknown state"}`;
       const highlights=overview.highlights||[];
-      qs("#globalCountryMetrics").innerHTML=highlights.length?highlights.map(item=>`<article class="country-indicator"><span class="country-indicator-label">${escapeHtml(item.label)}</span><strong class="country-indicator-value">${escapeHtml(formatCountryValue(item.value,item.format,item.unit))}</strong><div class="country-indicator-meta">${escapeHtml(item.unit)} · ${escapeHtml(item.year)}</div><span class="country-indicator-source">${item.source_url?`<a href="${escapeHtml(item.source_url)}" target="_blank" rel="noopener">${escapeHtml(item.source)} ↗</a>`:escapeHtml(item.source)} · ${escapeHtml(item.data_state)}</span></article>`).join(""):'<div class="empty-state"><div><strong>No validated indicators</strong><span>No validated public value is currently available for this country.</span></div></div>';
+      qs("#globalCountryMetrics").innerHTML=highlights.length?highlights.map(item=>`<article class="country-indicator"><span class="country-indicator-label">${escapeHtml(item.label)}</span><strong class="country-indicator-value">${escapeHtml(formatCountryValue(item.value,item.format,item.unit))}</strong><div class="country-indicator-meta">${escapeHtml(item.unit)} · ${escapeHtml(item.year)}</div><span class="country-indicator-source">${item.source_url?`<a href="${escapeHtml(item.source_url)}" target="_blank" rel="noopener">${escapeHtml(item.source)} ↗</a>`:escapeHtml(item.source)} · ${escapeHtml(item.data_state)}</span><button type="button" class="ghost-button scsi-record-truth-button" data-record-truth-indicator="${escapeHtml(item.id)}" data-record-truth-country="${escapeHtml(normalized)}">Truth</button></article>`).join(""):'<div class="empty-state"><div><strong>No validated indicators</strong><span>No validated public value is currently available for this country.</span></div></div>';
       globalCountryState.trends=trends.trends||[];
       qs("#globalTrendSelect").innerHTML=globalCountryState.trends.map(item=>`<option value="${escapeHtml(item.key)}">${escapeHtml(item.label)}</option>`).join("");
       if(globalCountryState.trends.length){qs("#globalTrendTitle").textContent=globalCountryState.trends[0].label;renderGlobalTrend(globalCountryState.trends[0])}else{qs("#globalTrendTitle").textContent="Trend unavailable";renderGlobalTrend(null)}
@@ -1818,7 +1821,7 @@
     hydration.then(results=>{const failed=results.filter(result=>result.status==="rejected");const status=qs("#statusText");if(failed.length){console.warn("[Site Intelligence] Startup hydration completed with limited services.",failed.map(result=>result.reason));if(status)status.textContent="Partial public data";toast("Some optional public data is temporarily unavailable.")}else if(status)status.textContent="Live public data";window.dispatchEvent(new CustomEvent("scsi:startup-hydrated",{detail:{version:APP_VERSION,state:failed.length?"limited":"ready",failed:failed.length}}));reportHeight()});
   }
   window.SCSIOverviewMapV3232={version:APP_VERSION,getMap:()=>state.map,getEvents:()=>state.events?.features||[],getFilteredEvents:()=>state.filteredEvents.slice(),getFilters:()=>({...state.overviewFilters}),setFilters:setOverviewFilters,selectEvent:selectOverviewEvent,fitResults:fitOverviewResults,setImageryOpacity:value=>state.imagery?.setOpacity?.(Math.max(0,Math.min(1,Number(value)))),setBaseStyle:style=>{const map=qs("#map");if(map)map.dataset.mapStyle=String(style||"institutional-dark");syncOverviewMapUrl()},syncUrl:syncOverviewMapUrl,render:renderOverviewFeatures};
-  window.SCSIRouterV3228={version:"3.23.7.2",navigate:navigateToRoute,current:()=>state.route};
+  window.SCSIRouterV3228={version:"3.23.8",navigate:navigateToRoute,current:()=>state.route};
   if(!FIXED_WORDPRESS_EMBED){
     window.addEventListener("load",reportHeight,{once:true});
     window.addEventListener("resize",reportHeight,{passive:true});
@@ -1844,5 +1847,5 @@ visualStyle.textContent=`
 document.head.appendChild(visualStyle);
 
 
-/* v3.23.7.2 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v3.23.7.2 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v3.23.8 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v3.23.8 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

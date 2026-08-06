@@ -1,4 +1,4 @@
-"""Public-safe runtime diagnostics for Site Intelligence v3.23.7.2.
+"""Public-safe runtime diagnostics for Site Intelligence v3.23.8.
 
 The diagnostics intentionally avoid outbound network calls. They report the local
 application contract, required first-party assets, map surfaces, embed policy,
@@ -42,6 +42,8 @@ REQUIRED_ASSETS = (
     "assets/performance-offline-v3236.js",
     "assets/data-truth-v32371.css",
     "assets/data-truth-v32371.js",
+    "assets/record-provenance-v3238.css",
+    "assets/record-provenance-v3238.js",
     "assets/production-truth-v3231.css",
     "assets/production-truth-v3231.js",
     "assets/service-recovery-v3224.js",
@@ -74,6 +76,9 @@ CRITICAL_PUBLIC_ENDPOINTS = (
     "/public/data-truth/countries",
     "/public/data-truth/coverage-matrix",
     "/public/data-truth/country/KEN",
+    "/public/record-truth/country/KEN",
+    "/public/record-truth/indicator/KEN/SP.POP.TOTL",
+    "/public/record-truth/manifest",
 )
 
 MAP_SURFACE_HINTS = {
@@ -159,8 +164,9 @@ def build_runtime_health(settings: Settings) -> dict[str, Any]:
     performance_offline_js = "/app/assets/performance-offline-v3236.js"
     startup_stability_js = "/app/assets/startup-stability-v32364.js"
     data_truth_js = "/app/assets/data-truth-v32371.js"
+    record_truth_js = "/app/assets/record-provenance-v3238.js"
     production_truth_js = "/app/assets/production-truth-v3231.js"
-    ordered_scripts = all(token in index_html for token in (fallback_js, recovery_js, runtime_js, startup_stability_js, bootstrap_js, performance_offline_js, workspace_js, interaction_js, app_js, browser_reliability_js, data_truth_js, production_truth_js))
+    ordered_scripts = all(token in index_html for token in (fallback_js, recovery_js, runtime_js, startup_stability_js, bootstrap_js, performance_offline_js, workspace_js, interaction_js, app_js, browser_reliability_js, data_truth_js, record_truth_js, production_truth_js))
     if ordered_scripts:
         ordered_scripts = (
             index_html.index(fallback_js)
@@ -174,6 +180,7 @@ def build_runtime_health(settings: Settings) -> dict[str, Any]:
             < index_html.index(interaction_js)
             < index_html.index(browser_reliability_js)
             < index_html.index(data_truth_js)
+            < index_html.index(record_truth_js)
             < index_html.index(production_truth_js)
         )
 
@@ -211,7 +218,7 @@ def build_runtime_health(settings: Settings) -> dict[str, Any]:
         _check(
             "offline-shell",
             "Offline shell contains the reliability assets",
-            all(name in worker for name in ("vector-cartography-v3230.js", "vector-cartography-v3230.css", "world-cartography-v3230.geojson", "runtime-v3230.js", "runtime-v3230.css", "cartographic-workspace-v3230.js", "cartographic-workspace-v3230.css", "cartographic-interaction-v3232.js", "cartographic-interaction-v3232.css", "analytical-workspaces-v3234.js", "analytical-workspaces-v3234.css", "bootstrap-v32361.js", "startup-stability-v32364.js", "performance-offline-v3236.js", "performance-offline-v3236.css", "data-truth-v32371.js", "data-truth-v32371.css", "production-truth-v3231.js", "production-truth-v3231.css", "service-recovery-v3224.js")) and f'const RELEASE="{APP_VERSION}"' in worker,
+            all(name in worker for name in ("vector-cartography-v3230.js", "vector-cartography-v3230.css", "world-cartography-v3230.geojson", "runtime-v3230.js", "runtime-v3230.css", "cartographic-workspace-v3230.js", "cartographic-workspace-v3230.css", "cartographic-interaction-v3232.js", "cartographic-interaction-v3232.css", "analytical-workspaces-v3234.js", "analytical-workspaces-v3234.css", "bootstrap-v32361.js", "startup-stability-v32364.js", "performance-offline-v3236.js", "performance-offline-v3236.css", "data-truth-v32371.js", "data-truth-v32371.css", "record-provenance-v3238.js", "record-provenance-v3238.css", "production-truth-v3231.js", "production-truth-v3231.css", "service-recovery-v3224.js")) and f'const RELEASE="{APP_VERSION}"' in worker,
             "Service worker release and runtime assets are aligned." if worker else "Service worker is missing or unreadable.",
         ),
         _check(

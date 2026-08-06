@@ -1,4 +1,4 @@
-# Site Intelligence v3.23.7.2
+# Site Intelligence v3.23.8
 ## Country Selector Hydration and Global Selection Repair
 
 ### Release purpose

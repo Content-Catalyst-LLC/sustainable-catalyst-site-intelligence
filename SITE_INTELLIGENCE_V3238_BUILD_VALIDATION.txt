@@ -1,0 +1,23 @@
+Site Intelligence v3.23.8 — Record Provenance and Indicator Truth
+
+Complete source validation passed:
+- 1,003 Python tests passed across 183 files in 10 bounded, process-isolated groups.
+- 1,215 immutable repository entries verified byte-for-byte.
+- 127 JSON and GeoJSON files parsed.
+- 63 JavaScript files passed syntax validation.
+- WordPress PHP syntax passed.
+- The 173-country selector retained focus, accepted wheel interaction, and selected Afghanistan, Zimbabwe, and Brazil in direct and iframe modes.
+- Global selector hydration and Global Country Data Truth gates passed.
+- All 39 application scripts initialized in direct and iframe modes.
+- Production-soak route churn completed with zero route failures and zero automatic service-worker reloads.
+- The fixed WordPress iframe remained 1,100 px high without moving the host page.
+- Record Truth opened map-layer, indicator, and event disclosures in direct and iframe modes.
+- Indicator, map-layer, and event records returned deterministic 64-character SHA-256 fingerprints.
+- Kenya population remained a dated 2023 historical snapshot.
+- Brazil population remained missing and was not imputed or replaced with another country.
+- Record Truth application and WordPress assets were byte-identical.
+
+Validation command:
+PYTHON=python3 bash verify_site_intelligence_v3_23_8_macos.sh
+
+Result: PASS

@@ -1,6 +1,6 @@
-# Install and Test — Site Intelligence v3.23.7.2 Repaired Package
+# Install and Test — Site Intelligence v3.23.8 Repaired Package
 
-1. Put the repaired v3.23.7.2 installer and release bundle in `~/Downloads`.
+1. Put the repaired v3.23.8 installer and release bundle in `~/Downloads`.
 2. Run the repaired installer command supplied with the release.
 3. Wait for both deterministic validation passes and the live GitHub/Render gate.
 4. Install the WordPress ZIP only after the installer reports success.

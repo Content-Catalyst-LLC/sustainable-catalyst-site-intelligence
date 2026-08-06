@@ -1,3 +1,11 @@
+## 3.23.8 — Record Provenance and Indicator Truth
+
+- Added record-level truth contracts for country indicators, map layers, events, charts, and table records.
+- Added source, date, unit, transformation, lineage, limitation, and truth-state disclosure.
+- Added deterministic SHA-256 fingerprints that detect changes without implying source authority.
+- Added a browser Record Truth drawer and downloadable country provenance manifests.
+- Added mandatory direct and WordPress-iframe browser gates for indicator, map-layer, and event truth.
+
 ## 3.23.7.2 — Country Dropdown Interaction and Focus Safety
 
 - Stops background workspace-state checks from moving focus away from the global country selector.
