@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
-RELEASE="3.26.0"
+RELEASE="3.27.0"
 RELEASE_ID="site-intelligence-v${RELEASE}"
 BUNDLE="${1:-}"
 fail(){ printf '\nERROR: %s\n' "$1" >&2; exit 1; }
 if [[ -z "$BUNDLE" ]]; then
-  BUNDLE="$(find "$HOME/Downloads" -maxdepth 1 -type f -name 'sustainable-catalyst-site-intelligence-v3.26.0-release-bundle*.zip' -print0 2>/dev/null | xargs -0 ls -t 2>/dev/null | head -1 || true)"
+  BUNDLE="$(find "$HOME/Downloads" -maxdepth 1 -type f -name 'sustainable-catalyst-site-intelligence-v3.27.0-release-bundle*.zip' -print0 2>/dev/null | xargs -0 ls -t 2>/dev/null | head -1 || true)"
 fi
 [[ -n "$BUNDLE" && -f "$BUNDLE" ]] || fail "The Site Intelligence v${RELEASE} release bundle was not found in Downloads."
 for command_name in unzip shasum python3 git curl rsync; do command -v "$command_name" >/dev/null 2>&1 || fail "$command_name is required."; done

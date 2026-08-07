@@ -10,37 +10,37 @@ trap 'rm -rf "$RUNTIME_SANDBOX" "$BACKEND/backend"' EXIT
 export SC_SI_RUNTIME_STATE_ROOT="$RUNTIME_SANDBOX"
 reset_runtime(){ rm -rf "$RUNTIME_SANDBOX"; mkdir -p "$RUNTIME_SANDBOX"; }
 
-printf '\n==> Running complete inherited and v3.26.0 test suite with bounded process-isolated teardown\n'
+printf '\n==> Running complete inherited and v3.27.0 test suite with bounded process-isolated teardown\n'
 PYTHON="$PYTHON" PYTHONPATH="$BACKEND" PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 "$PYTHON" "$ROOT/scripts/run_v3240_test_suite.py"
 rm -rf "$BACKEND/backend"
 
 printf '
-==> Running mandatory v3.26.0 country dropdown interaction and focus-safety gate
+==> Running mandatory v3.27.0 country dropdown interaction and focus-safety gate
 '
 reset_runtime
 "$PYTHON" "$ROOT/scripts/run_browser_gate_v3240.py" browser_country_selector_interaction_v3238.py
 
 printf '
-==> Running mandatory v3.26.0 global country selector hydration gate
+==> Running mandatory v3.27.0 global country selector hydration gate
 '
 reset_runtime
 "$PYTHON" "$ROOT/scripts/run_browser_gate_v3240.py" browser_country_selector_hydration_v3238.py
 
-printf '\n==> Running mandatory v3.26.0 global country truth browser gate\n'
+printf '\n==> Running mandatory v3.27.0 global country truth browser gate\n'
 reset_runtime
 "$PYTHON" "$ROOT/scripts/run_browser_gate_v3240.py" browser_global_country_data_truth_v3238.py
 
 printf '
-==> Verifying v3.26.0 Global Data Truth Control Plane
+==> Verifying v3.27.0 Global Data Truth Control Plane
 '
 "$PYTHON" "$ROOT/scripts/validate_v3240_release.py"
-grep -q 'APP_VERSION = "3.26.0"' "$BACKEND/app/version.py"
-grep -q 'Version: 3.26.0' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
-grep -q 'const RELEASE="3.26.0"' "$BACKEND/public_app/service-worker.js"
+grep -q 'APP_VERSION = "3.27.0"' "$BACKEND/app/version.py"
+grep -q 'Version: 3.27.0' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
+grep -q 'const RELEASE="3.27.0"' "$BACKEND/public_app/service-worker.js"
 grep -q '/public/record-truth/indicator/{country_code}/{indicator_id}' "$BACKEND/app/main.py"
 grep -q '/public/record-truth/map-layer/{layer_id}' "$BACKEND/app/main.py"
 grep -q '/public/record-truth/manifest' "$BACKEND/app/main.py"
-grep -q 'record-provenance-v3238.js?v=3.26.0' "$BACKEND/public_app/index.html"
+grep -q 'record-provenance-v3238.js?v=3.27.0' "$BACKEND/public_app/index.html"
 grep -q 'record-provenance-v3238.js' "$BACKEND/public_app/service-worker.js"
 cmp -s "$BACKEND/public_app/assets/record-provenance-v3238.js" "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/assets/record-provenance-v3238.js"
 cmp -s "$BACKEND/public_app/assets/record-provenance-v3238.css" "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/assets/record-provenance-v3238.css"
@@ -49,7 +49,7 @@ grep -q '/public/data-truth/control-plane/schema-drift' "$BACKEND/app/main.py"
 grep -q '/public/data-truth/control-plane/outages' "$BACKEND/app/main.py"
 grep -q '/public/data-truth/control-plane/workspaces' "$BACKEND/app/main.py"
 grep -q '/public/data-truth/control-plane/export' "$BACKEND/app/main.py"
-grep -q 'data-truth-control-plane-v3240.js?v=3.26.0' "$BACKEND/public_app/index.html"
+grep -q 'data-truth-control-plane-v3240.js?v=3.27.0' "$BACKEND/public_app/index.html"
 grep -q 'data-truth-control-plane-v3240.js' "$BACKEND/public_app/service-worker.js"
 grep -q 'SCSIDataTruthControlPlaneV3240' "$BACKEND/public_app/assets/data-truth-control-plane-v3240.js"
 grep -q 'data-truth-view="control"' "$BACKEND/public_app/assets/data-truth-v32371.js"
@@ -57,7 +57,7 @@ cmp -s "$BACKEND/public_app/assets/data-truth-control-plane-v3240.js" "$ROOT/wor
 cmp -s "$BACKEND/public_app/assets/data-truth-control-plane-v3240.css" "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/assets/data-truth-control-plane-v3240.css"
 cmp -s "$BACKEND/public_app/assets/data-truth-v32371.js" "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/assets/data-truth-v32371.js"
 grep -q '/public/data-truth/coverage-matrix' "$BACKEND/app/main.py"
-grep -q 'data-truth-v32371.js?v=3.26.0' "$BACKEND/public_app/index.html"
+grep -q 'data-truth-v32371.js?v=3.27.0' "$BACKEND/public_app/index.html"
 grep -q 'data-truth-v32371.js' "$BACKEND/public_app/service-worker.js"
 grep -q 'const countryCatalogTask=hydrateCountrySelector(initialCountry)' "$BACKEND/public_app/assets/app.js"
 grep -q '/public/data-truth/countries' "$BACKEND/public_app/assets/app.js"
@@ -83,7 +83,7 @@ printf '
 "$PYTHON" - "$ROOT" <<'PYVERIFY'
 from pathlib import Path
 import hashlib,json,sys
-root=Path(sys.argv[1]);m=json.loads((root/'MANIFEST.json').read_text());assert m['release']=='3.26.0';assert m['file_count']==len(m['files'])
+root=Path(sys.argv[1]);m=json.loads((root/'MANIFEST.json').read_text());assert m['release']=='3.27.0';assert m['file_count']==len(m['files'])
 for e in m['files']:
  p=root/e['path'];d=p.read_bytes();assert len(d)==e['bytes'],e['path'];assert hashlib.sha256(d).hexdigest()==e['sha256'],e['path']
 print(f"Verified {len(m['files'])} manifest entries.")
@@ -118,17 +118,17 @@ printf '
 '
 reset_runtime
 "$PYTHON" "$ROOT/scripts/run_browser_gate_v3240.py" browser_complete_shell_gate_v32362.py
-printf '\n==> Running mandatory v3.26.0 production-soak route and service-worker gate\n'
+printf '\n==> Running mandatory v3.27.0 production-soak route and service-worker gate\n'
 reset_runtime
 "$PYTHON" "$ROOT/scripts/run_browser_gate_v3240.py" browser_production_soak_gate_v32364.py
 printf '\n==> Running mandatory long-page WordPress embed gate\n'
 reset_runtime
 "$PYTHON" "$ROOT/scripts/run_browser_gate_v3240.py" browser_wordpress_embed_gate_v32363.py
-printf '\n==> Running mandatory v3.26.0 record provenance and indicator-truth gate\n'
+printf '\n==> Running mandatory v3.27.0 record provenance and indicator-truth gate\n'
 reset_runtime
 "$PYTHON" "$ROOT/scripts/run_browser_gate_v3240.py" browser_record_provenance_v3238.py
 printf '
-==> Running mandatory v3.26.0 Global Data Truth Control Plane gate
+==> Running mandatory v3.27.0 Global Data Truth Control Plane gate
 '
 reset_runtime
 "$PYTHON" "$ROOT/scripts/run_browser_gate_v3240.py" browser_data_truth_control_plane_v3240.py
@@ -136,6 +136,6 @@ reset_runtime
 rm -rf "$BACKEND/backend"
 [[ ! -e "$BACKEND/backend" ]] || { echo 'ERROR: runtime state cleanup failed.' >&2; exit 1; }
 printf '
-SUCCESS: Site Intelligence v3.26.0 passed Global Data Truth Control Plane validation.
+SUCCESS: Site Intelligence v3.27.0 passed Global Data Truth Control Plane validation.
 Repository: %s
 ' "$ROOT"

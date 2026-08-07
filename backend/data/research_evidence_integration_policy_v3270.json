@@ -1,0 +1,49 @@
+{
+  "version": "3.27.0",
+  "schema": "sc-site-intelligence-research-evidence-integration-policy/1.0",
+  "targets": {
+    "research-librarian": {
+      "label": "Research Librarian",
+      "purpose": "Prepare a bounded research question, selected evidence, and explicit gaps for source discovery.",
+      "packet_type": "research_question",
+      "delivery": "preview-only"
+    },
+    "knowledge-library": {
+      "label": "Knowledge Library",
+      "purpose": "Prepare a discovery query or publication/archive metadata without claiming a remote document match.",
+      "packet_type": "publication_archive",
+      "delivery": "preview-only"
+    },
+    "workbench": {
+      "label": "Workbench",
+      "purpose": "Prepare quantitative records, units, assumptions, and provenance for reproducible analysis.",
+      "packet_type": "analytical_packet",
+      "delivery": "preview-only"
+    },
+    "decision-studio": {
+      "label": "Decision Studio",
+      "purpose": "Prepare evidence, scenarios, uncertainties, and assumptions for structured decision review.",
+      "packet_type": "scenario_decision_packet",
+      "delivery": "preview-only"
+    }
+  },
+  "evidence_classes": [
+    "official-statistic",
+    "scientific-observation",
+    "forecast",
+    "legal-record",
+    "humanitarian-report",
+    "event-record",
+    "derived-analysis",
+    "source-note"
+  ],
+  "boundaries": [
+    "A handoff preview is a portable packet, not proof that another Sustainable Catalyst product received or ingested it.",
+    "Every external handoff requires an explicit human confirmation step outside this preview contract.",
+    "Knowledge Library discovery returns a query plan unless verified document matches are supplied by an actual library index.",
+    "Research relevance does not establish truth, authority, causation, importance, or decision priority.",
+    "Claim maps preserve supporting, contradicting, qualifying, and contextual relationships without resolving contested claims automatically.",
+    "Source snapshots record what Site Intelligence was given at a point in time; they do not certify the upstream source as complete or correct.",
+    "Publication remains a human-reviewed action and is never triggered by this public integration layer."
+  ]
+}

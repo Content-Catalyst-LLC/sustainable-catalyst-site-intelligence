@@ -10,20 +10,20 @@ trap 'rm -rf "$RUNTIME_SANDBOX" "$BACKEND/backend"' EXIT
 export SC_SI_RUNTIME_STATE_ROOT="$RUNTIME_SANDBOX"
 reset_runtime(){ rm -rf "$RUNTIME_SANDBOX"; mkdir -p "$RUNTIME_SANDBOX"; }
 
-printf '\n==> Running complete inherited and v3.26.0 test suite\n'
+printf '\n==> Running complete inherited and v3.27.0 test suite\n'
 PYTHON="$PYTHON" PYTHONPATH="$BACKEND" PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 "$PYTHON" "$ROOT/scripts/run_v3250_test_suite.py"
 rm -rf "$BACKEND/backend"
 
 printf '\n==> Validating unified analytical state contracts\n'
 PYTHONPATH="$BACKEND" "$PYTHON" "$ROOT/scripts/validate_v3250_release.py"
-grep -q 'APP_VERSION = "3.26.0"' "$BACKEND/app/version.py"
-grep -q 'Version: 3.26.0' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
-grep -q 'const RELEASE="3.26.0"' "$BACKEND/public_app/service-worker.js"
+grep -q 'APP_VERSION = "3.27.0"' "$BACKEND/app/version.py"
+grep -q 'Version: 3.27.0' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
+grep -q 'const RELEASE="3.27.0"' "$BACKEND/public_app/service-worker.js"
 grep -q '/public/workspaces/unified-state' "$BACKEND/app/main.py"
 grep -q '/public/workspaces/unified-state/normalize' "$BACKEND/app/main.py"
 grep -q '/public/workspaces/unified-state/deep-link' "$BACKEND/app/main.py"
 grep -q '/public/workspaces/unified-state/handoff/{target}' "$BACKEND/app/main.py"
-grep -q 'cross-view-state-v3250.js?v=3.26.0' "$BACKEND/public_app/index.html"
+grep -q 'cross-view-state-v3250.js?v=3.27.0' "$BACKEND/public_app/index.html"
 grep -q 'cross-view-state-v3250.js' "$BACKEND/public_app/service-worker.js"
 grep -q 'SiteIntelligenceCrossViewState' "$BACKEND/public_app/assets/cross-view-state-v3250.js"
 cmp -s "$BACKEND/public_app/assets/cross-view-state-v3250.js" "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/assets/cross-view-state-v3250.js"
@@ -33,7 +33,7 @@ printf '\n==> Verifying immutable repository manifest\n'
 "$PYTHON" - "$ROOT" <<'PYVERIFY'
 from pathlib import Path
 import hashlib,json,sys
-root=Path(sys.argv[1]);m=json.loads((root/'MANIFEST.json').read_text());assert m['release']=='3.26.0';assert m['file_count']==len(m['files'])
+root=Path(sys.argv[1]);m=json.loads((root/'MANIFEST.json').read_text());assert m['release']=='3.27.0';assert m['file_count']==len(m['files'])
 for e in m['files']:
  p=root/e['path'];d=p.read_bytes();assert len(d)==e['bytes'],e['path'];assert hashlib.sha256(d).hexdigest()==e['sha256'],e['path']
 print(f"Verified {len(m['files'])} manifest entries.")
@@ -72,4 +72,4 @@ done
 
 rm -rf "$BACKEND/backend"
 [[ ! -e "$BACKEND/backend" ]] || { echo 'ERROR: runtime state cleanup failed.' >&2; exit 1; }
-printf '\nSUCCESS: Site Intelligence v3.26.0 passed unified analytical workspace and cross-view state validation.\nRepository: %s\n' "$ROOT"
+printf '\nSUCCESS: Site Intelligence v3.27.0 passed unified analytical workspace and cross-view state validation.\nRepository: %s\n' "$ROOT"

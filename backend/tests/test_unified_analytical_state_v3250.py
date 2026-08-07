@@ -13,7 +13,7 @@ CLIENT = TestClient(app)
 def test_unified_state_schema_connects_six_analytical_routes():
     payload = CLIENT.get('/public/workspaces/unified-state').json()
     assert payload['ok'] is True
-    assert payload['version'] == '3.26.0'
+    assert payload['version'] == '3.27.0'
     assert payload['contract'] == 'unified-analytical-workspace-state'
     assert payload['route_count'] == 6
     assert set(payload['routes']) == {'overview', 'global', 'country', 'compare', 'spatial', 'earth'}
@@ -73,16 +73,16 @@ def test_fingerprint_is_stable_for_equivalent_state():
 def test_assets_are_shipped_offline_and_match_wordpress():
     html = (ROOT / 'backend/public_app/index.html').read_text()
     worker = (ROOT / 'backend/public_app/service-worker.js').read_text()
-    assert 'cross-view-state-v3250.css?v=3.26.0' in html
-    assert 'cross-view-state-v3250.js?v=3.26.0' in html
+    assert 'cross-view-state-v3250.css?v=3.27.0' in html
+    assert 'cross-view-state-v3250.js?v=3.27.0' in html
     assert 'cross-view-state-v3250.js' in worker
-    assert 'data-scsi-release="3.26.0"' in html
+    assert 'data-scsi-release="3.27.0"' in html
     for name in ('cross-view-state-v3250.js', 'cross-view-state-v3250.css'):
         assert (ROOT / 'backend/public_app/assets' / name).read_bytes() == (ROOT / 'wordpress-plugin/sustainable-catalyst-site-intelligence/assets' / name).read_bytes()
 
 
-def test_wordpress_release_bar_names_the_v3250_build():
+def test_wordpress_release_bar_names_current_build():
     plugin = (ROOT / 'wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php').read_text()
     host_js = (ROOT / 'wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js').read_text()
-    assert 'Version: 3.26.0' in plugin
-    assert "Comparative, Scenario, and Model Assurance" in host_js
+    assert 'Version: 3.27.0' in plugin
+    assert "Research Evidence and Knowledge Integration" in host_js
