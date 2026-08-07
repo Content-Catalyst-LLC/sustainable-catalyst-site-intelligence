@@ -1,8 +1,8 @@
-Site Intelligence v3.25.0 — Package Verification
+Site Intelligence v3.26.0 — Package Verification
 
 Required release-bundle contents:
-- sustainable-catalyst-site-intelligence-v3.25.0-repository.zip
-- sustainable-catalyst-site-intelligence-v3.25.0-wordpress-plugin.zip
+- sustainable-catalyst-site-intelligence-v3.26.0-repository.zip
+- sustainable-catalyst-site-intelligence-v3.26.0-wordpress-plugin.zip
 - deploy_and_validate_site_intelligence_v3_23_8_macos.sh
 - RELEASE_NOTES_SITE_INTELLIGENCE_V3238.md
 - SITE_INTELLIGENCE_V3238_RECORD_PROVENANCE_AUDIT.md
@@ -12,9 +12,9 @@ Required release-bundle contents:
 - SHA256SUMS.txt
 
 Package requirements:
-- The repository ZIP must extract to sustainable-catalyst-site-intelligence-v3.25.0/.
+- The repository ZIP must extract to sustainable-catalyst-site-intelligence-v3.26.0/.
 - The WordPress ZIP must extract to sustainable-catalyst-site-intelligence/.
 - SHA256SUMS.txt must verify every bundle member except itself.
 - The installer must reject missing or altered packages.
 - The installer must run two complete deterministic validation passes.
-- GitHub and Render promotion must verify the exact v3.25.0 commit and live record-truth contracts before WordPress installation is authorized.
+- GitHub and Render promotion must verify the exact v3.26.0 commit and live record-truth contracts before WordPress installation is authorized.

@@ -1,8 +1,8 @@
-# Site Intelligence v3.25.0 — Global Data Truth Control Plane
+# Site Intelligence v3.26.0 — Global Data Truth Control Plane
 
 ## Release purpose
 
-v3.25.0 turns the source-level, country-level, and record-level truth layers into one operational control plane. It is a consolidation release: it adds no new public data provider and makes no new live-data claim.
+v3.26.0 turns the source-level, country-level, and record-level truth layers into one operational control plane. It is a consolidation release: it adds no new public data provider and makes no new live-data claim.
 
 ## Public contracts
 

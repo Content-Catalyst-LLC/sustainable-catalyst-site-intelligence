@@ -1,4 +1,4 @@
-# Install and Test Site Intelligence v3.25.0
+# Install and Test Site Intelligence v3.26.0
 
 Place the macOS installer and release bundle in `~/Downloads`, then run:
 
@@ -10,7 +10,7 @@ INSTALLER="$(find . -maxdepth 1 -type f \
   -print0 | xargs -0 ls -t | head -1)"
 
 BUNDLE="$(find . -maxdepth 1 -type f \
-  -name 'sustainable-catalyst-site-intelligence-v3.25.0-release-bundle*.zip' \
+  -name 'sustainable-catalyst-site-intelligence-v3.26.0-release-bundle*.zip' \
   -print0 | xargs -0 ls -t | head -1)"
 
 chmod +x "$INSTALLER"

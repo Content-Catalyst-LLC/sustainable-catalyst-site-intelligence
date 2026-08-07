@@ -1,4 +1,4 @@
-# Site Intelligence v3.25.0 Selector Hydration Audit
+# Site Intelligence v3.26.0 Selector Hydration Audit
 
 ## Observed defect
 

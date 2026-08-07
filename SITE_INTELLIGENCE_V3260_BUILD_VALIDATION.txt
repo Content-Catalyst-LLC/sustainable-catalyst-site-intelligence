@@ -1,0 +1,40 @@
+Site Intelligence v3.26.0 — Comparative, Scenario, and Model Assurance
+Build validation summary
+
+Implemented contracts
+- GET /public/assurance
+- POST /public/assurance/comparison
+- POST /public/assurance/scenario
+- POST /public/assurance/model-review
+- GET /public/assurance/model-cards
+- POST /public/assurance/package
+
+Assurance behaviors
+- Six-field comparison compatibility review: unit, definition, period, frequency, price basis, seasonal adjustment.
+- Missing numeric values remain missing; direct-difference interpretation is withheld when review is required.
+- Explicit scenario assumption ledger with percent and absolute transforms.
+- Low/base/high one-assumption-at-a-time sensitivity analysis.
+- Deterministic non-probabilistic scenario envelope.
+- Model-card completeness review with intended-use, limitations, prohibited-use, input/output, uncertainty, validation, and provenance requirements.
+- Autonomous consequential-decision authority and individual risk scoring remain outside the public assurance boundary.
+- Reproducible SHA-256 content-change fingerprints; no claim of source authentication.
+
+Validation completed before packaging
+- 1,030 Python tests passed.
+- 1,276 immutable repository entries verified.
+- 129 JSON/GeoJSON files parsed.
+- 69 JavaScript files syntax-validated.
+- Complete shell initialized 42 first-party scripts.
+- New assurance browser gate passed in direct and iframe modes.
+- Cross-view state gate passed with Brazil retained across Compare and Earth.
+- Country selector interaction passed with 173 unique countries, focus retained, wheel input unblocked, and AFG/ZWE/BRA selection.
+- Country selector hydration passed from Kenya to Brazil.
+- Global Country Data Truth gate passed.
+- Record Provenance gate passed for map layer, indicator, and event records.
+- Global Data Truth Control Plane gate passed for eight sources and twelve workspaces.
+- Complete shell gate passed with 42 first-party scripts in direct, service-worker-failure, and iframe modes.
+- Production soak passed 12 route transitions with zero failures and zero automatic service-worker reloads.
+- Fixed WordPress embed gate passed at 1100px with no host-page jump.
+- Release shell scripts passed bash syntax validation.
+
+Production deployment is intentionally not performed during package construction. The macOS installer revalidates the extracted release before GitHub/Render promotion and permits WordPress installation only after the live release gate verifies the exact Git commit and v3.26.0 assurance contracts.

@@ -1,4 +1,4 @@
-Site Intelligence v3.25.0 build validation
+Site Intelligence v3.26.0 build validation
 Release: Country Dropdown Interaction and Focus Safety
 Package state: repaired validator; internal release identity unchanged
 
@@ -16,7 +16,7 @@ Implemented repair
 Validator repair
 - Removed nonportable Home/End assertions for a closed native select in headless macOS Chrome.
 - Added unique-catalog, enabled/visible control, pointer-events, uncancelled wheel-event, focus-retention, first-option, last-option, and Brazil-selection checks.
-- The failed installer never reached GitHub, Render, or WordPress promotion, so the internal version remains 3.25.0.
+- The failed installer never reached GitHub, Render, or WordPress promotion, so the internal version remains 3.26.0.
 
 Validation results
 - 993 automated tests passed.

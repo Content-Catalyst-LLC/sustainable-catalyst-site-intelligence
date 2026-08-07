@@ -1,0 +1,42 @@
+{
+  "version": "3.26.0",
+  "schema": "sc-site-intelligence-comparative-model-assurance-policy/1.0",
+  "comparison_dimensions": ["unit", "definition_id", "period", "frequency", "price_basis", "seasonal_adjustment"],
+  "model_card_required_fields": ["model_id", "title", "model_version", "intended_use", "limitations", "prohibited_uses", "inputs", "outputs", "uncertainty", "validation", "provenance"],
+  "scenario_modes": ["percent", "absolute"],
+  "boundaries": [
+    "No silent unit, definition, geography, currency, period, or seasonal-adjustment normalization.",
+    "Missing values remain missing unless an explicit transformation with provenance is supplied.",
+    "Scenario sensitivity ranges are deterministic results from supplied assumptions, not probabilities or confidence intervals.",
+    "Correlation, scenario response, and model output do not establish causation.",
+    "Forecasts and models remain advisory analytical artifacts and cannot make autonomous consequential decisions.",
+    "Model-card completeness does not prove model validity, accuracy, safety, or institutional approval.",
+    "Reproducible package fingerprints detect content changes but do not authenticate source truth."
+  ],
+  "method_cards": [
+    {
+      "model_id": "transparent-arithmetic-scenario",
+      "title": "Transparent Arithmetic Scenario",
+      "model_version": "1.0",
+      "model_type": "scenario_transform",
+      "intended_use": "Explore explicitly supplied arithmetic changes from a disclosed baseline.",
+      "limitations": "Not a forecast, probability, causal model, optimization result, or recommendation.",
+      "prohibited_uses": ["Autonomous consequential decisions", "Claims of predicted outcomes", "Hidden ranking or scoring"],
+      "uncertainty": "Sensitivity envelope reflects supplied low/base/high assumptions only.",
+      "validation": "Deterministic arithmetic and reproducible input fingerprint.",
+      "provenance": "User-supplied baseline and assumptions plus referenced Site Intelligence records."
+    },
+    {
+      "model_id": "comparison-compatibility-review",
+      "title": "Comparison Compatibility Review",
+      "model_version": "1.0",
+      "model_type": "assurance_rule_set",
+      "intended_use": "Identify unit, definition, period, frequency, price-basis, and seasonal-adjustment differences before direct comparison.",
+      "limitations": "A compatible signature does not prove substantive comparability or source quality.",
+      "prohibited_uses": ["Automatic ranking", "Silent normalization", "Automatic imputation"],
+      "uncertainty": "Methodological uncertainty remains a human review item.",
+      "validation": "Deterministic field-by-field compatibility checks.",
+      "provenance": "Submitted comparison records and their disclosed source metadata."
+    }
+  ]
+}

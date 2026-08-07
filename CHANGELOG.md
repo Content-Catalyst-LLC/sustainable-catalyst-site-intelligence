@@ -1,4 +1,4 @@
-## 3.25.0 — Unified Analytical Workspace and Cross-View State
+## 3.26.0 — Unified Analytical Workspace and Cross-View State
 
 - Added one normalized state contract across six analytical routes.
 - Preserved country, comparison, indicator, imagery, date, event-period, and spatial selections across compatible workspaces.
@@ -6,7 +6,7 @@
 - Added local/session persistence and a compact browser state bar without requiring accounts.
 - Added direct and WordPress-iframe browser gates while retaining all country-selector, provenance, Data Truth, route-soak, service-worker, and embed-isolation contracts.
 
-## 3.25.0 — Global Data Truth Control Plane
+## 3.26.0 — Global Data Truth Control Plane
 
 - Composes all eight registered public source contracts into operational, degraded, review, unavailable, and unknown attention states.
 - Adds public-safe derived status history without claiming a complete source event log.
@@ -14,7 +14,7 @@
 - Adds a fingerprint-bound control-plane export and a fourth Data Truth application view.
 - Preserves explicit boundaries between source health, geographic eligibility, observed records, and source authority.
 
-## 3.25.0 — Record Provenance and Indicator Truth
+## 3.26.0 — Record Provenance and Indicator Truth
 
 - Added record-level truth contracts for country indicators, map layers, events, charts, and table records.
 - Added source, date, unit, transformation, lineage, limitation, and truth-state disclosure.

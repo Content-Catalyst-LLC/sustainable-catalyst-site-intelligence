@@ -1,4 +1,4 @@
-# v3.25.0 Record Provenance and Indicator Truth Audit
+# v3.26.0 Record Provenance and Indicator Truth Audit
 
 ## Scope
 

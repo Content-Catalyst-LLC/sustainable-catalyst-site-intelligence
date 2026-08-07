@@ -1,8 +1,8 @@
-# Site Intelligence v3.25.0 — Unified Analytical Workspace and Cross-View State
+# Site Intelligence v3.26.0 — Unified Analytical Workspace and Cross-View State
 
 ## Release purpose
 
-v3.25.0 connects Global Conditions, Country Intelligence, Compare, Spatial Evidence, Earth Observation, and the overview map through one portable analytical-state contract. It preserves country, comparison, indicator, imagery, date, and spatial selections when users move between compatible workspaces.
+v3.26.0 connects Global Conditions, Country Intelligence, Compare, Spatial Evidence, Earth Observation, and the overview map through one portable analytical-state contract. It preserves country, comparison, indicator, imagery, date, and spatial selections when users move between compatible workspaces.
 
 ## New public contracts
 
