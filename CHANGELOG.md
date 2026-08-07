@@ -1,8 +1,16 @@
 
-## 3.29.0 — Briefing, Story Map, and Publication Studio
+## 3.30.0 — Institutional Workspaces and Review Governance
+
+- Added portable investigation workspace packages with deterministic fingerprints.
+- Added review queues, structured annotations, role-separated review/approval checks, and append-only audit previews.
+- Added import preview and compatibility checks without remote writes or account provisioning.
+- Preserved existing file-backed institutional workspace operations and public/private boundaries.
+
+
+## 3.30.0 — Briefing, Story Map, and Publication Studio
 - Added frozen evidence manifests, briefing/story-map previews, publication readiness, correction previews, and review-gated export packages.
 - Preserved Data Truth, Record Provenance, monitoring, cross-view state, service-worker closure, and WordPress embed isolation.
-# Site Intelligence v3.29.0 — Monitoring, Digests, and Early-Warning Operations
+# Site Intelligence v3.30.0 — Monitoring, Digests, and Early-Warning Operations
 
 - Added Monitoring, Digests, and Early-Warning Operations with explicit watchlists, geographic areas, source-change monitoring, five alert-history states, modeled-warning separation, review-gated digest previews, and feed contracts.
 - Preserved all Data Truth, provenance, cross-view state, country selector, loading recovery, and WordPress embed-isolation safeguards.
@@ -15,7 +23,7 @@
 - Adds Knowledge Library discovery-query preparation without claiming unexecuted matches.
 - Adds Research Librarian, Workbench, and Decision Studio handoff previews with explicit human confirmation and no automatic delivery or publication.
 
-## 3.29.0 — Unified Analytical Workspace and Cross-View State
+## 3.30.0 — Unified Analytical Workspace and Cross-View State
 
 - Added one normalized state contract across six analytical routes.
 - Preserved country, comparison, indicator, imagery, date, event-period, and spatial selections across compatible workspaces.
@@ -23,7 +31,7 @@
 - Added local/session persistence and a compact browser state bar without requiring accounts.
 - Added direct and WordPress-iframe browser gates while retaining all country-selector, provenance, Data Truth, route-soak, service-worker, and embed-isolation contracts.
 
-## 3.29.0 — Global Data Truth Control Plane
+## 3.30.0 — Global Data Truth Control Plane
 
 - Composes all eight registered public source contracts into operational, degraded, review, unavailable, and unknown attention states.
 - Adds public-safe derived status history without claiming a complete source event log.
@@ -31,7 +39,7 @@
 - Adds a fingerprint-bound control-plane export and a fourth Data Truth application view.
 - Preserves explicit boundaries between source health, geographic eligibility, observed records, and source authority.
 
-## 3.29.0 — Record Provenance and Indicator Truth
+## 3.30.0 — Record Provenance and Indicator Truth
 
 - Added record-level truth contracts for country indicators, map layers, events, charts, and table records.
 - Added source, date, unit, transformation, lineage, limitation, and truth-state disclosure.

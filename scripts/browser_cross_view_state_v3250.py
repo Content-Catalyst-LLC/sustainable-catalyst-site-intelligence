@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Mandatory browser gate for Site Intelligence v3.29.0 cross-view state."""
+"""Mandatory browser gate for Site Intelligence v3.30.0 cross-view state."""
 from __future__ import annotations
 
 import json
@@ -85,7 +85,7 @@ def main() -> int:
         assert earth['state']['view'] == 'earth' and earth['state']['country'] == 'BRA', result
         assert 'view=country' in earth['canonical'] and 'country=BRA' in earth['canonical'], result
     print(json.dumps({'browser': browser_path, 'results': results, 'errors': errors}, indent=2))
-    print('PASS: v3.29.0 preserved country and analytical state across compare, Earth observation, direct, iframe, and portable deep-link transitions.')
+    print('PASS: v3.30.0 preserved country and analytical state across compare, Earth observation, direct, iframe, and portable deep-link transitions.')
     return 0
 
 
