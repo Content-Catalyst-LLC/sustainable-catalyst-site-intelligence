@@ -7,10 +7,10 @@ from fastapi.testclient import TestClient
 from app.main import app
 from app.version import APP_VERSION
 from app.record_provenance_v3238 import MAP_LAYERS
-assert APP_VERSION=='3.28.0'
+assert APP_VERSION=='3.29.0'
 client=TestClient(app)
 indicator=client.get('/public/record-truth/indicator/KEN/SP.POP.TOTL').json()
-assert indicator['ok'] and indicator['version']=='3.28.0'
+assert indicator['ok'] and indicator['version']=='3.29.0'
 assert indicator['record_id']=='indicator:KEN:SP.POP.TOTL'
 assert indicator['truth_state']=='historical_snapshot'
 assert indicator['dates']['observation_year']==2023
@@ -30,10 +30,10 @@ countries=client.get('/public/data-truth/countries').json(); assert countries['c
 html=(ROOT/'backend/public_app/index.html').read_text(); worker=(ROOT/'backend/public_app/service-worker.js').read_text()
 record_js=(ROOT/'backend/public_app/assets/record-provenance-v3238.js').read_text(); app_js=(ROOT/'backend/public_app/assets/app.js').read_text()
 php=(ROOT/'wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php').read_text()
-for token in ('record-provenance-v3238.css?v=3.28.0','record-provenance-v3238.js?v=3.28.0','mapLayerTruthButton'): assert token in html
+for token in ('record-provenance-v3238.css?v=3.29.0','record-provenance-v3238.js?v=3.29.0','mapLayerTruthButton'): assert token in html
 assert 'record-provenance-v3238.js' in worker and 'record-provenance-v3238.css' in worker
 assert 'SCSIRecordProvenanceV3238' in record_js and '/public/record-truth/manifest' in record_js
 assert 'data-record-truth-indicator' in app_js and 'scsi:record-truth' in app_js
-assert 'Version: 3.28.0' in php
+assert 'Version: 3.29.0' in php
 assert (ROOT/'backend/public_app/assets/record-provenance-v3238.js').read_bytes()==(ROOT/'wordpress-plugin/sustainable-catalyst-site-intelligence/assets/record-provenance-v3238.js').read_bytes()
-print('Site Intelligence v3.28.0 record provenance and indicator truth release contract passed.')
+print('Site Intelligence v3.29.0 record provenance and indicator truth release contract passed.')

@@ -1,6 +1,6 @@
 (()=>{
   'use strict';
-  const VERSION='3.28.0';
+  const VERSION='3.29.0';
   const ROOT_SELECTOR=`#app[data-scsi-release="${VERSION}"]`;
   const root=()=>document.querySelector(ROOT_SELECTOR),launch=()=>document.querySelector('#launchScreen'),message=()=>document.querySelector('#launchMessage'),progress=()=>document.querySelector('#launchProgressBar'),retry=()=>document.querySelector('#launchRetry');
   const state={version:VERSION,startedAt:performance.now(),ready:false,limited:false,workerState:'not-started',controllerAtStart:Boolean(navigator.serviceWorker?.controller),reloadScheduled:false,automaticReloads:0};

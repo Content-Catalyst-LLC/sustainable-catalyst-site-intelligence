@@ -1,0 +1,17 @@
+{
+  "version": "3.29.0",
+  "release_id": "site-intelligence-v3.29.0",
+  "schema": "sc-site-intelligence-briefing-publication-studio/1.0",
+  "publication_types": ["intelligence-brief", "story-map", "evidence-note", "monitoring-digest", "comparative-brief"],
+  "correction_actions": ["correction", "supersession", "retraction"],
+  "required_sections": ["summary", "methodology", "limitations"],
+  "export_formats": ["json", "markdown", "print-html", "csv-evidence"],
+  "principles": [
+    "Human editorial review and explicit publish confirmation remain mandatory.",
+    "A publication package freezes the supplied evidence and source manifest by fingerprint; it does not prove source accuracy or authority.",
+    "Methodology, limitations, missing data, and conflicting evidence remain visible in public output.",
+    "Story sequence, map proximity, chart alignment, and temporal adjacency do not establish causation.",
+    "Corrections, supersessions, and retractions are prepared as explicit versioned records and never erase prior public versions.",
+    "No public write or WordPress publication is performed by the public preview endpoints."
+  ]
+}
