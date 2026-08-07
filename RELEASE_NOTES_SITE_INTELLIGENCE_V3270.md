@@ -1,4 +1,4 @@
-# Site Intelligence v3.27.0 — Research Evidence and Knowledge Integration
+# Site Intelligence v3.28.0 — Research Evidence and Knowledge Integration
 
 ## Purpose
 

@@ -1,0 +1,39 @@
+Site Intelligence v3.28.0 — Monitoring, Digests, and Early-Warning Operations
+Build validation status: PASS
+
+Application contracts
+- Monitoring Operations schema: PASS
+- Saved watchlist preview: PASS
+- Geographic monitoring areas: PASS
+- Indicator-threshold evaluation: PASS
+- Alert states new / continuing / changed / resolved / withdrawn: PASS
+- Source-change monitoring: PASS
+- Modeled-warning separation: PASS
+- Draft digest review gate: PASS
+- Reviewed JSON / Atom / RSS feed contract: PASS
+- Automatic publication: disabled
+- Automatic emergency dispatch: disabled
+- Individual tracking: disabled
+- Hidden risk scoring: disabled
+
+Regression validation
+- 1,052 automated tests passed.
+- 188 pytest files collected in the repository.
+- 131 JSON / GeoJSON files parsed successfully before final packaging.
+- 73 JavaScript files syntax-validated across the public app and WordPress asset mirror.
+- WordPress PHP syntax passed.
+- 44 first-party public-application scripts initialized in the complete-shell browser gate.
+
+Browser validation
+- v3.28.0 Monitoring Operations direct mode: PASS
+- v3.28.0 Monitoring Operations WordPress-iframe mode: PASS
+- Research Evidence and Knowledge Integration direct + iframe: PASS
+- Comparative / Scenario / Model Assurance direct + iframe: PASS
+- 173-country selector interaction: PASS
+- Country selector hydration Kenya -> Brazil: PASS
+- Complete production shell direct + iframe: PASS
+- Production soak: 12 route transitions, 0 route failures, 0 automatic service-worker reloads
+- WordPress fixed application viewport: 1100 px, no host-page jump
+
+Validator note
+The managed build environment imposes a wall-clock ceiling on a single long-running shell command. The cumulative all-browser verifier reached that external ceiling after multiple successful gates. Each mandatory browser gate was therefore executed independently against the same frozen source tree and passed. This is an environment execution limit, not an application test failure. The macOS installer retains the complete verifier sequence for normal local execution.

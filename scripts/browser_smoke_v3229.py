@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Chromium visual smoke test for v3.27.0 vector cartography.
+"""Chromium visual smoke test for v3.28.0 vector cartography.
 
 The test is network-independent. It supplies deterministic local raster tiles,
 loads the packaged local country geometry, composes a satellite-like layer over
@@ -114,7 +114,7 @@ def main() -> int:
     dark_ratio = dark_pixels / (image.width * image.height)
     unique_colors = len(colors)
 
-    assert result["version"] == "3.27.0", result
+    assert result["version"] == "3.28.0", result
     assert result["snapshot"]["libraryMode"] == "vector-cartography-engine", result
     assert result["snapshot"]["degradedCount"] == 0, result
     assert result["first"]["boundaries"] > 150, result
@@ -133,7 +133,7 @@ def main() -> int:
     assert dark_ratio < 0.72, dark_ratio
     assert not errors, errors
     print(json.dumps({**result, "visual": {"unique_colors": unique_colors, "dark_ratio": round(dark_ratio, 4)}}, indent=2))
-    print("PASS: v3.27.0 rendered layered raster imagery, vector geography, country labels, overlays, scale, and controls in Chromium.")
+    print("PASS: v3.28.0 rendered layered raster imagery, vector geography, country labels, overlays, scale, and controls in Chromium.")
     return 0
 
 

@@ -1,0 +1,25 @@
+{
+  "schema": "sc-site-intelligence-monitoring-early-warning-policy/1.0",
+  "version": "3.28.0",
+  "title": "Monitoring, Digests, and Early-Warning Operations",
+  "alert_states": ["new", "continuing", "changed", "resolved", "withdrawn"],
+  "watch_types": ["indicator-threshold", "source-change", "geographic-event", "freshness-change"],
+  "cadences": ["manual", "hourly", "daily", "weekly"],
+  "feed_formats": ["json", "atom", "rss"],
+  "principles": [
+    "Every alert exposes the trigger, supporting evidence, freshness state, and known limitations.",
+    "A missing event record is not evidence that a hazard or condition is absent.",
+    "Modeled warning signals remain distinct from source alerts and are not emergency instructions.",
+    "Digests remain drafts until a human explicitly reviews and approves publication.",
+    "No hidden composite risk score is created.",
+    "No individual tracking, automated consequential action, or automatic emergency dispatch is allowed."
+  ],
+  "prohibited": {
+    "automatic_publication": true,
+    "automatic_emergency_dispatch": true,
+    "automated_consequential_action": true,
+    "individual_tracking": true,
+    "hidden_risk_scoring": true,
+    "fabricated_events": true
+  }
+}

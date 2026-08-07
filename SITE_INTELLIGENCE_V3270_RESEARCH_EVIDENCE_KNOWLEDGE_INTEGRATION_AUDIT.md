@@ -1,4 +1,4 @@
-# v3.27.0 Research Evidence and Knowledge Integration Audit
+# v3.28.0 Research Evidence and Knowledge Integration Audit
 
 ## Integration targets
 
