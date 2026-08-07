@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Network-independent Chromium smoke test for v3.24.0 performance/offline recovery."""
+"""Network-independent Chromium smoke test for v3.25.0 performance/offline recovery."""
 from __future__ import annotations
 
 import json
@@ -26,12 +26,12 @@ def main() -> int:
     errors: list[str] = []
     contract = {
         "ok": True,
-        "version": "3.24.0",
+        "version": "3.25.0",
         "contract": "performance-and-offline-recovery",
         "performance_budgets": {"first_useful_map_ms": 3500},
     }
     html = f'''<!doctype html><html><head><style>{CSS.read_text(encoding="utf-8")}</style></head><body>
-      <div id="app" data-scsi-release="3.24.0">
+      <div id="app" data-scsi-release="3.25.0">
         <nav id="primaryNavigation"><button class="nav-item" data-route="overview" aria-current="page">Overview</button><button class="nav-item" data-route="science">Science</button></nav>
         <main><section data-route-panel data-route="overview"><h1>Overview</h1><div id="map" style="width:900px;height:520px" aria-label="Public intelligence map"></div></section><section data-route-panel data-route="science" hidden><h1>Science</h1></section></main>
       </div>
@@ -62,7 +62,7 @@ def main() -> int:
     assert route_result == {"route": "science", "overview": "false", "science": "true"}, route_result
     assert not errors, errors
     print(json.dumps({"initial": result, "route": route_result}, indent=2))
-    print("PASS: v3.24.0 first-useful-map measurement, route isolation, and recovery status rendered without browser errors.")
+    print("PASS: v3.25.0 first-useful-map measurement, route isolation, and recovery status rendered without browser errors.")
     return 0
 
 

@@ -1,4 +1,4 @@
-Site Intelligence v3.24.0 — Country Selector Hydration and Global Selection Repair
+Site Intelligence v3.25.0 — Country Selector Hydration and Global Selection Repair
 
 cd ~/Downloads
 
@@ -7,7 +7,7 @@ INSTALLER="$(find . -maxdepth 1 -type f \
   -print0 | xargs -0 ls -t | head -1)"
 
 BUNDLE="$(find . -maxdepth 1 -type f \
-  -name 'sustainable-catalyst-site-intelligence-v3.24.0-release-bundle*.zip' \
+  -name 'sustainable-catalyst-site-intelligence-v3.25.0-release-bundle*.zip' \
   -print0 | xargs -0 ls -t | head -1)"
 
 chmod +x "$INSTALLER"

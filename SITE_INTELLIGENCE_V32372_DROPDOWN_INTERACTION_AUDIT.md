@@ -1,4 +1,4 @@
-# v3.24.0 Country Dropdown Interaction Audit
+# v3.25.0 Country Dropdown Interaction Audit
 
 ## Reproduced defect
 

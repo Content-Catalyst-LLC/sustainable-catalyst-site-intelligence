@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-RELEASE="3.24.0"
+RELEASE="3.25.0"
 RELEASE_ID="site-intelligence-v${RELEASE}"
 REPO_SLUG="${SC_SI_GITHUB_REPOSITORY:-Content-Catalyst-LLC/sustainable-catalyst-site-intelligence}"
 RENDER_URL="${SC_SI_RENDER_URL:-https://sustainable-catalyst-site-intelligence.onrender.com}"
@@ -90,31 +90,31 @@ for ((attempt=1; attempt<=ATTEMPTS; attempt++)); do
       truth_contract="$(curl -fsS --max-time 45 -H 'Cache-Control: no-cache, no-store' "${RENDER_URL%/}/public/workspaces/production-truth?verify=${attempt}" 2>/dev/null || true)"
       runtime_health="$(curl -fsS --max-time 45 -H 'Cache-Control: no-cache, no-store' "${RENDER_URL%/}/public/runtime-health?verify=${attempt}" 2>/dev/null || true)"
       app_ready=false; engine_ready=false; world_ready=false; workspace_ready=false; interaction_ready=false; data_truth_ready=false; analytical_ready=false; browser_reliability_ready=false; performance_offline_ready=false; bootstrap_recovery_ready=false; truth_ready=false; health_ready=false
-      [[ "$app_html" == *'data-scsi-release="3.24.0"'* && "$app_html" == *'vector-cartography-v3230.js'* && "$app_html" == *'cartographic-workspace-v3230.js'* && "$app_html" == *'cartographic-interaction-v3232.js'* ]] && app_ready=true
+      [[ "$app_html" == *'data-scsi-release="3.25.0"'* && "$app_html" == *'vector-cartography-v3230.js'* && "$app_html" == *'cartographic-workspace-v3230.js'* && "$app_html" == *'cartographic-interaction-v3232.js'* ]] && app_ready=true
       [[ "$engine_js" == *'__scsiSelfHosted: true'* && "$engine_js" == *'world-cartography-v3230.geojson'* ]] && engine_ready=true
       [[ "$workspace_js" == *'SCSICartographicWorkspaceV3230'* && "$workspace_js" == *'evaluateVisibleMaps'* && "$workspace_js" == *'overviewEvidenceRail'* ]] && workspace_ready=true
-      interaction_ready="$(python3 -c 'import json,sys; d=json.load(sys.stdin); print("true" if d.get("ok") and d.get("version")=="3.24.0" and all(d.get("layer_controls",{}).values()) else "false")' <<<"$interaction_contract" 2>/dev/null || printf false)"
+      interaction_ready="$(python3 -c 'import json,sys; d=json.load(sys.stdin); print("true" if d.get("ok") and d.get("version")=="3.25.0" and all(d.get("layer_controls",{}).values()) else "false")' <<<"$interaction_contract" 2>/dev/null || printf false)"
       [[ "$interaction_js" == *'SCSICartographicInteractionV3232'* && "$interaction_js" == *'mapImageryOpacity'* && "$interaction_js" == *'mapClusterEvents'* ]] || interaction_ready=false
-      data_truth_ready="$(python3 -c 'import json,sys; d=json.load(sys.stdin); p=d.get("classification_policy",{}); print("true" if d.get("ok") and d.get("version")=="3.24.0" and d.get("source_count")==8 and p.get("cached_is_live") is False and p.get("demonstration_is_live") is False else "false")' <<<"$data_truth_contract" 2>/dev/null || printf false)"
+      data_truth_ready="$(python3 -c 'import json,sys; d=json.load(sys.stdin); p=d.get("classification_policy",{}); print("true" if d.get("ok") and d.get("version")=="3.25.0" and d.get("source_count")==8 and p.get("cached_is_live") is False and p.get("demonstration_is_live") is False else "false")' <<<"$data_truth_contract" 2>/dev/null || printf false)"
       [[ "$data_truth_js" == *'SCSIDataTruthV32371'* && "$data_truth_js" == *'stale_marker_required'* && "$data_truth_js" == *'dataTruthPanel'* ]] || data_truth_ready=false
-      analytical_ready="$(python3 -c 'import json,sys;d=json.load(sys.stdin);print("true" if d.get("ok") and d.get("version")=="3.24.0" and d.get("workflow_count")==5 and d.get("summary",{}).get("unavailable")==0 else "false")' <<<"$analytical_contract" 2>/dev/null || printf false)"
+      analytical_ready="$(python3 -c 'import json,sys;d=json.load(sys.stdin);print("true" if d.get("ok") and d.get("version")=="3.25.0" and d.get("workflow_count")==5 and d.get("summary",{}).get("unavailable")==0 else "false")' <<<"$analytical_contract" 2>/dev/null || printf false)"
       [[ "$analytical_js" == *'SCSIAnalyticalWorkspacesV3234'* && "$analytical_js" == *'analyticalWorkflowPanel'* && "$analytical_js" == *'insideApp'* ]] || analytical_ready=false
-      browser_reliability_ready="$(python3 -c 'import json,sys;d=json.load(sys.stdin);print("true" if d.get("ok") and d.get("version")=="3.24.0" and d.get("contract")=="browser-reliability-mobile-accessibility" and d.get("accessibility",{}).get("map_text_summaries") else "false")' <<<"$browser_reliability_contract" 2>/dev/null || printf false)"
+      browser_reliability_ready="$(python3 -c 'import json,sys;d=json.load(sys.stdin);print("true" if d.get("ok") and d.get("version")=="3.25.0" and d.get("contract")=="browser-reliability-mobile-accessibility" and d.get("accessibility",{}).get("map_text_summaries") else "false")' <<<"$browser_reliability_contract" 2>/dev/null || printf false)"
       [[ "$browser_reliability_js" == *'SCSIBrowserReliabilityV3235'* && "$browser_reliability_js" == *'scsi:viewport-recovery'* && "$browser_reliability_js" == *'Low-bandwidth mode'* ]] || browser_reliability_ready=false
-      performance_offline_ready="$(python3 -c 'import json,sys;d=json.load(sys.stdin);print("true" if d.get("ok") and d.get("version")=="3.24.0" and d.get("contract")=="performance-and-offline-recovery" and d.get("loading",{}).get("route_request_cancellation") else "false")' <<<"$performance_offline_contract" 2>/dev/null || printf false)"
+      performance_offline_ready="$(python3 -c 'import json,sys;d=json.load(sys.stdin);print("true" if d.get("ok") and d.get("version")=="3.25.0" and d.get("contract")=="performance-and-offline-recovery" and d.get("loading",{}).get("route_request_cancellation") else "false")' <<<"$performance_offline_contract" 2>/dev/null || printf false)"
       [[ "$performance_offline_js" == *'SCSIPerformanceOfflineV3236'* && "$performance_offline_js" == *'scsi:first-useful-map'* && "$service_worker" == *'cacheFirstImmutable'* && "$service_worker" == *'X-SCSI-Data-State'* ]] || performance_offline_ready=false
-      bootstrap_recovery_ready="$(python3 -c 'import json,sys;d=json.load(sys.stdin);print("true" if d.get("ok") and d.get("version")=="3.24.0" and d.get("contract")=="single-owner-bootstrap-and-loading-recovery" and d.get("service_worker",{}).get("registration_owner_count")==1 else "false")' <<<"$bootstrap_recovery_contract" 2>/dev/null || printf false)"
+      bootstrap_recovery_ready="$(python3 -c 'import json,sys;d=json.load(sys.stdin);print("true" if d.get("ok") and d.get("version")=="3.25.0" and d.get("contract")=="single-owner-bootstrap-and-loading-recovery" and d.get("service_worker",{}).get("registration_owner_count")==1 else "false")' <<<"$bootstrap_recovery_contract" 2>/dev/null || printf false)"
       [[ "$bootstrap_js" == *'SCSIBootstrapV32361'* && "$bootstrap_js" == *'serviceWorker.register'* && "$bootstrap_js" == *'startup deadline exceeded'* ]] || bootstrap_recovery_ready=false
-      truth_ready="$(python3 -c 'import json,sys; d=json.load(sys.stdin); print("true" if d.get("ok") and d.get("version")=="3.24.0" and d.get("route_count")==35 and d.get("summary",{}).get("unavailable")==0 else "false")' <<<"$truth_contract" 2>/dev/null || printf false)"
+      truth_ready="$(python3 -c 'import json,sys; d=json.load(sys.stdin); print("true" if d.get("ok") and d.get("version")=="3.25.0" and d.get("route_count")==35 and d.get("summary",{}).get("unavailable")==0 else "false")' <<<"$truth_contract" 2>/dev/null || printf false)"
       [[ "$truth_js" == *'SCSIProductionTruthV3231'* && "$truth_js" == *'history.pushState'* && "$truth_js" == *'scsi:workspace-state'* ]] || truth_ready=false
       world_ready="$(python3 -c 'import json,sys; d=json.load(sys.stdin); print("true" if d.get("type")=="FeatureCollection" and len(d.get("features",[]))>=170 else "false")' <<<"$world_geojson" 2>/dev/null || printf false)"
-      health_ready="$(python3 -c 'import json,sys; d=json.load(sys.stdin); print("true" if d.get("ok") and d.get("status")=="healthy" and d.get("version")=="3.24.0" else "false")' <<<"$runtime_health" 2>/dev/null || printf false)"
+      health_ready="$(python3 -c 'import json,sys; d=json.load(sys.stdin); print("true" if d.get("ok") and d.get("status")=="healthy" and d.get("version")=="3.25.0" else "false")' <<<"$runtime_health" 2>/dev/null || printf false)"
       if [[ "$app_ready" == true && "$engine_ready" == true && "$world_ready" == true && "$workspace_ready" == true && "$interaction_ready" == true && "$data_truth_ready" == true && "$analytical_ready" == true && "$browser_reliability_ready" == true && "$performance_offline_ready" == true && "$bootstrap_recovery_ready" == true && "$truth_ready" == true && "$health_ready" == true ]]; then
         write_receipt "verified" "GitHub, Render, the live app shell, self-hosted map engine, cartographic workspace, interaction controls, data-truth directory, five-workflow analytical directory, browser reliability contract, performance/offline contract, single-owner bootstrap contract, service-worker strategy, production-truth directory, runtime health, and WordPress installation gate are synchronized."
         printf 'Render release gate and live map runtime are ready for v%s at commit %s.
 ' "$OBSERVED_VERSION" "${OBSERVED_COMMIT:0:12}"
         printf '
-SUCCESS: Site Intelligence v3.24.0 is live with single-owner bootstrap and loading recovery.
+SUCCESS: Site Intelligence v3.25.0 is live with single-owner bootstrap and loading recovery.
 Deployment receipt: %s
 Rollback tag: %s (%s)
 ' "$DEPLOYMENT_RECEIPT" "$ROLLBACK_TAG" "${PREVIOUS_COMMIT:0:12}"

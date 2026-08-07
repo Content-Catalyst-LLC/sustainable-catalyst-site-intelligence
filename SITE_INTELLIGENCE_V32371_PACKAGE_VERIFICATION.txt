@@ -1,21 +1,21 @@
-Site Intelligence v3.24.0 package verification
+Site Intelligence v3.25.0 package verification
 Status: PASS
 
 Required release artifacts
-- sustainable-catalyst-site-intelligence-v3.24.0-repository.zip
-- sustainable-catalyst-site-intelligence-v3.24.0-wordpress-plugin.zip
+- sustainable-catalyst-site-intelligence-v3.25.0-repository.zip
+- sustainable-catalyst-site-intelligence-v3.25.0-wordpress-plugin.zip
 - deploy_and_validate_site_intelligence_v3_23_7_1_macos.sh
 - release notes, selector hydration audit, installation guide, terminal commands, build validation, and checksum manifest
 
 Repository package contract
-- Top-level repository folder: sustainable-catalyst-site-intelligence-v3.24.0
-- Release identity: 3.24.0
+- Top-level repository folder: sustainable-catalyst-site-intelligence-v3.25.0
+- Release identity: 3.25.0
 - Immutable manifest: 1171 entries
 - Mandatory selector hydration and inherited browser gates included
 
 WordPress package contract
 - Top-level plugin folder: sustainable-catalyst-site-intelligence
-- Plugin version: 3.24.0
+- Plugin version: 3.25.0
 - Selector-facing host asset identifies the patch release
 - Existing shortcode and fixed-viewport embed compatibility retained
 

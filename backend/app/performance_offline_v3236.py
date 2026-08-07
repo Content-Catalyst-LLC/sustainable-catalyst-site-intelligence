@@ -1,4 +1,4 @@
-"""Performance and offline recovery contract for Site Intelligence v3.24.0."""
+"""Performance and offline recovery contract for Site Intelligence v3.25.0."""
 from __future__ import annotations
 
 from copy import deepcopy

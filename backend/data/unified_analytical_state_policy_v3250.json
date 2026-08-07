@@ -1,0 +1,33 @@
+{
+  "schema": "sc-site-intelligence-unified-analytical-state/1.0",
+  "version": "3.25.0",
+  "release_id": "site-intelligence-v3.25.0",
+  "default_route": "overview",
+  "default_country": "KEN",
+  "default_compare": "GHA",
+  "shared_fields": [
+    "view", "country", "compare", "indicator", "imageryLayer", "imageryDate",
+    "area_id", "dataset_id", "layer_id", "date_a", "date_b", "eventDays", "mapCategories"
+  ],
+  "routes": {
+    "overview": {"workflow_id": "global_conditions", "fields": ["country", "imageryLayer", "imageryDate", "eventDays", "mapCategories"]},
+    "global": {"workflow_id": "global_conditions", "fields": ["country", "eventDays", "mapCategories"]},
+    "country": {"workflow_id": "country_intelligence", "fields": ["country", "indicator"]},
+    "compare": {"workflow_id": "compare", "fields": ["country", "compare", "indicator"]},
+    "spatial": {"workflow_id": "spatial_evidence", "fields": ["country", "area_id", "dataset_id"]},
+    "earth": {"workflow_id": "earth_observation", "fields": ["country", "layer_id", "date_a", "date_b", "imageryLayer", "imageryDate"]}
+  },
+  "handoff_targets": {
+    "global": "global",
+    "country": "country",
+    "compare": "compare",
+    "spatial": "spatial",
+    "earth": "earth"
+  },
+  "boundaries": [
+    "Cross-view state preserves user selections; it does not assert that every destination has matching records.",
+    "A deep link is a reproducible interface state, not a frozen data snapshot.",
+    "Country, source, and record truth remain authoritative for availability, freshness, and provenance.",
+    "Missing or invalid parameters are dropped or replaced with disclosed defaults; values are never borrowed from another country."
+  ]
+}

@@ -1,6 +1,6 @@
-# Install and test Site Intelligence v3.24.0
+# Install and test Site Intelligence v3.25.0
 
-1. Put the v3.24.0 installer and release bundle in `~/Downloads`.
+1. Put the v3.25.0 installer and release bundle in `~/Downloads`.
 2. Run the installer command supplied with the release.
 3. Allow both deterministic validation passes to finish.
 4. The promotion script pushes the exact validated Git tree, waits for Render, and verifies the live control-plane, country truth, record truth, browser, service-worker, and WordPress embed contracts.

@@ -1,6 +1,6 @@
-# Site Intelligence v3.24.0 Validation Repair
+# Site Intelligence v3.25.0 Validation Repair
 
-The original v3.24.0 installer stopped before promotion because its headless-Chrome gate assumed that pressing Home and End on a closed native `<select>` would change the selected value on every operating system.
+The original v3.25.0 installer stopped before promotion because its headless-Chrome gate assumed that pressing Home and End on a closed native `<select>` would change the selected value on every operating system.
 
 The failed result itself showed that the application contract was working: the country catalog loaded, focus remained on `countrySelect`, Brazil was selected, and the Data Truth badge changed to `BRA`. The nonportable assertion was the only failure.
 
@@ -15,4 +15,4 @@ The repaired gate now verifies the cross-platform contract:
 - Data Truth follows every selection;
 - the same checks pass directly and inside the WordPress iframe.
 
-The internal release remains v3.24.0 because the failed installer never reached GitHub, Render, or the WordPress handoff.
+The internal release remains v3.25.0 because the failed installer never reached GitHub, Render, or the WordPress handoff.
