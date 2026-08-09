@@ -1,5 +1,5 @@
 (()=>{"use strict";
-const VERSION="4.8.0";
+const VERSION="4.9.0";
 const STORAGE_KEY="scsi_cross_view_state_v3250";
 const LOCAL_KEY="scsi_cross_view_last_v3250";
 const ROUTES={overview:["country","imageryLayer","imageryDate","eventDays","mapCategories"],global:["country","eventDays","mapCategories"],country:["country","indicator"],compare:["country","compare","indicator"],spatial:["country","area_id","dataset_id"],earth:["country","layer_id","date_a","date_b","imageryLayer","imageryDate"]};

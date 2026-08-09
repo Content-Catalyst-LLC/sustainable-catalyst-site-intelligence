@@ -1,4 +1,4 @@
-# Site Intelligence v4.8.0 — Install and Test
+# Site Intelligence v4.9.0 — Install and Test
 
 Use the release bundle and installer together. Do not install the WordPress ZIP until the installer reports that the exact GitHub commit and Render release gate passed.
 
@@ -10,7 +10,7 @@ INSTALLER="$(find . -maxdepth 1 -type f \
   -print0 | xargs -0 ls -t | head -1)"
 
 BUNDLE="$(find . -maxdepth 1 -type f \
-  -name 'sustainable-catalyst-site-intelligence-v4.8.0-release-bundle*.zip' \
+  -name 'sustainable-catalyst-site-intelligence-v4.9.0-release-bundle*.zip' \
   -print0 | xargs -0 ls -t | head -1)"
 
 chmod +x "$INSTALLER"

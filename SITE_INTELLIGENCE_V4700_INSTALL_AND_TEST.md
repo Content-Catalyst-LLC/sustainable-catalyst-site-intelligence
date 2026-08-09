@@ -1,4 +1,4 @@
-# Site Intelligence v4.8.0 — Install and Test
+# Site Intelligence v4.9.0 — Install and Test
 
 Use the release bundle and installer together. The installer verifies SHA-256 bundle checksums, creates an isolated Python environment, validates the exact extracted repository, runs the backend regression suite, and promotes the validated source through GitHub and Render.
 
@@ -14,7 +14,7 @@ SC_SI_RUN_BROWSER=1 PYTHON=python3 bash verify_site_intelligence_v4_7_0_macos.sh
 ## Bundle-only verification
 
 ```bash
-SC_VERIFY_BUNDLE_ONLY=1 bash deploy_and_validate_site_intelligence_v4_7_0_macos.sh sustainable-catalyst-site-intelligence-v4.8.0-release-bundle.zip
+SC_VERIFY_BUNDLE_ONLY=1 bash deploy_and_validate_site_intelligence_v4_7_0_macos.sh sustainable-catalyst-site-intelligence-v4.9.0-release-bundle.zip
 ```
 
 ## Expected release boundaries

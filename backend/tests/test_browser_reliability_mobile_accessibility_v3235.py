@@ -18,8 +18,8 @@ def test_browser_reliability_contract_is_public_and_bounded():
     assert response.status_code == 200
     payload = response.json()
     assert payload["ok"] is True
-    assert payload["version"] == "4.8.0"
-    assert payload["release_id"] == "site-intelligence-v4.8.0"
+    assert payload["version"] == "4.9.0"
+    assert payload["release_id"] == "site-intelligence-v4.9.0"
     assert payload["contract"] == "browser-reliability-mobile-accessibility"
     assert len(payload["supported_browsers"]) == 4
     assert {row["id"] for row in payload["viewport_profiles"]} == {"phone", "tablet", "desktop"}
@@ -56,8 +56,8 @@ def test_reliability_contract_covers_mobile_and_long_sessions():
 
 def test_app_shell_orders_browser_reliability_inside_the_application():
     html = read("backend/public_app/index.html")
-    assert "/app/assets/browser-reliability-v3235.css?v=4.8.0" in html
-    assert "/app/assets/browser-reliability-v3235.js?v=4.8.0" in html
+    assert "/app/assets/browser-reliability-v3235.css?v=4.9.0" in html
+    assert "/app/assets/browser-reliability-v3235.js?v=4.9.0" in html
     assert html.index("analytical-workspaces-v3234.js") < html.index("browser-reliability-v3235.js") < html.index("data-truth-v32371.js")
     js = read("backend/public_app/assets/browser-reliability-v3235.js")
     for token in (
@@ -73,7 +73,7 @@ def test_app_shell_orders_browser_reliability_inside_the_application():
 
 def test_service_worker_runtime_health_and_wordpress_package_assets():
     worker = read("backend/public_app/service-worker.js")
-    assert 'const RELEASE="4.8.0"' in worker
+    assert 'const RELEASE="4.9.0"' in worker
     assert "browser-reliability-v3235.js" in worker
     assert "browser-reliability-v3235.css" in worker
     health = CLIENT.get("/public/runtime-health").json()
@@ -83,7 +83,7 @@ def test_service_worker_runtime_health_and_wordpress_package_assets():
     assert "/app/assets/browser-reliability-v3235.css" in assets
     assert "/public/browser-reliability" in endpoints
     php = read("wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php")
-    assert "Version: 4.8.0" in php
+    assert "Version: 4.9.0" in php
     assert "browserReliabilityJsUrl" in php
     assert "wp_enqueue_script('scsi-browser-reliability'" not in php
     assert (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/browser-reliability-v3235.js").is_file()

@@ -1,8 +1,8 @@
-# Site Intelligence v4.8.0 — Unified Public Intelligence Platform Audit
+# Site Intelligence v4.9.0 — Unified Public Intelligence Platform Audit
 
 ## Consolidation objective
 
-The v4.8.0 audit verifies that Site Intelligence now exposes one coherent public platform architecture without erasing the distinctions between its evidence, analytical, research, publication, monitoring, and governance capabilities.
+The v4.9.0 audit verifies that Site Intelligence now exposes one coherent public platform architecture without erasing the distinctions between its evidence, analytical, research, publication, monitoring, and governance capabilities.
 
 ## Navigation audit
 
@@ -29,7 +29,7 @@ The consolidation layer does not change the meaning of the underlying contracts.
 
 ## Compatibility audit
 
-v4.8.0 preserves:
+v4.9.0 preserves:
 
 - all 35 legacy public route IDs;
 - the existing public API surface;
@@ -49,4 +49,4 @@ The v4 browser gates also retain the existing 173-country selector, Data Truth c
 
 ## Release boundary
 
-v4.8.0 does not claim that every source has complete global coverage, that search relevance is truth, that modeled warnings are operational emergency alerts, or that publication and cross-product delivery occur automatically.
+v4.9.0 does not claim that every source has complete global coverage, that search relevance is truth, that modeled warnings are operational emergency alerts, or that publication and cross-product delivery occur automatically.

@@ -1,0 +1,33 @@
+Site Intelligence v4.9.0 — Marine Biodiversity & Bioacoustic Intelligence
+
+SOURCE VALIDATION
+- Full backend regression suite: 1,157 passed
+- Marine biodiversity / bioacoustic focused API tests: PASS
+- Static release contract: PASS
+- JavaScript syntax: 99 files validated
+- JSON/GeoJSON parsing inventory: 136 files
+- WordPress PHP syntax: PASS
+- Static security scan: 0 findings
+
+BROWSER VALIDATION
+- Marine Biodiversity direct mode: PASS
+- Marine Biodiversity WordPress iframe mode: PASS
+- Underwater Observation direct/iframe regression: PASS
+- Seafloor direct/iframe regression: PASS
+- Water Column direct/iframe regression: PASS
+- Ocean Surface direct/iframe regression: PASS
+- Complete production shell: 53/53 base scripts
+- Unified v4 architecture: 6 primary areas / 35 routes
+- Country selector: 173 unique countries; AFG/ZWE bounds; BRA Data Truth propagation; wheel/focus safety PASS
+- Production soak: 12 transitions / 0 route failures / 0 automatic service-worker reloads
+- WordPress fixed application viewport: 1100 px; host-page scroll isolation PASS
+
+SCIENTIFIC / EVIDENCE BOUNDARIES
+- Zero occurrence-query results are not represented as species absence.
+- Explicit source absence records remain a separate occurrence state.
+- Taxonomy records are not promoted to occurrence or distribution evidence.
+- Visual annotations are not automatically promoted to occurrence records or abundance claims.
+- Model visual/acoustic detections are not automatically promoted to verified species identifications.
+- Raw acoustic recordings are not automatically promoted to biological detections.
+- Acoustic detections remain interval/method bounded and are not abundance or population estimates.
+- Environmental context is not assumed synchronized unless the source relationship explicitly establishes it.
