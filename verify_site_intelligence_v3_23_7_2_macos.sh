@@ -10,32 +10,32 @@ trap 'rm -rf "$RUNTIME_SANDBOX" "$BACKEND/backend"' EXIT
 export SC_SI_RUNTIME_STATE_ROOT="$RUNTIME_SANDBOX"
 
 printf '
-==> Running mandatory v4.9.0 country dropdown interaction and focus-safety gate
+==> Running mandatory v4.10.0 country dropdown interaction and focus-safety gate
 '
 "$PYTHON" "$ROOT/scripts/run_browser_gate_v32372.py" browser_country_selector_interaction_v32372.py
 
 printf '
-==> Running mandatory v4.9.0 global country selector hydration gate
+==> Running mandatory v4.10.0 global country selector hydration gate
 '
 "$PYTHON" "$ROOT/scripts/run_browser_gate_v32372.py" browser_country_selector_hydration_v32372.py
 
-printf '\n==> Running mandatory v4.9.0 global country truth browser gate\n'
+printf '\n==> Running mandatory v4.10.0 global country truth browser gate\n'
 "$PYTHON" "$ROOT/scripts/run_browser_gate_v32372.py" browser_global_country_data_truth_v32372.py
 
 rm -rf "$BACKEND/backend"
 printf '
-==> Running complete inherited and v4.9.0 test suite with process-isolated teardown
+==> Running complete inherited and v4.10.0 test suite with process-isolated teardown
 '
 PYTHONPATH="$BACKEND" PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 "$PYTHON" "$ROOT/scripts/run_v32372_test_suite.py"
 printf '
-==> Verifying v4.9.0 country dropdown interaction and focus safety
+==> Verifying v4.10.0 country dropdown interaction and focus safety
 '
 "$PYTHON" "$ROOT/scripts/validate_v32372_release.py"
-grep -q 'APP_VERSION = "4.9.0"' "$BACKEND/app/version.py"
-grep -q 'Version: 4.9.0' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
-grep -q 'const RELEASE="4.9.0"' "$BACKEND/public_app/service-worker.js"
+grep -q 'APP_VERSION = "4.10.0"' "$BACKEND/app/version.py"
+grep -q 'Version: 4.10.0' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
+grep -q 'const RELEASE="4.10.0"' "$BACKEND/public_app/service-worker.js"
 grep -q '/public/data-truth/coverage-matrix' "$BACKEND/app/main.py"
-grep -q 'data-truth-v32371.js?v=4.9.0' "$BACKEND/public_app/index.html"
+grep -q 'data-truth-v32371.js?v=4.10.0' "$BACKEND/public_app/index.html"
 grep -q 'data-truth-v32371.js' "$BACKEND/public_app/service-worker.js"
 grep -q 'const countryCatalogTask=hydrateCountrySelector(initialCountry)' "$BACKEND/public_app/assets/app.js"
 grep -q '/public/data-truth/countries' "$BACKEND/public_app/assets/app.js"
@@ -61,7 +61,7 @@ printf '
 "$PYTHON" - "$ROOT" <<'PYVERIFY'
 from pathlib import Path
 import hashlib,json,sys
-root=Path(sys.argv[1]);m=json.loads((root/'MANIFEST.json').read_text());assert m['release']=='4.9.0';assert m['file_count']==len(m['files'])
+root=Path(sys.argv[1]);m=json.loads((root/'MANIFEST.json').read_text());assert m['release']=='4.10.0';assert m['file_count']==len(m['files'])
 for e in m['files']:
  p=root/e['path'];d=p.read_bytes();assert len(d)==e['bytes'],e['path'];assert hashlib.sha256(d).hexdigest()==e['sha256'],e['path']
 print(f"Verified {len(m['files'])} manifest entries.")
@@ -95,13 +95,13 @@ printf '
 ==> Running mandatory complete-shell Chromium browser gate
 '
 "$PYTHON" "$ROOT/scripts/run_browser_gate_v32372.py" browser_complete_shell_gate_v32362.py
-printf '\n==> Running mandatory v4.9.0 production-soak route and service-worker gate\n'
+printf '\n==> Running mandatory v4.10.0 production-soak route and service-worker gate\n'
 "$PYTHON" "$ROOT/scripts/run_browser_gate_v32372.py" browser_production_soak_gate_v32364.py
 printf '\n==> Running mandatory long-page WordPress embed gate\n'
 "$PYTHON" "$ROOT/scripts/run_browser_gate_v32372.py" browser_wordpress_embed_gate_v32363.py
 rm -rf "$BACKEND/backend"
 [[ ! -e "$BACKEND/backend" ]] || { echo 'ERROR: runtime state cleanup failed.' >&2; exit 1; }
 printf '
-SUCCESS: Site Intelligence v4.9.0 passed country dropdown interaction and focus-safety validation.
+SUCCESS: Site Intelligence v4.10.0 passed country dropdown interaction and focus-safety validation.
 Repository: %s
 ' "$ROOT"

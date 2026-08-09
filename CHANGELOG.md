@@ -1,4 +1,13 @@
-## 4.9.0 — Marine Biodiversity & Bioacoustic Intelligence
+## 4.10.0 — Ocean Missions, Vehicles & Observatory Network
+
+- Added source-bounded platform and mission contracts for Argo/Argovis, U.S. IOOS, Ocean Networks Canada, and NOAA Ocean Exploration.
+- Added ten distinct platform classes spanning floats, gliders, buoys, moorings, AUVs, ROVs, research vessels, fixed observatories, camera stations, and hydrophone stations.
+- Added timestamp-required source-position normalization and source-reported mission/status normalization without promoting either to a verified current state.
+- Added discrete track normalization with no interpolation, no inferred continuous path, and no future-trajectory prediction.
+- Added a deferred Missions & Network interface after Marine Biodiversity without adding a public route.
+- Preserved all v4 six-area/35-route, Data Truth, provenance, ocean, space, selector, soak, and WordPress isolation boundaries.
+
+## 4.10.0 — Marine Biodiversity & Bioacoustic Intelligence
 
 - Added marine biodiversity evidence contracts for OBIS, WoRMS, FathomNet, and Ocean Networks Canada hydrophones.
 - Added explicit occurrence, taxonomy, visual-annotation, acoustic-recording, acoustic-detection, and environmental-context evidence classes.
@@ -7,7 +16,7 @@
 - Prevented model detections, raw recordings, taxonomy records, and visual labels from being silently promoted to verified species presence, abundance, or population claims.
 - Added a deferred Marine Biodiversity & Bioacoustic Intelligence interface inside Underwater Observation without creating a new public route.
 
-## v4.9.0 — Water Column & Depth Explorer
+## v4.10.0 — Water Column & Depth Explorer
 
 - Added water-column navigation from 0 to 11,000 m inside the existing Earth Observation/Ocean workflow.
 - Registered Argo/Argovis, Copernicus Marine 3-D products, and Ocean Networks Canada Oceans 3.0 with explicit access, coverage, authentication, and depth semantics.
@@ -16,18 +25,18 @@
 - Added depth query/export/readiness APIs and a deferred Depth Explorer UI without increasing the base HTML shell.
 - Preserved all six v4 navigation areas, 35 routes, Data Truth, provenance, country selection, route soak, service-worker closure, and WordPress embed isolation.
 
-## v4.9.0 — Orbital Earth & Satellite Observation
+## v4.10.0 — Orbital Earth & Satellite Observation
 
 - Added orbital Earth perspective, platform/instrument context, imagery continuity, truth-bounded footprints, and orbital evidence export inside the existing Earth route.
 
-# v4.9.0 — Unified Public Intelligence Platform
+# v4.10.0 — Unified Public Intelligence Platform
 
 - Consolidates 35 preserved public workspaces into six primary navigation areas.
 - Adds a canonical v4 platform, navigation, contract, and readiness API.
 - Preserves existing routes, deep links, shortcodes, evidence boundaries, and review gates.
 - Adds an accessible grouped navigation shell without creating a second routing system.
 
-# v4.9.0 — Security, Observability, Performance, and Scale Assurance
+# v4.10.0 — Security, Observability, Performance, and Scale Assurance
 
 - Production admin authentication fails closed when the credential is missing or left at the development placeholder.
 - Administrative rate limiting uses one-way token fingerprints rather than visitor IP persistence.
@@ -36,7 +45,7 @@
 - Added public production-assurance contracts and a Governance workspace assurance panel.
 
 
-## 4.9.0 — Institutional Workspaces and Review Governance
+## 4.10.0 — Institutional Workspaces and Review Governance
 
 - Added portable investigation workspace packages with deterministic fingerprints.
 - Added review queues, structured annotations, role-separated review/approval checks, and append-only audit previews.
@@ -44,10 +53,10 @@
 - Preserved existing file-backed institutional workspace operations and public/private boundaries.
 
 
-## 4.9.0 — Briefing, Story Map, and Publication Studio
+## 4.10.0 — Briefing, Story Map, and Publication Studio
 - Added frozen evidence manifests, briefing/story-map previews, publication readiness, correction previews, and review-gated export packages.
 - Preserved Data Truth, Record Provenance, monitoring, cross-view state, service-worker closure, and WordPress embed isolation.
-# Site Intelligence v4.9.0 — Monitoring, Digests, and Early-Warning Operations
+# Site Intelligence v4.10.0 — Monitoring, Digests, and Early-Warning Operations
 
 - Added Monitoring, Digests, and Early-Warning Operations with explicit watchlists, geographic areas, source-change monitoring, five alert-history states, modeled-warning separation, review-gated digest previews, and feed contracts.
 - Preserved all Data Truth, provenance, cross-view state, country selector, loading recovery, and WordPress embed-isolation safeguards.
@@ -60,7 +69,7 @@
 - Adds Knowledge Library discovery-query preparation without claiming unexecuted matches.
 - Adds Research Librarian, Workbench, and Decision Studio handoff previews with explicit human confirmation and no automatic delivery or publication.
 
-## 4.9.0 — Unified Analytical Workspace and Cross-View State
+## 4.10.0 — Unified Analytical Workspace and Cross-View State
 
 - Added one normalized state contract across six analytical routes.
 - Preserved country, comparison, indicator, imagery, date, event-period, and spatial selections across compatible workspaces.
@@ -68,7 +77,7 @@
 - Added local/session persistence and a compact browser state bar without requiring accounts.
 - Added direct and WordPress-iframe browser gates while retaining all country-selector, provenance, Data Truth, route-soak, service-worker, and embed-isolation contracts.
 
-## 4.9.0 — Global Data Truth Control Plane
+## 4.10.0 — Global Data Truth Control Plane
 
 - Composes all eight registered public source contracts into operational, degraded, review, unavailable, and unknown attention states.
 - Adds public-safe derived status history without claiming a complete source event log.
@@ -76,7 +85,7 @@
 - Adds a fingerprint-bound control-plane export and a fourth Data Truth application view.
 - Preserves explicit boundaries between source health, geographic eligibility, observed records, and source authority.
 
-## 4.9.0 — Record Provenance and Indicator Truth
+## 4.10.0 — Record Provenance and Indicator Truth
 
 - Added record-level truth contracts for country indicators, map layers, events, charts, and table records.
 - Added source, date, unit, transformation, lineage, limitation, and truth-state disclosure.
@@ -1283,7 +1292,7 @@
 - Corrected global-scope iframe height listeners that referenced a private function.
 - Added bootstrap recovery API, runtime-health, offline-shell, package, and browser validation contracts.
 
-## 4.9.0 — Underwater Observation & Visual Evidence
+## 4.10.0 — Underwater Observation & Visual Evidence
 
 - Added ONC Oceans 3.0 / SeaTube, FathomNet, and NOAA Ocean Exploration visual-evidence source contracts.
 - Added underwater media and annotation normalization, evidence manifests, rights/credit metadata, and non-fabrication controls.

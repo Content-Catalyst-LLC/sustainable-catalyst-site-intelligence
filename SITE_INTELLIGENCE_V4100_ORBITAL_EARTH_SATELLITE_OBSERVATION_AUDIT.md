@@ -1,4 +1,4 @@
-# v4.9.0 Orbital Earth & Satellite Observation Audit
+# v4.10.0 Orbital Earth & Satellite Observation Audit
 
 The release extends the existing `earth` route instead of creating a new primary workspace. Orbital state preserves the selected observation layer, requested date, geographic center, and source attribution.
 

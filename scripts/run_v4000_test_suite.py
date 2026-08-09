@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the complete v4.9.0 pytest inventory once with bounded teardown.
+"""Run the complete v4.10.0 pytest inventory once with bounded teardown.
 
 The suite output is file-backed so inherited connector executor threads cannot hold the
 installer's stdout pipe open after pytest has already emitted a complete pass summary.

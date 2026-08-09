@@ -1,0 +1,30 @@
+Site Intelligence v4.10.0 — Ocean Missions, Vehicles & Observatory Network
+
+SOURCE VALIDATION
+- Full backend regression suite: 1,166 passed
+- Ocean missions / vehicles / observatory focused API tests: PASS
+- Static release contract: PASS
+- JavaScript syntax: 101 files validated
+- JSON/GeoJSON parsing inventory: 136 files
+- WordPress PHP syntax: PASS
+- Static security scan: 0 findings
+- Initial application HTML: 164,948 bytes / 165,000-byte budget
+
+BROWSER VALIDATION
+- Ocean Missions direct mode: PASS
+- Ocean Missions WordPress iframe mode: PASS
+- Complete production shell: 53/53 base scripts
+- Unified v4 architecture: 6 primary areas / 35 routes
+- Country selector: 173 unique countries; AFG/ZWE bounds; BRA Data Truth propagation; wheel/focus safety PASS
+- Production soak: 12 transitions / 0 route failures / 0 automatic service-worker reloads
+- WordPress fixed application viewport: 1100 px; host-page scroll isolation PASS
+
+MISSION / PLATFORM TRUTH BOUNDARIES
+- Platform registry entries are not represented as proof of current operation.
+- Last-reported positions remain timestamp-bounded and are not relabeled as current positions.
+- Historical expedition, ROV, vessel, float, or glider records are not represented as live missions.
+- Discrete source track points are not interpolated into a continuous trajectory.
+- Future positions and trajectories are not predicted by the v4.10.0 contract.
+- Nearby environmental observations, camera records, and hydrophone records are not substituted for vehicle/platform position.
+- Source-reported status remains source- and timestamp-bounded.
+- Normalized source records are source-attributed and are not claimed to be independently network-verified by normalization alone.

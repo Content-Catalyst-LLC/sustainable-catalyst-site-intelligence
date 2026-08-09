@@ -1,6 +1,6 @@
-# Site Intelligence v4.9.0 — Seafloor & Bathymetric Intelligence
+# Site Intelligence v4.10.0 — Seafloor & Bathymetric Intelligence
 
-v4.9.0 extends the Earth Observation ocean sequence from the water column to the seabed while preserving the v4 six-area / 35-route platform architecture.
+v4.10.0 extends the Earth Observation ocean sequence from the water column to the seabed while preserving the v4 six-area / 35-route platform architecture.
 
 ## New capability
 
@@ -17,7 +17,7 @@ v4.9.0 extends the Earth Observation ocean sequence from the water column to the
 
 ## Scientific boundaries
 
-v4.9.0 does not treat a terrain grid as a sounding archive. Grid spacing is not represented as measurement spacing, positional accuracy, or uncertainty. Survey footprints do not prove uniform sounding density. Hillshade and terrain-relief rendering are presentation derivatives, not independent bathymetric observations. Depth/elevation sign conventions and vertical datums are never silently transformed.
+v4.10.0 does not treat a terrain grid as a sounding archive. Grid spacing is not represented as measurement spacing, positional accuracy, or uncertainty. Survey footprints do not prove uniform sounding density. Hillshade and terrain-relief rendering are presentation derivatives, not independent bathymetric observations. Depth/elevation sign conventions and vertical datums are never silently transformed.
 
 The local seabed visualization is labeled `ORIENTATION TERRAIN · NOT BATHYMETRIC PIXELS` until an explicit source terrain record is loaded.
 

@@ -1,4 +1,4 @@
-# Site Intelligence v4.9.0 — Astronomical Observation Audit
+# Site Intelligence v4.10.0 — Astronomical Observation Audit
 
 - The primary platform remains six areas / 35 routes; no new top-level route is introduced.
 - Astronomical observation remains inside the `earth` route and preserves the Earth → orbit → planetary → deep-sky progression.

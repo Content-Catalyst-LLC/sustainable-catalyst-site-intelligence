@@ -1,12 +1,12 @@
-# Site Intelligence v4.9.0 — Install and Test
+# Site Intelligence v4.10.0 — Install and Test
 
-Run `deploy_and_validate_site_intelligence_v3_31_0_macos.sh` with the v4.9.0 release bundle.
+Run `deploy_and_validate_site_intelligence_v3_31_0_macos.sh` with the v4.10.0 release bundle.
 
 The installer:
 1. verifies the release-bundle SHA-256 checksums;
 2. extracts the immutable repository package;
 3. creates a clean Python virtual environment and installs declared requirements;
-4. runs the complete v4.9.0 verifier, including static assurance, supply-chain checks, and all 1,079 Python tests;
+4. runs the complete v4.10.0 verifier, including static assurance, supply-chain checks, and all 1,079 Python tests;
 5. runs a second deterministic static/package pass without repeating the browser or regression suite;
 6. revalidates the source and exact Git tree during promotion without nested Chromium launches;
 7. pushes the exact Git commit and release tags to GitHub;

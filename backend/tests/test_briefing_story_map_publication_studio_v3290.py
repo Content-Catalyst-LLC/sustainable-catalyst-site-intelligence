@@ -24,7 +24,7 @@ def package_payload():
 
 def test_publication_studio_contract_is_review_gated():
     payload = CLIENT.get("/public/publication-studio").json()
-    assert payload["version"] == "4.9.0"
+    assert payload["version"] == "4.10.0"
     assert payload["contract"] == "briefing-story-map-publication-studio"
     assert payload["human_editorial_review_required"] is True
     assert payload["human_publish_confirmation_required"] is True

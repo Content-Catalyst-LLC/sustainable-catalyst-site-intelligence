@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Mandatory complete production-shell browser gate for Site Intelligence v4.9.0.
+"""Mandatory complete production-shell browser gate for Site Intelligence v4.10.0.
 
 The harness uses the exact shipped index HTML and every first-party script in document
 order. It runs in-memory because some managed validation environments administratively
@@ -19,7 +19,7 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
 APP=ROOT/'backend/public_app'
-VERSION='4.9.0'
+VERSION='4.10.0'
 
 def find_browser():
     candidates=[
@@ -125,7 +125,7 @@ def main():
     actionable=[item for item in console if not any(token in item.lower() for token in ('failed to load resource','net::err_','favicon'))]
     assert not actionable,actionable
     print(json.dumps({'browser':browser_path,'results':results,'filteredConsoleErrors':console},indent=2))
-    print('PASS: complete v4.9.0 production shell is responsive, observer-bounded, and fully initialized in direct and iframe modes.')
+    print('PASS: complete v4.10.0 production shell is responsive, observer-bounded, and fully initialized in direct and iframe modes.')
     return 0
 if __name__ == "__main__":
     try:
