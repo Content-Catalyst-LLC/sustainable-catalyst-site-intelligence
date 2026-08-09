@@ -9,11 +9,11 @@ from fastapi.testclient import TestClient
 from app.main import app
 from app.version import APP_VERSION
 
-assert APP_VERSION == '4.5.0'
+assert APP_VERSION == '4.6.0'
 client = TestClient(app)
 
 overview = client.get('/public/data-truth/control-plane').json()
-assert overview['ok'] and overview['version'] == '4.5.0'
+assert overview['ok'] and overview['version'] == '4.6.0'
 assert overview['contract'] == 'global-data-truth-control-plane'
 assert overview['source_count'] == 8
 assert len(overview['control_plane_fingerprint']) == 64
@@ -51,14 +51,14 @@ worker = (ROOT / 'backend/public_app/service-worker.js').read_text()
 truth_js = (ROOT / 'backend/public_app/assets/data-truth-v32371.js').read_text()
 control_js = (ROOT / 'backend/public_app/assets/data-truth-control-plane-v3240.js').read_text()
 php = (ROOT / 'wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php').read_text()
-for token in ('data-truth-control-plane-v3240.css?v=4.5.0','data-truth-control-plane-v3240.js?v=4.5.0'):
+for token in ('data-truth-control-plane-v3240.css?v=4.6.0','data-truth-control-plane-v3240.js?v=4.6.0'):
     assert token in html
 assert 'data-truth-control-plane-v3240.js' in worker and 'data-truth-control-plane-v3240.css' in worker
 assert 'data-truth-view="control"' in truth_js and 'loadControl' in truth_js
 assert 'SCSIDataTruthControlPlaneV3240' in control_js
 for endpoint in ('/public/data-truth/control-plane','/public/data-truth/control-plane/schema-drift','/public/data-truth/control-plane/outages','/public/data-truth/control-plane/workspaces','/public/data-truth/control-plane/export'):
     assert endpoint in control_js or endpoint in (ROOT / 'backend/app/main.py').read_text()
-assert 'Version: 4.5.0' in php
+assert 'Version: 4.6.0' in php
 for name in ('data-truth-control-plane-v3240.js','data-truth-control-plane-v3240.css','data-truth-v32371.js'):
     assert (ROOT / 'backend/public_app/assets' / name).read_bytes() == (ROOT / 'wordpress-plugin/sustainable-catalyst-site-intelligence/assets' / name).read_bytes()
-print('Site Intelligence v4.5.0 Global Data Truth Control Plane release contract passed.')
+print('Site Intelligence v4.6.0 Global Data Truth Control Plane release contract passed.')

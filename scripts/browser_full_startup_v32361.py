@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Complete application-shell Chromium startup validation for v4.5.0.
+"""Complete application-shell Chromium startup validation for v4.6.0.
 
 The managed browser blocks localhost navigation, so this harness loads the production
 index HTML and the exact first-party startup assets inline. It exercises the complete
@@ -28,7 +28,7 @@ def document(mode:str,deadline=650)->str:
     html=re.sub(r'<link[^>]+rel="stylesheet"[^>]*>','',html)
     html=re.sub(r'<script\s+src="[^"]+"\s+defer></script>','',html)
     css='\n'.join(p.read_text(encoding='utf-8') for p in (APP/'assets').glob('*.css'))
-    setup=f"""<script>{worker_setup(mode)}(()=>{{const make=()=>{{const data=new Map();return{{getItem:k=>data.has(String(k))?data.get(String(k)):null,setItem:(k,v)=>data.set(String(k),String(v)),removeItem:k=>data.delete(String(k)),clear:()=>data.clear(),key:i=>[...data.keys()][i]||null,get length(){{return data.size}}}}}};try{{Object.defineProperty(window,'localStorage',{{configurable:true,value:make()}});Object.defineProperty(window,'sessionStorage',{{configurable:true,value:make()}})}}catch(_){{}}}})();window.SC_SITE_INTELLIGENCE_API=location.origin;window.fetch=async(input)=>{{const u=String(input);if(u.includes('/public/performance-offline'))return new Response(JSON.stringify({{ok:true,version:'4.5.0',contract:'performance-and-offline-recovery',performance_budgets:{{first_useful_map_ms:3500}}}}),{{status:200,headers:{{'Content-Type':'application/json'}}}});if(u.includes('/public/bootstrap-recovery'))return new Response(JSON.stringify({{ok:true,version:'4.5.0'}}),{{status:200,headers:{{'Content-Type':'application/json'}}}});return new Response(JSON.stringify({{detail:'deterministic startup test: optional service unavailable'}}),{{status:503,headers:{{'Content-Type':'application/json'}}}});}};</script>"""
+    setup=f"""<script>{worker_setup(mode)}(()=>{{const make=()=>{{const data=new Map();return{{getItem:k=>data.has(String(k))?data.get(String(k)):null,setItem:(k,v)=>data.set(String(k),String(v)),removeItem:k=>data.delete(String(k)),clear:()=>data.clear(),key:i=>[...data.keys()][i]||null,get length(){{return data.size}}}}}};try{{Object.defineProperty(window,'localStorage',{{configurable:true,value:make()}});Object.defineProperty(window,'sessionStorage',{{configurable:true,value:make()}})}}catch(_){{}}}})();window.SC_SITE_INTELLIGENCE_API=location.origin;window.fetch=async(input)=>{{const u=String(input);if(u.includes('/public/performance-offline'))return new Response(JSON.stringify({{ok:true,version:'4.6.0',contract:'performance-and-offline-recovery',performance_budgets:{{first_useful_map_ms:3500}}}}),{{status:200,headers:{{'Content-Type':'application/json'}}}});if(u.includes('/public/bootstrap-recovery'))return new Response(JSON.stringify({{ok:true,version:'4.6.0'}}),{{status:200,headers:{{'Content-Type':'application/json'}}}});return new Response(JSON.stringify({{detail:'deterministic startup test: optional service unavailable'}}),{{status:503,headers:{{'Content-Type':'application/json'}}}});}};</script>"""
     scripts='\n'.join(f'<script>{(APP/path).read_text(encoding="utf-8")}</script>' for path in STARTUP_ASSETS)
     html=html.replace('</head>',f'<style>{css}</style>{setup}</head>')
     html=html.replace('data-scsi-startup-deadline-ms="9000"',f'data-scsi-startup-deadline-ms="{deadline}"')
@@ -54,12 +54,12 @@ def main():
             results[mode]=snap(page);page.close()
         page=browser.new_page(viewport={'width':1280,'height':900});page.set_content('<iframe id="frame" style="width:1200px;height:820px"></iframe>');frame=page.query_selector('#frame').content_frame();frame.set_content(document('disabled'),wait_until='domcontentloaded');frame.wait_for_function("document.querySelector('#app')?.classList.contains('app-ready')",timeout=12000);frame.wait_for_function("document.querySelector('#launchScreen')?.classList.contains('hidden')",timeout=3000);results['iframe']=snap(frame);page.close();browser.close()
     for key,value in results.items():
-        assert value['release']=='4.5.0',(key,value)
+        assert value['release']=='4.6.0',(key,value)
         assert value['ready'] and value['launchHidden'] and value['startup'] in {'ready','limited'},(key,value)
         assert value['owner'],(key,value)
         assert value['registrations']<=1,(key,value)
         assert value['mapWidth']>300 and value['mapHeight']>300,(key,value)
     # Optional-service failures are expected warnings; unhandled page errors are not.
     assert not errors,errors
-    print(json.dumps(results,indent=2));print('PASS: complete v4.5.0 HTML/app.js startup is visible across worker failure and iframe conditions.');return 0
+    print(json.dumps(results,indent=2));print('PASS: complete v4.6.0 HTML/app.js startup is visible across worker failure and iframe conditions.');return 0
 if __name__=='__main__':raise SystemExit(main())

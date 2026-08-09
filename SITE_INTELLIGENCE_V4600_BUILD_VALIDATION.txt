@@ -1,0 +1,48 @@
+Sustainable Catalyst Site Intelligence v4.6.0
+Water Column & Depth Explorer — Build Validation
+
+Release status: source validation complete; production deployment not performed in this build environment.
+
+Backend regression
+- 1,132 automated tests passed.
+- v4.6.0 Water Column contract tests passed.
+- Exact-depth sample resolution passed.
+- Between-sample requests preserve missing values: no interpolation and no nearest-sample substitution.
+- Pressure and geometric depth remain separate unless an attributed source conversion exists.
+- Source QC flags and observation provenance are retained.
+
+Source contracts
+- Argo profiles via Argovis registered as in-situ/BGC profile evidence.
+- Copernicus Marine registered as gridded 3-D analysis/forecast/reanalysis/model evidence.
+- Ocean Networks Canada Oceans 3.0 registered for fixed-observatory, mobile-platform, and in-situ observation evidence.
+- No upstream credentials are exposed in public state, browser assets, manifests, or fixtures.
+
+Browser validation
+- Water Column & Depth Explorer passed in direct application mode.
+- Water Column & Depth Explorer passed in WordPress iframe mode.
+- Ocean Surface passed in direct and iframe modes.
+- Orbital Earth passed in direct and iframe modes.
+- Lunar & Planetary Intelligence passed in direct and iframe modes.
+- Astronomical Observation passed in direct and iframe modes.
+- Solar System Navigation passed in direct and iframe modes.
+- Complete application shell initialized 53/53 first-party scripts.
+- Unified v4 navigation retained 6 primary areas and 35 routes.
+- Country selector retained 173 unique countries and focus/wheel interaction.
+- Production soak completed 12 route transitions with 0 route failures and 0 automatic service-worker reloads.
+- WordPress application viewport remained fixed at 1,100 px without moving the host page.
+
+Static/package validation
+- 136 JSON/GeoJSON files parsed successfully before manifest freeze.
+- 93 JavaScript files syntax-validated.
+- WordPress PHP syntax passed.
+- Static security scan returned 0 findings.
+- Base public-app HTML: 164,952 bytes / 165,000-byte budget.
+- Ocean and Water Column controls are deferred so the new vertical interface does not inflate the initial HTML shell beyond budget.
+
+Release boundary
+- Navigation depth supports 0–11,000 m as a requested exploration state.
+- A selected depth does not prove an observation exists there.
+- Missing samples remain missing.
+- No interpolation is performed in v4.6.0.
+- Nearest samples may be disclosed as context but are never substituted as the requested-depth value.
+- In-situ, fixed-observatory, mobile-platform, model, analysis, forecast, and reanalysis evidence remain distinguishable.
