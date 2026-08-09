@@ -1,4 +1,4 @@
-# Site Intelligence v4.2.0 — Lunar & Planetary Intelligence Audit
+# Site Intelligence v4.3.0 — Lunar & Planetary Intelligence Audit
 
 - Preserves the v4 six-area, 35-route architecture.
 - Extends the existing Earth / Orbital workspace rather than creating a new top-level route.

@@ -1,4 +1,4 @@
-"""Live Intelligence source operations for Site Intelligence v4.2.0.
+"""Live Intelligence source operations for Site Intelligence v4.3.0.
 
 This module provides a public-safe source registry and a protected operational
 control plane for the electronic Live Intelligence board. Runtime state is

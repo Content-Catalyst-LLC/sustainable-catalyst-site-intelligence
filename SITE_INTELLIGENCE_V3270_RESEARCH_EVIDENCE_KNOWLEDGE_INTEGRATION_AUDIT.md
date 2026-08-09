@@ -1,4 +1,4 @@
-# v4.2.0 Research Evidence and Knowledge Integration Audit
+# v4.3.0 Research Evidence and Knowledge Integration Audit
 
 ## Integration targets
 
