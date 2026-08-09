@@ -1,4 +1,4 @@
-"""Mutation-observer recovery and complete-shell browser-gate contract for v4.1.0."""
+"""Mutation-observer recovery and complete-shell browser-gate contract for v4.2.0."""
 from __future__ import annotations
 from copy import deepcopy
 import json

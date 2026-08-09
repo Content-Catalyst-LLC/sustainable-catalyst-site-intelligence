@@ -57,9 +57,9 @@ def main() -> int:
     assert not errors, errors
     assert initial["count"] >= 170 and initial["value"] == "KEN" and initial["hasBrazil"]
     assert result["selected"] == "BRA" and result["badge"] == "BRA"
-    assert result["api"] == "4.1.0"
+    assert result["api"] == "4.2.0"
     print(json.dumps(result, indent=2))
-    print("PASS: v4.1.0 hydrates the global selector and changes Data Truth from Kenya to Brazil.")
+    print("PASS: v4.2.0 hydrates the global selector and changes Data Truth from Kenya to Brazil.")
     return 0
 
 

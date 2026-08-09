@@ -1,6 +1,6 @@
-# v4.1.0 Briefing, Story Map, and Publication Studio Audit
+# v4.2.0 Briefing, Story Map, and Publication Studio Audit
 
-The v4.1.0 layer composes existing Site Intelligence evidence, provenance, monitoring, and publication capabilities into a public review-oriented preparation surface.
+The v4.2.0 layer composes existing Site Intelligence evidence, provenance, monitoring, and publication capabilities into a public review-oriented preparation surface.
 
 ## Contracts
 - `/public/publication-studio`

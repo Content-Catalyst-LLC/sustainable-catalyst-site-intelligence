@@ -5,7 +5,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_v3220_release_contract():
     requirements = {
-        "backend/app/version.py": ['APP_VERSION = "4.1.0"'],
+        "backend/app/version.py": ['APP_VERSION = "4.2.0"'],
         "backend/app/live_intelligence_registry_publications_v3220.py": [
             "class LiveIntelligenceRegistryPublicationCenter", "def create_brief(", "def review_brief(",
             "def approve_brief(", "def citation_bundle(", "def package_payload(", "def record_handoff(",
@@ -24,7 +24,7 @@ def test_v3220_release_contract():
             "live_intelligence_registry_publications_handoffs_path",
         ],
         "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php": [
-            "Version: 4.1.0", "sc_live_intelligence_registry_publications",
+            "Version: 4.2.0", "sc_live_intelligence_registry_publications",
             "rest_live_intelligence_registry_publications_briefs",
             "rest_live_intelligence_registry_publication_citations",
         ],
@@ -32,9 +32,9 @@ def test_v3220_release_contract():
             "setupLiveIntelligenceRegistryPublications", "Source-linked citation bundle",
             "No automatic publication",
         ],
-        "README.md": ["v4.1.0 — Collection Publication, Citation Exports, and Research Brief Packages"],
+        "README.md": ["v4.2.0 — Collection Publication, Citation Exports, and Research Brief Packages"],
         "RELEASE_NOTES_SITE_INTELLIGENCE_V3220.md": ["Collection Publication", "Citation exports", "No automatic publication"],
-        "docs/RELEASE_MANIFEST_V3220.json": ['"version": "4.1.0"', '"automatic_publication_performed": false'],
+        "docs/RELEASE_MANIFEST_V3220.json": ['"version": "4.2.0"', '"automatic_publication_performed": false'],
         "docs/live-intelligence-registry-publications-v3220.schema.json": ["Live Intelligence Registry Research Brief", '"additionalProperties": false'],
     }
     for relative, needles in requirements.items():
