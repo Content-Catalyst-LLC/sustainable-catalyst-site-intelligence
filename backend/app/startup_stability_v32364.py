@@ -1,4 +1,4 @@
-"""Production-soak, route-stability, and service-worker closure contract for v3.30.0."""
+"""Production-soak, route-stability, and service-worker closure contract for v3.31.0."""
 from __future__ import annotations
 from copy import deepcopy
 import json

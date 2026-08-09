@@ -17,6 +17,7 @@ from app.live_intelligence_publication_releases_v3120 import (
 def settings_for(tmp_path):
     return Settings(
         environment="development",
+        api_token="test-admin-token",
         live_intelligence_briefings_path=str(tmp_path / "briefings.jsonl"),
         live_intelligence_briefing_packages_path=str(tmp_path / "briefing-packages.jsonl"),
         live_intelligence_briefing_handoffs_path=str(tmp_path / "briefing-handoffs.jsonl"),

@@ -1,5 +1,5 @@
 (()=>{"use strict";
-  const VERSION="3.30.0",ENDPOINT="/public/browser-reliability";
+  const VERSION="3.31.0",ENDPOINT="/public/browser-reliability";
   const MAX_SUMMARY_PASSES_PER_SECOND=8;
   const qs=(s,r=document)=>r.querySelector(s),qsa=(s,r=document)=>[...r.querySelectorAll(s)];
   const root=()=>qs('#app[data-scsi-release]');

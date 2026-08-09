@@ -1,0 +1,90 @@
+{
+  "schema": "sc-site-intelligence-security-observability-performance/1.0",
+  "release": "3.31.0",
+  "security": {
+    "production_admin_auth": "fail-closed",
+    "production_default_token_allowed": false,
+    "admin_rate_limit_scope": "token-fingerprint",
+    "visitor_ip_persistence": false,
+    "required_headers": [
+      "X-Content-Type-Options",
+      "Referrer-Policy",
+      "Permissions-Policy",
+      "Content-Security-Policy",
+      "X-SC-Site-Intelligence-Version",
+      "Server-Timing"
+    ],
+    "csp": {
+      "default-src": [
+        "'self'"
+      ],
+      "script-src": [
+        "'self'"
+      ],
+      "style-src": [
+        "'self'",
+        "'unsafe-inline'"
+      ],
+      "img-src": [
+        "'self'",
+        "data:",
+        "blob:",
+        "https:"
+      ],
+      "connect-src": [
+        "'self'",
+        "https:"
+      ],
+      "worker-src": [
+        "'self'",
+        "blob:"
+      ],
+      "object-src": [
+        "'none'"
+      ],
+      "base-uri": [
+        "'self'"
+      ],
+      "form-action": [
+        "'self'"
+      ]
+    }
+  },
+  "performance_budgets": {
+    "startup_deadline_ms": 4500,
+    "route_transition_ms": 2500,
+    "largest_javascript_asset_bytes": 425000,
+    "largest_css_asset_bytes": 180000,
+    "total_first_party_javascript_bytes": 2600000,
+    "total_first_party_css_bytes": 850000,
+    "service_worker_runtime_data_entries": 120,
+    "service_worker_immutable_entries": 180
+  },
+  "observability": {
+    "persistent_visitor_profiles": false,
+    "request_timing_header": "Server-Timing",
+    "dimensions": [
+      "route-family",
+      "connector-freshness",
+      "map-initialization",
+      "export-completion",
+      "browser-budget",
+      "release-identity"
+    ],
+    "public_diagnostics_are_aggregate": true
+  },
+  "supply_chain": {
+    "dependency_constraints_required": true,
+    "hash_pinning_claimed": false,
+    "secret_scan": "release-gate",
+    "pip_check": "release-gate",
+    "immutable_manifest": "sha256"
+  },
+  "boundaries": [
+    "This release does not claim external penetration testing, certification, or regulatory compliance.",
+    "The in-process rate limiter is not distributed across multiple workers.",
+    "Server-Timing exposes aggregate request duration only and is not persisted as a visitor profile.",
+    "Dependency constraints reduce drift but are not cryptographic lockfiles unless hashes are present.",
+    "Performance budgets are release gates, not guarantees for every device, network, or upstream service."
+  ]
+}

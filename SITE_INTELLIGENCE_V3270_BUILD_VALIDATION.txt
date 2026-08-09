@@ -1,4 +1,4 @@
-Site Intelligence v3.30.0 — Research Evidence and Knowledge Integration
+Site Intelligence v3.31.0 — Research Evidence and Knowledge Integration
 Build validation summary
 
 Implemented contracts
@@ -38,4 +38,4 @@ Validation completed before packaging
 - Fixed WordPress embed gate passed at 1100px with no host-page jump.
 - Release shell scripts passed bash syntax validation.
 
-Production deployment is intentionally not performed during package construction. The macOS installer revalidates the extracted release before GitHub/Render promotion and permits WordPress installation only after the live release gate verifies the exact Git commit and v3.30.0 research integration contracts.
+Production deployment is intentionally not performed during package construction. The macOS installer revalidates the extracted release before GitHub/Render promotion and permits WordPress installation only after the live release gate verifies the exact Git commit and v3.31.0 research integration contracts.

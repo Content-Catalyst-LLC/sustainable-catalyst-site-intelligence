@@ -1,6 +1,6 @@
-# v3.30.0 Briefing, Story Map, and Publication Studio Audit
+# v3.31.0 Briefing, Story Map, and Publication Studio Audit
 
-The v3.30.0 layer composes existing Site Intelligence evidence, provenance, monitoring, and publication capabilities into a public review-oriented preparation surface.
+The v3.31.0 layer composes existing Site Intelligence evidence, provenance, monitoring, and publication capabilities into a public review-oriented preparation surface.
 
 ## Contracts
 - `/public/publication-studio`

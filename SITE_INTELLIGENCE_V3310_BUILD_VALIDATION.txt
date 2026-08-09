@@ -1,0 +1,27 @@
+Site Intelligence v3.31.0 — Build Validation
+Security, Observability, Performance, and Scale Assurance
+
+PASS — release contract validation
+PASS — production admin auth fails closed for missing/default development token
+PASS — token-fingerprint rate limiting does not use visitor IP persistence
+PASS — security/CSP/CORS/HSTS/Server-Timing contract validation
+PASS — static secret-pattern scan: 0 findings
+PASS — performance budget contract
+PASS — supply-chain policy contract
+PASS — Python compilation
+PASS — 133 JSON/GeoJSON files parsed
+PASS — 79 JavaScript files syntax validated
+PASS — WordPress PHP syntax
+PASS — 1,380 immutable manifest entries verified
+PASS — 1,079 automated tests
+PASS — composite browser release gate: direct + iframe
+PASS — 47/47 first-party application scripts initialized
+PASS — 173-country selector and Brazil Data Truth hydration
+PASS — route churn with zero route failures
+PASS — production assurance browser surface
+PASS — fixed WordPress iframe at 1,100 px with no host-page jump
+PASS — zero browser console errors in release gates
+
+Browser validation is executed as a package-build gate. Installer validation intentionally does not nest Chromium inside the larger deployment verifier because successful Chromium child processes can linger during teardown and create false installer hangs. The installer instead verifies the immutable package, executes all backend regression tests in a clean virtual environment, and verifies the deployed Render runtime after promotion.
+
+Production deployment is not performed by the build environment.
