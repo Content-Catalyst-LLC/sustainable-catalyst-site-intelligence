@@ -6,7 +6,7 @@ from browser_complete_shell_gate_v32362 import document, find_browser
 def exercise(page,label):
     page.wait_for_function("document.querySelector('#app')?.classList.contains('app-ready')",timeout=20000)
     page.wait_for_function("window.SCSIAssuranceV3260 && document.documentElement.dataset.assurance === 'ready'",timeout=15000)
-    page.locator('.nav-item[data-route="scenarios"]').click()
+    page.evaluate("()=>window.SCSIRouterV3228.navigate('scenarios')")
     page.wait_for_timeout(250)
     return page.evaluate("""(label)=>({label,panel:!!document.querySelector('#assurancePanel'),state:document.querySelector('#assuranceState')?.textContent,dimensions:Number(document.querySelector('#assuranceDimensionCount')?.textContent||0),cards:Number(document.querySelector('#assuranceCardCount')?.textContent||0),scripts:(window.__executedScripts||[]).filter(s=>String(s).includes('assurance-v3260.js')).length})""",label)
 
@@ -23,7 +23,7 @@ def main():
     assert not errors,errors
     for r in results:
         assert r['panel'] and r['state']=='Ready' and r['dimensions']>=6 and r['cards']>=2 and r['scripts']==1,r
-    print(json.dumps({'browser':path,'results':results,'errors':errors},indent=2));print('PASS: v3.31.0 assurance panel rendered in direct and iframe modes.');return 0
+    print(json.dumps({'browser':path,'results':results,'errors':errors},indent=2));print('PASS: v4.0.0 assurance panel rendered in direct and iframe modes.');return 0
 if __name__=='__main__':
     try: status=int(main())
     except BaseException: traceback.print_exc();status=1

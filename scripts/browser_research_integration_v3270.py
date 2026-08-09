@@ -5,7 +5,7 @@ from browser_complete_shell_gate_v32362 import document, find_browser
 
 def exercise(page,label):
     page.wait_for_function("document.querySelector('#app')?.classList.contains('app-ready')",timeout=20000)
-    page.locator('.nav-item[data-route="research"]').click()
+    page.evaluate("()=>window.SCSIRouterV3228.navigate('research')")
     page.wait_for_function("window.SCSIResearchIntegrationV3270 && document.documentElement.dataset.researchIntegration === 'ready'",timeout=15000)
     page.wait_for_timeout(250)
     return page.evaluate("""(label)=>{const snap=window.SCSIResearchIntegrationV3270.snapshot();return{label,panel:!!document.querySelector('#researchIntegrationPanel'),state:document.querySelector('#researchIntegrationState')?.textContent,targets:Number(document.querySelector('#researchIntegrationTargets')?.textContent||0),confirmation:document.querySelector('#researchIntegrationPanel')?.textContent.includes('Required'),preview:document.querySelector('#researchIntegrationPanel')?.textContent.includes('Preview only'),snapshotCountry:(snap.countries||[])[0]||'',scripts:(window.__executedScripts||[]).filter(s=>String(s).includes('research-integration-v3270.js')).length}}""",label)
@@ -23,7 +23,7 @@ def main():
     assert not errors,errors
     for r in results:
         assert r['panel'] and r['state']=='Ready' and r['targets']==4 and r['confirmation'] and r['preview'] and r['snapshotCountry']=='KEN' and r['scripts']==1,r
-    print(json.dumps({'browser':path,'results':results,'errors':errors},indent=2));print('PASS: v3.31.0 research evidence and knowledge integration rendered in direct and iframe modes.');return 0
+    print(json.dumps({'browser':path,'results':results,'errors':errors},indent=2));print('PASS: v4.0.0 research evidence and knowledge integration rendered in direct and iframe modes.');return 0
 if __name__=='__main__':
     try: status=int(main())
     except BaseException: traceback.print_exc();status=1

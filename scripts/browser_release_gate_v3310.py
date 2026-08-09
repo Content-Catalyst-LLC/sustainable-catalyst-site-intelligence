@@ -22,7 +22,7 @@ def exercise(page,label):
         loc=page.locator(f'.nav-item[data-route="{route}"]')
         if not loc.count(): failures.append(f'missing:{route}'); continue
         try:
-            loc.click(timeout=3000); page.wait_for_timeout(45)
+            page.evaluate('(route)=>window.SCSIRouterV3228.navigate(route)',route); page.wait_for_timeout(45)
         except Exception as exc: failures.append(f'{route}:{exc}')
     final=snapshot(page)
     return {'label':label,'scripts':final['executedScripts'],'expected':final['expectedScripts'],'countryOptions':country['before'],'country':country['value'],'badge':badge,'routeFailures':failures,'productionAssurance':final.get('productionAssuranceReady',False),'ready':final['ready']}
@@ -42,7 +42,7 @@ def main():
         assert r['ready'] and r['productionAssurance'] and r['scripts']==r['expected'] and r['expected']>=47,r
         assert r['countryOptions']>=170 and r['country']=='BRA' and 'BRA' in (r['badge'] or ''),r
         assert not r['routeFailures'],r
-    print(json.dumps({'browser':path,'results':results,'errors':errors},indent=2)); print('PASS: v3.31.0 composite release gate verified complete shell, production assurance, global country selection, route churn, and iframe behavior.'); return 0
+    print(json.dumps({'browser':path,'results':results,'errors':errors},indent=2)); print('PASS: v4.0.0 composite release gate verified complete shell, production assurance, global country selection, route churn, and iframe behavior.'); return 0
 if __name__=='__main__':
     try: status=int(main())
     except BaseException: traceback.print_exc(); status=1

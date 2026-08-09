@@ -1,0 +1,96 @@
+{
+  "release": "4.0.0",
+  "contract": "unified-public-intelligence-platform",
+  "primary_areas": [
+    {
+      "id": "live-overview",
+      "label": "Live Overview",
+      "description": "Current conditions, live events, and source-aware monitoring.",
+      "routes": ["overview", "global", "events", "alerts"]
+    },
+    {
+      "id": "places-systems",
+      "label": "Places & Systems",
+      "description": "Country, regional, economic, legal, scientific, humanitarian, resource, and thematic context.",
+      "routes": ["country", "dossiers", "economics", "law", "science", "humanitarian", "resources", "thematic"]
+    },
+    {
+      "id": "analysis",
+      "label": "Analysis",
+      "description": "Comparative, spatial, Earth-observation, harmonization, model, and scenario workflows.",
+      "routes": ["compare", "spatial", "earth", "harmonization", "models", "scenarios"]
+    },
+    {
+      "id": "evidence-research",
+      "label": "Evidence & Research",
+      "description": "Discovery, audit, research paths, evidence synthesis, relationships, provenance, and saved state.",
+      "routes": ["platform", "observatory", "research", "evidence", "graph", "sources", "saved"]
+    },
+    {
+      "id": "publishing-monitoring",
+      "label": "Publishing & Monitoring",
+      "description": "Briefings, publications, digests, monitoring, and institutional review workspaces.",
+      "routes": ["briefing", "publishing", "monitoring", "workspaces"]
+    },
+    {
+      "id": "methods-operations",
+      "label": "Methods & Operations",
+      "description": "API integration, workflows, federation, governance, access, and product documentation.",
+      "routes": ["integration", "workflows", "federation", "governance", "experience", "launch"]
+    }
+  ],
+  "canonical_contracts": [
+    {
+      "id": "route-state",
+      "label": "Route and cross-view state",
+      "owner": "unified-analytical-state",
+      "principle": "One selected geography and compatible analytical state can move across workspaces without silent substitution."
+    },
+    {
+      "id": "truth-provenance",
+      "label": "Data truth and record provenance",
+      "owner": "global-data-truth-control-plane",
+      "principle": "Source eligibility, observed coverage, freshness, record transformations, and missingness remain explicit."
+    },
+    {
+      "id": "assurance",
+      "label": "Comparative and model assurance",
+      "owner": "comparative-scenario-model-assurance",
+      "principle": "Comparability, assumptions, sensitivity, uncertainty, and model limitations are disclosed before interpretation."
+    },
+    {
+      "id": "research-handoff",
+      "label": "Research and product handoffs",
+      "owner": "research-evidence-knowledge-integration",
+      "principle": "Evidence packets retain provenance and require explicit human confirmation before external delivery."
+    },
+    {
+      "id": "publication-export",
+      "label": "Publication and export",
+      "owner": "briefing-story-map-publication-studio",
+      "principle": "Frozen evidence, methodology, limitations, review state, and prior versions remain attached to durable outputs."
+    },
+    {
+      "id": "operations-governance",
+      "label": "Operations and governance",
+      "owner": "security-observability-performance-scale-assurance",
+      "principle": "Production security, monitoring, review governance, and performance are enforced without hidden visitor profiles."
+    }
+  ],
+  "compatibility": {
+    "legacy_route_count": 35,
+    "legacy_routes_preserved": true,
+    "existing_public_endpoints_preserved": true,
+    "existing_shortcodes_preserved": true,
+    "deep_links_preserved": true,
+    "automatic_migrations": false,
+    "deprecation_policy": "Public routes and contracts are not removed in v4.0.0; future removals require a documented compatibility window."
+  },
+  "boundaries": [
+    "The six primary areas organize existing workspaces; they do not collapse distinct evidence types or methodologies.",
+    "Search relevance, model outputs, alerts, and scenario results are not automated decisions or authoritative conclusions.",
+    "Missing, stale, historical, modeled, and contextual records remain visibly distinct.",
+    "Public access does not require a hosted user profile.",
+    "Cross-product handoffs and publication remain human-confirmed and review-gated."
+  ]
+}

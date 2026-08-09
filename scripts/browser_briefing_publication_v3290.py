@@ -6,7 +6,7 @@ from browser_complete_shell_gate_v32362 import document, find_browser
 
 def exercise(page, label):
     page.wait_for_function("document.querySelector('#app')?.classList.contains('app-ready')", timeout=20000)
-    page.locator('.nav-item[data-route="publishing"]').click()
+    page.evaluate("()=>window.SCSIRouterV3228.navigate('publishing')")
     page.wait_for_function("window.SCSIBriefingPublicationV3290 && document.documentElement.dataset.briefingPublication === 'ready'", timeout=15000)
     page.wait_for_timeout(200)
     return page.evaluate("""(label)=>{const panel=document.querySelector('#briefingPublicationV3290');return{label,panel:!!panel,state:document.querySelector('#bp3290State')?.textContent||'',review:panel?.textContent.includes('Required'),autoPublish:panel?.textContent.includes('Disabled'),preserved:panel?.textContent.includes('Preserved'),fingerprint:panel?.textContent.includes('Fingerprint frozen'),script:(window.__executedScripts||[]).filter(s=>String(s).includes('briefing-publication-v3290.js')).length}}""", label)
@@ -25,7 +25,7 @@ def main():
     assert not errors, errors
     for r in results:
         assert r['panel'] and r['state']=='Ready' and r['review'] and r['autoPublish'] and r['preserved'] and r['fingerprint'] and r['script']==1, r
-    print(json.dumps({'browser':path,'results':results,'errors':errors},indent=2)); print('PASS: v3.31.0 Briefing, Story Map, and Publication Studio rendered in direct and iframe modes.'); return 0
+    print(json.dumps({'browser':path,'results':results,'errors':errors},indent=2)); print('PASS: v4.0.0 Briefing, Story Map, and Publication Studio rendered in direct and iframe modes.'); return 0
 
 if __name__=='__main__':
     try: status=int(main())

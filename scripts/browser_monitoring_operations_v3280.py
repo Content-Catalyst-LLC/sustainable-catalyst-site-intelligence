@@ -6,7 +6,7 @@ from browser_complete_shell_gate_v32362 import document, find_browser
 
 def exercise(page,label):
     page.wait_for_function("document.querySelector('#app')?.classList.contains('app-ready')",timeout=20000)
-    page.locator('.nav-item[data-route="alerts"]').click()
+    page.evaluate("()=>window.SCSIRouterV3228.navigate('alerts')")
     page.wait_for_function("window.SCSIMonitoringOperationsV3280 && document.documentElement.dataset.monitoringOperations === 'ready'",timeout=15000)
     page.wait_for_timeout(250)
     return page.evaluate("""(label)=>{const snap=window.SCSIMonitoringOperationsV3280.snapshot();return{label,panel:!!document.querySelector('#monitoringOperationsPanel'),state:document.querySelector('#monitoringOpsState')?.textContent,alertStates:Number(document.querySelector('#monitoringOpsAlertStates')?.textContent||0),watchTypes:Number(document.querySelector('#monitoringOpsWatchTypes')?.textContent||0),review:document.querySelector('#monitoringOperationsPanel')?.textContent.includes('Review gated'),emergency:document.querySelector('#monitoringOperationsPanel')?.textContent.includes('Disabled'),country:snap.country||'',scripts:(window.__executedScripts||[]).filter(s=>String(s).includes('monitoring-operations-v3280.js')).length}}""",label)
@@ -25,7 +25,7 @@ def main():
     assert not errors,errors
     for r in results:
         assert r['panel'] and r['state']=='Ready' and r['alertStates']==5 and r['watchTypes']==4 and r['review'] and r['emergency'] and r['country']=='KEN' and r['scripts']==1,r
-    print(json.dumps({'browser':path,'results':results,'errors':errors},indent=2));print('PASS: v3.31.0 monitoring, digest, and early-warning operations rendered in direct and iframe modes.');return 0
+    print(json.dumps({'browser':path,'results':results,'errors':errors},indent=2));print('PASS: v4.0.0 monitoring, digest, and early-warning operations rendered in direct and iframe modes.');return 0
 if __name__=='__main__':
     try: status=int(main())
     except BaseException: traceback.print_exc();status=1

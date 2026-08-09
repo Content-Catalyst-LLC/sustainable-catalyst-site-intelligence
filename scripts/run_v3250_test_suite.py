@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the complete v3.31.0 test inventory in one file-backed process.
+"""Run the complete v4.0.0 test inventory in one file-backed process.
 
 The full inventory completes faster and more deterministically as one pytest process.
 Output is written to a file so descendants cannot retain the validator's stdout pipe;

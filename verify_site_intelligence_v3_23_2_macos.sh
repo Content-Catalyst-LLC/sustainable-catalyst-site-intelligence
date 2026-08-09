@@ -12,10 +12,10 @@ trap 'rm -rf "$RUNTIME_SANDBOX" "$BACKEND/backend"' EXIT
 export SC_SI_RUNTIME_STATE_ROOT="$RUNTIME_SANDBOX"
 rm -rf "$BACKEND/backend"
 
-printf '\n==> Verifying v3.31.0 release identity and cartographic interaction contracts\n'
-grep -q 'APP_VERSION = "3.31.0"' "$BACKEND/app/version.py"
-grep -q 'Version: 3.31.0' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
-grep -q 'const RELEASE="3.31.0"' "$BACKEND/public_app/service-worker.js"
+printf '\n==> Verifying v4.0.0 release identity and cartographic interaction contracts\n'
+grep -q 'APP_VERSION = "4.0.0"' "$BACKEND/app/version.py"
+grep -q 'Version: 4.0.0' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
+grep -q 'const RELEASE="4.0.0"' "$BACKEND/public_app/service-worker.js"
 grep -q 'cartographic-interaction-v3232.js' "$BACKEND/public_app/index.html"
 grep -q 'cartographic-interaction-v3232.css' "$BACKEND/public_app/index.html"
 grep -q '/public/maps/interaction' "$BACKEND/app/main.py"
@@ -31,7 +31,7 @@ printf '\n==> Verifying immutable repository manifest\n'
 from pathlib import Path
 import hashlib,json,sys
 root=Path(sys.argv[1]); manifest=json.loads((root/'MANIFEST.json').read_text())
-assert manifest['release']=='3.31.0'; assert manifest['file_count']==len(manifest['files'])
+assert manifest['release']=='4.0.0'; assert manifest['file_count']==len(manifest['files'])
 for entry in manifest['files']:
     path=root/entry['path']; data=path.read_bytes()
     assert len(data)==entry['bytes'],entry['path']
@@ -72,4 +72,4 @@ if [[ "${SC_SI_SKIP_BROWSER_SMOKE:-0}" != "1" ]]; then
   "$PYTHON" "$ROOT/scripts/browser_smoke_v3232.py"
 fi
 [[ ! -e "$BACKEND/backend" ]] || { echo 'ERROR: tests wrote runtime state into the immutable checkout.' >&2; exit 1; }
-printf '\nSUCCESS: Site Intelligence v3.31.0 passed deterministic validation.\nRepository: %s\nRuntime sandbox: isolated and removed on exit\n' "$ROOT"
+printf '\nSUCCESS: Site Intelligence v4.0.0 passed deterministic validation.\nRepository: %s\nRuntime sandbox: isolated and removed on exit\n' "$ROOT"

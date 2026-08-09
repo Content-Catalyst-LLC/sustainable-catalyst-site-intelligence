@@ -10,11 +10,11 @@ trap 'rm -rf "$RUNTIME_SANDBOX" "$BACKEND/backend"' EXIT
 export SC_SI_RUNTIME_STATE_ROOT="$RUNTIME_SANDBOX"
 reset_runtime(){ rm -rf "$RUNTIME_SANDBOX"; mkdir -p "$RUNTIME_SANDBOX"; }
 
-printf '\n==> Validating v3.31.0 Monitoring, Digests, and Early-Warning Operations contracts\n'
+printf '\n==> Validating v4.0.0 Monitoring, Digests, and Early-Warning Operations contracts\n'
 PYTHONPATH="$BACKEND" "$PYTHON" "$ROOT/scripts/validate_v3280_release.py"
-grep -q 'APP_VERSION = "3.31.0"' "$BACKEND/app/version.py"
-grep -q 'Version: 3.31.0' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
-grep -q 'const RELEASE="3.31.0"' "$BACKEND/public_app/service-worker.js"
+grep -q 'APP_VERSION = "4.0.0"' "$BACKEND/app/version.py"
+grep -q 'Version: 4.0.0' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
+grep -q 'const RELEASE="4.0.0"' "$BACKEND/public_app/service-worker.js"
 for endpoint in \
   '/public/monitoring-operations' \
   '/public/monitoring-operations/watchlist/preview' \
@@ -25,7 +25,7 @@ for endpoint in \
   '/public/monitoring-operations/feed-contract'; do
   grep -q "$endpoint" "$BACKEND/app/main.py"
 done
-grep -q 'monitoring-operations-v3280.js?v=3.31.0' "$BACKEND/public_app/index.html"
+grep -q 'monitoring-operations-v3280.js?v=4.0.0' "$BACKEND/public_app/index.html"
 grep -q 'monitoring-operations-v3280.js' "$BACKEND/public_app/service-worker.js"
 grep -q 'SCSIMonitoringOperationsV3280' "$BACKEND/public_app/assets/monitoring-operations-v3280.js"
 cmp -s "$BACKEND/public_app/assets/monitoring-operations-v3280.js" "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/assets/monitoring-operations-v3280.js"
@@ -35,7 +35,7 @@ printf '\n==> Verifying immutable repository manifest\n'
 "$PYTHON" - "$ROOT" <<'PYVERIFY'
 from pathlib import Path
 import hashlib,json,sys
-root=Path(sys.argv[1]);m=json.loads((root/'MANIFEST.json').read_text());assert m['release']=='3.31.0';assert m['file_count']==len(m['files'])
+root=Path(sys.argv[1]);m=json.loads((root/'MANIFEST.json').read_text());assert m['release']=='4.0.0';assert m['file_count']==len(m['files'])
 for e in m['files']:
  p=root/e['path'];d=p.read_bytes();assert len(d)==e['bytes'],e['path'];assert hashlib.sha256(d).hexdigest()==e['sha256'],e['path']
 print(f"Verified {len(m['files'])} manifest entries.")
@@ -71,9 +71,9 @@ for gate in \
   PYTHONPATH="$BACKEND" "$PYTHON" "$ROOT/scripts/$gate"
 done
 
-printf '\n==> Running complete inherited and v3.31.0 test suite\n'
+printf '\n==> Running complete inherited and v4.0.0 test suite\n'
 reset_runtime
 PYTHON="$PYTHON" PYTHONPATH="$BACKEND" PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 "$PYTHON" "$ROOT/scripts/run_v3280_test_suite.py"
 rm -rf "$BACKEND/backend"
 [[ ! -e "$BACKEND/backend" ]] || { echo 'ERROR: runtime state cleanup failed.' >&2; exit 1; }
-printf '\nSUCCESS: Site Intelligence v3.31.0 passed Monitoring, Digests, and Early-Warning Operations validation.\nRepository: %s\n' "$ROOT"
+printf '\nSUCCESS: Site Intelligence v4.0.0 passed Monitoring, Digests, and Early-Warning Operations validation.\nRepository: %s\n' "$ROOT"

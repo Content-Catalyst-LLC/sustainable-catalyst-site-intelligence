@@ -1,6 +1,6 @@
 (function(window,document){
   "use strict";
-  const VERSION="3.31.0";
+  const VERSION="4.0.0";
   const ENDPOINT="/public/workspaces/production-truth";
   const CORE_ROUTES=new Set(["overview","global","economics","law","science","humanitarian","resources","dossiers","alerts","scenarios","earth","spatial","harmonization","country","events","compare","thematic","briefing","sources"]);
   const CONTROLLERS={platform:"SCConnectedPlatformV300",global:"SCGlobalConditionsV210",economics:"SCEconomicsV220",law:"SCLawV230",science:"SCScienceV240",humanitarian:"SCHumanitarianV250",resources:"SCResourcesV260",dossiers:"SCDossiersV270",alerts:"SCAlertsV280",scenarios:"SCScenariosV290",research:"SCResearchV2100",integration:"SCIntegrationV2110",experience:"SCExperienceV2120",spatial:"SCSpatialV2150",harmonization:"SCHarmonizationV2160",models:"SCModelsV2170",evidence:"SCEvidenceV2180",graph:"SCKnowledgeGraphV2190",publishing:"SCIntelligencePublishingV2200",monitoring:"SCScheduledMonitoringV2210",workspaces:"SCInstitutionalWorkspacesV2220",workflows:"SCCrossPlatformWorkflowsV2230",federation:"SCInstitutionalFederationV2240",governance:"SCProductionGovernanceV2250"};

@@ -1,0 +1,31 @@
+Site Intelligence v4.0.0 — Unified Public Intelligence Platform
+Build validation
+
+Release identity
+- Version: 4.0.0
+- Release id: site-intelligence-v4.0.0
+- Release type: major consolidation / compatibility-preserving platform release
+
+Backend regression
+- 1,084 automated tests passed.
+- No legacy public route removed.
+- v4 contract tests cover six primary areas, 35 unique preserved routes, six canonical contract families, compatibility, and readiness.
+
+Browser validation
+- v4 grouped-navigation gate passed in direct and WordPress-iframe modes.
+- Complete application shell initialized 48/48 first-party scripts.
+- Country selector retained 173 unique country choices and Brazil propagated to Data Truth.
+- Production soak completed 12 route transitions with zero failures and zero automatic service-worker reloads.
+- Fixed WordPress embed remained 1,100 px and did not move the host page.
+
+Static and packaging contract
+- Python modules compile.
+- JSON/GeoJSON payloads parse.
+- JavaScript and WordPress PHP syntax checks are part of the release verifier.
+- Static security/supply-chain scan is part of the release verifier.
+- Immutable repository manifest is generated after the final source tree is frozen.
+
+Deployment boundary
+- Production deployment was not performed in the build environment.
+- The installer performs isolated dependency installation, full regression validation, a second package/static pass, GitHub promotion, and live Render release verification.
+- WordPress installation remains gated on the exact live v4.0.0 release and Git commit.
