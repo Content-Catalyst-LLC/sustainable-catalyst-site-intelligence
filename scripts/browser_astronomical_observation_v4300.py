@@ -11,12 +11,12 @@ def browser_path():
 
 def fixture_html():
     catalog={
-        "ok":True,"version":"4.6.0",
+        "ok":True,"version":"4.7.0",
         "targets":[{"id":"m31","title":"Andromeda Galaxy (M31)"},{"id":"crab","title":"Crab Nebula (M1)"}],
         "surveys":[{"id":"dss-optical","title":"Digitized Sky Survey","wavelength":"optical"},{"id":"rosat-soft-xray","title":"ROSAT soft X-ray survey family","wavelength":"soft X-ray"}]
     }
     base={
-        "ok":True,"version":"4.6.0",
+        "ok":True,"version":"4.7.0",
         "target":{"target_id":"m31","title":"Andromeda Galaxy (M31)","ra_deg":10.684708,"dec_deg":41.26875},
         "view":{"field_deg":0.25,"coordinate_frame":"equatorial J2000"},
         "observation":{"id":"dss-optical","title":"Digitized Sky Survey","wavelength":"optical","archive":"NASA/IPAC IRSA Finder Chart","survey_family":"DSS","color_semantics":"single-band display; not natural color","official_observation_handoff":{"url":"https://irsa.ipac.caltech.edu/x"}}
@@ -30,7 +30,7 @@ window.fetch=async input=>{const u=String(input);let x=catalog;if(u.includes('/s
 
 def exercise(page,label):
     page.set_content(fixture_html(), wait_until='domcontentloaded')
-    page.wait_for_function("window.SCSIAstronomicalV4300?.version==='4.6.0'")
+    page.wait_for_function("window.SCSIAstronomicalV4300?.version==='4.7.0'")
     page.locator('#earthAstronomyEnter').click()
     page.wait_for_function("!document.querySelector('#astronomyPanel').hidden")
     page.wait_for_function("document.querySelector('#astroTargetTitle').textContent.includes('Andromeda')")
@@ -38,7 +38,7 @@ def exercise(page,label):
     page.select_option('#astroSurvey','rosat-soft-xray')
     page.wait_for_function("document.querySelector('#astroSurveyTitle').textContent.includes('ROSAT')")
     m=page.evaluate("""()=>({version:SCSIAstronomicalV4300.version,target:document.querySelector('#astroTargetTitle').textContent,survey:document.querySelector('#astroSurveyTitle').textContent,truth:document.querySelector('#astroTruth').textContent,stage:document.querySelector('.astro4300-stage-copy span').textContent,hidden:document.querySelector('#astronomyPanel').hidden})""")
-    assert m['version']=='4.6.0' and 'Crab' in m['target'] and 'ROSAT' in m['survey'] and 'Orientation only' in m['truth'] and 'NOT SURVEY PIXELS' in m['stage'] and not m['hidden']
+    assert m['version']=='4.7.0' and 'Crab' in m['target'] and 'ROSAT' in m['survey'] and 'Orientation only' in m['truth'] and 'NOT SURVEY PIXELS' in m['stage'] and not m['hidden']
     return {'label':label,**m}
 
 def main():
@@ -52,7 +52,7 @@ def main():
     outer=browser.new_page(viewport={'width':1200,'height':850}); outer.set_content('<iframe id="f" style="width:1100px;height:760px"></iframe>')
     frame=outer.query_selector('#f').content_frame(); r2=exercise(frame,'iframe')
     print(json.dumps({'browser':path,'results':[r1,r2]},indent=2))
-    print('PASS: v4.6.0 Astronomical Observation Environment passed direct and iframe interaction.')
+    print('PASS: v4.7.0 Astronomical Observation Environment passed direct and iframe interaction.')
     sys.stdout.flush(); os._exit(0)
 
 if __name__=='__main__':

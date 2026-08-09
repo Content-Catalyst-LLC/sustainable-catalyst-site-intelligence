@@ -15,11 +15,11 @@ def read(path: str) -> str:
 
 
 def test_release_identity_and_workspace_assets_are_current():
-    assert 'APP_VERSION = "4.6.0"' in read("backend/app/version.py")
+    assert 'APP_VERSION = "4.7.0"' in read("backend/app/version.py")
     html = read("backend/public_app/index.html")
-    assert 'data-scsi-release="4.6.0"' in html
-    assert "/app/assets/cartographic-workspace-v3230.css?v=4.6.0" in html
-    assert "/app/assets/cartographic-workspace-v3230.js?v=4.6.0" in html
+    assert 'data-scsi-release="4.7.0"' in html
+    assert "/app/assets/cartographic-workspace-v3230.css?v=4.7.0" in html
+    assert "/app/assets/cartographic-workspace-v3230.js?v=4.7.0" in html
     assert html.index("vector-cartography-v3230.js") < html.index("runtime-v3230.js") < html.index("app.js") < html.index("cartographic-workspace-v3230.js")
 
 
@@ -86,7 +86,7 @@ def test_country_selection_reframes_the_primary_map():
 
 def test_wordpress_packages_workspace_runtime_and_release_identity():
     php = read("wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php")
-    assert "Version: 4.6.0" in php
+    assert "Version: 4.7.0" in php
     assert "cartographic-workspace-v3230.css" in php
     assert "vector-cartography-v3230.js" in php
     assert "wp_enqueue_style('scsi-cartographic-workspace'" not in php
@@ -102,7 +102,7 @@ def test_wordpress_packages_workspace_runtime_and_release_identity():
 
 def test_service_worker_caches_current_presentation_assets():
     worker = read("backend/public_app/service-worker.js")
-    assert 'const RELEASE="4.6.0"' in worker
+    assert 'const RELEASE="4.7.0"' in worker
     for name in (
         "cartographic-workspace-v3230.js",
         "cartographic-workspace-v3230.css",
@@ -114,7 +114,7 @@ def test_service_worker_caches_current_presentation_assets():
 
 def test_current_promotion_gate_and_browser_smoke_are_declared():
     promote = read("promote_site_intelligence_v3_22_9_to_github_and_render_macos.sh")
-    assert 'RELEASE="4.6.0"' in promote
+    assert 'RELEASE="4.7.0"' in promote
     assert "vector-cartography-v3230.js" in promote
     assert "world-cartography-v3230.geojson" in promote
     assert "/public/runtime-health" in promote

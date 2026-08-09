@@ -1,4 +1,4 @@
-# Site Intelligence v4.6.0 — Global Ocean Intelligence & Surface Conditions
+# Site Intelligence v4.7.0 — Global Ocean Intelligence & Surface Conditions
 
 Ocean Surface extends the existing Earth Observation route without creating a 36th public route. The consolidated v4 platform remains six primary areas and 35 routes.
 

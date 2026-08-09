@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-RELEASE="4.6.0"
+RELEASE="4.7.0"
 RELEASE_ID="site-intelligence-v${RELEASE}"
 REPO_SLUG="${SC_SI_GITHUB_REPOSITORY:-Content-Catalyst-LLC/sustainable-catalyst-site-intelligence}"
 RENDER_URL="${SC_SI_RENDER_URL:-https://sustainable-catalyst-site-intelligence.onrender.com}"
@@ -75,17 +75,17 @@ for ((attempt=1; attempt<=ATTEMPTS; attempt++)); do
       workspace_js="$(curl -fsS --max-time 45 -H 'Cache-Control: no-cache, no-store' "${RENDER_URL%/}/app/assets/cartographic-workspace-v3230.js?verify=${attempt}" 2>/dev/null || true)"
       runtime_health="$(curl -fsS --max-time 45 -H 'Cache-Control: no-cache, no-store' "${RENDER_URL%/}/public/runtime-health?verify=${attempt}" 2>/dev/null || true)"
       app_ready=false; engine_ready=false; world_ready=false; workspace_ready=false; health_ready=false
-      [[ "$app_html" == *'data-scsi-release="4.6.0"'* && "$app_html" == *'vector-cartography-v3230.js'* && "$app_html" == *'cartographic-workspace-v3230.js'* ]] && app_ready=true
+      [[ "$app_html" == *'data-scsi-release="4.7.0"'* && "$app_html" == *'vector-cartography-v3230.js'* && "$app_html" == *'cartographic-workspace-v3230.js'* ]] && app_ready=true
       [[ "$engine_js" == *'__scsiSelfHosted: true'* && "$engine_js" == *'world-cartography-v3230.geojson'* ]] && engine_ready=true
       [[ "$workspace_js" == *'SCSICartographicWorkspaceV3230'* && "$workspace_js" == *'evaluateVisibleMaps'* && "$workspace_js" == *'overviewEvidenceRail'* ]] && workspace_ready=true
       world_ready="$(python3 -c 'import json,sys; d=json.load(sys.stdin); print("true" if d.get("type")=="FeatureCollection" and len(d.get("features",[]))>=170 else "false")' <<<"$world_geojson" 2>/dev/null || printf false)"
-      health_ready="$(python3 -c 'import json,sys; d=json.load(sys.stdin); print("true" if d.get("ok") and d.get("status")=="healthy" and d.get("version")=="4.6.0" else "false")' <<<"$runtime_health" 2>/dev/null || printf false)"
+      health_ready="$(python3 -c 'import json,sys; d=json.load(sys.stdin); print("true" if d.get("ok") and d.get("status")=="healthy" and d.get("version")=="4.7.0" else "false")' <<<"$runtime_health" 2>/dev/null || printf false)"
       if [[ "$app_ready" == true && "$engine_ready" == true && "$world_ready" == true && "$workspace_ready" == true && "$health_ready" == true ]]; then
         write_receipt "verified" "GitHub, Render, the live app shell, self-hosted map engine, cartographic workspace, runtime health, and WordPress installation gate are synchronized."
         printf 'Render release gate and live map runtime are ready for v%s at commit %s.
 ' "$OBSERVED_VERSION" "${OBSERVED_COMMIT:0:12}"
         printf '
-SUCCESS: Site Intelligence v4.6.0 is live with the cartographic workspace and application presentation.
+SUCCESS: Site Intelligence v4.7.0 is live with the cartographic workspace and application presentation.
 Deployment receipt: %s
 Rollback tag: %s (%s)
 ' "$DEPLOYMENT_RECEIPT" "$ROLLBACK_TAG" "${PREVIOUS_COMMIT:0:12}"

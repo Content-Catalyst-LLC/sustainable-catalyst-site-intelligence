@@ -22,7 +22,7 @@ def fixture_html():
         {'id':'saturn','title':'Saturn','naif_id':699},
     ]
     catalog = {
-        'ok': True, 'version': '4.6.0', 'bodies': bodies,
+        'ok': True, 'version': '4.7.0', 'bodies': bodies,
         'missions': [
             {'id':'juno','title':'Juno'},
             {'id':'voyager-1','title':'Voyager 1'},
@@ -37,14 +37,14 @@ def fixture_html():
     setup = r'''<script>
 history.replaceState=()=>{};Element.prototype.scrollIntoView=()=>{};window.SC_SITE_INTELLIGENCE_API='https://gate.local';window.open=()=>null;window.matchMedia=()=>({matches:true});
 const catalog=__CATALOG__,bodies=__BODIES__;
-window.fetch=async input=>{const u=String(input);let x=catalog;if(u.includes('/state')){const q=new URL(u).searchParams;const body=q.get('body')||'earth';const mission=q.get('mission')||'';const row=bodies.find(b=>b.id===body)||bodies[1];x={ok:true,version:'4.6.0',body:row,mission:mission?{id:mission,title:mission==='juno'?'Juno':'Voyager 1'}:null,time:{epoch_utc:q.get('epoch')?q.get('epoch')+':00Z':null},view:{frame:q.get('frame')||'J2000',observer:{id:q.get('observer')||'solar-system-barycenter',title:q.get('observer')||'solar-system barycenter'}},ephemeris:{authorities:[{id:'jpl-horizons',url:'https://ssd.jpl.nasa.gov/horizons/app.html'}]},exploration:{url:'https://eyes.nasa.gov/apps/solar-system/'},truth:{local_orbit_layout_is_ephemeris:false,spacecraft_position_fabricated:false,trajectory_fabricated:false}};}return new Response(JSON.stringify(x),{status:200,headers:{'Content-Type':'application/json'}})};
+window.fetch=async input=>{const u=String(input);let x=catalog;if(u.includes('/state')){const q=new URL(u).searchParams;const body=q.get('body')||'earth';const mission=q.get('mission')||'';const row=bodies.find(b=>b.id===body)||bodies[1];x={ok:true,version:'4.7.0',body:row,mission:mission?{id:mission,title:mission==='juno'?'Juno':'Voyager 1'}:null,time:{epoch_utc:q.get('epoch')?q.get('epoch')+':00Z':null},view:{frame:q.get('frame')||'J2000',observer:{id:q.get('observer')||'solar-system-barycenter',title:q.get('observer')||'solar-system barycenter'}},ephemeris:{authorities:[{id:'jpl-horizons',url:'https://ssd.jpl.nasa.gov/horizons/app.html'}]},exploration:{url:'https://eyes.nasa.gov/apps/solar-system/'},truth:{local_orbit_layout_is_ephemeris:false,spacecraft_position_fabricated:false,trajectory_fabricated:false}};}return new Response(JSON.stringify(x),{status:200,headers:{'Content-Type':'application/json'}})};
 </script>'''.replace('__CATALOG__', json.dumps(catalog)).replace('__BODIES__', json.dumps(bodies))
     return f'''<!doctype html><html><head><style>{CSS}</style>{setup}</head><body><section id="astronomyPanel"></section><button id="earthSolarSystemEnter">Solar System</button><section id="solarSystemPanel" class="solar-system-panel" hidden></section><script>{JS}</script></body></html>'''
 
 
 def exercise(page, label):
     page.set_content(fixture_html(), wait_until='domcontentloaded')
-    page.wait_for_function("window.SCSISolarSystemV4400?.version==='4.6.0'")
+    page.wait_for_function("window.SCSISolarSystemV4400?.version==='4.7.0'")
     page.locator('#earthSolarSystemEnter').click()
     page.wait_for_function("!document.querySelector('#solarSystemPanel').hidden")
     page.wait_for_function("document.querySelector('#solarTargetTitle').textContent.includes('Earth')")
@@ -67,7 +67,7 @@ def exercise(page, label):
       observer:document.querySelector('#solarObserver').value,
       hidden:document.querySelector('#solarSystemPanel').hidden
     })""")
-    assert m['version'] == '4.6.0'
+    assert m['version'] == '4.7.0'
     assert 'Juno' in m['target'] and 'Jupiter' in m['state']
     assert 'Not claimed' in m['truth'] and 'Not rendered' in m['truth']
     assert 'NOT EPHEMERIS' in m['stage'] and m['selected'] == 'jupiter'
@@ -90,7 +90,7 @@ def main():
     frame = outer.query_selector('#f').content_frame()
     r2 = exercise(frame, 'iframe')
     print(json.dumps({'browser': path, 'results': [r1, r2]}, indent=2))
-    print('PASS: v4.6.0 Solar System Navigation & Mission Ephemeris passed direct and iframe interaction.')
+    print('PASS: v4.7.0 Solar System Navigation & Mission Ephemeris passed direct and iframe interaction.')
     sys.stdout.flush()
     os._exit(0)
 

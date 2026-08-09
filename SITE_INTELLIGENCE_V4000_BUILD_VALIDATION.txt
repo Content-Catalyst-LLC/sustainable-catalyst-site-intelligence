@@ -1,9 +1,9 @@
-Site Intelligence v4.6.0 — Unified Public Intelligence Platform
+Site Intelligence v4.7.0 — Unified Public Intelligence Platform
 Build validation
 
 Release identity
-- Version: 4.6.0
-- Release id: site-intelligence-v4.6.0
+- Version: 4.7.0
+- Release id: site-intelligence-v4.7.0
 - Release type: major consolidation / compatibility-preserving platform release
 
 Backend regression
@@ -28,4 +28,4 @@ Static and packaging contract
 Deployment boundary
 - Production deployment was not performed in the build environment.
 - The installer performs isolated dependency installation, full regression validation, a second package/static pass, GitHub promotion, and live Render release verification.
-- WordPress installation remains gated on the exact live v4.6.0 release and Git commit.
+- WordPress installation remains gated on the exact live v4.7.0 release and Git commit.
