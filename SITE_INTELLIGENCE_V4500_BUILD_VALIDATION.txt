@@ -1,0 +1,48 @@
+Site Intelligence v4.5.0 — Global Ocean Intelligence & Surface Conditions
+Build validation record
+
+Backend regression:
+- 1,123 tests passed.
+
+Focused Ocean Surface browser gate:
+- direct mode passed.
+- WordPress-iframe mode passed.
+- surface-current state selected.
+- Copernicus Marine source selected.
+- surface value remained Not loaded without a source record.
+- point/time coverage remained Not verified without a source record.
+- missing data remained missing.
+- no source substitution occurred.
+
+Ocean truth and source contract:
+- NOAA CoastWatch / OceanWatch ERDDAP registered.
+- U.S. IOOS Data Catalog registered with U.S. coastal/regional scope preserved.
+- Copernicus Marine registered without embedding credentials.
+- 9 ocean-surface variables registered.
+- observed, in-situ, satellite-derived, analysis, reanalysis, model, forecast, and derived-product evidence classes remain distinct.
+- selecting a source, date, or location does not fabricate a value or infer coverage.
+
+Inherited observation gates:
+- Orbital Earth direct + iframe passed.
+- Lunar & Planetary Intelligence direct + iframe passed.
+- Astronomical Observation direct + iframe passed.
+- Solar System Navigation direct + iframe passed.
+
+Platform stability:
+- 53/53 first-party application scripts initialized.
+- v4 navigation retained 6 primary areas and 35 routes.
+- country catalog exposed 173 unique country options.
+- country selector focus, wheel interaction, first/last selection, and Brazil propagation passed.
+- production soak completed 12 route transitions with 0 route failures.
+- automatic service-worker reloads: 0.
+- WordPress iframe remained fixed at 1100px and did not move the host page.
+- base HTML remained within the inherited 165000-byte performance budget after moving Ocean Surface controls into the deferred observation shell.
+
+Static source verification before manifest freeze:
+- 136 JSON/GeoJSON files parsed.
+- 91 JavaScript files syntax-validated across public and WordPress asset trees.
+- WordPress PHP syntax passed.
+- static security scan returned 0 findings.
+
+Immutable repository manifest: 1,498 entries.
+Independent extracted-package verification is recorded separately.

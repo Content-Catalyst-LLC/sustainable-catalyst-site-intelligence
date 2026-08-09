@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Mandatory browser gate for v4.4.0 record provenance and indicator truth."""
+"""Mandatory browser gate for v4.5.0 record provenance and indicator truth."""
 from __future__ import annotations
 
 import json
@@ -101,7 +101,7 @@ def main() -> int:
         assert result['event']['fingerprint'] == 64, result
         assert result['panelVisible'] is True and result['downloadEnabled'] is True and result['consoleApi'] is True, result
     print(json.dumps({'browser': browser_path, 'results': results, 'errors': errors}, indent=2))
-    print('PASS: v4.4.0 opened map-layer, indicator, and event record truth with dates, transformations, source disclosure, and stable fingerprints in direct and iframe modes.')
+    print('PASS: v4.5.0 opened map-layer, indicator, and event record truth with dates, transformations, source disclosure, and stable fingerprints in direct and iframe modes.')
     return 0
 
 
