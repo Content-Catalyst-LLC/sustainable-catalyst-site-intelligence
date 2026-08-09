@@ -1,4 +1,4 @@
-# Site Intelligence v4.7.0 — Seafloor & Bathymetric Intelligence Audit
+# Site Intelligence v4.8.0 — Seafloor & Bathymetric Intelligence Audit
 
 ## Architecture
 

@@ -1,0 +1,23 @@
+Site Intelligence v4.8.0 — Underwater Observation & Visual Evidence
+Build validation record
+
+Targeted contract tests: 8 passed
+Complete backend regression suite: 1,148 passed
+JavaScript syntax validation: 97 files
+Underwater browser gate: PASS direct + WordPress iframe
+Seafloor regression gate: PASS direct + WordPress iframe
+Water Column regression gate: PASS direct + WordPress iframe
+Ocean Surface regression gate: PASS direct + WordPress iframe
+Complete production shell: PASS, 53/53 base scripts, 6 areas, 35 routes
+Country selector interaction: PASS, 173 unique countries, AFG/ZWE boundaries, BRA Data Truth propagation
+Production soak: PASS, 12 transitions, 0 route failures, 0 automatic service-worker reloads
+WordPress embed isolation: PASS, fixed 1100 px application viewport and stable host-page scroll
+
+Scientific/review boundaries verified:
+- no synthetic underwater media
+- catalog/station/dive presence is not point coverage
+- model inference is not verified biological observation
+- annotation is not abundance/population evidence
+- environmental sensor context is not assumed synchronized
+- reuse rights are not inferred
+- source/media URLs are HTTPS and restricted to registered provider hosts

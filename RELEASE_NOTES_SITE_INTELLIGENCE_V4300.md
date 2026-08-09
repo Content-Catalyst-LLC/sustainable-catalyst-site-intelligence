@@ -1,4 +1,4 @@
-# Site Intelligence v4.7.0 — Astronomical Observation Environment
+# Site Intelligence v4.8.0 — Astronomical Observation Environment
 
 Extends Earth Observation → Orbital Earth → Lunar & Planetary Intelligence into source-aware deep-sky observation while preserving the v4 six-area / 35-route architecture.
 
