@@ -1,4 +1,4 @@
-"""Briefing, Story Map, and Publication Studio contracts for Site Intelligence v4.3.0.
+"""Briefing, Story Map, and Publication Studio contracts for Site Intelligence v4.4.0.
 
 Public endpoints are deterministic preview/export contracts. They do not mutate the
 existing publishing store and cannot publish, correct, retract, or hand off content.

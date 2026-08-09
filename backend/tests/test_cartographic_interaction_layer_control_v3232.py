@@ -19,8 +19,8 @@ def test_public_map_interaction_contract_is_complete():
     assert response.status_code == 200
     payload = response.json()
     assert payload["ok"] is True
-    assert payload["version"] == "4.3.0"
-    assert payload["release_id"] == "site-intelligence-v4.3.0"
+    assert payload["version"] == "4.4.0"
+    assert payload["release_id"] == "site-intelligence-v4.4.0"
     assert payload["contract"] == "cartographic-interaction-and-layer-control"
     assert len(payload["base_styles"]) == 3
     assert len(payload["semantic_categories"]) == 7
@@ -31,8 +31,8 @@ def test_public_map_interaction_contract_is_complete():
 
 def test_app_shell_loads_interaction_after_workspace_and_before_truth():
     html = read("backend/public_app/index.html")
-    assert '/app/assets/cartographic-interaction-v3232.css?v=4.3.0' in html
-    assert '/app/assets/cartographic-interaction-v3232.js?v=4.3.0' in html
+    assert '/app/assets/cartographic-interaction-v3232.css?v=4.4.0' in html
+    assert '/app/assets/cartographic-interaction-v3232.js?v=4.4.0' in html
     assert html.index("app.js") < html.index("cartographic-workspace-v3230.js") < html.index("cartographic-interaction-v3232.js") < html.index("production-truth-v3231.js")
 
 
@@ -95,7 +95,7 @@ def test_runtime_health_and_offline_shell_require_interaction_assets():
 
 def test_wordpress_packages_interaction_assets_but_keeps_app_runtime_out_of_host_document():
     php = read("wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php")
-    assert "Version: 4.3.0" in php
+    assert "Version: 4.4.0" in php
     assert "mapInteractionCssUrl" in php and "mapInteractionJsUrl" in php
     assert "wp_enqueue_script('scsi-production-truth'" not in php
     assert "wp_enqueue_script('scsi-cartographic-interaction'" not in php

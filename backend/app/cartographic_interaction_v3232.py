@@ -1,4 +1,4 @@
-"""Public cartographic interaction contract for Site Intelligence v4.3.0."""
+"""Public cartographic interaction contract for Site Intelligence v4.4.0."""
 from __future__ import annotations
 
 import json

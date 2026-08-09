@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Mandatory browser gate for Site Intelligence v4.3.0 Global Data Truth Control Plane."""
+"""Mandatory browser gate for Site Intelligence v4.4.0 Global Data Truth Control Plane."""
 from __future__ import annotations
 
 import json
@@ -81,7 +81,7 @@ def main() -> int:
         assert before['country'] == 'KEN' and before['api'] is True, result
         assert filtered['visible'] == 1 and filtered['hidden'] == 7, result
     print(json.dumps({'browser': browser_path, 'results': results, 'errors': errors}, indent=2))
-    print('PASS: v4.3.0 rendered the Global Data Truth Control Plane with source operations, schema drift, incidents, workspace truth, filtering, and fingerprint disclosure in direct and iframe modes.')
+    print('PASS: v4.4.0 rendered the Global Data Truth Control Plane with source operations, schema drift, incidents, workspace truth, filtering, and fingerprint disclosure in direct and iframe modes.')
     return 0
 
 

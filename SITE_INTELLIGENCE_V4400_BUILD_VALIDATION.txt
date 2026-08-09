@@ -1,0 +1,38 @@
+Site Intelligence v4.4.0 — Solar System Navigation & Mission Ephemeris
+Build validation record
+
+Backend regression:
+- 1,115 tests passed.
+
+Focused solar-system browser gate:
+- direct mode passed.
+- WordPress-iframe mode passed.
+- Jupiter destination selected.
+- Juno mission context selected.
+- ECLIPJ2000 and earth-center request state preserved.
+- authoritative ephemeris remained not loaded locally.
+- body/spacecraft positions remained not claimed.
+- trajectory remained not rendered.
+
+Inherited observation gates:
+- Orbital Earth direct + iframe passed.
+- Lunar & Planetary Intelligence direct + iframe passed.
+- Astronomical Observation direct + iframe passed.
+
+Platform stability:
+- 52/52 first-party application scripts initialized.
+- v4 navigation retained 6 primary areas and 35 routes.
+- country catalog exposed 173 unique country options.
+- country selector focus, wheel interaction, first/last selection, and Brazil propagation passed.
+- production soak completed 12 route transitions with 0 route failures.
+- automatic service-worker reloads: 0.
+- WordPress iframe remained fixed at 1100px and did not move the host page.
+
+Immutable repository manifest: 1478 entries.
+Static source verification:
+- 134 JSON/GeoJSON files parsed.
+- 89 JavaScript files syntax-validated.
+- WordPress PHP syntax passed.
+- static security scan returned 0 findings.
+
+Independent extracted-package verification is recorded separately.

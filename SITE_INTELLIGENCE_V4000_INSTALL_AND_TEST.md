@@ -1,4 +1,4 @@
-# Site Intelligence v4.3.0 — Install and Test
+# Site Intelligence v4.4.0 — Install and Test
 
 Use the release bundle and macOS installer together. The installer verifies SHA-256 bundle checksums before extracting the repository or allowing promotion.
 
@@ -12,7 +12,7 @@ INSTALLER="$(find . -maxdepth 1 -type f \
   -print0 | xargs -0 ls -t | head -1)"
 
 BUNDLE="$(find . -maxdepth 1 -type f \
-  -name 'sustainable-catalyst-site-intelligence-v4.3.0-release-bundle*.zip' \
+  -name 'sustainable-catalyst-site-intelligence-v4.4.0-release-bundle*.zip' \
   -print0 | xargs -0 ls -t | head -1)"
 
 chmod +x "$INSTALLER"
