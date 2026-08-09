@@ -1,4 +1,4 @@
-# Site Intelligence v4.0.0 — Research Evidence and Knowledge Integration
+# Site Intelligence v4.1.0 — Research Evidence and Knowledge Integration
 
 ## Purpose
 

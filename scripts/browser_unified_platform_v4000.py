@@ -38,7 +38,7 @@ def main():
         assert r['metrics']=={'areas':'6','routes':'35','contracts':'6','card':True},r
         assert r['scripts']==r['expected'] and r['expected']>=48,r
     print(json.dumps({'browser':path,'results':results,'errors':errors},indent=2))
-    print('PASS: v4.0.0 grouped navigation and unified platform contract rendered in direct and iframe modes.')
+    print('PASS: v4.1.0 grouped navigation and unified platform contract rendered in direct and iframe modes.')
     return 0
 if __name__=='__main__':
     try: status=int(main())

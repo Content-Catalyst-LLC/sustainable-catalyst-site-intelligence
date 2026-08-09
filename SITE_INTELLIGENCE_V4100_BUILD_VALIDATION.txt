@@ -1,0 +1,37 @@
+Site Intelligence v4.1.0 — Orbital Earth & Satellite Observation
+Build validation record
+
+STATUS
+- Production deployment: NOT performed in the build environment.
+- Full inherited + v4.1 backend regression suite: 1,092 passed.
+- Targeted Orbital Earth contract validation: PASS.
+- Focused shipped Orbital Earth browser interaction gate: PASS in direct and WordPress-iframe modes.
+- JavaScript syntax validation: 83 files.
+- WordPress PHP syntax: PASS.
+- Static security scan: zero findings.
+- Public platform structure preserved: 35 routes in 6 primary areas.
+- Orbital platform/instrument catalog: 8 registered Earth-observation layer contexts.
+- Country selector contract preserved: at least 170 countries; packaged catalog remains compatible with the 173-country v4 baseline.
+
+PERFORMANCE
+- Application HTML: 163,505 bytes (budget 165,000).
+- app.js: 194,340 bytes (budget 260,000).
+- app.css: 99,644 bytes (budget 100,000).
+- Base first-party shell total: 457,489 bytes (budget 500,000).
+- Orbital controls are loaded as dedicated v4.1 assets instead of expanding the base HTML shell.
+
+ORBITAL TRUTH / NON-FABRICATION
+- Real registered satellite imagery products: YES.
+- Real-time spacecraft position claimed: NO.
+- Ephemeris connected: NO.
+- Pass-specific ground track claimed: NO.
+- Instantaneous sensor swath claimed: NO.
+- Visual perspective altitude is a navigation parameter, not a solved physical spacecraft-camera geometry.
+- Orbit rings are illustrative orientation graphics.
+- Historical/composited imagery remains source- and date-labeled.
+
+FROZEN SOURCE VALIDATION
+- Immutable release manifest generated after source/docs/scripts freeze.
+- Full frozen-source verifier: PASS.
+- Focused Orbital Earth browser gate against frozen source: PASS in direct and WordPress-iframe modes.
+- Independent extracted-package validation and final bundle checksum verification are recorded separately so this source-tree report does not claim post-packaging results before packaging occurs.

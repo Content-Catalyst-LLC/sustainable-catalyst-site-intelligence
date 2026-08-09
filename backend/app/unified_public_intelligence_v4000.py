@@ -5,7 +5,9 @@ import json
 from pathlib import Path
 from typing import Any
 
-RELEASE_VERSION = "4.0.0"
+from .version import APP_VERSION
+
+RELEASE_VERSION = APP_VERSION
 CONTRACT = "unified-public-intelligence-platform"
 ROOT = Path(__file__).resolve().parents[2]
 POLICY_PATH = ROOT / "backend/data/unified_public_intelligence_policy_v4000.json"
@@ -44,6 +46,7 @@ def public_unified_platform() -> dict[str, Any]:
         "version": RELEASE_VERSION,
         "contract": CONTRACT,
         "release_name": "Unified Public Intelligence Platform",
+        "orbital_earth_extension": "/public/orbital-earth",
         "primary_area_count": len(policy["primary_areas"]),
         "route_count": len(routes),
         "primary_areas": policy["primary_areas"],
@@ -101,6 +104,7 @@ def public_v4_readiness() -> dict[str, Any]:
         "ok": all(checks.values()),
         "version": RELEASE_VERSION,
         "release_name": "Unified Public Intelligence Platform",
+        "orbital_earth_extension": "/public/orbital-earth",
         "checks": checks,
         "summary": {
             "primary_areas": len(policy["primary_areas"]),

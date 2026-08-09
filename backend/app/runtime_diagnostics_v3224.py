@@ -1,4 +1,4 @@
-"""Public-safe runtime diagnostics for Site Intelligence v4.0.0.
+"""Public-safe runtime diagnostics for Site Intelligence v4.1.0.
 
 The diagnostics intentionally avoid outbound network calls. They report the local
 application contract, required first-party assets, map surfaces, embed policy,
