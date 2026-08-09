@@ -25,7 +25,7 @@ def main():
     assert not errors,errors
     for r in results:
         assert r['panel'] and r['state']=='Ready' and r['alertStates']==5 and r['watchTypes']==4 and r['review'] and r['emergency'] and r['country']=='KEN' and r['scripts']==1,r
-    print(json.dumps({'browser':path,'results':results,'errors':errors},indent=2));print('PASS: v4.10.0 monitoring, digest, and early-warning operations rendered in direct and iframe modes.');return 0
+    print(json.dumps({'browser':path,'results':results,'errors':errors},indent=2));print('PASS: v4.11.0 monitoring, digest, and early-warning operations rendered in direct and iframe modes.');return 0
 if __name__=='__main__':
     try: status=int(main())
     except BaseException: traceback.print_exc();status=1

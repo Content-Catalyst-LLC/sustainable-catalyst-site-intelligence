@@ -1,6 +1,6 @@
 (function(window,document){
   "use strict";
-  const VERSION="4.10.0";
+  const VERSION="4.11.0";
   const APP_ROOT=document.querySelector('#app[data-scsi-release]');
   if(!APP_ROOT||!document.querySelector('#map'))return;
   let panel=null,button=null,summary=null,initialized=false;

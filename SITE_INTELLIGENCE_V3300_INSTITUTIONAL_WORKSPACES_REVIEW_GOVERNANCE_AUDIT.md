@@ -1,4 +1,4 @@
-# v4.10.0 Institutional Workspaces and Review Governance Audit
+# v4.11.0 Institutional Workspaces and Review Governance Audit
 
 - Existing v2.22 institutional workspace operations are retained as the persistence foundation.
 - v3.30 adds portable preview/export/import contracts instead of a second workspace database.

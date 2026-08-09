@@ -1,4 +1,4 @@
-# Site Intelligence v4.10.0 — Briefing, Story Map, and Publication Studio
+# Site Intelligence v4.11.0 — Briefing, Story Map, and Publication Studio
 
 ## Purpose
 Turn reviewed Site Intelligence evidence into durable publication-ready packages without hiding sources, methodology, limitations, uncertainty, corrections, or the requirement for human editorial approval.

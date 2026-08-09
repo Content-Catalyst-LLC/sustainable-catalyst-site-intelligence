@@ -7,7 +7,7 @@ from app.orbital_earth_v4200 import overview,catalog,state,readiness
 from app.unified_public_intelligence_v4000 import public_unified_navigation
 
 o=overview(); c=catalog(); s=state('true-color','2026-08-01',0,20,1200); r=readiness(); nav=public_unified_navigation()
-assert o['ok'] and o['version']=='4.10.0' and o['contract']=='orbital-earth-satellite-observation' and o['route']=='earth'
+assert o['ok'] and o['version']=='4.11.0' and o['contract']=='orbital-earth-satellite-observation' and o['route']=='earth'
 assert c['layer_count']>=8 and all(row['real_time_position_available'] is False for row in c['layers'])
 assert 'gibs.earthdata.nasa.gov' in s['observation']['tile_url']
 assert s['orbit_context']['real_time_spacecraft_position'] is None and s['orbit_context']['ground_track'] is None
@@ -15,11 +15,11 @@ assert s['footprints']['instantaneous_sensor_swath'] is None
 assert r['ok'] and all(r['checks'].values())
 assert nav['route_count']==35 and nav['primary_area_count']==6 and any(x['route_id']=='earth' for x in nav['routes'])
 html=(ROOT/'backend/public_app/index.html').read_text(); sw=(ROOT/'backend/public_app/service-worker.js').read_text(); js=(ROOT/'backend/public_app/assets/orbital-earth-v4200.js').read_text(); css=(ROOT/'backend/public_app/assets/orbital-earth-v4200.css').read_text()
-assert 'data-scsi-release="4.10.0"' in html and 'data-scsi-orbital-contract="orbital-earth-v4200"' in html
-assert 'orbital-earth-v4200.js?v=4.10.0' in html and 'orbital-earth-v4200.css?v=4.10.0' in html
+assert 'data-scsi-release="4.11.0"' in html and 'data-scsi-orbital-contract="orbital-earth-v4200"' in html
+assert 'orbital-earth-v4200.js?v=4.11.0' in html and 'orbital-earth-v4200.css?v=4.11.0' in html
 assert 'orbital-earth-v4200.js' in sw and 'orbital-earth-v4200.css' in sw
 assert 'SCSIOrbitalEarthV4200' in js and '.earth-globe-shell' in css
 assert js==(ROOT/'wordpress-plugin/sustainable-catalyst-site-intelligence/assets/orbital-earth-v4200.js').read_text()
 assert css==(ROOT/'wordpress-plugin/sustainable-catalyst-site-intelligence/assets/orbital-earth-v4200.css').read_text()
-print(json.dumps({'version':'4.10.0','contract':o['contract'],'layers':c['layer_count'],'routes':nav['route_count'],'primary_areas':nav['primary_area_count'],'readiness':r['ok'],'state_sha256':s['state_sha256']},indent=2))
-print('PASS: Site Intelligence v4.10.0 Orbital Earth & Satellite Observation contracts are complete.')
+print(json.dumps({'version':'4.11.0','contract':o['contract'],'layers':c['layer_count'],'routes':nav['route_count'],'primary_areas':nav['primary_area_count'],'readiness':r['ok'],'state_sha256':s['state_sha256']},indent=2))
+print('PASS: Site Intelligence v4.11.0 Orbital Earth & Satellite Observation contracts are complete.')

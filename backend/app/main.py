@@ -181,6 +181,16 @@ from .ocean_missions_v41000 import (
     export_manifest as build_ocean_missions_export_manifest,
     readiness as build_ocean_missions_readiness,
 )
+from .ocean_events_v41100 import (
+    overview as build_ocean_events_overview,
+    catalog as build_ocean_events_catalog,
+    state as build_ocean_events_state,
+    normalize_condition as build_ocean_events_normalize_condition,
+    threshold_preview as build_ocean_events_threshold_preview,
+    normalize_event as build_ocean_events_normalize_event,
+    export_manifest as build_ocean_events_export_manifest,
+    readiness as build_ocean_events_readiness,
+)
 from .browser_reliability_v3235 import public_browser_reliability_contract as build_public_browser_reliability_contract
 from .performance_offline_v3236 import public_performance_offline_contract as build_public_performance_offline_contract
 from .bootstrap_recovery_v32361 import public_bootstrap_recovery_contract as build_public_bootstrap_recovery_contract
@@ -631,7 +641,7 @@ async def public_experience_headers(request, call_next):
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
-        response.headers["X-SC-Release-Gate"] = "v4.10.0"
+        response.headers["X-SC-Release-Gate"] = "v4.11.0"
     elif path == "/app/service-worker.js":
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
@@ -1621,6 +1631,43 @@ def public_ocean_missions_manifest(source: str = Query(default="argo"), platform
 @app.get("/public/ocean-missions/readiness")
 def public_ocean_missions_readiness():
     return build_ocean_missions_readiness()
+
+@app.get("/public/ocean-events")
+def public_ocean_events_overview():
+    return build_ocean_events_overview()
+
+@app.get("/public/ocean-events/catalog")
+def public_ocean_events_catalog():
+    return build_ocean_events_catalog()
+
+@app.get("/public/ocean-events/state")
+def public_ocean_events_state(source: str = Query(default="noaa-coral-reef-watch"), hazard_type: str = Query(default="marine-heatwave"), latitude: float | None = Query(default=None), longitude: float | None = Query(default=None), date: str = Query(default="")):
+    try: return build_ocean_events_state(source, hazard_type, latitude, longitude, date)
+    except ValueError as exc: raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+@app.post("/public/ocean-events/condition/normalize")
+def public_ocean_events_condition_normalize(request: dict[str, Any] = Body(default={})):
+    try: return build_ocean_events_normalize_condition(request)
+    except (ValueError, TypeError) as exc: raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+@app.post("/public/ocean-events/threshold/preview")
+def public_ocean_events_threshold_preview(request: dict[str, Any] = Body(default={})):
+    try: return build_ocean_events_threshold_preview(request)
+    except (ValueError, TypeError) as exc: raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+@app.post("/public/ocean-events/event/normalize")
+def public_ocean_events_event_normalize(request: dict[str, Any] = Body(default={})):
+    try: return build_ocean_events_normalize_event(request)
+    except (ValueError, TypeError) as exc: raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+@app.get("/public/ocean-events/export-manifest")
+def public_ocean_events_manifest(source: str = Query(default="noaa-coral-reef-watch"), hazard_type: str = Query(default="marine-heatwave"), latitude: float | None = Query(default=None), longitude: float | None = Query(default=None), date: str = Query(default="")):
+    try: return build_ocean_events_export_manifest(source, hazard_type, latitude, longitude, date)
+    except ValueError as exc: raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+@app.get("/public/ocean-events/readiness")
+def public_ocean_events_readiness():
+    return build_ocean_events_readiness()
 
 @app.get("/public/production-assurance")
 def public_production_assurance_endpoint(settings: Settings = Depends(get_settings)):
@@ -3513,7 +3560,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.10.0 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v4.11.0 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -3655,7 +3702,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.10.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v4.11.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -3772,7 +3819,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.10.0 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v4.11.0 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -3894,7 +3941,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.10.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v4.11.0 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -4030,7 +4077,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.10.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v4.11.0 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -7207,7 +7254,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v4.10.0 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v4.11.0 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -7441,7 +7488,7 @@ def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     return build_reliability(settings)
 
 
-# Site Intelligence v4.10.0 — Open Standards, Federation, and Institutional Data Exchange.
+# Site Intelligence v4.11.0 — Open Standards, Federation, and Institutional Data Exchange.
 def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
     if not settings.federation_exchange_enabled:
         raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
@@ -7531,7 +7578,7 @@ def admin_federation_accept_import_endpoint(request: dict = Body(default={}), se
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.10.0 — Security, Privacy, Governance, and Production Scale.
+# Site Intelligence v4.11.0 — Security, Privacy, Governance, and Production Scale.
 def _production_governance(settings: Settings) -> ProductionGovernanceCenter:
     if not settings.production_governance_enabled:
         raise HTTPException(status_code=503, detail="Production governance is disabled.")
@@ -7680,7 +7727,7 @@ def admin_production_governance_deployment_endpoint(request: dict = Body(default
 def admin_production_governance_load_probe_endpoint(requests: int = Query(default=250, ge=1, le=5000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return _production_governance(settings).load_probe(requests)
 
-# Site Intelligence v4.10.0 — Connected Live Intelligence Surface.
+# Site Intelligence v4.11.0 — Connected Live Intelligence Surface.
 def _connected_platform(settings: Settings) -> ConnectedPublicIntelligencePlatform:
     if not settings.connected_platform_enabled:
         raise HTTPException(status_code=404, detail="Connected platform is disabled.")

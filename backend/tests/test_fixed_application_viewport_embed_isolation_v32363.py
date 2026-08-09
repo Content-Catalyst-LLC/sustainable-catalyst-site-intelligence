@@ -17,7 +17,7 @@ def read(path: str) -> str:
 def test_public_embed_isolation_contract():
     payload = CLIENT.get("/public/embed-isolation").json()
     assert payload["ok"] is True
-    assert payload["version"] == "4.10.0"
+    assert payload["version"] == "4.11.0"
     assert payload["application_embed"]["document_auto_resize"] is False
     assert payload["application_embed"]["internal_scrolling"] is True
     assert payload["message_policy"]["child_height_messages_enabled"] is False
@@ -54,7 +54,7 @@ def test_wordpress_host_ignores_height_messages_for_fixed_application():
 
 def test_fixed_application_css_disables_visibility_and_height_animation():
     css = read("wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.css")
-    block = css[css.rfind("v4.10.0"):]
+    block = css[css.rfind("v4.11.0"):]
     for token in (
         "content-visibility:visible!important",
         "contain:none!important",
@@ -78,7 +78,7 @@ def test_child_application_disables_height_reporting_in_wordpress_mode():
 def test_runtime_health_includes_embed_isolation():
     health = CLIENT.get("/public/runtime-health").json()
     assert health["ok"] is True
-    assert health["version"] == "4.10.0"
+    assert health["version"] == "4.11.0"
     assert "/public/embed-isolation" in {row["path"] for row in health["endpoint_contracts"]}
     check = {row["id"]: row for row in health["checks"]}["fixed-wordpress-embed-isolation"]
     assert check["status"] == "pass"

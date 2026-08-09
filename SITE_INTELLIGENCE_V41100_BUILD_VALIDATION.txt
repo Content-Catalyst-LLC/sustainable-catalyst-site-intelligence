@@ -1,0 +1,10 @@
+Site Intelligence v4.11.0 build validation
+Feature: Ocean Events, Hazards & Ecosystem Change
+Targeted ocean-events and inherited ocean-missions tests: PASS
+Full backend regression suite: 1174 passed
+Ocean Events direct/iframe browser interaction: PASS
+Complete shell: 53/53 base scripts; 6 areas; 35 routes; 173 countries
+Country selector interaction: PASS
+Production soak: 12 transitions; 0 route failures; 0 automatic service-worker reloads
+WordPress fixed embed: 1100px; host-page isolation PASS
+Static/package validation and final manifest verification are performed by verify_site_intelligence_v4_11_0_macos.sh.

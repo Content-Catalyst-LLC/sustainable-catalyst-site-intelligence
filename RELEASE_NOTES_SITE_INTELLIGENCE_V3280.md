@@ -1,8 +1,8 @@
-# Site Intelligence v4.10.0 — Monitoring, Digests, and Early-Warning Operations
+# Site Intelligence v4.11.0 — Monitoring, Digests, and Early-Warning Operations
 
 ## Purpose
 
-v4.10.0 turns the existing Alerts and Scheduled Monitoring capabilities into a coherent review-oriented monitoring layer. It adds explicit watchlists, geographic monitoring areas, source-change checks, threshold evaluation, alert-state transitions, modeled-warning separation, draft digest generation, and reviewed-feed contracts without claiming automatic emergency response or autonomous publication.
+v4.11.0 turns the existing Alerts and Scheduled Monitoring capabilities into a coherent review-oriented monitoring layer. It adds explicit watchlists, geographic monitoring areas, source-change checks, threshold evaluation, alert-state transitions, modeled-warning separation, draft digest generation, and reviewed-feed contracts without claiming automatic emergency response or autonomous publication.
 
 ## Public contracts
 
@@ -27,7 +27,7 @@ v4.10.0 turns the existing Alerts and Scheduled Monitoring capabilities into a c
 
 ## Governance boundaries
 
-v4.10.0 does not provide automatic emergency dispatch, individual tracking, hidden risk scoring, automatic consequential action, fabricated events, or automatic publication.
+v4.11.0 does not provide automatic emergency dispatch, individual tracking, hidden risk scoring, automatic consequential action, fabricated events, or automatic publication.
 
 ## Compatibility
 

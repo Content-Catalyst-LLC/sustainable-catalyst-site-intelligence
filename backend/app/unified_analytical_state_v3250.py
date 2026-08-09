@@ -1,4 +1,4 @@
-"""Unified analytical workspace and cross-view state for Site Intelligence v4.10.0."""
+"""Unified analytical workspace and cross-view state for Site Intelligence v4.11.0."""
 from __future__ import annotations
 
 from datetime import datetime
