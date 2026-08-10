@@ -10,4 +10,4 @@ assert 'ocean-governance-v41500.js' in coastal; assert 'ocean-governance-v41500.
 for asset in ('ocean-governance-v41500.js','ocean-governance-v41500.css','coastal-change-v41400.js','coastal-change-v41400.css'):
  assert (ROOT/'backend/public_app/assets'/asset).read_text()==(ROOT/'wordpress-plugin/sustainable-catalyst-site-intelligence/assets'/asset).read_text(),asset
 subprocess.run([sys.executable,str(ROOT/'scripts/validate_v41500_release_contract.py')],check=True,cwd=ROOT,env={**os.environ,'PYTHONPATH':str(ROOT/'backend')})
-print('PASS: v4.16.0 static release validation')
+print('PASS: v4.17.0 static release validation')

@@ -14,7 +14,7 @@ def browser_path():
 
 def fixture_html():
     catalog = {
-        'ok': True, 'version': '4.16.0', 'maximum_navigation_depth_m': 11000,
+        'ok': True, 'version': '4.17.0', 'maximum_navigation_depth_m': 11000,
         'sources': [
             {'id':'argo-argovis','title':'Argo profiles via Argovis','url':'https://argo.ucsd.edu/data/','coverage':'global profile coverage','depth_semantics':'source-reported profile samples'},
             {'id':'copernicus-marine','title':'Copernicus Marine 3-D ocean products','url':'https://marine.copernicus.eu/','coverage':'global and regional 3-D products','depth_semantics':'dataset-defined model or analysis depth levels'},
@@ -27,14 +27,14 @@ def fixture_html():
     setup = r'''<script>
 history.replaceState=()=>{};Element.prototype.scrollIntoView=()=>{};window.SC_SITE_INTELLIGENCE_API='https://gate.local';window.open=()=>null;window.matchMedia=()=>({matches:true});
 const catalog=__CATALOG__;
-window.fetch=async input=>{const u=String(input);let x=catalog;if(u.includes('/state')){const qp=new URL(u).searchParams;const variable=qp.get('variable')||'temperature',source=qp.get('source')||'argo-argovis',depth=Number(qp.get('depth_m')||0),v=catalog.variables.find(r=>r.id===variable)||catalog.variables[0],s=catalog.sources.find(r=>r.id===source)||catalog.sources[0];x={ok:true,version:'4.16.0',contract:'water-column-depth-explorer',variable:v,source:s,point:{latitude:Number(qp.get('latitude')||0),longitude:Number(qp.get('longitude')||0)},date:qp.get('date')||null,depth_m:depth,condition:{value:null,record_loaded:false,coverage_verified:false,depth_sample_verified:false},query_plan:{access_kind:source==='copernicus-marine'?'Copernicus Marine 3-D catalogue/subset':'Argovis Argo profile selection'},truth:{value_fabricated:false,depth_value_interpolated:false,nearest_sample_substituted:false}};}return new Response(JSON.stringify(x),{status:200,headers:{'Content-Type':'application/json'}})};
+window.fetch=async input=>{const u=String(input);let x=catalog;if(u.includes('/state')){const qp=new URL(u).searchParams;const variable=qp.get('variable')||'temperature',source=qp.get('source')||'argo-argovis',depth=Number(qp.get('depth_m')||0),v=catalog.variables.find(r=>r.id===variable)||catalog.variables[0],s=catalog.sources.find(r=>r.id===source)||catalog.sources[0];x={ok:true,version:'4.17.0',contract:'water-column-depth-explorer',variable:v,source:s,point:{latitude:Number(qp.get('latitude')||0),longitude:Number(qp.get('longitude')||0)},date:qp.get('date')||null,depth_m:depth,condition:{value:null,record_loaded:false,coverage_verified:false,depth_sample_verified:false},query_plan:{access_kind:source==='copernicus-marine'?'Copernicus Marine 3-D catalogue/subset':'Argovis Argo profile selection'},truth:{value_fabricated:false,depth_value_interpolated:false,nearest_sample_substituted:false}};}return new Response(JSON.stringify(x),{status:200,headers:{'Content-Type':'application/json'}})};
 </script>'''.replace('__CATALOG__', json.dumps(catalog))
     return f'''<!doctype html><html><head><style>{CSS}</style>{setup}</head><body><section id="oceanSurfacePanel"><div class="ocean4500-actions"><button>Back</button></div></section><script>{JS}</script></body></html>'''
 
 
 def exercise(page, label):
     page.set_content(fixture_html(), wait_until='domcontentloaded')
-    page.wait_for_function("window.SCSIWaterColumnV4600?.version==='4.16.0'")
+    page.wait_for_function("window.SCSIWaterColumnV4600?.version==='4.17.0'")
     page.locator('#oceanDepthEnter').click()
     page.wait_for_function("!document.querySelector('#waterColumnPanel').hidden")
     page.select_option('#waterVariable','dissolved-oxygen')
@@ -44,7 +44,7 @@ def exercise(page, label):
     page.wait_for_timeout(250)
     page.wait_for_function("document.querySelector('#waterStateTitle')?.textContent.includes('1,500 m')")
     m = page.evaluate("""()=>({version:SCSIWaterColumnV4600.version,variable:document.querySelector('#waterVariable').value,source:document.querySelector('#waterSource').value,depth:document.querySelector('#waterDepth').value,title:document.querySelector('#waterStateTitle').textContent,stage:document.querySelector('#waterStageState').textContent,truth:document.querySelector('#waterTruth').textContent,contract:document.querySelector('#waterColumnPanel').dataset.scsiWaterContract,hidden:document.querySelector('#waterColumnPanel').hidden})""")
-    assert m['version']=='4.16.0' and m['variable']=='dissolved-oxygen' and m['source']=='copernicus-marine' and m['depth']=='1500'
+    assert m['version']=='4.17.0' and m['variable']=='dissolved-oxygen' and m['source']=='copernicus-marine' and m['depth']=='1500'
     assert 'source sample not loaded' in m['stage'] and 'Not loaded' in m['truth'] and 'None' in m['truth']
     assert m['contract']=='water-column-depth-explorer' and not m['hidden']
     return {'label':label, **m}
@@ -58,7 +58,7 @@ def main():
     pw=sync_playwright().start(); browser=pw.chromium.launch(headless=True, executable_path=path, args=['--no-sandbox','--disable-dev-shm-usage'])
     direct=browser.new_page(viewport={'width':1200,'height':900}); r1=exercise(direct,'direct')
     outer=browser.new_page(viewport={'width':1200,'height':900}); outer.set_content('<iframe id="f" style="width:1100px;height:820px"></iframe>'); frame=outer.query_selector('#f').content_frame(); r2=exercise(frame,'iframe')
-    print(json.dumps({'browser':path,'results':[r1,r2]},indent=2)); print('PASS: v4.16.0 Water Column & Depth Explorer passed direct and iframe interaction.'); sys.stdout.flush(); os._exit(0)
+    print(json.dumps({'browser':path,'results':[r1,r2]},indent=2)); print('PASS: v4.17.0 Water Column & Depth Explorer passed direct and iframe interaction.'); sys.stdout.flush(); os._exit(0)
 
 
 if __name__=='__main__':

@@ -1,4 +1,4 @@
-"""Institutional Workspaces and Review Governance for Site Intelligence v4.16.0.
+"""Institutional Workspaces and Review Governance for Site Intelligence v4.17.0.
 
 The public contracts in this module prepare portable workspace, review, annotation,
 audit, export, and import-preview artifacts. They never provision accounts, persist

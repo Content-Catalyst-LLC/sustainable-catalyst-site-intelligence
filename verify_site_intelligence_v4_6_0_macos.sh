@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"; BACKEND="$ROOT/backend"; PYTHON="${PYTHON:-python3}"
-grep -q 'APP_VERSION = "4.16.0"' "$BACKEND/app/version.py"
-grep -q 'Version: 4.16.0' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
+grep -q 'APP_VERSION = "4.17.0"' "$BACKEND/app/version.py"
+grep -q 'Version: 4.17.0' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
 for endpoint in /public/orbital-earth /public/planetary-intelligence /public/astronomical-observation /public/solar-system-navigation /public/ocean-intelligence /public/ocean-intelligence/catalog /public/ocean-intelligence/state /public/ocean-intelligence/observation/normalize /public/ocean-intelligence/export-manifest /public/ocean-intelligence/readiness /public/water-column /public/water-column/catalog /public/water-column/state /public/water-column/profile/normalize /public/water-column/depth/resolve /public/water-column/export-manifest /public/water-column/readiness /public/v4/readiness; do grep -q "$endpoint" "$BACKEND/app/main.py"; done
 cmp -s "$BACKEND/public_app/assets/ocean-surface-v4500.js" "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/assets/ocean-surface-v4500.js"
 cmp -s "$BACKEND/public_app/assets/ocean-surface-v4500.css" "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/assets/ocean-surface-v4500.css"
@@ -32,4 +32,4 @@ if command -v php >/dev/null 2>&1; then php -l "$ROOT/wordpress-plugin/sustainab
 "$PYTHON" "$ROOT/scripts/security_static_scan_v4600.py" "$ROOT"
 if [[ "${SC_SI_SKIP_TESTS:-0}" != "1" ]]; then (cd "$BACKEND" && PYTHONPATH=. PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 "$PYTHON" -m pytest -q); fi
 if [[ "${SC_SI_RUN_BROWSER:-0}" == "1" ]]; then PYTHON="$PYTHON" "$PYTHON" "$ROOT/scripts/browser_water_column_v4600.py"; fi
-echo 'SUCCESS: Site Intelligence v4.16.0 passed Water Column & Depth Explorer validation.'
+echo 'SUCCESS: Site Intelligence v4.17.0 passed Water Column & Depth Explorer validation.'

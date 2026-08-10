@@ -10,4 +10,4 @@ assert 'cryosphere-v41600.js' in prev; assert 'cryosphere-v41600.js' in sw and '
 for asset in ('cryosphere-v41600.js','cryosphere-v41600.css','ocean-governance-v41500.js','ocean-governance-v41500.css'):
  assert (ROOT/'backend/public_app/assets'/asset).read_text()==(ROOT/'wordpress-plugin/sustainable-catalyst-site-intelligence/assets'/asset).read_text(),asset
 subprocess.run([sys.executable,str(ROOT/'scripts/validate_v41600_release_contract.py')],check=True,cwd=ROOT,env={**os.environ,'PYTHONPATH':str(ROOT/'backend')})
-print('PASS: v4.16.0 static release validation')
+print('PASS: v4.17.0 static release validation')

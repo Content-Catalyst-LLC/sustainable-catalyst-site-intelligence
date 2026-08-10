@@ -8,7 +8,7 @@ CLIENT = TestClient(app)
 
 def test_overview_preserves_v4_architecture_and_no_automatic_hazard_claims():
     p = CLIENT.get('/public/ocean-events').json()
-    assert p['ok'] and p['version'] == '4.16.0' and p['route'] == 'earth'
+    assert p['ok'] and p['version'] == '4.17.0' and p['route'] == 'earth'
     assert p['contract'] == 'ocean-events-hazards-ecosystem-change'
     assert p['source_count'] == 4 and p['hazard_type_count'] >= 8
     assert any('threshold crossing' in x.lower() for x in p['truth_boundaries'])

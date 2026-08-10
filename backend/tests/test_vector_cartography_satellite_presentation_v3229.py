@@ -16,19 +16,19 @@ def read(path: str) -> str:
 
 
 def test_release_identity_and_cartography_assets_are_current():
-    assert 'APP_VERSION = "4.16.0"' in read("backend/app/version.py")
+    assert 'APP_VERSION = "4.17.0"' in read("backend/app/version.py")
     html = read("backend/public_app/index.html")
-    assert 'data-scsi-release="4.16.0"' in html
+    assert 'data-scsi-release="4.17.0"' in html
     assert 'data-map-runtime="vector-cartography-engine"' in html
-    assert "/app/assets/vector-cartography-v3230.css?v=4.16.0" in html
-    assert "/app/assets/vector-cartography-v3230.js?v=4.16.0" in html
+    assert "/app/assets/vector-cartography-v3230.css?v=4.17.0" in html
+    assert "/app/assets/vector-cartography-v3230.js?v=4.17.0" in html
     assert html.index("vector-cartography-v3230.js") < html.index("service-recovery-v3224.js") < html.index("runtime-v3230.js") < html.index("app.js")
 
 
 def test_local_vector_geography_has_labels_ranks_and_country_identity():
     payload = json.loads(read("backend/public_app/assets/world-cartography-v3230.geojson"))
     assert payload["type"] == "FeatureCollection"
-    assert payload["version"] == "4.16.0"
+    assert payload["version"] == "4.17.0"
     assert len(payload["features"]) >= 170
     for feature in payload["features"]:
         props = feature["properties"]
@@ -100,7 +100,7 @@ def test_runtime_health_requires_vector_cartography_assets():
 
 def test_wordpress_packages_the_same_cartography_runtime_and_release():
     php = read("wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php")
-    assert "Version: 4.16.0" in php
+    assert "Version: 4.17.0" in php
     assert "vector-cartography-v3230.js" in php
     assert "vector-cartography-v3230.css" in php
     assert "world-cartography-v3230.geojson" in php
@@ -111,7 +111,7 @@ def test_wordpress_packages_the_same_cartography_runtime_and_release():
 def test_service_worker_and_promotion_gate_verify_live_cartography():
     worker = read("backend/public_app/service-worker.js")
     promote = read("promote_site_intelligence_v3_22_9_to_github_and_render_macos.sh")
-    assert 'const RELEASE="4.16.0"' in worker
+    assert 'const RELEASE="4.17.0"' in worker
     for name in ("vector-cartography-v3230.js", "vector-cartography-v3230.css", "world-cartography-v3230.geojson", "runtime-v3230.js"):
         assert name in worker
     assert "/app/assets/vector-cartography-v3230.js" in promote

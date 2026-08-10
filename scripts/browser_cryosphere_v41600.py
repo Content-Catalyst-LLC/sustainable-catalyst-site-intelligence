@@ -13,7 +13,7 @@ try:
  for path in ['/public/cryosphere','/public/cryosphere/catalog','/public/cryosphere/state?source=noaa-nsidc-sea-ice-index&indicator_type=sea-ice-extent&latitude=80&longitude=-30','/public/cryosphere/readiness','/app/assets/cryosphere-v41600.js','/app/assets/cryosphere-v41600.css']:
   r=httpx.get(f'http://127.0.0.1:{port}'+path,timeout=5); assert r.status_code==200,(path,r.status_code)
  s=httpx.get(f'http://127.0.0.1:{port}/public/cryosphere/state?source=noaa-nsidc-sea-ice-index&indicator_type=sea-ice-extent',timeout=5).json(); assert s['truth']['local_safety_determination'] is False
- print('PASS: v4.16.0 cryosphere direct and iframe-compatible HTTP/browser asset gate')
+ print('PASS: v4.17.0 cryosphere direct and iframe-compatible HTTP/browser asset gate')
 finally:
  p.terminate();
  try:p.wait(timeout=5)
