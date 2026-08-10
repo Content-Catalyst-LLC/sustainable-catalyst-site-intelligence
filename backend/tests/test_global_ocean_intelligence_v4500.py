@@ -5,7 +5,7 @@ from app.ocean_surface_v4500 import catalog, normalize_observation, readiness, s
 CLIENT=TestClient(app); ROOT=Path(__file__).resolve().parents[2]
 
 def test_overview_and_v4_architecture():
- p=CLIENT.get('/public/ocean-intelligence').json(); assert p['ok'] and p['version']=='4.26.0' and p['route']=='earth' and p['source_count']>=3 and p['variable_count']>=9 and len(p['contract_sha256'])==64; assert any('Missing ocean data remains missing' in x for x in p['truth_boundaries']); nav=CLIENT.get('/public/v4/navigation').json(); assert nav['route_count']==35 and nav['primary_area_count']==6
+ p=CLIENT.get('/public/ocean-intelligence').json(); assert p['ok'] and p['version']=='4.27.0' and p['route']=='earth' and p['source_count']>=3 and p['variable_count']>=9 and len(p['contract_sha256'])==64; assert any('Missing ocean data remains missing' in x for x in p['truth_boundaries']); nav=CLIENT.get('/public/v4/navigation').json(); assert nav['route_count']==35 and nav['primary_area_count']==6
 
 def test_catalog_sources_and_variables():
  p=catalog(); assert {x['id'] for x in p['sources']}=={'noaa-coastwatch-erddap','ioos-catalog','copernicus-marine'}; assert len(p['variables'])>=9; assert 'not global' in next(x for x in p['sources'] if x['id']=='ioos-catalog')['coverage']; assert 'free Copernicus Marine account' in next(x for x in p['sources'] if x['id']=='copernicus-marine')['authentication']

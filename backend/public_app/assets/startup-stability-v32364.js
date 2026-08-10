@@ -1,6 +1,6 @@
 (()=>{
   'use strict';
-  const VERSION='4.26.0';
+  const VERSION='4.27.0';
   const SHELL_TARGET_MS=1500;
   const HARD_FAIL_OPEN_MS=4500;
   const startedAt=performance.now();
