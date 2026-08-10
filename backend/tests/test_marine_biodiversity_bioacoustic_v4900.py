@@ -17,7 +17,7 @@ CLIENT = TestClient(app)
 
 def test_overview_preserves_v4_architecture_and_evidence_boundaries():
     p = CLIENT.get('/public/marine-biodiversity').json()
-    assert p['ok'] and p['version'] == '4.30.0' and p['route'] == 'earth'
+    assert p['ok'] and p['version'] == '4.31.0' and p['route'] == 'earth'
     assert p['contract'] == 'marine-biodiversity-bioacoustic-intelligence'
     assert p['source_count'] == 4 and p['evidence_class_count'] == 6
     assert any('no returned occurrence records' in x.lower() for x in p['truth_boundaries'])

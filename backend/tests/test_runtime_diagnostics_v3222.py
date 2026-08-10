@@ -13,7 +13,7 @@ def test_public_runtime_health_is_local_public_safe_and_versioned():
     assert response.status_code == 200
     data = response.json()
     assert data["ok"] is True
-    assert data["version"] == "4.30.0"
+    assert data["version"] == "4.31.0"
     assert data["scope"] == "local-runtime-contract"
     assert data["live_upstream_checks_performed"] is False
     assert data["summary"]["available_assets"] == data["summary"]["required_assets"]
@@ -24,7 +24,7 @@ def test_runtime_assets_load_between_map_reliability_and_application():
     html = (ROOT / "backend/public_app/index.html").read_text(encoding="utf-8")
     fallback = html.index("/app/assets/vector-cartography-v3230.js")
     runtime = html.index("/app/assets/runtime-v3230.js")
-    application = html.index('src="/app/assets/app.js?v=4.30.0" defer')
+    application = html.index('src="/app/assets/app.js?v=4.31.0" defer')
     assert fallback < runtime < application
     assert "/app/assets/runtime-v3230.css" in html
 
@@ -51,7 +51,7 @@ def test_map_runtime_keeps_first_party_interactive_mode_without_openstreetmap():
 
 def test_runtime_assets_are_offline_cached_and_release_aligned():
     worker = (ROOT / "backend/public_app/service-worker.js").read_text(encoding="utf-8")
-    assert 'const RELEASE="4.30.0"' in worker
+    assert 'const RELEASE="4.31.0"' in worker
     assert "runtime-v3230.js" in worker
     assert "runtime-v3230.css" in worker
     assert "vector-cartography-v3230.js" in worker
@@ -60,7 +60,7 @@ def test_runtime_assets_are_offline_cached_and_release_aligned():
 def test_wordpress_package_uses_the_upgraded_map_runtime():
     php = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text(encoding="utf-8")
     fallback = ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/vector-cartography-v3230.js"
-    assert "Version: 4.30.0" in php
+    assert "Version: 4.31.0" in php
     assert "vector-cartography-v3230.js" in php
     assert fallback.is_file()
     assert "basemap-tiles-unavailable" in fallback.read_text(encoding="utf-8")
