@@ -1,6 +1,6 @@
 """Governed publication adapters and release packages for Live Intelligence.
 
-Site Intelligence v4.24.0 converts human-approved editorial workspaces into
+Site Intelligence v4.25.0 converts human-approved editorial workspaces into
 immutable, adapter-specific delivery packages. It validates release metadata,
 requires a separate release approver, records manual handoff receipts, and
 never writes to WordPress or an institutional destination by itself.

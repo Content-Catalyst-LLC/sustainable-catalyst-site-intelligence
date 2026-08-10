@@ -302,6 +302,11 @@ from .climate_intelligence_v42200 import (
     export_manifest as build_climate_export_manifest,
     readiness as build_climate_readiness,
 )
+from .agriculture_food_systems_v42500 import (
+    overview as build_agriculture_overview, catalog as build_agriculture_catalog, state as build_agriculture_state,
+    normalize_measurement as build_agriculture_normalize_measurement, normalize_assessment as build_agriculture_normalize_assessment,
+    threshold_preview as build_agriculture_threshold_preview, export_manifest as build_agriculture_export_manifest, readiness as build_agriculture_readiness,
+)
 from .wetlands_inland_waters_v42400 import (
     overview as build_wetlands_overview, catalog as build_wetlands_catalog, state as build_wetlands_state,
     normalize_feature as build_wetlands_normalize_feature, normalize_measurement as build_wetlands_normalize_measurement,
@@ -767,7 +772,7 @@ async def public_experience_headers(request, call_next):
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
-        response.headers["X-SC-Release-Gate"] = "v4.24.0"
+        response.headers["X-SC-Release-Gate"] = "v4.25.0"
     elif path == "/app/service-worker.js":
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
@@ -4110,7 +4115,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.24.0 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v4.25.0 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -4252,7 +4257,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.24.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v4.25.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -4369,7 +4374,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.24.0 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v4.25.0 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -4491,7 +4496,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.24.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v4.25.0 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -4627,7 +4632,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.24.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v4.25.0 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -5179,6 +5184,33 @@ def public_environmental_monitoring_dashboard_endpoint(settings: Settings = Depe
     return public_topic_dashboard("environmental-monitoring")
 
 
+
+@app.get("/public/agriculture-food")
+def public_agriculture_overview(): return build_agriculture_overview()
+@app.get("/public/agriculture-food/catalog")
+def public_agriculture_catalog(): return build_agriculture_catalog()
+@app.get("/public/agriculture-food/state")
+def public_agriculture_state(source: str = Query(default="faostat"), indicator_type: str = Query(default="crop-production"), commodity: str = Query(default=""), area: str = Query(default=""), year: str = Query(default=""), latitude: float | None = Query(default=None), longitude: float | None = Query(default=None)):
+    try: return build_agriculture_state(source,indicator_type,commodity,area,year,latitude,longitude)
+    except (ValueError,TypeError) as exc: raise HTTPException(status_code=400,detail=str(exc)) from exc
+@app.post("/public/agriculture-food/measurement/normalize")
+def public_agriculture_measurement_normalize(request: dict[str, Any] = Body(default={})):
+    try: return build_agriculture_normalize_measurement(request)
+    except (ValueError,TypeError) as exc: raise HTTPException(status_code=400,detail=str(exc)) from exc
+@app.post("/public/agriculture-food/assessment/normalize")
+def public_agriculture_assessment_normalize(request: dict[str, Any] = Body(default={})):
+    try: return build_agriculture_normalize_assessment(request)
+    except (ValueError,TypeError) as exc: raise HTTPException(status_code=400,detail=str(exc)) from exc
+@app.post("/public/agriculture-food/threshold/preview")
+def public_agriculture_threshold_preview(request: dict[str, Any] = Body(default={})):
+    try: return build_agriculture_threshold_preview(request)
+    except (ValueError,TypeError) as exc: raise HTTPException(status_code=400,detail=str(exc)) from exc
+@app.get("/public/agriculture-food/export-manifest")
+def public_agriculture_manifest(source: str = Query(default="faostat"), indicator_type: str = Query(default="crop-production"), commodity: str = Query(default=""), area: str = Query(default=""), year: str = Query(default="")):
+    try: return build_agriculture_export_manifest(source,indicator_type,commodity,area,year)
+    except (ValueError,TypeError) as exc: raise HTTPException(status_code=400,detail=str(exc)) from exc
+@app.get("/public/agriculture-food/readiness")
+def public_agriculture_readiness(): return build_agriculture_readiness()
 
 @app.get("/public/wetlands-inland-water")
 def public_wetlands_overview(): return build_wetlands_overview()
@@ -7832,7 +7864,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v4.24.0 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v4.25.0 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -8066,7 +8098,7 @@ def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     return build_reliability(settings)
 
 
-# Site Intelligence v4.24.0 — Open Standards, Federation, and Institutional Data Exchange.
+# Site Intelligence v4.25.0 — Open Standards, Federation, and Institutional Data Exchange.
 def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
     if not settings.federation_exchange_enabled:
         raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
@@ -8156,7 +8188,7 @@ def admin_federation_accept_import_endpoint(request: dict = Body(default={}), se
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.24.0 — Security, Privacy, Governance, and Production Scale.
+# Site Intelligence v4.25.0 — Security, Privacy, Governance, and Production Scale.
 def _production_governance(settings: Settings) -> ProductionGovernanceCenter:
     if not settings.production_governance_enabled:
         raise HTTPException(status_code=503, detail="Production governance is disabled.")
@@ -8305,7 +8337,7 @@ def admin_production_governance_deployment_endpoint(request: dict = Body(default
 def admin_production_governance_load_probe_endpoint(requests: int = Query(default=250, ge=1, le=5000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return _production_governance(settings).load_probe(requests)
 
-# Site Intelligence v4.24.0 — Connected Live Intelligence Surface.
+# Site Intelligence v4.25.0 — Connected Live Intelligence Surface.
 def _connected_platform(settings: Settings) -> ConnectedPublicIntelligencePlatform:
     if not settings.connected_platform_enabled:
         raise HTTPException(status_code=404, detail="Connected platform is disabled.")

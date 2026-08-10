@@ -1,6 +1,6 @@
 """Saved discovery views, public research collections, and evidence pathways.
 
-Site Intelligence v4.24.0 adds an append-only, human-governed curation layer
+Site Intelligence v4.25.0 adds an append-only, human-governed curation layer
 above the public preservation-registry discovery service. It preserves
 reproducible filter states and approved record snapshots without storing
 visitor identities, visitor queries, credentials, or remote-write authority.
