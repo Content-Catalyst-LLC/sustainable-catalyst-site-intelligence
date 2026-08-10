@@ -1,3 +1,12 @@
+## 4.21.0 — Global Soils, Land Degradation & Desertification Intelligence
+
+- Added ISRIC SoilGrids, USDA-NRCS Soil Data Access, NASA SMAP and UNCCD SDG 15.3.1 / Land Degradation Neutrality source contracts.
+- Added mapped soil property, official soil survey, satellite soil-moisture, model-assimilated root-zone soil-moisture, country-reported degradation and UNCCD-default-estimate evidence classes.
+- Added soil/land state, measurement normalization, degradation-assessment normalization, threshold-preview, export-manifest and readiness contracts.
+- Added explicit guards preventing model maps from becoming ground samples, map units from becoming parcel truth, SMAP L4 fields from becoming direct observations, partial UNCCD reporting from becoming a comprehensive global assessment, degradation indicators from becoming causal attribution, and soil carbon from becoming carbon-credit claims.
+- Added a deferred Soils & Land Condition browser environment after Geosphere without adding a top-level public route.
+- Preserved six primary areas / 35 public routes and deterministic runtime-state exclusions.
+
 ## 4.16.0 — Global Cryosphere Intelligence & Frozen-Earth Conditions
 
 - Added source-bounded cryosphere evidence for sea ice, snow, glaciers, ice sheets, and frozen ground.

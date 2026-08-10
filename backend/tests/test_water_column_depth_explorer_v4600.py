@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_overview_preserves_v4_architecture_and_truth_boundaries():
     p = CLIENT.get('/public/water-column').json()
-    assert p['ok'] and p['version'] == '4.20.0' and p['route'] == 'earth'
+    assert p['ok'] and p['version'] == '4.21.0' and p['route'] == 'earth'
     assert p['source_count'] >= 3 and p['variable_count'] >= 8 and p['maximum_navigation_depth_m'] == 11000.0
     assert any('does not interpolate' in x for x in p['truth_boundaries'])
     nav = CLIENT.get('/public/v4/navigation').json()

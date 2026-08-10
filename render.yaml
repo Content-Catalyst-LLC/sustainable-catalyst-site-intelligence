@@ -14,7 +14,7 @@ services:
       - key: SC_SI_RELEASE_CHANNEL
         value: production
       - key: SC_SI_RELEASE_ID
-        value: site-intelligence-v4.20.0
+        value: site-intelligence-v4.21.0
       - key: SC_SI_RUNTIME_STATE_ROOT
         value: /tmp/site-intelligence-runtime
       - key: SC_SI_EXPECTED_GIT_BRANCH
