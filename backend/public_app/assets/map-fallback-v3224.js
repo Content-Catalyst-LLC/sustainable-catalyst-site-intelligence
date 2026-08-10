@@ -1,7 +1,7 @@
 (function (window, document) {
   "use strict";
 
-  const VERSION = "4.19.0";
+  const VERSION = "4.20.0";
   const OSM_TILES = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
   const ATTRIBUTION = "© OpenStreetMap contributors";
   const managedMaps = new Map();

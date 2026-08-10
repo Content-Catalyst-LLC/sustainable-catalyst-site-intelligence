@@ -1,0 +1,9 @@
+cd ~/Downloads
+INSTALLER="$(find . -maxdepth 1 -type f -name 'deploy_and_validate_site_intelligence_v4_20_0_macos*.sh' -print0 | xargs -0 ls -t | head -1)"
+BUNDLE="$(find . -maxdepth 1 -type f -name 'sustainable-catalyst-site-intelligence-v4.20.0-release-bundle*.zip' -print0 | xargs -0 ls -t | head -1)"
+echo "INSTALLER=$INSTALLER"
+echo "BUNDLE=$BUNDLE"
+[ -n "$INSTALLER" ] || { echo "ERROR: v4.20.0 installer not found in ~/Downloads"; exit 1; }
+[ -n "$BUNDLE" ] || { echo "ERROR: v4.20.0 release bundle not found in ~/Downloads"; exit 1; }
+chmod +x "$INSTALLER"
+bash "$INSTALLER" "$BUNDLE"

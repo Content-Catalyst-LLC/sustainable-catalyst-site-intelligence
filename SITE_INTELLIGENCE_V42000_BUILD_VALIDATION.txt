@@ -1,0 +1,26 @@
+Site Intelligence v4.20.0 — Global Geosphere, Earthquake & Volcano Intelligence
+Build validation status: PASS
+
+Focused inherited + v4.20 regression: 16 passed
+Complete inherited + v4.20 regression: 1,246 passed
+Immutable repository manifest: 1,786 distributable files
+Nested backend runtime entries: 0
+JSON/GeoJSON parse gate: 134 files
+JavaScript syntax gate: 121 files
+WordPress PHP syntax: PASS
+Static security findings: 0
+Initial public-app HTML: 164,948 bytes
+Geosphere direct / iframe-compatible browser asset gate: PASS
+Architecture: six primary areas / 35 public routes preserved
+
+Truth gates verified:
+- earthquake catalog event != platform emergency warning
+- ShakeMap != structural-damage census
+- PAGER estimate != confirmed loss
+- USGS volcano notice remains source-issued
+- source aviation color code != platform-issued aviation notice
+- InSAR line-of-sight displacement != automatic vertical displacement
+- deformation product != structural-damage finding
+- preliminary / rapid response != final product
+- threshold comparison != earthquake / volcano alert
+- zero records != no solid-Earth hazard
