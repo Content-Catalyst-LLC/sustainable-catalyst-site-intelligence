@@ -13,7 +13,7 @@ def browser_path():
 
 def fixture_html():
     catalog={
-      'ok':True,'version':'4.14.0','contract':'coastal-change-sea-level-blue-carbon',
+      'ok':True,'version':'4.15.0','contract':'coastal-change-sea-level-blue-carbon',
       'sources':[
         {'id':'noaa-coops','title':'NOAA CO-OPS Tides & Currents','url':'https://tidesandcurrents.noaa.gov/','indicator_types':['observed-water-level','tide-prediction'],'limitations':'Station observations are local and datum-dependent.'},
         {'id':'noaa-digital-coast','title':'NOAA Digital Coast / Sea Level Rise','url':'https://coast.noaa.gov/digitalcoast/','indicator_types':['sea-level-scenario','inundation-screening','tidal-wetland'],'limitations':'Sea-level inundation is screening-level planning information.'},
@@ -23,19 +23,19 @@ def fixture_html():
     setup='''<script>
 history.replaceState=()=>{};Element.prototype.scrollIntoView=()=>{};window.SC_SITE_INTELLIGENCE_API='https://gate.local';window.open=()=>null;window.matchMedia=()=>({matches:true});
 const catalog=__CATALOG__;
-window.fetch=async input=>{const u=String(input);let x=catalog;if(u.includes('/state')){const qp=new URL(u,'https://gate.local').searchParams,source=qp.get('source')||'noaa-coops',indicator=qp.get('indicator_type')||'observed-water-level',s=catalog.sources.find(r=>r.id===source)||catalog.sources[0],a=catalog.indicator_types.find(r=>r.id===indicator)||catalog.indicator_types[0];x={ok:true,version:'4.14.0',contract:'coastal-change-sea-level-blue-carbon',source:s,indicator_type:a,query_point:qp.has('latitude')?{latitude:Number(qp.get('latitude')),longitude:Number(qp.get('longitude'))}:null,date:qp.get('date')||null,source_supports_indicator_type:(s.indicator_types||[]).includes(a.id),evidence:{water_level_loaded:false,shoreline_record_loaded:false,scenario_layer_loaded:false,habitat_record_loaded:false},truth:{prediction_treated_as_observation:false,scenario_treated_as_exact_flood_forecast:false,shoreline_projection_treated_as_guaranteed_position:false,habitat_treated_as_carbon_stock_estimate:false,habitat_treated_as_carbon_credit:false,platform_safety_finding:false,platform_property_loss_finding:false,platform_regulatory_finding:false}};}return new Response(JSON.stringify(x),{status:200,headers:{'Content-Type':'application/json'}})};
+window.fetch=async input=>{const u=String(input);let x=catalog;if(u.includes('/state')){const qp=new URL(u,'https://gate.local').searchParams,source=qp.get('source')||'noaa-coops',indicator=qp.get('indicator_type')||'observed-water-level',s=catalog.sources.find(r=>r.id===source)||catalog.sources[0],a=catalog.indicator_types.find(r=>r.id===indicator)||catalog.indicator_types[0];x={ok:true,version:'4.15.0',contract:'coastal-change-sea-level-blue-carbon',source:s,indicator_type:a,query_point:qp.has('latitude')?{latitude:Number(qp.get('latitude')),longitude:Number(qp.get('longitude'))}:null,date:qp.get('date')||null,source_supports_indicator_type:(s.indicator_types||[]).includes(a.id),evidence:{water_level_loaded:false,shoreline_record_loaded:false,scenario_layer_loaded:false,habitat_record_loaded:false},truth:{prediction_treated_as_observation:false,scenario_treated_as_exact_flood_forecast:false,shoreline_projection_treated_as_guaranteed_position:false,habitat_treated_as_carbon_stock_estimate:false,habitat_treated_as_carbon_credit:false,platform_safety_finding:false,platform_property_loss_finding:false,platform_regulatory_finding:false}};}return new Response(JSON.stringify(x),{status:200,headers:{'Content-Type':'application/json'}})};
 </script>'''.replace('__CATALOG__',json.dumps(catalog))
     return f'''<!doctype html><html><head><style>{CSS}</style>{setup}</head><body><section id="marinePollutionPanel"><div class="mp41300-actions"><button>Back</button></div></section><script>{JS}</script></body></html>'''
 
 def exercise(page,label):
     page.set_content(fixture_html(),wait_until='domcontentloaded')
-    page.wait_for_function("window.SCSICoastalChangeV41400?.version==='4.14.0'")
+    page.wait_for_function("window.SCSICoastalChangeV41400?.version==='4.15.0'")
     page.locator('#mpCoastalEnter').click(); page.wait_for_function("!document.querySelector('#coastalChangePanel').hidden")
     page.evaluate("""()=>{document.querySelector('#ccSource').value='global-mangrove-watch';document.querySelector('#ccIndicator').value='mangrove-extent';document.querySelector('#ccLat').value='-4.5';document.querySelector('#ccLon').value='39.5'}""")
     page.evaluate("()=>SCSICoastalChangeV41400.refresh()"); page.wait_for_timeout(120)
     page.wait_for_function("document.querySelector('#ccStateTitle')?.textContent.includes('Global Mangrove')")
     m=page.evaluate("""()=>({version:SCSICoastalChangeV41400.version,source:document.querySelector('#ccSource').value,indicator:document.querySelector('#ccIndicator').value,stage:document.querySelector('#ccStageState').textContent,truth:document.querySelector('#ccTruth').textContent,contract:document.querySelector('#coastalChangePanel').dataset.scsiCoastalContract,hidden:document.querySelector('#coastalChangePanel').hidden})""")
-    assert m['version']=='4.14.0' and m['source']=='global-mangrove-watch' and m['indicator']=='mangrove-extent'
+    assert m['version']=='4.15.0' and m['source']=='global-mangrove-watch' and m['indicator']=='mangrove-extent'
     assert 'no coastal evidence record loaded' in m['stage'].lower()
     assert 'Scenario = exact flood boundary' in m['truth'] and 'Habitat = carbon stock' in m['truth'] and 'Habitat = carbon credit' in m['truth']
     assert m['contract']=='coastal-change-sea-level-blue-carbon' and not m['hidden']
@@ -49,7 +49,7 @@ def main():
     pw=sync_playwright().start(); browser=pw.chromium.launch(headless=True,executable_path=path,args=['--no-sandbox','--disable-dev-shm-usage'])
     direct=browser.new_page(viewport={'width':1200,'height':900}); r1=exercise(direct,'direct')
     outer=browser.new_page(viewport={'width':1200,'height':900}); outer.set_content('<iframe id="f" style="width:1100px;height:820px"></iframe>'); frame=outer.query_selector('#f').content_frame(); r2=exercise(frame,'iframe')
-    print(json.dumps({'browser':path,'results':[r1,r2]},indent=2), flush=True); print('PASS: v4.14.0 Coastal Change passed direct and iframe interaction.', flush=True); os._exit(0)
+    print(json.dumps({'browser':path,'results':[r1,r2]},indent=2), flush=True); print('PASS: v4.15.0 Coastal Change passed direct and iframe interaction.', flush=True); os._exit(0)
 
 if __name__=='__main__':
     try: status=main()

@@ -1,6 +1,6 @@
-# Site Intelligence v4.14.0 — Marine Biodiversity & Bioacoustic Intelligence
+# Site Intelligence v4.15.0 — Marine Biodiversity & Bioacoustic Intelligence
 
-v4.14.0 extends Underwater Observation from visual media into structured biological and acoustic evidence while preserving the v4 six-area/35-route platform architecture.
+v4.15.0 extends Underwater Observation from visual media into structured biological and acoustic evidence while preserving the v4 six-area/35-route platform architecture.
 
 ## Added
 

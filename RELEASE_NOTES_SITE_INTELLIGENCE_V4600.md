@@ -1,8 +1,8 @@
-# Site Intelligence v4.14.0 — Water Column & Depth Explorer
+# Site Intelligence v4.15.0 — Water Column & Depth Explorer
 
 ## Purpose
 
-Extend Global Ocean Intelligence below the sea surface without converting a depth request into a fabricated observation. v4.14.0 adds a source-bounded vertical navigation and profile-evidence contract inside the existing Earth Observation route.
+Extend Global Ocean Intelligence below the sea surface without converting a depth request into a fabricated observation. v4.15.0 adds a source-bounded vertical navigation and profile-evidence contract inside the existing Earth Observation route.
 
 ## Source architecture
 
@@ -27,7 +27,7 @@ Upstream credentials/tokens are never embedded in public state, browser assets, 
 ## Evidence rules
 
 - Selecting a depth is a navigation request, not proof of a source record at that depth.
-- v4.14.0 performs **no interpolation** between profile samples.
+- v4.15.0 performs **no interpolation** between profile samples.
 - The nearest available sample may be disclosed as context but is never substituted as the requested-depth value.
 - Pressure and geometric depth are not silently converted into one another.
 - Quality flags remain attached to source samples rather than being collapsed into a generic pass/fail score.

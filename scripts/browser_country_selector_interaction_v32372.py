@@ -60,7 +60,7 @@ def exercise(page, label: str) -> dict[str, object]:
         """()=>{
           const main=document.querySelector('#main');
           for(let i=0;i<12;i++){
-            window.dispatchEvent(new CustomEvent('scsi:workspace-state',{detail:{version:'4.14.0',route:'overview',state:i%2?'ready':'degraded'}}));
+            window.dispatchEvent(new CustomEvent('scsi:workspace-state',{detail:{version:'4.15.0',route:'overview',state:i%2?'ready':'degraded'}}));
             const probe=document.createElement('i');probe.className='selector-focus-probe';main?.append(probe);probe.remove();
           }
         }"""
@@ -147,7 +147,7 @@ def main() -> int:
         assert result["selectedFirst"] == result["firstOption"], result
         assert result["selected"] == "BRA" and result["badge"] == "BRA", result
     print(json.dumps({"browser": browser_path, "results": results, "errors": errors}, indent=2))
-    print("PASS: v4.14.0 preserves country-picker focus, leaves wheel interaction unblocked, and selects the first, last, and representative catalog countries in direct and iframe modes.")
+    print("PASS: v4.15.0 preserves country-picker focus, leaves wheel interaction unblocked, and selects the first, last, and representative catalog countries in direct and iframe modes.")
     return 0
 
 
