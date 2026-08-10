@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_overview_preserves_v4_architecture_and_truth_boundaries():
     p = CLIENT.get('/public/seafloor-intelligence').json()
-    assert p['ok'] and p['version'] == '4.17.0' and p['route'] == 'earth'
+    assert p['ok'] and p['version'] == '4.18.0' and p['route'] == 'earth'
     assert p['source_count'] == 3 and p['layer_count'] >= 8
     assert any('Grid spacing' in x for x in p['truth_boundaries'])
     nav = CLIENT.get('/public/v4/navigation').json()
