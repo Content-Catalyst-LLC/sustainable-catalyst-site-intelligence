@@ -21,8 +21,8 @@ def test_public_data_truth_directory_discloses_non_live_states_and_boundaries():
     assert response.status_code == 200
     payload = response.json()
     assert payload["ok"] is True
-    assert payload["version"] == "4.22.0"
-    assert payload["release_id"] == "site-intelligence-v4.22.0"
+    assert payload["version"] == "4.23.0"
+    assert payload["release_id"] == "site-intelligence-v4.23.0"
     assert payload["contract"] == "data-freshness-coverage-and-source-truth"
     assert payload["source_count"] == 8
     assert payload["classification_policy"]["cached_is_live"] is False
@@ -55,7 +55,7 @@ def test_unknown_source_fails_closed():
 def test_registry_has_canonical_truth_metadata_for_every_source():
     import json
     registry = json.loads(read("backend/data/live_intelligence_source_registry_v320.json"))
-    assert registry["version"] == "4.22.0"
+    assert registry["version"] == "4.23.0"
     assert len(registry["sources"]) == 8
     for source in registry["sources"]:
         assert source["endpoint"]["url"]
@@ -67,8 +67,8 @@ def test_registry_has_canonical_truth_metadata_for_every_source():
 
 def test_app_shell_loads_data_truth_inside_application_before_production_truth():
     html = read("backend/public_app/index.html")
-    assert '/app/assets/data-truth-v32371.css?v=4.22.0' in html
-    assert '/app/assets/data-truth-v32371.js?v=4.22.0' in html
+    assert '/app/assets/data-truth-v32371.css?v=4.23.0' in html
+    assert '/app/assets/data-truth-v32371.js?v=4.23.0' in html
     assert html.index("cartographic-interaction-v3232.js") < html.index("data-truth-v32371.js") < html.index("production-truth-v3231.js")
     js = read("backend/public_app/assets/data-truth-v32371.js")
     for token in ("dataTruthToggle", "dataTruthPanel", "stale_marker_required", "Cached, historical, demonstration", "SCSIDataTruthV32371"):
@@ -85,7 +85,7 @@ def test_runtime_health_offline_shell_and_wordpress_package_include_truth_assets
     worker = read("backend/public_app/service-worker.js")
     assert "data-truth-v32371.js" in worker and "data-truth-v32371.css" in worker
     php = read("wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php")
-    assert "Version: 4.22.0" in php
+    assert "Version: 4.23.0" in php
     assert "dataTruthCssUrl" in php and "dataTruthJsUrl" in php
     assert "wp_enqueue_script('scsi-data-truth'" not in php
     assert (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/data-truth-v32371.js").is_file()

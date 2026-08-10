@@ -1,5 +1,5 @@
 (()=>{"use strict";
-const VERSION="4.22.0", API=window.SC_SITE_INTELLIGENCE_API||location.origin;
+const VERSION="4.23.0", API=window.SC_SITE_INTELLIGENCE_API||location.origin;
 const q=(s,r=document)=>r.querySelector(s), esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 async function post(path,payload){const r=await fetch(API+path,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},cache:"no-store",body:JSON.stringify(payload)});if(!r.ok)throw new Error(await r.text());return r.json()}
 async function get(path){const r=await fetch(API+path,{cache:"no-store"});if(!r.ok)throw new Error(`${path}:${r.status}`);return r.json()}
