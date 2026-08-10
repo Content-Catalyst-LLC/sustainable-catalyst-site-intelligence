@@ -8,4 +8,4 @@ assert 'underwater-observation-v4800.js' in sw and 'underwater-observation-v4800
 for asset in ('underwater-observation-v4800.js','underwater-observation-v4800.css','seafloor-bathymetry-v4700.js','seafloor-bathymetry-v4700.css'):
     assert (ROOT/'backend/public_app/assets'/asset).read_text()==(ROOT/'wordpress-plugin/sustainable-catalyst-site-intelligence/assets'/asset).read_text(), asset
 subprocess.run([sys.executable,str(ROOT/'scripts/validate_v4800_release_contract.py')],check=True)
-print('PASS: v4.11.0 static release validation')
+print('PASS: v4.12.0 static release validation')

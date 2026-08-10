@@ -1,4 +1,4 @@
-# v4.11.0 Ocean Events, Hazards & Ecosystem Change Audit
+# v4.12.0 Ocean Events, Hazards & Ecosystem Change Audit
 
 ## Scope
 - Marine heatwave / thermal anomaly

@@ -1,5 +1,5 @@
 (()=>{"use strict";
-const VERSION="4.11.0";const q=(s,r=document)=>r.querySelector(s);const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const VERSION="4.12.0";const q=(s,r=document)=>r.querySelector(s);const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function insideApp(){return Boolean(q("#app[data-scsi-release]"));}
 async function api(path){const r=await fetch(path,{headers:{Accept:"application/json"},cache:"no-store"});if(!r.ok)throw new Error(`${r.status}`);return r.json();}
 function routeOpen(route){const button=q(`.nav-item[data-route="${CSS.escape(route)}"]`);if(button){button.click();button.focus({preventScroll:true});return true}const u=new URL(location.href);u.searchParams.set("view",route);location.assign(u);return false}

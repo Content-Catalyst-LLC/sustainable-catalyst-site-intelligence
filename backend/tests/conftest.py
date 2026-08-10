@@ -13,7 +13,10 @@ import shutil
 import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
-DATA = ROOT / "backend" / "data"
+DATA_DIRS = [
+    ROOT / "backend" / "data",
+    ROOT / "backend" / "backend" / "data",
+]
 _RUNTIME_DIRS = [
     "historical_archive_v2140",
     "production_governance_v2250",
@@ -48,13 +51,18 @@ _RUNTIME_FILES = [
 
 
 def _clean_runtime_state() -> None:
-    for name in _RUNTIME_DIRS:
-        shutil.rmtree(DATA / name, ignore_errors=True)
-    for name in _RUNTIME_FILES:
-        try:
-            (DATA / name).unlink()
-        except FileNotFoundError:
-            pass
+    for data in DATA_DIRS:
+        for name in _RUNTIME_DIRS:
+            shutil.rmtree(data / name, ignore_errors=True)
+        for name in _RUNTIME_FILES:
+            try:
+                (data / name).unlink()
+            except FileNotFoundError:
+                pass
+    # Backend-relative defaults can resolve to repo/backend/backend/... when tests
+    # execute with backend as cwd. That tree is runtime-only and must never
+    # survive a test boundary or enter an immutable release package.
+    shutil.rmtree(ROOT / "backend" / "backend", ignore_errors=True)
 
 
 @pytest.fixture(autouse=True)

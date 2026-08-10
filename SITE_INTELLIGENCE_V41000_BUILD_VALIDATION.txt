@@ -1,4 +1,4 @@
-Site Intelligence v4.11.0 — Ocean Missions, Vehicles & Observatory Network
+Site Intelligence v4.12.0 — Ocean Missions, Vehicles & Observatory Network
 
 SOURCE VALIDATION
 - Full backend regression suite: 1,166 passed
@@ -24,7 +24,7 @@ MISSION / PLATFORM TRUTH BOUNDARIES
 - Last-reported positions remain timestamp-bounded and are not relabeled as current positions.
 - Historical expedition, ROV, vessel, float, or glider records are not represented as live missions.
 - Discrete source track points are not interpolated into a continuous trajectory.
-- Future positions and trajectories are not predicted by the v4.11.0 contract.
+- Future positions and trajectories are not predicted by the v4.12.0 contract.
 - Nearby environmental observations, camera records, and hydrophone records are not substituted for vehicle/platform position.
 - Source-reported status remains source- and timestamp-bounded.
 - Normalized source records are source-attributed and are not claimed to be independently network-verified by normalization alone.

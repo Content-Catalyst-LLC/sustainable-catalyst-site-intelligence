@@ -11,12 +11,12 @@ export SC_SI_RUNTIME_STATE_ROOT="$RUNTIME_SANDBOX"
 reset_runtime(){ rm -rf "$RUNTIME_SANDBOX"; mkdir -p "$RUNTIME_SANDBOX"; }
 
 printf '
-==> Validating v4.11.0 Unified Public Intelligence Platform contracts
+==> Validating v4.12.0 Unified Public Intelligence Platform contracts
 '
 PYTHONPATH="$BACKEND" "$PYTHON" "$ROOT/scripts/validate_v4000_release.py"
-grep -q 'APP_VERSION = "4.11.0"' "$BACKEND/app/version.py"
-grep -q 'Version: 4.11.0' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
-grep -q 'const RELEASE="4.11.0"' "$BACKEND/public_app/service-worker.js"
+grep -q 'APP_VERSION = "4.12.0"' "$BACKEND/app/version.py"
+grep -q 'Version: 4.12.0' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
+grep -q 'const RELEASE="4.12.0"' "$BACKEND/public_app/service-worker.js"
 grep -q 'data-scsi-platform-contract="unified-v4"' "$BACKEND/public_app/index.html"
 for endpoint in \
   '/public/v4' \
@@ -31,8 +31,8 @@ for endpoint in \
   '/public/production-assurance'; do
   grep -q "$endpoint" "$BACKEND/app/main.py"
 done
-grep -q 'unified-platform-v4000.js?v=4.11.0' "$BACKEND/public_app/index.html"
-grep -q 'unified-platform-v4000.css?v=4.11.0' "$BACKEND/public_app/index.html"
+grep -q 'unified-platform-v4000.js?v=4.12.0' "$BACKEND/public_app/index.html"
+grep -q 'unified-platform-v4000.css?v=4.12.0' "$BACKEND/public_app/index.html"
 grep -q 'unified-platform-v4000.js' "$BACKEND/public_app/service-worker.js"
 grep -q 'SCSIUnifiedPlatformV4000' "$BACKEND/public_app/assets/unified-platform-v4000.js"
 cmp -s "$BACKEND/public_app/assets/unified-platform-v4000.js" "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/assets/unified-platform-v4000.js"
@@ -44,7 +44,7 @@ printf '
 "$PYTHON" - "$ROOT" <<'PYVERIFY'
 from pathlib import Path
 import hashlib,json,sys
-root=Path(sys.argv[1]);m=json.loads((root/'MANIFEST.json').read_text());assert m['release']=='4.11.0';assert m['file_count']==len(m['files'])
+root=Path(sys.argv[1]);m=json.loads((root/'MANIFEST.json').read_text());assert m['release']=='4.12.0';assert m['file_count']==len(m['files'])
 for e in m['files']:
  p=root/e['path'];d=p.read_bytes();assert len(d)==e['bytes'],e['path'];assert hashlib.sha256(d).hexdigest()==e['sha256'],e['path']
 print(f"Verified {len(m['files'])} manifest entries.")
@@ -84,7 +84,7 @@ if ! "$PYTHON" -m pip check >/dev/null 2>&1; then
 fi
 if [[ "${SC_SI_SKIP_TESTS:-0}" != "1" ]]; then
   printf '
-==> Running complete inherited and v4.11.0 regression suite
+==> Running complete inherited and v4.12.0 regression suite
 '
   reset_runtime
   PYTHON="$PYTHON" PYTHONPATH="$BACKEND" PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 "$PYTHON" "$ROOT/scripts/run_v4000_test_suite.py"
@@ -95,7 +95,7 @@ else
 fi
 if [[ "${SC_SI_RUN_BROWSER_GATE:-0}" == "1" && "${SC_SI_SKIP_BROWSER:-0}" != "1" ]]; then
   printf '
-==> Running v4.11.0 browser consolidation gate
+==> Running v4.12.0 browser consolidation gate
 '
   reset_runtime
   PYTHONPATH="$BACKEND" "$PYTHON" "$ROOT/scripts/browser_unified_platform_v4000.py"
@@ -107,6 +107,6 @@ fi
 rm -rf "$BACKEND/backend"
 [[ ! -e "$BACKEND/backend" ]] || { echo 'ERROR: runtime state cleanup failed.' >&2; exit 1; }
 printf '
-SUCCESS: Site Intelligence v4.11.0 passed Unified Public Intelligence Platform validation.
+SUCCESS: Site Intelligence v4.12.0 passed Unified Public Intelligence Platform validation.
 Repository: %s
 ' "$ROOT"

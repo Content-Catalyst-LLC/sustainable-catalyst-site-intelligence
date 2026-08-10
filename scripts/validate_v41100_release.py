@@ -8,4 +8,4 @@ assert 'ocean-events-v41100.js' in sw and 'ocean-events-v41100.css' in sw
 for asset in ('ocean-events-v41100.js','ocean-events-v41100.css','ocean-missions-v41000.js','ocean-missions-v41000.css'):
     assert (ROOT/'backend/public_app/assets'/asset).read_text()==(ROOT/'wordpress-plugin/sustainable-catalyst-site-intelligence/assets'/asset).read_text(), asset
 subprocess.run([sys.executable,str(ROOT/'scripts/validate_v41100_release_contract.py')],check=True)
-print('PASS: v4.11.0 static release validation')
+print('PASS: v4.12.0 static release validation')

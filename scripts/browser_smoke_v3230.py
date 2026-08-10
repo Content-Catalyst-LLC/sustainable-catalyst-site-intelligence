@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Network-independent Chromium smoke test for v4.11.0 application presentation."""
+"""Network-independent Chromium smoke test for v4.12.0 application presentation."""
 from __future__ import annotations
 
 from io import BytesIO
@@ -84,7 +84,7 @@ def main() -> int:
     assert result["uniqueColors"] > 100 and result["darkRatio"] < 0.82, result
     assert not errors, errors
     print(json.dumps(result, indent=2))
-    print("PASS: v4.11.0 rendered a bounded map-first workspace, subject focus, evidence drawer, route isolation, and visible-map health in Chromium.")
+    print("PASS: v4.12.0 rendered a bounded map-first workspace, subject focus, evidence drawer, route isolation, and visible-map health in Chromium.")
     return 0
 
 

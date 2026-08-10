@@ -1,0 +1,46 @@
+Site Intelligence v4.12.0 — Build Validation (corrected package)
+============================================================
+Release: Marine Human Activity, Protected Areas & Maritime Pressure
+
+RESULT: PASS
+
+Core validation
+- Backend automated tests: 1,182 passed
+- Immutable repository manifest: 1,634 distributable entries
+- Nested backend runtime entries in manifest: 0
+- JSON/GeoJSON distributable files parsed: 134
+- JavaScript files syntax validated: 105
+- WordPress PHP syntax: PASS
+- Static security scan findings: 0
+- Deterministic validation pass 1: PASS
+- Deterministic validation pass 2 after full tests: PASS
+
+Packaging repair
+- Removed runtime-only backend/backend/data state from repository package
+- Test cleanup covers canonical and backend-relative runtime locations
+- Dedicated build_v41200_manifest.py added
+- Static release validator rejects frozen backend/backend runtime state
+
+Architecture
+- Primary areas: 6
+- Public routes: 35
+- Route delta from v4.11.0: 0
+- New layer remains deferred inside Earth Observation ocean sequence
+
+v4.12 evidence gates
+- NOAA / BOEM Marine Cadastre Vessel Traffic registered
+- NOAA Marine Protected Areas Inventory registered
+- EMODnet Human Activities registered
+- Global Fishing Watch APIs registered
+- AIS absence is not treated as vessel absence
+- Inferred fishing activity is not treated as illegal fishing
+- Protected-area overlap is not treated as a legal violation
+- No platform compliance or enforcement finding is fabricated
+
+Browser gate
+- Marine Human Activity browser gate: PASS
+- Spatial orientation label: PASS
+- No unsupported legal/compliance inference: PASS
+
+Promotion status
+- Production deployment was not performed in this build environment.
