@@ -1,4 +1,4 @@
-"""Research evidence and knowledge integration for Site Intelligence v4.25.0.
+"""Research evidence and knowledge integration for Site Intelligence v4.26.0.
 
 This module prepares public-safe research context, provenance manifests, citation
 exports, claim/evidence relationship maps, and explicit handoff previews. It does

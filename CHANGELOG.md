@@ -1,3 +1,10 @@
+## v4.26.0 — Global Human Settlements, Urbanization & Built Environment Intelligence
+
+- Added source-bounded JRC GHSL, WorldPop Global2, NASA VIIRS Black Marble and World Bank urbanization contracts.
+- Added human-settlements normalization, feature, threshold-preview, export-manifest and readiness endpoints.
+- Preserved census, parcel, zoning, infrastructure-service and zero-record non-inference boundaries.
+- Preserved six primary areas and all 35 public routes.
+
 ## 4.24.0 — Wetlands, Inland Waters & Aquatic Habitat Intelligence
 - Added wetland inventory, Ramsar designation, global surface-water change and SWOT inland-water evidence.
 - Preserved six-area / 35-route architecture and bounded Render polling.

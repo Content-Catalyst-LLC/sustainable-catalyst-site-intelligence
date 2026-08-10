@@ -4,7 +4,7 @@ from app.climate_intelligence_v42200 import normalize_measurement, normalize_ext
 client=TestClient(app)
 def test_overview_and_catalog():
     o=client.get('/public/climate').json(); c=client.get('/public/climate/catalog').json()
-    assert o['ok'] and o['version']=='4.25.0' and o['contract']=='global-climate-baselines-anomalies-extremes-intelligence'
+    assert o['ok'] and o['version']=='4.26.0' and o['contract']=='global-climate-baselines-anomalies-extremes-intelligence'
     assert o['source_count']==4 and c['truth_boundaries']['climate_normal_equals_forecast'] is False
     assert {'noaa-ncei-cdo','copernicus-era5','nasa-gistemp-v4','wmo-climate-extremes'} <= {x['id'] for x in c['sources']}
 def test_empty_state_has_no_climate_risk_claim():
