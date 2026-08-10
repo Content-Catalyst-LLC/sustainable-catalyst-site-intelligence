@@ -1,4 +1,4 @@
-Site Intelligence v4.13.0 terminal install command
+Site Intelligence v4.14.0 terminal install command
 
 cd ~/Downloads
 
@@ -7,10 +7,10 @@ INSTALLER="$(find . -maxdepth 1 -type f \
   -print0 | xargs -0 ls -t | head -1)"
 
 BUNDLE="$(find . -maxdepth 1 -type f \
-  -name 'sustainable-catalyst-site-intelligence-v4.13.0-release-bundle*.zip' \
+  -name 'sustainable-catalyst-site-intelligence-v4.14.0-release-bundle*.zip' \
   -print0 | xargs -0 ls -t | head -1)"
 
 chmod +x "$INSTALLER"
 bash "$INSTALLER" "$BUNDLE"
 
-Install the WordPress ZIP only after the live GitHub and Render release gate reports success for v4.13.0.
+Install the WordPress ZIP only after the live GitHub and Render release gate reports success for v4.14.0.

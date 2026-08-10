@@ -1,4 +1,4 @@
-# Site Intelligence v4.13.0 — Security, Observability, Performance, and Scale Assurance
+# Site Intelligence v4.14.0 — Security, Observability, Performance, and Scale Assurance
 
 This release hardens the existing public-intelligence platform rather than adding another observatory.
 

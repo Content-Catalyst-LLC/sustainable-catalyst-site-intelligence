@@ -1,4 +1,4 @@
-"""Writable runtime-state path isolation for Site Intelligence v4.13.0."""
+"""Writable runtime-state path isolation for Site Intelligence v4.14.0."""
 
 from __future__ import annotations
 

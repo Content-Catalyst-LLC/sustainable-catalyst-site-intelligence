@@ -1,8 +1,8 @@
-# Site Intelligence v4.13.0 — Marine Human Activity, Protected Areas & Maritime Pressure
+# Site Intelligence v4.14.0 — Marine Human Activity, Protected Areas & Maritime Pressure
 
 ## Release purpose
 
-v4.13.0 extends the ocean environment from physical and biological observation into human-use and conservation context without creating a new primary workspace or public route family.
+v4.14.0 extends the ocean environment from physical and biological observation into human-use and conservation context without creating a new primary workspace or public route family.
 
 The ocean continuum is now:
 
@@ -54,18 +54,18 @@ The ocean sequence gains a deferred **Human activity & protection** environment 
 
 ## Compatibility
 
-v4.13.0 preserves the six-area / 35-route v4 architecture and does not alter the existing country selector, WordPress host-page isolation contract, fixed application viewport, or prior ocean/space evidence boundaries.
+v4.14.0 preserves the six-area / 35-route v4 architecture and does not alter the existing country selector, WordPress host-page isolation contract, fixed application viewport, or prior ocean/space evidence boundaries.
 
 ## Packaging repair revision — 2026-08-09
 
 The first local installer run exposed a release-packaging defect before GitHub/Render promotion: the immutable manifest had accidentally frozen runtime-only files under `backend/backend/data/`. The first deterministic test pass updated that runtime state, causing the second manifest verification to fail as designed.
 
-The corrected v4.13.0 package:
+The corrected v4.14.0 package:
 
 - excludes the erroneous nested `backend/backend/` runtime tree from the immutable manifest;
 - removes nested runtime state from the distributable repository;
 - extends test hygiene to clean both canonical and backend-relative runtime locations;
-- adds a dedicated v4.13.0 manifest builder and static regression assertion preventing nested runtime state from being frozen again;
+- adds a dedicated v4.14.0 manifest builder and static regression assertion preventing nested runtime state from being frozen again;
 - preserves the application version, feature contracts, six-area / 35-route architecture, and WordPress package.
 
-No v4.13.0 GitHub or Render promotion occurred before this repair.
+No v4.14.0 GitHub or Render promotion occurred before this repair.

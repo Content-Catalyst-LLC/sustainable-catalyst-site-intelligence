@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"; BACKEND="$ROOT/backend"; PYTHON="${PYTHON:-python3}"
-grep -q 'APP_VERSION = "4.13.0"' "$BACKEND/app/version.py"
-grep -q 'Version: 4.13.0' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
+grep -q 'APP_VERSION = "4.14.0"' "$BACKEND/app/version.py"
+grep -q 'Version: 4.14.0' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
 for endpoint in /public/orbital-earth /public/planetary-intelligence /public/astronomical-observation /public/solar-system-navigation /public/ocean-intelligence /public/water-column /public/seafloor-intelligence /public/underwater-observation /public/underwater-observation/catalog /public/underwater-observation/state /public/underwater-observation/media/normalize /public/underwater-observation/annotation/normalize /public/underwater-observation/export-manifest /public/underwater-observation/readiness /public/marine-biodiversity /public/marine-biodiversity/catalog /public/marine-biodiversity/state /public/marine-biodiversity/occurrence/normalize /public/marine-biodiversity/taxonomy/normalize /public/marine-biodiversity/visual/normalize /public/marine-biodiversity/acoustic/normalize /public/marine-biodiversity/export-manifest /public/marine-biodiversity/readiness /public/ocean-missions /public/ocean-missions/catalog /public/ocean-missions/state /public/ocean-missions/platform/normalize /public/ocean-missions/mission/normalize /public/ocean-missions/track/normalize /public/ocean-missions/export-manifest /public/ocean-missions/readiness /public/ocean-events /public/ocean-events/catalog /public/ocean-events/state /public/ocean-events/condition/normalize /public/ocean-events/threshold/preview /public/ocean-events/event/normalize /public/ocean-events/export-manifest /public/ocean-events/readiness /public/marine-human-activity /public/marine-human-activity/catalog /public/marine-human-activity/state /public/marine-human-activity/activity/normalize /public/marine-human-activity/protected-area/normalize /public/marine-human-activity/overlap/preview /public/marine-human-activity/export-manifest /public/marine-human-activity/readiness /public/v4/readiness; do grep -q "$endpoint" "$BACKEND/app/main.py"; done
 for asset in ocean-surface-v4500 water-column-v4600 seafloor-bathymetry-v4700 underwater-observation-v4800 marine-biodiversity-v4900 ocean-missions-v41000 ocean-events-v41100 marine-human-activity-v41200; do
   cmp -s "$BACKEND/public_app/assets/${asset}.js" "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/assets/${asset}.js"
@@ -14,7 +14,7 @@ echo '==> Verifying immutable repository manifest'
 import hashlib,json,sys
 from pathlib import Path
 root=Path(sys.argv[1]); m=json.loads((root/'MANIFEST.json').read_text())
-assert m.get('release')=='4.13.0'
+assert m.get('release')=='4.14.0'
 for row in m['files']:
  p=root/row['path']; assert p.is_file(),row['path']; assert hashlib.sha256(p.read_bytes()).hexdigest()==row['sha256'],row['path']
 print(f"Verified {len(m['files'])} manifest entries.")
@@ -33,4 +33,4 @@ if command -v php >/dev/null 2>&1; then php -l "$ROOT/wordpress-plugin/sustainab
 "$PYTHON" "$ROOT/scripts/security_static_scan_v41100.py" "$ROOT"
 if [[ "${SC_SI_SKIP_TESTS:-0}" != "1" ]]; then (cd "$BACKEND" && PYTHONPATH=. PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 "$PYTHON" -m pytest -q); fi
 if [[ "${SC_SI_RUN_BROWSER:-0}" == "1" ]]; then PYTHON="$PYTHON" "$PYTHON" "$ROOT/scripts/browser_marine_human_activity_v41200.py"; fi
-echo 'SUCCESS: Site Intelligence v4.13.0 passed Marine Human Activity, Protected Areas & Maritime Pressure validation.'
+echo 'SUCCESS: Site Intelligence v4.14.0 passed Marine Human Activity, Protected Areas & Maritime Pressure validation.'

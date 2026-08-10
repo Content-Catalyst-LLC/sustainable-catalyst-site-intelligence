@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Static and API contract validation for Site Intelligence v4.13.0."""
+"""Static and API contract validation for Site Intelligence v4.14.0."""
 from __future__ import annotations
 
 import json
@@ -19,7 +19,7 @@ schema = client.get("/public/workspaces/unified-state")
 assert schema.status_code == 200, schema.text
 payload = schema.json()
 assert payload["ok"] is True
-assert payload["version"] == "4.13.0"
+assert payload["version"] == "4.14.0"
 assert payload["contract"] == "unified-analytical-workspace-state"
 assert payload["route_count"] == 6
 assert payload["country_catalog_count"] >= 170
@@ -48,15 +48,15 @@ assert body["snapshot"] is False
 html = (BACKEND / "public_app" / "index.html").read_text(encoding="utf-8")
 worker = (BACKEND / "public_app" / "service-worker.js").read_text(encoding="utf-8")
 js = (BACKEND / "public_app" / "assets" / "cross-view-state-v3250.js").read_text(encoding="utf-8")
-assert 'data-scsi-release="4.13.0"' in html
-assert "cross-view-state-v3250.css?v=4.13.0" in html
-assert "cross-view-state-v3250.js?v=4.13.0" in html
+assert 'data-scsi-release="4.14.0"' in html
+assert "cross-view-state-v3250.css?v=4.14.0" in html
+assert "cross-view-state-v3250.js?v=4.14.0" in html
 assert "cross-view-state-v3250.js" in worker
 assert "SiteIntelligenceCrossViewState" in js
 assert "scsi:cross-view-ready" in js
 
 policy = json.loads((BACKEND / "data" / "unified_analytical_state_policy_v3250.json").read_text(encoding="utf-8"))
-assert policy["version"] == "4.13.0"
+assert policy["version"] == "4.14.0"
 assert set(policy["routes"]) == {"overview", "global", "country", "compare", "spatial", "earth"}
 
 print(
@@ -72,4 +72,4 @@ print(
         indent=2,
     )
 )
-print("PASS: Site Intelligence v4.13.0 unified analytical state contracts are complete.")
+print("PASS: Site Intelligence v4.14.0 unified analytical state contracts are complete.")

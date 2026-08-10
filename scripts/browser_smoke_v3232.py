@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Network-independent Chromium smoke test for v4.13.0 map interaction controls."""
+"""Network-independent Chromium smoke test for v4.14.0 map interaction controls."""
 from __future__ import annotations
 
 import json
@@ -37,12 +37,12 @@ def main() -> int:
         page = browser.new_page(viewport={"width": 1280, "height": 820})
         page.on("console", lambda message: errors.append(f"console:{message.type}:{message.text}") if message.type == "error" else None)
         page.on("pageerror", lambda error: errors.append(f"pageerror:{error}"))
-        page.set_content('<!doctype html><html><body><div id="app" data-scsi-release="4.13.0" class="app-ready"><section class="map-panel"><div class="map-toolbar"><div class="map-actions"></div></div><div id="map" style="width:1000px;height:560px"></div><div id="eventList"></div></section></div></body></html>')
+        page.set_content('<!doctype html><html><body><div id="app" data-scsi-release="4.14.0" class="app-ready"><section class="map-panel"><div class="map-toolbar"><div class="map-actions"></div></div><div id="map" style="width:1000px;height:560px"></div><div id="eventList"></div></section></div></body></html>')
         page.add_style_tag(content=ENGINE_CSS.read_text(encoding="utf-8"))
         page.add_style_tag(content=INTERACTION_CSS.read_text(encoding="utf-8"))
         page.evaluate("world => { window.fetch=async()=>({ok:true,json:async()=>world}); }", world)
         page.add_script_tag(content=ENGINE.read_text(encoding="utf-8"))
-        page.evaluate("features => { history.replaceState=()=>{}; const map=L.map('map',{minZoom:2,maxZoom:9}).setView([0,38],3); let filters={categories:[],source:'',days:30,cluster:true,eventsVisible:true,selected:''}; let filtered=features.slice(); const redraw=()=>{filtered=features.filter(f=>(!filters.categories.length||filters.categories.includes(f.properties.category))&&(!filters.source||filters.source===f.properties.source)); window.dispatchEvent(new CustomEvent('scsi:overview-events-rendered',{detail:{count:filtered.length}}));}; window.SCSIOverviewMapV3232={version:'4.13.0',getMap:()=>map,getEvents:()=>features,getFilteredEvents:()=>filtered,getFilters:()=>({...filters}),setFilters:next=>{filters={...filters,...next};redraw();return filters},selectEvent:id=>{filters.selected=id},fitResults:()=>map.fitBounds(filtered.map(f=>[f.geometry.coordinates[1],f.geometry.coordinates[0]]),{maxZoom:6}),setImageryOpacity:value=>{document.querySelector('#map').dataset.opacity=String(value)},setBaseStyle:value=>{document.querySelector('#map').dataset.mapStyle=value},syncUrl:()=>{},render:redraw}; redraw(); }", features)
+        page.evaluate("features => { history.replaceState=()=>{}; const map=L.map('map',{minZoom:2,maxZoom:9}).setView([0,38],3); let filters={categories:[],source:'',days:30,cluster:true,eventsVisible:true,selected:''}; let filtered=features.slice(); const redraw=()=>{filtered=features.filter(f=>(!filters.categories.length||filters.categories.includes(f.properties.category))&&(!filters.source||filters.source===f.properties.source)); window.dispatchEvent(new CustomEvent('scsi:overview-events-rendered',{detail:{count:filtered.length}}));}; window.SCSIOverviewMapV3232={version:'4.14.0',getMap:()=>map,getEvents:()=>features,getFilteredEvents:()=>filtered,getFilters:()=>({...filters}),setFilters:next=>{filters={...filters,...next};redraw();return filters},selectEvent:id=>{filters.selected=id},fitResults:()=>map.fitBounds(filtered.map(f=>[f.geometry.coordinates[1],f.geometry.coordinates[0]]),{maxZoom:6}),setImageryOpacity:value=>{document.querySelector('#map').dataset.opacity=String(value)},setBaseStyle:value=>{document.querySelector('#map').dataset.mapStyle=value},syncUrl:()=>{},render:redraw}; redraw(); }", features)
         page.add_script_tag(content=INTERACTION.read_text(encoding="utf-8"))
         page.wait_for_timeout(800)
         page.click('#mapInteractionToggle')
@@ -61,7 +61,7 @@ def main() -> int:
     assert result["zoom"] >= 4, result
     assert not errors, errors
     print(json.dumps(result, indent=2))
-    print("PASS: v4.13.0 rendered layer controls, semantic filters, synchronized result state, fit-to-results, and local geography in Chromium.")
+    print("PASS: v4.14.0 rendered layer controls, semantic filters, synchronized result state, fit-to-results, and local geography in Chromium.")
     return 0
 
 

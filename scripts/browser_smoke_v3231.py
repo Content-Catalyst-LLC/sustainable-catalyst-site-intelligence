@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Network-independent Chromium smoke test for v4.13.0 production truth."""
+"""Network-independent Chromium smoke test for v4.14.0 production truth."""
 from __future__ import annotations
 
 import json
@@ -37,7 +37,7 @@ def main() -> int:
         page.set_content('<!doctype html><html><body><nav id="primaryNavigation"><button class="nav-item active" data-route="overview"><span>Overview</span></button><button class="nav-item" data-route="global"><span>Global conditions</span></button><button class="nav-item" data-route="economics"><span>Economics</span></button></nav><main id="main" class="workspace"><header class="workspace-head"><h1 id="viewTitle">Overview</h1></header><section id="overviewLayout"><article class="panel"><p>Current public map, events, evidence, and source context are ready.</p><div class="scsi-map-managed"></div></article></section><section id="globalConditionsWorkspace" hidden><article class="panel"><p>Current global public conditions and source context are ready.</p></article></section><section id="routePanel" hidden></section></main></body></html>')
         page.evaluate("() => { window.__lastPushed=''; history.pushState=(state,title,url)=>{window.__lastPushed=String(url)}; }")
         page.add_style_tag(content=STYLE.read_text(encoding="utf-8"))
-        page.evaluate("routes => { window.fetch=async()=>({ok:true,json:async()=>({ok:true,version:'4.13.0',routes})}); window.SCGlobalConditionsV210={open:async()=>{document.querySelector('#overviewLayout').hidden=true;document.querySelector('#globalConditionsWorkspace').hidden=false},close:()=>{document.querySelector('#globalConditionsWorkspace').hidden=true}}; let current='overview'; window.SCSIRouterV3228={current:()=>current,navigate:async route=>{current=route;document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.route===route));if(route==='overview'){document.querySelector('#overviewLayout').hidden=false;window.SCGlobalConditionsV210.close()}else if(route==='global'){await window.SCGlobalConditionsV210.open()}return true}}; document.querySelector('#primaryNavigation').addEventListener('click',event=>{const button=event.target.closest('.nav-item[data-route]');if(button&&!button.disabled)window.SCSIRouterV3228.navigate(button.dataset.route)}); }", routes)
+        page.evaluate("routes => { window.fetch=async()=>({ok:true,json:async()=>({ok:true,version:'4.14.0',routes})}); window.SCGlobalConditionsV210={open:async()=>{document.querySelector('#overviewLayout').hidden=true;document.querySelector('#globalConditionsWorkspace').hidden=false},close:()=>{document.querySelector('#globalConditionsWorkspace').hidden=true}}; let current='overview'; window.SCSIRouterV3228={current:()=>current,navigate:async route=>{current=route;document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.route===route));if(route==='overview'){document.querySelector('#overviewLayout').hidden=false;window.SCGlobalConditionsV210.close()}else if(route==='global'){await window.SCGlobalConditionsV210.open()}return true}}; document.querySelector('#primaryNavigation').addEventListener('click',event=>{const button=event.target.closest('.nav-item[data-route]');if(button&&!button.disabled)window.SCSIRouterV3228.navigate(button.dataset.route)}); }", routes)
         page.add_script_tag(content=SCRIPT.read_text(encoding="utf-8"))
         page.wait_for_timeout(600)
         initial = page.evaluate("() => ({bar:!!document.querySelector('#productionTruthBar'),state:document.querySelector('#productionTruthBar')?.dataset.state,label:document.querySelector('#truthStateLabel')?.textContent,economicsDisabled:document.querySelector('[data-route=economics]').disabled,route:document.body.dataset.workspaceRoute})")
@@ -52,7 +52,7 @@ def main() -> int:
     assert "view=global" in global_state["pushed"], global_state
     assert not errors, errors
     print(json.dumps({"initial": initial, "global": global_state}, indent=2))
-    print("PASS: v4.13.0 production truth disabled a missing controller, reported route readiness, and restored browser history.")
+    print("PASS: v4.14.0 production truth disabled a missing controller, reported route readiness, and restored browser history.")
     return 0
 
 

@@ -14,13 +14,13 @@ def find_browser():
 
 def page_html():
     payload={
-      'ok':True,'version':'4.13.0','contract':'orbital-earth-satellite-observation','mode':'orbital','presentation':'2.5d-orbital-perspective',
+      'ok':True,'version':'4.14.0','contract':'orbital-earth-satellite-observation','mode':'orbital','presentation':'2.5d-orbital-perspective',
       'view':{'center':[0,20],'presentation_altitude_km':1200,'altitude_is_physical_camera_solution':False},
       'observation':{'requested_date':'2026-08-01','layer_id':'true-color','layer_title':'NASA Corrected Reflectance True Color','tile_url':'https://gibs.earthdata.nasa.gov/example/{z}/{y}/{x}.jpg','source':'NASA GIBS','attribution':'NASA EOSDIS GIBS','spatial_resolution':'source and zoom dependent','observation_type':'visible-light satellite mosaic','platform':'Suomi National Polar-orbiting Partnership','instrument':'VIIRS','product_context':'Corrected Reflectance True Color'},
       'footprints':{'instantaneous_sensor_swath':None,'boundary':'Site Intelligence exposes product coverage and selected-view context. It does not invent a pass-specific sensor footprint when no ephemeris/swath source is connected.'},
       'orbit_context':{'real_time_spacecraft_position':None,'ground_track':None,'ephemeris_connected':False,'illustrative_orbit_rings_only':True}
     }
-    export={'ok':True,'version':'4.13.0','schema':'sc-site-intelligence-orbital-view/1.0','orbital_state':payload,'review':{'real_satellite_imagery':True,'live_spacecraft_position_claimed':False,'instantaneous_swath_claimed':False,'human_interpretation_required':True},'manifest_sha256':'a'*64}
+    export={'ok':True,'version':'4.14.0','schema':'sc-site-intelligence-orbital-view/1.0','orbital_state':payload,'review':{'real_satellite_imagery':True,'live_spacecraft_position_claimed':False,'instantaneous_swath_claimed':False,'human_interpretation_required':True},'manifest_sha256':'a'*64}
     setup=f'''<script>
     history.replaceState=()=>{{}};
     window.SC_SITE_INTELLIGENCE_API='https://gate.local';
@@ -38,7 +38,7 @@ def page_html():
     <script>{JS}</script></body></html>'''
 
 def exercise(page,label):
-    page.wait_for_function("window.SCSIOrbitalEarthV4100?.version==='4.13.0'",timeout=5000)
+    page.wait_for_function("window.SCSIOrbitalEarthV4100?.version==='4.14.0'",timeout=5000)
     page.locator('#earthOrbitEnter').click()
     page.wait_for_function("document.querySelector('#earthStudio').classList.contains('orbit-active')",timeout=5000)
     page.wait_for_function("document.querySelector('#earthOrbitPlatform')?.textContent.includes('VIIRS')",timeout=5000)
@@ -57,8 +57,8 @@ def main():
     outer=browser.new_page(viewport={'width':1200,'height':850});outer.set_content('<iframe id="f" style="width:1100px;height:760px"></iframe>');frame=outer.query_selector('#f').content_frame();frame.set_content(html,wait_until='domcontentloaded');results.append(exercise(frame,'iframe'))
     assert not errors,errors
     for r in results:
-        m=r['metrics'];assert m['active'] and not m['hidden'];assert m['altitude']=='35786';assert '35,786' in m['label'];assert 'VIIRS' in m['platform'];assert 'no position fabricated' in m['truth'].lower();assert 'pass-specific sensor footprint' in m['truth'].lower();assert m['map'] and m['version']=='4.13.0' and m['surfaceRestored']
-    print(json.dumps({'browser':path,'results':results,'errors':errors},indent=2));print('PASS: v4.13.0 Orbital Earth interaction passed in direct and iframe modes.')
+        m=r['metrics'];assert m['active'] and not m['hidden'];assert m['altitude']=='35786';assert '35,786' in m['label'];assert 'VIIRS' in m['platform'];assert 'no position fabricated' in m['truth'].lower();assert 'pass-specific sensor footprint' in m['truth'].lower();assert m['map'] and m['version']=='4.14.0' and m['surfaceRestored']
+    print(json.dumps({'browser':path,'results':results,'errors':errors},indent=2));print('PASS: v4.14.0 Orbital Earth interaction passed in direct and iframe modes.')
     sys.stdout.flush();sys.stderr.flush();os._exit(0)
 
 if __name__=='__main__':

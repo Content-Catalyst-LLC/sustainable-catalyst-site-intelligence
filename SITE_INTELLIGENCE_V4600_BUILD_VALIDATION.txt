@@ -1,11 +1,11 @@
-Sustainable Catalyst Site Intelligence v4.13.0
+Sustainable Catalyst Site Intelligence v4.14.0
 Water Column & Depth Explorer — Build Validation
 
 Release status: source validation complete; production deployment not performed in this build environment.
 
 Backend regression
 - 1,132 automated tests passed.
-- v4.13.0 Water Column contract tests passed.
+- v4.14.0 Water Column contract tests passed.
 - Exact-depth sample resolution passed.
 - Between-sample requests preserve missing values: no interpolation and no nearest-sample substitution.
 - Pressure and geometric depth remain separate unless an attributed source conversion exists.
@@ -43,6 +43,6 @@ Release boundary
 - Navigation depth supports 0–11,000 m as a requested exploration state.
 - A selected depth does not prove an observation exists there.
 - Missing samples remain missing.
-- No interpolation is performed in v4.13.0.
+- No interpolation is performed in v4.14.0.
 - Nearest samples may be disclosed as context but are never substituted as the requested-depth value.
 - In-situ, fixed-observatory, mobile-platform, model, analysis, forecast, and reanalysis evidence remain distinguishable.

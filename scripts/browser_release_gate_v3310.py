@@ -42,7 +42,7 @@ def main():
         assert r['ready'] and r['productionAssurance'] and r['scripts']==r['expected'] and r['expected']>=47,r
         assert r['countryOptions']>=170 and r['country']=='BRA' and 'BRA' in (r['badge'] or ''),r
         assert not r['routeFailures'],r
-    print(json.dumps({'browser':path,'results':results,'errors':errors},indent=2)); print('PASS: v4.13.0 composite release gate verified complete shell, production assurance, global country selection, route churn, and iframe behavior.'); return 0
+    print(json.dumps({'browser':path,'results':results,'errors':errors},indent=2)); print('PASS: v4.14.0 composite release gate verified complete shell, production assurance, global country selection, route churn, and iframe behavior.'); return 0
 if __name__=='__main__':
     try: status=int(main())
     except BaseException: traceback.print_exc(); status=1
