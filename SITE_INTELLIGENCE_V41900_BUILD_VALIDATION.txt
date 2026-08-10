@@ -1,0 +1,25 @@
+Site Intelligence v4.19.0 — Terrestrial Ecosystems, Vegetation & Wildfire Intelligence
+Build validation status: PASS
+
+Focused inherited + v4.19 regression: 16 passed
+Complete inherited + v4.19 regression: 1,238 passed
+Immutable repository manifest: 1,767 distributable files
+Nested backend runtime entries: 0
+JSON/GeoJSON parse gate: 134 files
+JavaScript syntax gate: 119 files
+WordPress PHP syntax: PASS
+Static security findings: 0
+Initial public-app HTML: 164,948 bytes
+Terrestrial direct / iframe-compatible browser asset gate: PASS
+Architecture: six primary areas / 35 public routes preserved
+
+Truth gates verified:
+- active-fire detection != complete wildfire incident
+- active-fire detection != burned area
+- burned-area classification != current active fire
+- NDVI/EVI != direct ecosystem-health determination
+- land-cover class != legal land use / ownership / protected status
+- satellite classification != ground-survey truth
+- near-real-time != consolidated/final product
+- threshold comparison != wildfire warning / evacuation order
+- zero records != no fire / no vegetation stress / no land-cover change
