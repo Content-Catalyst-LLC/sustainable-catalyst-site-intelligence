@@ -1,8 +1,8 @@
-# Site Intelligence v4.15.0 — Solar System Navigation & Mission Ephemeris
+# Site Intelligence v4.16.0 — Solar System Navigation & Mission Ephemeris
 
 ## Purpose
 
-v4.15.0 connects Orbital Earth, Lunar & Planetary Intelligence, and Astronomical Observation through a single solar-system navigation state inside the existing Earth Observation route. The release preserves the v4 six-area / 35-route architecture.
+v4.16.0 connects Orbital Earth, Lunar & Planetary Intelligence, and Astronomical Observation through a single solar-system navigation state inside the existing Earth Observation route. The release preserves the v4 six-area / 35-route architecture.
 
 ## New capability
 

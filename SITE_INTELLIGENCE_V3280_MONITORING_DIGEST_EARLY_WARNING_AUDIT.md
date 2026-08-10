@@ -1,8 +1,8 @@
-# Site Intelligence v4.15.0 Monitoring, Digest, and Early-Warning Audit
+# Site Intelligence v4.16.0 Monitoring, Digest, and Early-Warning Audit
 
 ## Scope
 
-This audit covers the public-safe monitoring layer introduced in v4.15.0.
+This audit covers the public-safe monitoring layer introduced in v4.16.0.
 
 ### Watchlists
 

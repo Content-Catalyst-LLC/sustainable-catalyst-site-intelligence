@@ -1,4 +1,4 @@
-# Site Intelligence v4.15.0 — Water Column & Depth Explorer Audit
+# Site Intelligence v4.16.0 — Water Column & Depth Explorer Audit
 
 ## Scope
 
@@ -27,7 +27,7 @@ PASS — State contains `value: null` before a source record is loaded.
 
 PASS — `depth_sample_verified` is false until an exact source sample is present.
 
-PASS — v4.15.0 interpolation is disabled.
+PASS — v4.16.0 interpolation is disabled.
 
 PASS — nearest-sample substitution is disabled.
 

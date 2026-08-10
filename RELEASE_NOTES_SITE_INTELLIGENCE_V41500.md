@@ -1,4 +1,4 @@
-# Site Intelligence v4.15.0 — Ocean Governance, Jurisdiction & Maritime Boundaries
+# Site Intelligence v4.16.0 — Ocean Governance, Jurisdiction & Maritime Boundaries
 
 This release adds source-bounded orientation for maritime zones, maritime boundaries, FAO fishing statistical areas, and Regional Fishery Body coverage inside Earth Observation. The six-area / 35-route architecture is preserved.
 

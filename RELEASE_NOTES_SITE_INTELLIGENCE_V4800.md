@@ -1,6 +1,6 @@
-# Site Intelligence v4.15.0 — Underwater Observation & Visual Evidence
+# Site Intelligence v4.16.0 — Underwater Observation & Visual Evidence
 
-v4.15.0 extends the existing Earth Observation chain from seafloor terrain into source-attributed underwater visual observations without adding a new top-level route.
+v4.16.0 extends the existing Earth Observation chain from seafloor terrain into source-attributed underwater visual observations without adding a new top-level route.
 
 Observation sequence:
 

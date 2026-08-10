@@ -1,8 +1,8 @@
-# Site Intelligence v4.15.0 — Coastal Change, Sea Level & Blue-Carbon Intelligence
+# Site Intelligence v4.16.0 — Coastal Change, Sea Level & Blue-Carbon Intelligence
 
 ## Release purpose
 
-v4.15.0 extends the existing Earth Observation ocean continuum to the dynamic coastal interface without adding a new primary application area or public navigation route. The release keeps water-level observations, tide predictions, sea-level-rise screening scenarios, shoreline analyses, coastal land-cover evidence, wetlands, and mangroves as distinct source-bounded evidence classes.
+v4.16.0 extends the existing Earth Observation ocean continuum to the dynamic coastal interface without adding a new primary application area or public navigation route. The release keeps water-level observations, tide predictions, sea-level-rise screening scenarios, shoreline analyses, coastal land-cover evidence, wetlands, and mangroves as distinct source-bounded evidence classes.
 
 ## Registered source families
 
@@ -51,4 +51,4 @@ The browser surface offers source, indicator, date, and geographic query state, 
 
 ## Production deployment
 
-The package is prepared for the existing resume-safe GitHub and Render promotion workflow. Production promotion is not performed by the build environment. Install the WordPress ZIP only after the installer verifies the exact v4.15.0 release id, Git commit, Render backend version, and live release gate.
+The package is prepared for the existing resume-safe GitHub and Render promotion workflow. Production promotion is not performed by the build environment. Install the WordPress ZIP only after the installer verifies the exact v4.16.0 release id, Git commit, Render backend version, and live release gate.

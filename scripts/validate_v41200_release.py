@@ -18,4 +18,4 @@ for asset in (
 ):
     assert (ROOT/'backend/public_app/assets'/asset).read_text()==(ROOT/'wordpress-plugin/sustainable-catalyst-site-intelligence/assets'/asset).read_text(), asset
 subprocess.run([sys.executable,str(ROOT/'scripts/validate_v41200_release_contract.py')],check=True,cwd=ROOT,env={**__import__('os').environ,'PYTHONPATH':str(ROOT/'backend')})
-print('PASS: v4.15.0 static release validation')
+print('PASS: v4.16.0 static release validation')

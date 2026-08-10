@@ -1,8 +1,8 @@
-# Site Intelligence v4.15.0 — Unified Public Intelligence Platform
+# Site Intelligence v4.16.0 — Unified Public Intelligence Platform
 
 ## Release purpose
 
-v4.15.0 is a consolidation release. It reorganizes the accumulated Site Intelligence capability set into one public intelligence platform without deleting, renaming, or silently migrating the existing public workspaces.
+v4.16.0 is a consolidation release. It reorganizes the accumulated Site Intelligence capability set into one public intelligence platform without deleting, renaming, or silently migrating the existing public workspaces.
 
 ## Primary navigation
 
@@ -19,7 +19,7 @@ The grouping is presentation architecture, not a second router. Existing route b
 
 ## Canonical platform contracts
 
-v4.15.0 identifies six shared contract families:
+v4.16.0 identifies six shared contract families:
 
 - route and cross-view state;
 - Data Truth and record provenance;
