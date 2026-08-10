@@ -1,4 +1,4 @@
-"""Event clustering and transparent signal ranking for Site Intelligence v4.23.0.
+"""Event clustering and transparent signal ranking for Site Intelligence v4.24.0.
 
 The module uses deterministic, explainable heuristics. It does not infer causal
 relationships, forecast event outcomes, or treat multi-source repetition as

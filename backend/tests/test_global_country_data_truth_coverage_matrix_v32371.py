@@ -10,7 +10,7 @@ CLIENT=TestClient(app)
 
 def test_global_country_catalog_is_bundled_and_broad():
     payload=CLIENT.get('/public/data-truth/countries').json()
-    assert payload['ok'] is True and payload['version']=='4.23.0'
+    assert payload['ok'] is True and payload['version']=='4.24.0'
     assert payload['country_count']>=170
     codes={row['code'] for row in payload['countries']}
     assert {'KEN','GHA','USA','IND','BRA','DEU'}.issubset(codes)
@@ -64,7 +64,7 @@ def test_global_truth_assets_and_service_worker_contract_are_shipped():
     html=(ROOT/'backend/public_app/index.html').read_text()
     worker=(ROOT/'backend/public_app/service-worker.js').read_text()
     js=(ROOT/'backend/public_app/assets/data-truth-v32371.js').read_text()
-    assert 'data-truth-v32371.css?v=4.23.0' in html and 'data-truth-v32371.js?v=4.23.0' in html
+    assert 'data-truth-v32371.css?v=4.24.0' in html and 'data-truth-v32371.js?v=4.24.0' in html
     assert 'data-truth-v32371.js' in worker and 'data-truth-v32371.css' in worker
     for token in ('SCSIDataTruthV32371','Coverage matrix','eligibility','scsi:data-truth-country-ready'):
         assert token in js

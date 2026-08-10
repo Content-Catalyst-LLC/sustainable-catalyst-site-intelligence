@@ -1,4 +1,4 @@
-# Site Intelligence v4.23.0 — Global Biodiversity, Species Distribution & Conservation Intelligence
+# Site Intelligence v4.24.0 — Global Biodiversity, Species Distribution & Conservation Intelligence
 
 ## Purpose
 Extend Earth Observation from climate and land-system context into biodiversity occurrence, marine and avian observations, and conservation-governance evidence without adding a new top-level route family.

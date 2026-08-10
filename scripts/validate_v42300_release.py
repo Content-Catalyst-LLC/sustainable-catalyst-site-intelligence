@@ -10,4 +10,4 @@ assert 'biodiversity-v42300.js' in prev; assert 'biodiversity-v42300.js' in sw a
 for asset in ('biodiversity-v42300.js','biodiversity-v42300.css','climate-v42200.js','climate-v42200.css'):
  assert (ROOT/'backend/public_app/assets'/asset).read_text()==(ROOT/'wordpress-plugin/sustainable-catalyst-site-intelligence/assets'/asset).read_text(),asset
 subprocess.run([sys.executable,str(ROOT/'scripts/validate_v42300_release_contract.py')],check=True,cwd=ROOT,env={**os.environ,'PYTHONPATH':str(ROOT/'backend')})
-print('PASS: v4.23.0 static release validation')
+print('PASS: v4.24.0 static release validation')

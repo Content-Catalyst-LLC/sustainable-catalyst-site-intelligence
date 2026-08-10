@@ -14,7 +14,7 @@ try:
   r=httpx.get(f'http://127.0.0.1:{port}'+path,timeout=5); assert r.status_code==200,(path,r.status_code)
  s=httpx.get(f'http://127.0.0.1:{port}/public/biodiversity/state?source=usfws-ecos&indicator_type=esa-listing-status',timeout=5).json(); assert s['truth']['esa_status_treated_as_global_status'] is False and s['truth']['critical_habitat_overlap_treated_as_project_effect'] is False
  js=httpx.get(f'http://127.0.0.1:{port}/app/assets/biodiversity-v42300.js',timeout=5).text; assert 'SCSIBiodiversityV42300' in js and 'NOT A POPULATION CENSUS, ABSENCE FINDING OR LEGAL DETERMINATION' in js
- print('PASS: v4.23.0 biodiversity direct and iframe-compatible HTTP/browser asset gate')
+ print('PASS: v4.24.0 biodiversity direct and iframe-compatible HTTP/browser asset gate')
 finally:
  p.terminate()
  try:p.wait(timeout=5)

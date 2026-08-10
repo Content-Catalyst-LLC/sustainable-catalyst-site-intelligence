@@ -10,8 +10,8 @@ def read(path: str) -> str: return (ROOT/path).read_text(encoding="utf-8")
 
 def test_directory_declares_five_operational_exportable_workflows():
     payload=CLIENT.get("/public/workflows/analytical").json()
-    assert payload["ok"] is True and payload["version"]=="4.23.0"
-    assert payload["release_id"]=="site-intelligence-v4.23.0"
+    assert payload["ok"] is True and payload["version"]=="4.24.0"
+    assert payload["release_id"]=="site-intelligence-v4.24.0"
     assert payload["contract"]=="analytical-workspace-completion"
     assert payload["workflow_count"]==5 and payload["summary"]=={"operational":5,"limited":0,"unavailable":0}
     assert {w["workflow_id"] for w in payload["workflows"]}=={"global_conditions","country_intelligence","compare","spatial_evidence","earth_observation"}
@@ -42,8 +42,8 @@ def test_snapshot_preserves_non_live_boundaries_with_injected_provider():
 
 def test_app_shell_and_service_worker_package_workflow_assets_inside_app_only():
     html=read("backend/public_app/index.html")
-    assert "/app/assets/analytical-workspaces-v3234.css?v=4.23.0" in html
-    assert "/app/assets/analytical-workspaces-v3234.js?v=4.23.0" in html
+    assert "/app/assets/analytical-workspaces-v3234.css?v=4.24.0" in html
+    assert "/app/assets/analytical-workspaces-v3234.js?v=4.24.0" in html
     assert html.index("analytical-workspaces-v3234.js") < html.index("data-truth-v32371.js") < html.index("production-truth-v3231.js")
     js=read("backend/public_app/assets/analytical-workspaces-v3234.js")
     for token in ("analyticalWorkflowToggle","Five complete public workflows","scsi:analytical-workspaces-ready","insideApp"):
@@ -51,7 +51,7 @@ def test_app_shell_and_service_worker_package_workflow_assets_inside_app_only():
     worker=read("backend/public_app/service-worker.js")
     assert "analytical-workspaces-v3234.js" in worker and "analytical-workspaces-v3234.css" in worker
     php=read("wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php")
-    assert "analyticalWorkspacesJsUrl" in php and "Version: 4.23.0" in php
+    assert "analyticalWorkspacesJsUrl" in php and "Version: 4.24.0" in php
     assert "wp_enqueue_script('scsi-analytical-workspaces'" not in php
     assert (ROOT/"wordpress-plugin/sustainable-catalyst-site-intelligence/assets/analytical-workspaces-v3234.js").is_file()
 

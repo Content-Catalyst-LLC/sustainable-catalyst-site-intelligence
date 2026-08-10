@@ -1,4 +1,4 @@
-# v4.23.0 Biodiversity, Species Distribution & Conservation Audit
+# v4.24.0 Biodiversity, Species Distribution & Conservation Audit
 
 - Route architecture: unchanged (six primary areas / 35 public routes).
 - Source classes: GBIF, OBIS, eBird, USFWS ECOS.

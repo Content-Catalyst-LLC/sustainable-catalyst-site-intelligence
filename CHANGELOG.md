@@ -1,9 +1,13 @@
-## 4.23.0
+## 4.24.0 — Wetlands, Inland Waters & Aquatic Habitat Intelligence
+- Added wetland inventory, Ramsar designation, global surface-water change and SWOT inland-water evidence.
+- Preserved six-area / 35-route architecture and bounded Render polling.
+
+## 4.24.0
 - Added Global Biodiversity, Species Distribution & Conservation Intelligence.
 - Added GBIF, OBIS, eBird and USFWS ECOS evidence registries and truth boundaries.
 - Preserved six primary areas / 35 public routes.
 
-## 4.23.0 — Global Soils, Land Degradation & Desertification Intelligence
+## 4.24.0 — Global Soils, Land Degradation & Desertification Intelligence
 
 - Added ISRIC SoilGrids, USDA-NRCS Soil Data Access, NASA SMAP and UNCCD SDG 15.3.1 / Land Degradation Neutrality source contracts.
 - Added mapped soil property, official soil survey, satellite soil-moisture, model-assimilated root-zone soil-moisture, country-reported degradation and UNCCD-default-estimate evidence classes.
