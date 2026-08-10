@@ -1,4 +1,4 @@
-## 4.21.0 — Global Soils, Land Degradation & Desertification Intelligence
+## 4.22.0 — Global Soils, Land Degradation & Desertification Intelligence
 
 - Added ISRIC SoilGrids, USDA-NRCS Soil Data Access, NASA SMAP and UNCCD SDG 15.3.1 / Land Degradation Neutrality source contracts.
 - Added mapped soil property, official soil survey, satellite soil-moisture, model-assimilated root-zone soil-moisture, country-reported degradation and UNCCD-default-estimate evidence classes.
