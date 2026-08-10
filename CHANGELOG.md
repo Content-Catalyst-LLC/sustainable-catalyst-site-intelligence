@@ -1,4 +1,4 @@
-## 4.27.0 — Global Transportation Networks, Ports, Airports & Transit Intelligence
+## 4.28.0 — Global Transportation Networks, Ports, Airports & Transit Intelligence
 
 - Added a four-source transportation evidence registry: Overture Maps Transportation, UNECE UN/LOCODE, OurAirports, and MobilityData Mobility Database.
 - Added eight public transportation contracts for overview, catalog, state, feature normalization, feed normalization, accessibility screening, export manifest, and readiness.
@@ -6,7 +6,7 @@
 - Preserved non-inference boundaries for navigation, operating status, legal access, official aeronautical information, service guarantees, complete transit coverage, and safety.
 - Extended the bounded GitHub/Render deployment verifier with a transportation deep gate and visible release synchronization checks.
 
-## v4.27.0 — Global Human Settlements, Urbanization & Built Environment Intelligence
+## v4.28.0 — Global Human Settlements, Urbanization & Built Environment Intelligence
 
 - Added source-bounded JRC GHSL, WorldPop Global2, NASA VIIRS Black Marble and World Bank urbanization contracts.
 - Added human-settlements normalization, feature, threshold-preview, export-manifest and readiness endpoints.

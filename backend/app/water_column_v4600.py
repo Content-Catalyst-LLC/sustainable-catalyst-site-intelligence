@@ -167,7 +167,7 @@ def overview():
         "truth_boundaries": [
             "A selected depth is a navigation request, not evidence that a measurement exists at that depth.",
             "In-situ profiles, fixed-depth observatory measurements, and gridded model/analysis depth levels remain distinct evidence classes.",
-            "Site Intelligence does not interpolate between profile samples unless a future method explicitly requests and discloses an interpolation method; v4.27.0 performs no interpolation.",
+            "Site Intelligence does not interpolate between profile samples unless a future method explicitly requests and discloses an interpolation method; v4.28.0 performs no interpolation.",
             "Pressure is not silently converted to geometric depth and geometric depth is not silently converted to pressure.",
             "Quality-control flags remain attached to source samples and are not converted into a generic pass/fail score.",
             "Missing depth samples remain missing; the nearest available sample may be reported as context but is not substituted as the requested depth value.",
@@ -364,7 +364,7 @@ def resolve_depth(request: dict[str, Any]):
                 "distance_m": round(abs(nearest["depth_m"] - target), 3),
                 "value_withheld_as_target_value": True,
             },
-            "reason": "No exact source sample exists at the requested depth; v4.27.0 does not interpolate or substitute the nearest sample.",
+            "reason": "No exact source sample exists at the requested depth; v4.28.0 does not interpolate or substitute the nearest sample.",
         }
     p = {"ok": True, "version": VERSION, "contract": CONTRACT, "resolution": result, "generated_at": _now()}
     p["resolution_sha256"] = _digest(result)
