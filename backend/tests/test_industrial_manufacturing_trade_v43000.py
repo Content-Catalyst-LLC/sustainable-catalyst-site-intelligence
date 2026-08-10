@@ -4,7 +4,7 @@ from app.industrial_manufacturing_trade_v43000 import normalize_feature,normaliz
 client=TestClient(app)
 def test_source_registry_and_truth_boundary():
  o=client.get('/public/industrial-manufacturing').json();c=client.get('/public/industrial-manufacturing/catalog').json()
- assert o['ok'] and o['version']=='4.32.0' and o['source_count']==4 and o['route']=='earth'
+ assert o['ok'] and o['version']=='4.33.0' and o['source_count']==4 and o['route']=='earth'
  assert {'openstreetmap-industrial','world-bank-manufacturing','world-bank-gem','world-bank-wits-trade'}<={x['id'] for x in c['sources']}
  assert c['truth_boundaries']['mapped_industrial_feature_equals_operating_facility'] is False and c['truth_boundaries']['bilateral_trade_equals_supply_chain_dependency'] is False
 def test_empty_state_not_disruption_or_absence_finding():

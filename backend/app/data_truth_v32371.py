@@ -1,4 +1,4 @@
-"""Global country data truth and coverage matrix for Site Intelligence v4.32.0."""
+"""Global country data truth and coverage matrix for Site Intelligence v4.33.0."""
 from __future__ import annotations
 
 from datetime import datetime, timezone

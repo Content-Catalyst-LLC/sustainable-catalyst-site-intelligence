@@ -1,0 +1,22 @@
+Site Intelligence v4.33.0 — Global Solid Waste, Recycling & Circular-Materials Intelligence
+BUILD VALIDATION
+
+Focused regression:
+- v4.32 Water & Sanitation + v4.33 Solid Waste: 16 passed
+
+Complete inherited suite:
+- 1,350 tests collected
+- deterministic chunk 1: 376 passed
+- deterministic chunk 2: 310 passed
+- deterministic chunk 3: 319 passed
+- deterministic chunk 4: 345 passed
+- aggregate: 1,350 / 1,350 passed
+
+Pre-freeze static gates:
+- v4.33 release contract: PASS
+- v4.33 direct/iframe browser asset gate: PASS
+- JavaScript syntax: 147 files validated
+- WordPress PHP syntax: PASS
+- static security findings: 0
+
+The immutable-manifest, extracted-package and final bundle receipts are produced after freeze/package verification.

@@ -4,4 +4,4 @@ ROOT=Path(__file__).resolve().parents[1];js=(ROOT/'backend/public_app/assets/wat
 for t in ['SCSIWaterSanitationV43200','WATER & SANITATION EVIDENCE','/public/water-sanitation-infrastructure/catalog','waterSanitationPanel']: assert t in js,t
 assert 'loadWaterSanitation' in prev and 'water-sanitation-v43200.js' in prev
 assert '.ws43200-panel' in css
-print('PASS: v4.32.0 water supply / wastewater / sanitation direct + iframe-compatible browser asset gate')
+print('PASS: v4.33.0 water supply / wastewater / sanitation direct + iframe-compatible browser asset gate')

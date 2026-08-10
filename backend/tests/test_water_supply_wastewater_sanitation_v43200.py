@@ -4,7 +4,7 @@ from app.water_sanitation_infrastructure_v43200 import normalize_feature,normali
 client=TestClient(app)
 def test_source_registry_and_truth_boundary():
  o=client.get('/public/water-sanitation-infrastructure').json();c=client.get('/public/water-sanitation-infrastructure/catalog').json()
- assert o['ok'] and o['version']=='4.32.0' and o['source_count']==4 and o['route']=='earth'
+ assert o['ok'] and o['version']=='4.33.0' and o['source_count']==4 and o['route']=='earth'
  assert {'openstreetmap-water-infrastructure','epa-echo-wastewater','epa-sdwis-drinking-water','who-unicef-jmp-wash'}<={x['id'] for x in c['sources']}
  assert c['truth_boundaries']['mapped_facility_equals_operating_utility'] is False and c['truth_boundaries']['wash_estimate_equals_household_service'] is False
 def test_empty_state_not_absence_or_water_safety_finding():
