@@ -1,5 +1,5 @@
 (()=>{"use strict";
-const VERSION="4.12.0";
+const VERSION="4.13.0";
 const q=(s,r=document)=>r.querySelector(s);
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 async function json(url,options){const r=await fetch(url,{cache:"no-store",...options});if(!r.ok)throw new Error(`${url}:${r.status}`);return r.json()}

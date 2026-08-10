@@ -1,6 +1,6 @@
-# Site Intelligence v4.12.0 — Ocean Missions, Vehicles & Observatory Network
+# Site Intelligence v4.13.0 — Ocean Missions, Vehicles & Observatory Network
 
-v4.12.0 connects ocean-observing platforms and mission records without turning catalog metadata into fabricated live telemetry. The v4 six-area/35-route platform architecture remains unchanged.
+v4.13.0 connects ocean-observing platforms and mission records without turning catalog metadata into fabricated live telemetry. The v4 six-area/35-route platform architecture remains unchanged.
 
 ## Added
 

@@ -1,4 +1,4 @@
-# Site Intelligence v4.12.0 — Security / Observability / Performance / Scale Audit
+# Site Intelligence v4.13.0 — Security / Observability / Performance / Scale Audit
 
 ## Security
 - Production admin authentication: fail closed.

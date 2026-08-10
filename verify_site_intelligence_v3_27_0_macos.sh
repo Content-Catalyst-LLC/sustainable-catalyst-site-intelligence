@@ -10,11 +10,11 @@ trap 'rm -rf "$RUNTIME_SANDBOX" "$BACKEND/backend"' EXIT
 export SC_SI_RUNTIME_STATE_ROOT="$RUNTIME_SANDBOX"
 reset_runtime(){ rm -rf "$RUNTIME_SANDBOX"; mkdir -p "$RUNTIME_SANDBOX"; }
 
-printf '\n==> Validating v4.12.0 Research Evidence and Knowledge Integration contracts\n'
+printf '\n==> Validating v4.13.0 Research Evidence and Knowledge Integration contracts\n'
 PYTHONPATH="$BACKEND" "$PYTHON" "$ROOT/scripts/validate_v3270_release.py"
-grep -q 'APP_VERSION = "4.12.0"' "$BACKEND/app/version.py"
-grep -q 'Version: 4.12.0' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
-grep -q 'const RELEASE="4.12.0"' "$BACKEND/public_app/service-worker.js"
+grep -q 'APP_VERSION = "4.13.0"' "$BACKEND/app/version.py"
+grep -q 'Version: 4.13.0' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
+grep -q 'const RELEASE="4.13.0"' "$BACKEND/public_app/service-worker.js"
 for endpoint in \
   '/public/research-integration' \
   '/public/research-integration/context' \
@@ -25,7 +25,7 @@ for endpoint in \
   '/public/research-integration/handoff/{target}/preview'; do
   grep -q "$endpoint" "$BACKEND/app/main.py"
 done
-grep -q 'research-integration-v3270.js?v=4.12.0' "$BACKEND/public_app/index.html"
+grep -q 'research-integration-v3270.js?v=4.13.0' "$BACKEND/public_app/index.html"
 grep -q 'research-integration-v3270.js' "$BACKEND/public_app/service-worker.js"
 grep -q 'SCSIResearchIntegrationV3270' "$BACKEND/public_app/assets/research-integration-v3270.js"
 grep -q 'snapshot:' "$BACKEND/public_app/assets/research-v2100.js"
@@ -36,7 +36,7 @@ printf '\n==> Verifying immutable repository manifest\n'
 "$PYTHON" - "$ROOT" <<'PYVERIFY'
 from pathlib import Path
 import hashlib,json,sys
-root=Path(sys.argv[1]);m=json.loads((root/'MANIFEST.json').read_text());assert m['release']=='4.12.0';assert m['file_count']==len(m['files'])
+root=Path(sys.argv[1]);m=json.loads((root/'MANIFEST.json').read_text());assert m['release']=='4.13.0';assert m['file_count']==len(m['files'])
 for e in m['files']:
  p=root/e['path'];d=p.read_bytes();assert len(d)==e['bytes'],e['path'];assert hashlib.sha256(d).hexdigest()==e['sha256'],e['path']
 print(f"Verified {len(m['files'])} manifest entries.")
@@ -71,9 +71,9 @@ for gate in \
   "$PYTHON" "$ROOT/scripts/run_browser_gate_v3270.py" "$gate"
 done
 
-printf '\n==> Running complete inherited and v4.12.0 test suite\n'
+printf '\n==> Running complete inherited and v4.13.0 test suite\n'
 reset_runtime
 PYTHON="$PYTHON" PYTHONPATH="$BACKEND" PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 "$PYTHON" "$ROOT/scripts/run_v3270_test_suite.py"
 rm -rf "$BACKEND/backend"
 [[ ! -e "$BACKEND/backend" ]] || { echo 'ERROR: runtime state cleanup failed.' >&2; exit 1; }
-printf '\nSUCCESS: Site Intelligence v4.12.0 passed Research Evidence and Knowledge Integration validation.\nRepository: %s\n' "$ROOT"
+printf '\nSUCCESS: Site Intelligence v4.13.0 passed Research Evidence and Knowledge Integration validation.\nRepository: %s\n' "$ROOT"

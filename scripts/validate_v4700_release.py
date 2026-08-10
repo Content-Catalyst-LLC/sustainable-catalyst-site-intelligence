@@ -9,4 +9,4 @@ for asset in ('seafloor-bathymetry-v4700.js','seafloor-bathymetry-v4700.css'):
     assert (ROOT/'backend/public_app/assets'/asset).read_text()==(ROOT/'wordpress-plugin/sustainable-catalyst-site-intelligence/assets'/asset).read_text()
 assert (ROOT/'backend/public_app/assets/water-column-v4600.js').read_text()==(ROOT/'wordpress-plugin/sustainable-catalyst-site-intelligence/assets/water-column-v4600.js').read_text()
 subprocess.run([sys.executable,str(ROOT/'scripts/validate_v4700_release_contract.py')],check=True)
-print('PASS: v4.12.0 static release validation')
+print('PASS: v4.13.0 static release validation')

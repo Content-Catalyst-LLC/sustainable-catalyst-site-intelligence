@@ -7,7 +7,7 @@ CLIENT=TestClient(app)
 
 def test_production_assurance_public_contract():
     r=CLIENT.get("/public/production-assurance"); assert r.status_code==200
-    d=r.json(); assert d["version"]=="4.12.0" and d["contract"]=="security-observability-performance-scale-assurance"
+    d=r.json(); assert d["version"]=="4.13.0" and d["contract"]=="security-observability-performance-scale-assurance"
     assert d["summary"]["default_token_allowed"] is False and d["summary"]["persistent_visitor_profiles"] is False and len(d["assurance_sha256"])==64
 
 def test_security_posture_is_fail_closed_and_privacy_safe():
@@ -38,8 +38,8 @@ def test_rate_limit_preview_and_supply_chain_contracts():
     s=CLIENT.get("/public/production-assurance/supply-chain").json(); assert s["hash_pinning_claimed"] is False and "pip check" in s["release_checks"]
 
 def test_post_deploy_smoke_is_preview_only():
-    d=CLIENT.post("/public/production-assurance/post-deploy/preview",json={"release":"4.12.0","commit":"abc123"}).json(); assert d["preview"]["network_requests_performed"] is False and d["preview"]["deployment_mutated"] is False and len(d["preview_sha256"])==64
+    d=CLIENT.post("/public/production-assurance/post-deploy/preview",json={"release":"4.13.0","commit":"abc123"}).json(); assert d["preview"]["network_requests_performed"] is False and d["preview"]["deployment_mutated"] is False and len(d["preview_sha256"])==64
 
 def test_assets_and_service_worker_ship_v3310_layer():
     root=Path(__file__).resolve().parents[2]; html=(root/"backend/public_app/index.html").read_text(); sw=(root/"backend/public_app/service-worker.js").read_text(); js=(root/"backend/public_app/assets/security-performance-v3310.js").read_text()
-    assert "security-performance-v3310.js?v=4.12.0" in html and "security-performance-v3310.js" in sw and "SCSIProductionAssuranceV3310" in js
+    assert "security-performance-v3310.js?v=4.13.0" in html and "security-performance-v3310.js" in sw and "SCSIProductionAssuranceV3310" in js

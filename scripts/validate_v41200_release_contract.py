@@ -2,7 +2,7 @@
 from app.marine_human_activity_v41200 import catalog, overlap_preview, readiness, state
 
 c=catalog()
-assert c['version']=='4.12.0'
+assert c['version']=='4.13.0'
 assert {x['id'] for x in c['sources']} == {
     'noaa-marine-cadastre-ais','noaa-mpa-inventory','emodnet-human-activities','global-fishing-watch'
 }
@@ -16,4 +16,4 @@ assert p['preview']['legal_violation'] is False
 assert p['preview']['enforcement_finding'] is False
 r=readiness(); assert r['ok'] and all(r['checks'].values())
 assert r['summary']['public_route_count_delta']==0
-print('PASS: v4.12.0 marine human-activity release contract')
+print('PASS: v4.13.0 marine human-activity release contract')

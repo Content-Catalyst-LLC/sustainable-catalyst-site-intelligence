@@ -1,4 +1,4 @@
-# Site Intelligence v4.12.0 — Marine Human Activity, Protected Areas & Maritime Pressure Audit
+# Site Intelligence v4.13.0 — Marine Human Activity, Protected Areas & Maritime Pressure Audit
 
 ## Audit objective
 
@@ -24,4 +24,4 @@ Confirm that the new marine human-activity layer provides spatial orientation wh
 
 ## Result
 
-The v4.12.0 implementation satisfies the bounded evidence model through backend normalization contracts, overlap preview semantics, browser copy, export manifests, readiness checks, and automated tests.
+The v4.13.0 implementation satisfies the bounded evidence model through backend normalization contracts, overlap preview semantics, browser copy, export manifests, readiness checks, and automated tests.

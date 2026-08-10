@@ -1,4 +1,4 @@
-# Site Intelligence v4.12.0 — Institutional Workspaces and Review Governance
+# Site Intelligence v4.13.0 — Institutional Workspaces and Review Governance
 
 ## Purpose
 Extend the existing institutional workspace foundation with portable investigation packages and explicit review governance without requiring public accounts or paid multi-tenant infrastructure.

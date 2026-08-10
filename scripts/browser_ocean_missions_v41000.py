@@ -12,7 +12,7 @@ def browser_path():
 
 def fixture_html():
     catalog={
-      'ok':True,'version':'4.12.0','contract':'ocean-missions-vehicles-observatory-network',
+      'ok':True,'version':'4.13.0','contract':'ocean-missions-vehicles-observatory-network',
       'sources':[
         {'id':'argo','title':'Argo observing network / Argovis access','url':'https://argo.ucsd.edu/data/','platform_types':['float'],'limitations':'A most-recent reported float position is not a verified current position.'},
         {'id':'ioos','title':'U.S. Integrated Ocean Observing System (IOOS)','url':'https://ioos.noaa.gov/data/access-ioos-data/','platform_types':['glider','buoy','mooring','fixed-observatory'],'limitations':'Registry presence does not prove current operation.'},
@@ -27,13 +27,13 @@ def fixture_html():
     setup='''<script>
 history.replaceState=()=>{};Element.prototype.scrollIntoView=()=>{};window.SC_SITE_INTELLIGENCE_API='https://gate.local';window.open=()=>null;window.matchMedia=()=>({matches:true});
 const catalog=__CATALOG__;
-window.fetch=async input=>{const u=String(input);let x=catalog;if(u.includes('/state')){const qp=new URL(u).searchParams,source=qp.get('source')||'argo',type=qp.get('platform_type')||'float',s=catalog.sources.find(r=>r.id===source)||catalog.sources[0],t=catalog.platform_types.find(r=>r.id===type)||catalog.platform_types[0];x={ok:true,version:'4.12.0',contract:'ocean-missions-vehicles-observatory-network',source:s,platform_type:t,platform_id:qp.get('platform_id')||null,query_point:qp.has('latitude')?{latitude:Number(qp.get('latitude')),longitude:Number(qp.get('longitude'))}:null,date:qp.get('date')||null,source_supports_platform_type:(s.platform_types||[]).includes(t.id),evidence:{platform_record_loaded:false,mission_record_loaded:false,position_record_loaded:false,track_loaded:false,operational_status_loaded:false},truth:{current_position_verified:false,current_operational_status_verified:false,continuous_trajectory_verified:false,future_trajectory_predicted:false,nearby_observation_as_platform_position:false,registry_presence_as_active_operation:false}};}return new Response(JSON.stringify(x),{status:200,headers:{'Content-Type':'application/json'}})};
+window.fetch=async input=>{const u=String(input);let x=catalog;if(u.includes('/state')){const qp=new URL(u).searchParams,source=qp.get('source')||'argo',type=qp.get('platform_type')||'float',s=catalog.sources.find(r=>r.id===source)||catalog.sources[0],t=catalog.platform_types.find(r=>r.id===type)||catalog.platform_types[0];x={ok:true,version:'4.13.0',contract:'ocean-missions-vehicles-observatory-network',source:s,platform_type:t,platform_id:qp.get('platform_id')||null,query_point:qp.has('latitude')?{latitude:Number(qp.get('latitude')),longitude:Number(qp.get('longitude'))}:null,date:qp.get('date')||null,source_supports_platform_type:(s.platform_types||[]).includes(t.id),evidence:{platform_record_loaded:false,mission_record_loaded:false,position_record_loaded:false,track_loaded:false,operational_status_loaded:false},truth:{current_position_verified:false,current_operational_status_verified:false,continuous_trajectory_verified:false,future_trajectory_predicted:false,nearby_observation_as_platform_position:false,registry_presence_as_active_operation:false}};}return new Response(JSON.stringify(x),{status:200,headers:{'Content-Type':'application/json'}})};
 </script>'''.replace('__CATALOG__',json.dumps(catalog))
     return f'''<!doctype html><html><head><style>{CSS}</style>{setup}</head><body><section id="marineBiodiversityPanel"><div class="bio4900-actions"><button>Back</button></div></section><script>{JS}</script></body></html>'''
 
 def exercise(page,label):
     page.set_content(fixture_html(),wait_until='domcontentloaded')
-    page.wait_for_function("window.SCSIOceanMissionsV41000?.version==='4.12.0'")
+    page.wait_for_function("window.SCSIOceanMissionsV41000?.version==='4.13.0'")
     page.locator('#bioMissionsEnter').click()
     page.wait_for_function("!document.querySelector('#oceanMissionsPanel').hidden")
     page.select_option('#omSource','argo'); page.select_option('#omType','float')
@@ -41,7 +41,7 @@ def exercise(page,label):
     page.locator('#omLon').dispatch_event('change'); page.wait_for_timeout(120)
     page.wait_for_function("document.querySelector('#omStateTitle')?.textContent.includes('Argo')")
     m=page.evaluate("""()=>({version:SCSIOceanMissionsV41000.version,source:document.querySelector('#omSource').value,type:document.querySelector('#omType').value,platform:document.querySelector('#omPlatform').value,stage:document.querySelector('#omStageState').textContent,truth:document.querySelector('#omTruth').textContent,contract:document.querySelector('#oceanMissionsPanel').dataset.scsiOceanMissionsContract,hidden:document.querySelector('#oceanMissionsPanel').hidden})""")
-    assert m['version']=='4.12.0' and m['source']=='argo' and m['type']=='float'
+    assert m['version']=='4.13.0' and m['source']=='argo' and m['type']=='float'
     assert m['platform']=='5901234' and 'no platform telemetry loaded' in m['stage'].lower()
     assert 'Current position' in m['truth'] and 'Not verified' in m['truth'] and 'Future position' in m['truth'] and 'Not predicted' in m['truth']
     assert m['contract']=='ocean-missions-vehicles-observatory-network' and not m['hidden']
@@ -55,7 +55,7 @@ def main():
     pw=sync_playwright().start(); browser=pw.chromium.launch(headless=True,executable_path=path,args=['--no-sandbox','--disable-dev-shm-usage'])
     direct=browser.new_page(viewport={'width':1200,'height':900}); r1=exercise(direct,'direct')
     outer=browser.new_page(viewport={'width':1200,'height':900}); outer.set_content('<iframe id="f" style="width:1100px;height:820px"></iframe>'); frame=outer.query_selector('#f').content_frame(); r2=exercise(frame,'iframe')
-    print(json.dumps({'browser':path,'results':[r1,r2]},indent=2)); print('PASS: v4.12.0 Ocean Missions, Vehicles & Observatory Network passed direct and iframe interaction.'); os._exit(0)
+    print(json.dumps({'browser':path,'results':[r1,r2]},indent=2)); print('PASS: v4.13.0 Ocean Missions, Vehicles & Observatory Network passed direct and iframe interaction.'); os._exit(0)
 
 if __name__=='__main__':
     try: status=main()

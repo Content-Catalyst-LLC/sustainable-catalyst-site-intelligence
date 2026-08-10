@@ -1,0 +1,30 @@
+Site Intelligence v4.13.0 — Marine Pollution, Debris & Water-Quality Intelligence
+BUILD VALIDATION
+
+Release contract: PASS
+Focused v4.12 + v4.13 tests: 16 passed
+Complete inherited + v4.13 regression suite: 1190 passed
+Immutable distributable manifest entries: 1653
+JSON/GeoJSON parsed in clean source tree: 134
+JavaScript files syntax-validated across backend + WordPress asset trees: 107
+WordPress PHP syntax: PASS
+Static security findings: 0
+Marine Pollution direct browser interaction: PASS
+Marine Pollution WordPress iframe interaction: PASS
+Primary areas: 6
+Public routes: 35
+Public route count delta: 0
+Primary area count delta: 0
+Nested backend/backend runtime state in distributable: 0
+
+Truth gates:
+- zero records = clean water: FALSE
+- non-detect = zero: FALSE
+- model/forecast = in-situ sample: FALSE
+- debris observation = source attribution: FALSE
+- threshold condition = regulatory exceedance: FALSE
+- threshold condition = health advisory: FALSE
+- platform ecological-harm finding: FALSE
+- platform compliance finding: FALSE
+
+Result: PASS

@@ -13,7 +13,7 @@ def payload():
 
 def test_governance_schema_has_bounded_institutional_contract():
     p=CLIENT.get("/public/institutional-governance").json()
-    assert p["version"]=="4.12.0" and p["contract"]=="institutional-workspaces-review-governance"
+    assert p["version"]=="4.13.0" and p["contract"]=="institutional-workspaces-review-governance"
     assert p["public_accounts_required"] is False and p["paid_multi_tenant_infrastructure_required"] is False
     assert p["automatic_evidence_approval"] is False and p["automatic_publication"] is False and p["public_write_performed"] is False
 
@@ -60,4 +60,4 @@ def test_assets_and_service_worker_ship_governance_layer():
     from pathlib import Path
     root=Path(__file__).resolve().parents[2]
     html=(root/"backend/public_app/index.html").read_text(); sw=(root/"backend/public_app/service-worker.js").read_text(); js=(root/"backend/public_app/assets/institutional-governance-v3300.js").read_text()
-    assert "institutional-governance-v3300.js?v=4.12.0" in html and "institutional-governance-v3300.js" in sw and "SCSIInstitutionalGovernanceV3300" in js
+    assert "institutional-governance-v3300.js?v=4.13.0" in html and "institutional-governance-v3300.js" in sw and "SCSIInstitutionalGovernanceV3300" in js
