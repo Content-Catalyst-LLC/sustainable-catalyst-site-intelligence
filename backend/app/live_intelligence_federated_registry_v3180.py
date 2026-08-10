@@ -1,6 +1,6 @@
 """Federated preservation registry, trust profiles, and cross-institution verification.
 
-Site Intelligence v4.29.0 records public-safe institutional registry entries and
+Site Intelligence v4.30.0 records public-safe institutional registry entries and
 checksum-bound attestations against approved preservation exchange packages.
 Registry approval and attestations are human-governed and append-only. Trust
 profiles are evidence declarations, not certifications or endorsements. The

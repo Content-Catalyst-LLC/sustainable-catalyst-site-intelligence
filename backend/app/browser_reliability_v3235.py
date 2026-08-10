@@ -1,4 +1,4 @@
-"""Browser reliability, mobile, and accessibility contract for Site Intelligence v4.29.0."""
+"""Browser reliability, mobile, and accessibility contract for Site Intelligence v4.30.0."""
 from __future__ import annotations
 
 from copy import deepcopy

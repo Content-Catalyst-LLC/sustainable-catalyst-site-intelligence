@@ -13,7 +13,7 @@ CLIENT = TestClient(app)
 def test_control_plane_composes_all_registered_sources():
     payload = CLIENT.get('/public/data-truth/control-plane').json()
     assert payload['ok'] is True
-    assert payload['version'] == '4.29.0'
+    assert payload['version'] == '4.30.0'
     assert payload['contract'] == 'global-data-truth-control-plane'
     assert payload['source_count'] == 8
     assert sum(payload['summary'][state] for state in ATTENTION_STATES) == 8
@@ -101,8 +101,8 @@ def test_control_plane_assets_are_shipped_offline_and_match_wordpress():
     worker = (ROOT / 'backend/public_app/service-worker.js').read_text()
     truth_js = (ROOT / 'backend/public_app/assets/data-truth-v32371.js').read_text()
     control_js = (ROOT / 'backend/public_app/assets/data-truth-control-plane-v3240.js').read_text()
-    assert 'data-truth-control-plane-v3240.css?v=4.29.0' in html
-    assert 'data-truth-control-plane-v3240.js?v=4.29.0' in html
+    assert 'data-truth-control-plane-v3240.css?v=4.30.0' in html
+    assert 'data-truth-control-plane-v3240.js?v=4.30.0' in html
     assert 'data-truth-control-plane-v3240.js' in worker
     assert 'data-truth-view="control"' in truth_js
     assert 'SCSIDataTruthControlPlaneV3240' in control_js

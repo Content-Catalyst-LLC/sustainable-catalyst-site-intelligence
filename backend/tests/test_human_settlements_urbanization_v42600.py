@@ -4,7 +4,7 @@ from app.human_settlements_v42600 import SOURCES,normalize_measurement,normalize
 client=TestClient(app)
 def test_source_registry_and_truth_boundary():
  o=client.get('/public/human-settlements').json();c=client.get('/public/human-settlements/catalog').json()
- assert o['ok'] and o['version']=='4.29.0' and o['source_count']==4 and o['route']=='earth'
+ assert o['ok'] and o['version']=='4.30.0' and o['source_count']==4 and o['route']=='earth'
  assert {'jrc-ghsl','worldpop-global2','nasa-black-marble','world-bank-urban'}<={x['id'] for x in c['sources']}
  assert c['truth_boundaries']['population_estimate_equals_census_headcount'] is False
 def test_empty_state_not_uninhabited_or_property_determination():
