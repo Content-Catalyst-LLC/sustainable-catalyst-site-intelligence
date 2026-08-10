@@ -1,4 +1,4 @@
-# Site Intelligence v4.31.0 Mining / Mineral Resources / Critical Materials Audit
+# Site Intelligence v4.32.0 Mining / Mineral Resources / Critical Materials Audit
 
 ## Scope
 Global mining and mineral-resource orientation inside the existing Earth Observation chain.

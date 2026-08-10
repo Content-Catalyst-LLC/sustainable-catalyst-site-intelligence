@@ -4,7 +4,7 @@ from app.wetlands_inland_waters_v42400 import normalize_feature,normalize_measur
 client=TestClient(app)
 def test_overview_catalog():
  o=client.get('/public/wetlands-inland-water').json(); c=client.get('/public/wetlands-inland-water/catalog').json()
- assert o['ok'] and o['version']=='4.31.0' and o['source_count']==4
+ assert o['ok'] and o['version']=='4.32.0' and o['source_count']==4
  assert {'usfws-nwi','ramsar-rsis','jrc-global-surface-water','nasa-swot-inland-water'} <= {x['id'] for x in c['sources']}
  assert c['truth_boundaries']['mapped_wetland_equals_jurisdictional_wetland'] is False
 def test_empty_state_no_absence_or_jurisdiction_claim():

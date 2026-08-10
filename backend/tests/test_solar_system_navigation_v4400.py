@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_overview_preserves_v4_route_architecture_and_truth_boundary():
     p = CLIENT.get('/public/solar-system-navigation').json()
-    assert p['ok'] and p['version'] == '4.31.0' and p['route'] == 'earth'
+    assert p['ok'] and p['version'] == '4.32.0' and p['route'] == 'earth'
     assert p['contract'] == 'solar-system-navigation-mission-ephemeris'
     assert p['body_count'] >= 10 and p['mission_context_count'] >= 6
     assert len(p['contract_sha256']) == 64

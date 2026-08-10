@@ -1,4 +1,4 @@
-"""Governed relevance and rotation selection for Live Intelligence v4.31.0.
+"""Governed relevance and rotation selection for Live Intelligence v4.32.0.
 
 The rotation layer operates only on public-safe, validated signals returned by the
 existing reliability and gateway pipeline. It records aggregate display history,

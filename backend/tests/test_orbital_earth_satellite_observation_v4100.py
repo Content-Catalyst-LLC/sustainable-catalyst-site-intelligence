@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 def test_orbital_overview_extends_existing_earth_route_without_new_top_level_route():
     payload = CLIENT.get('/public/orbital-earth').json()
     assert payload['ok'] is True
-    assert payload['version'] == '4.31.0'
+    assert payload['version'] == '4.32.0'
     assert payload['contract'] == 'orbital-earth-satellite-observation'
     assert payload['route'] == 'earth'
     assert payload['mode'] == 'orbital'
@@ -40,7 +40,7 @@ def test_orbital_catalog_maps_all_registered_layers_to_platform_context_without_
 def test_orbital_state_uses_registered_real_imagery_and_explicit_truth_boundaries():
     payload = state('true-color','2026-08-01',41.8781,-87.6298,500)
     observation = payload['observation']
-    assert payload['version'] == '4.31.0'
+    assert payload['version'] == '4.32.0'
     assert observation['requested_date'] == '2026-08-01'
     assert observation['layer_id'] == 'true-color'
     assert 'gibs.earthdata.nasa.gov' in observation['tile_url']
@@ -87,8 +87,8 @@ def test_orbital_browser_assets_are_shipped_in_app_service_worker_and_wordpress_
     js=(ROOT/'backend/public_app/assets/orbital-earth-v4100.js').read_text()
     css=(ROOT/'backend/public_app/assets/orbital-earth-v4100.css').read_text()
     assert 'data-scsi-orbital-contract="orbital-earth-v4100"' in html
-    assert 'orbital-earth-v4100.css?v=4.31.0' in html
-    assert 'orbital-earth-v4100.js?v=4.31.0' in html
+    assert 'orbital-earth-v4100.css?v=4.32.0' in html
+    assert 'orbital-earth-v4100.js?v=4.32.0' in html
     assert 'id="earthOrbitPanel"' in html
     assert 'id="earthOrbitMap"' in js
     assert 'orbital-earth-v4100.css' in sw and 'orbital-earth-v4100.js' in sw
@@ -100,7 +100,7 @@ def test_orbital_browser_assets_are_shipped_in_app_service_worker_and_wordpress_
 
 def test_earth_observation_overview_advertises_orbital_extension():
     payload=CLIENT.get('/public/earth-observation').json()
-    assert payload['version']=='4.31.0'
+    assert payload['version']=='4.32.0'
     assert payload['orbital_contract']=='/public/orbital-earth'
     assert 'surface-to-orbit transition' in payload['capabilities']
     assert 'orbital Earth perspective' in payload['capabilities']
