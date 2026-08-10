@@ -4,7 +4,7 @@ from app.geosphere_v42000 import catalog, normalize_measurement, normalize_notic
 client=TestClient(app)
 def test_overview_and_catalog():
     o=client.get('/public/geosphere').json(); c=client.get('/public/geosphere/catalog').json()
-    assert o['ok'] and o['version']=='4.28.0' and o['contract']=='global-geosphere-earthquake-volcano-intelligence'
+    assert o['ok'] and o['version']=='4.29.0' and o['contract']=='global-geosphere-earthquake-volcano-intelligence'
     assert o['source_count']==4 and c['truth_boundaries']['shakemap_equals_structural_damage'] is False
     assert {'usgs-earthquake-catalog','usgs-shakemap','usgs-volcano-hans','nasa-jpl-aria'} <= {x['id'] for x in c['sources']}
 def test_empty_state_has_no_hazard_claim():
