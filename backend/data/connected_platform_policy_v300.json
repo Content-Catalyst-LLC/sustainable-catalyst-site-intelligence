@@ -1,9 +1,12 @@
 {
   "schema": "sc-connected-public-intelligence-policy/1.0",
-  "version": "4.35.5",
+  "version": "4.35.6",
   "title": "Connected Public Intelligence and Evidence Platform",
   "public_index": {
-    "sources": ["public-safe static registries", "approved public runtime records"],
+    "sources": [
+      "public-safe static registries",
+      "approved public runtime records"
+    ],
     "private_records_excluded": true,
     "credentials_excluded": true,
     "account_required": false,
@@ -19,5 +22,15 @@
     "individual_tracking_allowed": false,
     "hidden_ranking_allowed": false
   },
-  "lifecycle": ["source", "ingest", "archive", "harmonize", "analyze", "review", "publish", "monitor", "exchange"]
+  "lifecycle": [
+    "source",
+    "ingest",
+    "archive",
+    "harmonize",
+    "analyze",
+    "review",
+    "publish",
+    "monitor",
+    "exchange"
+  ]
 }

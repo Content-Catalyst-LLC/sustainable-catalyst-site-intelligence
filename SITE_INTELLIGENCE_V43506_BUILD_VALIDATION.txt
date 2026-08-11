@@ -1,0 +1,16 @@
+Site Intelligence v4.35.6 — National Statistical & Domain-Authority Connector Expansion
+BUILD VALIDATION
+
+Deterministic pytest suite: 1455 / 1455 passed
+Targeted v4.35.6 connector tests: 13 / 13 passed
+Combined connector/release-health regression set: 66 / 66 passed
+JSON/GeoJSON parsing: 134 files passed
+JavaScript syntax validation: 151 files passed
+WordPress PHP syntax: passed
+Static security scan: 0 findings
+Release contract: passed
+Browser/static connector gate: passed
+Immutable manifest: 2167 files generated and verified
+Verifier chunk reconciliation: 402 + 315 + 341 + 359 + 38 = 1455 tests
+
+Release-gate policy: first-party release identity/runtime/route integrity remains blocking; external authoritative-source health remains operational/non-blocking.

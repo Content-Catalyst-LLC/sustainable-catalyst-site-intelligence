@@ -1,6 +1,6 @@
 {
   "schema": "sc-site-intelligence-spatial-evidence/1.0",
-  "version": "4.35.5",
+  "version": "4.35.6",
   "title": "Geospatial Analysis and Spatial Evidence Policy",
   "capabilities": [
     "user-defined bounding-box, polygon, and radius areas of interest",
@@ -12,10 +12,22 @@
     "GeoJSON, CSV, and evidence-packet exports"
   ],
   "methods": [
-    {"id": "intersection", "description": "Point-in-polygon, segment intersection, and representative-point radius tests are applied to WGS84 GeoJSON."},
-    {"id": "proximity", "description": "Point distances use the haversine formula. Non-point features use a clearly labeled minimum vertex/centroid approximation."},
-    {"id": "aggregation", "description": "Only intersecting features are counted or aggregated. Missing metric values are reported and never imputed."},
-    {"id": "temporal-comparison", "description": "Stable feature identifiers are compared across immutable dataset versions; geometry and property digests reveal changes."}
+    {
+      "id": "intersection",
+      "description": "Point-in-polygon, segment intersection, and representative-point radius tests are applied to WGS84 GeoJSON."
+    },
+    {
+      "id": "proximity",
+      "description": "Point distances use the haversine formula. Non-point features use a clearly labeled minimum vertex/centroid approximation."
+    },
+    {
+      "id": "aggregation",
+      "description": "Only intersecting features are counted or aggregated. Missing metric values are reported and never imputed."
+    },
+    {
+      "id": "temporal-comparison",
+      "description": "Stable feature identifiers are compared across immutable dataset versions; geometry and property digests reveal changes."
+    }
   ],
   "limitations": [
     "No coordinate reprojection is performed; inputs must use EPSG:4326 longitude and latitude.",

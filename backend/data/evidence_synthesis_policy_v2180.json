@@ -1,6 +1,6 @@
 {
   "schema": "sc-site-intelligence-evidence-synthesis-policy/1.0",
-  "version": "4.35.5",
+  "version": "4.35.6",
   "title": "Evidence Synthesis, Claims, and Contradiction Review Policy",
   "principles": [
     "Claims remain separate from evidence records and source documents.",
@@ -18,7 +18,10 @@
     "No suppression of conflicting evidence or unresolved uncertainty.",
     "No individual targeting, surveillance, risk scoring, or consequential automated action."
   ],
-  "handoffs": ["knowledge-library", "research-librarian"],
+  "handoffs": [
+    "knowledge-library",
+    "research-librarian"
+  ],
   "external_ai_default": "disabled",
   "human_review_required": true
 }

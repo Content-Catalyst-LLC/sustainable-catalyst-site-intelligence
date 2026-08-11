@@ -1,12 +1,15 @@
 {
-  "version": "4.35.5",
+  "version": "4.35.6",
   "release_id": "site-intelligence-v4.35.5",
   "contract": "fixed-application-viewport-and-wordpress-embed-isolation",
   "application_embed": {
     "mode": "wordpress-fixed",
     "shortcode": "sc_site_intelligence_app",
     "default_height_px": 900,
-    "supported_height_px": {"minimum": 620, "maximum": 1400},
+    "supported_height_px": {
+      "minimum": 620,
+      "maximum": 1400
+    },
     "document_auto_resize": false,
     "internal_scrolling": true,
     "height_transition": false,

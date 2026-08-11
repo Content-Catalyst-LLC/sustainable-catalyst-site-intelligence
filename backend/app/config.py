@@ -88,12 +88,12 @@ class Settings(BaseSettings):
     github_org: str = "Content-Catalyst-LLC"
     public_connector_live_checks: bool = True
 
-    # Site Intelligence v4.35.5 — ReliefWeb V2 requires a pre-approved
+    # Site Intelligence v4.35.6 — ReliefWeb V2 requires a pre-approved
     # appname. Keep it server-side; a blank value disables only the ReliefWeb
     # live source and is surfaced as configuration-required in the API audit.
     reliefweb_appname: str = ""
 
-    # Site Intelligence v4.35.5 — first authoritative connector expansion.
+    # Site Intelligence v4.35.6 — first authoritative connector expansion.
     # Public agency endpoints have safe defaults. The USGS API key is optional
     # and is used only server-side to raise applicable Water Data rate limits.
     usgs_water_base_url: str = "https://api.waterdata.usgs.gov/ogcapi/v0"
@@ -103,7 +103,7 @@ class Settings(BaseSettings):
     unhcr_population_base_url: str = "https://api.unhcr.org/population/v1"
     nasa_cmr_base_url: str = "https://cmr.earthdata.nasa.gov/search"
 
-    # Site Intelligence v4.35.5 — Authoritative Connector Expansion II.
+    # Site Intelligence v4.35.6 — Authoritative Connector Expansion II.
     # All five services below support public machine-readable access. Keep
     # endpoints configurable server-side for future agency migrations.
     noaa_coops_base_url: str = "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter"
@@ -112,7 +112,7 @@ class Settings(BaseSettings):
     eurostat_base_url: str = "https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data"
     usda_soil_data_access_url: str = "https://SDMDataAccess.sc.egov.usda.gov/Tabular/post.rest"
 
-    # Site Intelligence v4.35.5 — Authoritative Connector Expansion III.
+    # Site Intelligence v4.35.6 — Authoritative Connector Expansion III.
     # Public interfaces use safe defaults. FIRMS and NASS credentials are
     # server-side only and never exposed through browser state or public diagnostics.
     usfws_nwi_query_url: str = "https://fwspublicservices.wim.usgs.gov/wetlandsmapservice/rest/services/Wetlands/MapServer/0/query"
@@ -123,6 +123,14 @@ class Settings(BaseSettings):
     usda_nass_api_key: str = ""
     nasa_cmr_graphql_url: str = "https://graphql.earthdata.nasa.gov/api"
     nasa_earthdata_token: str = ""
+
+    # Site Intelligence v4.35.6 — National Statistical & Domain-Authority Connector Expansion.
+    # These five endpoints are public first-party statistical interfaces.
+    pcbs_pxweb_base_url: str = "https://pcbs.gov.ps/SDGsIndicators/api/v1/en"
+    statcan_wds_base_url: str = "https://www150.statcan.gc.ca/t1/wds/rest"
+    ons_api_base_url: str = "https://api.beta.ons.gov.uk/v1"
+    abs_data_api_base_url: str = "https://data.api.abs.gov.au/rest"
+    bls_public_api_base_url: str = "https://api.bls.gov/publicAPI/v1"
 
 
     # Platform Core v2.5.0 integration — optional in Site Intelligence v1.20.0.
@@ -255,7 +263,7 @@ class Settings(BaseSettings):
     live_source_operations_history_path: str = "backend/data/live_intelligence_source_operations_history_v320.jsonl"
     live_source_operations_max_history: int = Field(default=500, ge=50, le=5000)
 
-    # Site Intelligence v4.35.5 — Event Clustering and Intelligence Ranking.
+    # Site Intelligence v4.35.6 — Event Clustering and Intelligence Ranking.
     # Deterministic heuristics reduce duplicate presentation and rank display
     # relevance. Scores are not truth, danger, or institutional-importance scores.
     live_intelligence_clustering_enabled: bool = True
@@ -264,17 +272,17 @@ class Settings(BaseSettings):
     live_intelligence_cluster_distance_km: float = Field(default=300.0, ge=1.0, le=2500.0)
     live_intelligence_cluster_text_similarity: float = Field(default=0.34, ge=0.1, le=0.95)
 
-    # Site Intelligence v4.35.5 — Signal Context and Drill-Down.
+    # Site Intelligence v4.35.6 — Signal Context and Drill-Down.
     # Context packets are assembled only from public-safe signal fields and retain
     # source, time, map precision, ranking, evidence, and human-review boundaries.
     live_intelligence_context_enabled: bool = True
 
-    # Site Intelligence v4.35.5 — Topic and Regional Channels.
+    # Site Intelligence v4.35.6 — Topic and Regional Channels.
     # Channels are public-safe filters over existing signals. Empty geographic
     # results remain empty and are never replaced by unrelated global records.
     live_intelligence_channels_enabled: bool = True
 
-    # Site Intelligence v4.35.5 — Live Intelligence reliability and freshness.
+    # Site Intelligence v4.35.6 — Live Intelligence reliability and freshness.
     # Same-query last-known-good payloads are public-safe runtime state and must
     # remain outside immutable release archives.
     live_intelligence_reliability_enabled: bool = True
@@ -287,7 +295,7 @@ class Settings(BaseSettings):
     live_intelligence_last_known_good_retention_hours: int = Field(default=168, ge=1, le=2160)
     live_intelligence_last_known_good_max_entries: int = Field(default=64, ge=1, le=512)
 
-    # Site Intelligence v4.35.5 — Signal Relevance and Rotation Intelligence.
+    # Site Intelligence v4.35.6 — Signal Relevance and Rotation Intelligence.
     # Rotation state stores aggregate signal exposure history and bounded human
     # overrides only. It never stores individual visitor behavior or source values.
     live_intelligence_rotation_enabled: bool = True
@@ -297,7 +305,7 @@ class Settings(BaseSettings):
     live_intelligence_minimum_display_seconds: int = Field(default=12, ge=4, le=120)
     live_intelligence_maximum_exposure_seconds: int = Field(default=45, ge=12, le=600)
 
-    # Site Intelligence v4.35.5 — Analytics and Public-Value Measurement.
+    # Site Intelligence v4.35.6 — Analytics and Public-Value Measurement.
     # Runtime state contains day-level aggregate counters only. Raw events, IP
     # addresses, cookies, user agents, referrers, page paths, and visitor IDs are rejected.
     live_intelligence_analytics_enabled: bool = True
@@ -305,7 +313,7 @@ class Settings(BaseSettings):
     live_intelligence_analytics_retention_days: int = Field(default=90, ge=7, le=730)
     live_intelligence_analytics_max_signal_buckets: int = Field(default=500, ge=20, le=5000)
 
-    # Site Intelligence v4.35.5 — Signal Subscriptions, Alerts, and Scheduled Intelligence.
+    # Site Intelligence v4.35.6 — Signal Subscriptions, Alerts, and Scheduled Intelligence.
     # Runtime state stores governed watchlists, deterministic evaluations,
     # human-reviewed alerts and digests, and provider-neutral handoff manifests.
     # Subscriber profiles, recipient identities, direct email, and webhooks are excluded.
@@ -320,7 +328,7 @@ class Settings(BaseSettings):
     live_intelligence_subscriptions_max_alerts_per_run: int = Field(default=50, ge=1, le=500)
     live_intelligence_subscriptions_dedupe_hours: int = Field(default=72, ge=1, le=8760)
 
-    # Site Intelligence v4.35.5 — Live Intelligence Briefings and Publication Workflow.
+    # Site Intelligence v4.35.6 — Live Intelligence Briefings and Publication Workflow.
     live_intelligence_briefings_enabled: bool = True
     live_intelligence_briefings_path: str = "backend/data/live_intelligence_briefings_v3100/briefings_v3100.jsonl"
     live_intelligence_briefing_packages_path: str = "backend/data/live_intelligence_briefings_v3100/packages_v3100.jsonl"
@@ -328,7 +336,7 @@ class Settings(BaseSettings):
     live_intelligence_briefings_max_records: int = Field(default=20000, ge=100, le=200000)
     live_intelligence_briefings_max_sources: int = Field(default=100, ge=1, le=500)
 
-    # Site Intelligence v4.35.5 — Editorial Workspace, Review Queues, and Publication Orchestration.
+    # Site Intelligence v4.35.6 — Editorial Workspace, Review Queues, and Publication Orchestration.
     # Editorial workspaces retain revision and review events while treating claims,
     # evidence, observed values, and provenance as immutable source material.
     live_intelligence_editorial_enabled: bool = True
@@ -338,7 +346,7 @@ class Settings(BaseSettings):
     live_intelligence_editorial_max_records: int = Field(default=20000, ge=100, le=200000)
     live_intelligence_editorial_require_separation_of_duties: bool = True
 
-    # Site Intelligence v4.35.5 — Publication Adapters, Institutional Handoffs, and Release Governance.
+    # Site Intelligence v4.35.6 — Publication Adapters, Institutional Handoffs, and Release Governance.
     # Packages remain provider-neutral and contain no credentials or recipient identities.
     live_intelligence_publication_releases_enabled: bool = True
     live_intelligence_publication_releases_path: str = "backend/data/live_intelligence_publication_v3120/releases_v3120.jsonl"
@@ -347,7 +355,7 @@ class Settings(BaseSettings):
     live_intelligence_publication_max_records: int = Field(default=20000, ge=100, le=200000)
     live_intelligence_publication_require_separation_of_duties: bool = True
 
-    # Site Intelligence v4.35.5 — Release Monitoring, Rollback, and Post-Publication Governance.
+    # Site Intelligence v4.35.6 — Release Monitoring, Rollback, and Post-Publication Governance.
     # Runtime records are externally reported receipts and human review artifacts.
     # Site Intelligence performs no deployment, network verification, rollback, or destination write.
     live_intelligence_release_operations_enabled: bool = True
@@ -360,7 +368,7 @@ class Settings(BaseSettings):
     live_intelligence_release_operations_max_records: int = Field(default=20000, ge=100, le=200000)
     live_intelligence_release_operations_require_separation_of_duties: bool = True
 
-    # Site Intelligence v4.35.5 — Corrections, Retractions, and Public Change History.
+    # Site Intelligence v4.35.6 — Corrections, Retractions, and Public Change History.
     # Change records are append-only public notices derived from approved corrections.
     # Site Intelligence retains the original release and performs no destination write or deletion.
     live_intelligence_change_history_enabled: bool = True
@@ -370,7 +378,7 @@ class Settings(BaseSettings):
     live_intelligence_change_history_max_records: int = Field(default=20000, ge=100, le=200000)
     live_intelligence_change_history_require_separation_of_duties: bool = True
 
-    # Site Intelligence v4.35.5 — Public Record Archive, Provenance Ledger, and Long-Term Preservation.
+    # Site Intelligence v4.35.6 — Public Record Archive, Provenance Ledger, and Long-Term Preservation.
     # Archive records are append-only, checksum-bound packages. Site Intelligence performs
     # no deletion, destination write, or remote institutional deposit.
     live_intelligence_public_archive_enabled: bool = True
@@ -380,7 +388,7 @@ class Settings(BaseSettings):
     live_intelligence_public_archive_max_records: int = Field(default=20000, ge=100, le=200000)
     live_intelligence_public_archive_require_separation_of_duties: bool = True
 
-    # Site Intelligence v4.35.5 — Archive Verification, Preservation Audits, and Institutional Custody.
+    # Site Intelligence v4.35.6 — Archive Verification, Preservation Audits, and Institutional Custody.
     # Audits and custody packages are append-only and human-governed. Site Intelligence
     # claims no automatic scheduler, remote deposit, archive mutation, or destination write.
     live_intelligence_archive_audits_enabled: bool = True
@@ -396,7 +404,7 @@ class Settings(BaseSettings):
     live_intelligence_preservation_exchange_max_records: int = Field(default=20000, ge=100, le=200000)
     live_intelligence_preservation_exchange_require_separation_of_duties: bool = True
 
-    # Site Intelligence v4.35.5 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification.
+    # Site Intelligence v4.35.6 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification.
     # Registry entries and attestations are append-only, human-governed, public-safe records.
     # Trust profiles are evidence declarations, not certification or endorsement.
     live_intelligence_preservation_registry_enabled: bool = True
@@ -407,7 +415,7 @@ class Settings(BaseSettings):
     live_intelligence_preservation_registry_require_separation_of_duties: bool = True
     live_intelligence_preservation_registry_consensus_threshold: int = Field(default=2, ge=2, le=12)
 
-    # Site Intelligence v4.35.5 — Registry Governance, Challenges, Revocation, and Appeals.
+    # Site Intelligence v4.35.6 — Registry Governance, Challenges, Revocation, and Appeals.
     # Governance records are append-only and preserve prior institutions and attestations.
     live_intelligence_registry_governance_enabled: bool = True
     live_intelligence_registry_governance_challenges_path: str = "backend/data/live_intelligence_registry_governance_v3190/challenges_v3190.jsonl"
@@ -416,13 +424,13 @@ class Settings(BaseSettings):
     live_intelligence_registry_governance_max_records: int = Field(default=20000, ge=100, le=200000)
     live_intelligence_registry_governance_require_separation_of_duties: bool = True
 
-    # Site Intelligence v4.35.5 — Public Registry Discovery, Evidence Search, and Institutional Profiles.
+    # Site Intelligence v4.35.6 — Public Registry Discovery, Evidence Search, and Institutional Profiles.
     # Discovery is read-only and indexes approved public-safe records without storing queries or visitor profiles.
     live_intelligence_registry_discovery_enabled: bool = True
     live_intelligence_registry_discovery_default_limit: int = Field(default=25, ge=1, le=100)
     live_intelligence_registry_discovery_max_limit: int = Field(default=100, ge=10, le=500)
 
-    # Site Intelligence v4.35.5 — Saved Discovery Views, Public Research Collections, and Evidence Pathways.
+    # Site Intelligence v4.35.6 — Saved Discovery Views, Public Research Collections, and Evidence Pathways.
     # Curation state is append-only, human-reviewed, public-safe, and does not store visitor identities or queries.
     live_intelligence_registry_collections_enabled: bool = True
     live_intelligence_registry_collections_views_path: str = "backend/data/live_intelligence_registry_collections_v3210/views_v3210.jsonl"
@@ -432,7 +440,7 @@ class Settings(BaseSettings):
     live_intelligence_registry_collections_snapshot_limit: int = Field(default=100, ge=1, le=500)
     live_intelligence_registry_collections_require_separation_of_duties: bool = True
 
-    # Site Intelligence v4.35.5 — Collection Publication, Citation Exports, and Research Brief Packages.
+    # Site Intelligence v4.35.6 — Collection Publication, Citation Exports, and Research Brief Packages.
     # Briefs are checksum-bound to approved public collections and all delivery remains manual.
     live_intelligence_registry_publications_enabled: bool = True
     live_intelligence_registry_publications_briefs_path: str = "backend/data/live_intelligence_registry_publications_v3220/briefs_v3220.jsonl"
@@ -477,7 +485,7 @@ class Settings(BaseSettings):
     spatial_evidence_max_radius_km: float = Field(default=5000.0, ge=0.1, le=20000.0)
     spatial_evidence_max_proximity_km: float = Field(default=5000.0, ge=0.1, le=20000.0)
 
-    # Site Intelligence v4.35.5 — Statistical Harmonization and Comparable-Series Engine.
+    # Site Intelligence v4.35.6 — Statistical Harmonization and Comparable-Series Engine.
     # Source series, transformed series, and lineage receipts are writable runtime
     # state and may be redirected to durable storage. Release registries remain immutable.
     statistical_harmonization_enabled: bool = True
@@ -490,7 +498,7 @@ class Settings(BaseSettings):
     statistical_harmonization_max_records: int = Field(default=10000, ge=100, le=100000)
     statistical_harmonization_max_observations: int = Field(default=5000, ge=1, le=100000)
 
-    # Site Intelligence v4.35.5 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+    # Site Intelligence v4.35.6 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
     # Model cards and immutable policy registries ship with the release. Forecasts,
     # evaluations, warning rules, and warning events are writable runtime state.
     model_governance_enabled: bool = True
@@ -505,7 +513,7 @@ class Settings(BaseSettings):
     model_governance_max_records: int = Field(default=10000, ge=100, le=100000)
     model_governance_max_forecast_points: int = Field(default=5000, ge=1, le=100000)
 
-    # Site Intelligence v4.35.5 — Evidence Synthesis, Claims, and Contradiction Review.
+    # Site Intelligence v4.35.6 — Evidence Synthesis, Claims, and Contradiction Review.
     # Claims, evidence, reviews, syntheses, and uncertainty records are writable
     # runtime state. Immutable policy files ship with the release.
     evidence_synthesis_enabled: bool = True
@@ -519,7 +527,7 @@ class Settings(BaseSettings):
     evidence_synthesis_max_records: int = Field(default=10000, ge=100, le=100000)
     evidence_synthesis_max_excerpt_chars: int = Field(default=4000, ge=100, le=20000)
 
-    # Site Intelligence v4.35.5 — Intelligence Publishing and Story Map Studio.
+    # Site Intelligence v4.35.6 — Intelligence Publishing and Story Map Studio.
     # Entity, relationship, and alias records are writable runtime state. Immutable
     # policy and relationship registries ship with the release.
     knowledge_graph_enabled: bool = True
@@ -534,7 +542,7 @@ class Settings(BaseSettings):
     knowledge_graph_max_results: int = Field(default=1000, ge=10, le=10000)
 
 
-    # Site Intelligence v4.35.5 — Intelligence Publishing and Story Map Studio.
+    # Site Intelligence v4.35.6 — Intelligence Publishing and Story Map Studio.
     # Publication projects, blocks, reviews, and immutable published versions are
     # writable runtime state. Policy files ship with the immutable release.
     intelligence_publishing_enabled: bool = True
@@ -548,7 +556,7 @@ class Settings(BaseSettings):
     intelligence_publishing_max_blocks: int = Field(default=250, ge=1, le=2000)
     intelligence_publishing_max_block_chars: int = Field(default=100000, ge=1000, le=1000000)
 
-    # Site Intelligence v4.35.5 — Scheduled Monitoring, Digests, and Public Intelligence Feeds.
+    # Site Intelligence v4.35.6 — Scheduled Monitoring, Digests, and Public Intelligence Feeds.
     # Monitor definitions, checks, alerts, digests, delivery receipts, and feed
     # definitions are writable runtime state. The policy file is immutable.
     scheduled_monitoring_enabled: bool = True
@@ -566,7 +574,7 @@ class Settings(BaseSettings):
     scheduled_monitoring_email_enabled: bool = False
     scheduled_monitoring_webhook_enabled: bool = False
 
-    # Site Intelligence v4.35.5 — Institutional Workspaces, Collaboration, and Review.
+    # Site Intelligence v4.35.6 — Institutional Workspaces, Collaboration, and Review.
     # Roles and permissions are enforced inside token-protected administrative APIs,
     # but this release does not provision accounts or replace an identity provider.
     # All writable workspace state is excluded from immutable release packages.
@@ -588,7 +596,7 @@ class Settings(BaseSettings):
 
 
 
-    # Site Intelligence v4.35.5 — Typed Cross-Platform Intelligence Workflows.
+    # Site Intelligence v4.35.6 — Typed Cross-Platform Intelligence Workflows.
     # Packets, receipts, delivery attempts, linkbacks, and retry records are writable
     # runtime state. This release validates and records handoffs but does not perform
     # remote writes or replace Platform Core orchestration.
@@ -606,7 +614,7 @@ class Settings(BaseSettings):
     cross_platform_workflows_retry_delay_seconds: int = Field(default=300, ge=10, le=86400)
     cross_platform_workflows_max_payload_bytes: int = Field(default=2000000, ge=1000, le=20000000)
 
-    # Open Standards, Federation, and Institutional Data Exchange v4.35.5.
+    # Open Standards, Federation, and Institutional Data Exchange v4.35.6.
     federation_exchange_enabled: bool = True
     federation_root_path: str = "backend/data/federation_exchange_v2240"
     federation_institutions_path: str = "backend/data/federation_exchange_v2240/institutions_v2240.jsonl"
@@ -621,7 +629,7 @@ class Settings(BaseSettings):
     federation_max_records: int = Field(default=30000, ge=100, le=300000)
     federation_max_manifest_bytes: int = Field(default=5000000, ge=1000, le=50000000)
 
-    # Site Intelligence v4.35.5 — Security, Privacy, Governance, and Production Scale.
+    # Site Intelligence v4.35.6 — Security, Privacy, Governance, and Production Scale.
     # SQLite provides a zero-cost durable mode with explicit migrations. Production
     # deployments should map the database and backup paths to a persistent disk.
     production_governance_enabled: bool = True
@@ -634,7 +642,7 @@ class Settings(BaseSettings):
     production_admin_rate_limit: int = Field(default=120, ge=10, le=10000)
     production_admin_rate_window_seconds: int = Field(default=60, ge=1, le=3600)
 
-    # Site Intelligence v4.35.5 — Connected Public Intelligence and Evidence Platform.
+    # Site Intelligence v4.35.6 — Connected Public Intelligence and Evidence Platform.
     # The default zero-cost index is generated from public-safe registries and
     # approved runtime records. It does not expose private records or claim a
     # persistent search cluster, automatic publication, or remote delivery.

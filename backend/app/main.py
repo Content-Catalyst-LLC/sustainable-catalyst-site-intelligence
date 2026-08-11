@@ -692,13 +692,13 @@ from .source_methodology_studio import (
     studio_export as build_source_methodology_export,
     SourceMethodologyError,
 )
-from .authoritative_api_audit_v4355 import (
+from .authoritative_api_audit_v4356 import (
     audit_overview as build_authoritative_api_audit,
     audit_catalog as build_authoritative_api_catalog,
     workspace_matrix as build_authoritative_api_workspace_matrix,
     audit_readiness as build_authoritative_api_readiness,
 )
-from .authoritative_connectors_v4355 import (
+from .authoritative_connectors_v4356 import (
     connector_catalog as build_authoritative_connector_catalog,
     connector_readiness as build_authoritative_connector_readiness,
     usgs_water_latest as build_usgs_water_latest,
@@ -717,6 +717,12 @@ from .authoritative_connectors_v4355 import (
     nasa_firms_area as build_nasa_firms_area,
     usda_nass_quickstats as build_usda_nass_quickstats,
     nasa_cmr_graphql_collections as build_nasa_cmr_graphql_collections,
+    pcbs_pxweb_metadata as build_pcbs_pxweb_metadata,
+    pcbs_pxweb_data as build_pcbs_pxweb_data,
+    statcan_vectors as build_statcan_vectors,
+    ons_observations as build_ons_observations,
+    abs_sdmx_data as build_abs_sdmx_data,
+    bls_timeseries as build_bls_timeseries,
 )
 from .release_health_v43531 import (
     deployment_verification as build_deployment_verification_v43531,
@@ -868,7 +874,7 @@ async def public_experience_headers(request, call_next):
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
-        response.headers["X-SC-Release-Gate"] = "v4.35.5"
+        response.headers["X-SC-Release-Gate"] = "v4.35.6"
     elif path == "/app/service-worker.js":
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
@@ -4311,7 +4317,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.35.5 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v4.35.6 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -4453,7 +4459,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.35.5 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v4.35.6 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -4570,7 +4576,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.35.5 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v4.35.6 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -4692,7 +4698,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.35.5 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v4.35.6 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -4828,7 +4834,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.35.5 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v4.35.6 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -5639,6 +5645,113 @@ def public_nasa_cmr_graphql_endpoint(
         raise HTTPException(status_code=400, detail=str(exc)) from exc
     except RuntimeError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+@app.get("/public/authoritative-connectors/pcbs/pxweb/metadata")
+@app.get("/public/country-statistics/palestine/pcbs/metadata")
+def public_pcbs_pxweb_metadata_endpoint(
+    table_path: str = Query(..., min_length=3, max_length=240),
+    settings: Settings = Depends(get_settings),
+):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    try:
+        return build_pcbs_pxweb_metadata(settings, table_path=table_path)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.get("/public/authoritative-connectors/pcbs/pxweb/data")
+@app.get("/public/country-statistics/palestine/pcbs/data")
+def public_pcbs_pxweb_data_endpoint(
+    table_path: str = Query(..., min_length=3, max_length=240),
+    selection: list[str] = Query(default=[]),
+    settings: Settings = Depends(get_settings),
+):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    try:
+        return build_pcbs_pxweb_data(settings, table_path=table_path, selections=selection)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.get("/public/authoritative-connectors/statcan/vectors")
+@app.get("/public/country-statistics/canada/statcan")
+def public_statcan_vectors_endpoint(
+    vector_id: list[int] = Query(default=[]),
+    latest_n: int = Query(3, ge=1, le=24),
+    settings: Settings = Depends(get_settings),
+):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    try:
+        return build_statcan_vectors(settings, vector_ids=vector_id, latest_n=latest_n)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.get("/public/authoritative-connectors/ons/observations")
+@app.get("/public/country-statistics/united-kingdom/ons")
+def public_ons_observations_endpoint(
+    dataset_id: str = Query(..., min_length=1, max_length=100),
+    edition: str = Query(..., min_length=1, max_length=100),
+    version: int = Query(..., ge=1),
+    filter: list[str] = Query(default=[]),
+    settings: Settings = Depends(get_settings),
+):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    try:
+        return build_ons_observations(settings, dataset_id=dataset_id, edition=edition, version=version, filters=filter)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.get("/public/authoritative-connectors/abs/sdmx")
+@app.get("/public/country-statistics/australia/abs")
+def public_abs_sdmx_endpoint(
+    dataflow: str = Query(..., min_length=2, max_length=120),
+    data_key: str = Query(..., min_length=1, max_length=240),
+    start_period: str = Query(..., min_length=4, max_length=20),
+    end_period: str = Query(..., min_length=4, max_length=20),
+    limit: int = Query(200, ge=1, le=1000),
+    settings: Settings = Depends(get_settings),
+):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    try:
+        return build_abs_sdmx_data(settings, dataflow=dataflow, data_key=data_key, start_period=start_period, end_period=end_period, limit=limit)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.get("/public/authoritative-connectors/bls/timeseries")
+@app.get("/public/economics-labor/live/bls")
+def public_bls_timeseries_endpoint(
+    series_id: list[str] = Query(default=[]),
+    start_year: int | None = Query(None, ge=1900, le=2200),
+    end_year: int | None = Query(None, ge=1900, le=2200),
+    settings: Settings = Depends(get_settings),
+):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    try:
+        return build_bls_timeseries(settings, series_ids=series_id, start_year=start_year, end_year=end_year)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
 
 @app.get("/public/sources")
 def public_sources_endpoint(
@@ -8613,7 +8726,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v4.35.5 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v4.35.6 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -8847,7 +8960,7 @@ def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     return build_reliability(settings)
 
 
-# Site Intelligence v4.35.5 — Open Standards, Federation, and Institutional Data Exchange.
+# Site Intelligence v4.35.6 — Open Standards, Federation, and Institutional Data Exchange.
 def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
     if not settings.federation_exchange_enabled:
         raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
@@ -8937,7 +9050,7 @@ def admin_federation_accept_import_endpoint(request: dict = Body(default={}), se
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.35.5 — Security, Privacy, Governance, and Production Scale.
+# Site Intelligence v4.35.6 — Security, Privacy, Governance, and Production Scale.
 def _production_governance(settings: Settings) -> ProductionGovernanceCenter:
     if not settings.production_governance_enabled:
         raise HTTPException(status_code=503, detail="Production governance is disabled.")
@@ -9086,7 +9199,7 @@ def admin_production_governance_deployment_endpoint(request: dict = Body(default
 def admin_production_governance_load_probe_endpoint(requests: int = Query(default=250, ge=1, le=5000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return _production_governance(settings).load_probe(requests)
 
-# Site Intelligence v4.35.5 — Connected Live Intelligence Surface.
+# Site Intelligence v4.35.6 — Connected Live Intelligence Surface.
 def _connected_platform(settings: Settings) -> ConnectedPublicIntelligencePlatform:
     if not settings.connected_platform_enabled:
         raise HTTPException(status_code=404, detail="Connected platform is disabled.")
