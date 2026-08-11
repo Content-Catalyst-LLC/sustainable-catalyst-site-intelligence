@@ -9,6 +9,6 @@ for t in ['SCSISETIV43400','TECHNOSIGNATURE SEARCH EVIDENCE','/public/seti-techn
     assert t in js,t
 assert 'astroSeti' in astro and 'SCSISETIV43400' in astro
 assert 'seti-technosignatures-v43400' in astro
-assert 'seti-technosignatures-v43400.js?v=4.34.0' in astro and 'seti-technosignatures-v43400.css?v=4.34.0' in astro
+assert 'seti-technosignatures-v43400.js?v=4.35.0' in astro and 'seti-technosignatures-v43400.css?v=4.35.0' in astro
 assert '.seti-panel' in css and '.seti43400-spectrum' in css
-print('PASS: v4.34.0 SETI / technosignatures direct + iframe-compatible browser asset gate')
+print('PASS: v4.35.0 SETI / technosignatures direct + iframe-compatible browser asset gate')

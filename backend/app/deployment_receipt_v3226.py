@@ -1,4 +1,4 @@
-"""Public-safe, runtime-generated deployment receipt for Site Intelligence v4.34.0."""
+"""Public-safe, runtime-generated deployment receipt for Site Intelligence v4.35.0."""
 
 from __future__ import annotations
 

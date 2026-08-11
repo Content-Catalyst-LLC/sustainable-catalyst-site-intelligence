@@ -124,6 +124,16 @@ from .seti_technosignatures_v43400 import (
     export_manifest as build_seti_export_manifest,
     readiness as build_seti_readiness,
 )
+from .exoplanet_habitability_v43500 import (
+    overview as build_exoplanet_habitability_overview,
+    catalog as build_exoplanet_habitability_catalog,
+    state as build_exoplanet_habitability_state,
+    normalize_planet as build_exoplanet_habitability_normalize_planet,
+    normalize_spectrum as build_exoplanet_habitability_normalize_spectrum,
+    normalize_biosignature as build_exoplanet_habitability_normalize_biosignature,
+    export_manifest as build_exoplanet_habitability_export_manifest,
+    readiness as build_exoplanet_habitability_readiness,
+)
 from .solar_system_navigation_v4400 import (
     overview as build_solar_system_overview,
     catalog as build_solar_system_catalog,
@@ -827,7 +837,7 @@ async def public_experience_headers(request, call_next):
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
-        response.headers["X-SC-Release-Gate"] = "v4.34.0"
+        response.headers["X-SC-Release-Gate"] = "v4.35.0"
     elif path == "/app/service-worker.js":
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
@@ -1605,6 +1615,53 @@ def public_seti_manifest(source: str = Query(default="breakthrough-listen-open-d
 @app.get("/public/seti-technosignatures/readiness")
 def public_seti_readiness():
     return build_seti_readiness()
+
+@app.get("/public/exoplanet-habitability")
+def public_exoplanet_habitability_overview():
+    return build_exoplanet_habitability_overview()
+
+@app.get("/public/exoplanet-habitability/catalog")
+def public_exoplanet_habitability_catalog():
+    return build_exoplanet_habitability_catalog()
+
+@app.get("/public/exoplanet-habitability/state")
+def public_exoplanet_habitability_state(source: str = Query(default="nasa-exoplanet-archive-systems"), indicator_type: str = Query(default="planetary-system"), target: str = Query(default=""), spectrum_type: str = Query(default=""), facility: str = Query(default=""), wavelength_um: float | None = Query(default=None, gt=0)):
+    try:
+        return build_exoplanet_habitability_state(source, indicator_type, target, spectrum_type, facility, wavelength_um)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+@app.post("/public/exoplanet-habitability/planet/normalize")
+def public_exoplanet_habitability_planet_normalize(request: dict[str, Any] = Body(default={})):
+    try:
+        return build_exoplanet_habitability_normalize_planet(request)
+    except (ValueError, TypeError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+@app.post("/public/exoplanet-habitability/spectrum/normalize")
+def public_exoplanet_habitability_spectrum_normalize(request: dict[str, Any] = Body(default={})):
+    try:
+        return build_exoplanet_habitability_normalize_spectrum(request)
+    except (ValueError, TypeError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+@app.post("/public/exoplanet-habitability/biosignature/normalize")
+def public_exoplanet_habitability_biosignature_normalize(request: dict[str, Any] = Body(default={})):
+    try:
+        return build_exoplanet_habitability_normalize_biosignature(request)
+    except (ValueError, TypeError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+@app.get("/public/exoplanet-habitability/export-manifest")
+def public_exoplanet_habitability_manifest(source: str = Query(default="nasa-exoplanet-archive-systems"), indicator_type: str = Query(default="planetary-system"), target: str = Query(default=""), spectrum_type: str = Query(default=""), facility: str = Query(default=""), wavelength_um: float | None = Query(default=None, gt=0)):
+    try:
+        return build_exoplanet_habitability_export_manifest(source, indicator_type, target, spectrum_type, facility, wavelength_um)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+@app.get("/public/exoplanet-habitability/readiness")
+def public_exoplanet_habitability_readiness():
+    return build_exoplanet_habitability_readiness()
 
 @app.get("/public/solar-system-navigation")
 def public_solar_system_navigation():
@@ -4218,7 +4275,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.34.0 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v4.35.0 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -4360,7 +4417,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.34.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v4.35.0 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -4477,7 +4534,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.34.0 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v4.35.0 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -4599,7 +4656,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.34.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v4.35.0 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -4735,7 +4792,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.34.0 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v4.35.0 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -8141,7 +8198,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v4.34.0 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v4.35.0 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -8375,7 +8432,7 @@ def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     return build_reliability(settings)
 
 
-# Site Intelligence v4.34.0 — Open Standards, Federation, and Institutional Data Exchange.
+# Site Intelligence v4.35.0 — Open Standards, Federation, and Institutional Data Exchange.
 def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
     if not settings.federation_exchange_enabled:
         raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
@@ -8465,7 +8522,7 @@ def admin_federation_accept_import_endpoint(request: dict = Body(default={}), se
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.34.0 — Security, Privacy, Governance, and Production Scale.
+# Site Intelligence v4.35.0 — Security, Privacy, Governance, and Production Scale.
 def _production_governance(settings: Settings) -> ProductionGovernanceCenter:
     if not settings.production_governance_enabled:
         raise HTTPException(status_code=503, detail="Production governance is disabled.")
@@ -8614,7 +8671,7 @@ def admin_production_governance_deployment_endpoint(request: dict = Body(default
 def admin_production_governance_load_probe_endpoint(requests: int = Query(default=250, ge=1, le=5000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return _production_governance(settings).load_probe(requests)
 
-# Site Intelligence v4.34.0 — Connected Live Intelligence Surface.
+# Site Intelligence v4.35.0 — Connected Live Intelligence Surface.
 def _connected_platform(settings: Settings) -> ConnectedPublicIntelligencePlatform:
     if not settings.connected_platform_enabled:
         raise HTTPException(status_code=404, detail="Connected platform is disabled.")

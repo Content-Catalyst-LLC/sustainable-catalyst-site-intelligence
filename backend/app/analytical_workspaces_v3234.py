@@ -1,4 +1,4 @@
-"""Five core analytical workflow contracts for Site Intelligence v4.34.0."""
+"""Five core analytical workflow contracts for Site Intelligence v4.35.0."""
 from __future__ import annotations
 
 from copy import deepcopy
