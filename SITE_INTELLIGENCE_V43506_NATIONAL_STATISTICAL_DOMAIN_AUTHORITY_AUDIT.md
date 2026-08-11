@@ -1,8 +1,8 @@
-# Site Intelligence v4.35.6 — National Statistical & Domain-Authority Connector Audit
+# Site Intelligence v4.35.7 — National Statistical & Domain-Authority Connector Audit
 
 ## Purpose
 
-Expansion v4.35.6 increases direct access to first-party national statistical authorities instead of routing country evidence primarily through international aggregators.
+Expansion v4.35.7 increases direct access to first-party national statistical authorities instead of routing country evidence primarily through international aggregators.
 
 ## New connectors
 

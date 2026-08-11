@@ -1,6 +1,6 @@
-# Site Intelligence v4.35.6 — National Statistical & Domain-Authority Connector Expansion
+# Site Intelligence v4.35.7 — National Statistical & Domain-Authority Connector Expansion
 
-Site Intelligence v4.35.6 expands the authoritative-data layer with five direct national statistical authorities while preserving the v4.35.3.1 deployment/source-health separation and all existing connector routes.
+Site Intelligence v4.35.7 expands the authoritative-data layer with five direct national statistical authorities while preserving the v4.35.3.1 deployment/source-health separation and all existing connector routes.
 
 ## Added authoritative interfaces
 

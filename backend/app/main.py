@@ -22,7 +22,7 @@ from .runtime_recovery_v3224 import build_runtime_recovery_contract
 from .production_truth_v3231 import public_production_truth as build_public_production_truth, public_production_truth_route as build_public_production_truth_route
 from .cartographic_interaction_v3232 import public_map_interaction_contract as build_public_map_interaction_contract
 from .data_truth_v32371 import (public_data_truth as build_public_data_truth, public_data_truth_source as build_public_data_truth_source, public_data_truth_countries as build_public_data_truth_countries, public_country_data_truth as build_public_country_data_truth, public_country_source_truth as build_public_country_source_truth, public_country_indicator_truth as build_public_country_indicator_truth, public_coverage_matrix as build_public_coverage_matrix)
-from .record_provenance_v3238 import (public_indicator_record_truth as build_public_indicator_record_truth, public_country_record_truth as build_public_country_record_truth, public_map_layer_truth as build_public_map_layer_truth, public_normalized_record_truth as build_public_normalized_record_truth, public_record_truth_manifest as build_public_record_truth_manifest)
+from .record_provenance_v4357 import (public_indicator_record_truth as build_public_indicator_record_truth, public_country_record_truth as build_public_country_record_truth, public_map_layer_truth as build_public_map_layer_truth, public_normalized_record_truth as build_public_normalized_record_truth, public_record_truth_manifest as build_public_record_truth_manifest)
 from .data_truth_control_plane_v3240 import (public_control_plane as build_public_control_plane, public_control_plane_sources as build_public_control_plane_sources, public_control_plane_source as build_public_control_plane_source, public_control_plane_history as build_public_control_plane_history, public_control_plane_schema_drift as build_public_control_plane_schema_drift, public_control_plane_outages as build_public_control_plane_outages, public_control_plane_coverage as build_public_control_plane_coverage, public_control_plane_workspaces as build_public_control_plane_workspaces, public_control_plane_export as build_public_control_plane_export)
 from .analytical_workspaces_v3234 import public_analytical_workspaces as build_public_analytical_workspaces, public_analytical_workspace as build_public_analytical_workspace, public_analytical_snapshot as build_public_analytical_snapshot
 from .unified_analytical_state_v3250 import (
@@ -692,7 +692,7 @@ from .source_methodology_studio import (
     studio_export as build_source_methodology_export,
     SourceMethodologyError,
 )
-from .authoritative_api_audit_v4356 import (
+from .authoritative_api_audit_v4357 import (
     audit_overview as build_authoritative_api_audit,
     audit_catalog as build_authoritative_api_catalog,
     workspace_matrix as build_authoritative_api_workspace_matrix,
@@ -723,6 +723,16 @@ from .authoritative_connectors_v4356 import (
     ons_observations as build_ons_observations,
     abs_sdmx_data as build_abs_sdmx_data,
     bls_timeseries as build_bls_timeseries,
+)
+from .evidence_intelligence_v4357 import (
+    overview as build_evidence_intelligence_overview,
+    metric_catalog as build_evidence_metric_catalog,
+    precedence_catalog as build_evidence_precedence_catalog,
+    freshness_policy as build_evidence_freshness_policy,
+    freshness_assessment as build_evidence_freshness_assessment,
+    indicator_semantics as build_evidence_indicator_semantics,
+    select_evidence as build_evidence_selection,
+    readiness as build_evidence_intelligence_readiness,
 )
 from .release_health_v43531 import (
     deployment_verification as build_deployment_verification_v43531,
@@ -874,7 +884,7 @@ async def public_experience_headers(request, call_next):
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
-        response.headers["X-SC-Release-Gate"] = "v4.35.6"
+        response.headers["X-SC-Release-Gate"] = "v4.35.7"
     elif path == "/app/service-worker.js":
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
@@ -4317,7 +4327,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.35.6 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v4.35.7 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -4459,7 +4469,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.35.6 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v4.35.7 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -4576,7 +4586,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.35.6 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v4.35.7 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -4698,7 +4708,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.35.6 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v4.35.7 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -4834,7 +4844,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.35.6 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v4.35.7 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -5315,6 +5325,52 @@ def public_authoritative_connectors_readiness_endpoint(settings: Settings = Depe
     if not settings.public_dashboards_enabled:
         raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
     return build_authoritative_connector_readiness(settings)
+
+
+@app.get("/public/evidence-intelligence")
+def public_evidence_intelligence_endpoint():
+    return build_evidence_intelligence_overview()
+
+
+@app.get("/public/evidence-intelligence/metrics")
+def public_evidence_metrics_endpoint():
+    return build_evidence_metric_catalog()
+
+
+@app.get("/public/evidence-intelligence/precedence")
+def public_evidence_precedence_endpoint(jurisdiction: str = Query(default=""), concept_id: str = Query(default="")):
+    return build_evidence_precedence_catalog(jurisdiction=jurisdiction, concept_id=concept_id)
+
+
+@app.get("/public/evidence-intelligence/freshness")
+def public_evidence_freshness_endpoint(observed_at: str = Query(...), cadence: str = Query(default="unknown"), now: str | None = Query(default=None)):
+    return build_evidence_freshness_assessment(observed_at=observed_at, cadence=cadence, now=now)
+
+
+@app.get("/public/evidence-intelligence/indicator/{indicator_id}")
+def public_evidence_indicator_semantics_endpoint(indicator_id: str, jurisdiction: str = Query(default="")):
+    try:
+        return build_evidence_indicator_semantics(indicator_id, jurisdiction=jurisdiction)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Indicator semantics not registered.") from exc
+
+
+@app.post("/public/evidence-intelligence/select")
+def public_evidence_select_endpoint(payload: dict[str, Any] = Body(...)):
+    try:
+        return build_evidence_selection(
+            concept_id=str(payload.get("concept_id") or ""),
+            jurisdiction=str(payload.get("jurisdiction") or ""),
+            candidates=payload.get("candidates") or [],
+            now=payload.get("now"),
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/public/evidence-intelligence/readiness")
+def public_evidence_intelligence_readiness_endpoint():
+    return build_evidence_intelligence_readiness()
 
 
 @app.get("/public/deployment-verification")
@@ -8726,7 +8782,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v4.35.6 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v4.35.7 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -8960,7 +9016,7 @@ def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     return build_reliability(settings)
 
 
-# Site Intelligence v4.35.6 — Open Standards, Federation, and Institutional Data Exchange.
+# Site Intelligence v4.35.7 — Open Standards, Federation, and Institutional Data Exchange.
 def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
     if not settings.federation_exchange_enabled:
         raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
@@ -9050,7 +9106,7 @@ def admin_federation_accept_import_endpoint(request: dict = Body(default={}), se
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.35.6 — Security, Privacy, Governance, and Production Scale.
+# Site Intelligence v4.35.7 — Security, Privacy, Governance, and Production Scale.
 def _production_governance(settings: Settings) -> ProductionGovernanceCenter:
     if not settings.production_governance_enabled:
         raise HTTPException(status_code=503, detail="Production governance is disabled.")
@@ -9199,7 +9255,7 @@ def admin_production_governance_deployment_endpoint(request: dict = Body(default
 def admin_production_governance_load_probe_endpoint(requests: int = Query(default=250, ge=1, le=5000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return _production_governance(settings).load_probe(requests)
 
-# Site Intelligence v4.35.6 — Connected Live Intelligence Surface.
+# Site Intelligence v4.35.7 — Connected Live Intelligence Surface.
 def _connected_platform(settings: Settings) -> ConnectedPublicIntelligencePlatform:
     if not settings.connected_platform_enabled:
         raise HTTPException(status_code=404, detail="Connected platform is disabled.")

@@ -1,4 +1,4 @@
-# Site Intelligence v4.35.6 — National Statistical & Domain-Authority Connector Expansion
+# Site Intelligence v4.35.7 — National Statistical & Domain-Authority Connector Expansion
 
 - Added PCBS PxWeb bounded metadata/data retrieval with an explicit structural-access-versus-operational-availability boundary.
 - Added Statistics Canada WDS vector retrieval with status/revision metadata preservation.
@@ -9,7 +9,7 @@
 - Expanded the source audit from 179 to 184 registrations and from 96 to 101 machine-readable registrations; 66 are now implemented, discovery-backed, or configuration-gated.
 - Preserved the hardened non-blocking external-source health policy for release promotion.
 
-# Site Intelligence v4.35.6 — Authoritative Connector Expansion II
+# Site Intelligence v4.35.7 — Authoritative Connector Expansion II
 
 - Added live NOAA CO-OPS Data API retrieval for bounded station observations/predictions with datum, units, time-zone, quality/error metadata, and raw-source preservation.
 - Added live NOAA NCEI Access Data Service retrieval with bounded dataset/date/station/data-type requests and explicit separation from token-gated CDO v2.
@@ -20,7 +20,7 @@
 - Preserved v4.35.3.1 release-gate hardening: upstream source availability remains non-blocking for GitHub/Render promotion.
 - Tightened audit precision so a live NCEI Access Data connector does not falsely mark unrelated NCEI catalog pages as live retrieval.
 
-# Site Intelligence v4.35.6 — Authoritative Connector Expansion I
+# Site Intelligence v4.35.7 — Authoritative Connector Expansion I
 
 - Added live USGS Water Data OGC latest-continuous retrieval with provenance, provisional/approved status, qualifiers and null preservation.
 - Added NOAA CoastWatch ERDDAP dataset search and bounded tabledap data retrieval.
@@ -32,7 +32,7 @@
 - Migrated the Humanitarian source registry ReliefWeb URL to V2.
 - Preserved deterministic no-network validation and source-null integrity.
 
-## 4.35.6 — Authoritative API & Workspace Integrity Audit
+## 4.35.7 — Authoritative API & Workspace Integrity Audit
 
 - Added a deterministic audit inventory spanning source registries and legacy live connectors without treating registration as retrieval.
 - Added LIVE / DISCOVERY / REGISTERED / AUTH_REQUIRED / BULK / STALE / UNAVAILABLE classifications with workspace-level coverage summaries.

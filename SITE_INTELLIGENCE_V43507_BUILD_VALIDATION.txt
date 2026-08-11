@@ -1,0 +1,21 @@
+Site Intelligence v4.35.7 — Source Precedence, Metric Semantics & Freshness Intelligence
+
+Validation summary
+- Targeted v4.35.7 regression tests: 12/12 passed.
+- Connector/deployment compatibility set: 78/78 passed.
+- Full deterministic pytest suite: 1,467/1,467 passed.
+  - chunk 1: 402 passed
+  - chunk 2: 315 passed
+  - chunk 3: 341 passed
+  - chunk 4: 366 passed
+  - chunk 5: 43 passed
+- Immutable repository manifest: 2,183 files.
+- JSON/GeoJSON parsing: 134 files passed.
+- JavaScript syntax: 151 files passed.
+- WordPress PHP syntax: passed.
+- Static security scan: 0 findings.
+- Evidence-intelligence browser/static gate: passed.
+- Evidence selection and readiness are deterministic and perform no upstream network calls.
+- External source health remains non-blocking for release promotion.
+
+The combined verifier process reached the execution window during pytest chunk 3 after 717 tests had already passed. Chunks 3-5 were completed separately against the same frozen tree, reconciling to 1,467/1,467. A subsequent tests-skipped verifier pass completed the manifest/static/browser gates end-to-end.

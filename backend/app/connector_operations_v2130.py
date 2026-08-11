@@ -14,7 +14,7 @@ from uuid import uuid4
 from .config import Settings
 
 SCHEMA_VERSION = "sc-site-intelligence-connector-operations/1.0"
-RELEASE_VERSION = "4.35.6"
+RELEASE_VERSION = "4.35.7"
 
 _LOCK = threading.RLock()
 _SECRET_FRAGMENTS = ("key", "token", "secret", "password", "authorization", "credential", "cookie")
@@ -618,7 +618,7 @@ class ConnectorOperationsCenter:
             except Exception as exc:  # Archival failure must not falsify ingestion acceptance.
                 receipt["historical_archive"] = {
                     "ok": False,
-                    "version": "4.35.6",
+                    "version": "4.35.7",
                     "error": f"{type(exc).__name__}: {exc}"[:500],
                     "ingestion_status_unchanged": True,
                 }

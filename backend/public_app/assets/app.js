@@ -25,7 +25,7 @@
     }
     throw last;
   }
-  const APP_VERSION="4.35.6";
+  const APP_VERSION="4.35.7";
   const FIXED_WORDPRESS_EMBED=window.SCSI_FIXED_WORDPRESS_EMBED===true;
   let heightFrame=0;
   function documentHeight(){
@@ -1229,6 +1229,13 @@
     qs("#authoritativePriorityTargets").innerHTML=(data?.priority_connector_targets||[]).slice(0,5).map(item=>`<span>${escapeHtml(item.workspace)} → ${escapeHtml(item.target_state)}</span>`).join("");
   }
 
+  function renderEvidenceIntelligence(data){
+    qs("#evidenceConceptMetric").textContent=data?.metric_concept_count??"—";
+    qs("#evidencePrecedenceMetric").textContent=data?.precedence_rule_count??"—";
+    qs("#evidenceFreshnessMetric").textContent=data?.freshness_cadence_count??"—";
+    qs("#evidenceIntelligenceStatus").textContent=data?.critical_boundary||"Metric semantics, source precedence, and freshness policy are available.";
+  }
+
   async function refreshSourceDiagnostics(sequence,controller){
     try{
       const data=await apiWithRetry("/public/source-methodology/diagnostics",1,{signal:controller.signal,timeout:30000});
@@ -1245,15 +1252,16 @@
     qs("#sourceStudio").setAttribute("aria-busy","true");qs("#sourceStatus").textContent="Loading public source and methodology records…";qs("#sourceRegistryList").innerHTML='<div class="loading-block">Loading source records…</div>';
     const params=sourceFilterParams();
     try{
-      const [sourcesResult,methodsResult,auditResult]=await Promise.allSettled([
+      const [sourcesResult,methodsResult,auditResult,evidenceResult]=await Promise.allSettled([
         apiWithRetry(`/public/sources?${params.toString()}`,2,{signal:controller.signal,timeout:18000}),
         apiWithRetry("/public/methodology",2,{signal:controller.signal,timeout:12000}),
-        apiWithRetry("/public/authoritative-apis",1,{signal:controller.signal,timeout:18000})
+        apiWithRetry("/public/authoritative-apis",1,{signal:controller.signal,timeout:18000}),
+        apiWithRetry("/public/evidence-intelligence",1,{signal:controller.signal,timeout:12000})
       ]);
       if(controller.signal.aborted||sequence!==sourceStudioState.sequence)return;
       if(sourcesResult.status!=="fulfilled")throw sourcesResult.reason;
       sourceStudioState.data=sourcesResult.value;sourceStudioState.methods=methodsResult.status==="fulfilled"?methodsResult.value:{methods:[],total_registered:0};sourceStudioState.diagnostics=null;sourceStudioState.audit=auditResult.status==="fulfilled"?auditResult.value:null;
-      populateSourceFilters(sourceStudioState.data);renderMethodology(sourceStudioState.methods);renderAuthoritativeApiAudit(sourceStudioState.audit||{summary:{counts:{}},completed_connector_targets:[],priority_connector_targets:[]});qs("#sourceIssueMetric").textContent="…";
+      populateSourceFilters(sourceStudioState.data);renderMethodology(sourceStudioState.methods);renderAuthoritativeApiAudit(sourceStudioState.audit||{summary:{counts:{}},completed_connector_targets:[],priority_connector_targets:[]});renderEvidenceIntelligence(evidenceResult.status==="fulfilled"?evidenceResult.value:{});qs("#sourceIssueMetric").textContent="…";
       const requested=new URLSearchParams(location.search).get("source");const first=sourceStudioState.data.sources?.[0]?.id;const requestedAvailable=(sourceStudioState.data.sources||[]).some(item=>item.id===requested);sourceStudioState.activeSource=requestedAvailable?requested:first||null;if(requested&&!requestedAvailable)toast("Requested source record is unavailable; showing an available source instead.");renderSourceRegistry(sourceStudioState.data);renderSourceDetail((sourceStudioState.data.sources||[]).find(item=>item.id===sourceStudioState.activeSource));
       qs("#sourceStatus").textContent=`${sourceStudioState.data.count} matching sources · ${sourceStudioState.methods.total_registered||0} documented methods · checking connector diagnostics…`;
       if(pushState)syncSourceUrl();reportHeight();void refreshSourceDiagnostics(sequence,controller);
@@ -1834,7 +1842,7 @@
     hydration.then(results=>{const failed=results.filter(result=>result.status==="rejected");const status=qs("#statusText");if(failed.length){console.warn("[Site Intelligence] Startup hydration completed with limited services.",failed.map(result=>result.reason));if(status)status.textContent="Partial public data";toast("Some optional public data is temporarily unavailable.")}else if(status)status.textContent="Live public data";window.dispatchEvent(new CustomEvent("scsi:startup-hydrated",{detail:{version:APP_VERSION,state:failed.length?"limited":"ready",failed:failed.length}}));reportHeight()});
   }
   window.SCSIOverviewMapV3232={version:APP_VERSION,getMap:()=>state.map,getEvents:()=>state.events?.features||[],getFilteredEvents:()=>state.filteredEvents.slice(),getFilters:()=>({...state.overviewFilters}),setFilters:setOverviewFilters,selectEvent:selectOverviewEvent,fitResults:fitOverviewResults,setImageryOpacity:value=>state.imagery?.setOpacity?.(Math.max(0,Math.min(1,Number(value)))),setBaseStyle:style=>{const map=qs("#map");if(map)map.dataset.mapStyle=String(style||"institutional-dark");syncOverviewMapUrl()},syncUrl:syncOverviewMapUrl,render:renderOverviewFeatures};
-  window.SCSIRouterV3228={version:"4.35.6",navigate:navigateToRoute,current:()=>state.route};
+  window.SCSIRouterV3228={version:"4.35.7",navigate:navigateToRoute,current:()=>state.route};
   if(!FIXED_WORDPRESS_EMBED){
     window.addEventListener("load",reportHeight,{once:true});
     window.addEventListener("resize",reportHeight,{passive:true});
@@ -1860,5 +1868,5 @@ visualStyle.textContent=`
 document.head.appendChild(visualStyle);
 
 
-/* v4.35.6 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v4.35.6 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v4.35.7 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v4.35.7 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
