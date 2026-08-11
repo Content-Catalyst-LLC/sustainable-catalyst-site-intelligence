@@ -1,8 +1,8 @@
-# Site Intelligence v4.35.8 — Source Precedence, Metric Semantics & Freshness Intelligence
+# Site Intelligence v4.35.9 — Source Precedence, Metric Semantics & Freshness Intelligence
 
 ## Purpose
 
-v4.35.8 adds a deterministic evidence-intelligence layer above Site Intelligence's authoritative connector and provenance systems. The release decides whether evidence is semantically eligible for a requested metric before considering source authority, jurisdictional precedence, status, or freshness.
+v4.35.9 adds a deterministic evidence-intelligence layer above Site Intelligence's authoritative connector and provenance systems. The release decides whether evidence is semantically eligible for a requested metric before considering source authority, jurisdictional precedence, status, or freshness.
 
 ## Major changes
 

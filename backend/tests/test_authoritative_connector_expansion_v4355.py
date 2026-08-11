@@ -16,7 +16,7 @@ def settings(**updates):
 
 
 def test_release_catalog_expands_to_fifteen_interfaces():
-    assert APP_VERSION == "4.35.8"
+    assert APP_VERSION == "4.35.9"
     data = connectors.connector_catalog(settings())
     assert data["connector_count"] == 15
     assert data["live_connector_count"] == 11

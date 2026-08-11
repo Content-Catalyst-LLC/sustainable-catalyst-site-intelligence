@@ -8,7 +8,7 @@ CLIENT = TestClient(app)
 
 def test_overview_and_catalog_register_four_source_families():
     o = CLIENT.get('/public/marine-pollution').json()
-    assert o['ok'] and o['version'] == '4.35.8'
+    assert o['ok'] and o['version'] == '4.35.9'
     assert o['contract'] == 'marine-pollution-debris-water-quality'
     c = CLIENT.get('/public/marine-pollution/catalog').json()
     assert {x['id'] for x in c['sources']} == {

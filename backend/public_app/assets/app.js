@@ -25,7 +25,7 @@
     }
     throw last;
   }
-  const APP_VERSION="4.35.8";
+  const APP_VERSION="4.35.9";
   const FIXED_WORDPRESS_EMBED=window.SCSI_FIXED_WORDPRESS_EMBED===true;
   let heightFrame=0;
   function documentHeight(){
@@ -1225,7 +1225,9 @@
     qs("#authoritativeLiveMetric").textContent=(counts.LIVE??0)+(counts.DISCOVERY??0);
     qs("#authoritativeGapMetric").textContent=summary.registered_but_not_retrieved??"—";
     qs("#authoritativeAuthMetric").textContent=counts.AUTH_REQUIRED??"—";
-    qs("#authoritativeApiStatus").textContent=`${summary.machine_readable_registrations??0} machine-readable registrations · ${summary.implemented_or_configuration_gated_registrations??0} implemented/configuration-gated · ${summary.stale_implemented_connectors??0} known stale implemented connectors.`;
+    const production=data?.production_audit||{},closure=production?.closure_ledger_summary||{};
+    const closureText=production?.production_controls_ready===true?`Production controls ready · ${closure.registered_not_retrieved??summary.registered_but_not_retrieved??0} retrieval gaps remain explicit`:`Production audit incomplete`;
+    qs("#authoritativeApiStatus").textContent=`${summary.machine_readable_registrations??0} machine-readable registrations · ${summary.implemented_or_configuration_gated_registrations??0} implemented/configuration-gated · ${summary.stale_implemented_connectors??0} known stale · ${closureText}.`;
     qs("#authoritativeCompletedTargets").innerHTML=(data?.completed_connector_targets||[]).slice(0,5).map(item=>`<span>${escapeHtml(item.workspace)} → ${escapeHtml(item.state)} · v${escapeHtml(item.completed_in)}</span>`).join("");
     qs("#authoritativePriorityTargets").innerHTML=(data?.priority_connector_targets||[]).slice(0,5).map(item=>`<span>${escapeHtml(item.workspace)} → ${escapeHtml(item.target_state)}</span>`).join("");
   }
@@ -1843,7 +1845,7 @@
     hydration.then(results=>{const failed=results.filter(result=>result.status==="rejected");const status=qs("#statusText");if(failed.length){console.warn("[Site Intelligence] Startup hydration completed with limited services.",failed.map(result=>result.reason));if(status)status.textContent="Partial public data";toast("Some optional public data is temporarily unavailable.")}else if(status)status.textContent="Live public data";window.dispatchEvent(new CustomEvent("scsi:startup-hydrated",{detail:{version:APP_VERSION,state:failed.length?"limited":"ready",failed:failed.length}}));reportHeight()});
   }
   window.SCSIOverviewMapV3232={version:APP_VERSION,getMap:()=>state.map,getEvents:()=>state.events?.features||[],getFilteredEvents:()=>state.filteredEvents.slice(),getFilters:()=>({...state.overviewFilters}),setFilters:setOverviewFilters,selectEvent:selectOverviewEvent,fitResults:fitOverviewResults,setImageryOpacity:value=>state.imagery?.setOpacity?.(Math.max(0,Math.min(1,Number(value)))),setBaseStyle:style=>{const map=qs("#map");if(map)map.dataset.mapStyle=String(style||"institutional-dark");syncOverviewMapUrl()},syncUrl:syncOverviewMapUrl,render:renderOverviewFeatures};
-  window.SCSIRouterV3228={version:"4.35.8",navigate:navigateToRoute,current:()=>state.route};
+  window.SCSIRouterV3228={version:"4.35.9",navigate:navigateToRoute,current:()=>state.route};
   if(!FIXED_WORDPRESS_EMBED){
     window.addEventListener("load",reportHeight,{once:true});
     window.addEventListener("resize",reportHeight,{passive:true});
@@ -1869,5 +1871,5 @@ visualStyle.textContent=`
 document.head.appendChild(visualStyle);
 
 
-/* v4.35.8 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v4.35.8 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v4.35.9 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v4.35.9 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

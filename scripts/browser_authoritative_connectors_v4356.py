@@ -5,8 +5,8 @@ index=(ROOT/"backend/public_app/index.html").read_text()
 app=(ROOT/"backend/public_app/assets/app.js").read_text()
 main=(ROOT/"backend/app/main.py").read_text()
 promotion=(ROOT/"promote_site_intelligence_v4_35_6_to_github_and_render_macos.sh").read_text()
-assert 'data-scsi-release="4.35.8"' in index
-assert 'const APP_VERSION="4.35.8"' in app
+assert 'data-scsi-release="4.35.9"' in index
+assert 'const APP_VERSION="4.35.9"' in app
 assert '/public/deployment-verification' in main and '/public/source-health-policy' in main
 assert '/public/deployment-verification' in promotion and '/public/source-health-policy' in promotion
 assert 'Deep gate:' not in promotion
@@ -27,4 +27,4 @@ assert 'authoritative_connectors_v4356' in main
 assert 'authoritative_api_audit_v4356' in main
 for forbidden in ('/public/climate/state','/public/biodiversity/state','/public/mining-critical-materials/state','/public/exoplanet-habitability/state'):
     assert forbidden not in promotion
-print('PASS: v4.35.8 national statistical/domain-authority connector browser/static gate')
+print('PASS: v4.35.9 national statistical/domain-authority connector browser/static gate')

@@ -1,4 +1,4 @@
-"""Comparative, scenario, and model assurance for Site Intelligence v4.35.8.
+"""Comparative, scenario, and model assurance for Site Intelligence v4.35.9.
 
 The assurance layer does not create forecasts or normalize incompatible records.
 It makes comparison assumptions, scenario arithmetic, model-card completeness,

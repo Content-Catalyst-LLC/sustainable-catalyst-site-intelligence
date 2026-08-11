@@ -1,0 +1,24 @@
+Site Intelligence v4.35.9 — Authoritative API Coverage Closure & Production Audit
+Build validation date: 2026-08-11
+
+PASS — 1,487 / 1,487 deterministic pytest tests.
+PASS — v4.35.9 production audit targeted/compatibility regression coverage.
+PASS — immutable repository manifest verification.
+PASS — 134 JSON/GeoJSON files parsed.
+PASS — 151 JavaScript files syntax validated.
+PASS — WordPress PHP syntax.
+PASS — static security scan: 0 findings.
+PASS — authoritative coverage browser/static gate.
+PASS — source precedence, metric semantics, freshness, workspace evidence unification, and non-blocking source-health policy preserved.
+
+Production audit snapshot:
+- Total source registrations: 184
+- Machine-readable registrations: 101
+- Machine-readable LIVE: 36
+- Machine-readable DISCOVERY: 6
+- Machine-readable AUTH_REQUIRED: 11
+- Machine-readable REGISTERED/not retrieved: 44
+- Machine-readable BULK-only: 4
+- Known stale implemented connectors: 0
+- Production controls ready: yes
+- Coverage closure complete: no; explicit backlog remains open
