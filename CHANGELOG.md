@@ -1,3 +1,12 @@
+## 4.35.2 — Authoritative API & Workspace Integrity Audit
+
+- Added a deterministic audit inventory spanning source registries and legacy live connectors without treating registration as retrieval.
+- Added LIVE / DISCOVERY / REGISTERED / AUTH_REQUIRED / BULK / STALE / UNAVAILABLE classifications with workspace-level coverage summaries.
+- Added public authoritative-API audit, catalog, workspace-matrix, and readiness endpoints plus Sources workspace coverage metrics.
+- Migrated ReliefWeb humanitarian retrieval from decommissioned API V1 to V2 and made the required approved `appname` an explicit server-side configuration gate.
+- Registered the first verified connector-expansion targets: USGS Water OGC APIs, NOAA CoastWatch ERDDAP, NASA CMR Search/GraphQL, NASA Exoplanet Archive TAP, and UNHCR Refugee Statistics.
+- Preserved the v4.35.1 Palestine resolver and Platform Core configuration diagnostics.
+
 ## 4.35.1 — Country Resolution, Workspace Availability & Configuration Repair
 
 - Canonicalized `PSE` / `PS` to display **Palestine** while preserving `State of Palestine`, `Palestinian Territories`, `Palestinian Territory`, and `West Bank and Gaza` as resolver aliases.

@@ -1,0 +1,29 @@
+Site Intelligence v4.35.2 — Authoritative API & Workspace Integrity Audit
+Validation date: 2026-08-10
+
+Deterministic pytest collection: 1,389 tests
+Deterministic pytest result: 1,389 passed / 0 failed
+New v4.35.2 integrity tests: 12 passed / 0 failed
+
+Repository audit snapshot (no upstream network calls):
+- 179 source registrations
+- 135 unique endpoints/records
+- 39 source-bearing workspaces/inventories
+- 96 machine-readable registrations
+- 25 implemented / discovery / configuration-gated registrations
+- LIVE: 16
+- DISCOVERY: 1
+- REGISTERED: 70
+- AUTH_REQUIRED: 8
+- BULK: 4
+- STALE: 0
+- UNAVAILABLE: 80
+
+Release changes validated:
+- ReliefWeb active humanitarian connector migrated to API V2.
+- Live ReliefWeb calls require SC_SI_RELIEFWEB_APPNAME; missing appname fails locally before a network call.
+- Public authoritative API audit/catalog/workspace/readiness endpoints are available.
+- Sources & Methodology includes authoritative API coverage metrics and priority connector targets.
+- v4.35.1 Palestine/PSE resolution and Platform Core runtime-configuration diagnostics are preserved.
+- Six primary areas and 35 public routes are preserved.
+- Application HTML performance budget adjusted from 165,000 to 167,000 bytes for the 1.1 KB audit surface; total first-party shell budget remains 500,000 bytes.

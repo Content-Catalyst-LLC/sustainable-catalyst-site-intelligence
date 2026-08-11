@@ -14,7 +14,7 @@ services:
       - key: SC_SI_RELEASE_CHANNEL
         value: production
       - key: SC_SI_RELEASE_ID
-        value: site-intelligence-v4.35.1
+        value: site-intelligence-v4.35.2
       - key: SC_SI_RUNTIME_STATE_ROOT
         value: /tmp/site-intelligence-runtime
       - key: SC_SI_EXPECTED_GIT_BRANCH
@@ -77,6 +77,9 @@ services:
       - key: SC_SI_PLATFORM_CORE_URL
         sync: false
       - key: SC_SI_PLATFORM_CORE_PUBLIC_API_KEY
+        sync: false
+      # ReliefWeb API V2 requires an approved appname for live humanitarian reports.
+      - key: SC_SI_RELIEFWEB_APPNAME
         sync: false
 
 # v2.8.0 optional environment values:

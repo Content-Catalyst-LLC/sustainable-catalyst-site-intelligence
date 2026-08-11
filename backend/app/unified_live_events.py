@@ -7,6 +7,7 @@ from typing import Any
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 import json
+import os
 
 from .version import APP_VERSION
 from .country_cache import country_cache
@@ -55,6 +56,9 @@ SOURCE_REGISTRY = {
     "reliefweb": {
         "name": "ReliefWeb",
         "authority": "official-humanitarian-aggregator",
+        "api_version": "v2",
+        "api_url": "https://api.reliefweb.int/v2/reports",
+        "authentication": "pre-approved appname required",
         "license_note": "Humanitarian reporting index; individual reports retain their originating publisher.",
     },
 }
@@ -273,10 +277,13 @@ def _eonet_events(days: int = 30, limit: int = 200) -> list[dict[str, Any]]:
     return records
 
 def _reliefweb_reports(days: int = 14, limit: int = 80) -> list[dict[str, Any]]:
+    appname = os.getenv("SC_SI_RELIEFWEB_APPNAME", "").strip()
+    if not appname:
+        raise RuntimeError("reliefweb_v2_appname_not_configured")
     end = datetime.now(timezone.utc)
     start = end - timedelta(days=max(1, min(days, 90)))
     params = {
-        "appname": "sustainable-catalyst-site-intelligence",
+        "appname": appname,
         "limit": max(1, min(limit, 200)),
         "profile": "full",
         "sort[]": "date:desc",
@@ -284,7 +291,7 @@ def _reliefweb_reports(days: int = 14, limit: int = 80) -> list[dict[str, Any]]:
         "filter[value][from]": start.strftime("%Y-%m-%dT00:00:00+00:00"),
         "filter[value][to]": end.strftime("%Y-%m-%dT23:59:59+00:00"),
     }
-    payload = _request_json(f"https://api.reliefweb.int/v1/reports?{urlencode(params, doseq=True)}")
+    payload = _request_json(f"https://api.reliefweb.int/v2/reports?{urlencode(params, doseq=True)}")
     records = []
     for item in payload.get("data", []):
         fields = item.get("fields") or {}
