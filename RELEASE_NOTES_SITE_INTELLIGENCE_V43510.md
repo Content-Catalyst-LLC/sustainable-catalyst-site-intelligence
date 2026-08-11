@@ -1,6 +1,6 @@
-# Site Intelligence v4.35.10 — Authoritative Connector Expansion IV
+# Site Intelligence v4.35.11 — Authoritative Connector Expansion IV
 
-v4.35.10 continues the authoritative-data closure branch with five first-party machine interfaces: FAOSTAT, ILOSTAT SDMX, OECD Data Explorer SDMX, EPA Facility Registry Service, and USGS Volcano Hazards Program HANS. The release preserves bounded retrieval, semantic/provenance boundaries, and non-blocking upstream health.
+v4.35.11 continues the authoritative-data closure branch with five first-party machine interfaces: FAOSTAT, ILOSTAT SDMX, OECD Data Explorer SDMX, EPA Facility Registry Service, and USGS Volcano Hazards Program HANS. The release preserves bounded retrieval, semantic/provenance boundaries, and non-blocking upstream health.
 
 ## Connector expansion
 - FAOSTAT data API: LIVE implementation with server-configurable base URL.

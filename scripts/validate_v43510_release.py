@@ -4,9 +4,9 @@ import subprocess,sys
 ROOT=Path(__file__).resolve().parents[1]
 subprocess.run([sys.executable,str(ROOT/'scripts/validate_v43510_release_contract.py')],check=True)
 wp=(ROOT/'wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php').read_text()
-assert 'Version: 4.35.10' in wp and 'site-intelligence-v4.35.10' in wp
+assert 'Version: 4.35.11' in wp and 'site-intelligence-v4.35.11' in wp
 index=(ROOT/'backend/public_app/index.html').read_text(); app=(ROOT/'backend/public_app/assets/app.js').read_text()
-assert 'data-scsi-release="4.35.10"' in index and 'const APP_VERSION="4.35.10"' in app
+assert 'data-scsi-release="4.35.11"' in index and 'const APP_VERSION="4.35.11"' in app
 for f in ('backend/app/authoritative_connectors_v43510.py','backend/app/authoritative_api_audit_v43510.py','backend/app/authoritative_api_production_audit_v43510.py','backend/tests/test_authoritative_connector_expansion_iv_v43510.py'):
  assert (ROOT/f).is_file(),f
-print('PASS: v4.35.10 static release validation')
+print('PASS: v4.35.11 static release validation')

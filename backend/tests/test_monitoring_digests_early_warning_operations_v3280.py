@@ -23,7 +23,7 @@ def current_signal(value=10.5, freshness="historical_only", withdrawn=False):
 
 def test_schema_is_review_gated_and_not_emergency_dispatch():
     payload = CLIENT.get("/public/monitoring-operations").json()
-    assert payload["version"] == "4.35.10"
+    assert payload["version"] == "4.35.11"
     assert payload["contract"] == "monitoring-digests-and-early-warning-operations"
     assert payload["alert_states"] == ["new", "continuing", "changed", "resolved", "withdrawn"]
     assert payload["human_review_required"] is True
@@ -128,8 +128,8 @@ def test_release_assets_and_policy_are_wired():
     worker = (root / "backend/public_app/service-worker.js").read_text()
     js = (root / "backend/public_app/assets/monitoring-operations-v3280.js").read_text()
     policy = (root / "backend/data/monitoring_early_warning_policy_v3280.json").read_text()
-    assert "monitoring-operations-v3280.css?v=4.35.10" in html
-    assert "monitoring-operations-v3280.js?v=4.35.10" in html
+    assert "monitoring-operations-v3280.css?v=4.35.11" in html
+    assert "monitoring-operations-v3280.js?v=4.35.11" in html
     assert "monitoring-operations-v3280.js" in worker
     assert "SCSIMonitoringOperationsV3280" in js
-    assert '"version": "4.35.10"' in policy
+    assert '"version": "4.35.11"' in policy

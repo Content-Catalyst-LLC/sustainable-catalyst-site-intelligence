@@ -1,6 +1,6 @@
 """Collection publication, citation exports, and research brief packages.
 
-Site Intelligence v4.35.10 adds a human-governed publication layer above
+Site Intelligence v4.35.11 adds a human-governed publication layer above
 approved public registry research collections. It prepares source-linked
 briefs and citation packages without mutating source records, publishing to
 remote systems, or storing visitor identities, recipients, or credentials.

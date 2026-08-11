@@ -1,110 +1,110 @@
-# Current release: Site Intelligence v4.35.10 — Workspace Evidence Unification & Truth-Layer Repair
+# Current release: Site Intelligence v4.35.11 — Workspace Evidence Unification & Truth-Layer Repair
 
-Site Intelligence v4.35.10 unifies country-workspace headline values, evidence metadata, and Record Truth around one canonical observation object. The same value, reporting period, source state, semantics, freshness, lineage, and canonical SHA-256 now flow through the workspace and Truth surfaces; a separate packaged-snapshot path can no longer make Truth disagree with the displayed card. Legacy Record Provenance shapes remain compatible, and external source health remains non-blocking for deployment.
+Site Intelligence v4.35.11 unifies country-workspace headline values, evidence metadata, and Record Truth around one canonical observation object. The same value, reporting period, source state, semantics, freshness, lineage, and canonical SHA-256 now flow through the workspace and Truth surfaces; a separate packaged-snapshot path can no longer make Truth disagree with the displayed card. Legacy Record Provenance shapes remain compatible, and external source health remains non-blocking for deployment.
 
-# Current release: Site Intelligence v4.35.10 — Source Precedence, Metric Semantics & Freshness Intelligence
+# Current release: Site Intelligence v4.35.11 — Source Precedence, Metric Semantics & Freshness Intelligence
 
-Site Intelligence v4.35.10 adds a deterministic evidence-selection layer above the authoritative connector catalog. It registers explicit metric concepts, jurisdiction-aware source precedence, cadence-aware freshness, semantic incompatibility guards, conflict disclosure, and source-selection fingerprints. Structural electricity access is now explicitly separated from current electricity availability, grid reliability, outage status, hours of service, and generator dependence. For Palestine structural electricity access, PCBS is the preferred national statistical authority when a compatible observation is available, with World Bank retained as a harmonized fallback/comparison source. Operational electricity conditions require operational evidence and cannot be answered by the World Bank access indicator.
+Site Intelligence v4.35.11 adds a deterministic evidence-selection layer above the authoritative connector catalog. It registers explicit metric concepts, jurisdiction-aware source precedence, cadence-aware freshness, semantic incompatibility guards, conflict disclosure, and source-selection fingerprints. Structural electricity access is now explicitly separated from current electricity availability, grid reliability, outage status, hours of service, and generator dependence. For Palestine structural electricity access, PCBS is the preferred national statistical authority when a compatible observation is available, with World Bank retained as a harmonized fallback/comparison source. Operational electricity conditions require operational evidence and cannot be answered by the World Bank access indicator.
 
 The release preserves the 20-interface authoritative connector catalog and the hardened rule that external-source health cannot block a valid first-party deployment.
 
-# Current release: Site Intelligence v4.35.10 — National Statistical & Domain-Authority Connector Expansion
+# Current release: Site Intelligence v4.35.11 — National Statistical & Domain-Authority Connector Expansion
 
-Site Intelligence v4.35.10 adds five direct first-party statistical-authority connectors: Palestinian Central Bureau of Statistics PxWeb, Statistics Canada Web Data Service, UK Office for National Statistics API, Australian Bureau of Statistics SDMX Data API, and U.S. Bureau of Labor Statistics Public Data API. The release preserves observation period, units, status/revision metadata, footnotes and source payloads, and it keeps structural indicators distinct from current operational conditions.
+Site Intelligence v4.35.11 adds five direct first-party statistical-authority connectors: Palestinian Central Bureau of Statistics PxWeb, Statistics Canada Web Data Service, UK Office for National Statistics API, Australian Bureau of Statistics SDMX Data API, and U.S. Bureau of Labor Statistics Public Data API. The release preserves observation period, units, status/revision metadata, footnotes and source payloads, and it keeps structural indicators distinct from current operational conditions.
 
 The authoritative connector catalog now exposes 20 interfaces while retaining the v4.35.3.1 rule that external-source health cannot block a valid first-party deployment.
 
-# Current release: Site Intelligence v4.35.10 — Authoritative Connector Expansion II
+# Current release: Site Intelligence v4.35.11 — Authoritative Connector Expansion II
 
-**Current release:** v4.35.10 — Connected Public Intelligence and Evidence Platform (build focus: authoritative public-data retrieval expansion)
+**Current release:** v4.35.11 — Connected Public Intelligence and Evidence Platform (build focus: authoritative public-data retrieval expansion)
 
-## v4.35.10 — Authoritative Connector Expansion II
+## v4.35.11 — Authoritative Connector Expansion II
 
-Site Intelligence v4.35.10 adds five additional first-class authoritative machine interfaces: NOAA CO-OPS coastal/tide observations and predictions, NOAA NCEI Access Data Service retrieval, IOC-UNESCO OBIS marine-biodiversity occurrences, Eurostat Statistics API JSON-stat retrieval, and USDA-NRCS Soil Data Access map-unit retrieval. These join the five Expansion I interfaces while preserving source provenance, null values, quality/status metadata, bounded queries, and explicit evidence limitations.
+Site Intelligence v4.35.11 adds five additional first-class authoritative machine interfaces: NOAA CO-OPS coastal/tide observations and predictions, NOAA NCEI Access Data Service retrieval, IOC-UNESCO OBIS marine-biodiversity occurrences, Eurostat Statistics API JSON-stat retrieval, and USDA-NRCS Soil Data Access map-unit retrieval. These join the five Expansion I interfaces while preserving source provenance, null values, quality/status metadata, bounded queries, and explicit evidence limitations.
 
 The hardened v4.35.3.1 deployment contract remains in force: first-party release identity/runtime/route integrity can block promotion, but transient upstream-source health cannot. `/public/authoritative-connectors` now exposes the combined ten-connector catalog, while `/public/source-health-policy` keeps operational-source state separate from release validity.
 
-# Current release: Site Intelligence v4.35.10 — Exoplanets, Habitability & Atmospheric Biosignature Intelligence
+# Current release: Site Intelligence v4.35.11 — Exoplanets, Habitability & Atmospheric Biosignature Intelligence
 
-Site Intelligence v4.35.10 extends the existing Astronomy / Space environment with source-bounded SETI observations, radio-signal event metadata, published search coverage and exoplanet target context. Signal events and candidate labels are not confirmation of extraterrestrial intelligence; non-detections are not absence findings; and announcement authority is never inferred. The six-area / 35-route public architecture remains unchanged, and SETI assets lazy-load to preserve the inherited application-shell performance budget.
+Site Intelligence v4.35.11 extends the existing Astronomy / Space environment with source-bounded SETI observations, radio-signal event metadata, published search coverage and exoplanet target context. Signal events and candidate labels are not confirmation of extraterrestrial intelligence; non-detections are not absence findings; and announcement authority is never inferred. The six-area / 35-route public architecture remains unchanged, and SETI assets lazy-load to preserve the inherited application-shell performance budget.
 
 
-Site Intelligence v4.35.10 extends the Earth/infrastructure continuum with source-bounded solid-waste, hazardous-waste regulatory, recycling and circular-material statistics. Mapped infrastructure is not operating status; regulatory records are not new compliance findings; statistical recycling rates are not material-circularity certification; and projections are not observations. The six-area / 35-route public architecture remains unchanged.
+Site Intelligence v4.35.11 extends the Earth/infrastructure continuum with source-bounded solid-waste, hazardous-waste regulatory, recycling and circular-material statistics. Mapped infrastructure is not operating status; regulatory records are not new compliance findings; statistical recycling rates are not material-circularity certification; and projections are not observations. The six-area / 35-route public architecture remains unchanged.
 
-# Site Intelligence v4.35.10
+# Site Intelligence v4.35.11
 
 Current release: Global Industrial Facilities, Manufacturing & Trade-Flow Intelligence.
 
 
-## Site Intelligence v4.35.10 — Digital Connectivity
+## Site Intelligence v4.35.11 — Digital Connectivity
 
-v4.35.10 adds a source-aware digital-connectivity layer spanning telecommunications infrastructure, sampled Internet performance, national connectivity statistics, and provider-reported broadband availability while preserving the existing public architecture and evidence-truth boundaries.
+v4.35.11 adds a source-aware digital-connectivity layer spanning telecommunications infrastructure, sampled Internet performance, national connectivity statistics, and provider-reported broadband availability while preserving the existing public architecture and evidence-truth boundaries.
 
-# Site Intelligence v4.35.10 — Global Transportation Networks, Ports, Airports & Transit Intelligence
+# Site Intelligence v4.35.11 — Global Transportation Networks, Ports, Airports & Transit Intelligence
 
 Transportation Intelligence extends Earth Observation from human settlements into mapped transport networks, trade/transport locations, airport/runway records and transit-feed discovery. Overture Maps transportation, UNECE UN/LOCODE, OurAirports and MobilityData remain distinct evidence families. Network geometry is not a guaranteed navigable route; location codes do not prove current facility operation; community airport records are not official aeronautical information; and GTFS/feed catalog presence does not guarantee current service or complete transit coverage. The six-area / 35-route public architecture remains unchanged.
 
-# Site Intelligence v4.35.10 — Global Human Settlements, Urbanization & Built Environment Intelligence
+# Site Intelligence v4.35.11 — Global Human Settlements, Urbanization & Built Environment Intelligence
 
 Human Settlements extends Earth Observation into built-up morphology, modeled spatial population, nighttime-light signals, and harmonized urbanization statistics. JRC GHSL, WorldPop Global2, NASA VIIRS Black Marble, and World Bank urban indicators remain distinct evidence families. Built-up grids are not parcel building footprints; modeled epochs are not direct observations for every year; population surfaces are not census headcounts; nighttime radiance is not automatically electricity service, economic output or population; and urban indicators are not local settlement or zoning boundaries. The six-area / 35-route public architecture remains unchanged.
 
-# Site Intelligence v4.35.10 — Agriculture, Crops & Food-System Conditions Intelligence
+# Site Intelligence v4.35.11 — Agriculture, Crops & Food-System Conditions Intelligence
 
-Site Intelligence v4.35.10 extends Earth Observation into agricultural statistics, crop-condition remote sensing and consensus crop assessments while preserving evidence type, provenance and non-inference boundaries.
+Site Intelligence v4.35.11 extends Earth Observation into agricultural statistics, crop-condition remote sensing and consensus crop assessments while preserving evidence type, provenance and non-inference boundaries.
 
-# Site Intelligence v4.35.10 — Wetlands, Inland Waters & Aquatic Habitat Intelligence
+# Site Intelligence v4.35.11 — Wetlands, Inland Waters & Aquatic Habitat Intelligence
 
-Site Intelligence v4.35.10 adds Global Biodiversity, Species Distribution & Conservation Intelligence while preserving the six-area / 35-route public architecture.
+Site Intelligence v4.35.11 adds Global Biodiversity, Species Distribution & Conservation Intelligence while preserving the six-area / 35-route public architecture.
 
-# Site Intelligence v4.35.10 — Global Soils, Land Degradation & Desertification Intelligence
+# Site Intelligence v4.35.11 — Global Soils, Land Degradation & Desertification Intelligence
 
 Global Soils extends Earth Observation into mapped soil properties, official soil survey information, satellite/model soil moisture, and country-reported land-degradation indicators. ISRIC SoilGrids predictions remain distinct from ground samples; USDA-NRCS map units remain distinct from parcel/site-specific truth; NASA SMAP retrievals and L4 model-assimilated fields remain distinct from direct in-situ measurements; and UNCCD country reports/default estimates remain partial reporting evidence rather than a comprehensive independent global assessment. Soil organic carbon evidence is never promoted into a carbon-credit claim. The six-area / 35-route public architecture remains unchanged.
 
-# Site Intelligence v4.35.10 — Global Geosphere, Earthquake & Volcano Intelligence
+# Site Intelligence v4.35.11 — Global Geosphere, Earthquake & Volcano Intelligence
 
 Global Geosphere extends Earth Observation into solid-Earth seismicity, shaking, volcano-status, and ground-deformation evidence. USGS Earthquake Catalog/real-time feeds, USGS ShakeMap/PAGER, USGS Volcano Hazards Program HANS, and NASA/JPL ARIA deformation products remain distinct evidence families. Catalog records remain revisable; ShakeMap is not a structural-damage census; PAGER is not confirmed loss; volcano notices remain source-issued; and InSAR line-of-sight displacement is not silently converted into vertical displacement, structural damage, causation, or an emergency declaration. The six-area / 35-route public architecture remains unchanged.
 
-# Site Intelligence v4.35.10 — Global Hydrology, Rivers, Flood & Drought Intelligence
+# Site Intelligence v4.35.11 — Global Hydrology, Rivers, Flood & Drought Intelligence
 
 Global Hydrology extends Earth Observation from atmosphere into the terrestrial water cycle. Modern USGS Water Data APIs, NASA GPM IMERG precipitation, Copernicus GloFAS / Global Flood Monitoring, and NOAA/NIDIS Drought.gov are registered as distinct evidence families. Gauge observations remain distinct from satellite precipitation estimates and modeled discharge; forecasts remain distinct from observations; near-real-time products remain distinct from final products; threshold crossings do not become platform-issued flood warnings; and drought indices do not become Sustainable Catalyst drought declarations. The six-area / 35-route public architecture remains unchanged.
 
-# Site Intelligence v4.35.10 — Global Cryosphere Intelligence & Frozen-Earth Conditions
+# Site Intelligence v4.35.11 — Global Cryosphere Intelligence & Frozen-Earth Conditions
 
 Global Cryosphere Intelligence extends Earth Observation beyond the ocean continuum into sea ice, seasonal snow, glaciers, ice sheets, and frozen-ground evidence. NOAA/NSIDC Sea Ice Index v4, NASA NSIDC DAAC/Earthdata CMR, GLIMS, and MODIS snow/sea-ice products are registered as distinct source families. Near-real-time products remain distinct from final products; missing data is not interpreted as no ice or snow; inventory geometry is not treated as current position; and Site Intelligence does not issue local travel, safety, hazard, glacier-mass-balance, or permafrost determinations. The six-area / 35-route public architecture remains unchanged.
 
-# Site Intelligence v4.35.10 — Ocean Governance, Jurisdiction & Maritime Boundaries
+# Site Intelligence v4.35.11 — Ocean Governance, Jurisdiction & Maritime Boundaries
 
 Ocean Governance adds source-bounded maritime-zone, fishing-statistical-area, and Regional Fishery Body orientation without converting map geometry into a legal determination, sovereignty claim, fishing authorization, enforcement finding, disputed-boundary resolution, or navigation instruction. The six-area / 35-route public architecture remains unchanged.
 
-# Site Intelligence v4.35.10 — Coastal Change, Sea Level & Blue-Carbon Intelligence
+# Site Intelligence v4.35.11 — Coastal Change, Sea Level & Blue-Carbon Intelligence
 
 Coastal Change, Sea Level & Blue-Carbon Intelligence extends the ocean continuum to the dynamic coast. It registers NOAA CO-OPS water-level and tide services, NOAA Digital Coast sea-level-rise and coastal land-cover products, USGS Coastal Change Hazards products, and Global Mangrove Watch as distinct evidence families. Observations, astronomical predictions, screening scenarios, shoreline analyses, uncertainty, land-cover classes, wetlands, and mangrove evidence remain source-bounded. Site Intelligence does not turn screening inundation into an exact parcel forecast, shoreline change into a guaranteed property outcome, or habitat evidence into a platform-derived carbon stock, sequestration, restoration-success, or carbon-credit claim. The six-area / 35-route v4 architecture remains unchanged.
 
-# Site Intelligence v4.35.10 — Marine Pollution, Debris & Water-Quality Intelligence
+# Site Intelligence v4.35.11 — Marine Pollution, Debris & Water-Quality Intelligence
 
 Marine Pollution, Debris & Water-Quality Intelligence extends the existing ocean sequence with source-bounded microplastics, marine litter, contaminant, discrete water-quality, and biogeochemical evidence. It preserves non-detects, model/observation distinctions, units, matrices, methods, quality flags, and threshold context without inferring clean water, health risk, ecological harm, source attribution, or regulatory noncompliance. The six-area / 35-route v4 architecture remains unchanged.
 
-# Site Intelligence v4.35.10 — Ocean Missions, Vehicles & Observatory Network
+# Site Intelligence v4.35.11 — Ocean Missions, Vehicles & Observatory Network
 
 Ocean Missions, Vehicles & Observatory Network connects the platforms collecting marine evidence while keeping registry presence, source-reported status, timestamped position, mission history, and discrete trajectory points distinct. Argo/Argovis, U.S. IOOS, Ocean Networks Canada, and NOAA Ocean Exploration are registered as source contracts; a last-reported position is never silently presented as a current position, historical tracks are not live feeds, and discrete track points are not interpolated into continuous or future trajectories. The v4 six-area/35-route architecture is unchanged.
 
-# Site Intelligence v4.35.10 — Marine Biodiversity & Bioacoustic Intelligence
+# Site Intelligence v4.35.11 — Marine Biodiversity & Bioacoustic Intelligence
 
 Marine Biodiversity & Bioacoustic Intelligence connects OBIS occurrence records, WoRMS taxonomy, FathomNet visual annotations, and Ocean Networks Canada hydrophone evidence while preserving each as a distinct evidence class. Model detections remain model detections; recordings are not automatically biological detections; occurrence records are not population estimates; taxonomy is not occurrence evidence; and zero returned records are not represented as species absence. The v4 six-area/35-route architecture is unchanged.
 
-# Site Intelligence v4.35.10 — Water Column & Depth Explorer
+# Site Intelligence v4.35.11 — Water Column & Depth Explorer
 
-Water Column & Depth Explorer extends Global Ocean Intelligence below the sea surface while preserving the v4 six-area/35-route architecture. It registers Argo/Argovis profiles, Copernicus Marine 3-D ocean products, and Ocean Networks Canada Oceans 3.0 as separate evidence paths; exposes bounded 0–11,000 m navigation; preserves source sample depth, pressure, units, quality flags, and profile identity; and withholds a requested-depth value when no exact source sample exists. v4.35.10 performs no interpolation and never substitutes a nearest sample as the requested-depth observation.
+Water Column & Depth Explorer extends Global Ocean Intelligence below the sea surface while preserving the v4 six-area/35-route architecture. It registers Argo/Argovis profiles, Copernicus Marine 3-D ocean products, and Ocean Networks Canada Oceans 3.0 as separate evidence paths; exposes bounded 0–11,000 m navigation; preserves source sample depth, pressure, units, quality flags, and profile identity; and withholds a requested-depth value when no exact source sample exists. v4.35.11 performs no interpolation and never substitutes a nearest sample as the requested-depth observation.
 
-# Site Intelligence v4.35.10 — Orbital Earth & Satellite Observation
+# Site Intelligence v4.35.11 — Orbital Earth & Satellite Observation
 
 Orbital Earth extends the existing Earth Observation route with a provenance-aware surface-to-orbit perspective over registered satellite imagery while preserving all 35 v4 public routes and truth boundaries.
 
-# Site Intelligence v4.35.10 — Unified Public Intelligence Platform
+# Site Intelligence v4.35.11 — Unified Public Intelligence Platform
 
-Site Intelligence v4.35.10 consolidates the existing 35 public workspaces into six primary areas while preserving legacy routes, deep links, Data Truth, record provenance, analytical state, assurance, human-reviewed publication, and production-governance boundaries. No legacy public route is removed in this release.
+Site Intelligence v4.35.11 consolidates the existing 35 public workspaces into six primary areas while preserving legacy routes, deep links, Data Truth, record provenance, analytical state, assurance, human-reviewed publication, and production-governance boundaries. No legacy public route is removed in this release.
 
-# Site Intelligence v4.35.10 — Security, Observability, Performance, and Scale Assurance
+# Site Intelligence v4.35.11 — Security, Observability, Performance, and Scale Assurance
 
 Production hardening release: fail-closed administrative authentication, token-fingerprint rate limiting, first-party security headers, privacy-preserving response timing, packaged asset budgets, supply-chain validation, and post-deployment smoke assurance. No penetration-test, compliance-certification, distributed-tracing, or distributed-rate-limit claim is made.
 
@@ -115,47 +115,47 @@ Site Intelligence now turns selected countries, indicators, events, sources, and
 
 Every cross-product handoff is preview-only and requires explicit human confirmation. Knowledge Library discovery remains a query plan until an actual library index returns verified matches, and publication remains a separate human-reviewed action.
 
-# Site Intelligence v4.35.10 — Global Data Truth Control Plane
+# Site Intelligence v4.35.11 — Global Data Truth Control Plane
 
 Site Intelligence now composes source operations, country coverage, record provenance, schema status, source incidents, coverage gaps, and workspace dependencies into one public-safe Global Data Truth Control Plane. Operational status remains separate from record availability, source authority, and country-level evidence.
 
 The release adds derived status history, a schema-drift register, a bounded source-attention register, multi-country coverage monitoring, cross-workspace truth status, a downloadable fingerprint-bound control-plane export, and a fourth Data Truth interface view while preserving record truth, country selection, loading recovery, service-worker closure, and WordPress embed isolation.
 
-# Current release: Site Intelligence v4.35.10
+# Current release: Site Intelligence v4.35.11
 
 Global Country Data Truth and Coverage Matrix separates source operations, geographic eligibility, observed country-linked records, and indicator availability so global coverage claims cannot silently stand in for verified country data.
 
 ## Current release
 
-**v4.35.10 — Fixed Application Viewport and WordPress Embed Isolation**
+**v4.35.11 — Fixed Application Viewport and WordPress Embed Isolation**
 
-## Current release: v4.35.10
+## Current release: v4.35.11
 
 Performance and Offline Recovery adds measurable first-useful-map readiness, route-scoped request ownership, bounded network fallback, release-safe service-worker migration, and honest offline states while preserving the map-first analytical workspace and WordPress host isolation.
 
-# Site Intelligence v4.35.10 — Browser Reliability, Mobile, and Accessibility
+# Site Intelligence v4.35.11 — Browser Reliability, Mobile, and Accessibility
 
 Current release hardening for browser capability, responsive application behavior, keyboard focus, accessible map summaries, low-bandwidth presentation, and long-session recovery.
 
-# Site Intelligence v4.35.10 — Analytical Workspace Completion
+# Site Intelligence v4.35.11 — Analytical Workspace Completion
 
 A map-first public intelligence application with five complete core workflows, explicit source truth, bounded failure states, deep links, and export contracts.
 
-## v4.35.10 — Analytical Workspace Completion
+## v4.35.11 — Analytical Workspace Completion
 
 Global Conditions, Country Intelligence, Compare, Spatial Evidence, and Earth Observation now share one operational contract for inputs, stages, outputs, source truth, exports, and initial, ready, empty, degraded, and unavailable states. The application-scoped Core workflows panel preserves WordPress host isolation and routes users directly into each completed analytical workspace.
 
-## v4.35.10 — Cartographic Workspace and Application Presentation
+## v4.35.11 — Cartographic Workspace and Application Presentation
 
 Site Intelligence now renders the selected workspace as a bounded application instead of one stacked document. The live map uses a continuous rectangular viewport, subject-aware country framing, collision-aware labels, corrected raster composition, a collapsible evidence rail, and browser-visible presentation health checks. Hidden workspaces are removed from document flow until routed.
 
-**Current release:** v4.35.10 — Connected Public Intelligence and Evidence Platform
+**Current release:** v4.35.11 — Connected Public Intelligence and Evidence Platform
 
-## v4.35.10 — Resume-Safe Promotion, Deployment Receipts, and Runtime-State Isolation
+## v4.35.11 — Resume-Safe Promotion, Deployment Receipts, and Runtime-State Isolation
 
 Site Intelligence now treats deployment as a resumable transaction. Promotion writes a machine-readable receipt, preserves one stable rollback point, refuses to overwrite a branch that advanced during release, and can resume Render verification after an interrupted run. Writable last-known-good state is redirected outside the immutable checkout through `SC_SI_RUNTIME_STATE_ROOT`.
 
-### v4.35.10 deployment highlights
+### v4.35.11 deployment highlights
 
 - Public `/public/deployment-receipt` with release identity, runtime commit, branch, service, and receipt fingerprint.
 - `/public/release-gate` verifies the expected release id in addition to plugin version and Git commit.
@@ -167,19 +167,19 @@ Site Intelligence now treats deployment as a resumable transaction. Promotion wr
 
 # Sustainable Catalyst Site Intelligence
 
-## v4.35.10 — Global Energy Infrastructure, Power Systems & Electricity Intelligence
+## v4.35.11 — Global Energy Infrastructure, Power Systems & Electricity Intelligence
 Adds evidence-separated power infrastructure and electricity-system orientation using OpenStreetMap, EIA, Ember, and ENTSO-E while preserving the six-area / 35-route architecture.
 
-## v4.35.10 — Production Truth and Workspace Completion
+## v4.35.11 — Production Truth and Workspace Completion
 
 All 35 public routes now declare explicit initial, ready, empty, degraded, and unavailable states. Missing controllers fail closed, supported deep links and browser history restore the active workspace, inactive route controllers remain closed, and the live deployment gate verifies the production-truth directory before WordPress installation.
 
 
-## v4.35.10 — Deployment Gate, Live Parity Lock, and Rollback Readiness
+## v4.35.11 — Deployment Gate, Live Parity Lock, and Rollback Readiness
 
 Site Intelligence now treats backend deployment as a verifiable production contract rather than assuming that a validated ZIP reached Render. The backend publishes an uncached release gate, WordPress checks that gate against its own version, and the macOS promotion workflow creates a rollback tag before it pushes the release.
 
-### v4.35.10 deployment highlights
+### v4.35.11 deployment highlights
 
 - Public `/public/release-gate` with backend version, Render branch, commit, release channel, and installation decision.
 - No-store response headers on health, build identity, deployment status, and release-gate endpoints.
@@ -199,15 +199,15 @@ Site Intelligence now treats backend deployment as a verifiable production contr
 - Added map-backed Spatial Evidence and corrected approved embed frame policies.
 - 847 automated tests passed.
 
-## v4.35.10 — Collection Publication, Citation Exports, and Research Brief Packages
+## v4.35.11 — Collection Publication, Citation Exports, and Research Brief Packages
 
 Approved public research collections can now become checksum-bound, human-reviewed research briefs with retained evidence pathways, source-linked citation bundles, limitations, and manual delivery receipts.
 
-**Prior release:** v4.35.10 — Connected Public Intelligence and Evidence Platform
+**Prior release:** v4.35.11 — Connected Public Intelligence and Evidence Platform
 
 **Current Live Intelligence increment:** Collection Publication, Citation Exports, and Research Brief Packages
 
-### Current v4.35.10 publication capabilities
+### Current v4.35.11 publication capabilities
 
 - Approved public collection to research brief workflow.
 - Separate preparation, review, and approval roles.
@@ -216,15 +216,15 @@ Approved public research collections can now become checksum-bound, human-review
 - Manual handoff receipts for Knowledge Library, Publications, Decision Studio, WordPress manual import, and downloads.
 - No automatic publication, remote-system write, visitor profiling, recipient identity storage, credential storage, or source mutation.
 
-## v4.35.10 — Saved Discovery Views, Public Research Collections, and Evidence Pathways
+## v4.35.11 — Saved Discovery Views, Public Research Collections, and Evidence Pathways
 
 Approved registry discovery states can now be saved as checksum-bound, reproducible views. Human-reviewed public research collections preserve ordered public-record snapshots, evidence-pathway rationale, source-view lineage, and explicit drift acknowledgments without storing visitor queries or profiles.
 
-**Current release:** v4.35.10 — Connected Public Intelligence and Evidence Platform
+**Current release:** v4.35.11 — Connected Public Intelligence and Evidence Platform
 
 **Current Live Intelligence increment:** Saved Discovery Views, Public Research Collections, and Evidence Pathways
 
-### Current v4.35.10 collection capabilities
+### Current v4.35.11 collection capabilities
 
 - Canonical saved discovery filter states and result checksums.
 - Separate preparation, review, and approval roles.
@@ -234,34 +234,34 @@ Approved registry discovery states can now be saved as checksum-bound, reproduci
 - JSON/Markdown collection packages and read-only WordPress presentation.
 - No visitor-query storage, visitor profiling, source mutation, or remote write.
 
-## v4.35.10 — Public Registry Discovery, Evidence Search, and Institutional Profiles
+## v4.35.11 — Public Registry Discovery, Evidence Search, and Institutional Profiles
 
 Approved preservation institutions, exchanges, attestations, challenges, and appeals are now discoverable through a bounded public search surface. Evidence-linked profiles expose public policy and verification references while stripping staff identities, internal review reasons, visitor profiling, and remote-write capability.
 
-**Current release:** v4.35.10 — Connected Public Intelligence and Evidence Platform
+**Current release:** v4.35.11 — Connected Public Intelligence and Evidence Platform
 
 **Current Live Intelligence increment:** Public Registry Discovery, Evidence Search, and Institutional Profiles
 
 ### Current integrated Live Intelligence capabilities
 
-- v4.35.10 — Signal Context and Drill-Down
-- v4.35.10 — Topic and Regional Channels
-- v4.35.10 — Homepage Intelligence Gateway
-- v4.35.10 — Signal Relevance and Rotation Intelligence
-- v4.35.10 — Analytics and Public-Value Measurement
-- v4.35.10 — Connected Live Intelligence Surface
-- v4.35.10 — Signal Subscriptions, Alerts, and Scheduled Intelligence
-- v4.35.10 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
-- v4.35.10 — Editorial Workspace, Review Queues, and Publication Orchestration
-- v4.35.10 — Publication Adapters, Institutional Handoffs, and Release Governance
-- v4.35.10 — Release Monitoring, Rollback, and Post-Publication Governance
-- v4.35.10 — Corrections, Retractions, and Public Change History
-- v4.35.10 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
-- v4.35.10 — Archive Verification, Preservation Audits, and Institutional Custody
-- v4.35.10 — Preservation Interoperability, External Verification, and Institutional Exchange
-- v4.35.10 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
-- v4.35.10 — Registry Governance, Challenges, Revocation, and Appeals
-- v4.35.10 — Public Registry Discovery, Evidence Search, and Institutional Profiles
+- v4.35.11 — Signal Context and Drill-Down
+- v4.35.11 — Topic and Regional Channels
+- v4.35.11 — Homepage Intelligence Gateway
+- v4.35.11 — Signal Relevance and Rotation Intelligence
+- v4.35.11 — Analytics and Public-Value Measurement
+- v4.35.11 — Connected Live Intelligence Surface
+- v4.35.11 — Signal Subscriptions, Alerts, and Scheduled Intelligence
+- v4.35.11 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
+- v4.35.11 — Editorial Workspace, Review Queues, and Publication Orchestration
+- v4.35.11 — Publication Adapters, Institutional Handoffs, and Release Governance
+- v4.35.11 — Release Monitoring, Rollback, and Post-Publication Governance
+- v4.35.11 — Corrections, Retractions, and Public Change History
+- v4.35.11 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
+- v4.35.11 — Archive Verification, Preservation Audits, and Institutional Custody
+- v4.35.11 — Preservation Interoperability, External Verification, and Institutional Exchange
+- v4.35.11 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
+- v4.35.11 — Registry Governance, Challenges, Revocation, and Appeals
+- v4.35.11 — Public Registry Discovery, Evidence Search, and Institutional Profiles
 
 ## v3.13.0 — Release Monitoring, Rollback, and Post-Publication Governance
 
@@ -1523,46 +1523,46 @@ For durable source health and history across Render deploys, redirect `SC_SI_LIV
 Live Intelligence now turns approved editorial workspaces into checksum-verified release candidates and adapter-specific packages for Publications, the Knowledge Library, Decision Studio, WordPress manual import, and direct download. Validation and separate release approval are required before package export or manual handoff. No adapter writes to a destination, stores credentials, or includes recipient identities.
 
 
-## v4.35.10 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
+## v4.35.11 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
 
-Site Intelligence v4.35.10 preserves approved public briefings, publication releases, and public change notices as checksum-bound, append-only archival records with source snapshots, retention classes, chain lineage, preservation manifests, human verification and approval, JSON/Markdown packages, and manual custody handoffs. It performs no source mutation, archive deletion, destination write, remote deposit, credential storage, or recipient profiling.
+Site Intelligence v4.35.11 preserves approved public briefings, publication releases, and public change notices as checksum-bound, append-only archival records with source snapshots, retention classes, chain lineage, preservation manifests, human verification and approval, JSON/Markdown packages, and manual custody handoffs. It performs no source mutation, archive deletion, destination write, remote deposit, credential storage, or recipient profiling.
 
-## v4.35.10 — Corrections, Retractions, and Public Change History
+## v4.35.11 — Corrections, Retractions, and Public Change History
 
 Live Intelligence now converts approved public corrections into a separately reviewed, append-only public change history. Correction, clarification, replacement, retraction, and rollback notices preserve the original release, link immutable release checksums, and expose public lineage without silently rewriting or deleting prior evidence. JSON and Markdown packages support manual delivery to Publications, the Knowledge Library, WordPress, and download workflows.
 
 WordPress shortcode: `[sc_live_intelligence_change_history]`
 
-## v4.35.10 — Archive Verification, Preservation Audits, and Institutional Custody
+## v4.35.11 — Archive Verification, Preservation Audits, and Institutional Custody
 
-Site Intelligence v4.35.10 adds repeatable checksum, source-snapshot, preservation-manifest, provenance-chain, retention, and custody audits above the append-only public archive. Human-approved reports and custody packages remain read-only, checksum-bound, and manually transferred. The platform claims no automatic scheduler and performs no archive mutation, deletion, remote deposit, destination write, credential storage, or recipient profiling.
+Site Intelligence v4.35.11 adds repeatable checksum, source-snapshot, preservation-manifest, provenance-chain, retention, and custody audits above the append-only public archive. Human-approved reports and custody packages remain read-only, checksum-bound, and manually transferred. The platform claims no automatic scheduler and performs no archive mutation, deletion, remote deposit, destination write, credential storage, or recipient profiling.
 
 WordPress shortcode: `[sc_live_intelligence_archive_audits]`
 
 
-## v4.35.10 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
+## v4.35.11 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
 
-Site Intelligence v4.35.10 adds a public-safe institutional registry above approved preservation exchange packages. Human-reviewed profiles declare repository scope, jurisdiction, supported exchange profiles, verification methods, and public policy references. Checksum-bound attestations are counted once per approved institution when computing multi-party consensus. Registry inclusion is not certification, accreditation, ranking, or endorsement. The platform performs no network verification, remote deposit, destination write, archive mutation, credential storage, or personal-contact storage.
+Site Intelligence v4.35.11 adds a public-safe institutional registry above approved preservation exchange packages. Human-reviewed profiles declare repository scope, jurisdiction, supported exchange profiles, verification methods, and public policy references. Checksum-bound attestations are counted once per approved institution when computing multi-party consensus. Registry inclusion is not certification, accreditation, ranking, or endorsement. The platform performs no network verification, remote deposit, destination write, archive mutation, credential storage, or personal-contact storage.
 
 WordPress shortcode: `[sc_live_intelligence_preservation_registry]`
 
-## v4.35.10 — Vector Cartography, Satellite Composition, and Map Presentation
+## v4.35.11 — Vector Cartography, Satellite Composition, and Map Presentation
 
-Site Intelligence v4.35.10 upgrades the shared self-hosted map runtime with layered base and satellite raster panes, enriched Natural Earth country geometry, zoom-aware labels, scale, coordinates, restrained institutional styling, controlled map sizing, and browser-visible quality thresholds. Local vector geography remains available when optional tiles fail, while imagery loss is reported separately from application health.
+Site Intelligence v4.35.11 upgrades the shared self-hosted map runtime with layered base and satellite raster panes, enriched Natural Earth country geometry, zoom-aware labels, scale, coordinates, restrained institutional styling, controlled map sizing, and browser-visible quality thresholds. Local vector geography remains available when optional tiles fail, while imagery loss is reported separately from application health.
 
 
-## v4.35.10 — Data Freshness, Coverage, and Source Truth
+## v4.35.11 — Data Freshness, Coverage, and Source Truth
 
 Site Intelligence now exposes a canonical public data-truth directory covering publisher identity, endpoint, license, geographic and temporal coverage, refresh and cache policy, retrieval condition, live/cached/historical/demonstration/context-only classification, metadata completeness, schema-change review, retry policy, and circuit-breaker state. Non-live data cannot silently claim live status.
 
-### v4.35.10 Underwater Observation & Visual Evidence
+### v4.35.11 Underwater Observation & Visual Evidence
 
 Earth Observation can now continue from Seafloor into a source-bounded Underwater Observation layer. The platform prepares discovery for real camera/ROV/image records and annotations while keeping the local underwater scene explicitly illustrative and withholding media, biological, sensor-synchronization, and reuse-rights claims until source records support them.
 
-## v4.35.10 — Marine Human Activity, Protected Areas & Maritime Pressure
+## v4.35.11 — Marine Human Activity, Protected Areas & Maritime Pressure
 
 Site Intelligence now extends the ocean continuum into source-bounded human-use and conservation context using NOAA/BOEM Marine Cadastre vessel traffic, NOAA MPA Inventory, EMODnet Human Activities, and Global Fishing Watch source families. AIS gaps remain gaps, inferred fishing activity is not treated as illegality, and spatial overlap with a protected area is never promoted into a compliance or enforcement finding. The v4 shell remains six primary areas and 35 public routes.
 
 
-## v4.35.10 — Terrestrial Ecosystems, Vegetation & Wildfire Intelligence
+## v4.35.11 — Terrestrial Ecosystems, Vegetation & Wildfire Intelligence
 Adds deferred Earth Observation orientation for NASA FIRMS fire/burned-area evidence, NASA MODIS vegetation indices, Copernicus LCFM land/tree cover, and Copernicus global vegetation products while preserving evidence maturity and no-warning/no-health-inference boundaries.

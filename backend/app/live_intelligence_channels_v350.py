@@ -1,4 +1,4 @@
-"""Topic and regional Live Intelligence channels for Site Intelligence v4.35.10.
+"""Topic and regional Live Intelligence channels for Site Intelligence v4.35.11.
 
 Channels are transparent filters over the existing public-signal service. They
 never fabricate missing local context, infer country identity from coordinates,

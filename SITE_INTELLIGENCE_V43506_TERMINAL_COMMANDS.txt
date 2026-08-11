@@ -1,7 +1,7 @@
 cd ~/Downloads
 
 INSTALLER="$(find . -maxdepth 1 -type f -name 'deploy_and_validate_site_intelligence_v4_35_6_macos*.sh' -print0 | xargs -0 ls -t | head -1)"
-BUNDLE="$(find . -maxdepth 1 -type f -name 'sustainable-catalyst-site-intelligence-v4.35.10-release-bundle*.zip' -print0 | xargs -0 ls -t | head -1)"
+BUNDLE="$(find . -maxdepth 1 -type f -name 'sustainable-catalyst-site-intelligence-v4.35.11-release-bundle*.zip' -print0 | xargs -0 ls -t | head -1)"
 
 echo "INSTALLER=$INSTALLER"
 echo "BUNDLE=$BUNDLE"

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Source precedence, metric semantics and freshness intelligence for Site Intelligence v4.35.10.
+"""Source precedence, metric semantics and freshness intelligence for Site Intelligence v4.35.11.
 
 This layer does not fetch upstream data. It evaluates already disclosed candidate evidence and
 keeps semantic compatibility ahead of authority or freshness. A fresher record for the wrong
