@@ -1,4 +1,4 @@
-"""Deployment verification and non-blocking source-health policy for Site Intelligence v4.35.4.
+"""Deployment verification and non-blocking source-health policy for Site Intelligence v4.35.5.
 
 Release verification is intentionally limited to first-party deployment identity,
 packaging, and deterministic application/runtime contracts. External authoritative
@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from .authoritative_connectors_v4354 import CONNECTORS, connector_readiness
+from .authoritative_connectors_v4355 import CONNECTORS, connector_readiness
 from .version import APP_VERSION
 
 VERSION = APP_VERSION
@@ -79,7 +79,9 @@ def source_health_policy(settings: Any) -> dict[str, Any]:
     for connector in CONNECTORS:
         base_setting = str(connector.get("base_url_setting") or "")
         configured_url = _setting(settings, base_setting)
-        state = "configured" if configured_url else "configuration-required"
+        credential_setting = str(connector.get("credential_setting") or "")
+        credential_ok = bool(_setting(settings, credential_setting)) if credential_setting else True
+        state = "configured" if configured_url and credential_ok else "configuration-required"
         rows.append({
             "id": connector["id"],
             "title": connector["title"],
@@ -88,6 +90,7 @@ def source_health_policy(settings: Any) -> dict[str, Any]:
             "state": state,
             "release_blocking": False,
             "network_probe_performed": False,
+            "required_environment": connector.get("credential_environment"),
             "interpretation": "Configuration/readiness state only; current upstream availability is not inferred without a live probe.",
         })
     reliefweb_configured = bool(_setting(settings, "reliefweb_appname"))

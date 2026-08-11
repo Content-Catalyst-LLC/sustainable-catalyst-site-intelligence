@@ -4,7 +4,7 @@ from app.solid_waste_circular_materials_v43300 import normalize_feature,normaliz
 client=TestClient(app)
 def test_source_registry_and_truth_boundary():
  o=client.get('/public/solid-waste-circular-materials').json();c=client.get('/public/solid-waste-circular-materials/catalog').json()
- assert o['ok'] and o['version']=='4.35.4' and o['source_count']==4 and o['route']=='earth'
+ assert o['ok'] and o['version']=='4.35.5' and o['source_count']==4 and o['route']=='earth'
  assert {'openstreetmap-waste-recycling','epa-rcrainfo-hazardous-waste','world-bank-what-a-waste','eurostat-waste'}<={x['id'] for x in c['sources']}
  assert c['truth_boundaries']['mapped_waste_feature_equals_operating_facility'] is False and c['truth_boundaries']['reported_recycling_rate_equals_material_circularity'] is False
 def test_empty_state_not_absence_or_operation_finding():

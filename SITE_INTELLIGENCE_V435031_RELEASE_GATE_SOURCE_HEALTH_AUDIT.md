@@ -1,4 +1,4 @@
-# v4.35.4 Release-Gate & Source-Health Audit
+# v4.35.5 Release-Gate & Source-Health Audit
 
 ## Problem addressed
 
@@ -25,4 +25,4 @@ External authoritative sources never block deployment. The source-health policy 
 
 ## Regression protection
 
-The v4.35.4 test suite asserts that the current promotion script contains no `Deep gate:` and does not probe representative domain state endpoints such as Climate, Biodiversity, Mining, Water/Sanitation or Exoplanet state routes.
+The v4.35.5 test suite asserts that the current promotion script contains no `Deep gate:` and does not probe representative domain state endpoints such as Climate, Biodiversity, Mining, Water/Sanitation or Exoplanet state routes.

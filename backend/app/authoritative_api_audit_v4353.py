@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Site Intelligence v4.35.4 authoritative API/workspace integrity audit and connector coverage.
+"""Site Intelligence v4.35.5 authoritative API/workspace integrity audit and connector coverage.
 
 This module is deliberately evidence-conservative.  It distinguishes source
 registrations from implemented retrieval clients and never promotes a portal or
@@ -138,7 +138,7 @@ VERIFIED_MACHINE_INTERFACES = (
         "current_version": "v0",
         "documentation_url": "https://api.waterdata.usgs.gov/docs/",
         "authentication": "public; API key increases rate limits",
-        "status": "implemented-live-v4.35.4",
+        "status": "implemented-live-v4.35.5",
         "audit_date": AUDIT_DATE,
     },
     {
@@ -149,7 +149,7 @@ VERIFIED_MACHINE_INTERFACES = (
         "current_version": "server-advertised",
         "documentation_url": "https://coastwatch.noaa.gov/erddap/rest.html",
         "authentication": "none for public datasets",
-        "status": "implemented-live-v4.35.4",
+        "status": "implemented-live-v4.35.5",
         "audit_date": AUDIT_DATE,
     },
     {
@@ -160,7 +160,7 @@ VERIFIED_MACHINE_INTERFACES = (
         "current_version": "current service",
         "documentation_url": "https://cmr.earthdata.nasa.gov/search/site/docs/search/api.html",
         "authentication": "guest search supported; auth for restricted assets",
-        "status": "implemented-discovery-v4.35.4",
+        "status": "implemented-discovery-v4.35.5",
         "audit_date": AUDIT_DATE,
     },
     {
@@ -182,7 +182,7 @@ VERIFIED_MACHINE_INTERFACES = (
         "current_version": "current TAP service",
         "documentation_url": "https://exoplanetarchive.ipac.caltech.edu/docs/TAP/usingTAP.html",
         "authentication": "public query service",
-        "status": "implemented-live-v4.35.4",
+        "status": "implemented-live-v4.35.5",
         "audit_date": AUDIT_DATE,
     },
     {
@@ -193,17 +193,17 @@ VERIFIED_MACHINE_INTERFACES = (
         "current_version": "1.0.0",
         "documentation_url": "https://api.unhcr.org/docs/refugee-statistics.html",
         "authentication": "public read API",
-        "status": "implemented-live-v4.35.4",
+        "status": "implemented-live-v4.35.5",
         "audit_date": AUDIT_DATE,
     },
 )
 
 COMPLETED_CONNECTOR_TARGETS = (
-    {"id":"usgs-water-ogc-v0","workspace":"Hydrology, Rivers, Flood & Drought","state":"LIVE","completed_in":"4.35.4"},
-    {"id":"noaa-coastwatch-erddap","workspace":"Ocean Surface","state":"LIVE","completed_in":"4.35.4"},
-    {"id":"nasa-exoplanet-tap","workspace":"Exoplanets, Habitability & Biosignatures","state":"LIVE","completed_in":"4.35.4"},
-    {"id":"unhcr-refugee-statistics-v1","workspace":"Humanitarian Intelligence","state":"LIVE","completed_in":"4.35.4"},
-    {"id":"nasa-cmr-search","workspace":"Earth / Science / Space discovery","state":"DISCOVERY","completed_in":"4.35.4"},
+    {"id":"usgs-water-ogc-v0","workspace":"Hydrology, Rivers, Flood & Drought","state":"LIVE","completed_in":"4.35.5"},
+    {"id":"noaa-coastwatch-erddap","workspace":"Ocean Surface","state":"LIVE","completed_in":"4.35.5"},
+    {"id":"nasa-exoplanet-tap","workspace":"Exoplanets, Habitability & Biosignatures","state":"LIVE","completed_in":"4.35.5"},
+    {"id":"unhcr-refugee-statistics-v1","workspace":"Humanitarian Intelligence","state":"LIVE","completed_in":"4.35.5"},
+    {"id":"nasa-cmr-search","workspace":"Earth / Science / Space discovery","state":"DISCOVERY","completed_in":"4.35.5"},
 )
 
 # The backlog remains intentionally evidence-driven.  A later connector build

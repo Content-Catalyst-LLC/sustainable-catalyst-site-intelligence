@@ -692,13 +692,13 @@ from .source_methodology_studio import (
     studio_export as build_source_methodology_export,
     SourceMethodologyError,
 )
-from .authoritative_api_audit_v4354 import (
+from .authoritative_api_audit_v4355 import (
     audit_overview as build_authoritative_api_audit,
     audit_catalog as build_authoritative_api_catalog,
     workspace_matrix as build_authoritative_api_workspace_matrix,
     audit_readiness as build_authoritative_api_readiness,
 )
-from .authoritative_connectors_v4354 import (
+from .authoritative_connectors_v4355 import (
     connector_catalog as build_authoritative_connector_catalog,
     connector_readiness as build_authoritative_connector_readiness,
     usgs_water_latest as build_usgs_water_latest,
@@ -712,6 +712,11 @@ from .authoritative_connectors_v4354 import (
     obis_occurrences as build_obis_occurrences,
     eurostat_statistics as build_eurostat_statistics,
     usda_soil_mapunits as build_usda_soil_mapunits,
+    usfws_nwi_wetlands as build_usfws_nwi_wetlands,
+    epa_echo_facilities as build_epa_echo_facilities,
+    nasa_firms_area as build_nasa_firms_area,
+    usda_nass_quickstats as build_usda_nass_quickstats,
+    nasa_cmr_graphql_collections as build_nasa_cmr_graphql_collections,
 )
 from .release_health_v43531 import (
     deployment_verification as build_deployment_verification_v43531,
@@ -863,7 +868,7 @@ async def public_experience_headers(request, call_next):
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
-        response.headers["X-SC-Release-Gate"] = "v4.35.4"
+        response.headers["X-SC-Release-Gate"] = "v4.35.5"
     elif path == "/app/service-worker.js":
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
@@ -4306,7 +4311,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.35.4 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v4.35.5 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -4448,7 +4453,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.35.4 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v4.35.5 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -4565,7 +4570,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.35.4 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v4.35.5 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -4687,7 +4692,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.35.4 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v4.35.5 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -4823,7 +4828,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.35.4 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v4.35.5 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -5530,6 +5535,110 @@ def public_usda_soil_mapunits_endpoint(
     except RuntimeError as exc:
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 
+
+
+@app.get("/public/authoritative-connectors/usfws-nwi/wetlands")
+@app.get("/public/wetlands-inland-water/live/usfws-nwi")
+def public_usfws_nwi_wetlands_endpoint(
+    latitude: float | None = Query(None, ge=-90, le=90),
+    longitude: float | None = Query(None, ge=-180, le=180),
+    bbox: str = Query("", max_length=120),
+    limit: int = Query(50, ge=1, le=200),
+    return_geometry: bool = Query(True),
+    settings: Settings = Depends(get_settings),
+):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    try:
+        return build_usfws_nwi_wetlands(settings, latitude=latitude, longitude=longitude, bbox=bbox, limit=limit, return_geometry=return_geometry)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.get("/public/authoritative-connectors/epa-echo/facilities")
+@app.get("/public/industrial-manufacturing/live/epa-echo")
+@app.get("/public/water-sanitation/live/epa-echo")
+def public_epa_echo_facilities_endpoint(
+    media: str = Query("all", max_length=8),
+    state: str = Query("", max_length=2),
+    registry_id: str = Query("", max_length=24),
+    latitude: float | None = Query(None, ge=-90, le=90),
+    longitude: float | None = Query(None, ge=-180, le=180),
+    radius_miles: float = Query(5.0, gt=0, le=50),
+    limit: int = Query(100, ge=1, le=500),
+    settings: Settings = Depends(get_settings),
+):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    try:
+        return build_epa_echo_facilities(settings, media=media, state=state, registry_id=registry_id, latitude=latitude, longitude=longitude, radius_miles=radius_miles, limit=limit)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.get("/public/authoritative-connectors/nasa-firms/area")
+@app.get("/public/terrestrial-ecosystems/live/nasa-firms")
+def public_nasa_firms_area_endpoint(
+    source: str = Query("VIIRS_NOAA20_NRT", max_length=32),
+    bbox: str = Query(..., min_length=7, max_length=120),
+    day_range: int = Query(1, ge=1, le=5),
+    date: str = Query("", max_length=10),
+    settings: Settings = Depends(get_settings),
+):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    try:
+        return build_nasa_firms_area(settings, source=source, bbox=bbox, day_range=day_range, date_value=date)
+    except PermissionError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.get("/public/authoritative-connectors/usda-nass/quick-stats")
+@app.get("/public/agriculture-food-systems/live/usda-nass")
+def public_usda_nass_quickstats_endpoint(
+    filter: list[str] = Query(default=[]),
+    limit: int = Query(100, ge=1, le=500),
+    settings: Settings = Depends(get_settings),
+):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    try:
+        return build_usda_nass_quickstats(settings, filters=filter, limit=limit)
+    except PermissionError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.get("/public/authoritative-connectors/nasa-cmr/graphql/collections")
+@app.get("/public/science-discovery/nasa-cmr-graphql")
+def public_nasa_cmr_graphql_endpoint(
+    keyword: str = Query("", max_length=160),
+    short_name: str = Query("", max_length=120),
+    provider: str = Query("", max_length=80),
+    bounding_box: str = Query("", max_length=120),
+    temporal: str = Query("", max_length=100),
+    limit: int = Query(20, ge=1, le=100),
+    settings: Settings = Depends(get_settings),
+):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    try:
+        return build_nasa_cmr_graphql_collections(settings, keyword=keyword, short_name=short_name, provider=provider, bounding_box=bounding_box, temporal=temporal, limit=limit)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
 
 @app.get("/public/sources")
 def public_sources_endpoint(
@@ -8504,7 +8613,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v4.35.4 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v4.35.5 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -8738,7 +8847,7 @@ def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     return build_reliability(settings)
 
 
-# Site Intelligence v4.35.4 — Open Standards, Federation, and Institutional Data Exchange.
+# Site Intelligence v4.35.5 — Open Standards, Federation, and Institutional Data Exchange.
 def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
     if not settings.federation_exchange_enabled:
         raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
@@ -8828,7 +8937,7 @@ def admin_federation_accept_import_endpoint(request: dict = Body(default={}), se
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.35.4 — Security, Privacy, Governance, and Production Scale.
+# Site Intelligence v4.35.5 — Security, Privacy, Governance, and Production Scale.
 def _production_governance(settings: Settings) -> ProductionGovernanceCenter:
     if not settings.production_governance_enabled:
         raise HTTPException(status_code=503, detail="Production governance is disabled.")
@@ -8977,7 +9086,7 @@ def admin_production_governance_deployment_endpoint(request: dict = Body(default
 def admin_production_governance_load_probe_endpoint(requests: int = Query(default=250, ge=1, le=5000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return _production_governance(settings).load_probe(requests)
 
-# Site Intelligence v4.35.4 — Connected Live Intelligence Surface.
+# Site Intelligence v4.35.5 — Connected Live Intelligence Surface.
 def _connected_platform(settings: Settings) -> ConnectedPublicIntelligencePlatform:
     if not settings.connected_platform_enabled:
         raise HTTPException(status_code=404, detail="Connected platform is disabled.")

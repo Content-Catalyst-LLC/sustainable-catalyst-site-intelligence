@@ -9,7 +9,7 @@ from app.main import app
 from app.release_health_v43531 import deployment_verification, source_health_policy
 from app.version import APP_VERSION
 
-assert APP_VERSION == "4.35.4"
+assert APP_VERSION == "4.35.5"
 settings = Settings(_env_file=None, reliefweb_appname="")
 verify = deployment_verification(settings)
 assert verify["ok"] and verify["version"] == APP_VERSION
@@ -38,5 +38,5 @@ assert "/public/source-health-policy" in promotion
 assert "/public/climate/state" not in promotion
 assert "External source availability is intentionally excluded" in promotion
 render=(ROOT/"render.yaml").read_text()
-assert "site-intelligence-v4.35.4" in render
-print("PASS: v4.35.4 deployment verification/source-health release contract")
+assert "site-intelligence-v4.35.5" in render
+print("PASS: v4.35.5 deployment verification/source-health release contract")

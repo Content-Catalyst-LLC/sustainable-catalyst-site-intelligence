@@ -1,4 +1,4 @@
-# Site Intelligence v4.35.4 — Authoritative Connector Expansion II
+# Site Intelligence v4.35.5 — Authoritative Connector Expansion II
 
 - Added live NOAA CO-OPS Data API retrieval for bounded station observations/predictions with datum, units, time-zone, quality/error metadata, and raw-source preservation.
 - Added live NOAA NCEI Access Data Service retrieval with bounded dataset/date/station/data-type requests and explicit separation from token-gated CDO v2.
@@ -9,7 +9,7 @@
 - Preserved v4.35.3.1 release-gate hardening: upstream source availability remains non-blocking for GitHub/Render promotion.
 - Tightened audit precision so a live NCEI Access Data connector does not falsely mark unrelated NCEI catalog pages as live retrieval.
 
-# Site Intelligence v4.35.4 — Authoritative Connector Expansion I
+# Site Intelligence v4.35.5 — Authoritative Connector Expansion I
 
 - Added live USGS Water Data OGC latest-continuous retrieval with provenance, provisional/approved status, qualifiers and null preservation.
 - Added NOAA CoastWatch ERDDAP dataset search and bounded tabledap data retrieval.
@@ -21,7 +21,7 @@
 - Migrated the Humanitarian source registry ReliefWeb URL to V2.
 - Preserved deterministic no-network validation and source-null integrity.
 
-## 4.35.4 — Authoritative API & Workspace Integrity Audit
+## 4.35.5 — Authoritative API & Workspace Integrity Audit
 
 - Added a deterministic audit inventory spanning source registries and legacy live connectors without treating registration as retrieval.
 - Added LIVE / DISCOVERY / REGISTERED / AUTH_REQUIRED / BULK / STALE / UNAVAILABLE classifications with workspace-level coverage summaries.

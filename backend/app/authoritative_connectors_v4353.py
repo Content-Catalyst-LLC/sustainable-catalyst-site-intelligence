@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Site Intelligence v4.35.4 authoritative connector expansion I.
+"""Site Intelligence v4.35.5 authoritative connector expansion I.
 
 The connector layer deliberately keeps authoritative payloads and missing values
 intact.  It normalizes only enough structure for the public workspaces to show
@@ -21,7 +21,7 @@ from .version import APP_VERSION
 
 VERSION = APP_VERSION
 CONTRACT = "authoritative-connector-expansion-i"
-USER_AGENT = "SustainableCatalyst-SiteIntelligence/4.35.4 (+https://sustainablecatalyst.com)"
+USER_AGENT = "SustainableCatalyst-SiteIntelligence/4.35.5 (+https://sustainablecatalyst.com)"
 MAX_RESPONSE_BYTES = 4 * 1024 * 1024
 
 CONNECTORS: tuple[dict[str, Any], ...] = (

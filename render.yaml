@@ -14,7 +14,7 @@ services:
       - key: SC_SI_RELEASE_CHANNEL
         value: production
       - key: SC_SI_RELEASE_ID
-        value: site-intelligence-v4.35.4
+        value: site-intelligence-v4.35.5
       - key: SC_SI_RUNTIME_STATE_ROOT
         value: /tmp/site-intelligence-runtime
       - key: SC_SI_EXPECTED_GIT_BRANCH
@@ -83,6 +83,14 @@ services:
         sync: false
       # Optional; public USGS Water Data reads work without a key.
       - key: SC_SI_USGS_WATER_API_KEY
+        sync: false
+      # Authoritative Connector Expansion III: server-side credentials only.
+      - key: SC_SI_NASA_FIRMS_MAP_KEY
+        sync: false
+      - key: SC_SI_USDA_NASS_API_KEY
+        sync: false
+      # Optional NASA Earthdata token; public CMR GraphQL metadata discovery works without it.
+      - key: SC_SI_NASA_EARTHDATA_TOKEN
         sync: false
 
 # v2.8.0 optional environment values:

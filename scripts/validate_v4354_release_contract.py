@@ -11,7 +11,7 @@ from app.version import APP_VERSION
 from app.authoritative_connectors_v4354 import connector_catalog, connector_readiness
 from app.authoritative_api_audit_v4354 import audit_overview
 
-assert APP_VERSION == "4.35.4"
+assert APP_VERSION == "4.35.5"
 settings = Settings(_env_file=None, reliefweb_appname="")
 verify = deployment_verification(settings)
 assert verify["ok"] and verify["version"] == APP_VERSION
@@ -52,5 +52,5 @@ assert "/public/source-health-policy" in promotion
 assert "/public/climate/state" not in promotion
 assert "External source availability is intentionally excluded" in promotion
 render=(ROOT/"render.yaml").read_text()
-assert "site-intelligence-v4.35.4" in render
-print("PASS: v4.35.4 authoritative connector expansion II release contract")
+assert "site-intelligence-v4.35.5" in render
+print("PASS: v4.35.5 authoritative connector expansion II release contract")
