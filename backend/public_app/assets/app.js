@@ -25,7 +25,7 @@
     }
     throw last;
   }
-  const APP_VERSION="4.35.7";
+  const APP_VERSION="4.35.8";
   const FIXED_WORDPRESS_EMBED=window.SCSI_FIXED_WORDPRESS_EMBED===true;
   let heightFrame=0;
   function documentHeight(){
@@ -929,12 +929,13 @@
       countryLineage=new Map((profile.highlights||[]).map(item=>[item.key,item]));
       qs("#countryIndicatorGrid").innerHTML=(profile.highlights||[]).map(item=>{
         const lineage=item.lineage||{},state=lineage.platform_core_state||"not-recorded";
-        return `<article class="country-indicator" tabindex="0" role="button" data-evidence-key="${escapeHtml(item.key)}" aria-label="Inspect evidence for ${escapeHtml(item.label)}"><span class="country-indicator-label">${escapeHtml(item.label)}</span><strong class="country-indicator-value">${escapeHtml(formatCountryValue(item.value,item.format,item.unit))}</strong><div class="country-indicator-meta">${escapeHtml(item.unit)} · ${escapeHtml(item.year)}</div><span class="country-indicator-source">${escapeHtml(item.source)} · ${escapeHtml(item.data_state)}</span><span class="country-indicator-lineage"><i class="lineage-dot ${escapeHtml(state)}"></i>${escapeHtml(state==="recorded"||state==="existing"?"Evidence recorded":state==="queued"?"Evidence queued":"Evidence details")}</span></article>`;
+        const freshness=item.freshness?.status||"unknown",obs=item.observation_id||"canonical observation unavailable";
+        return `<article class="country-indicator" tabindex="0" role="button" data-evidence-key="${escapeHtml(item.key)}" data-canonical-observation="${escapeHtml(obs)}" aria-label="Inspect evidence for ${escapeHtml(item.label)}"><span class="country-indicator-label">${escapeHtml(item.label)}</span><strong class="country-indicator-value">${escapeHtml(formatCountryValue(item.value,item.format,item.unit))}</strong><div class="country-indicator-meta">${escapeHtml(item.unit)} · ${escapeHtml(item.year)} · ${escapeHtml(freshness)}</div><span class="country-indicator-source">${escapeHtml(item.source)} · ${escapeHtml(item.data_state)}</span><span class="country-indicator-lineage"><i class="lineage-dot ${escapeHtml(state)}"></i>${escapeHtml(state==="recorded"||state==="existing"?"Evidence recorded":state==="queued"?"Evidence queued":"Evidence details")}</span><button type="button" class="scsi-record-truth-button" data-record-truth-indicator="${escapeHtml(item.id)}" data-record-truth-country="${escapeHtml(code)}">Truth</button></article>`;
       }).join("")||'<div class="loading-block">Validated country indicators are unavailable.</div>';
       qsa("[data-evidence-key]").forEach(card=>{
         const activate=()=>openEvidenceDrawer(countryLineage.get(card.dataset.evidenceKey)||{});
-        card.addEventListener("click",activate);
-        card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();activate()}});
+        card.addEventListener("click",e=>{if(e.target.closest("[data-record-truth-indicator]"))return;activate()});
+        card.addEventListener("keydown",e=>{if(e.target.closest?.("[data-record-truth-indicator]"))return;if(e.key==="Enter"||e.key===" "){e.preventDefault();activate()}});
       });
       const options=(trends.trends||[]);
       qs("#trendSelect").innerHTML=options.map((item,i)=>`<option value="${escapeHtml(item.key)}">${escapeHtml(item.label)}</option>`).join("");
@@ -942,7 +943,7 @@
       qs("#trendSelect").onchange=e=>{const item=options.find(x=>x.key===e.target.value);if(item){qs("#trendTitle").textContent=item.label;renderTrend(item)}};
       qs("#countryEvidenceNotes").innerHTML=[
         "Reporting years differ by indicator and remain visible.",
-        "The latest non-null public observation is used; missing values are not imputed.",
+        "The displayed value and Truth drawer resolve from the same canonical observation object; missing values are not imputed.",
         "Reference snapshots are explicitly labeled when the live source cannot be reached.",
         "Indicators describe conditions but do not establish causes, rankings, or legal conclusions."
       ].map(x=>`<div class="evidence-note">${escapeHtml(x)}</div>`).join("");
@@ -1842,7 +1843,7 @@
     hydration.then(results=>{const failed=results.filter(result=>result.status==="rejected");const status=qs("#statusText");if(failed.length){console.warn("[Site Intelligence] Startup hydration completed with limited services.",failed.map(result=>result.reason));if(status)status.textContent="Partial public data";toast("Some optional public data is temporarily unavailable.")}else if(status)status.textContent="Live public data";window.dispatchEvent(new CustomEvent("scsi:startup-hydrated",{detail:{version:APP_VERSION,state:failed.length?"limited":"ready",failed:failed.length}}));reportHeight()});
   }
   window.SCSIOverviewMapV3232={version:APP_VERSION,getMap:()=>state.map,getEvents:()=>state.events?.features||[],getFilteredEvents:()=>state.filteredEvents.slice(),getFilters:()=>({...state.overviewFilters}),setFilters:setOverviewFilters,selectEvent:selectOverviewEvent,fitResults:fitOverviewResults,setImageryOpacity:value=>state.imagery?.setOpacity?.(Math.max(0,Math.min(1,Number(value)))),setBaseStyle:style=>{const map=qs("#map");if(map)map.dataset.mapStyle=String(style||"institutional-dark");syncOverviewMapUrl()},syncUrl:syncOverviewMapUrl,render:renderOverviewFeatures};
-  window.SCSIRouterV3228={version:"4.35.7",navigate:navigateToRoute,current:()=>state.route};
+  window.SCSIRouterV3228={version:"4.35.8",navigate:navigateToRoute,current:()=>state.route};
   if(!FIXED_WORDPRESS_EMBED){
     window.addEventListener("load",reportHeight,{once:true});
     window.addEventListener("resize",reportHeight,{passive:true});
@@ -1868,5 +1869,5 @@ visualStyle.textContent=`
 document.head.appendChild(visualStyle);
 
 
-/* v4.35.7 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v4.35.7 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v4.35.8 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v4.35.8 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

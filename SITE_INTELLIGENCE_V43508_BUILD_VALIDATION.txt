@@ -1,0 +1,20 @@
+Site Intelligence v4.35.8 — Workspace Evidence Unification & Truth-Layer Repair
+
+Validation summary
+- New v4.35.8 regression tests: 12/12 passed.
+- Targeted compatibility tests: 45/45 passed.
+- Full deterministic pytest suite: 1,479/1,479 passed across four file chunks.
+- Release contract: PASS.
+- Static release validation: PASS.
+- Workspace-evidence browser/static gate: PASS.
+- External-source health remains non-blocking for release promotion.
+
+Deterministic test chunk reconciliation
+- Chunk 1: 421 passed.
+- Chunk 2: 337 passed.
+- Chunk 3: 342 passed.
+- Chunk 4: 379 passed.
+- Total: 1,479 passed.
+
+Key regression proved
+A workspace indicator and its Record Truth response now share one canonical observation identity/fingerprint. A live value cannot be paired with a missing Truth record, and a missing canonical value cannot be promoted to zero or another fallback value.

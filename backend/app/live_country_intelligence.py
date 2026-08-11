@@ -440,6 +440,10 @@ def country_indicators(code: str) -> dict[str, Any]:
                 "reason": "Reference snapshots and unavailable records are not published as live evidence.",
             }
             merged.append(fallback)
+    # v4.35.8: attach the single canonical observation consumed by workspace, evidence and Truth surfaces.
+    from .workspace_evidence_unification_v4358 import canonicalize_country_indicator
+    for item in merged:
+        item["canonical_observation"] = canonicalize_country_indicator({"code": normalized, **country}, item)
     available = [item for item in merged if item.get("latest")]
     if counts["live"] == len(INDICATORS):
         state = "live"
@@ -490,13 +494,17 @@ def country_profile(code: str) -> dict[str, Any]:
     latest = {item["key"]: item.get("latest") for item in indicators if item.get("latest")}
     highlights = []
     for item in indicators[:6]:
-        if item.get("latest"):
+        observation = item.get("canonical_observation") or {}
+        if observation.get("value", {}).get("available"):
             highlights.append({
-                "id": item["id"], "key": item["key"], "label": item["label"], "value": item["latest"]["value"],
-                "year": item["latest"]["year"], "unit": item["unit"], "format": item["format"],
-                "source": item["source"], "source_id": item.get("source_id"), "source_url": item.get("source_url"),
-                "data_state": item["data_state"], "cache_state": item.get("cache_state"), "retrieved_at": item.get("retrieved_at"),
-                "stale": item.get("stale", False), "lineage": item.get("lineage", {}),
+                "id": item["id"], "key": item["key"], "label": item["label"], "value": observation["value"]["number"],
+                "year": observation.get("dates", {}).get("observation_year"), "unit": observation.get("units", {}).get("display") or item["unit"], "format": item["format"],
+                "source": observation.get("source", {}).get("publisher") or item["source"], "source_id": observation.get("source", {}).get("source_id") or item.get("source_id"), "source_url": observation.get("source", {}).get("url") or item.get("source_url"),
+                "data_state": observation.get("presentation_state") or item["data_state"], "cache_state": observation.get("cache_state") or item.get("cache_state"), "retrieved_at": observation.get("dates", {}).get("retrieved_at"),
+                "stale": observation.get("stale", False), "lineage": observation.get("lineage", {}),
+                "observation_id": observation.get("observation_id"), "canonical_observation_sha256": observation.get("fingerprint", {}).get("value"),
+                "semantics": observation.get("semantics"), "freshness": observation.get("freshness"), "canonical_observation": observation,
+                "truth_endpoint": f"/public/record-truth/indicator/{country['code']}/{item['id']}",
             })
     return {
         "ok": True, "version": VERSION, "generated_at": payload["generated_at"], "country": country,

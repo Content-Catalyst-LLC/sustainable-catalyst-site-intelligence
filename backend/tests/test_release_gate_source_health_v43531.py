@@ -17,13 +17,13 @@ def settings(**updates):
 
 
 def test_release_version_is_v43531():
-    assert APP_VERSION == "4.35.7"
+    assert APP_VERSION == "4.35.8"
 
 
 def test_deployment_verification_is_network_free_and_first_party_only():
     data = deployment_verification(settings())
     assert data["ok"] is True
-    assert data["version"] == "4.35.7"
+    assert data["version"] == "4.35.8"
     assert data["network_calls_performed"] is False
     assert data["source_health_blocks_release"] is False
     assert all(data["checks"].values())
@@ -54,7 +54,7 @@ def test_public_verification_endpoints_are_available():
     policy = client.get("/public/source-health-policy")
     assert deployment.status_code == 200
     assert policy.status_code == 200
-    assert deployment.json()["version"] == "4.35.7"
+    assert deployment.json()["version"] == "4.35.8"
     assert policy.json()["summary"]["release_blocking_sources"] == 0
 
 

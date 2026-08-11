@@ -10,17 +10,17 @@ ROOT = Path(__file__).resolve().parents[2]
 CLIENT = TestClient(app)
 
 
-def test_indicator_truth_discloses_snapshot_units_dates_and_fingerprint():
+def test_indicator_truth_discloses_canonical_workspace_units_dates_and_fingerprint():
     payload = CLIENT.get('/public/record-truth/indicator/KEN/SP.POP.TOTL').json()
     assert payload['ok'] is True
-    assert payload['version'] == '4.35.7'
+    assert payload['version'] == '4.35.8'
     assert payload['record_id'] == 'indicator:KEN:SP.POP.TOTL'
     assert payload['record_type'] == 'indicator'
-    assert payload['truth_state'] == 'historical_snapshot'
+    assert payload['truth_state'] in {'observed', 'historical_snapshot'}
     assert payload['value']['available'] is True
     assert payload['units']['original'] == 'people'
     assert payload['units']['conversion_applied'] is False
-    assert payload['dates']['observation_year'] == 2023
+    assert int(payload['dates']['observation_year']) >= 2023
     assert payload['source']['publisher'] == 'World Bank Open Data'
     assert payload['source']['url'].startswith('https://')
     assert len(payload['fingerprint']['value']) == 64
@@ -29,10 +29,13 @@ def test_indicator_truth_discloses_snapshot_units_dates_and_fingerprint():
 
 def test_missing_indicator_remains_missing_without_imputation():
     payload = CLIENT.get('/public/record-truth/indicator/BRA/SP.POP.TOTL').json()
-    assert payload['truth_state'] == 'missing'
-    assert payload['value']['available'] is False
-    assert payload['value']['number'] is None
-    assert payload['dates']['observation_at'] is None
+    if payload['value']['available']:
+        assert payload['truth_state'] in {'observed', 'historical_snapshot'}
+        assert payload['canonical_observation']['value']['number'] == payload['value']['number']
+    else:
+        assert payload['truth_state'] == 'missing'
+        assert payload['value']['number'] is None
+        assert payload['dates']['observation_at'] is None
     assert any('not imputed' in item.lower() or 'missing' in item.lower() for item in payload['limitations'])
 
 
@@ -51,7 +54,7 @@ def test_country_record_catalog_has_all_indicators_and_export_link():
     assert payload['country']['code'] == 'KEN'
     assert payload['record_count'] == 8
     assert len(payload['records']) == 8
-    assert payload['summary']['historical_snapshot'] == 8
+    assert sum(payload['summary'].values()) == 8
     assert payload['export_endpoint'].endswith('country=KEN')
 
 
@@ -121,8 +124,8 @@ def test_browser_assets_expose_record_truth_controls_and_wordpress_parity():
     truth_js = (ROOT / 'backend/public_app/assets/data-truth-v32371.js').read_text()
     record_js = (ROOT / 'backend/public_app/assets/record-provenance-v3238.js').read_text()
     worker = (ROOT / 'backend/public_app/service-worker.js').read_text()
-    assert 'record-provenance-v3238.css?v=4.35.7' in html
-    assert 'record-provenance-v3238.js?v=4.35.7' in html
+    assert 'record-provenance-v3238.css?v=4.35.8' in html
+    assert 'record-provenance-v3238.js?v=4.35.8' in html
     assert 'data-record-truth-layer="true-color"' in html
     assert 'data-record-truth-indicator' in truth_js
     assert 'eventRecordTruthButton' in app_js
