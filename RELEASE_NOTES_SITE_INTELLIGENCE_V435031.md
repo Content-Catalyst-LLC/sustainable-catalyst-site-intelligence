@@ -1,6 +1,6 @@
-# Site Intelligence v4.35.3.1 — Deployment Verification, Source Health & Release-Gate Hardening
+# Site Intelligence v4.35.4 — Deployment Verification, Source Health & Release-Gate Hardening
 
-v4.35.3.1 is a production-reliability patch on top of Authoritative Connector Expansion I.
+v4.35.4 is a production-reliability patch on top of Authoritative Connector Expansion I.
 
 ## Changes
 

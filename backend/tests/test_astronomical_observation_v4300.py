@@ -6,7 +6,7 @@ CLIENT=TestClient(app); ROOT=Path(__file__).resolve().parents[2]
 
 def test_overview_preserves_v4_route_architecture():
     p=CLIENT.get('/public/astronomical-observation').json()
-    assert p['ok'] and p['version']=='4.35.3.1' and p['route']=='earth'
+    assert p['ok'] and p['version']=='4.35.4' and p['route']=='earth'
     assert p['target_count']>=6 and p['survey_count']>=7 and len(p['contract_sha256'])==64
     nav=CLIENT.get('/public/v4/navigation').json(); assert nav['route_count']==35 and nav['primary_area_count']==6
 

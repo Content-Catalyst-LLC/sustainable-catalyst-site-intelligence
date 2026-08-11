@@ -1,0 +1,50 @@
+Site Intelligence v4.35.4 — Authoritative Connector Expansion II
+Build validation status: PASS
+
+Deterministic validation:
+- v4.35.4 release contract: PASS
+- v4.35.4 static release validation: PASS
+- v4.35.4 browser/static authoritative-connector gate: PASS
+- Expansion II targeted connector tests: 13/13 PASS
+- Complete inherited + current pytest suite: 1430/1430 PASS
+
+Repository/static validation:
+- Immutable repository manifest: 2137 files (final manifest rebuilt after this receipt)
+- JSON/GeoJSON parse validation: 134 files PASS
+- JavaScript syntax validation: 151 files PASS
+- WordPress PHP syntax: PASS
+- Static security scan: PASS, 0 findings
+
+Authoritative connector contract:
+- Combined public connector interfaces: 10
+- LIVE retrieval interfaces: 9
+- DISCOVERY interfaces: 1 (NASA CMR)
+- Expansion II interfaces: NOAA CO-OPS, NOAA NCEI Access Data, IOC-UNESCO OBIS, Eurostat Statistics API, USDA-NRCS Soil Data Access
+- Deterministic connector readiness performs no upstream network calls
+- External source health remains non-blocking for release promotion
+
+Authoritative source audit:
+- Source registrations: 179
+- Unique endpoint/source records: 120
+- Machine-readable registrations: 96
+- Implemented/discovery/configuration-gated registrations: 56
+- LIVE registrations: 38
+- DISCOVERY registrations: 8
+- REGISTERED/not-yet-retrieved registrations: 50
+- AUTH_REQUIRED registrations: 10
+- BULK registrations: 4
+- STALE implemented connectors: 0
+- UNAVAILABLE under current audit taxonomy: 69
+
+Integrity repairs:
+- NOAA NCEI live classification is interface-specific to the Access Data Service and does not promote unrelated same-host catalog pages to LIVE.
+- NOAA CO-OPS explicit date ranges are capped at 31 days.
+- USDA Soil Data Access accepts only strictly validated identifiers and fixed server-authored SQL templates.
+- Missing/null upstream values remain missing/null.
+
+Package gates required and verified for the shipped artifacts:
+- repository ZIP integrity
+- WordPress plugin ZIP integrity
+- release-bundle ZIP integrity
+- SHA-256 release-bundle verification
+- standalone macOS installer bundle-only verification

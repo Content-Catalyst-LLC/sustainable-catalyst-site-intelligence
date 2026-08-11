@@ -1,6 +1,6 @@
 """Source-bound Live Intelligence briefings and publication handoffs.
 
-Site Intelligence v4.35.3.1 converts canonical signals, reviewed alerts, and
+Site Intelligence v4.35.4 converts canonical signals, reviewed alerts, and
 approved digests into editorial briefing drafts. The system assembles evidence,
 chronology, and source-linked claims, but it does not publish interpretation or
 write to WordPress automatically. Public release always requires a documented

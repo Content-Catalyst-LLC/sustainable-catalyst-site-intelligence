@@ -1,4 +1,4 @@
-"""Deployment verification and non-blocking source-health policy for Site Intelligence v4.35.3.1.
+"""Deployment verification and non-blocking source-health policy for Site Intelligence v4.35.4.
 
 Release verification is intentionally limited to first-party deployment identity,
 packaging, and deterministic application/runtime contracts. External authoritative
@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from .authoritative_connectors_v4353 import CONNECTORS, connector_readiness
+from .authoritative_connectors_v4354 import CONNECTORS, connector_readiness
 from .version import APP_VERSION
 
 VERSION = APP_VERSION

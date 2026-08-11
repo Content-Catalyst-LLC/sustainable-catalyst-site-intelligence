@@ -4,7 +4,7 @@ from app.mining_critical_materials_v43100 import normalize_feature,normalize_res
 client=TestClient(app)
 def test_source_registry_and_truth_boundary():
  o=client.get('/public/mining-critical-materials').json();c=client.get('/public/mining-critical-materials/catalog').json()
- assert o['ok'] and o['version']=='4.35.3.1' and o['source_count']==4 and o['route']=='earth'
+ assert o['ok'] and o['version']=='4.35.4' and o['source_count']==4 and o['route']=='earth'
  assert {'openstreetmap-mining','usgs-usmin','usgs-mcs-2026','iea-critical-minerals'}<={x['id'] for x in c['sources']}
  assert c['truth_boundaries']['mapped_mining_feature_equals_operating_mine'] is False and c['truth_boundaries']['scenario_gap_equals_shortage'] is False
 def test_empty_state_not_absence_or_supply_finding():

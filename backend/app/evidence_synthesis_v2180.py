@@ -13,7 +13,7 @@ from uuid import uuid4
 
 from .config import Settings
 
-RELEASE_VERSION = "4.35.3.1"
+RELEASE_VERSION = "4.35.4"
 SCHEMA_VERSION = "sc-site-intelligence-evidence-synthesis/1.0"
 CLAIM_SCHEMA = "sc-site-intelligence-claim/1.0"
 EVIDENCE_SCHEMA = "sc-site-intelligence-claim-evidence/1.0"
