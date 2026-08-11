@@ -10,4 +10,4 @@ assert 'mining-critical-materials-v43100.js' in prev and 'mining-critical-materi
 for a in ('mining-critical-materials-v43100.js','mining-critical-materials-v43100.css','industrial-manufacturing-v43000.js','industrial-manufacturing-v43000.css'):
  assert (ROOT/'backend/public_app/assets'/a).read_text()==(ROOT/'wordpress-plugin/sustainable-catalyst-site-intelligence/assets'/a).read_text(),a
 subprocess.run([sys.executable,str(ROOT/'scripts/validate_v43100_release_contract.py')],check=True,cwd=ROOT,env={**os.environ,'PYTHONPATH':str(ROOT/'backend')})
-print('PASS: v4.35.0 static release validation')
+print('PASS: v4.35.1 static release validation')

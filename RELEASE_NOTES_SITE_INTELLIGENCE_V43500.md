@@ -1,7 +1,7 @@
-# Site Intelligence v4.35.0 — Exoplanets, Habitability & Atmospheric Biosignature Intelligence
+# Site Intelligence v4.35.1 — Exoplanets, Habitability & Atmospheric Biosignature Intelligence
 
 ## Summary
-v4.35.0 adds a lazy-loaded Space Intelligence environment for exoplanet system parameters, atmospheric spectroscopy, JWST spectral products, and source-attributed biosignature assessment context. It is attached to Astronomical Observation and does not change the six-primary-area / 35-public-route navigation architecture.
+v4.35.1 adds a lazy-loaded Space Intelligence environment for exoplanet system parameters, atmospheric spectroscopy, JWST spectral products, and source-attributed biosignature assessment context. It is attached to Astronomical Observation and does not change the six-primary-area / 35-public-route navigation architecture.
 
 ## Evidence sources
 1. NASA Exoplanet Archive — Planetary Systems / PSCompPars through TAP.

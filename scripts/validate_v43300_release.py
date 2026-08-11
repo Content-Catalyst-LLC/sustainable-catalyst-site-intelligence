@@ -10,4 +10,4 @@ assert 'solid-waste-circular-v43300.js' in prev and 'solid-waste-circular-v43300
 for a in ('solid-waste-circular-v43300.js','solid-waste-circular-v43300.css','water-sanitation-v43200.js','water-sanitation-v43200.css'):
  assert (ROOT/'backend/public_app/assets'/a).read_text()==(ROOT/'wordpress-plugin/sustainable-catalyst-site-intelligence/assets'/a).read_text(),a
 subprocess.run([sys.executable,str(ROOT/'scripts/validate_v43300_release_contract.py')],check=True,cwd=ROOT,env={**os.environ,'PYTHONPATH':str(ROOT/'backend')})
-print('PASS: v4.35.0 static release validation')
+print('PASS: v4.35.1 static release validation')

@@ -88,7 +88,94 @@ def public_unified_contracts() -> dict[str, Any]:
     }
 
 
-def public_v4_readiness() -> dict[str, Any]:
+CORE_REQUIRED_ROUTES = ("economics", "law", "science", "resources")
+CORE_ENHANCED_ROUTES = ("platform", "global", "humanitarian", "dossiers", "alerts", "scenarios")
+WORKSPACE_FLAG_MAP = {
+    "economics": "economics_sustainability_enabled",
+    "law": "international_law_observatory_enabled",
+    "science": "scientific_earth_systems_enabled",
+    "humanitarian": "humanitarian_conflict_displacement_enabled",
+    "resources": "trade_energy_resource_security_enabled",
+    "dossiers": "unified_dossiers_enabled",
+    "alerts": "alerts_monitoring_enabled",
+    "scenarios": "comparative_scenario_studio_enabled",
+    "research": "research_workflows_enabled",
+    "integration": "public_data_api_enabled",
+    "experience": "offline_experience_enabled",
+    "spatial": "spatial_evidence_enabled",
+    "harmonization": "statistical_harmonization_enabled",
+    "models": "model_governance_enabled",
+    "evidence": "evidence_synthesis_enabled",
+    "graph": "knowledge_graph_enabled",
+    "publishing": "intelligence_publishing_enabled",
+    "monitoring": "scheduled_monitoring_enabled",
+    "workspaces": "institutional_workspaces_enabled",
+    "workflows": "cross_platform_workflows_enabled",
+    "federation": "federation_exchange_enabled",
+    "governance": "production_governance_enabled",
+    "platform": "connected_platform_enabled",
+}
+
+
+def _runtime_configuration(settings: Any = None) -> dict[str, Any]:
+    def value(name: str, default: Any = None) -> Any:
+        return getattr(settings, name, default) if settings is not None else default
+
+    workspace_flags = {route: bool(value(attribute, True)) for route, attribute in WORKSPACE_FLAG_MAP.items()}
+    disabled_routes = sorted(route for route, enabled in workspace_flags.items() if not enabled)
+    core_enabled = bool(value("platform_core_enabled", False))
+    core_base_url_configured = bool(str(value("platform_core_url", "") or "").strip())
+    public_key_configured = bool(str(value("platform_core_public_api_key", "") or "").strip())
+    write_key_configured = bool(str(value("platform_core_write_api_key", "") or "").strip())
+    core_read_configured = core_enabled and core_base_url_configured
+    unavailable_core_routes = [
+        route for route in CORE_REQUIRED_ROUTES
+        if workspace_flags.get(route, True) and not core_read_configured
+    ]
+    return {
+        "runtime_ready": not disabled_routes and not unavailable_core_routes,
+        "configuration_required": bool(disabled_routes or unavailable_core_routes),
+        "workspace_flags": workspace_flags,
+        "disabled_routes": disabled_routes,
+        "platform_core": {
+            "enabled": core_enabled,
+            "base_url_configured": core_base_url_configured,
+            "public_api_key_configured": public_key_configured,
+            "public_read_configured": core_read_configured,
+            "write_lineage_configured": core_read_configured and write_key_configured,
+            "public_api_key_optional": True,
+        },
+        "core_required_routes": list(CORE_REQUIRED_ROUTES),
+        "core_required_routes_unavailable": unavailable_core_routes,
+        "core_enhanced_routes": list(CORE_ENHANCED_ROUTES),
+        "required_environment": [
+            "SC_SI_PLATFORM_CORE_ENABLED=true",
+            "SC_SI_PLATFORM_CORE_URL=<deployed Platform Core backend URL>",
+        ],
+        "optional_environment": [
+            "SC_SI_PLATFORM_CORE_PUBLIC_API_KEY=<only if public reads require authentication>",
+            "SC_SI_PLATFORM_CORE_WRITE_API_KEY=<only for backend lineage/write integration>",
+        ],
+    }
+
+
+def public_v4_configuration_readiness(settings: Any = None) -> dict[str, Any]:
+    runtime = _runtime_configuration(settings)
+    payload = {
+        "ok": True,
+        "version": RELEASE_VERSION,
+        "contract": "site-intelligence-runtime-configuration",
+        **runtime,
+    }
+    payload["configuration_sha256"] = _digest({
+        "workspace_flags": runtime["workspace_flags"],
+        "platform_core": runtime["platform_core"],
+        "core_required_routes_unavailable": runtime["core_required_routes_unavailable"],
+    })
+    return payload
+
+
+def public_v4_readiness(settings: Any = None) -> dict[str, Any]:
     policy = _policy()
     routes = _route_directory()
     route_ids = [row["route_id"] for row in routes]
@@ -100,16 +187,20 @@ def public_v4_readiness() -> dict[str, Any]:
         "deep_links_preserved": policy["compatibility"].get("deep_links_preserved") is True,
         "automatic_migrations_disabled": policy["compatibility"].get("automatic_migrations") is False,
     }
+    runtime = _runtime_configuration(settings)
     return {
         "ok": all(checks.values()),
+        "runtime_ready": runtime["runtime_ready"],
+        "configuration_required": runtime["configuration_required"],
         "version": RELEASE_VERSION,
         "release_name": "Unified Public Intelligence Platform",
         "orbital_earth_extension": "/public/orbital-earth",
         "checks": checks,
+        "runtime_configuration": runtime,
         "summary": {
             "primary_areas": len(policy["primary_areas"]),
             "preserved_routes": len(route_ids),
             "canonical_contracts": len(policy["canonical_contracts"]),
         },
-        "readiness_sha256": _digest(checks),
+        "readiness_sha256": _digest({"checks": checks, "runtime_configuration": runtime}),
     }

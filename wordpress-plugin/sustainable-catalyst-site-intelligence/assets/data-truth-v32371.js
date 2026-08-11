@@ -1,6 +1,6 @@
 (function(){
   "use strict";
-  const VERSION="4.35.0";
+  const VERSION="4.35.1";
   const root=document.querySelector('#app[data-scsi-release]');
   if(!root)return;
   let panel=null,toggle=null,activeView='country',previousFocus=null,matrixPayload=null;
@@ -13,7 +13,7 @@
     toggle=document.createElement('button');toggle.type='button';toggle.id='dataTruthToggle';toggle.className='ghost-button scsi-data-truth-toggle';toggle.setAttribute('aria-controls','dataTruthPanel');toggle.setAttribute('aria-expanded','false');toggle.innerHTML='<span>Data truth</span><small id="dataTruthBadge">global</small>';
     const controls=root.querySelector('.topbar-controls')||root.querySelector('.map-actions')||root;controls.insertBefore(toggle,controls.firstChild);
     panel=document.createElement('aside');panel.id='dataTruthPanel';panel.className='scsi-data-truth-panel';panel.hidden=true;panel.setAttribute('aria-label','Global country data truth and coverage matrix');
-    panel.innerHTML=`<div class="scsi-data-truth-head"><div><p class="eyebrow">GLOBAL COUNTRY DATA TRUTH · v4.35.0</p><h2>Eligibility, observed coverage, and missing data</h2></div><button id="dataTruthClose" type="button" class="icon-button" aria-label="Close data truth panel">×</button></div><div class="scsi-data-truth-tabs" role="tablist"><button type="button" data-truth-view="country" aria-selected="true">Selected country</button><button type="button" data-truth-view="matrix" aria-selected="false">Coverage matrix</button><button type="button" data-truth-view="sources" aria-selected="false">Source directory</button><button type="button" data-truth-view="control" aria-selected="false">Control plane</button></div><div id="dataTruthBody" aria-live="polite"><p>Checking country and source contracts…</p></div>`;
+    panel.innerHTML=`<div class="scsi-data-truth-head"><div><p class="eyebrow">GLOBAL COUNTRY DATA TRUTH · v4.35.1</p><h2>Eligibility, observed coverage, and missing data</h2></div><button id="dataTruthClose" type="button" class="icon-button" aria-label="Close data truth panel">×</button></div><div class="scsi-data-truth-tabs" role="tablist"><button type="button" data-truth-view="country" aria-selected="true">Selected country</button><button type="button" data-truth-view="matrix" aria-selected="false">Coverage matrix</button><button type="button" data-truth-view="sources" aria-selected="false">Source directory</button><button type="button" data-truth-view="control" aria-selected="false">Control plane</button></div><div id="dataTruthBody" aria-live="polite"><p>Checking country and source contracts…</p></div>`;
     root.appendChild(panel);toggle.addEventListener('click',()=>panel.hidden?open():close());panel.querySelector('#dataTruthClose').addEventListener('click',close);
     panel.querySelectorAll('[data-truth-view]').forEach(button=>button.addEventListener('click',()=>switchView(button.dataset.truthView)));
     document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!panel.hidden)close()});

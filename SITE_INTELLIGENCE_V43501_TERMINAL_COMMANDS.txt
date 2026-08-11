@@ -1,0 +1,6 @@
+cd ~/Downloads
+chmod +x deploy_and_validate_site_intelligence_v4_35_1_macos.sh
+./deploy_and_validate_site_intelligence_v4_35_1_macos.sh
+
+# Bundle-only checksum/structure verification:
+SC_VERIFY_BUNDLE_ONLY=1 ./deploy_and_validate_site_intelligence_v4_35_1_macos.sh

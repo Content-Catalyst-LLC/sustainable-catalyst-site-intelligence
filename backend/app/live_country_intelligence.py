@@ -39,6 +39,7 @@ FALLBACK_COUNTRY_CATALOG: dict[str, dict[str, Any]] = {
     "MEX": {"name": "Mexico", "iso2": "MX", "region": "Latin America & Caribbean", "capital": "Mexico City", "latitude": 23.6345, "longitude": -102.5528},
     "NGA": {"name": "Nigeria", "iso2": "NG", "region": "Sub-Saharan Africa", "capital": "Abuja", "latitude": 9.0820, "longitude": 8.6753},
     "PAK": {"name": "Pakistan", "iso2": "PK", "region": "South Asia", "capital": "Islamabad", "latitude": 30.3753, "longitude": 69.3451},
+    "PSE": {"name": "West Bank and Gaza", "iso2": "PS", "region": "Middle East, North Africa, Afghanistan & Pakistan", "capital": "Ramallah", "latitude": 31.8980, "longitude": 35.2040},
     "RUS": {"name": "Russian Federation", "iso2": "RU", "region": "Europe & Central Asia", "capital": "Moscow", "latitude": 61.5240, "longitude": 105.3188},
     "SAU": {"name": "Saudi Arabia", "iso2": "SA", "region": "Middle East, North Africa, Afghanistan & Pakistan", "capital": "Riyadh", "latitude": 23.8859, "longitude": 45.0792},
     "ZAF": {"name": "South Africa", "iso2": "ZA", "region": "Sub-Saharan Africa", "capital": "Pretoria", "latitude": -30.5595, "longitude": 22.9375},
@@ -59,7 +60,7 @@ DISPLAY_NAMES = {
     "Lao PDR": "Laos",
     "Slovak Republic": "Slovakia",
     "Kyrgyz Republic": "Kyrgyzstan",
-    "West Bank and Gaza": "Palestinian Territories",
+    "West Bank and Gaza": "Palestine",
 }
 
 SEARCH_ALIASES = {
@@ -71,7 +72,7 @@ SEARCH_ALIASES = {
     "USA": ["United States of America", "US", "U.S."],
     "GBR": ["Britain", "Great Britain", "UK", "U.K."],
     "VEN": ["Bolivarian Republic of Venezuela"],
-    "PSE": ["Palestine", "West Bank and Gaza"],
+    "PSE": ["Palestine", "State of Palestine", "Palestinian Territories", "Palestinian Territory", "West Bank and Gaza"],
 }
 
 TERRITORY_CODES = {
@@ -270,14 +271,28 @@ def country_regions() -> dict[str, Any]:
 
 
 def _country(code: str) -> tuple[str, dict[str, Any]]:
-    normalized = _clean_text(code).upper()
+    requested = _clean_text(code)
+    normalized = requested.upper()
+    folded = requested.casefold()
     payload = country_catalog()
-    match = next((item for item in payload["countries"] if item["code"] == normalized or item.get("iso2") == normalized), None)
+
+    def matches(item: dict[str, Any]) -> bool:
+        if item.get("code") == normalized or str(item.get("iso2") or "").upper() == normalized:
+            return True
+        names = [
+            item.get("name"),
+            item.get("display_name"),
+            item.get("source_name"),
+            *(item.get("alternate_names") or []),
+        ]
+        return bool(folded and any(_clean_text(name).casefold() == folded for name in names if name))
+
+    match = next((item for item in payload["countries"] if matches(item)), None)
     if not match:
         raise ValueError("unsupported_country")
     metadata = dict(match)
-    normalized = metadata.pop("code")
-    return normalized, metadata
+    canonical_code = metadata.pop("code")
+    return canonical_code, metadata
 
 
 def _world_bank_series(iso2: str, indicator_id: str, per_page: int = 30) -> list[dict[str, Any]]:

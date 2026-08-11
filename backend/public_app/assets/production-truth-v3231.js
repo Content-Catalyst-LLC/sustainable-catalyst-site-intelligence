@@ -1,6 +1,6 @@
 (function(window,document){
   "use strict";
-  const VERSION="4.35.0";
+  const VERSION="4.35.1";
   const ENDPOINT="/public/workspaces/production-truth";
   const CORE_ROUTES=new Set(["overview","global","economics","law","science","humanitarian","resources","dossiers","alerts","scenarios","earth","spatial","harmonization","country","events","compare","thematic","briefing","sources"]);
   const CONTROLLERS={platform:"SCConnectedPlatformV300",global:"SCGlobalConditionsV210",economics:"SCEconomicsV220",law:"SCLawV230",science:"SCScienceV240",humanitarian:"SCHumanitarianV250",resources:"SCResourcesV260",dossiers:"SCDossiersV270",alerts:"SCAlertsV280",scenarios:"SCScenariosV290",research:"SCResearchV2100",integration:"SCIntegrationV2110",experience:"SCExperienceV2120",spatial:"SCSpatialV2150",harmonization:"SCHarmonizationV2160",models:"SCModelsV2170",evidence:"SCEvidenceV2180",graph:"SCKnowledgeGraphV2190",publishing:"SCIntelligencePublishingV2200",monitoring:"SCScheduledMonitoringV2210",workspaces:"SCInstitutionalWorkspacesV2220",workflows:"SCCrossPlatformWorkflowsV2230",federation:"SCInstitutionalFederationV2240",governance:"SCProductionGovernanceV2250"};
@@ -50,9 +50,12 @@
     if(!controllerAvailable(route))return {phase:'unavailable',reason:`The ${contract(route).label} controller is not packaged in this release.`};
     const surface=surfaceFor(route);if(!surface)return {phase:'unavailable',reason:`The ${contract(route).label} route opened without a visible workspace surface.`};
     const text=(surface.textContent||'').replace(/\s+/g,' ').trim();
-    const hasFailure=/failed to load|unavailable|could not load|service did not respond|temporarily unavailable/i.test(text);
+    const explicitFailure=surface.querySelector('[data-state="error"],[data-state="unavailable"],.workspace-error,.error-state,[role="alert"][data-severity="error"]');
+    const configurationRequired=/platform core (?:public reading )?is not configured|core-unconfigured|configuration required/i.test(text);
+    const hasFailure=Boolean(explicitFailure)||/failed to load|could not load|service did not respond|temporarily unavailable|workspace unavailable|route opened without a visible workspace surface/i.test(text);
     const hasLoading=/loading|preparing|connecting|checking/i.test(text);
     const meaningful=surface.querySelectorAll('article,.panel,.metric-card,.event-row,.source-row,.scsi-map-managed,canvas,svg,table,li').length>0||text.length>180;
+    if(configurationRequired)return {phase:'degraded',reason:'This workspace is registered, but its Platform Core read dependency is not configured.'};
     if(hasFailure)return {phase:'degraded',reason:contract(route).degraded_state};
     if(hasLoading&&!meaningful)return {phase:'initial',reason:'The active workspace is still connecting to its public services.'};
     if(!meaningful)return {phase:'empty',reason:contract(route).empty_state};

@@ -1,4 +1,4 @@
-# v4.35.0 Exoplanets, Habitability & Atmospheric Biosignature Audit
+# v4.35.1 Exoplanets, Habitability & Atmospheric Biosignature Audit
 
 ## Scope
 Public orientation and normalization contracts for exoplanet-system parameters, atmospheric spectra, JWST Level-3 spectroscopy, and source-attributed biosignature assessment records.
