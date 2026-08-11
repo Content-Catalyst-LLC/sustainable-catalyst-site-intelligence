@@ -1,17 +1,17 @@
-# Site Intelligence v4.33.0 — Install and Test
+# Site Intelligence v4.34.0 — Install and Test
 
 ## Required order
 
-1. Run the macOS installer against the v4.33.0 release bundle.
+1. Run the macOS installer against the v4.34.0 release bundle.
 2. Allow deterministic repository validation to finish.
 3. Allow GitHub promotion and bounded Render verification to finish.
-4. Confirm the live release gate reports exact v4.33.0 version, release id and expected commit.
+4. Confirm the live release gate reports exact v4.34.0 version, release id and expected commit.
 5. Only then install the WordPress ZIP.
 
 ## Release package files
 
-- `sustainable-catalyst-site-intelligence-v4.33.0-repository.zip`
-- `sustainable-catalyst-site-intelligence-v4.33.0-wordpress-plugin.zip`
+- `sustainable-catalyst-site-intelligence-v4.34.0-repository.zip`
+- `sustainable-catalyst-site-intelligence-v4.34.0-wordpress-plugin.zip`
 - `deploy_and_validate_site_intelligence_v4_33_0_macos.sh`
 - `SHA256SUMS.txt`
 
@@ -35,5 +35,5 @@ The v4.33 verifier validates:
 To verify the bundle without GitHub/Render promotion:
 
 ```bash
-SC_VERIFY_BUNDLE_ONLY=1 bash deploy_and_validate_site_intelligence_v4_33_0_macos.sh sustainable-catalyst-site-intelligence-v4.33.0-release-bundle.zip
+SC_VERIFY_BUNDLE_ONLY=1 bash deploy_and_validate_site_intelligence_v4_33_0_macos.sh sustainable-catalyst-site-intelligence-v4.34.0-release-bundle.zip
 ```

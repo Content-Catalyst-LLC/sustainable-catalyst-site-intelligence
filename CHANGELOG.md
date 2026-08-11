@@ -1,20 +1,28 @@
-## 4.33.0 — Global Solid Waste, Recycling & Circular-Materials Intelligence
+## 4.34.0 — SETI, Technosignatures & Radio Signal Intelligence
+
+- Added Breakthrough Listen Open Data observation/data-product evidence, published radio-event tables, SETI Institute Technosearch coverage, and NASA Exoplanet Archive target context.
+- Added eight public SETI/technosignature contracts and an Astronomy → SETI browser handoff without adding a top-level route.
+- Added explicit guards for signal-event/candidate confirmation, RFI exclusion, non-detection, pipeline-score interpretation and announcement authority.
+- Lazy-loaded SETI browser assets to preserve the inherited application HTML byte budget.
+- Preserved six primary areas / 35 public routes and bounded GitHub/Render verification.
+
+## 4.34.0 — Global Solid Waste, Recycling & Circular-Materials Intelligence
 
 - Added source-bounded OpenStreetMap waste/recycling infrastructure, EPA RCRAInfo hazardous-waste records, World Bank What a Waste global statistics, and Eurostat waste/recycling series.
 - Added eight public solid-waste/circular-material contracts plus a deferred Water & Sanitation → Solid Waste browser handoff.
 - Preserved facility-operation, compliance, recycling-outcome, circularity, projection/observation and zero-record truth boundaries.
 - Preserved six primary areas / 35 public routes, immutable runtime-state exclusions, and bounded visible Render verification.
 
-## 4.33.0 — Global Mining, Mineral Resources & Critical-Materials Intelligence
+## 4.34.0 — Global Mining, Mineral Resources & Critical-Materials Intelligence
 
 - Added mining, deposit/resource, mineral commodity, and critical-mineral scenario evidence.
 - Preserved six primary areas / 35 public routes and explicit non-inference boundaries.
 
-## 4.33.0
+## 4.34.0
 - Global Industrial Facilities, Manufacturing & Trade-Flow Intelligence.
 - Adds OSM industrial geometry, World Bank manufacturing/GEM series, and WITS trade-flow evidence with strict non-inference boundaries.
 
-## 4.33.0 — Global Transportation Networks, Ports, Airports & Transit Intelligence
+## 4.34.0 — Global Transportation Networks, Ports, Airports & Transit Intelligence
 
 - Added a four-source transportation evidence registry: Overture Maps Transportation, UNECE UN/LOCODE, OurAirports, and MobilityData Mobility Database.
 - Added eight public transportation contracts for overview, catalog, state, feature normalization, feed normalization, accessibility screening, export manifest, and readiness.
@@ -22,7 +30,7 @@
 - Preserved non-inference boundaries for navigation, operating status, legal access, official aeronautical information, service guarantees, complete transit coverage, and safety.
 - Extended the bounded GitHub/Render deployment verifier with a transportation deep gate and visible release synchronization checks.
 
-## v4.33.0 — Global Human Settlements, Urbanization & Built Environment Intelligence
+## v4.34.0 — Global Human Settlements, Urbanization & Built Environment Intelligence
 
 - Added source-bounded JRC GHSL, WorldPop Global2, NASA VIIRS Black Marble and World Bank urbanization contracts.
 - Added human-settlements normalization, feature, threshold-preview, export-manifest and readiness endpoints.

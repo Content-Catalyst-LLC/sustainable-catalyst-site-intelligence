@@ -1,8 +1,8 @@
-# Site Intelligence v4.33.0 — Global Solid Waste, Recycling & Circular-Materials Intelligence
+# Site Intelligence v4.34.0 — Global Solid Waste, Recycling & Circular-Materials Intelligence
 
 ## Release purpose
 
-v4.33.0 extends the existing Earth/infrastructure continuum into solid-waste systems, recycling infrastructure, hazardous-waste regulatory context, municipal-waste statistics, treatment/recovery/disposal series, and circular-material screening evidence. It is additive inside the existing Earth route and does not change the six primary areas or 35 public navigation routes.
+v4.34.0 extends the existing Earth/infrastructure continuum into solid-waste systems, recycling infrastructure, hazardous-waste regulatory context, municipal-waste statistics, treatment/recovery/disposal series, and circular-material screening evidence. It is additive inside the existing Earth route and does not change the six primary areas or 35 public navigation routes.
 
 ## Registered evidence families
 

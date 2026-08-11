@@ -10,4 +10,4 @@ assert 'water-sanitation-v43200.js' in prev and 'water-sanitation-v43200.js' in 
 for a in ('water-sanitation-v43200.js','water-sanitation-v43200.css','mining-critical-materials-v43100.js','mining-critical-materials-v43100.css'):
  assert (ROOT/'backend/public_app/assets'/a).read_text()==(ROOT/'wordpress-plugin/sustainable-catalyst-site-intelligence/assets'/a).read_text(),a
 subprocess.run([sys.executable,str(ROOT/'scripts/validate_v43200_release_contract.py')],check=True,cwd=ROOT,env={**os.environ,'PYTHONPATH':str(ROOT/'backend')})
-print('PASS: v4.33.0 static release validation')
+print('PASS: v4.34.0 static release validation')

@@ -21,7 +21,7 @@ EXPECTED_AREAS = {
 def test_v4_platform_contract_consolidates_without_removing_routes():
     payload = CLIENT.get("/public/v4").json()
     assert payload["ok"] is True
-    assert payload["version"] == "4.33.0"
+    assert payload["version"] == "4.34.0"
     assert payload["release_name"] == "Unified Public Intelligence Platform"
     assert payload["primary_area_count"] == 6
     assert payload["route_count"] == 35
@@ -66,8 +66,8 @@ def test_v4_browser_assets_and_service_worker_are_shipped_to_both_surfaces():
     js = (ROOT / "backend/public_app/assets/unified-platform-v4000.js").read_text()
     css = (ROOT / "backend/public_app/assets/unified-platform-v4000.css").read_text()
     assert 'data-scsi-platform-contract="unified-v4"' in html
-    assert 'unified-platform-v4000.css?v=4.33.0' in html
-    assert 'unified-platform-v4000.js?v=4.33.0' in html
+    assert 'unified-platform-v4000.css?v=4.34.0' in html
+    assert 'unified-platform-v4000.js?v=4.34.0' in html
     assert 'unified-platform-v4000.js' in sw and 'unified-platform-v4000.css' in sw
     assert 'SCSIUnifiedPlatformV4000' in js and 'GROUPS=[' in js
     assert '.v4000-nav-group' in css

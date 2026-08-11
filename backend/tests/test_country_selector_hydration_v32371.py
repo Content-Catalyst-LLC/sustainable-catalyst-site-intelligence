@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def test_country_catalog_contract_has_global_options():
-    assert APP_VERSION == "4.33.0"
+    assert APP_VERSION == "4.34.0"
     client = TestClient(app)
     primary = client.get("/public/countries").json()
     fallback = client.get("/public/data-truth/countries").json()
@@ -32,4 +32,4 @@ def test_shipped_shell_hydrates_country_selector_during_startup():
     assert 'countryCatalogTask.then(code=>loadCountry(code))' in app_js
     assert 'scsi:country-catalog-ready' in app_js
     assert 'scsi:country-catalog-ready' in truth_js
-    assert 'data-truth-v32371.js?v=4.33.0' in index
+    assert 'data-truth-v32371.js?v=4.34.0' in index
