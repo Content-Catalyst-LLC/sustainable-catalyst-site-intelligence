@@ -6,8 +6,9 @@ from urllib.parse import parse_qs, urlparse
 import pytest
 from fastapi.testclient import TestClient
 
-from app.authoritative_api_audit_v4352 import (
+from app.authoritative_api_audit_v4353 import (
     ACCESS_CLASSES,
+    COMPLETED_CONNECTOR_TARGETS,
     PRIORITY_CONNECTOR_TARGETS,
     VERIFIED_MACHINE_INTERFACES,
     audit_overview,
@@ -24,7 +25,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def test_release_version_and_taxonomy():
-    assert APP_VERSION == "4.35.2"
+    assert APP_VERSION == "4.35.3.1"
     assert ACCESS_CLASSES == (
         "LIVE",
         "DISCOVERY",
@@ -68,7 +69,7 @@ def test_reliefweb_becomes_live_when_appname_is_configured(monkeypatch):
     assert {row["configuration_state"] for row in reliefweb} == {"configured"}
 
 
-def test_verified_machine_interfaces_and_priority_targets_are_explicit():
+def test_verified_machine_interfaces_and_completed_targets_are_explicit():
     verified = {row["id"] for row in VERIFIED_MACHINE_INTERFACES}
     assert {
         "reliefweb-v2",
@@ -79,14 +80,15 @@ def test_verified_machine_interfaces_and_priority_targets_are_explicit():
         "nasa-exoplanet-tap",
         "unhcr-refugee-statistics-v1",
     } <= verified
-    priorities = {row["id"] for row in PRIORITY_CONNECTOR_TARGETS}
+    completed = {row["id"] for row in COMPLETED_CONNECTOR_TARGETS}
     assert {
         "usgs-water-ogc-v0",
         "noaa-coastwatch-erddap",
         "nasa-exoplanet-tap",
         "unhcr-refugee-statistics-v1",
         "nasa-cmr-search",
-    } <= priorities
+    } == completed
+    assert PRIORITY_CONNECTOR_TARGETS
 
 
 def test_workspace_matrix_exposes_registration_and_gap_counts(monkeypatch):
@@ -104,7 +106,7 @@ def test_readiness_reports_integrity_checks_without_network_calls(monkeypatch):
     monkeypatch.delenv("SC_SI_RELIEFWEB_APPNAME", raising=False)
     data = audit_readiness(Settings(_env_file=None))
     assert data["ok"] is True
-    assert data["version"] == "4.35.2"
+    assert data["version"] == "4.35.3.1"
     assert data["network_calls_performed"] is False
     assert all(data["checks"].values())
 
@@ -148,7 +150,7 @@ def test_public_authoritative_api_endpoints(monkeypatch):
     client = TestClient(app)
     overview = client.get("/public/authoritative-apis")
     assert overview.status_code == 200
-    assert overview.json()["version"] == "4.35.2"
+    assert overview.json()["version"] == "4.35.3.1"
     catalog = client.get("/public/authoritative-apis/catalog", params={"workspace": "Hydrology"})
     assert catalog.status_code == 200
     assert catalog.json()["sources"]

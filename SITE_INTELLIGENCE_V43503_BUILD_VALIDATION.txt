@@ -1,0 +1,36 @@
+Site Intelligence v4.35.3 — Authoritative Connector Expansion I
+Build validation summary
+
+PASS — APP_VERSION and WordPress plugin version synchronized to 4.35.3
+PASS — 1,405 / 1,405 deterministic pytest tests
+PASS — 28 / 28 targeted v4.35.2 audit + v4.35.3 connector regression tests during initial connector pass
+PASS — v4.35.3 static release contract
+PASS — v4.35.3 browser/static connector gate
+PASS — 134 JSON/GeoJSON files parsed
+PASS — 151 JavaScript files syntax-validated
+PASS — WordPress PHP syntax
+PASS — static security scan: 0 findings
+PASS — ReliefWeb source registry uses V2; V1 absent from active humanitarian registry
+PASS — USGS Water Data OGC live connector
+PASS — NOAA CoastWatch ERDDAP search + bounded tabledap connector
+PASS — NASA Exoplanet Archive TAP/ADQL live connector
+PASS — UNHCR Refugee Statistics live connector
+PASS — NASA CMR collection discovery connector remains DISCOVERY, not observation
+PASS — missing/null values preserved by connector contracts
+PASS — deterministic connector readiness performs no upstream network calls
+
+Post-build API audit:
+- 179 source registrations
+- 120 unique host/record identities after base_url-aware normalization
+- 39 source-bearing workspace/inventory groups
+- 96 machine-readable registrations
+- 32 LIVE registrations
+- 8 DISCOVERY registrations
+- 10 AUTH_REQUIRED registrations
+- 56 REGISTERED machine-readable registrations not yet retrieved
+- 4 BULK registrations
+- 0 STALE implemented connectors
+- 69 UNAVAILABLE/portal-only registrations
+- 50 implemented/discovery/configuration-gated registrations
+
+The immutable manifest count and release-bundle checksums are generated after this report is written.

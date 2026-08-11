@@ -1,4 +1,26 @@
-## 4.35.2 — Authoritative API & Workspace Integrity Audit
+# Site Intelligence v4.35.3.1 — Deployment Verification, Source Health & Release-Gate Hardening
+
+- Replaced the brittle all-domain deep deployment gate with a first-party release verification contract.
+- Added `/public/deployment-verification` for deterministic version, packaging, connector-router, and required-route readiness.
+- Added `/public/source-health-policy` to report authoritative-source configuration separately from release validity.
+- Made every external source health state explicitly non-blocking for GitHub/Render promotion.
+- Removed domain `/state` probes from the current promotion decision so transient workspace/source variability cannot invalidate a correct deployment.
+- Preserved the v4.35.3 authoritative connector expansion and all 35 public routes.
+- Added regression coverage derived from the v4.35.2 Render verification failure mode.
+
+# Site Intelligence v4.35.3.1 — Authoritative Connector Expansion I
+
+- Added live USGS Water Data OGC latest-continuous retrieval with provenance, provisional/approved status, qualifiers and null preservation.
+- Added NOAA CoastWatch ERDDAP dataset search and bounded tabledap data retrieval.
+- Added NASA Exoplanet Archive TAP/ADQL planetary-system retrieval with explicit parameter semantics.
+- Added UNHCR Refugee Statistics API population retrieval with ISO3 origin/asylum filtering.
+- Added NASA Common Metadata Repository collection discovery and preserved DISCOVERY as distinct from observations.
+- Added public connector catalog/readiness routes and workspace route aliases.
+- Repaired authoritative-source host inventory for registries that expose `base_url`.
+- Migrated the Humanitarian source registry ReliefWeb URL to V2.
+- Preserved deterministic no-network validation and source-null integrity.
+
+## 4.35.3.1 — Authoritative API & Workspace Integrity Audit
 
 - Added a deterministic audit inventory spanning source registries and legacy live connectors without treating registration as retrieval.
 - Added LIVE / DISCOVERY / REGISTERED / AUTH_REQUIRED / BULK / STALE / UNAVAILABLE classifications with workspace-level coverage summaries.

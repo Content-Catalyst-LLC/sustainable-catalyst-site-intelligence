@@ -14,7 +14,7 @@ services:
       - key: SC_SI_RELEASE_CHANNEL
         value: production
       - key: SC_SI_RELEASE_ID
-        value: site-intelligence-v4.35.2
+        value: site-intelligence-v4.35.3.1
       - key: SC_SI_RUNTIME_STATE_ROOT
         value: /tmp/site-intelligence-runtime
       - key: SC_SI_EXPECTED_GIT_BRANCH
@@ -80,6 +80,9 @@ services:
         sync: false
       # ReliefWeb API V2 requires an approved appname for live humanitarian reports.
       - key: SC_SI_RELIEFWEB_APPNAME
+        sync: false
+      # Optional; public USGS Water Data reads work without a key.
+      - key: SC_SI_USGS_WATER_API_KEY
         sync: false
 
 # v2.8.0 optional environment values:

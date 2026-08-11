@@ -1,4 +1,4 @@
-const RELEASE="4.35.2";
+const RELEASE="4.35.3.1";
 const CACHE_PREFIX="scsi-";
 const VERSION=`${CACHE_PREFIX}v${RELEASE}`;
 const IMMUTABLE=`${VERSION}-immutable`;

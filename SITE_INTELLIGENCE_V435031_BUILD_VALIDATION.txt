@@ -1,0 +1,26 @@
+Site Intelligence v4.35.3.1
+Deployment Verification, Source Health & Release-Gate Hardening
+
+RESULT: PASS
+
+Deterministic Python tests: 1,417 / 1,417 passed
+New v4.35.3.1 release-gate/source-health tests: 12 / 12 passed
+Combined targeted v4.35.3 + v4.35.3.1 regression pass: 28 / 28 passed
+Immutable repository manifest: 2,122 entries before final documentation receipt update; rebuilt for final package
+JSON/GeoJSON parsing: 134 files passed
+JavaScript syntax validation: 151 files passed
+WordPress PHP syntax: passed
+Static security scan: 0 findings
+Browser/static release-gate hardening gate: passed
+Promotion shell syntax: passed
+Installer shell syntax: passed
+
+Key assertions:
+- expected release identity/commit remains blocking
+- first-party runtime and application shell remain blocking
+- six-area/35-route structural contract remains blocking
+- deterministic authoritative connector-router readiness remains blocking
+- external authoritative-source health is non-blocking
+- domain /state probes are absent from the current release decision
+- ReliefWeb configuration-required state cannot invalidate deployment
+- no external network requests are required by deterministic release verification

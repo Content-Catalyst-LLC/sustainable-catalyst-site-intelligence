@@ -692,11 +692,25 @@ from .source_methodology_studio import (
     studio_export as build_source_methodology_export,
     SourceMethodologyError,
 )
-from .authoritative_api_audit_v4352 import (
+from .authoritative_api_audit_v4353 import (
     audit_overview as build_authoritative_api_audit,
     audit_catalog as build_authoritative_api_catalog,
     workspace_matrix as build_authoritative_api_workspace_matrix,
     audit_readiness as build_authoritative_api_readiness,
+)
+from .authoritative_connectors_v4353 import (
+    connector_catalog as build_authoritative_connector_catalog,
+    connector_readiness as build_authoritative_connector_readiness,
+    usgs_water_latest as build_usgs_water_latest,
+    noaa_erddap_search as build_noaa_erddap_search,
+    noaa_erddap_tabledap as build_noaa_erddap_tabledap,
+    nasa_exoplanet_planets as build_nasa_exoplanet_planets,
+    unhcr_population as build_unhcr_population,
+    nasa_cmr_collections as build_nasa_cmr_collections,
+)
+from .release_health_v43531 import (
+    deployment_verification as build_deployment_verification_v43531,
+    source_health_policy as build_source_health_policy_v43531,
 )
 from .saved_views import (
     schema_manifest as build_saved_views_schema,
@@ -844,7 +858,7 @@ async def public_experience_headers(request, call_next):
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
-        response.headers["X-SC-Release-Gate"] = "v4.35.2"
+        response.headers["X-SC-Release-Gate"] = "v4.35.3.1"
     elif path == "/app/service-worker.js":
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
@@ -4287,7 +4301,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.35.2 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v4.35.3.1 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -4429,7 +4443,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.35.2 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v4.35.3.1 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -4546,7 +4560,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.35.2 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v4.35.3.1 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -4668,7 +4682,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.35.2 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v4.35.3.1 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -4804,7 +4818,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.35.2 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v4.35.3.1 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -5271,6 +5285,142 @@ def public_authoritative_api_readiness_endpoint(settings: Settings = Depends(get
     if not settings.public_dashboards_enabled:
         raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
     return build_authoritative_api_readiness(settings)
+
+
+@app.get("/public/authoritative-connectors")
+def public_authoritative_connectors_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_authoritative_connector_catalog(settings)
+
+
+@app.get("/public/authoritative-connectors/readiness")
+def public_authoritative_connectors_readiness_endpoint(settings: Settings = Depends(get_settings)):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    return build_authoritative_connector_readiness(settings)
+
+
+@app.get("/public/deployment-verification")
+def public_deployment_verification_v43531_endpoint(settings: Settings = Depends(get_settings)):
+    return build_deployment_verification_v43531(settings)
+
+
+@app.get("/public/source-health-policy")
+def public_source_health_policy_v43531_endpoint(settings: Settings = Depends(get_settings)):
+    return build_source_health_policy_v43531(settings)
+
+
+@app.get("/public/authoritative-connectors/usgs-water/latest")
+@app.get("/public/hydrology/live/usgs-water")
+def public_usgs_water_latest_endpoint(
+    latitude: float = Query(..., ge=-90, le=90),
+    longitude: float = Query(..., ge=-180, le=180),
+    radius_degrees: float = Query(0.10, gt=0, le=5),
+    limit: int = Query(50, ge=1, le=250),
+    parameter_code: str = Query(""),
+    settings: Settings = Depends(get_settings),
+):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    try:
+        return build_usgs_water_latest(settings, latitude=latitude, longitude=longitude, radius_degrees=radius_degrees, limit=limit, parameter_code=parameter_code)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.get("/public/authoritative-connectors/noaa-erddap/search")
+@app.get("/public/ocean-intelligence/erddap/search")
+def public_noaa_erddap_search_endpoint(
+    query: str = Query(..., min_length=1, max_length=160),
+    limit: int = Query(20, ge=1, le=100),
+    settings: Settings = Depends(get_settings),
+):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    try:
+        return build_noaa_erddap_search(settings, query=query, limit=limit)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.get("/public/authoritative-connectors/noaa-erddap/data")
+@app.get("/public/ocean-intelligence/erddap/data")
+def public_noaa_erddap_data_endpoint(
+    dataset_id: str = Query(..., min_length=1, max_length=128),
+    variables: str = Query(..., min_length=1, max_length=500),
+    constraint: list[str] = Query(default=[]),
+    settings: Settings = Depends(get_settings),
+):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    try:
+        fields = [item.strip() for item in variables.split(",") if item.strip()]
+        return build_noaa_erddap_tabledap(settings, dataset_id=dataset_id, variables=fields, constraints=constraint)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.get("/public/authoritative-connectors/nasa-exoplanets")
+@app.get("/public/exoplanet-habitability/live")
+def public_nasa_exoplanet_connector_endpoint(
+    target: str = Query("", max_length=120),
+    limit: int = Query(25, ge=1, le=200),
+    settings: Settings = Depends(get_settings),
+):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    try:
+        return build_nasa_exoplanet_planets(settings, target=target, limit=limit)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.get("/public/authoritative-connectors/unhcr-population")
+@app.get("/public/humanitarian-intelligence/displacement/live")
+def public_unhcr_population_connector_endpoint(
+    year: int | None = Query(None, ge=1951, le=2200),
+    origin: str = Query("", max_length=3),
+    asylum: str = Query("", max_length=3),
+    limit: int = Query(100, ge=1, le=200),
+    settings: Settings = Depends(get_settings),
+):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    try:
+        return build_unhcr_population(settings, year=year, origin=origin, asylum=asylum, limit=limit)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+
+@app.get("/public/authoritative-connectors/nasa-cmr/collections")
+@app.get("/public/science-discovery/nasa-cmr")
+def public_nasa_cmr_connector_endpoint(
+    query: str = Query(..., min_length=1, max_length=160),
+    limit: int = Query(20, ge=1, le=200),
+    provider: str = Query("", max_length=80),
+    temporal: str = Query("", max_length=120),
+    bounding_box: str = Query("", max_length=100),
+    settings: Settings = Depends(get_settings),
+):
+    if not settings.public_dashboards_enabled:
+        raise HTTPException(status_code=403, detail="Public dashboards are disabled.")
+    try:
+        return build_nasa_cmr_collections(settings, query=query, limit=limit, provider=provider, temporal=temporal, bounding_box=bounding_box)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
 
 
 @app.get("/public/sources")
@@ -8246,7 +8396,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v4.35.2 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v4.35.3.1 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -8480,7 +8630,7 @@ def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     return build_reliability(settings)
 
 
-# Site Intelligence v4.35.2 — Open Standards, Federation, and Institutional Data Exchange.
+# Site Intelligence v4.35.3.1 — Open Standards, Federation, and Institutional Data Exchange.
 def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
     if not settings.federation_exchange_enabled:
         raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
@@ -8570,7 +8720,7 @@ def admin_federation_accept_import_endpoint(request: dict = Body(default={}), se
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.35.2 — Security, Privacy, Governance, and Production Scale.
+# Site Intelligence v4.35.3.1 — Security, Privacy, Governance, and Production Scale.
 def _production_governance(settings: Settings) -> ProductionGovernanceCenter:
     if not settings.production_governance_enabled:
         raise HTTPException(status_code=503, detail="Production governance is disabled.")
@@ -8719,7 +8869,7 @@ def admin_production_governance_deployment_endpoint(request: dict = Body(default
 def admin_production_governance_load_probe_endpoint(requests: int = Query(default=250, ge=1, le=5000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return _production_governance(settings).load_probe(requests)
 
-# Site Intelligence v4.35.2 — Connected Live Intelligence Surface.
+# Site Intelligence v4.35.3.1 — Connected Live Intelligence Surface.
 def _connected_platform(settings: Settings) -> ConnectedPublicIntelligencePlatform:
     if not settings.connected_platform_enabled:
         raise HTTPException(status_code=404, detail="Connected platform is disabled.")

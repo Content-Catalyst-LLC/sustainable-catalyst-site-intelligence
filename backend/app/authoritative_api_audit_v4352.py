@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Site Intelligence v4.35.2 authoritative API/workspace integrity audit.
+"""Site Intelligence v4.35.3.1 authoritative API/workspace integrity audit.
 
 This module is deliberately evidence-conservative.  It distinguishes source
 registrations from implemented retrieval clients and never promotes a portal or
