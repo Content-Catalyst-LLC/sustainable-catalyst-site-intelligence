@@ -1,0 +1,40 @@
+Site Intelligence v4.35.10 — Authoritative Connector Expansion IV
+Build validation summary
+
+Deterministic pytest suite: 1501 / 1501 passed.
+Expansion IV targeted tests: 14 / 14 passed.
+Cross-release connector/reliability compatibility sweep: 112 / 112 passed.
+Release contract: PASS.
+Browser/static Expansion IV gate: PASS.
+WordPress version/release identity: PASS.
+Promotion gate: first-party identity/runtime/router/evidence checks only; external API health non-blocking.
+
+Production machine-readable audit:
+- registrations: 105
+- LIVE: 41
+- DISCOVERY: 6
+- AUTH_REQUIRED: 11
+- REGISTERED not retrieved: 43
+- BULK: 4
+- STALE: 0
+
+Public connector catalog:
+- total interfaces: 25
+- LIVE: 21
+- DISCOVERY: 2
+- AUTH_REQUIRED: 2
+
+Expansion IV connectors:
+- FAOSTAT Data API
+- ILOSTAT SDMX / indicator service
+- OECD Data Explorer SDMX API
+- EPA Facility Registry Service API
+- USGS Volcano Hazards Program HANS
+
+Integrity boundaries:
+- missing upstream values remain missing
+- bounded requests only
+- statistical series retain source dimensions/units/periods
+- facility registry identity is not a violation/exposure conclusion
+- volcano notices remain USGS-authored alert statements
+- deterministic readiness makes no upstream network calls

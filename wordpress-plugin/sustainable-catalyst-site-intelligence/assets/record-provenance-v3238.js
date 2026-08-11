@@ -1,6 +1,6 @@
 (()=>{
   'use strict';
-  const VERSION='4.35.9';
+  const VERSION='4.35.10';
   const root=document.querySelector('#app')||document.body;
   let panel=null,body=null,previousFocus=null,currentRecord=null;
   const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));

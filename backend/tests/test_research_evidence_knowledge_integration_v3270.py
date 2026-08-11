@@ -49,7 +49,7 @@ def sample():
 
 def test_schema_requires_human_confirmation_and_no_automatic_delivery():
     payload = CLIENT.get("/public/research-integration").json()
-    assert payload["version"] == "4.35.9"
+    assert payload["version"] == "4.35.10"
     assert payload["contract"] == "research-evidence-and-knowledge-integration"
     assert payload["human_confirmation_required"] is True
     assert payload["automatic_delivery"] is False

@@ -1,4 +1,4 @@
-"""Global Data Truth Control Plane for Site Intelligence v4.35.9.
+"""Global Data Truth Control Plane for Site Intelligence v4.35.10.
 
 The control plane composes existing source, country, and record truth contracts into a
 public-safe operational view. It does not invent source history, perform network

@@ -6,7 +6,7 @@ client = TestClient(app)
 
 def test_exoplanet_overview_catalog_and_sources():
     o=client.get('/public/exoplanet-habitability').json(); c=client.get('/public/exoplanet-habitability/catalog').json()
-    assert o['ok'] and o['version']=='4.35.9' and o['route']=='earth' and o['source_count']==4
+    assert o['ok'] and o['version']=='4.35.10' and o['route']=='earth' and o['source_count']==4
     ids={x['id'] for x in c['sources']}
     assert {'nasa-exoplanet-archive-systems','nasa-exoplanet-archive-atmospheres','exo-mast','mast-jwst-spectraldb'} <= ids
     assert c['truth_boundaries']['habitable_zone_equals_habitable'] is False

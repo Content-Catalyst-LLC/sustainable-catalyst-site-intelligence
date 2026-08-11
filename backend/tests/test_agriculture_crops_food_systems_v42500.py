@@ -4,7 +4,7 @@ from app.agriculture_food_systems_v42500 import normalize_measurement,normalize_
 client=TestClient(app)
 def test_overview_catalog():
  o=client.get('/public/agriculture-food').json(); c=client.get('/public/agriculture-food/catalog').json()
- assert o['ok'] and o['version']=='4.35.9' and o['source_count']==4
+ assert o['ok'] and o['version']=='4.35.10' and o['source_count']==4
  assert {'faostat','usda-nass-quick-stats','usda-crop-casma','geoglam-crop-monitor'} <= {x['id'] for x in c['sources']}
  assert c['truth_boundaries']['crop_monitor_condition_equals_platform_forecast'] is False
 def test_empty_state_no_absence_or_forecast_claim():
