@@ -1,4 +1,4 @@
-"""Resume-safe release gate and deployment identity for v4.35.11."""
+"""Resume-safe release gate and deployment identity for v4.35.12."""
 
 from __future__ import annotations
 

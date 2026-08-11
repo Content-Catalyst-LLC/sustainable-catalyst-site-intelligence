@@ -693,7 +693,7 @@ from .source_methodology_studio import (
     studio_export as build_source_methodology_export,
     SourceMethodologyError,
 )
-from .authoritative_api_production_audit_v43511 import (
+from .authoritative_api_production_audit_v43512 import (
     audit_overview as build_authoritative_api_audit,
     audit_catalog as build_authoritative_api_catalog,
     workspace_matrix as build_authoritative_api_workspace_matrix,
@@ -702,7 +702,7 @@ from .authoritative_api_production_audit_v43511 import (
     closure_ledger as build_authoritative_api_closure_ledger,
     production_readiness as build_authoritative_api_production_readiness,
 )
-from .authoritative_connectors_v43511 import (
+from .authoritative_connectors_v43512 import (
     connector_catalog as build_authoritative_connector_catalog,
     connector_readiness as build_authoritative_connector_readiness,
     usgs_water_latest as build_usgs_water_latest,
@@ -739,6 +739,9 @@ from .authoritative_connectors_v43511 import (
     osm_telecom as build_osm_telecom,
     mlab_locate as build_mlab_locate,
     fcc_bdc_asofs as build_fcc_bdc_asofs,
+    airnow_current as build_airnow_current_v43512,
+    era5_catalogue as build_era5_catalogue_v43512,
+    cams_catalogue as build_cams_catalogue_v43512,
 )
 from .evidence_intelligence_v4357 import (
     overview as build_evidence_intelligence_overview,
@@ -900,7 +903,7 @@ async def public_experience_headers(request, call_next):
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
-        response.headers["X-SC-Release-Gate"] = "v4.35.11"
+        response.headers["X-SC-Release-Gate"] = "v4.35.12"
     elif path == "/app/service-worker.js":
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
@@ -4369,7 +4372,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.35.11 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v4.35.12 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -4511,7 +4514,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.35.11 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v4.35.12 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -4628,7 +4631,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.35.11 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v4.35.12 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -4750,7 +4753,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.35.11 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v4.35.12 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -4886,7 +4889,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.35.11 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v4.35.12 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -5964,6 +5967,27 @@ def public_digital_mlab(settings: Settings=Depends(get_settings)):
 @app.get("/public/digital-connectivity/discovery/fcc-bdc")
 def public_digital_fcc_bdc(settings: Settings=Depends(get_settings)):
     try: return build_fcc_bdc_asofs(settings)
+    except RuntimeError as exc: raise HTTPException(status_code=502,detail=str(exc)) from exc
+
+@app.get("/public/authoritative-connectors/airnow/current")
+@app.get("/public/atmosphere/live/airnow")
+def public_atmosphere_airnow_current(latitude: float=Query(...,ge=-90,le=90), longitude: float=Query(...,ge=-180,le=180), distance_miles: int=Query(25,ge=1,le=250), settings: Settings=Depends(get_settings)):
+    try: return build_airnow_current_v43512(settings,latitude=latitude,longitude=longitude,distance_miles=distance_miles)
+    except ValueError as exc: raise HTTPException(status_code=400,detail=str(exc)) from exc
+    except RuntimeError as exc: raise HTTPException(status_code=502,detail=str(exc)) from exc
+
+@app.get("/public/authoritative-connectors/copernicus-era5/catalogue")
+@app.get("/public/climate/discovery/era5")
+def public_climate_era5_catalogue(collection_id: str=Query("reanalysis-era5-single-levels",max_length=120), settings: Settings=Depends(get_settings)):
+    try: return build_era5_catalogue_v43512(settings,collection_id=collection_id)
+    except ValueError as exc: raise HTTPException(status_code=400,detail=str(exc)) from exc
+    except RuntimeError as exc: raise HTTPException(status_code=502,detail=str(exc)) from exc
+
+@app.get("/public/authoritative-connectors/cams/catalogue")
+@app.get("/public/atmosphere/discovery/cams")
+def public_atmosphere_cams_catalogue(collection_id: str=Query("cams-global-atmospheric-composition-forecasts",max_length=120), settings: Settings=Depends(get_settings)):
+    try: return build_cams_catalogue_v43512(settings,collection_id=collection_id)
+    except ValueError as exc: raise HTTPException(status_code=400,detail=str(exc)) from exc
     except RuntimeError as exc: raise HTTPException(status_code=502,detail=str(exc)) from exc
 
 
@@ -8940,7 +8964,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v4.35.11 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v4.35.12 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -9174,7 +9198,7 @@ def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     return build_reliability(settings)
 
 
-# Site Intelligence v4.35.11 — Open Standards, Federation, and Institutional Data Exchange.
+# Site Intelligence v4.35.12 — Open Standards, Federation, and Institutional Data Exchange.
 def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
     if not settings.federation_exchange_enabled:
         raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
@@ -9264,7 +9288,7 @@ def admin_federation_accept_import_endpoint(request: dict = Body(default={}), se
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.35.11 — Security, Privacy, Governance, and Production Scale.
+# Site Intelligence v4.35.12 — Security, Privacy, Governance, and Production Scale.
 def _production_governance(settings: Settings) -> ProductionGovernanceCenter:
     if not settings.production_governance_enabled:
         raise HTTPException(status_code=503, detail="Production governance is disabled.")
@@ -9413,7 +9437,7 @@ def admin_production_governance_deployment_endpoint(request: dict = Body(default
 def admin_production_governance_load_probe_endpoint(requests: int = Query(default=250, ge=1, le=5000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return _production_governance(settings).load_probe(requests)
 
-# Site Intelligence v4.35.11 — Connected Live Intelligence Surface.
+# Site Intelligence v4.35.12 — Connected Live Intelligence Surface.
 def _connected_platform(settings: Settings) -> ConnectedPublicIntelligencePlatform:
     if not settings.connected_platform_enabled:
         raise HTTPException(status_code=404, detail="Connected platform is disabled.")

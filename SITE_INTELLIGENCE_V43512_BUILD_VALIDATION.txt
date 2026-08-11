@@ -1,0 +1,42 @@
+Site Intelligence v4.35.12 — High-Priority Workspace Connector Closure II: Climate & Atmosphere
+
+FINAL STATUS: PASS
+
+Deterministic tests
+- Collected: 1,527
+- Passed: 1,527
+- Failed: 0
+- Frozen-tree reconciliation: 408 + 332 + 351 + 356 + 80 = 1,527
+- The combined verifier execution window ended during chunk 3; chunks 3-5 were completed separately against the same frozen source tree.
+
+Release-specific validation
+- v4.35.12 closure regressions: 12/12 passed
+- Connector/reliability compatibility suite: 126/126 passed
+- Release contract: PASS
+- Climate/Atmosphere browser/static gate: PASS
+
+Static / syntax / security
+- JSON/GeoJSON parsed: 134
+- JavaScript syntax validated: 151 files
+- WordPress PHP syntax: PASS
+- Static security findings: 0
+
+Production audit
+- Machine-readable registrations: 106
+- LIVE: 43
+- DISCOVERY: 10
+- AUTH_REQUIRED: 14
+- REGISTERED/not retrieved: 35
+- BULK: 4
+- STALE: 0
+- Implemented/discovery/configuration-gated: 67
+- Climate REGISTERED backlog: 0
+- Atmosphere REGISTERED backlog: 0
+- Public connector catalogue: 35 total / 23 LIVE / 6 DISCOVERY / 6 AUTH_REQUIRED
+
+Deployment policy
+- First-party release integrity is blocking.
+- External upstream/source health is non-blocking.
+- Readiness does not perform live upstream probes.
+
+Final packaging verification is performed after manifest restamping and is reported by the release-bundle SHA256SUMS plus installer bundle-only verification.

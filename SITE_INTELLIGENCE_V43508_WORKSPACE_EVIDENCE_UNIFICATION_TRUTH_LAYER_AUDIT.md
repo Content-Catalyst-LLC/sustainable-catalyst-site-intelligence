@@ -1,12 +1,12 @@
-# v4.35.11 Workspace Evidence Unification & Truth-Layer Audit
+# v4.35.12 Workspace Evidence Unification & Truth-Layer Audit
 
 ## Problem repaired
 
-Before v4.35.11, the public country workspace and Record Truth could follow different indicator evidence paths. The country workspace used `live_country_intelligence.country_indicators()`, which could display a live/cached World Bank observation. Record Truth used `GlobalCountryDataTruth.country_indicators()`, which primarily represented packaged fallback coverage. For a country such as Palestine this allowed the visible card to show a real source observation while Truth could simultaneously report the same indicator as missing.
+Before v4.35.12, the public country workspace and Record Truth could follow different indicator evidence paths. The country workspace used `live_country_intelligence.country_indicators()`, which could display a live/cached World Bank observation. Record Truth used `GlobalCountryDataTruth.country_indicators()`, which primarily represented packaged fallback coverage. For a country such as Palestine this allowed the visible card to show a real source observation while Truth could simultaneously report the same indicator as missing.
 
 ## Canonical observation contract
 
-v4.35.11 introduces `sc-site-intelligence-canonical-observation/1.0`. Each country-indicator observation retains:
+v4.35.12 introduces `sc-site-intelligence-canonical-observation/1.0`. Each country-indicator observation retains:
 
 - canonical observation identifier;
 - country and indicator identity;

@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 def test_experience_profile_declares_target_without_claiming_certification():
     payload = experience_profile()
-    assert payload["application_version"] == "4.35.11"
+    assert payload["application_version"] == "4.35.12"
     assert "target" in ACCESSIBILITY_TARGET.lower()
     assert "certification" in ACCESSIBILITY_TARGET.lower()
     assert payload["privacy"]["telemetry_added"] is False
@@ -47,7 +47,7 @@ def test_public_experience_endpoints():
     checklist = client.get("/public/experience-profile/checklist")
     diagnostics = client.get("/public/experience-profile/diagnostics")
     assert profile.status_code == checklist.status_code == diagnostics.status_code == 200
-    assert profile.json()["application_version"] == "4.35.11"
+    assert profile.json()["application_version"] == "4.35.12"
     assert diagnostics.json()["ok"] is True
 
 
@@ -84,9 +84,9 @@ def test_public_html_has_navigation_and_live_region_contracts():
 
 def test_public_html_defers_scripts_and_does_not_eager_load_capture_library():
     html = (ROOT / "backend/public_app/index.html").read_text(encoding="utf-8")
-    assert 'src="/app/assets/app.js?v=4.35.11" defer' in html
-    assert 'src="/app/assets/vector-cartography-v3230.js?v=4.35.11" defer' in html
-    assert html.index('src="/app/assets/vector-cartography-v3230.js?v=4.35.11" defer') < html.index('src="/app/assets/app.js?v=4.35.11" defer')
+    assert 'src="/app/assets/app.js?v=4.35.12" defer' in html
+    assert 'src="/app/assets/vector-cartography-v3230.js?v=4.35.12" defer' in html
+    assert html.index('src="/app/assets/vector-cartography-v3230.js?v=4.35.12" defer') < html.index('src="/app/assets/app.js?v=4.35.12" defer')
     assert "unpkg.com/leaflet" not in html
     assert 'leaflet.js" defer' not in html
     assert "html2canvas.min.js" not in html
@@ -140,8 +140,8 @@ def test_css_has_reduced_motion_and_forced_color_modes():
 
 def test_wordpress_embed_contract_is_lazy_and_origin_checked():
     php = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text(encoding="utf-8")
-    assert "Version: 4.35.11" in php
-    assert "const VERSION = '4.35.11';" in php
+    assert "Version: 4.35.12" in php
+    assert "const VERSION = '4.35.12';" in php
     assert 'loading="lazy"' in php
     assert 'allow="fullscreen; clipboard-write"' in php
     js = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js").read_text(encoding="utf-8")
@@ -160,5 +160,5 @@ def test_source_methodology_registry_documents_experience_delivery():
 def test_application_version_is_aligned_across_frontend_and_backend():
     js = (ROOT / "backend/public_app/assets/app.js").read_text(encoding="utf-8")
     version = (ROOT / "backend/app/version.py").read_text(encoding="utf-8")
-    assert 'APP_VERSION="4.35.11"' in js
-    assert 'APP_VERSION = "4.35.11"' in version
+    assert 'APP_VERSION="4.35.12"' in js
+    assert 'APP_VERSION = "4.35.12"' in version

@@ -1,4 +1,4 @@
-# Site Intelligence v4.35.11 — Authoritative Connector Expansion IV Audit
+# Site Intelligence v4.35.12 — Authoritative Connector Expansion IV Audit
 
 ## Purpose
 Continue closing the production connector backlog using first-party governmental and intergovernmental machine interfaces without weakening source semantics, provenance, missing-value handling, or deployment reliability.

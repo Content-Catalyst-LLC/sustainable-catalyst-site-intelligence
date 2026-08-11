@@ -9,7 +9,7 @@ from app.main import app
 from app.version import APP_VERSION
 from app.workspace_evidence_unification_v4358 import canonicalize_country_indicator, overview, readiness
 from app.release_health_v43531 import deployment_verification, source_health_policy
-assert APP_VERSION=='4.35.11'
+assert APP_VERSION=='4.35.12'
 settings=Settings(_env_file=None, reliefweb_appname='', nasa_firms_map_key='', usda_nass_api_key='')
 assert overview()['contract']=='workspace-evidence-unification-truth-layer'
 assert readiness()['ok'] is True and readiness()['network_calls_performed'] is False
@@ -40,4 +40,4 @@ assert 'data-canonical-observation' in app_js and 'data-record-truth-indicator' 
 assert 'Canonical observation' in truth_js and 'Canonical SHA-256' in truth_js
 promotion=(ROOT/'promote_site_intelligence_v4_35_8_to_github_and_render_macos.sh').read_text()
 assert 'Deep gate:' not in promotion and '/public/workspace-evidence/readiness' in promotion
-print('PASS: v4.35.11 workspace evidence unification & truth-layer repair release contract')
+print('PASS: v4.35.12 workspace evidence unification & truth-layer repair release contract')

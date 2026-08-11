@@ -17,7 +17,7 @@ def settings(**updates):
 
 
 def test_release_version_and_readiness():
-    assert APP_VERSION == "4.35.11"
+    assert APP_VERSION == "4.35.12"
     assert overview()["critical_boundary"].startswith("Electricity access")
     assert readiness()["ok"] is True
     assert readiness()["network_calls_performed"] is False

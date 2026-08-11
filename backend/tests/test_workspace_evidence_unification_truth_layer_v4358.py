@@ -31,7 +31,7 @@ def _indicator(value=100.0, year=2024, state="live"):
 
 
 def _payload(value=100.0, year=2024, state="live"):
-    return {"ok":True,"version":"4.35.11","country":_country(),"data_state":state,"indicators":[_indicator(value,year,state)]}
+    return {"ok":True,"version":"4.35.12","country":_country(),"data_state":state,"indicators":[_indicator(value,year,state)]}
 
 
 def test_canonical_observation_preserves_value_semantics_and_fingerprint():

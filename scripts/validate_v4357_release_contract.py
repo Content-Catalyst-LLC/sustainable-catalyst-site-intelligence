@@ -11,7 +11,7 @@ from app.evidence_intelligence_v4357 import overview, metric_catalog, precedence
 from app.authoritative_api_audit_v4357 import audit_overview, audit_readiness
 from app.authoritative_connectors_v4356 import connector_catalog
 from app.release_health_v43531 import deployment_verification, source_health_policy
-assert APP_VERSION=='4.35.11'
+assert APP_VERSION=='4.35.12'
 settings=Settings(_env_file=None, reliefweb_appname='', nasa_firms_map_key='', usda_nass_api_key='')
 assert overview()['metric_concept_count'] >= 9
 assert readiness()['ok'] is True and readiness()['network_calls_performed'] is False
@@ -37,4 +37,4 @@ body=record.json(); assert body['semantics']['concept_id']=='electricity_structu
 main=(ROOT/'backend/app/main.py').read_text(); assert 'authoritative_api_audit_v4357' in main and 'record_provenance_v4357' in main
 for endpoint in ('/public/evidence-intelligence','/public/evidence-intelligence/select','/public/evidence-intelligence/readiness'): assert endpoint in main
 promotion=(ROOT/'promote_site_intelligence_v4_35_7_to_github_and_render_macos.sh').read_text(); assert 'Deep gate:' not in promotion and '/public/deployment-verification' in promotion and '/public/source-health-policy' in promotion
-print('PASS: v4.35.11 source precedence, metric semantics & freshness intelligence release contract')
+print('PASS: v4.35.12 source precedence, metric semantics & freshness intelligence release contract')
