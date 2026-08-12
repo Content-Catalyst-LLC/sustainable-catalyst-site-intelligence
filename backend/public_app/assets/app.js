@@ -25,7 +25,7 @@
     }
     throw last;
   }
-  const APP_VERSION="4.35.18";
+  const APP_VERSION="4.35.19";
   const FIXED_WORDPRESS_EMBED=window.SCSI_FIXED_WORDPRESS_EMBED===true;
   let heightFrame=0;
   function documentHeight(){
@@ -593,9 +593,9 @@
       qs("#countryIdentityCode").textContent=country.code;
       qs("#countryIdentityRegion").textContent=(country.region||"Region unavailable").toUpperCase();
       qs("#countryIdentityName").textContent=country.name;
-      qs("#countryIdentityMeta").textContent=`Capital: ${country.capital||"Unavailable"}${country.income_level?` · ${country.income_level}`:""} · ${overview.data_state||"unknown state"}`;
+      qs("#countryIdentityMeta").textContent=`Capital: ${country.capital||"Unavailable"}${country.income_level?` · ${country.income_level}`:""} · ${overview.evidence_summary||"period-specific public evidence"}`;
       const highlights=overview.highlights||[];
-      qs("#globalCountryMetrics").innerHTML=highlights.length?highlights.map(item=>`<article class="country-indicator"><span class="country-indicator-label">${escapeHtml(item.label)}</span><strong class="country-indicator-value">${escapeHtml(formatCountryValue(item.value,item.format,item.unit))}</strong><div class="country-indicator-meta">${escapeHtml(item.unit)} · ${escapeHtml(item.year)}</div><span class="country-indicator-source">${item.source_url?`<a href="${escapeHtml(item.source_url)}" target="_blank" rel="noopener">${escapeHtml(item.source)} ↗</a>`:escapeHtml(item.source)} · ${escapeHtml(item.data_state)}</span><button type="button" class="ghost-button scsi-record-truth-button" data-record-truth-indicator="${escapeHtml(item.id)}" data-record-truth-country="${escapeHtml(normalized)}">Truth</button></article>`).join(""):'<div class="empty-state"><div><strong>No validated indicators</strong><span>No validated public value is currently available for this country.</span></div></div>';
+      qs("#globalCountryMetrics").innerHTML=highlights.length?highlights.map(item=>`<article class="country-indicator"><span class="country-indicator-label">${escapeHtml(item.label)}</span><strong class="country-indicator-value">${escapeHtml(formatCountryValue(item.value,item.format,item.unit))}</strong><div class="country-indicator-meta">${escapeHtml(item.unit)} · ${escapeHtml(item.year)}</div><span class="country-indicator-source">${item.source_url?`<a href="${escapeHtml(item.source_url)}" target="_blank" rel="noopener">${escapeHtml(item.source)} ↗</a>`:escapeHtml(item.source)} · ${escapeHtml(item.evidence_label||item.data_state)}</span><button type="button" class="ghost-button scsi-record-truth-button" data-record-truth-indicator="${escapeHtml(item.id)}" data-record-truth-country="${escapeHtml(normalized)}">Truth</button></article>`).join(""):'<div class="empty-state"><div><strong>No validated indicators</strong><span>No validated public value is currently available for this country.</span></div></div>';
       globalCountryState.trends=trends.trends||[];
       qs("#globalTrendSelect").innerHTML=globalCountryState.trends.map(item=>`<option value="${escapeHtml(item.key)}">${escapeHtml(item.label)}</option>`).join("");
       if(globalCountryState.trends.length){qs("#globalTrendTitle").textContent=globalCountryState.trends[0].label;renderGlobalTrend(globalCountryState.trends[0])}else{qs("#globalTrendTitle").textContent="Trend unavailable";renderGlobalTrend(null)}
@@ -1254,6 +1254,15 @@
     qs("#externalResilienceStatus").textContent=data?.ok===true?"Resilience control plane ready · upstream health is non-blocking for deployment.":"Resilience diagnostics unavailable.";
   }
 
+  function renderProductionSoak(data){
+    const flap=(data?.scenarios||[]).find(item=>item.id==="24-cycle-provider-flapping");
+    qs("#productionSoakScenarioMetric").textContent=data?.scenario_count!=null?`${data.passed_scenario_count||0} / ${data.scenario_count}`:"—";
+    qs("#productionSoakFlapMetric").textContent=flap?.cycles??24;
+    qs("#productionSoakSemanticMetric").textContent=data?.checks?.semantic_truth_guard_ready===true?"Strict":"Review";
+    qs("#productionSoakBlockingMetric").textContent=data?.upstream_health_release_blocking===false?"No":"Review";
+    qs("#productionSoakStatus").textContent=data?.ok===true?"Production soak ready · 8 deterministic failure/recovery scenarios pass · real-provider health remains non-blocking.":"Production soak requires review.";
+  }
+
   function renderWorkspaceBrowserAudit(data){
     const checks=data?.checks||{};
     qs("#workspaceAuditRouteMetric").textContent=data?.route_count??"—";
@@ -1286,19 +1295,20 @@
     qs("#sourceStudio").setAttribute("aria-busy","true");qs("#sourceStatus").textContent="Loading public source and methodology records…";qs("#sourceRegistryList").innerHTML='<div class="loading-block">Loading source records…</div>';
     const params=sourceFilterParams();
     try{
-      const [sourcesResult,methodsResult,auditResult,evidenceResult,credentialResult,resilienceResult,workspaceAuditResult]=await Promise.allSettled([
+      const [sourcesResult,methodsResult,auditResult,evidenceResult,credentialResult,resilienceResult,soakResult,workspaceAuditResult]=await Promise.allSettled([
         apiWithRetry(`/public/sources?${params.toString()}`,2,{signal:controller.signal,timeout:18000}),
         apiWithRetry("/public/methodology",2,{signal:controller.signal,timeout:12000}),
         apiWithRetry("/public/authoritative-apis",1,{signal:controller.signal,timeout:18000}),
         apiWithRetry("/public/evidence-intelligence",1,{signal:controller.signal,timeout:12000}),
         apiWithRetry("/public/credential-configuration",1,{signal:controller.signal,timeout:12000}),
         apiWithRetry("/public/external-resilience",1,{signal:controller.signal,timeout:12000}),
+        apiWithRetry("/public/production-soak",1,{signal:controller.signal,timeout:12000}),
         apiWithRetry("/public/workspace-browser-audit/readiness",1,{signal:controller.signal,timeout:12000})
       ]);
       if(controller.signal.aborted||sequence!==sourceStudioState.sequence)return;
       if(sourcesResult.status!=="fulfilled")throw sourcesResult.reason;
       sourceStudioState.data=sourcesResult.value;sourceStudioState.methods=methodsResult.status==="fulfilled"?methodsResult.value:{methods:[],total_registered:0};sourceStudioState.diagnostics=null;sourceStudioState.audit=auditResult.status==="fulfilled"?auditResult.value:null;
-      populateSourceFilters(sourceStudioState.data);renderMethodology(sourceStudioState.methods);renderAuthoritativeApiAudit(sourceStudioState.audit||{summary:{counts:{}},completed_connector_targets:[],priority_connector_targets:[]});renderEvidenceIntelligence(evidenceResult.status==="fulfilled"?evidenceResult.value:{});renderCredentialConfiguration(credentialResult.status==="fulfilled"?credentialResult.value:{});renderExternalResilience(resilienceResult.status==="fulfilled"?resilienceResult.value:{});renderWorkspaceBrowserAudit(workspaceAuditResult.status==="fulfilled"?workspaceAuditResult.value:{});qs("#sourceIssueMetric").textContent="…";
+      populateSourceFilters(sourceStudioState.data);renderMethodology(sourceStudioState.methods);renderAuthoritativeApiAudit(sourceStudioState.audit||{summary:{counts:{}},completed_connector_targets:[],priority_connector_targets:[]});renderEvidenceIntelligence(evidenceResult.status==="fulfilled"?evidenceResult.value:{});renderCredentialConfiguration(credentialResult.status==="fulfilled"?credentialResult.value:{});renderExternalResilience(resilienceResult.status==="fulfilled"?resilienceResult.value:{});renderProductionSoak(soakResult.status==="fulfilled"?soakResult.value:{});renderWorkspaceBrowserAudit(workspaceAuditResult.status==="fulfilled"?workspaceAuditResult.value:{});qs("#sourceIssueMetric").textContent="…";
       const requested=new URLSearchParams(location.search).get("source");const first=sourceStudioState.data.sources?.[0]?.id;const requestedAvailable=(sourceStudioState.data.sources||[]).some(item=>item.id===requested);sourceStudioState.activeSource=requestedAvailable?requested:first||null;if(requested&&!requestedAvailable)toast("Requested source record is unavailable; showing an available source instead.");renderSourceRegistry(sourceStudioState.data);renderSourceDetail((sourceStudioState.data.sources||[]).find(item=>item.id===sourceStudioState.activeSource));
       qs("#sourceStatus").textContent=`${sourceStudioState.data.count} matching sources · ${sourceStudioState.methods.total_registered||0} documented methods · checking connector diagnostics…`;
       if(pushState)syncSourceUrl();reportHeight();void refreshSourceDiagnostics(sequence,controller);
@@ -1528,7 +1538,7 @@
   }
   function closeAuditablePublicObservatory(){const panel=qs("#auditablePublicObservatory");if(panel)panel.hidden=true;const button=qs("#saveViewButton");if(button)button.disabled=false}
 
-  // registered route recovery is enforced after every route transition by v4.35.18.
+  // registered route recovery is enforced after every route transition by v4.35.19.
   async function setRoute(route){
     qs("#main").classList.remove("route-enter");void qs("#main").offsetWidth;qs("#main").classList.add("route-enter");
     state.route=route;
@@ -1880,7 +1890,7 @@
     hydration.then(results=>{const failed=results.filter(result=>result.status==="rejected");const status=qs("#statusText");if(failed.length){console.warn("[Site Intelligence] Startup hydration completed with limited services.",failed.map(result=>result.reason));if(status)status.textContent="Partial public data";toast("Some optional public data is temporarily unavailable.")}else if(status)status.textContent="Live public data";window.dispatchEvent(new CustomEvent("scsi:startup-hydrated",{detail:{version:APP_VERSION,state:failed.length?"limited":"ready",failed:failed.length}}));reportHeight()});
   }
   window.SCSIOverviewMapV3232={version:APP_VERSION,getMap:()=>state.map,getEvents:()=>state.events?.features||[],getFilteredEvents:()=>state.filteredEvents.slice(),getFilters:()=>({...state.overviewFilters}),setFilters:setOverviewFilters,selectEvent:selectOverviewEvent,fitResults:fitOverviewResults,setImageryOpacity:value=>state.imagery?.setOpacity?.(Math.max(0,Math.min(1,Number(value)))),setBaseStyle:style=>{const map=qs("#map");if(map)map.dataset.mapStyle=String(style||"institutional-dark");syncOverviewMapUrl()},syncUrl:syncOverviewMapUrl,render:renderOverviewFeatures};
-  window.SCSIRouterV3228={version:"4.35.18",navigate:navigateToRoute,current:()=>state.route};
+  window.SCSIRouterV3228={version:"4.35.19",navigate:navigateToRoute,current:()=>state.route};
   if(!FIXED_WORDPRESS_EMBED){
     window.addEventListener("load",reportHeight,{once:true});
     window.addEventListener("resize",reportHeight,{passive:true});
@@ -1906,5 +1916,5 @@ visualStyle.textContent=`
 document.head.appendChild(visualStyle);
 
 
-/* v4.35.18 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v4.35.18 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v4.35.19 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v4.35.19 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

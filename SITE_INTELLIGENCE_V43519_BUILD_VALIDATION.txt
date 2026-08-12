@@ -1,0 +1,67 @@
+Site Intelligence v4.35.19 — Build Validation
+============================================================
+Release: Live-Operation Stress, Semantic Truth & Recovery Integrity
+
+Deterministic pytest suite:
+  PASS — 1,617 / 1,617 tests
+  Chunk reconciliation: 373 + 353 + 263 + 291 + 337 = 1,617
+  Test files: 247
+
+v4.35.19 targeted fault-injection / semantic layer:
+  PASS — 14 / 14 tests
+  Eight soak scenarios: 8 / 8
+  Provider flapping: 24 cycles
+  429 Retry-After: PASS
+  503 bounded recovery: PASS
+  Explicit stale fallback: PASS
+  Circuit open/recovery: PASS
+  Missing-credential degradation: PASS
+  Network calls performed by release-readiness soak: false
+  Live-provider operator soak release blocking: false
+
+Workspace browser audit:
+  Registered routes: 35
+  Primary areas: 6
+  Desktop: 35 / 35 ready, 0 degraded
+  Mobile: 35 / 35 ready, 0 degraded
+  Iframe: 35 / 35 ready, 0 degraded
+  External provider health release blocking: false
+
+Semantic truth controls:
+  Transport freshness separated from evidence class: PASS
+  World Bank annual country observation => HARMONIZED BENCHMARK: PASS
+  Structural electricity cannot imply current supply: PASS
+  Structural drinking-water access cannot imply current service: PASS
+  Palestine PCBS source precedence exposed: PASS
+  World Bank retained as comparison/fallback: PASS
+  Canonical workspace evidence / Truth readiness: PASS
+
+Connector/evidence continuity:
+  Public connector interfaces: 50
+  Machine-readable source registrations: 112
+  LIVE registrations: 51
+  DISCOVERY registrations: 15
+  AUTH_REQUIRED registrations: 17
+  REGISTERED not retrieved: 27
+  BULK: 2
+  STALE: 0
+
+Performance/static gates:
+  Application HTML: 171,978 bytes / 172,000-byte budget — PASS
+  JSON/GeoJSON parse: PASS — 134 files
+  JavaScript syntax: PASS — 152 files
+  WordPress PHP syntax: PASS
+  Static security scan: PASS — 0 findings
+  v4.35.19 release contract: PASS
+  v4.35.19 static release validation: PASS
+
+Frozen artifact gates:
+  Immutable manifest: PASS — 2,372 files
+  Repository ZIP integrity: PASS
+  WordPress plugin ZIP integrity: PASS
+  Release-bundle ZIP integrity: PASS
+  SHA-256 verification of every bundle component: PASS
+  Standalone installer bundle-only verification: PASS
+  Extracted repository manifest verification: PASS — 2,372 / 2,372
+  Extracted repository release contract/static validation: PASS
+  Extracted repository targeted regressions: PASS — 14 / 14

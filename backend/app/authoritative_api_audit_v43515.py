@@ -8,11 +8,11 @@ from . import authoritative_api_audit_v43514 as prior
 
 VERSION=APP_VERSION; CONTRACT=prior.CONTRACT; AUDIT_DATE='2026-08-11'; ACCESS_CLASSES=prior.ACCESS_CLASSES
 COMPLETED_CONNECTOR_TARGETS=tuple(prior.COMPLETED_CONNECTOR_TARGETS)+(
- {'id':'osm-mining-overpass','workspace':'Mining & Critical Materials','state':'LIVE','completed_in':'4.35.18'},
- {'id':'usgs-usmin-sdc','workspace':'Mining & Critical Materials','state':'DISCOVERY','completed_in':'4.35.18'},
- {'id':'usgs-mcs-2026-sdc','workspace':'Mining & Critical Materials','state':'DISCOVERY','completed_in':'4.35.18'},
- {'id':'osm-industrial-overpass','workspace':'Industrial Manufacturing & Trade','state':'LIVE','completed_in':'4.35.18'},
- {'id':'world-bank-wits-trade-stats','workspace':'Industrial Manufacturing & Trade','state':'LIVE','completed_in':'4.35.18'},
+ {'id':'osm-mining-overpass','workspace':'Mining & Critical Materials','state':'LIVE','completed_in':'4.35.19'},
+ {'id':'usgs-usmin-sdc','workspace':'Mining & Critical Materials','state':'DISCOVERY','completed_in':'4.35.19'},
+ {'id':'usgs-mcs-2026-sdc','workspace':'Mining & Critical Materials','state':'DISCOVERY','completed_in':'4.35.19'},
+ {'id':'osm-industrial-overpass','workspace':'Industrial Manufacturing & Trade','state':'LIVE','completed_in':'4.35.19'},
+ {'id':'world-bank-wits-trade-stats','workspace':'Industrial Manufacturing & Trade','state':'LIVE','completed_in':'4.35.19'},
 )
 PRIORITY_CONNECTOR_TARGETS=tuple(x for x in prior.PRIORITY_CONNECTOR_TARGETS if x.get('id') not in {'openstreetmap-mining','usgs-usmin','usgs-mcs-2026','openstreetmap-industrial','world-bank-wits-trade'})
 def _now(): return datetime.now(timezone.utc).isoformat()

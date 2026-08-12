@@ -1,4 +1,4 @@
-# Site Intelligence v4.35.18 — Rate Limits, Retries, Caching, Backoff & Circuit Breakers
+# Site Intelligence v4.35.19 — Rate Limits, Retries, Caching, Backoff & Circuit Breakers
 
 ## Purpose
 Make Site Intelligence remain usable when authoritative upstream APIs are slow, rate-limited, temporarily unavailable, or intermittently failing.

@@ -31,7 +31,7 @@ def _indicator(value=100.0, year=2024, state="live"):
 
 
 def _payload(value=100.0, year=2024, state="live"):
-    return {"ok":True,"version":"4.35.18","country":_country(),"data_state":state,"indicators":[_indicator(value,year,state)]}
+    return {"ok":True,"version":"4.35.19","country":_country(),"data_state":state,"indicators":[_indicator(value,year,state)]}
 
 
 def test_canonical_observation_preserves_value_semantics_and_fingerprint():
@@ -54,7 +54,7 @@ def test_country_indicator_resolves_the_same_live_record(monkeypatch):
     monkeypatch.setattr(live,"country_indicators",lambda _code:_payload())
     obs=canonical_country_indicator("PSE","EG.ELC.ACCS.ZS")
     assert obs["value"]["number"]==100.0
-    assert obs["presentation_state"]=="live"
+    assert obs["presentation_state"]=="harmonized-benchmark"
 
 
 def test_country_catalog_and_indicator_share_canonical_fingerprint(monkeypatch):
@@ -71,7 +71,7 @@ def test_truth_consumes_canonical_live_observation_not_packaged_snapshot(monkeyp
     assert truth["value"]["available"] is True
     assert truth["canonical_observation"]["value"]["number"]==100.0
     assert truth["canonical_observation_sha256"]==truth["canonical_observation"]["fingerprint"]["value"]
-    assert truth["presentation_state"]=="live"
+    assert truth["presentation_state"]=="harmonized-benchmark"
 
 
 def test_truth_and_workspace_both_missing_when_canonical_value_missing(monkeypatch):

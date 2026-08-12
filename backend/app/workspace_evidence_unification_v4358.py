@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Workspace evidence unification and canonical observation contracts for Site Intelligence v4.35.18.
+"""Workspace evidence unification and canonical observation contracts for Site Intelligence v4.35.19.
 
 The workspace headline, evidence drawer, record-truth response and export manifest must all
 resolve from the same canonical observation object. This module intentionally consumes the
@@ -14,6 +14,7 @@ from typing import Any, Mapping
 import json
 
 from .version import APP_VERSION
+from .evidence_presentation_v43519 import classify_evidence
 from .evidence_intelligence_v4357 import (
     concept_for_indicator,
     indicator_semantics,
@@ -104,6 +105,12 @@ def canonicalize_country_indicator(country: Mapping[str, Any], indicator: Mappin
                     "status": "final" if data_state in {"live", "cached", "reference-snapshot"} else "unknown",
                 }],
             )
+    presentation = classify_evidence(
+        jurisdiction=code, indicator_id=indicator_id, source=str(indicator.get("source") or ""),
+        source_id=_source_id(indicator), authority_class=_authority_class(str(indicator.get("source") or "")),
+        observation_year=year, data_state=data_state, value_available=value is not None,
+        status="final" if data_state in {"live", "cached", "reference-snapshot"} else "unknown",
+    )
     observation = {
         "ok": True,
         "version": VERSION,
@@ -147,7 +154,10 @@ def canonicalize_country_indicator(country: Mapping[str, Any], indicator: Mappin
             "authority_class": _authority_class(str(indicator.get("source") or "")),
         },
         "truth_state": truth_state,
-        "presentation_state": data_state,
+        "presentation_state": presentation["evidence_class"],
+        "presentation_label": presentation["evidence_label"],
+        "transport_state": data_state,
+        "evidence_presentation": presentation,
         "cache_state": indicator.get("cache_state"),
         "stale": bool(indicator.get("stale", False)),
         "semantics": semantics,
@@ -157,7 +167,8 @@ def canonicalize_country_indicator(country: Mapping[str, Any], indicator: Mappin
         "limitations": [
             "The workspace headline, evidence drawer and Record Truth response resolve from this same canonical observation object.",
             "Missing upstream values remain missing and are never converted to zero or a percentage.",
-            "Reporting period, source state, source identity and semantic limitations remain attached to the displayed value.",
+            "Reporting period, transport/cache state, source identity, evidence class and semantic limitations remain attached to the displayed value.",
+            presentation["display_note"],
         ],
     }
     if concept_id == "electricity_structural_access":

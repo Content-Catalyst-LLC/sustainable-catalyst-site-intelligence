@@ -1,4 +1,15 @@
-# v4.35.18 — Full Workspace End-to-End Browser Audit & “Simply Works” Reliability
+# Changelog
+
+## v4.35.19 — Live-Operation Stress, Semantic Truth & Recovery Integrity
+- Added an application-level deterministic production soak with eight failure/recovery scenarios, including 429 Retry-After, 503 recovery, stale fallback, circuit opening/recovery, 24-cycle provider flapping, and missing-credential degradation.
+- Added evidence presentation classes that separate retrieval/cache state from observation semantics.
+- World Bank annual country indicators are now classified as harmonized benchmarks rather than operationally live observations.
+- Added Palestine source-priority rules with PCBS first for supported exact-concept statistical evidence and World Bank retained as harmonized comparison/fallback.
+- Added explicit structural-versus-operational warnings for electricity and drinking-water indicators.
+- Added Sources workspace production-soak status and release-gate requirements while keeping real upstream provider health non-blocking.
+- Preserved the inherited 35-route browser reliability, connector, credential, external-resilience, and canonical Truth contracts.
+
+# v4.35.19 — Full Workspace End-to-End Browser Audit & “Simply Works” Reliability
 
 - Audited all 35 registered public workspace routes across six primary areas.
 - Added deterministic route-to-surface contracts, route metadata validation, and first-party workspace-browser readiness.

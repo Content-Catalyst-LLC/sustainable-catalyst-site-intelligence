@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Site Intelligence v4.35.18 external-source resilience control plane.
+"""Site Intelligence v4.35.19 external-source resilience control plane.
 
 This module provides process-local, secret-safe resilience for read-oriented
 external data calls: bounded retries, Retry-After handling, conservative

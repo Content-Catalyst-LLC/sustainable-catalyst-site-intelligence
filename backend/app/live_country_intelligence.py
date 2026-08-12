@@ -440,7 +440,7 @@ def country_indicators(code: str) -> dict[str, Any]:
                 "reason": "Reference snapshots and unavailable records are not published as live evidence.",
             }
             merged.append(fallback)
-    # v4.35.18: attach the single canonical observation consumed by workspace, evidence and Truth surfaces.
+    # v4.35.19: attach the single canonical observation consumed by workspace, evidence and Truth surfaces.
     from .workspace_evidence_unification_v4358 import canonicalize_country_indicator
     for item in merged:
         item["canonical_observation"] = canonicalize_country_indicator({"code": normalized, **country}, item)
@@ -464,10 +464,11 @@ def country_indicators(code: str) -> dict[str, Any]:
         "missing_indicators": [item["id"] for item in merged if not item.get("latest")],
         "state_counts": counts, "indicators": merged,
         "methodology": [
-            "Latest non-null World Bank observation is used for each indicator.",
-            "Reporting years, units, source identifiers, and retrieval states remain visible.",
-            "Fresh and stale last-known-good records are explicitly labeled.",
-            "Reference snapshots are labeled and used only when no live or cached record is available.",
+            "World Bank values are retained as harmonized benchmark/fallback evidence, not as automatic claims about current operational conditions.",
+            "Transport retrieval state (live/cached/stale) is kept separate from the evidence class shown to users.",
+            "Reporting years, units, source identifiers, authority class, and semantic limitations remain visible.",
+            "National statistical or sector authorities may take precedence when an exact-concept source is connected and available.",
+            "Reference snapshots are labeled and used only when no retrieved or cached record is available.",
             "No missing value is silently imputed and zero remains distinct from unavailable.",
         ],
     }
@@ -500,7 +501,8 @@ def country_profile(code: str) -> dict[str, Any]:
                 "id": item["id"], "key": item["key"], "label": item["label"], "value": observation["value"]["number"],
                 "year": observation.get("dates", {}).get("observation_year"), "unit": observation.get("units", {}).get("display") or item["unit"], "format": item["format"],
                 "source": observation.get("source", {}).get("publisher") or item["source"], "source_id": observation.get("source", {}).get("source_id") or item.get("source_id"), "source_url": observation.get("source", {}).get("url") or item.get("source_url"),
-                "data_state": observation.get("presentation_state") or item["data_state"], "cache_state": observation.get("cache_state") or item.get("cache_state"), "retrieved_at": observation.get("dates", {}).get("retrieved_at"),
+                "data_state": observation.get("presentation_state") or item["data_state"], "evidence_label": observation.get("presentation_label") or observation.get("presentation_state") or item["data_state"],
+                "transport_state": observation.get("transport_state") or item.get("data_state"), "cache_state": observation.get("cache_state") or item.get("cache_state"), "retrieved_at": observation.get("dates", {}).get("retrieved_at"),
                 "stale": observation.get("stale", False), "lineage": observation.get("lineage", {}),
                 "observation_id": observation.get("observation_id"), "canonical_observation_sha256": observation.get("fingerprint", {}).get("value"),
                 "semantics": observation.get("semantics"), "freshness": observation.get("freshness"), "canonical_observation": observation,
@@ -508,8 +510,9 @@ def country_profile(code: str) -> dict[str, Any]:
             })
     return {
         "ok": True, "version": VERSION, "generated_at": payload["generated_at"], "country": country,
-        "data_state": payload["data_state"], "stale": payload.get("stale", False),
-        "summary": f"{country['name']} country intelligence combines public development indicators, satellite context, and recent public event records.",
+        "data_state": payload["data_state"], "transport_state": payload["data_state"], "stale": payload.get("stale", False),
+        "evidence_summary": "Mixed-period official and harmonized statistics · retrieval state shown separately",
+        "summary": f"{country['name']} country intelligence combines period-specific public statistics, source-aware evidence, satellite context, and recent public event records.",
         "highlights": highlights, "missing_indicators": payload.get("missing_indicators", []), "state_counts": payload.get("state_counts", {}),
         "indicator_endpoint": f"/public/country/{country['code']}/indicators", "trends_endpoint": f"/public/country/{country['code']}/trends",
         "events_endpoint": f"/public/events?country_code={country['code']}",
@@ -529,7 +532,7 @@ def country_brief(code: str) -> dict[str, Any]:
     lines = [f"{item['label']}: {item['value']} {item['unit']} ({item['year']}, {item['source']}, {item['data_state']})." for item in profile["highlights"]]
     return {
         "ok": True, "version": VERSION, "generated_at": profile["generated_at"], "country": country,
-        "title": f"{country['name']} — Live Country Intelligence Brief", "summary": profile["summary"],
+        "title": f"{country['name']} — Country Intelligence Brief", "summary": profile["summary"],
         "evidence_lines": lines, "data_state": profile["data_state"],
         "boundary": "This brief organizes public evidence for orientation and research. Verify important findings against the linked source.",
     }
@@ -540,7 +543,7 @@ def global_country_overview(code: str) -> dict[str, Any]:
     country = profile["country"]
     return {
         "ok": True, "version": VERSION, "generated_at": profile["generated_at"], "country": country,
-        "data_state": profile["data_state"], "stale": profile.get("stale", False),
+        "data_state": profile["data_state"], "transport_state": profile.get("transport_state"), "evidence_summary": profile.get("evidence_summary"), "stale": profile.get("stale", False),
         "headline": f"{country['name']} — Global Country Intelligence", "summary": profile["summary"],
         "map": {"latitude": country.get("latitude"), "longitude": country.get("longitude"), "default_zoom": 5 if country.get("latitude") is not None and country.get("longitude") is not None else 2},
         "highlights": profile["highlights"], "missing_indicators": profile.get("missing_indicators", []),

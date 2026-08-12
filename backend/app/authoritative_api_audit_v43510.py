@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""v4.35.18 audit extension for Authoritative Connector Expansion IV."""
+"""v4.35.19 audit extension for Authoritative Connector Expansion IV."""
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 import hashlib, json
@@ -15,19 +15,19 @@ AUDIT_DATE='2026-08-11'
 ACCESS_CLASSES=prior.ACCESS_CLASSES
 
 NEW_VERIFIED_MACHINE_INTERFACES=(
- {'id':'faostat-data-api','provider':'Food and Agriculture Organization of the United Nations','host':'fenixservices.fao.org','protocol':'REST / JSON / CSV','current_version':'FAOSTAT API developer-portal service','documentation_url':'https://www.fao.org/faostat/en/#developer-portal','authentication':'public','status':'implemented-live-v4.35.18','audit_date':AUDIT_DATE},
- {'id':'ilostat-sdmx','provider':'International Labour Organization','host':'rplumber.ilo.org','protocol':'SDMX / REST','current_version':'current ILOSTAT dissemination service','documentation_url':'https://www.ilo.org/resource/other/ilostat-sdmx-user-guide','authentication':'public','status':'implemented-live-v4.35.18','audit_date':AUDIT_DATE},
- {'id':'oecd-data-explorer-sdmx','provider':'OECD','host':'sdmx.oecd.org','protocol':'SDMX REST / JSON / CSV','current_version':'OECD Data Explorer API','documentation_url':'https://www.oecd.org/en/data/insights/data-explainers/2024/09/api.html','authentication':'public; rate limited','status':'implemented-live-v4.35.18','audit_date':AUDIT_DATE},
- {'id':'epa-frs-public-api','provider':'U.S. Environmental Protection Agency','host':'ofmpub.epa.gov','protocol':'REST / JSON','current_version':'FRS public query services','documentation_url':'https://www.epa.gov/frs/frs-api','authentication':'public query service','status':'implemented-live-v4.35.18','audit_date':AUDIT_DATE},
- {'id':'usgs-volcano-hans','provider':'U.S. Geological Survey Volcano Hazards Program','host':'volcanoes.usgs.gov','protocol':'REST / JSON','current_version':'HANS public API','documentation_url':'https://volcanoes.usgs.gov/vsc/api/','authentication':'public','status':'implemented-live-v4.35.18','audit_date':AUDIT_DATE},
+ {'id':'faostat-data-api','provider':'Food and Agriculture Organization of the United Nations','host':'fenixservices.fao.org','protocol':'REST / JSON / CSV','current_version':'FAOSTAT API developer-portal service','documentation_url':'https://www.fao.org/faostat/en/#developer-portal','authentication':'public','status':'implemented-live-v4.35.19','audit_date':AUDIT_DATE},
+ {'id':'ilostat-sdmx','provider':'International Labour Organization','host':'rplumber.ilo.org','protocol':'SDMX / REST','current_version':'current ILOSTAT dissemination service','documentation_url':'https://www.ilo.org/resource/other/ilostat-sdmx-user-guide','authentication':'public','status':'implemented-live-v4.35.19','audit_date':AUDIT_DATE},
+ {'id':'oecd-data-explorer-sdmx','provider':'OECD','host':'sdmx.oecd.org','protocol':'SDMX REST / JSON / CSV','current_version':'OECD Data Explorer API','documentation_url':'https://www.oecd.org/en/data/insights/data-explainers/2024/09/api.html','authentication':'public; rate limited','status':'implemented-live-v4.35.19','audit_date':AUDIT_DATE},
+ {'id':'epa-frs-public-api','provider':'U.S. Environmental Protection Agency','host':'ofmpub.epa.gov','protocol':'REST / JSON','current_version':'FRS public query services','documentation_url':'https://www.epa.gov/frs/frs-api','authentication':'public query service','status':'implemented-live-v4.35.19','audit_date':AUDIT_DATE},
+ {'id':'usgs-volcano-hans','provider':'U.S. Geological Survey Volcano Hazards Program','host':'volcanoes.usgs.gov','protocol':'REST / JSON','current_version':'HANS public API','documentation_url':'https://volcanoes.usgs.gov/vsc/api/','authentication':'public','status':'implemented-live-v4.35.19','audit_date':AUDIT_DATE},
 )
 VERIFIED_MACHINE_INTERFACES=tuple(prior.VERIFIED_MACHINE_INTERFACES)+NEW_VERIFIED_MACHINE_INTERFACES
 COMPLETED_CONNECTOR_TARGETS=tuple(prior.COMPLETED_CONNECTOR_TARGETS)+(
- {'id':'faostat-data-api','workspace':'Agriculture / Food Security','state':'LIVE','completed_in':'4.35.18'},
- {'id':'ilostat-sdmx','workspace':'Economics / Labor','state':'LIVE','completed_in':'4.35.18'},
- {'id':'oecd-data-explorer-sdmx','workspace':'Economics / Development','state':'LIVE','completed_in':'4.35.18'},
- {'id':'epa-frs-public-api','workspace':'Industrial / Facilities','state':'LIVE','completed_in':'4.35.18'},
- {'id':'usgs-volcano-hans','workspace':'Geosphere','state':'LIVE','completed_in':'4.35.18'},
+ {'id':'faostat-data-api','workspace':'Agriculture / Food Security','state':'LIVE','completed_in':'4.35.19'},
+ {'id':'ilostat-sdmx','workspace':'Economics / Labor','state':'LIVE','completed_in':'4.35.19'},
+ {'id':'oecd-data-explorer-sdmx','workspace':'Economics / Development','state':'LIVE','completed_in':'4.35.19'},
+ {'id':'epa-frs-public-api','workspace':'Industrial / Facilities','state':'LIVE','completed_in':'4.35.19'},
+ {'id':'usgs-volcano-hans','workspace':'Geosphere','state':'LIVE','completed_in':'4.35.19'},
 )
 PRIORITY_CONNECTOR_TARGETS=(
  {'id':'airnow-api','workspace':'Atmosphere / Air Quality','reason':'Connect EPA AirNow with server-side key configuration and pollutant semantics.','target_state':'AUTH_REQUIRED'},

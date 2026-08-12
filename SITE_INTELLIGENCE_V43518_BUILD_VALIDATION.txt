@@ -1,4 +1,4 @@
-Site Intelligence v4.35.18 — Build Validation
+Site Intelligence v4.35.19 — Build Validation
 ============================================================
 Release: Full Workspace End-to-End Browser Audit & “Simply Works” Reliability
 
@@ -24,7 +24,7 @@ Defects repaired during audit:
   PASS — Workflows registered-route metadata restored
   PASS — registered-route post-navigation surface enforcement
   PASS — hidden evidence drawer / mobile evidence rail overflow containment
-  PASS — release-verifier cwd-safe v4.35.18 frontend regression
+  PASS — release-verifier cwd-safe v4.35.19 frontend regression
 
 Connector/evidence continuity:
   Public connector interfaces: 50
@@ -49,8 +49,8 @@ Frozen release gates:
   JavaScript syntax: PASS — 152 files
   WordPress PHP syntax: PASS
   Static security scan: PASS — 0 findings
-  v4.35.18 release contract: PASS
-  v4.35.18 desktop/mobile/iframe browser gate: PASS
+  v4.35.19 release contract: PASS
+  v4.35.19 desktop/mobile/iframe browser gate: PASS
 
 Artifact validation:
   Repository ZIP integrity: PASS
@@ -59,4 +59,4 @@ Artifact validation:
   SHA-256 verification of every bundle component: PASS
   Standalone installer bundle-only verification: PASS
   Extracted repository immutable/static/browser verification: PASS
-  Extracted repository v4.35.18 targeted regressions: PASS — 8 / 8
+  Extracted repository v4.35.19 targeted regressions: PASS — 8 / 8

@@ -1,32 +1,8 @@
-# Current release: Site Intelligence v4.35.18 — Full Workspace End-to-End Browser Audit & “Simply Works” Reliability
+# Current release: Site Intelligence v4.35.19 — Live-Operation Stress, Semantic Truth & Recovery Integrity
 
-**Current release:** v4.35.18
+**Current release:** v4.35.19
 
-Site Intelligence v4.35.18 audits the complete 35-route public workspace contract across desktop, mobile, and iframe/browser modes. Registered routes now enforce a visible workspace surface or an explicit degraded recovery surface with Retry and Sources & methods actions; no registered workspace may silently collapse to a blank or generic unavailable view. The release also repairs missing Workflows route metadata, contains previously off-canvas evidence surfaces on narrow viewports, and keeps external-provider health non-blocking for deployment.
-
-# Current release: Site Intelligence v4.35.15 — High-Priority Workspace Connector Closure V: Mining, Critical Materials & Industrial Systems
-
-Site Intelligence v4.35.15 closes the ambiguous machine-interface backlog in Mining & Critical Materials and Industrial Manufacturing & Trade. Bounded OpenStreetMap/Overpass retrieval supplies supplemental mining and industrial infrastructure evidence; USGS USMIN and Mineral Commodity Summaries 2026 are discoverable through the official USGS Science Data Catalog API; and World Bank WITS provides bounded trade-statistics retrieval. USGS data-release metadata remain distinct from live mine operations, OSM remains supplemental community mapping, and WITS trade statistics remain distinct from physical shipment telemetry. Both target workspaces now have zero REGISTERED machine-interface backlog, while external source availability remains non-blocking for deployment.
-
-# Current release: Site Intelligence v4.35.15 — Workspace Evidence Unification & Truth-Layer Repair
-
-Site Intelligence v4.35.15 unifies country-workspace headline values, evidence metadata, and Record Truth around one canonical observation object. The same value, reporting period, source state, semantics, freshness, lineage, and canonical SHA-256 now flow through the workspace and Truth surfaces; a separate packaged-snapshot path can no longer make Truth disagree with the displayed card. Legacy Record Provenance shapes remain compatible, and external source health remains non-blocking for deployment.
-
-# Current release: Site Intelligence v4.35.15 — Source Precedence, Metric Semantics & Freshness Intelligence
-
-Site Intelligence v4.35.15 adds a deterministic evidence-selection layer above the authoritative connector catalog. It registers explicit metric concepts, jurisdiction-aware source precedence, cadence-aware freshness, semantic incompatibility guards, conflict disclosure, and source-selection fingerprints. Structural electricity access is now explicitly separated from current electricity availability, grid reliability, outage status, hours of service, and generator dependence. For Palestine structural electricity access, PCBS is the preferred national statistical authority when a compatible observation is available, with World Bank retained as a harmonized fallback/comparison source. Operational electricity conditions require operational evidence and cannot be answered by the World Bank access indicator.
-
-The release preserves the 20-interface authoritative connector catalog and the hardened rule that external-source health cannot block a valid first-party deployment.
-
-# Current release: Site Intelligence v4.35.15 — National Statistical & Domain-Authority Connector Expansion
-
-Site Intelligence v4.35.15 adds five direct first-party statistical-authority connectors: Palestinian Central Bureau of Statistics PxWeb, Statistics Canada Web Data Service, UK Office for National Statistics API, Australian Bureau of Statistics SDMX Data API, and U.S. Bureau of Labor Statistics Public Data API. The release preserves observation period, units, status/revision metadata, footnotes and source payloads, and it keeps structural indicators distinct from current operational conditions.
-
-The authoritative connector catalog now exposes 20 interfaces while retaining the v4.35.3.1 rule that external-source health cannot block a valid first-party deployment.
-
-# Current release: Site Intelligence v4.35.15 — Authoritative Connector Expansion II
-
-**Current release:** v4.35.15 — Connected Public Intelligence and Evidence Platform (build focus: authoritative public-data retrieval expansion)
+Site Intelligence v4.35.19 adds a deterministic live-operation stress layer and separates transport freshness from evidence meaning. The first-party release gate now requires eight failure/recovery soak scenarios, the inherited 35-route browser control plane, external resilience, canonical workspace evidence/Truth, and semantic evidence guards. Real provider health remains non-blocking. Country cards no longer use a successful or fresh World Bank retrieval as evidence that an annual statistic is a live operational condition; World Bank annual country series are presented as harmonized benchmarks, while explicit source-priority rules preserve higher-precedence national and sector evidence where available.
 
 ## v4.35.15 — Authoritative Connector Expansion II
 
@@ -1580,26 +1556,26 @@ Adds deferred Earth Observation orientation for NASA FIRMS fire/burned-area evid
 
 ## Current-release compatibility ledger
 
-- **Release:** v4.35.18 — Connected Public Intelligence and Evidence Platform
-- Current release:** v4.35.18 — Connected Public Intelligence and Evidence Platform
-- v4.35.18 — Analytics and Public-Value Measurement
-- v4.35.18 — Archive Verification, Preservation Audits, and Institutional Custody
-- v4.35.18 — Collection Publication, Citation Exports, and Research Brief Packages
-- v4.35.18 — Connected Live Intelligence Surface
-- v4.35.18 — Corrections, Retractions, and Public Change History
-- v4.35.18 — Editorial Workspace, Review Queues, and Publication Orchestration
-- v4.35.18 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
-- v4.35.18 — Homepage Intelligence Gateway
-- v4.35.18 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
-- v4.35.18 — Live Intelligence presentation
-- v4.35.18 — Preservation Interoperability, External Verification, and Institutional Exchange
-- v4.35.18 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
-- v4.35.18 — Public Registry Discovery, Evidence Search, and Institutional Profiles
-- v4.35.18 — Publication Adapters, Institutional Handoffs, and Release Governance
-- v4.35.18 — Registry Governance, Challenges, Revocation, and Appeals
-- v4.35.18 — Release Monitoring, Rollback, and Post-Publication Governance
-- v4.35.18 — Saved Discovery Views, Public Research Collections, and Evidence Pathways
-- v4.35.18 — Signal Context and Drill-Down
-- v4.35.18 — Signal Relevance and Rotation Intelligence
-- v4.35.18 — Signal Subscriptions, Alerts, and Scheduled Intelligence
-- v4.35.18 — Topic and Regional Channels
+- **Release:** v4.35.19 — Connected Public Intelligence and Evidence Platform
+- Current release:** v4.35.19 — Connected Public Intelligence and Evidence Platform
+- v4.35.19 — Analytics and Public-Value Measurement
+- v4.35.19 — Archive Verification, Preservation Audits, and Institutional Custody
+- v4.35.19 — Collection Publication, Citation Exports, and Research Brief Packages
+- v4.35.19 — Connected Live Intelligence Surface
+- v4.35.19 — Corrections, Retractions, and Public Change History
+- v4.35.19 — Editorial Workspace, Review Queues, and Publication Orchestration
+- v4.35.19 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
+- v4.35.19 — Homepage Intelligence Gateway
+- v4.35.19 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
+- v4.35.19 — Live Intelligence presentation
+- v4.35.19 — Preservation Interoperability, External Verification, and Institutional Exchange
+- v4.35.19 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
+- v4.35.19 — Public Registry Discovery, Evidence Search, and Institutional Profiles
+- v4.35.19 — Publication Adapters, Institutional Handoffs, and Release Governance
+- v4.35.19 — Registry Governance, Challenges, Revocation, and Appeals
+- v4.35.19 — Release Monitoring, Rollback, and Post-Publication Governance
+- v4.35.19 — Saved Discovery Views, Public Research Collections, and Evidence Pathways
+- v4.35.19 — Signal Context and Drill-Down
+- v4.35.19 — Signal Relevance and Rotation Intelligence
+- v4.35.19 — Signal Subscriptions, Alerts, and Scheduled Intelligence
+- v4.35.19 — Topic and Regional Channels

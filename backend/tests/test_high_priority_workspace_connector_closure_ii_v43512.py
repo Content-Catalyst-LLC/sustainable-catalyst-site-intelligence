@@ -9,7 +9,7 @@ from app.authoritative_api_production_audit_v43512 import production_audit, clos
 CLIENT=TestClient(app)
 
 def test_release_and_catalog_contract():
-    assert APP_VERSION=='4.35.18'
+    assert APP_VERSION=='4.35.19'
     s=Settings(_env_file=None,airnow_api_key='')
     cat=c.connector_catalog(s)
     assert cat['connector_count']==35
