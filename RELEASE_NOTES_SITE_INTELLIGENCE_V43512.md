@@ -1,6 +1,6 @@
-# Site Intelligence v4.35.12 — High-Priority Workspace Connector Closure II: Climate & Atmosphere
+# Site Intelligence v4.35.13 — High-Priority Workspace Connector Closure II: Climate & Atmosphere
 
-v4.35.12 continues the workspace-by-workspace “simply works” closure program by eliminating ambiguous REGISTERED machine-interface gaps in Climate and Atmosphere/Air Quality.
+v4.35.13 continues the workspace-by-workspace “simply works” closure program by eliminating ambiguous REGISTERED machine-interface gaps in Climate and Atmosphere/Air Quality.
 
 ## Added
 - EPA AirNow current-observation connector with explicit API-key configuration and credential redaction.

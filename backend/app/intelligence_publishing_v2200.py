@@ -14,7 +14,7 @@ from uuid import uuid4
 
 from .config import Settings
 
-RELEASE_VERSION = "4.35.12"
+RELEASE_VERSION = "4.35.13"
 SCHEMA_VERSION = "sc-site-intelligence-publication-studio/1.0"
 PROJECT_SCHEMA = "sc-site-intelligence-publication-project/1.0"
 BLOCK_SCHEMA = "sc-site-intelligence-publication-block/1.0"

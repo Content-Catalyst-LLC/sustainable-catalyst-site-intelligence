@@ -66,14 +66,14 @@ services:
         sync: false
       - key: SC_SI_PLATFORM_CORE_PUBLIC_API_KEY
         sync: false
-      # v4.35.12 Energy workspace official-source credentials.
+      # v4.35.13 Energy workspace official-source credentials.
       - key: SC_SI_EIA_API_KEY
         sync: false
       - key: SC_SI_EMBER_API_KEY
         sync: false
       - key: SC_SI_ENTSOE_SECURITY_TOKEN
         sync: false
-      # v4.35.12 Climate/Atmosphere connector closure.
+      # v4.35.13 Climate/Atmosphere connector closure.
       - key: SC_SI_AIRNOW_API_KEY
         sync: false
 

@@ -1,5 +1,5 @@
 from __future__ import annotations
-"""v4.35.12 — High-Priority Workspace Connector Closure I: Energy & Digital Infrastructure."""
+"""v4.35.13 — High-Priority Workspace Connector Closure I: Energy & Digital Infrastructure."""
 from datetime import datetime, timezone
 import re
 from typing import Any
@@ -22,7 +22,7 @@ def _setting(settings,name,default=''):
 
 def _request_text(url:str, *, timeout:int=8, max_bytes:int=MAX_RESPONSE_BYTES)->str:
     try:
-        req=Request(url,headers={'User-Agent':'Sustainable-Catalyst-Site-Intelligence/4.35.12','Accept':'application/xml,text/xml,text/plain;q=0.8'})
+        req=Request(url,headers={'User-Agent':'Sustainable-Catalyst-Site-Intelligence/4.35.13','Accept':'application/xml,text/xml,text/plain;q=0.8'})
         with urlopen(req,timeout=timeout) as r:
             raw=r.read(max_bytes+1)
             if len(raw)>max_bytes: raise RuntimeError('upstream response exceeds Site Intelligence bound')

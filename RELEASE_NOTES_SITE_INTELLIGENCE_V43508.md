@@ -1,6 +1,6 @@
-# Site Intelligence v4.35.12 — Workspace Evidence Unification & Truth-Layer Repair
+# Site Intelligence v4.35.13 — Workspace Evidence Unification & Truth-Layer Repair
 
-Site Intelligence v4.35.12 removes the split evidence path between country-workspace indicator cards and Record Truth. Country headline values, evidence metadata, Truth responses, country truth catalogs, and record-truth manifests now resolve from one canonical country-indicator observation object.
+Site Intelligence v4.35.13 removes the split evidence path between country-workspace indicator cards and Record Truth. Country headline values, evidence metadata, Truth responses, country truth catalogs, and record-truth manifests now resolve from one canonical country-indicator observation object.
 
 ## Primary changes
 
@@ -19,4 +19,4 @@ A displayed workspace value and its Truth response must have the same canonical 
 
 ## Validation
 
-The release carries 1,479 deterministic tests, including 12 new v4.35.12 unification regressions. The suite preserves the complete v4.35.7 connector, deployment, source-precedence, Palestine-resolution, domain-workspace, and Record Provenance compatibility contracts.
+The release carries 1,479 deterministic tests, including 12 new v4.35.13 unification regressions. The suite preserves the complete v4.35.7 connector, deployment, source-precedence, Palestine-resolution, domain-workspace, and Record Provenance compatibility contracts.

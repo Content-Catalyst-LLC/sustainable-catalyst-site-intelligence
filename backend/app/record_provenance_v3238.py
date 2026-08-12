@@ -1,4 +1,4 @@
-"""Record-level provenance and indicator truth for Site Intelligence v4.35.12.
+"""Record-level provenance and indicator truth for Site Intelligence v4.35.13.
 
 This module deliberately separates a reproducible provenance fingerprint from any
 claim that a source record is authoritative, complete, or current. A fingerprint

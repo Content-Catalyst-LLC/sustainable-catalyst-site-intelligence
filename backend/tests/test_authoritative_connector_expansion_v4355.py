@@ -16,7 +16,7 @@ def settings(**updates):
 
 
 def test_release_catalog_expands_to_fifteen_interfaces():
-    assert APP_VERSION == "4.35.12"
+    assert APP_VERSION == "4.35.13"
     data = connectors.connector_catalog(settings())
     assert data["connector_count"] == 15
     assert data["live_connector_count"] == 11
@@ -148,7 +148,7 @@ def test_configured_credentials_promote_firms_and_nass_inventory_to_live():
 def test_public_routes_validate_and_auth_gates_without_upstream_calls(monkeypatch):
     client=TestClient(app)
     catalog=client.get("/public/authoritative-connectors")
-    assert catalog.status_code == 200 and catalog.json()["connector_count"] == 35
+    assert catalog.status_code == 200 and catalog.json()["connector_count"] == 40
     assert client.get("/public/authoritative-connectors/usfws-nwi/wetlands").status_code == 400
     assert client.get("/public/authoritative-connectors/epa-echo/facilities").status_code == 400
     assert client.get("/public/authoritative-connectors/nasa-firms/area", params={"bbox":"-90,40,-89,41"}).status_code == 503

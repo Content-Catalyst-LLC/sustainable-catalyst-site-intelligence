@@ -8,9 +8,9 @@ from . import authoritative_api_audit_v43511 as prior
 
 VERSION=APP_VERSION; CONTRACT=prior.CONTRACT; AUDIT_DATE='2026-08-11'; ACCESS_CLASSES=prior.ACCESS_CLASSES
 COMPLETED_CONNECTOR_TARGETS=tuple(prior.COMPLETED_CONNECTOR_TARGETS)+(
- {'id':'airnow','workspace':'Atmosphere, Air Quality & Aerosols','state':'AUTH_REQUIRED','completed_in':'4.35.12'},
- {'id':'copernicus-era5','workspace':'Climate Baselines, Anomalies & Extremes','state':'DISCOVERY','completed_in':'4.35.12'},
- {'id':'cams-global','workspace':'Atmosphere, Air Quality & Aerosols','state':'DISCOVERY','completed_in':'4.35.12'},
+ {'id':'airnow','workspace':'Atmosphere, Air Quality & Aerosols','state':'AUTH_REQUIRED','completed_in':'4.35.13'},
+ {'id':'copernicus-era5','workspace':'Climate Baselines, Anomalies & Extremes','state':'DISCOVERY','completed_in':'4.35.13'},
+ {'id':'cams-global','workspace':'Atmosphere, Air Quality & Aerosols','state':'DISCOVERY','completed_in':'4.35.13'},
 )
 PRIORITY_CONNECTOR_TARGETS=tuple(x for x in prior.PRIORITY_CONNECTOR_TARGETS if x.get('id') not in {'airnow','copernicus-era5','cams-global'})
 def _now(): return datetime.now(timezone.utc).isoformat()
