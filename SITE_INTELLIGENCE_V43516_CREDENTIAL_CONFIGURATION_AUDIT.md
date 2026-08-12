@@ -1,4 +1,4 @@
-# Site Intelligence v4.35.16 — Credential Configuration Audit
+# Site Intelligence v4.35.17 — Credential Configuration Audit
 
 ## Audit conclusion
 All 17 machine-readable `AUTH_REQUIRED` source registrations are mapped to 12 canonical credential profiles. The control plane is deterministic, secret-safe, network-free, and non-blocking for release promotion.
@@ -39,4 +39,4 @@ This is expected package behavior, not a release failure.
 6. Missing credentials are operational source-health/configuration conditions, not deployment blockers.
 
 ## Configuration debt repaired
-v4.35.16 adds canonical settings and deployment declarations for Copernicus Marine and Global Fishing Watch and aligns EPA AQS declarations across the root and backend Render blueprints. `backend/.env.example` now documents the complete environment-variable surface.
+v4.35.17 adds canonical settings and deployment declarations for Copernicus Marine and Global Fishing Watch and aligns EPA AQS declarations across the root and backend Render blueprints. `backend/.env.example` now documents the complete environment-variable surface.

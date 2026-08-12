@@ -1,0 +1,33 @@
+Site Intelligence v4.35.17 — Rate Limits, Retries, Caching, Backoff & Circuit Breakers
+
+DETERMINISTIC TESTS
+PASS — 1,595 / 1,595
+Frozen-tree reconciliation: 444 + 374 + 171 + 185 + 176 + 206 + 39 = 1,595
+Targeted v4.35.17 external resilience tests: 14 / 14
+
+EXTERNAL RESILIENCE CONTROL PLANE
+PASS — bounded retry statuses: 408, 425, 429, 500, 502, 503, 504
+PASS — Retry-After seconds and HTTP-date support
+PASS — bounded exponential backoff and provider pacing
+PASS — fresh-cache reuse and explicit stale-if-error labeling
+PASS — provider circuit breakers and secret-safe telemetry
+PASS — readiness performs no upstream network calls
+PASS — upstream/provider health remains non-blocking for release
+Provider policy profiles: 10
+Public connector surface hardened: 50 interfaces
+
+STATIC / PACKAGE VALIDATION
+Manifest entries: 2,341
+JSON/GeoJSON: PASS — 134 files
+JavaScript: PASS — 151 files
+PHP: PASS — WordPress syntax clean
+Security findings: PASS — 0 findings
+Browser/static external resilience gate: PASS
+Repository ZIP: PASS — ZIP integrity and extracted repository verification
+WordPress ZIP: PASS — ZIP integrity
+Release bundle: PASS — ZIP integrity and SHA-256 component verification
+Standalone installer bundle-only verification: PASS
+
+ARTIFACT RE-VERIFICATION
+PASS — extracted repository ZIP verified against 2,341-file immutable manifest
+PASS — extracted repository v4.35.17 targeted regressions: 14 / 14

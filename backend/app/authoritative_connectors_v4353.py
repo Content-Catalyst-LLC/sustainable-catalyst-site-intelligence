@@ -18,6 +18,7 @@ from urllib.parse import quote, urlencode, urljoin
 from urllib.request import Request, urlopen
 
 from .version import APP_VERSION
+from .external_resilience_v43517 import request_json as resilient_request_json
 
 VERSION = APP_VERSION
 CONTRACT = "authoritative-connector-expansion-i"
@@ -110,22 +111,7 @@ def _request_json(
     headers: dict[str, str] | None = None,
     max_bytes: int = MAX_RESPONSE_BYTES,
 ) -> Any:
-    request_headers = {"Accept": "application/json", "User-Agent": USER_AGENT}
-    request_headers.update(headers or {})
-    req = Request(url, headers=request_headers, method="GET")
-    try:
-        with urlopen(req, timeout=timeout) as response:
-            raw = response.read(max_bytes + 1)
-            if len(raw) > max_bytes:
-                raise ValueError("Authoritative API response exceeded the public connector size limit.")
-            charset = response.headers.get_content_charset() or "utf-8"
-            return json.loads(raw.decode(charset))
-    except HTTPError as exc:
-        raise RuntimeError(f"Authoritative API returned HTTP {exc.code}.") from exc
-    except URLError as exc:
-        raise RuntimeError("Authoritative API could not be reached.") from exc
-    except json.JSONDecodeError as exc:
-        raise RuntimeError("Authoritative API returned invalid JSON.") from exc
+    return resilient_request_json(url, headers=headers, timeout=timeout, max_bytes=max_bytes, cache=True, stale_if_error=False)
 
 
 def connector_catalog(settings: Any = None) -> dict[str, Any]:

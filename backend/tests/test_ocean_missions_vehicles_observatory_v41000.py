@@ -16,7 +16,7 @@ CLIENT = TestClient(app)
 
 def test_overview_preserves_v4_architecture_and_no_live_position_claims():
     p = CLIENT.get('/public/ocean-missions').json()
-    assert p['ok'] and p['version'] == '4.35.16' and p['route'] == 'earth'
+    assert p['ok'] and p['version'] == '4.35.17' and p['route'] == 'earth'
     assert p['contract'] == 'ocean-missions-vehicles-observatory-network'
     assert p['source_count'] == 4 and p['platform_type_count'] >= 10
     assert any('last reported position' in x.lower() for x in p['truth_boundaries'])

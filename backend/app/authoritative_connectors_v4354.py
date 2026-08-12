@@ -18,6 +18,7 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 from .version import APP_VERSION
+from .external_resilience_v43517 import request_json as resilient_request_json
 from . import authoritative_connectors_v4353 as expansion_i
 
 VERSION = APP_VERSION
@@ -104,43 +105,11 @@ def _clamp_int(value: int, low: int, high: int) -> int:
 
 
 def _request_json(url: str, *, timeout: int = 8, headers: dict[str, str] | None = None, max_bytes: int = MAX_RESPONSE_BYTES) -> Any:
-    request_headers = {"Accept": "application/json", "User-Agent": USER_AGENT}
-    request_headers.update(headers or {})
-    req = Request(url, headers=request_headers, method="GET")
-    try:
-        with urlopen(req, timeout=timeout) as response:
-            raw = response.read(max_bytes + 1)
-            if len(raw) > max_bytes:
-                raise ValueError("Authoritative API response exceeded the public connector size limit.")
-            return json.loads(raw.decode(response.headers.get_content_charset() or "utf-8"))
-    except HTTPError as exc:
-        raise RuntimeError(f"Authoritative API returned HTTP {exc.code}.") from exc
-    except URLError as exc:
-        raise RuntimeError("Authoritative API could not be reached.") from exc
-    except json.JSONDecodeError as exc:
-        raise RuntimeError("Authoritative API returned invalid JSON.") from exc
+    return resilient_request_json(url, headers=headers, timeout=timeout, max_bytes=max_bytes, cache=True, stale_if_error=False)
 
 
 def _post_json(url: str, payload: dict[str, Any], *, timeout: int = 8, max_bytes: int = MAX_RESPONSE_BYTES) -> Any:
-    body = json.dumps(payload, separators=(",", ":")).encode("utf-8")
-    req = Request(
-        url,
-        data=body,
-        headers={"Accept": "application/json", "Content-Type": "application/json", "User-Agent": USER_AGENT},
-        method="POST",
-    )
-    try:
-        with urlopen(req, timeout=timeout) as response:
-            raw = response.read(max_bytes + 1)
-            if len(raw) > max_bytes:
-                raise ValueError("Authoritative API response exceeded the public connector size limit.")
-            return json.loads(raw.decode(response.headers.get_content_charset() or "utf-8"))
-    except HTTPError as exc:
-        raise RuntimeError(f"Authoritative API returned HTTP {exc.code}.") from exc
-    except URLError as exc:
-        raise RuntimeError("Authoritative API could not be reached.") from exc
-    except json.JSONDecodeError as exc:
-        raise RuntimeError("Authoritative API returned invalid JSON.") from exc
+    return resilient_request_json(url, payload=payload, timeout=timeout, max_bytes=max_bytes, cache=True, stale_if_error=False, retry_safe=True)
 
 
 def _default_base(connector_id: str) -> str:

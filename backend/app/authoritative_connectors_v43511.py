@@ -1,5 +1,5 @@
 from __future__ import annotations
-"""v4.35.16 — High-Priority Workspace Connector Closure I: Energy & Digital Infrastructure."""
+"""v4.35.17 — High-Priority Workspace Connector Closure I: Energy & Digital Infrastructure."""
 from datetime import datetime, timezone
 import re
 from typing import Any
@@ -8,6 +8,7 @@ from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
 
 from .version import APP_VERSION
+from .external_resilience_v43517 import request_text as resilient_request_text
 from . import authoritative_connectors_v43510 as prior
 from .authoritative_connectors_v4355 import _request_json, MAX_RESPONSE_BYTES
 
@@ -21,14 +22,7 @@ def _setting(settings,name,default=''):
     return v or default
 
 def _request_text(url:str, *, timeout:int=8, max_bytes:int=MAX_RESPONSE_BYTES)->str:
-    try:
-        req=Request(url,headers={'User-Agent':'Sustainable-Catalyst-Site-Intelligence/4.35.16','Accept':'application/xml,text/xml,text/plain;q=0.8'})
-        with urlopen(req,timeout=timeout) as r:
-            raw=r.read(max_bytes+1)
-            if len(raw)>max_bytes: raise RuntimeError('upstream response exceeds Site Intelligence bound')
-            return raw.decode('utf-8','replace')
-    except (HTTPError,URLError,TimeoutError,OSError) as exc:
-        raise RuntimeError(f'authoritative source request failed: {exc}') from exc
+    return resilient_request_text(url, headers={'Accept':'application/xml,text/xml,text/plain;q=0.8'}, timeout=timeout, max_bytes=max_bytes, cache=True, stale_if_error=False)
 
 NEW_CONNECTORS=(
  {'id':'osm-power-overpass','title':'OpenStreetMap Power Infrastructure via Overpass','organization':'OpenStreetMap contributors / Overpass','workspace':'Energy Infrastructure & Power Systems','mode':'LIVE','authentication':'public','boundary':'Community-mapped infrastructure evidence is supplemental and does not establish ownership, energization, operating status, capacity, reliability, safety or legal access.'},

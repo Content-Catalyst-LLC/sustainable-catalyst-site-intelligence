@@ -66,26 +66,26 @@ services:
         sync: false
       - key: SC_SI_PLATFORM_CORE_PUBLIC_API_KEY
         sync: false
-      # v4.35.16 Energy workspace official-source credentials.
+      # v4.35.17 Energy workspace official-source credentials.
       - key: SC_SI_EIA_API_KEY
         sync: false
       - key: SC_SI_EMBER_API_KEY
         sync: false
       - key: SC_SI_ENTSOE_SECURITY_TOKEN
         sync: false
-      # v4.35.16 Climate/Atmosphere connector closure.
+      # v4.35.17 Climate/Atmosphere connector closure.
       - key: SC_SI_AIRNOW_API_KEY
         sync: false
       # ReliefWeb V2 humanitarian reports require an approved appname.
       - key: SC_SI_RELIEFWEB_APPNAME
         sync: false
-      # v4.35.16 Agriculture/Food Security/Humanitarian connector closure.
+      # v4.35.17 Agriculture/Food Security/Humanitarian connector closure.
       - key: SC_SI_HDX_HAPI_APP_IDENTIFIER
         sync: false
       - key: SC_SI_IPC_API_KEY
         sync: false
 
-      # v4.35.16 canonical authenticated-source configuration.
+      # v4.35.17 canonical authenticated-source configuration.
       - key: SC_SI_NASA_FIRMS_MAP_KEY
         sync: false
       - key: SC_SI_USDA_NASS_API_KEY

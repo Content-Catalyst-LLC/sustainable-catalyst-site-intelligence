@@ -1,5 +1,5 @@
 from __future__ import annotations
-"""v4.35.16 — High-Priority Workspace Connector Closure II: Climate & Atmosphere."""
+"""v4.35.17 — High-Priority Workspace Connector Closure II: Climate & Atmosphere."""
 from datetime import datetime, timezone
 import re
 from typing import Any

@@ -11,6 +11,7 @@ import os
 
 from .version import APP_VERSION
 from .country_cache import country_cache
+from .external_resilience_v43517 import request_json as resilient_request_json
 
 VERSION = APP_VERSION
 
@@ -67,15 +68,7 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 def _request_json(url: str, timeout: int = 10) -> Any:
-    request = Request(
-        url,
-        headers={
-            "Accept": "application/json",
-            "User-Agent": f"Sustainable-Catalyst-Site-Intelligence/{VERSION}",
-        },
-    )
-    with urlopen(request, timeout=timeout) as response:
-        return json.loads(response.read().decode("utf-8"))
+    return resilient_request_json(url, timeout=timeout, cache=True, stale_if_error=False)
 
 def _stable_id(source: str, source_id: str, title: str, observed_at: str) -> str:
     digest = sha256(f"{source}|{source_id}|{title}|{observed_at}".encode("utf-8")).hexdigest()[:24]

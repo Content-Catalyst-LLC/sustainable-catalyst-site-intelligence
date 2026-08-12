@@ -7,7 +7,7 @@ client = TestClient(app)
 def test_seti_overview_catalog_and_sources():
     o = client.get('/public/seti-technosignatures').json()
     c = client.get('/public/seti-technosignatures/catalog').json()
-    assert o['ok'] and o['version'] == '4.35.16' and o['route'] == 'earth' and o['source_count'] == 4
+    assert o['ok'] and o['version'] == '4.35.17' and o['route'] == 'earth' and o['source_count'] == 4
     ids = {x['id'] for x in c['sources']}
     assert {'breakthrough-listen-open-data','breakthrough-listen-event-tables','seti-technosearch','nasa-exoplanet-target-context'} <= ids
     assert c['truth_boundaries']['signal_event_equals_technosignature'] is False

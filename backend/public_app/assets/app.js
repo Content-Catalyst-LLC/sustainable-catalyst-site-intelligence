@@ -25,7 +25,7 @@
     }
     throw last;
   }
-  const APP_VERSION="4.35.16";
+  const APP_VERSION="4.35.17";
   const FIXED_WORDPRESS_EMBED=window.SCSI_FIXED_WORDPRESS_EMBED===true;
   let heightFrame=0;
   function documentHeight(){
@@ -1244,6 +1244,15 @@
     qs("#credentialProfileList").innerHTML=(data?.profiles||[]).map(item=>`<span>${escapeHtml(item.organization)} · ${escapeHtml(item.state)}</span>`).join("");
   }
 
+  function renderExternalResilience(data){
+    const totals=data?.telemetry?.totals||{};
+    qs("#resiliencePolicyMetric").textContent=data?.provider_policy_count??"—";
+    qs("#resilienceCacheMetric").textContent=totals.cache_hits??0;
+    qs("#resilienceRetryMetric").textContent=totals.retries??0;
+    qs("#resilienceCircuitMetric").textContent=totals.open_circuits??0;
+    qs("#externalResilienceStatus").textContent=data?.ok===true?"Resilience control plane ready · upstream health is non-blocking for deployment.":"Resilience diagnostics unavailable.";
+  }
+
   function renderEvidenceIntelligence(data){
     qs("#evidenceConceptMetric").textContent=data?.metric_concept_count??"—";
     qs("#evidencePrecedenceMetric").textContent=data?.precedence_rule_count??"—";
@@ -1267,17 +1276,18 @@
     qs("#sourceStudio").setAttribute("aria-busy","true");qs("#sourceStatus").textContent="Loading public source and methodology records…";qs("#sourceRegistryList").innerHTML='<div class="loading-block">Loading source records…</div>';
     const params=sourceFilterParams();
     try{
-      const [sourcesResult,methodsResult,auditResult,evidenceResult,credentialResult]=await Promise.allSettled([
+      const [sourcesResult,methodsResult,auditResult,evidenceResult,credentialResult,resilienceResult]=await Promise.allSettled([
         apiWithRetry(`/public/sources?${params.toString()}`,2,{signal:controller.signal,timeout:18000}),
         apiWithRetry("/public/methodology",2,{signal:controller.signal,timeout:12000}),
         apiWithRetry("/public/authoritative-apis",1,{signal:controller.signal,timeout:18000}),
         apiWithRetry("/public/evidence-intelligence",1,{signal:controller.signal,timeout:12000}),
-        apiWithRetry("/public/credential-configuration",1,{signal:controller.signal,timeout:12000})
+        apiWithRetry("/public/credential-configuration",1,{signal:controller.signal,timeout:12000}),
+        apiWithRetry("/public/external-resilience",1,{signal:controller.signal,timeout:12000})
       ]);
       if(controller.signal.aborted||sequence!==sourceStudioState.sequence)return;
       if(sourcesResult.status!=="fulfilled")throw sourcesResult.reason;
       sourceStudioState.data=sourcesResult.value;sourceStudioState.methods=methodsResult.status==="fulfilled"?methodsResult.value:{methods:[],total_registered:0};sourceStudioState.diagnostics=null;sourceStudioState.audit=auditResult.status==="fulfilled"?auditResult.value:null;
-      populateSourceFilters(sourceStudioState.data);renderMethodology(sourceStudioState.methods);renderAuthoritativeApiAudit(sourceStudioState.audit||{summary:{counts:{}},completed_connector_targets:[],priority_connector_targets:[]});renderEvidenceIntelligence(evidenceResult.status==="fulfilled"?evidenceResult.value:{});renderCredentialConfiguration(credentialResult.status==="fulfilled"?credentialResult.value:{});qs("#sourceIssueMetric").textContent="…";
+      populateSourceFilters(sourceStudioState.data);renderMethodology(sourceStudioState.methods);renderAuthoritativeApiAudit(sourceStudioState.audit||{summary:{counts:{}},completed_connector_targets:[],priority_connector_targets:[]});renderEvidenceIntelligence(evidenceResult.status==="fulfilled"?evidenceResult.value:{});renderCredentialConfiguration(credentialResult.status==="fulfilled"?credentialResult.value:{});renderExternalResilience(resilienceResult.status==="fulfilled"?resilienceResult.value:{});qs("#sourceIssueMetric").textContent="…";
       const requested=new URLSearchParams(location.search).get("source");const first=sourceStudioState.data.sources?.[0]?.id;const requestedAvailable=(sourceStudioState.data.sources||[]).some(item=>item.id===requested);sourceStudioState.activeSource=requestedAvailable?requested:first||null;if(requested&&!requestedAvailable)toast("Requested source record is unavailable; showing an available source instead.");renderSourceRegistry(sourceStudioState.data);renderSourceDetail((sourceStudioState.data.sources||[]).find(item=>item.id===sourceStudioState.activeSource));
       qs("#sourceStatus").textContent=`${sourceStudioState.data.count} matching sources · ${sourceStudioState.methods.total_registered||0} documented methods · checking connector diagnostics…`;
       if(pushState)syncSourceUrl();reportHeight();void refreshSourceDiagnostics(sequence,controller);
@@ -1858,7 +1868,7 @@
     hydration.then(results=>{const failed=results.filter(result=>result.status==="rejected");const status=qs("#statusText");if(failed.length){console.warn("[Site Intelligence] Startup hydration completed with limited services.",failed.map(result=>result.reason));if(status)status.textContent="Partial public data";toast("Some optional public data is temporarily unavailable.")}else if(status)status.textContent="Live public data";window.dispatchEvent(new CustomEvent("scsi:startup-hydrated",{detail:{version:APP_VERSION,state:failed.length?"limited":"ready",failed:failed.length}}));reportHeight()});
   }
   window.SCSIOverviewMapV3232={version:APP_VERSION,getMap:()=>state.map,getEvents:()=>state.events?.features||[],getFilteredEvents:()=>state.filteredEvents.slice(),getFilters:()=>({...state.overviewFilters}),setFilters:setOverviewFilters,selectEvent:selectOverviewEvent,fitResults:fitOverviewResults,setImageryOpacity:value=>state.imagery?.setOpacity?.(Math.max(0,Math.min(1,Number(value)))),setBaseStyle:style=>{const map=qs("#map");if(map)map.dataset.mapStyle=String(style||"institutional-dark");syncOverviewMapUrl()},syncUrl:syncOverviewMapUrl,render:renderOverviewFeatures};
-  window.SCSIRouterV3228={version:"4.35.16",navigate:navigateToRoute,current:()=>state.route};
+  window.SCSIRouterV3228={version:"4.35.17",navigate:navigateToRoute,current:()=>state.route};
   if(!FIXED_WORDPRESS_EMBED){
     window.addEventListener("load",reportHeight,{once:true});
     window.addEventListener("resize",reportHeight,{passive:true});
@@ -1884,5 +1894,5 @@ visualStyle.textContent=`
 document.head.appendChild(visualStyle);
 
 
-/* v4.35.16 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v4.35.16 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v4.35.17 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v4.35.17 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

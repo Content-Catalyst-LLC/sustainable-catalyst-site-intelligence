@@ -1,7 +1,7 @@
-# Site Intelligence v4.35.16 — Credentials, API-Key & Configuration Completion
+# Site Intelligence v4.35.17 — Credentials, API-Key & Configuration Completion
 
 ## Release purpose
-v4.35.16 completes the configuration control plane for the platform's authenticated authoritative-source integrations. It does not manufacture, store, expose, or transmit credentials. Instead, it maps every current machine-readable AUTH_REQUIRED registration to one canonical server-side credential profile and exposes secret-safe readiness diagnostics.
+v4.35.17 completes the configuration control plane for the platform's authenticated authoritative-source integrations. It does not manufacture, store, expose, or transmit credentials. Instead, it maps every current machine-readable AUTH_REQUIRED registration to one canonical server-side credential profile and exposes secret-safe readiness diagnostics.
 
 ## Credential control plane
 - 17 authenticated machine-readable source registrations mapped.

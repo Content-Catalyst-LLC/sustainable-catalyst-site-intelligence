@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from ..config import Settings
 from ..models import ExternalHealthItem
+from ..external_resilience_v43517 import request_json as resilient_request_json
 from .external_data import ExternalDataHub, EXTERNAL_CACHE, utc_now
 
 ADVANCED_CONNECTOR_VERSION = "0.6.0"
@@ -79,9 +80,7 @@ SAMPLE_GBIF = {
 
 def _http_json(url: str, timeout: int, headers: Optional[Dict[str, str]] = None) -> Tuple[Dict[str, Any], float]:
     start = time.perf_counter()
-    req = urllib.request.Request(url, headers=headers or {"User-Agent": "SustainableCatalystSiteIntelligence/0.6.0"})
-    with urllib.request.urlopen(req, timeout=timeout) as response:  # noqa: S310 - intentional public API request.
-        data = json.loads(response.read().decode("utf-8"))
+    data = resilient_request_json(url, headers=headers, timeout=timeout, cache=True, stale_if_error=False)
     elapsed = (time.perf_counter() - start) * 1000
     return data, round(elapsed, 1)
 
