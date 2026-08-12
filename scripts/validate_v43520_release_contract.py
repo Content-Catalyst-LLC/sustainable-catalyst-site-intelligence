@@ -17,7 +17,7 @@ from app.workspace_browser_audit_v43518 import workspace_browser_readiness
 from app.external_resilience_v43517 import resilience_readiness
 from app.workspace_evidence_unification_v4358 import readiness as workspace_evidence_readiness
 
-assert APP_VERSION == "4.35.21"
+assert APP_VERSION == "4.35.22"
 settings = Settings(_env_file=None)
 
 linked = linked_record_readiness()
@@ -87,4 +87,4 @@ assert "/public/country/${encodeURIComponent(code)}/linked-records?days=90&limit
 assert "/public/events?country_code=" not in app_js[app_js.index("async function loadCountryEvents"):app_js.index("function setCountryLoading")]
 assert "Open humanitarian view" in index
 
-print("PASS: v4.35.21 Country-Linked Record Recovery release contract")
+print("PASS: v4.35.22 Country-Linked Record Recovery release contract")

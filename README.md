@@ -1,10 +1,10 @@
-# Current release: Site Intelligence v4.35.21 — Palestine Data Federation & Wikimedia Knowledge Context
+# Current release: Site Intelligence v4.35.22 — Country Evidence Reconciliation & Scope Integrity
 
-**Current release:** v4.35.21
+**Current release:** v4.35.22
 
-Site Intelligence v4.35.21 extends the Palestine country-data path into a source-separated federation and adds Wikimedia as a bounded Knowledge Context layer. PCBS remains the primary statistical authority for supported Palestinian concepts; Palestine Open Data adds official dataset discovery; HDX HAPI/CKAN retain humanitarian indicator/discovery roles; and World Bank remains harmonized comparison. Wikidata, Wikipedia, Wikimedia Commons, and Pageviews add entity linkage, background, licensed visual context, and public-attention signals while remaining explicitly excluded from Truth precedence. All optional Wikimedia work is lazy and non-blocking.
+Site Intelligence v4.35.22 turns the country federation into an explainable evidence-selection system. Exact concept, unit compatibility, geographic scope, reference period and methodology are evaluated before source authority or freshness. For Palestine, PCBS remains the preferred national statistical authority for exact supported concepts; World Bank remains harmonized comparison/fallback; and Gaza- or West Bank-only observations cannot silently replace a Palestine-wide statistic. Material source differences are retained and disclosed rather than averaged into a synthetic value.
 
-The release preserves the v4.35.20 linked-record recovery and v4.35.19 semantic-truth/production-soak gates. Complete deterministic verification is 1,629/1,629, and all 35 workspace routes pass desktop, mobile, and iframe browser validation with zero degraded routes.
+The country workspace now exposes an Evidence Reconciliation panel showing which source was selected, whether a higher-precedence source is absent from the current candidate set, and whether records differ by geography, period or methodology. v4.35.21 Palestine federation/Wikimedia context, v4.35.20 linked-record recovery, and v4.35.19 semantic truth/production soak remain inherited.
 
 ## v4.35.15 — Authoritative Connector Expansion II
 
@@ -1558,26 +1558,26 @@ Adds deferred Earth Observation orientation for NASA FIRMS fire/burned-area evid
 
 ## Current-release compatibility ledger
 
-- **Release:** v4.35.21 — Connected Public Intelligence and Evidence Platform
-- Current release:** v4.35.21 — Connected Public Intelligence and Evidence Platform
-- v4.35.21 — Analytics and Public-Value Measurement
-- v4.35.21 — Archive Verification, Preservation Audits, and Institutional Custody
-- v4.35.21 — Collection Publication, Citation Exports, and Research Brief Packages
-- v4.35.21 — Connected Live Intelligence Surface
-- v4.35.21 — Corrections, Retractions, and Public Change History
-- v4.35.21 — Editorial Workspace, Review Queues, and Publication Orchestration
-- v4.35.21 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
-- v4.35.21 — Homepage Intelligence Gateway
-- v4.35.21 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
-- v4.35.21 — Live Intelligence presentation
-- v4.35.21 — Preservation Interoperability, External Verification, and Institutional Exchange
-- v4.35.21 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
-- v4.35.21 — Public Registry Discovery, Evidence Search, and Institutional Profiles
-- v4.35.21 — Publication Adapters, Institutional Handoffs, and Release Governance
-- v4.35.21 — Registry Governance, Challenges, Revocation, and Appeals
-- v4.35.21 — Release Monitoring, Rollback, and Post-Publication Governance
-- v4.35.21 — Saved Discovery Views, Public Research Collections, and Evidence Pathways
-- v4.35.21 — Signal Context and Drill-Down
-- v4.35.21 — Signal Relevance and Rotation Intelligence
-- v4.35.21 — Signal Subscriptions, Alerts, and Scheduled Intelligence
-- v4.35.21 — Topic and Regional Channels
+- **Release:** v4.35.22 — Connected Public Intelligence and Evidence Platform
+- Current release:** v4.35.22 — Connected Public Intelligence and Evidence Platform
+- v4.35.22 — Analytics and Public-Value Measurement
+- v4.35.22 — Archive Verification, Preservation Audits, and Institutional Custody
+- v4.35.22 — Collection Publication, Citation Exports, and Research Brief Packages
+- v4.35.22 — Connected Live Intelligence Surface
+- v4.35.22 — Corrections, Retractions, and Public Change History
+- v4.35.22 — Editorial Workspace, Review Queues, and Publication Orchestration
+- v4.35.22 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
+- v4.35.22 — Homepage Intelligence Gateway
+- v4.35.22 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
+- v4.35.22 — Live Intelligence presentation
+- v4.35.22 — Preservation Interoperability, External Verification, and Institutional Exchange
+- v4.35.22 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
+- v4.35.22 — Public Registry Discovery, Evidence Search, and Institutional Profiles
+- v4.35.22 — Publication Adapters, Institutional Handoffs, and Release Governance
+- v4.35.22 — Registry Governance, Challenges, Revocation, and Appeals
+- v4.35.22 — Release Monitoring, Rollback, and Post-Publication Governance
+- v4.35.22 — Saved Discovery Views, Public Research Collections, and Evidence Pathways
+- v4.35.22 — Signal Context and Drill-Down
+- v4.35.22 — Signal Relevance and Rotation Intelligence
+- v4.35.22 — Signal Subscriptions, Alerts, and Scheduled Intelligence
+- v4.35.22 — Topic and Regional Channels

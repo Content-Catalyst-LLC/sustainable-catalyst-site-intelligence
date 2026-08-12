@@ -1,0 +1,35 @@
+Site Intelligence v4.35.22 — Frozen Build Validation
+
+Release: 4.35.22
+Theme: Country Evidence Reconciliation & Scope Integrity
+
+DETERMINISTIC TESTS
+PASS — 1,636 / 1,636 tests
+PASS — targeted Palestine/reconciliation release slice: 19 / 19
+
+BROWSER CONTROL PLANE
+PASS — desktop: 35 / 35 ready; 0 degraded
+PASS — mobile: 35 / 35 ready; 0 degraded
+PASS — iframe: 35 / 35 ready; 0 degraded
+
+STATIC / SECURITY
+PASS — JSON/GeoJSON: 134 parsed
+PASS — JavaScript: 152 validated
+PASS — WordPress PHP syntax
+PASS — static security scan: 0 findings
+PASS — v4.35.22 release-contract validator
+PASS — v4.35.22 static-release validator
+PASS — verify/deploy/promote shell syntax
+
+APPLICATION BUDGETS
+PASS — HTML: 171,981 / 172,000 bytes
+PASS — CSS: 101,860 / 102,000 bytes
+PASS — HTML + CSS + app.js: 485,433 / 500,000 bytes
+
+RELEASE POLICY
+PASS — country reconciliation readiness is deterministic/network-free
+PASS — exact concept before authority precedence
+PASS — national geography before source precedence
+PASS — Palestine subnational scope guard
+PASS — automatic cross-source blending prohibited
+PASS — external provider health remains non-blocking for release promotion

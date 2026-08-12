@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Workspace evidence unification and canonical observation contracts for Site Intelligence v4.35.21.
+"""Workspace evidence unification and canonical observation contracts for Site Intelligence v4.35.22.
 
 The workspace headline, evidence drawer, record-truth response and export manifest must all
 resolve from the same canonical observation object. This module intentionally consumes the

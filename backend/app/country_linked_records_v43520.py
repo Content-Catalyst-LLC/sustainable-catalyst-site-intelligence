@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Country-linked public record recovery for Site Intelligence v4.35.21.
+"""Country-linked public record recovery for Site Intelligence v4.35.22.
 
 The country workspace must not equate "records" with only hazard/event feeds.
 This layer combines country-bounded public events with credential-free HDX/OCHA

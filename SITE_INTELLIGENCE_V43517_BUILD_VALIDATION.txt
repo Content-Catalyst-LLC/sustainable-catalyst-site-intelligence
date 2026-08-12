@@ -1,9 +1,9 @@
-Site Intelligence v4.35.21 — Rate Limits, Retries, Caching, Backoff & Circuit Breakers
+Site Intelligence v4.35.22 — Rate Limits, Retries, Caching, Backoff & Circuit Breakers
 
 DETERMINISTIC TESTS
 PASS — 1,595 / 1,595
 Frozen-tree reconciliation: 444 + 374 + 171 + 185 + 176 + 206 + 39 = 1,595
-Targeted v4.35.21 external resilience tests: 14 / 14
+Targeted v4.35.22 external resilience tests: 14 / 14
 
 EXTERNAL RESILIENCE CONTROL PLANE
 PASS — bounded retry statuses: 408, 425, 429, 500, 502, 503, 504
@@ -30,4 +30,4 @@ Standalone installer bundle-only verification: PASS
 
 ARTIFACT RE-VERIFICATION
 PASS — extracted repository ZIP verified against 2,341-file immutable manifest
-PASS — extracted repository v4.35.21 targeted regressions: 14 / 14
+PASS — extracted repository v4.35.22 targeted regressions: 14 / 14

@@ -1,7 +1,7 @@
-# Site Intelligence v4.35.21 — Install & Test
+# Site Intelligence v4.35.22 — Install & Test
 
 ## Install
-Use the standalone macOS installer with the matching v4.35.21 release bundle.
+Use the standalone macOS installer with the matching v4.35.22 release bundle.
 
 ```bash
 cd ~/Downloads
@@ -9,14 +9,14 @@ cd ~/Downloads
 chmod +x deploy_and_validate_site_intelligence_v4_35_20_macos.sh
 
 ./deploy_and_validate_site_intelligence_v4_35_20_macos.sh \
-  sustainable-catalyst-site-intelligence-v4.35.21-release-bundle.zip
+  sustainable-catalyst-site-intelligence-v4.35.22-release-bundle.zip
 ```
 
 ## Bundle-only verification
 ```bash
 SC_VERIFY_BUNDLE_ONLY=1 bash \
   deploy_and_validate_site_intelligence_v4_35_20_macos.sh \
-  sustainable-catalyst-site-intelligence-v4.35.21-release-bundle.zip
+  sustainable-catalyst-site-intelligence-v4.35.22-release-bundle.zip
 ```
 
 ## Repository verification

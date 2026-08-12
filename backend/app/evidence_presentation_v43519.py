@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Evidence presentation semantics for Site Intelligence v4.35.21.
+"""Evidence presentation semantics for Site Intelligence v4.35.22.
 
 Transport freshness (a successful HTTP request, a cache hit, or a stale fallback) is
 not evidence freshness and is never allowed to imply that an annual statistic is a

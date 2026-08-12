@@ -25,7 +25,7 @@
     }
     throw last;
   }
-  const APP_VERSION="4.35.21";
+  const APP_VERSION="4.35.22";
   const FIXED_WORDPRESS_EMBED=window.SCSI_FIXED_WORDPRESS_EMBED===true;
   let heightFrame=0;
   function documentHeight(){
@@ -561,6 +561,23 @@
       if(sequence===globalCountryState.requestSequence)qs("#countryEventsList").innerHTML=publicErrorBlock("Country records unavailable","The linked-record service did not respond.",()=>selectGlobalCountry(code,false));
     }
   }
+  function ensureCountryReconciliationPanel(){
+    let panel=qs("#countryEvidenceReconciliationPanel");if(panel)return panel;
+    panel=document.createElement("article");panel.id="countryEvidenceReconciliationPanel";panel.className="country-events-panel country-knowledge-panel";
+    panel.innerHTML='<div class="panel-head"><div><p class="eyebrow">EVIDENCE RECONCILIATION</p><h2>Evidence reconciliation & scope integrity</h2></div><span class="knowledge-context-class">NO AUTOMATIC BLENDING</span></div><div id="countryEvidenceReconciliation" class="country-knowledge-body"></div>';
+    const knowledge=qs("#countryKnowledgeContextPanel"),footer=qs("#globalCountryExplorer .country-global-footer");
+    if(knowledge)knowledge.parentNode?.insertBefore(panel,knowledge);else footer?.parentNode?.insertBefore(panel,footer);return panel;
+  }
+  function renderCountryEvidenceReconciliation(data){
+    const box=qs("#countryEvidenceReconciliation");if(!box)return;const rows=data?.indicators||[],summary=data?.summary||{};
+    const cards=rows.slice(0,8).map(row=>`<div class="country-indicator knowledge-context-card"><span>${escapeHtml(row.label||row.indicator_id||"INDICATOR")}</span><strong>${escapeHtml(String(row.selected_source_id||"No eligible source"))}</strong><p>${escapeHtml(row.reference_period||"Period unavailable")} · ${escapeHtml(row.reconciliation_state||"unavailable")}</p><p>${escapeHtml(row.note||"Selection rationale unavailable.")}</p></div>`).join("");
+    box.innerHTML=`<div class="country-federation-strip"><span>RECONCILIATION STATE</span><b>${escapeHtml(String(summary.reconciled_multi_source||0))} multi-source reconciled</b><b>${escapeHtml(String(summary.single_source||0))} single-source</b><b>${escapeHtml(String(summary.fallback_without_preferred_candidate||0))} fallback / preferred source absent</b><small>Scope, concept and reference period are checked before authority or freshness. No conflicting values are averaged.</small></div><div class="knowledge-context-grid">${cards||'<div class="empty-state"><div><strong>No reconciliation candidates</strong><span>No exact-concept country indicators are currently available for reconciliation.</span></div></div>'}</div><p class="knowledge-boundary">${escapeHtml(data?.boundary||"A preferred source that is not present in the current candidate set is disclosed as absent rather than silently replaced.")}</p>`;reportHeight();
+  }
+  async function loadCountryEvidenceReconciliation(code,signal,sequence){
+    ensureCountryReconciliationPanel();const box=qs("#countryEvidenceReconciliation");if(box)box.innerHTML='<div class="loading-block">Reconciling source precedence and geographic scope…</div>';
+    try{const data=await apiWithRetry(`/public/country/${encodeURIComponent(code)}/evidence-reconciliation`,1,{signal});if(signal.aborted||sequence!==globalCountryState.requestSequence)return;renderCountryEvidenceReconciliation(data)}
+    catch(error){if(error?.name!=="AbortError"&&sequence===globalCountryState.requestSequence&&box)box.innerHTML='<div class="empty-state"><div><strong>Reconciliation unavailable</strong><span>The country evidence remains visible, but the selection/scope explanation could not be loaded.</span></div></div>'}
+  }
   function ensureCountryKnowledgePanel(){
     let panel=qs("#countryKnowledgeContextPanel");if(panel)return panel;
     panel=document.createElement("article");panel.id="countryKnowledgeContextPanel";panel.className="country-events-panel country-knowledge-panel";
@@ -601,6 +618,7 @@
     qs("#globalTrendTitle").textContent="Loading trend";
     qs("#globalTrendChart").innerHTML='<div class="loading-block">Loading multi-year series…</div>';
     qs("#countryEventsList").innerHTML='<div class="loading-block">Loading country-linked records…</div>';
+    ensureCountryReconciliationPanel();qs("#countryEvidenceReconciliation").innerHTML='<div class="loading-block">Reconciling source precedence and geographic scope…</div>';
     ensureCountryKnowledgePanel();qs("#countryKnowledgeContext").innerHTML='<div class="loading-block">Loading optional knowledge context…</div>';
   }
   async function selectGlobalCountry(code,pushState=true){
@@ -637,6 +655,7 @@
       else{globalCountryState.overviewMap.setView([0,20],2)}
       await loadCountryEvents(normalized,signal,sequence);
       if(signal.aborted||sequence!==globalCountryState.requestSequence)return;
+      loadCountryEvidenceReconciliation(normalized,signal,sequence);
       loadCountryKnowledgeContext(normalized,signal,sequence);
       qs("#countrySearchResults").hidden=true;
       if(pushState||!supported){const params=new URLSearchParams(location.search);params.set("view","country");params.set("country",normalized);history.replaceState(null,"",`?${params.toString()}`)}
@@ -647,6 +666,7 @@
       qs("#globalCountryMetrics").innerHTML=publicErrorBlock("Country intelligence unavailable","The country service may be waking up or temporarily unavailable.",()=>selectGlobalCountry(normalized,false));
       qs("#globalTrendChart").innerHTML='<div class="empty-state"><div><strong>Trend unavailable</strong><span>Retry the country request to load a validated series.</span></div></div>';
       qs("#countryEventsList").innerHTML='<div class="empty-state"><div><strong>Country records unavailable</strong><span>Country indicator failure does not imply that no linked records or humanitarian conditions exist.</span></div></div>';
+      ensureCountryReconciliationPanel();qs("#countryEvidenceReconciliation").innerHTML='<div class="empty-state"><div><strong>Reconciliation deferred</strong><span>Country indicator failure prevented the selection/scope explanation from loading.</span></div></div>';
       ensureCountryKnowledgePanel();qs("#countryKnowledgeContext").innerHTML='<div class="empty-state"><div><strong>Knowledge context deferred</strong><span>Optional context loads independently from authoritative country evidence.</span></div></div>';
     }finally{
       if(sequence===globalCountryState.requestSequence)qs("#globalCountryExplorer").setAttribute("aria-busy","false");
@@ -1571,7 +1591,7 @@
   }
   function closeAuditablePublicObservatory(){const panel=qs("#auditablePublicObservatory");if(panel)panel.hidden=true;const button=qs("#saveViewButton");if(button)button.disabled=false}
 
-  // registered route recovery is enforced after every route transition by v4.35.21.
+  // registered route recovery is enforced after every route transition by v4.35.22.
   async function setRoute(route){
     qs("#main").classList.remove("route-enter");void qs("#main").offsetWidth;qs("#main").classList.add("route-enter");
     state.route=route;
@@ -1923,7 +1943,7 @@
     hydration.then(results=>{const failed=results.filter(result=>result.status==="rejected");const status=qs("#statusText");if(failed.length){console.warn("[Site Intelligence] Startup hydration completed with limited services.",failed.map(result=>result.reason));if(status)status.textContent="Partial public data";toast("Some optional public data is temporarily unavailable.")}else if(status)status.textContent="Live public data";window.dispatchEvent(new CustomEvent("scsi:startup-hydrated",{detail:{version:APP_VERSION,state:failed.length?"limited":"ready",failed:failed.length}}));reportHeight()});
   }
   window.SCSIOverviewMapV3232={version:APP_VERSION,getMap:()=>state.map,getEvents:()=>state.events?.features||[],getFilteredEvents:()=>state.filteredEvents.slice(),getFilters:()=>({...state.overviewFilters}),setFilters:setOverviewFilters,selectEvent:selectOverviewEvent,fitResults:fitOverviewResults,setImageryOpacity:value=>state.imagery?.setOpacity?.(Math.max(0,Math.min(1,Number(value)))),setBaseStyle:style=>{const map=qs("#map");if(map)map.dataset.mapStyle=String(style||"institutional-dark");syncOverviewMapUrl()},syncUrl:syncOverviewMapUrl,render:renderOverviewFeatures};
-  window.SCSIRouterV3228={version:"4.35.21",navigate:navigateToRoute,current:()=>state.route};
+  window.SCSIRouterV3228={version:"4.35.22",navigate:navigateToRoute,current:()=>state.route};
   if(!FIXED_WORDPRESS_EMBED){
     window.addEventListener("load",reportHeight,{once:true});
     window.addEventListener("resize",reportHeight,{passive:true});
@@ -1949,5 +1969,5 @@ visualStyle.textContent=`
 document.head.appendChild(visualStyle);
 
 
-/* v4.35.21 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v4.35.21 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v4.35.22 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v4.35.22 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

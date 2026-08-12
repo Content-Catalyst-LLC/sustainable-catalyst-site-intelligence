@@ -1,7 +1,7 @@
-# Site Intelligence v4.35.21 — Palestine Data Federation & Wikimedia Knowledge Context Audit
+# Site Intelligence v4.35.22 — Palestine Data Federation & Wikimedia Knowledge Context Audit
 
 ## Architecture decision
-v4.35.21 separates four questions that must not collapse into a single generic “source” state:
+v4.35.22 separates four questions that must not collapse into a single generic “source” state:
 
 1. What is the authoritative statistic?
 2. What official or humanitarian datasets are discoverable?
@@ -61,7 +61,7 @@ Final measured shell budgets during validation:
 - first-party shell total: **481,692 / 500,000 bytes**
 
 ## Deterministic verification
-- New v4.35.21 feature regressions: 8 dedicated tests.
+- New v4.35.22 feature regressions: 8 dedicated tests.
 - Complete inherited + new deterministic suite: **1,629 / 1,629 passed**.
 - Browser route visibility: **35/35 desktop, 35/35 mobile, 35/35 iframe**, zero degraded routes.
 - Palestine federation and Wikimedia readiness are network-free and external-provider health is non-blocking.

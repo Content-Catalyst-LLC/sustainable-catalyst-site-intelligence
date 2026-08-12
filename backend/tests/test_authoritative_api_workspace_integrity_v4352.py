@@ -25,7 +25,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def test_release_version_and_taxonomy():
-    assert APP_VERSION == "4.35.21"
+    assert APP_VERSION == "4.35.22"
     assert ACCESS_CLASSES == (
         "LIVE",
         "DISCOVERY",
@@ -106,7 +106,7 @@ def test_readiness_reports_integrity_checks_without_network_calls(monkeypatch):
     monkeypatch.delenv("SC_SI_RELIEFWEB_APPNAME", raising=False)
     data = audit_readiness(Settings(_env_file=None))
     assert data["ok"] is True
-    assert data["version"] == "4.35.21"
+    assert data["version"] == "4.35.22"
     assert data["network_calls_performed"] is False
     assert all(data["checks"].values())
 
@@ -150,7 +150,7 @@ def test_public_authoritative_api_endpoints(monkeypatch):
     client = TestClient(app)
     overview = client.get("/public/authoritative-apis")
     assert overview.status_code == 200
-    assert overview.json()["version"] == "4.35.21"
+    assert overview.json()["version"] == "4.35.22"
     catalog = client.get("/public/authoritative-apis/catalog", params={"workspace": "Hydrology"})
     assert catalog.status_code == 200
     assert catalog.json()["sources"]

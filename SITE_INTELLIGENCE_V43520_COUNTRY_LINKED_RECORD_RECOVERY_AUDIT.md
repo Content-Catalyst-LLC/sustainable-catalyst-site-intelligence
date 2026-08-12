@@ -1,4 +1,4 @@
-# Site Intelligence v4.35.21 — Country-Linked Record Recovery Audit
+# Site Intelligence v4.35.22 — Country-Linked Record Recovery Audit
 
 ## Defect
 The country workspace rendered “Country-linked records” from `/public/events?country_code=...`. The event aggregator loaded a bounded global ReliefWeb batch and filtered by country afterward. A country could therefore have valid upstream records yet render an empty panel because none landed in that global batch. If ReliefWeb's required application identifier was absent, the remaining USGS/EONET event feeds were not a sufficient humanitarian record path for countries such as Palestine.
@@ -25,7 +25,7 @@ HDX discovery candidates must contain an explicit ISO3 or country-name/alias mat
 Zero retained records means only that the currently connected sources returned no retained country-linked record. It is never interpreted as zero incidence, zero humanitarian need, or absence of a real-world condition.
 
 ## Release health
-`/public/country-linked-records/readiness` is deterministic and network-free. The v4.35.21 deployment verifier requires the linked-record recovery contract while retaining the inherited policy that live upstream provider health is non-blocking for release promotion.
+`/public/country-linked-records/readiness` is deterministic and network-free. The v4.35.22 deployment verifier requires the linked-record recovery contract while retaining the inherited policy that live upstream provider health is non-blocking for release promotion.
 
 ## Scope boundary
 This release repairs acquisition, routing, presentation, and source-state semantics. It does not claim that every humanitarian authority has been integrated, that every HDX dataset is current, or that discovery metadata replaces operational OCHA/WHO/sector reporting. Those remain separate evidence integrations.

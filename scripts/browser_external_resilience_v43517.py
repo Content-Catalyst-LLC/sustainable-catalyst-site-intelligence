@@ -5,8 +5,8 @@ index = (ROOT / 'backend/public_app/index.html').read_text()
 app = (ROOT / 'backend/public_app/assets/app.js').read_text()
 main = (ROOT / 'backend/app/main.py').read_text()
 
-assert 'data-scsi-release="4.35.21"' in index
-assert 'EXTERNAL RESILIENCE · v4.35.21' in index
+assert 'data-scsi-release="4.35.22"' in index
+assert 'EXTERNAL RESILIENCE · v4.35.22' in index
 for marker in ('externalResilienceStatus', 'resiliencePolicyMetric', 'resilienceCacheMetric', 'resilienceRetryMetric', 'resilienceCircuitMetric'):
     assert marker in index, marker
 for marker in ('renderExternalResilience', '/public/external-resilience', 'upstream health is non-blocking for deployment'):
@@ -15,4 +15,4 @@ for endpoint in ('/public/external-resilience', '/public/external-resilience/rea
     assert endpoint in main, endpoint
 assert len(index.encode()) <= 170_000
 assert len(app.encode()) <= 260_000
-print('PASS: v4.35.21 external resilience browser/static gate')
+print('PASS: v4.35.22 external resilience browser/static gate')

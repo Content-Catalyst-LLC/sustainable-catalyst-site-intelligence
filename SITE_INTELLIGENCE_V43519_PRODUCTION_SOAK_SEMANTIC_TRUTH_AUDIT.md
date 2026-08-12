@@ -1,4 +1,4 @@
-# Site Intelligence v4.35.21 — Production Soak & Semantic Truth Audit
+# Site Intelligence v4.35.22 — Production Soak & Semantic Truth Audit
 
 ## Production failure/recovery matrix
 1. Steady upstream success.
@@ -20,7 +20,7 @@ All eight scenarios are deterministic, execute in process, and use the productio
 Structural electricity access cannot substitute for current electricity availability, outage status, service hours, grid reliability, or generator dependence. Structural drinking-water access cannot substitute for current availability, pressure, continuity, quality, or household service conditions.
 
 ## Palestine precedence
-For supported exact-concept national statistical evidence, the source registry puts the Palestinian Central Bureau of Statistics first and retains World Bank as harmonized comparison/fallback. Operational electricity, health-system, water-service, and similar current-condition evidence remain separate concepts and require appropriate operational/sector sources; v4.35.21 does not claim connectors that are not yet implemented.
+For supported exact-concept national statistical evidence, the source registry puts the Palestinian Central Bureau of Statistics first and retains World Bank as harmonized comparison/fallback. Operational electricity, health-system, water-service, and similar current-condition evidence remain separate concepts and require appropriate operational/sector sources; v4.35.22 does not claim connectors that are not yet implemented.
 
 ## Release policy
 The deterministic first-party soak is release-blocking. A separate live-provider operator soak is not. This preserves the ability to verify real post-deployment behavior without allowing a transient external outage to invalidate an otherwise healthy Site Intelligence release.

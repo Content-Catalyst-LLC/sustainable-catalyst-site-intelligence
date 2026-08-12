@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Source precedence, metric semantics and freshness intelligence for Site Intelligence v4.35.21.
+"""Source precedence, metric semantics and freshness intelligence for Site Intelligence v4.35.22.
 
 This layer does not fetch upstream data. It evaluates already disclosed candidate evidence and
 keeps semantic compatibility ahead of authority or freshness. A fresher record for the wrong
@@ -153,6 +153,12 @@ PRECEDENCE_RULES: list[dict[str, Any]] = [
     },
     {
         "jurisdiction": "PSE",
+        "concept_id": "*",
+        "preferred_sources": ["pcbs-pxweb", "pcbs-pxweb-sdgs", "world_bank"],
+        "rationale": "For Palestine-wide official statistics, prefer PCBS when an exact-concept national series is present; retain World Bank as harmonized comparison/fallback. Subnational Gaza or West Bank records require explicit scope handling before this precedence rule is applied.",
+    },
+    {
+        "jurisdiction": "PSE",
         "concept_id": "electricity_operational_availability",
         "preferred_sources": ["gedco", "palestinian-energy-authority", "ocha-opt", "reliefweb"],
         "rationale": "Operational electricity conditions require grid/operator, energy-authority or humanitarian operational evidence; structural access statistics are semantically ineligible.",
@@ -234,6 +240,7 @@ def precedence_catalog(*, jurisdiction: str = "", concept_id: str = "") -> dict[
         rules = [row for row in rules if row["jurisdiction"] == j]
     if c:
         rules = [row for row in rules if row["concept_id"] in {c, "*"}]
+        rules.sort(key=lambda row: 0 if row["concept_id"] == c else 1)
     return {
         "ok": True,
         "version": VERSION,
@@ -319,6 +326,7 @@ def _precedence_index(jurisdiction: str, concept_id: str, source_id: str) -> int
         row for row in PRECEDENCE_RULES
         if row["jurisdiction"] == jurisdiction and row["concept_id"] in {concept_id, "*"}
     ]
+    matches.sort(key=lambda row: 0 if row["concept_id"] == concept_id else 1)
     for rule in matches:
         if source in rule["preferred_sources"]:
             return rule["preferred_sources"].index(source)

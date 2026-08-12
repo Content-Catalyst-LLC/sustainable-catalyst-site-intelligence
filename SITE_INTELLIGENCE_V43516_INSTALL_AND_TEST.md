@@ -1,7 +1,7 @@
-# Site Intelligence v4.35.21 — Install & Test
+# Site Intelligence v4.35.22 — Install & Test
 
 ## Install
-Run the standalone macOS installer with the v4.35.21 release bundle. The installer verifies bundle checksums, validates the repository, runs deterministic tests, synchronizes GitHub, and verifies the Render release receipt when promotion is enabled.
+Run the standalone macOS installer with the v4.35.22 release bundle. The installer verifies bundle checksums, validates the repository, runs deterministic tests, synchronizes GitHub, and verifies the Render release receipt when promotion is enabled.
 
 ## Local validation
 ```bash

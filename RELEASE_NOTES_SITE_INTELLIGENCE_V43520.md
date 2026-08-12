@@ -1,4 +1,4 @@
-# Site Intelligence v4.35.21 — Country-Linked Record Recovery, Source-Bounded Filtering & Humanitarian Discovery
+# Site Intelligence v4.35.22 — Country-Linked Record Recovery, Source-Bounded Filtering & Humanitarian Discovery
 
 ## Release objective
 Repair the country-linked record path so a supported country—especially Palestine (`PSE`)—does not appear to have no linked public records merely because a small global event batch omitted its records or a credential-gated provider is unavailable.

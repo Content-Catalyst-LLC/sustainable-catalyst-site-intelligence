@@ -16,7 +16,7 @@ from app.external_resilience_v43517 import resilience_readiness
 from app.release_health_v43518 import deployment_verification, source_health_policy
 from app.workspace_browser_audit_v43518 import workspace_browser_audit, workspace_browser_readiness
 
-assert APP_VERSION == "4.35.21"
+assert APP_VERSION == "4.35.22"
 settings = Settings(_env_file=None)
 
 audit = workspace_browser_audit()
@@ -92,4 +92,4 @@ promotion=(ROOT/"promote_site_intelligence_v4_35_18_to_github_and_render_macos.s
 assert "Deep gate:" not in promotion
 assert "/public/workspace-browser-audit/readiness" in promotion
 assert "workspace_browser_ready" in promotion
-print("PASS: v4.35.21 Full Workspace End-to-End Browser Audit & Simply Works Reliability release contract")
+print("PASS: v4.35.22 Full Workspace End-to-End Browser Audit & Simply Works Reliability release contract")

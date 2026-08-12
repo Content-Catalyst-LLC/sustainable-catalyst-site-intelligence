@@ -1,4 +1,13 @@
-# Site Intelligence v4.35.21 — Palestine Data Federation & Wikimedia Knowledge Context
+# v4.35.22 — Country Evidence Reconciliation & Scope Integrity
+
+- Added exact-concept, unit, geography, reference-period and methodology reconciliation for country evidence.
+- Added Palestine national/subnational scope guards so Gaza and West Bank records cannot silently replace Palestine-wide statistics.
+- Added PCBS-first Palestine statistical precedence for exact supported national concepts with explicit World Bank fallback disclosure.
+- Added material discrepancy review without automatic averaging or synthetic blending.
+- Added country-workspace Evidence Reconciliation panel and network-free readiness/reconcile/snapshot routes.
+- Preserved v4.35.21 Palestine federation/Wikimedia context, v4.35.20 linked-record recovery, and v4.35.19 semantic truth/production soak.
+
+# Site Intelligence v4.35.22 — Palestine Data Federation & Wikimedia Knowledge Context
 
 - Added Palestine Open Data Portal CKAN discovery and a Palestine-specific source federation.
 - Preserved PCBS as primary official statistics, HDX HAPI as standardized humanitarian indicators, HDX CKAN as humanitarian discovery, and World Bank as harmonized comparison.
@@ -10,7 +19,7 @@
 
 # Changelog
 
-## v4.35.21 — Live-Operation Stress, Semantic Truth & Recovery Integrity
+## v4.35.22 — Live-Operation Stress, Semantic Truth & Recovery Integrity
 - Added an application-level deterministic production soak with eight failure/recovery scenarios, including 429 Retry-After, 503 recovery, stale fallback, circuit opening/recovery, 24-cycle provider flapping, and missing-credential degradation.
 - Added evidence presentation classes that separate retrieval/cache state from observation semantics.
 - World Bank annual country indicators are now classified as harmonized benchmarks rather than operationally live observations.
@@ -19,7 +28,7 @@
 - Added Sources workspace production-soak status and release-gate requirements while keeping real upstream provider health non-blocking.
 - Preserved the inherited 35-route browser reliability, connector, credential, external-resilience, and canonical Truth contracts.
 
-# v4.35.21 — Full Workspace End-to-End Browser Audit & “Simply Works” Reliability
+# v4.35.22 — Full Workspace End-to-End Browser Audit & “Simply Works” Reliability
 
 - Audited all 35 registered public workspace routes across six primary areas.
 - Added deterministic route-to-surface contracts, route metadata validation, and first-party workspace-browser readiness.

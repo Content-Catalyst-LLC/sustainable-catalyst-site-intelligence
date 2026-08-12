@@ -1,4 +1,4 @@
-# Site Intelligence v4.35.21 — Palestine Data Federation & Wikimedia Knowledge Context
+# Site Intelligence v4.35.22 — Palestine Data Federation & Wikimedia Knowledge Context
 
 ## Release objective
 Extend the v4.35.20 Palestine linked-record recovery into a source-separated country-data federation while adding Wikimedia as a non-authoritative knowledge-context layer. The release must improve discovery and entity context without allowing community-curated context, public attention, or dataset metadata to overwrite source-governed Truth.
@@ -15,7 +15,7 @@ Extend the v4.35.20 Palestine linked-record recovery into a source-separated cou
 - Added a lazy, non-blocking country Knowledge Context panel; Wikimedia failure does not hold open the core country workspace.
 - Added explicit `truth_precedence: excluded` handling for Wikimedia context.
 - Added deterministic, network-free readiness surfaces for the Palestine federation and Wikimedia Knowledge Context.
-- Added a split-mode v4.35.21 browser verifier so desktop, mobile, and iframe can be validated independently without depending on optional upstream timing.
+- Added a split-mode v4.35.22 browser verifier so desktop, mobile, and iframe can be validated independently without depending on optional upstream timing.
 
 ## Palestine source roles
 - **PCBS** — PRIMARY OFFICIAL STATISTICS

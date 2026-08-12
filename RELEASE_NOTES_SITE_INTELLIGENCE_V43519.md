@@ -1,4 +1,4 @@
-# Site Intelligence v4.35.21 — Live-Operation Stress, Semantic Truth & Recovery Integrity
+# Site Intelligence v4.35.22 — Live-Operation Stress, Semantic Truth & Recovery Integrity
 
 ## Release objective
 Prove that Site Intelligence remains usable and truthful while external providers slow down, rate-limit, fail, flap, recover, or lack credentials—and prevent transport freshness from being misrepresented as evidence freshness or current operational reality.
@@ -25,4 +25,4 @@ Prove that Site Intelligence remains usable and truthful while external provider
 - World Bank remains available for international comparison and fallback; the semantic fix does not discard it.
 
 ## Validation
-The release is gated by the complete deterministic pytest suite, the 14-case v4.35.21 fault-injection/semantic regression layer, immutable repository manifest, JSON/GeoJSON parsing, JavaScript/PHP syntax validation, static security scanning, the inherited 35-route desktop/mobile/iframe browser audit, canonical evidence/Truth readiness, external-resilience readiness, and the v4.35.21 release contract.
+The release is gated by the complete deterministic pytest suite, the 14-case v4.35.22 fault-injection/semantic regression layer, immutable repository manifest, JSON/GeoJSON parsing, JavaScript/PHP syntax validation, static security scanning, the inherited 35-route desktop/mobile/iframe browser audit, canonical evidence/Truth readiness, external-resilience readiness, and the v4.35.22 release contract.
