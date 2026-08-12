@@ -14,7 +14,7 @@ services:
       - key: SC_SI_RELEASE_CHANNEL
         value: production
       - key: SC_SI_RELEASE_ID
-        value: site-intelligence-v4.35.15
+        value: site-intelligence-v4.35.16
       - key: SC_SI_RUNTIME_STATE_ROOT
         value: /tmp/site-intelligence-runtime
       - key: SC_SI_EXPECTED_GIT_BRANCH
@@ -92,20 +92,32 @@ services:
       # Optional NASA Earthdata token; public CMR GraphQL metadata discovery works without it.
       - key: SC_SI_NASA_EARTHDATA_TOKEN
         sync: false
-      # v4.35.15 Energy workspace official-source credentials.
+      # v4.35.16 Energy workspace official-source credentials.
       - key: SC_SI_EIA_API_KEY
         sync: false
       - key: SC_SI_EMBER_API_KEY
         sync: false
       - key: SC_SI_ENTSOE_SECURITY_TOKEN
         sync: false
-      # v4.35.15 Climate/Atmosphere connector closure.
+      # v4.35.16 Climate/Atmosphere connector closure.
       - key: SC_SI_AIRNOW_API_KEY
         sync: false
-      # v4.35.15 Agriculture/Food Security/Humanitarian connector closure.
+      # v4.35.16 Agriculture/Food Security/Humanitarian connector closure.
       - key: SC_SI_HDX_HAPI_APP_IDENTIFIER
         sync: false
       - key: SC_SI_IPC_API_KEY
+        sync: false
+
+      # v4.35.16 canonical authenticated-source configuration.
+      - key: SC_SI_EPA_AQS_EMAIL
+        sync: false
+      - key: SC_SI_EPA_AQS_KEY
+        sync: false
+      - key: SC_SI_COPERNICUS_MARINE_USERNAME
+        sync: false
+      - key: SC_SI_COPERNICUS_MARINE_PASSWORD
+        sync: false
+      - key: SC_SI_GLOBAL_FISHING_WATCH_API_TOKEN
         sync: false
 
 # v2.8.0 optional environment values:

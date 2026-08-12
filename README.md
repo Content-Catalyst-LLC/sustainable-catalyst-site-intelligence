@@ -1,3 +1,9 @@
+# Current release: Site Intelligence v4.35.16 — Credentials, API-Key & Configuration Completion
+
+**Current release:** v4.35.16
+
+Site Intelligence v4.35.16 adds a canonical, secret-safe credential control plane for all current AUTH_REQUIRED machine integrations. It deduplicates 17 authenticated source registrations into 12 credential profiles, declares every required Render environment variable, reports configured/missing/partial/invalid states without exposing secret material, and keeps credential completion separate from deployment integrity.
+
 # Current release: Site Intelligence v4.35.15 — High-Priority Workspace Connector Closure V: Mining, Critical Materials & Industrial Systems
 
 Site Intelligence v4.35.15 closes the ambiguous machine-interface backlog in Mining & Critical Materials and Industrial Manufacturing & Trade. Bounded OpenStreetMap/Overpass retrieval supplies supplemental mining and industrial infrastructure evidence; USGS USMIN and Mineral Commodity Summaries 2026 are discoverable through the official USGS Science Data Catalog API; and World Bank WITS provides bounded trade-statistics retrieval. USGS data-release metadata remain distinct from live mine operations, OSM remains supplemental community mapping, and WITS trade statistics remain distinct from physical shipment telemetry. Both target workspaces now have zero REGISTERED machine-interface backlog, while external source availability remains non-blocking for deployment.
@@ -1570,3 +1576,30 @@ Site Intelligence now extends the ocean continuum into source-bounded human-use 
 
 ## v4.35.15 — Terrestrial Ecosystems, Vegetation & Wildfire Intelligence
 Adds deferred Earth Observation orientation for NASA FIRMS fire/burned-area evidence, NASA MODIS vegetation indices, Copernicus LCFM land/tree cover, and Copernicus global vegetation products while preserving evidence maturity and no-warning/no-health-inference boundaries.
+
+
+## Current-release compatibility ledger
+
+- **Release:** v4.35.16 — Connected Public Intelligence and Evidence Platform
+- Current release:** v4.35.16 — Connected Public Intelligence and Evidence Platform
+- v4.35.16 — Analytics and Public-Value Measurement
+- v4.35.16 — Archive Verification, Preservation Audits, and Institutional Custody
+- v4.35.16 — Collection Publication, Citation Exports, and Research Brief Packages
+- v4.35.16 — Connected Live Intelligence Surface
+- v4.35.16 — Corrections, Retractions, and Public Change History
+- v4.35.16 — Editorial Workspace, Review Queues, and Publication Orchestration
+- v4.35.16 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
+- v4.35.16 — Homepage Intelligence Gateway
+- v4.35.16 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
+- v4.35.16 — Live Intelligence presentation
+- v4.35.16 — Preservation Interoperability, External Verification, and Institutional Exchange
+- v4.35.16 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
+- v4.35.16 — Public Registry Discovery, Evidence Search, and Institutional Profiles
+- v4.35.16 — Publication Adapters, Institutional Handoffs, and Release Governance
+- v4.35.16 — Registry Governance, Challenges, Revocation, and Appeals
+- v4.35.16 — Release Monitoring, Rollback, and Post-Publication Governance
+- v4.35.16 — Saved Discovery Views, Public Research Collections, and Evidence Pathways
+- v4.35.16 — Signal Context and Drill-Down
+- v4.35.16 — Signal Relevance and Rotation Intelligence
+- v4.35.16 — Signal Subscriptions, Alerts, and Scheduled Intelligence
+- v4.35.16 — Topic and Regional Channels

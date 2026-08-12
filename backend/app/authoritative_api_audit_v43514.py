@@ -8,11 +8,11 @@ from . import authoritative_api_audit_v43513 as prior
 
 VERSION=APP_VERSION; CONTRACT=prior.CONTRACT; AUDIT_DATE='2026-08-11'; ACCESS_CLASSES=prior.ACCESS_CLASSES
 COMPLETED_CONNECTOR_TARGETS=tuple(prior.COMPLETED_CONNECTOR_TARGETS)+(
- {'id':'gdacs-events-v1','workspace':'Humanitarian Intelligence','state':'LIVE','completed_in':'4.35.15'},
- {'id':'hdx-ckan-discovery','workspace':'Conflict & Human Security','state':'DISCOVERY','completed_in':'4.35.15'},
- {'id':'hdx-hapi-food-security','workspace':'Humanitarian Intelligence','state':'AUTH_REQUIRED','completed_in':'4.35.15'},
- {'id':'ipc-food-security-api','workspace':'Agriculture, Crops & Food Systems','state':'AUTH_REQUIRED','completed_in':'4.35.15'},
- {'id':'fews-net-data-platform','workspace':'Agriculture, Crops & Food Systems','state':'LIVE','completed_in':'4.35.15'},
+ {'id':'gdacs-events-v1','workspace':'Humanitarian Intelligence','state':'LIVE','completed_in':'4.35.16'},
+ {'id':'hdx-ckan-discovery','workspace':'Conflict & Human Security','state':'DISCOVERY','completed_in':'4.35.16'},
+ {'id':'hdx-hapi-food-security','workspace':'Humanitarian Intelligence','state':'AUTH_REQUIRED','completed_in':'4.35.16'},
+ {'id':'ipc-food-security-api','workspace':'Agriculture, Crops & Food Systems','state':'AUTH_REQUIRED','completed_in':'4.35.16'},
+ {'id':'fews-net-data-platform','workspace':'Agriculture, Crops & Food Systems','state':'LIVE','completed_in':'4.35.16'},
 )
 PRIORITY_CONNECTOR_TARGETS=tuple(x for x in prior.PRIORITY_CONNECTOR_TARGETS if x.get('id') not in {'gdacs','hdx','ipc-food-security-api','fews-net-data-platform'})
 def _now(): return datetime.now(timezone.utc).isoformat()
