@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""v4.35.13 record-truth adapter over the canonical workspace observation contract."""
+"""v4.35.14 record-truth adapter over the canonical workspace observation contract."""
 
 from typing import Any, Mapping
 from .config import Settings

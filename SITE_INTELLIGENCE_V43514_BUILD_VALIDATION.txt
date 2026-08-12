@@ -1,0 +1,30 @@
+Site Intelligence v4.35.14 — Build Validation
+Release: High-Priority Workspace Connector Closure IV: Agriculture, Food Security & Humanitarian Conditions
+
+DETERMINISTIC PYTEST
+PASS — 1,553 / 1,553 tests
+Frozen verifier reconciliation: 408 + 346 + 357 + 351 + 91 = 1,553
+New v4.35.14 closure regressions: 14 / 14 PASS
+
+STATIC / FORMAT GATES
+PASS — 134 JSON/GeoJSON files parsed
+PASS — 151 JavaScript files syntax-validated
+PASS — WordPress PHP syntax
+PASS — static security scan, 0 findings
+PASS — v4.35.14 release contract
+PASS — Agriculture/Food Security/Humanitarian browser/static connector gate
+
+AUDIT SNAPSHOT
+Machine-readable registrations: 112
+LIVE: 48
+DISCOVERY: 13
+AUTH_REQUIRED: 17
+REGISTERED/not retrieved: 32
+BULK: 2
+STALE: 0
+Public connector catalog: 45 (28 LIVE / 9 DISCOVERY / 8 AUTH_REQUIRED)
+Agriculture REGISTERED backlog: 0
+Humanitarian REGISTERED backlog: 0
+
+PASS — immutable repository manifest: 2,292 files
+Release packaging and final bundle checksums are verified after ZIP assembly.

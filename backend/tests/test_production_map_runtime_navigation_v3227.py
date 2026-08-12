@@ -29,7 +29,7 @@ def test_map_startup_is_entirely_first_party():
     runtime = read("backend/public_app/assets/vector-cartography-v3230.js")
     assert "unpkg.com/leaflet" not in html
     assert "leaflet@1.9.4/dist/leaflet.js" not in html
-    assert html.index("vector-cartography-v3230.js") < html.index('src="/app/assets/app.js?v=4.35.13"')
+    assert html.index("vector-cartography-v3230.js") < html.index('src="/app/assets/app.js?v=4.35.14"')
     assert '__scsiFirstParty: true' in runtime
     assert 'mode: "vector-cartography-engine"' in runtime
     assert 'data-map-zoom-in' in runtime
@@ -68,7 +68,7 @@ def test_wordpress_uses_the_same_first_party_runtime_before_map_features():
 def test_release_and_offline_shell_are_aligned():
     worker = read("backend/public_app/service-worker.js")
     html = read("backend/public_app/index.html")
-    assert 'const RELEASE="4.35.13"' in worker
-    assert 'data-scsi-release="4.35.13"' in html
+    assert 'const RELEASE="4.35.14"' in worker
+    assert 'data-scsi-release="4.35.14"' in html
     assert "vector-cartography-v3230.js" in worker
     assert "global-conditions-v210.js" in worker

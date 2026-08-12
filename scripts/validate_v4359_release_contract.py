@@ -8,7 +8,7 @@ from app.config import Settings
 from app.main import app
 from app.version import APP_VERSION
 from app.authoritative_api_production_audit_v4359 import production_audit, production_readiness, closure_ledger
-assert APP_VERSION=='4.35.13'
+assert APP_VERSION=='4.35.14'
 settings=Settings(_env_file=None, reliefweb_appname='', nasa_firms_map_key='', usda_nass_api_key='')
 a=production_audit(settings)
 assert a['production_controls_ready'] is True
@@ -26,4 +26,4 @@ main=(ROOT/'backend/app/main.py').read_text()
 assert 'authoritative_api_production_audit_v4359' in main
 promotion=(ROOT/'promote_site_intelligence_v4_35_9_to_github_and_render_macos.sh').read_text()
 assert 'Deep gate:' not in promotion
-print('PASS: v4.35.13 Authoritative API Coverage Closure & Production Audit release contract')
+print('PASS: v4.35.14 Authoritative API Coverage Closure & Production Audit release contract')

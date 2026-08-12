@@ -440,7 +440,7 @@ def country_indicators(code: str) -> dict[str, Any]:
                 "reason": "Reference snapshots and unavailable records are not published as live evidence.",
             }
             merged.append(fallback)
-    # v4.35.13: attach the single canonical observation consumed by workspace, evidence and Truth surfaces.
+    # v4.35.14: attach the single canonical observation consumed by workspace, evidence and Truth surfaces.
     from .workspace_evidence_unification_v4358 import canonicalize_country_indicator
     for item in merged:
         item["canonical_observation"] = canonicalize_country_indicator({"code": normalized, **country}, item)

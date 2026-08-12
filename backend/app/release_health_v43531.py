@@ -1,4 +1,4 @@
-"""Deployment verification and non-blocking source-health policy for Site Intelligence v4.35.13.
+"""Deployment verification and non-blocking source-health policy for Site Intelligence v4.35.14.
 
 Release verification is intentionally limited to first-party deployment identity,
 packaging, and deterministic application/runtime contracts. External authoritative
