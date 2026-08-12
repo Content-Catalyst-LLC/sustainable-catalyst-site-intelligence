@@ -1,4 +1,4 @@
-"""Connected, governed Live Intelligence surfaces for Site Intelligence v4.35.17.
+"""Connected, governed Live Intelligence surfaces for Site Intelligence v4.35.18.
 
 This module turns the canonical Live Intelligence signal contract into reusable
 public surfaces without duplicating ingestion, freshness, rotation, source, or

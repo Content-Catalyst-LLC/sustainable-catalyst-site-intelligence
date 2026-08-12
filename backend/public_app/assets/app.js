@@ -25,7 +25,7 @@
     }
     throw last;
   }
-  const APP_VERSION="4.35.17";
+  const APP_VERSION="4.35.18";
   const FIXED_WORDPRESS_EMBED=window.SCSI_FIXED_WORDPRESS_EMBED===true;
   let heightFrame=0;
   function documentHeight(){
@@ -98,7 +98,7 @@
         document.documentElement.dataset.scsiRouteBusy="true";
         window.dispatchEvent(new CustomEvent("scsi:route-transition-start",{detail:{version:APP_VERSION,route:current}}));
         history.replaceState(null,"",`?country=${encodeURIComponent(state.country)}&view=${encodeURIComponent(current)}`);
-        try{await setRoute(current)}catch(error){ok=false;console.error("[Site Intelligence] Route failed",current,error);toast("That workspace could not be opened.")}
+        try{await setRoute(current);await window.SCSIWorkspaceReliabilityV43518?.enforce?.(current)}catch(error){ok=false;console.error("[Site Intelligence] Route failed",current,error);await window.SCSIWorkspaceReliabilityV43518?.enforce?.(current,error?.message||"registered route recovery");toast("That workspace opened with limited services.")}
         window.dispatchEvent(new CustomEvent("scsi:route-transition-end",{detail:{version:APP_VERSION,route:current,ok}}));
       }
       return ok;
@@ -251,6 +251,7 @@
       publishing:["INTELLIGENCE PUBLISHING AND STORY MAP STUDIO","Publish source-aware intelligence","Read human-reviewed publications, story maps, timelines, charts, evidence blocks, methodology, and immutable version history."],
       monitoring:["SCHEDULED MONITORING, DIGESTS, AND PUBLIC FEEDS","Follow public evidence over time","Read human-approved digests, inspect deduplicated alerts, and subscribe through JSON, RSS, or Atom without a hosted profile."],
       workspaces:["INSTITUTIONAL WORKSPACES, COLLABORATION, AND REVIEW","Coordinate review without exposing private work","Browse human-published institutional workspaces and public source collections while membership, assignments, comments, and review notes remain private."],
+      workflows:["TYPED CROSS-PLATFORM INTELLIGENCE WORKFLOWS","Move evidence between products without losing context","Inspect typed public workflow routes across Site Intelligence, Workbench, Decision Studio, Research Librarian, Knowledge Library, Research Lab, and Platform Core while keeping private delivery history private."],
       federation:["OPEN STANDARDS, FEDERATION, AND INSTITUTIONAL DATA EXCHANGE","Exchange institutional evidence through open standards","Browse public institutions, catalogs, licenses, provenance, distributions, and manifest metadata without exposing trust policies or private import operations."],
       governance:["SECURITY, PRIVACY, GOVERNANCE, AND PRODUCTION SCALE","Inspect production-readiness contracts","Review public migration, audit, backup, queue, privacy, and rate-limiting boundaries without exposing operational secrets."],
       country:["COUNTRY INTELLIGENCE",`${names[state.country]||state.country} evidence profile`,"Environmental, development, humanitarian, security, and legal context for one selected country."],
@@ -1253,6 +1254,15 @@
     qs("#externalResilienceStatus").textContent=data?.ok===true?"Resilience control plane ready · upstream health is non-blocking for deployment.":"Resilience diagnostics unavailable.";
   }
 
+  function renderWorkspaceBrowserAudit(data){
+    const checks=data?.checks||{};
+    qs("#workspaceAuditRouteMetric").textContent=data?.route_count??"—";
+    qs("#workspaceAuditAreaMetric").textContent=data?.primary_area_count??"—";
+    qs("#workspaceAuditSurfaceMetric").textContent=checks.all_35_surfaces_mapped===true&&checks.all_surfaces_declared===true?"35 / 35":"Review";
+    qs("#workspaceAuditBlockingMetric").textContent=data?.upstream_health_release_blocking===false||checks.upstream_health_non_blocking===true?"No":"Review";
+    qs("#workspaceAuditStatus").textContent=data?.ok===true?"Workspace reliability control plane ready · every registered route has a visible or explicit degraded-mode surface.":"Workspace browser audit requires review.";
+  }
+
   function renderEvidenceIntelligence(data){
     qs("#evidenceConceptMetric").textContent=data?.metric_concept_count??"—";
     qs("#evidencePrecedenceMetric").textContent=data?.precedence_rule_count??"—";
@@ -1276,18 +1286,19 @@
     qs("#sourceStudio").setAttribute("aria-busy","true");qs("#sourceStatus").textContent="Loading public source and methodology records…";qs("#sourceRegistryList").innerHTML='<div class="loading-block">Loading source records…</div>';
     const params=sourceFilterParams();
     try{
-      const [sourcesResult,methodsResult,auditResult,evidenceResult,credentialResult,resilienceResult]=await Promise.allSettled([
+      const [sourcesResult,methodsResult,auditResult,evidenceResult,credentialResult,resilienceResult,workspaceAuditResult]=await Promise.allSettled([
         apiWithRetry(`/public/sources?${params.toString()}`,2,{signal:controller.signal,timeout:18000}),
         apiWithRetry("/public/methodology",2,{signal:controller.signal,timeout:12000}),
         apiWithRetry("/public/authoritative-apis",1,{signal:controller.signal,timeout:18000}),
         apiWithRetry("/public/evidence-intelligence",1,{signal:controller.signal,timeout:12000}),
         apiWithRetry("/public/credential-configuration",1,{signal:controller.signal,timeout:12000}),
-        apiWithRetry("/public/external-resilience",1,{signal:controller.signal,timeout:12000})
+        apiWithRetry("/public/external-resilience",1,{signal:controller.signal,timeout:12000}),
+        apiWithRetry("/public/workspace-browser-audit/readiness",1,{signal:controller.signal,timeout:12000})
       ]);
       if(controller.signal.aborted||sequence!==sourceStudioState.sequence)return;
       if(sourcesResult.status!=="fulfilled")throw sourcesResult.reason;
       sourceStudioState.data=sourcesResult.value;sourceStudioState.methods=methodsResult.status==="fulfilled"?methodsResult.value:{methods:[],total_registered:0};sourceStudioState.diagnostics=null;sourceStudioState.audit=auditResult.status==="fulfilled"?auditResult.value:null;
-      populateSourceFilters(sourceStudioState.data);renderMethodology(sourceStudioState.methods);renderAuthoritativeApiAudit(sourceStudioState.audit||{summary:{counts:{}},completed_connector_targets:[],priority_connector_targets:[]});renderEvidenceIntelligence(evidenceResult.status==="fulfilled"?evidenceResult.value:{});renderCredentialConfiguration(credentialResult.status==="fulfilled"?credentialResult.value:{});renderExternalResilience(resilienceResult.status==="fulfilled"?resilienceResult.value:{});qs("#sourceIssueMetric").textContent="…";
+      populateSourceFilters(sourceStudioState.data);renderMethodology(sourceStudioState.methods);renderAuthoritativeApiAudit(sourceStudioState.audit||{summary:{counts:{}},completed_connector_targets:[],priority_connector_targets:[]});renderEvidenceIntelligence(evidenceResult.status==="fulfilled"?evidenceResult.value:{});renderCredentialConfiguration(credentialResult.status==="fulfilled"?credentialResult.value:{});renderExternalResilience(resilienceResult.status==="fulfilled"?resilienceResult.value:{});renderWorkspaceBrowserAudit(workspaceAuditResult.status==="fulfilled"?workspaceAuditResult.value:{});qs("#sourceIssueMetric").textContent="…";
       const requested=new URLSearchParams(location.search).get("source");const first=sourceStudioState.data.sources?.[0]?.id;const requestedAvailable=(sourceStudioState.data.sources||[]).some(item=>item.id===requested);sourceStudioState.activeSource=requestedAvailable?requested:first||null;if(requested&&!requestedAvailable)toast("Requested source record is unavailable; showing an available source instead.");renderSourceRegistry(sourceStudioState.data);renderSourceDetail((sourceStudioState.data.sources||[]).find(item=>item.id===sourceStudioState.activeSource));
       qs("#sourceStatus").textContent=`${sourceStudioState.data.count} matching sources · ${sourceStudioState.methods.total_registered||0} documented methods · checking connector diagnostics…`;
       if(pushState)syncSourceUrl();reportHeight();void refreshSourceDiagnostics(sequence,controller);
@@ -1517,6 +1528,7 @@
   }
   function closeAuditablePublicObservatory(){const panel=qs("#auditablePublicObservatory");if(panel)panel.hidden=true;const button=qs("#saveViewButton");if(button)button.disabled=false}
 
+  // registered route recovery is enforced after every route transition by v4.35.18.
   async function setRoute(route){
     qs("#main").classList.remove("route-enter");void qs("#main").offsetWidth;qs("#main").classList.add("route-enter");
     state.route=route;
@@ -1868,7 +1880,7 @@
     hydration.then(results=>{const failed=results.filter(result=>result.status==="rejected");const status=qs("#statusText");if(failed.length){console.warn("[Site Intelligence] Startup hydration completed with limited services.",failed.map(result=>result.reason));if(status)status.textContent="Partial public data";toast("Some optional public data is temporarily unavailable.")}else if(status)status.textContent="Live public data";window.dispatchEvent(new CustomEvent("scsi:startup-hydrated",{detail:{version:APP_VERSION,state:failed.length?"limited":"ready",failed:failed.length}}));reportHeight()});
   }
   window.SCSIOverviewMapV3232={version:APP_VERSION,getMap:()=>state.map,getEvents:()=>state.events?.features||[],getFilteredEvents:()=>state.filteredEvents.slice(),getFilters:()=>({...state.overviewFilters}),setFilters:setOverviewFilters,selectEvent:selectOverviewEvent,fitResults:fitOverviewResults,setImageryOpacity:value=>state.imagery?.setOpacity?.(Math.max(0,Math.min(1,Number(value)))),setBaseStyle:style=>{const map=qs("#map");if(map)map.dataset.mapStyle=String(style||"institutional-dark");syncOverviewMapUrl()},syncUrl:syncOverviewMapUrl,render:renderOverviewFeatures};
-  window.SCSIRouterV3228={version:"4.35.17",navigate:navigateToRoute,current:()=>state.route};
+  window.SCSIRouterV3228={version:"4.35.18",navigate:navigateToRoute,current:()=>state.route};
   if(!FIXED_WORDPRESS_EMBED){
     window.addEventListener("load",reportHeight,{once:true});
     window.addEventListener("resize",reportHeight,{passive:true});
@@ -1894,5 +1906,5 @@ visualStyle.textContent=`
 document.head.appendChild(visualStyle);
 
 
-/* v4.35.17 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v4.35.17 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v4.35.18 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v4.35.18 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

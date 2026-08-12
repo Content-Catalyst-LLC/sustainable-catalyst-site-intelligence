@@ -1,3 +1,15 @@
+# v4.35.18 — Full Workspace End-to-End Browser Audit & “Simply Works” Reliability
+
+- Audited all 35 registered public workspace routes across six primary areas.
+- Added deterministic route-to-surface contracts, route metadata validation, and first-party workspace-browser readiness.
+- Added post-navigation recovery enforcement so registered routes render either their expected surface or an explicit degraded-mode workspace instead of a blank/generic unavailable view.
+- Repaired missing `workflows` route metadata.
+- Added Retry workspace and Sources & methods recovery actions.
+- Fixed mobile horizontal overflow caused by hidden evidence drawers and the overview evidence rail.
+- Verified all 35 routes in desktop, 390 px mobile, and iframe browser modes.
+- Preserved canonical evidence/Truth behavior and non-blocking external provider health.
+- Complete deterministic suite: 1,603 tests.
+
 # v4.35.15 — High-Priority Workspace Connector Closure V: Mining, Critical Materials & Industrial Systems
 
 - Closed Mining & Critical Materials and Industrial Manufacturing & Trade ambiguous REGISTERED machine-interface backlog to zero.

@@ -1,6 +1,6 @@
 (()=>{
   'use strict';
-  const VERSION='4.35.17';
+  const VERSION='4.35.18';
   const ENDPOINT='/public/performance-offline';
   const ROOT_SELECTOR='#app[data-scsi-release]';
   const STATIC_ENDPOINTS=new Set(['/public/runtime-health','/public/runtime-recovery','/public/release-gate','/public/build-info','/public/performance-offline']);

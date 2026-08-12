@@ -15,7 +15,7 @@ from app.credential_configuration_v43516 import credential_readiness
 from app.external_resilience_v43517 import resilience_overview, resilience_readiness
 from app.release_health_v43517 import deployment_verification, source_health_policy
 
-assert APP_VERSION == '4.35.17'
+assert APP_VERSION == '4.35.18'
 settings = Settings(_env_file=None)
 
 # No connector reclassification in this reliability build.
@@ -102,4 +102,4 @@ assert 'Deep gate:' not in promotion
 assert '/public/external-resilience/readiness' in promotion
 assert 'external_resilience_ready' in promotion
 
-print('PASS: v4.35.17 Rate Limits, Retries, Caching, Backoff & Circuit Breakers release contract')
+print('PASS: v4.35.18 Rate Limits, Retries, Caching, Backoff & Circuit Breakers release contract')

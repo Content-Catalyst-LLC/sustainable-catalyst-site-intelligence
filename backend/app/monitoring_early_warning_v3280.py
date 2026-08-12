@@ -1,4 +1,4 @@
-"""Monitoring, digests, and early-warning operations for Site Intelligence v4.35.17.
+"""Monitoring, digests, and early-warning operations for Site Intelligence v4.35.18.
 
 The public contract is deterministic and review-oriented. It evaluates supplied public
 records and source-state snapshots, explains every trigger, and never claims emergency

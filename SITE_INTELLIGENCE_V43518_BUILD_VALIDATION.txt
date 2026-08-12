@@ -1,0 +1,62 @@
+Site Intelligence v4.35.18 — Build Validation
+============================================================
+Release: Full Workspace End-to-End Browser Audit & “Simply Works” Reliability
+
+Deterministic pytest suite:
+  PASS — 1,603 / 1,603 tests
+  Final reconciliation: 444 + 374 + 356 + 250 + 132 + 47 = 1,603
+  Test files: 246
+  Verifier working-directory compatibility: PASS
+
+Workspace browser audit:
+  Registered routes: 35
+  Primary areas: 6
+  Desktop 1360×940: 35 / 35 visible or explicitly degraded
+  Mobile 390×844: 35 / 35 visible or explicitly degraded
+  Iframe 1180×820: 35 / 35 visible or explicitly degraded
+  Generic View unavailable on registered routes: 0
+  Explicit recovery layer: PASS
+  Retry workspace action: PASS
+  Sources & methods action: PASS
+  Mobile horizontal-overflow gate: PASS
+
+Defects repaired during audit:
+  PASS — Workflows registered-route metadata restored
+  PASS — registered-route post-navigation surface enforcement
+  PASS — hidden evidence drawer / mobile evidence rail overflow containment
+  PASS — release-verifier cwd-safe v4.35.18 frontend regression
+
+Connector/evidence continuity:
+  Public connector interfaces: 50
+  Machine-readable source registrations: 112
+  LIVE registrations: 51
+  DISCOVERY registrations: 15
+  AUTH_REQUIRED registrations: 17
+  REGISTERED not retrieved: 27
+  BULK: 2
+  STALE: 0
+
+Release policy:
+  Workspace-browser readiness: deterministic/network-free
+  External provider health release blocking: false
+  Credential completion release blocking: false
+  External-resilience control plane: preserved
+  Canonical workspace evidence / Truth contract: preserved
+
+Frozen release gates:
+  Immutable manifest: PASS — 2,357 files
+  JSON/GeoJSON parse: PASS — 134 files
+  JavaScript syntax: PASS — 152 files
+  WordPress PHP syntax: PASS
+  Static security scan: PASS — 0 findings
+  v4.35.18 release contract: PASS
+  v4.35.18 desktop/mobile/iframe browser gate: PASS
+
+Artifact validation:
+  Repository ZIP integrity: PASS
+  WordPress plugin ZIP integrity: PASS
+  Release-bundle ZIP integrity: PASS
+  SHA-256 verification of every bundle component: PASS
+  Standalone installer bundle-only verification: PASS
+  Extracted repository immutable/static/browser verification: PASS
+  Extracted repository v4.35.18 targeted regressions: PASS — 8 / 8

@@ -4,7 +4,7 @@ from app.biodiversity_intelligence_v42300 import normalize_occurrence, normalize
 client=TestClient(app)
 def test_overview_and_catalog():
     o=client.get('/public/biodiversity').json(); c=client.get('/public/biodiversity/catalog').json()
-    assert o['ok'] and o['version']=='4.35.17' and o['contract']=='global-biodiversity-species-distribution-conservation-intelligence'
+    assert o['ok'] and o['version']=='4.35.18' and o['contract']=='global-biodiversity-species-distribution-conservation-intelligence'
     assert o['source_count']==4 and c['truth_boundaries']['zero_records_equals_absence'] is False
     assert {'gbif-occurrence','obis','ebird-public','usfws-ecos'} <= {x['id'] for x in c['sources']}
 def test_empty_state_has_no_absence_or_population_claim():

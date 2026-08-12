@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Site Intelligence v4.35.17 authoritative API coverage closure & production audit after Expansion IV.
+"""Site Intelligence v4.35.18 authoritative API coverage closure & production audit after Expansion IV.
 
 The audit is deterministic and network-free.  It reconciles source registrations,
 implemented connector evidence, configuration-gated connectors, workspace gaps,

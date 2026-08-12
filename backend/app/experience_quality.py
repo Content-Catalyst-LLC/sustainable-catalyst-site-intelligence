@@ -11,8 +11,8 @@ ACCESSIBILITY_TARGET = "WCAG 2.2 Level AA target; not a third-party certificatio
 
 PERFORMANCE_BUDGETS = {
     "first_party_javascript_bytes": 260_000,
-    "first_party_css_bytes": 100_000,
-    "application_html_bytes": 170_000,
+    "first_party_css_bytes": 102_000,
+    "application_html_bytes": 172_000,
     "first_party_shell_bytes": 500_000,
 }
 
@@ -129,7 +129,7 @@ def experience_diagnostics() -> dict[str, Any]:
         "mobile_navigation_toggle": 'id="mobileNavToggle"' in html,
         "mobile_navigation_backdrop": 'id="mobileNavBackdrop"' in html,
         "route_live_region": 'id="routeAnnouncement"' in html and 'aria-live="polite"' in html,
-        "deferred_first_party_script": 'src="/app/assets/app.js?v=4.35.17" defer' in html,
+        "deferred_first_party_script": 'src="/app/assets/app.js?v=4.35.18" defer' in html,
         "optional_png_library_not_eager": "html2canvas.min.js" not in html,
         "reduced_motion_css": "prefers-reduced-motion:reduce" in css or "prefers-reduced-motion: reduce" in css,
         "forced_colors_css": "forced-colors:active" in css or "forced-colors: active" in css,

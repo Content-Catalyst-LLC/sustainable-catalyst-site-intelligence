@@ -1,8 +1,8 @@
-# Current release: Site Intelligence v4.35.17 — Rate Limits, Retries, Caching, Backoff & Circuit Breakers
+# Current release: Site Intelligence v4.35.18 — Full Workspace End-to-End Browser Audit & “Simply Works” Reliability
 
-**Current release:** v4.35.17
+**Current release:** v4.35.18
 
-Site Intelligence v4.35.17 hardens external authoritative-data retrieval with bounded retries, Retry-After handling, conservative provider pacing, fresh-response caching, explicit stale-if-error semantics, circuit breakers, and secret-safe operational telemetry. The shared resilience control plane is deterministic at readiness and external provider health remains non-blocking for deployment.
+Site Intelligence v4.35.18 audits the complete 35-route public workspace contract across desktop, mobile, and iframe/browser modes. Registered routes now enforce a visible workspace surface or an explicit degraded recovery surface with Retry and Sources & methods actions; no registered workspace may silently collapse to a blank or generic unavailable view. The release also repairs missing Workflows route metadata, contains previously off-canvas evidence surfaces on narrow viewports, and keeps external-provider health non-blocking for deployment.
 
 # Current release: Site Intelligence v4.35.15 — High-Priority Workspace Connector Closure V: Mining, Critical Materials & Industrial Systems
 
@@ -1580,26 +1580,26 @@ Adds deferred Earth Observation orientation for NASA FIRMS fire/burned-area evid
 
 ## Current-release compatibility ledger
 
-- **Release:** v4.35.17 — Connected Public Intelligence and Evidence Platform
-- Current release:** v4.35.17 — Connected Public Intelligence and Evidence Platform
-- v4.35.17 — Analytics and Public-Value Measurement
-- v4.35.17 — Archive Verification, Preservation Audits, and Institutional Custody
-- v4.35.17 — Collection Publication, Citation Exports, and Research Brief Packages
-- v4.35.17 — Connected Live Intelligence Surface
-- v4.35.17 — Corrections, Retractions, and Public Change History
-- v4.35.17 — Editorial Workspace, Review Queues, and Publication Orchestration
-- v4.35.17 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
-- v4.35.17 — Homepage Intelligence Gateway
-- v4.35.17 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
-- v4.35.17 — Live Intelligence presentation
-- v4.35.17 — Preservation Interoperability, External Verification, and Institutional Exchange
-- v4.35.17 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
-- v4.35.17 — Public Registry Discovery, Evidence Search, and Institutional Profiles
-- v4.35.17 — Publication Adapters, Institutional Handoffs, and Release Governance
-- v4.35.17 — Registry Governance, Challenges, Revocation, and Appeals
-- v4.35.17 — Release Monitoring, Rollback, and Post-Publication Governance
-- v4.35.17 — Saved Discovery Views, Public Research Collections, and Evidence Pathways
-- v4.35.17 — Signal Context and Drill-Down
-- v4.35.17 — Signal Relevance and Rotation Intelligence
-- v4.35.17 — Signal Subscriptions, Alerts, and Scheduled Intelligence
-- v4.35.17 — Topic and Regional Channels
+- **Release:** v4.35.18 — Connected Public Intelligence and Evidence Platform
+- Current release:** v4.35.18 — Connected Public Intelligence and Evidence Platform
+- v4.35.18 — Analytics and Public-Value Measurement
+- v4.35.18 — Archive Verification, Preservation Audits, and Institutional Custody
+- v4.35.18 — Collection Publication, Citation Exports, and Research Brief Packages
+- v4.35.18 — Connected Live Intelligence Surface
+- v4.35.18 — Corrections, Retractions, and Public Change History
+- v4.35.18 — Editorial Workspace, Review Queues, and Publication Orchestration
+- v4.35.18 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
+- v4.35.18 — Homepage Intelligence Gateway
+- v4.35.18 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
+- v4.35.18 — Live Intelligence presentation
+- v4.35.18 — Preservation Interoperability, External Verification, and Institutional Exchange
+- v4.35.18 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
+- v4.35.18 — Public Registry Discovery, Evidence Search, and Institutional Profiles
+- v4.35.18 — Publication Adapters, Institutional Handoffs, and Release Governance
+- v4.35.18 — Registry Governance, Challenges, Revocation, and Appeals
+- v4.35.18 — Release Monitoring, Rollback, and Post-Publication Governance
+- v4.35.18 — Saved Discovery Views, Public Research Collections, and Evidence Pathways
+- v4.35.18 — Signal Context and Drill-Down
+- v4.35.18 — Signal Relevance and Rotation Intelligence
+- v4.35.18 — Signal Subscriptions, Alerts, and Scheduled Intelligence
+- v4.35.18 — Topic and Regional Channels
