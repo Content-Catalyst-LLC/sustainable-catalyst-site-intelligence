@@ -1,5 +1,15 @@
 # Changelog
 
+## v4.35.24 — Palestine-First Country Navigation Integrity Repair
+
+- Fixed the remaining Overview-route Palestine/Israel selector defect left open by v4.35.23.
+- Made the first-party canonical registry authoritative for ISO3, ISO2, display name, and map-focus coordinates.
+- External country catalogs can enrich non-identity metadata but cannot overwrite canonical country identity or geography.
+- Overview commits and focuses the selected canonical country before optional upstream evidence retrieval.
+- Cross-identity country-intelligence and overview responses are blocked rather than rendered.
+- Added a hostile-upstream regression proving PSE remains Palestine and ISR remains Israel even when an external catalog attempts to swap them.
+
+
 ## v4.35.23 — Canonical Country Identity & Selector Routing Repair
 - Added a first-party 172-country canonical ISO3/ISO2 identity registry shared by selector, backend resolver, Data Truth and cartographic focus.
 - Locked `ISR → IL → Israel` and `PSE → PS → Palestine` independently of upstream country-catalog health.

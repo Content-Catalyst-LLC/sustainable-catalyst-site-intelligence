@@ -1,6 +1,6 @@
 (()=>{
   'use strict';
-  const VERSION='4.35.23';
+  const VERSION='4.35.24';
   const esc=value=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[ch]));
   const label=value=>String(value||'unknown').replaceAll('_',' ');
   async function json(url){const response=await fetch(url,{cache:'no-store',headers:{Accept:'application/json'}});if(!response.ok)throw new Error(`${response.status} ${response.statusText}`);return response.json()}

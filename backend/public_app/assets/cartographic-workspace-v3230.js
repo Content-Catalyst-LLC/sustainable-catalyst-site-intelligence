@@ -1,6 +1,6 @@
 (function(window,document){
   "use strict";
-  const VERSION="4.35.23";
+  const VERSION="4.35.24";
   const OVERVIEW_IDS=["map"];
   let overviewLayout=null;
   let evidenceRail=null;
@@ -52,13 +52,13 @@
 
   async function loadCountryCatalog(){
     if(countryCatalog)return countryCatalog;
-    // v4.35.23: map focus consumes the same first-party identity plane as the
+    // v4.35.24: map focus consumes the same first-party identity plane as the
     // selector. Live country metadata can enrich it but cannot define whether an
     // ISO3 code exists. This prevents a partial upstream catalog from leaving the
     // map focused on the previously selected country.
     const merged=new Map();
     try{const response=await fetch('/public/data-truth/countries',{headers:{Accept:'application/json'},cache:'no-store'});if(response.ok){const payload=await response.json();(payload.countries||[]).forEach(item=>{if(item?.code)merged.set(item.code,{...item})})}}catch(_){}
-    try{const response=await fetch('/public/countries',{headers:{Accept:'application/json'},cache:'no-store'});if(response.ok){const payload=await response.json();(payload.countries||[]).forEach(item=>{if(item?.code)merged.set(item.code,{...(merged.get(item.code)||{}),...item})})}}catch(_){}
+    try{const response=await fetch('/public/countries',{headers:{Accept:'application/json'},cache:'no-store'});if(response.ok){const payload=await response.json();(payload.countries||[]).forEach(item=>{if(!item?.code)return;const canonical=merged.get(item.code)||{};merged.set(item.code,{...item,...canonical,code:canonical.code||item.code,name:canonical.name||item.name,iso2:canonical.iso2||item.iso2,latitude:canonical.latitude??item.latitude,longitude:canonical.longitude??item.longitude})})}}catch(_){}
     countryCatalog=merged;return countryCatalog;
   }
   async function focusSelectedCountry(){

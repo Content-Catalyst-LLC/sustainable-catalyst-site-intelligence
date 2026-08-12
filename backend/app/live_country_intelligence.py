@@ -196,6 +196,40 @@ def _normalized_static_catalog() -> dict[str, dict[str, Any]]:
     return registry
 
 
+def _merge_country_catalogs(canonical: dict[str, dict[str, Any]], live: dict[str, dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    """Merge external metadata without allowing identity/geography override.
+
+    v4.35.24 makes this a pure, directly testable boundary. External country
+    catalogs may enrich classification/search metadata, but selector/routing
+    identity and map focus remain first-party.
+    """
+    merged = {code: dict(metadata) for code, metadata in canonical.items()}
+    protected = (
+        "code", "iso2", "name", "display_name", "latitude", "longitude",
+        "capital", "entity_type", "identity_source", "identity_version", "catalog_source",
+    )
+    for code, metadata in live.items():
+        canonical_record = merged.get(code)
+        if canonical_record:
+            enriched = {**canonical_record, **metadata, "code": code}
+            for field in protected:
+                if field in canonical_record:
+                    enriched[field] = canonical_record[field]
+            # External source names/regions remain useful for search and
+            # cross-provider metadata without affecting canonical identity.
+            aliases = {str(x).strip() for x in (canonical_record.get("alternate_names") or []) if str(x).strip()}
+            aliases.update(str(x).strip() for x in (metadata.get("alternate_names") or []) if str(x).strip())
+            source_name = str(metadata.get("source_name") or "").strip()
+            if source_name and source_name != canonical_record.get("name"):
+                aliases.add(source_name)
+            enriched["alternate_names"] = sorted(aliases)
+            enriched["metadata_source"] = metadata.get("source") or "World Bank Country API"
+            merged[code] = enriched
+        else:
+            merged[code] = {**metadata, "code": code}
+    return merged
+
+
 def country_catalog(force_refresh: bool = False) -> dict[str, Any]:
     global _COUNTRY_CATALOG_CACHE, _COUNTRY_CATALOG_FETCHED_AT, _COUNTRY_CATALOG_STATE, _COUNTRY_CATALOG_TIMING_MS
     if _COUNTRY_CATALOG_CACHE is None or force_refresh:
@@ -218,9 +252,9 @@ def country_catalog(force_refresh: bool = False) -> dict[str, Any]:
                 # v4.35.23: enrich canonical identities field-by-field. A live provider
                 # cannot remove a bundled ISO2/ISO3 binding, alias, or coordinate merely
                 # because one metadata field is absent upstream.
-                merged = {code: dict(metadata) for code, metadata in canonical.items()}
-                for code, metadata in live.items():
-                    merged[code] = {**merged.get(code, {}), **metadata, "code": code}
+                # v4.35.24: the pure merge boundary is release-tested against
+                # hostile/swapped Palestine/Israel upstream metadata.
+                merged = _merge_country_catalogs(canonical, live)
                 _COUNTRY_CATALOG_CACHE = merged
                 _COUNTRY_CATALOG_FETCHED_AT = country_cache.set(f"v{VERSION}:country-catalog", merged)
                 _COUNTRY_CATALOG_STATE = "live"

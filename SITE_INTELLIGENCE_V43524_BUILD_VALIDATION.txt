@@ -1,0 +1,40 @@
+Site Intelligence v4.35.24 — Build Validation
+Release: Palestine-First Country Navigation Integrity Repair
+
+Deterministic pytest suite
+- collected: 1650
+- passed: 1650
+- failed: 0
+
+Country navigation regression
+- hostile external catalog: PASS
+- PSE remains PSE / PS / Palestine: PASS
+- ISR remains ISR / IL / Israel: PASS
+- canonical map focus survives hostile metadata: PASS
+- cross-identity response blocked: PASS
+
+Browser control plane
+- desktop: 35/35 ready; 0 degraded
+- mobile: 35/35 ready; 0 degraded
+- iframe: 35/35 ready; 0 degraded
+
+Release/static validation
+- v4.35.24 release contract: PASS
+- v4.35.24 static validator: PASS
+- JSON/GeoJSON: 135 parsed
+- JavaScript: 152 validated
+- PHP syntax: PASS
+- static security findings: 0
+- shell syntax: PASS
+
+Experience budgets
+- HTML: 171981 / 172000 bytes
+- first-party JavaScript: 215107 / 260000 bytes
+- CSS: 101860 / 102000 bytes
+- first-party shell: 488948 / 500000 bytes
+
+Release-health policy
+- country identity readiness: network-free
+- country navigation integrity readiness: network-free
+- external country metadata: enrichment only
+- external provider availability: non-blocking for promotion

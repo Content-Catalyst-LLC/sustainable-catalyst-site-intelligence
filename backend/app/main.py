@@ -769,9 +769,9 @@ from .evidence_intelligence_v4357 import (
     select_evidence as build_evidence_selection,
     readiness as build_evidence_intelligence_readiness,
 )
-from .release_health_v43523 import (
-    deployment_verification as build_deployment_verification_v43531,
-    source_health_policy as build_source_health_policy_v43531,
+from .release_health_v43524 import (
+    deployment_verification as build_deployment_verification_v43524,
+    source_health_policy as build_source_health_policy_v43524,
 )
 from .workspace_browser_audit_v43518 import (
     workspace_browser_audit as build_workspace_browser_audit_v43518,
@@ -942,7 +942,7 @@ async def public_experience_headers(request, call_next):
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
-        response.headers["X-SC-Release-Gate"] = "v4.35.23"
+        response.headers["X-SC-Release-Gate"] = f"v{APP_VERSION}"
     elif path == "/app/service-worker.js":
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
@@ -5578,12 +5578,12 @@ def public_evidence_intelligence_readiness_endpoint():
 
 @app.get("/public/deployment-verification")
 def public_deployment_verification_v43531_endpoint(settings: Settings = Depends(get_settings)):
-    return build_deployment_verification_v43531(settings)
+    return build_deployment_verification_v43524(settings)
 
 
 @app.get("/public/source-health-policy")
 def public_source_health_policy_v43531_endpoint(settings: Settings = Depends(get_settings)):
-    return build_source_health_policy_v43531(settings)
+    return build_source_health_policy_v43524(settings)
 
 
 @app.get("/public/workspace-browser-audit")
@@ -6274,6 +6274,12 @@ def public_country_evidence_reconciliation_readiness_v43522():
 @app.get("/public/country-identity/readiness")
 def public_country_identity_readiness_v43523():
     from .country_identity_v43523 import readiness
+    return readiness()
+
+
+@app.get("/public/country-navigation-integrity/readiness")
+def public_country_navigation_integrity_readiness_v43524():
+    from .country_navigation_integrity_v43524 import readiness
     return readiness()
 
 

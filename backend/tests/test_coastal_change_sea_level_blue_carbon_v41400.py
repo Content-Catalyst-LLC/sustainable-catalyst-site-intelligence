@@ -8,7 +8,7 @@ CLIENT = TestClient(app)
 
 def test_overview_and_catalog_register_four_coastal_source_families():
     o = CLIENT.get('/public/coastal-change').json()
-    assert o['ok'] and o['version'] == '4.35.23'
+    assert o['ok'] and o['version'] == '4.35.24'
     assert o['contract'] == 'coastal-change-sea-level-blue-carbon'
     c = CLIENT.get('/public/coastal-change/catalog').json()
     assert {x['id'] for x in c['sources']} == {'noaa-coops','noaa-digital-coast','usgs-coastal-change','global-mangrove-watch'}

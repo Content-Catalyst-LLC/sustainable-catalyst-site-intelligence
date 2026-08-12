@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 4.35.23
+ * Version: 4.35.24
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,8 +13,8 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '4.35.23';
-    const RELEASE_ID = 'site-intelligence-v4.35.23';
+    const VERSION = '4.35.24';
+    const RELEASE_ID = 'site-intelligence-v4.35.24';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -433,7 +433,7 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v4.35.23 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
+        // v4.35.24 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
         // Existing moving tickers remain moving unless an administrator selects static or manual presentation.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
