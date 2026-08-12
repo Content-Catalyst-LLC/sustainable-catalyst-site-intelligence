@@ -1,7 +1,7 @@
-# Site Intelligence v4.35.19 — Install & Test
+# Site Intelligence v4.35.20 — Install & Test
 
 ## Install
-Use the standalone macOS installer together with the matching v4.35.19 release bundle.
+Use the standalone macOS installer together with the matching v4.35.20 release bundle.
 
 ```bash
 cd ~/Downloads
@@ -11,7 +11,7 @@ INSTALLER="$(find . -maxdepth 1 -type f \
   -print0 | xargs -0 ls -t | head -1)"
 
 BUNDLE="$(find . -maxdepth 1 -type f \
-  -name 'sustainable-catalyst-site-intelligence-v4.35.19-release-bundle*.zip' \
+  -name 'sustainable-catalyst-site-intelligence-v4.35.20-release-bundle*.zip' \
   -print0 | xargs -0 ls -t | head -1)"
 
 chmod +x "$INSTALLER"

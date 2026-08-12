@@ -11,7 +11,7 @@ from app.authoritative_api_production_audit_v43516 import production_audit, prod
 from app.authoritative_connectors_v43515 import connector_catalog, connector_readiness
 from app.credential_configuration_v43516 import PROFILES, credential_registry, credential_readiness
 
-assert APP_VERSION=='4.35.19'
+assert APP_VERSION=='4.35.20'
 settings=Settings(_env_file=None)
 a=production_audit(settings)
 assert a['production_controls_ready'] is True and a['coverage_closure_complete'] is False
@@ -44,4 +44,4 @@ promotion=(ROOT/'promote_site_intelligence_v4_35_16_to_github_and_render_macos.s
 assert 'Deep gate:' not in promotion
 assert '/public/credential-configuration/readiness' in promotion
 assert 'configuration_complete' not in promotion or 'credential_ready' in promotion
-print('PASS: v4.35.19 Credentials, API-Key & Configuration Completion release contract')
+print('PASS: v4.35.20 Credentials, API-Key & Configuration Completion release contract')

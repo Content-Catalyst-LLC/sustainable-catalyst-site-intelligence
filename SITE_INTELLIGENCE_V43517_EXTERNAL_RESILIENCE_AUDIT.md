@@ -1,4 +1,4 @@
-# Site Intelligence v4.35.19 — External Resilience Audit
+# Site Intelligence v4.35.20 — External Resilience Audit
 
 ## Objective
 Prevent upstream rate limits, timeouts, temporary errors, and repeated provider failures from cascading into broken Site Intelligence workspaces.

@@ -269,7 +269,7 @@ def _eonet_events(days: int = 30, limit: int = 200) -> list[dict[str, Any]]:
         })
     return records
 
-def _reliefweb_reports(days: int = 14, limit: int = 80) -> list[dict[str, Any]]:
+def _reliefweb_reports(days: int = 14, limit: int = 80, country_code: str | None = None) -> list[dict[str, Any]]:
     appname = os.getenv("SC_SI_RELIEFWEB_APPNAME", "").strip()
     if not appname:
         raise RuntimeError("reliefweb_v2_appname_not_configured")
@@ -280,10 +280,28 @@ def _reliefweb_reports(days: int = 14, limit: int = 80) -> list[dict[str, Any]]:
         "limit": max(1, min(limit, 200)),
         "profile": "full",
         "sort[]": "date:desc",
-        "filter[field]": "date.created",
-        "filter[value][from]": start.strftime("%Y-%m-%dT00:00:00+00:00"),
-        "filter[value][to]": end.strftime("%Y-%m-%dT23:59:59+00:00"),
     }
+    normalized_country = str(country_code or "").strip().upper()
+    if normalized_country:
+        # Country-filtered country workspaces must query ReliefWeb by ISO3 at
+        # the source. Fetching a small global batch and filtering afterward can
+        # hide valid country records simply because they fell outside that
+        # global window. ReliefWeb documents country.iso3 as searchable and
+        # exact-filterable for reports.
+        params.update({
+            "filter[operator]": "AND",
+            "filter[conditions][0][field]": "date.created",
+            "filter[conditions][0][value][from]": start.strftime("%Y-%m-%dT00:00:00+00:00"),
+            "filter[conditions][0][value][to]": end.strftime("%Y-%m-%dT23:59:59+00:00"),
+            "filter[conditions][1][field]": "country.iso3",
+            "filter[conditions][1][value]": normalized_country,
+        })
+    else:
+        params.update({
+            "filter[field]": "date.created",
+            "filter[value][from]": start.strftime("%Y-%m-%dT00:00:00+00:00"),
+            "filter[value][to]": end.strftime("%Y-%m-%dT23:59:59+00:00"),
+        })
     payload = _request_json(f"https://api.reliefweb.int/v2/reports?{urlencode(params, doseq=True)}")
     records = []
     for item in payload.get("data", []):
@@ -389,7 +407,7 @@ def unified_events(
 ) -> dict[str, Any]:
     normalized_days = max(1, min(int(days), 90))
     fetch_limit = max(300, min(int(limit), 1000))
-    cache_key = f"v{VERSION}:events:days:{normalized_days}"
+    cache_key = f"v{VERSION}:events:days:{normalized_days}:country:{str(country_code or 'GLOBAL').upper()}"
     cached = country_cache.get(cache_key, fresh_seconds=900, stale_seconds=86400, allow_stale=False)
 
     records: list[dict[str, Any]] = []
@@ -404,12 +422,17 @@ def unified_events(
         for source_id, loader in [
             ("usgs", lambda: _usgs_events(days=min(normalized_days, 30), limit=fetch_limit)),
             ("nasa-eonet", lambda: _eonet_events(days=max(normalized_days, 30), limit=fetch_limit)),
-            ("reliefweb", lambda: _reliefweb_reports(days=normalized_days, limit=min(fetch_limit, 120))),
+            ("reliefweb", lambda: _reliefweb_reports(days=normalized_days, limit=min(fetch_limit, 120), country_code=country_code)),
         ]:
             try:
                 source_records = loader()
                 records.extend(source_records)
                 source_states[source_id] = "live"
+            except RuntimeError as exc:
+                if source_id == "reliefweb" and str(exc) == "reliefweb_v2_appname_not_configured":
+                    source_states[source_id] = "configuration-required"
+                else:
+                    source_states[source_id] = "unavailable"
             except Exception:
                 source_states[source_id] = "unavailable"
         records = _deduplicate(records)

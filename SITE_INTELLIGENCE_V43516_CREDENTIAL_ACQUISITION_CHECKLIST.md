@@ -1,4 +1,4 @@
-# v4.35.19 Credential Acquisition Checklist
+# v4.35.20 Credential Acquisition Checklist
 
 Do not place credential values in Git, WordPress options, browser JavaScript, release bundles, screenshots, or support logs. Add them only as server-side environment variables in the deployment environment.
 

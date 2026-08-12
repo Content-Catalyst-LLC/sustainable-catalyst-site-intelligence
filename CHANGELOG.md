@@ -1,6 +1,18 @@
+# Site Intelligence v4.35.20 — Country-Linked Record Recovery, Source-Bounded Filtering & Humanitarian Discovery
+
+- Replaced the country workspace's event-only `/public/events?country_code=...` dependency with `/public/country/{country_code}/linked-records`.
+- Added source-bounded ReliefWeb country filtering using ISO3 before result truncation.
+- Added country-scoped cache identity for ReliefWeb retrieval.
+- Exposed missing ReliefWeb configuration as `configuration-required`.
+- Added explicitly country-matched HDX/OCHA public dataset discovery as a credential-free recovery lane.
+- Preserved event/report versus dataset-discovery evidence classes and limitations.
+- Added an honest zero-record boundary: no retained linked record does not mean no real-world event or humanitarian condition exists.
+- Added deterministic `/public/country-linked-records/readiness` and made it part of first-party deployment verification.
+- Preserved the v4.35.19 soak/semantic-truth gates and non-blocking external-provider policy.
+
 # Changelog
 
-## v4.35.19 — Live-Operation Stress, Semantic Truth & Recovery Integrity
+## v4.35.20 — Live-Operation Stress, Semantic Truth & Recovery Integrity
 - Added an application-level deterministic production soak with eight failure/recovery scenarios, including 429 Retry-After, 503 recovery, stale fallback, circuit opening/recovery, 24-cycle provider flapping, and missing-credential degradation.
 - Added evidence presentation classes that separate retrieval/cache state from observation semantics.
 - World Bank annual country indicators are now classified as harmonized benchmarks rather than operationally live observations.
@@ -9,7 +21,7 @@
 - Added Sources workspace production-soak status and release-gate requirements while keeping real upstream provider health non-blocking.
 - Preserved the inherited 35-route browser reliability, connector, credential, external-resilience, and canonical Truth contracts.
 
-# v4.35.19 — Full Workspace End-to-End Browser Audit & “Simply Works” Reliability
+# v4.35.20 — Full Workspace End-to-End Browser Audit & “Simply Works” Reliability
 
 - Audited all 35 registered public workspace routes across six primary areas.
 - Added deterministic route-to-surface contracts, route metadata validation, and first-party workspace-browser readiness.

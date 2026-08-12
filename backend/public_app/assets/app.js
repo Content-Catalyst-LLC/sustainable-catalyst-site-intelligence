@@ -25,7 +25,7 @@
     }
     throw last;
   }
-  const APP_VERSION="4.35.19";
+  const APP_VERSION="4.35.20";
   const FIXED_WORDPRESS_EMBED=window.SCSI_FIXED_WORDPRESS_EMBED===true;
   let heightFrame=0;
   function documentHeight(){
@@ -552,25 +552,25 @@
   }
   async function loadCountryEvents(code,signal,sequence){
     try{
-      const payload=await apiWithRetry(`/public/events?country_code=${encodeURIComponent(code)}&days=30&limit=20`,2,{signal});
+      const payload=await apiWithRetry(`/public/country/${encodeURIComponent(code)}/linked-records?days=90&limit=24`,2,{signal});
       if(signal.aborted||sequence!==globalCountryState.requestSequence)return;
-      globalCountryState.events=payload.events||[];
-      qs("#countryEventsList").innerHTML=globalCountryState.events.length?globalCountryState.events.slice(0,8).map(event=>`<div class="event-row"><span class="event-marker"></span><div><div class="event-title">${escapeHtml(event.title)}</div><div class="event-meta">${escapeHtml(event.category_label)} · ${escapeHtml(event.source_name)}${event.country_match_method?` · ${escapeHtml(event.country_match_method)}`:""}</div></div><div class="event-time">${cleanDate(event.observed_at)}</div></div>`).join(""):'<div class="empty-state"><div><strong>No country-linked events</strong><span>The connected public feeds returned no records with a retained country-match basis.</span></div></div>';
+      globalCountryState.events=payload.records||[];
+      qs("#countryEventsList").innerHTML=globalCountryState.events.length?globalCountryState.events.slice(0,8).map(record=>{const title=escapeHtml(record.title||"Public record"),label=escapeHtml(record.category_label||record.category||record.record_class||"Public record"),source=escapeHtml(record.source_name||record.source_id||"Public source"),match=record.country_match_method?` · ${escapeHtml(record.country_match_method)}`:"",body=`<div class="event-title">${record.source_url?`<a href="${escapeHtml(record.source_url)}" target="_blank" rel="noopener">${title}</a>`:title}</div><div class="event-meta">${label} · ${source}${match}</div>`;return `<div class="event-row"><span class="event-marker"></span><div>${body}</div><div class="event-time">${cleanDate(record.updated_at||record.observed_at)}</div></div>`}).join(""):`<div class="empty-state"><div><strong>No country-linked records</strong><span>No matching record was retained from the currently connected sources. This does not mean no event or humanitarian condition exists.</span></div></div>`;
     }catch(error){
       if(error?.name==="AbortError")return;
-      if(sequence===globalCountryState.requestSequence)qs("#countryEventsList").innerHTML=publicErrorBlock("Country events unavailable","The event service did not respond.",()=>selectGlobalCountry(code,false));
+      if(sequence===globalCountryState.requestSequence)qs("#countryEventsList").innerHTML=publicErrorBlock("Country records unavailable","The linked-record service did not respond.",()=>selectGlobalCountry(code,false));
     }
   }
   function setCountryLoading(code){
     const country=globalCountryState.catalog.find(item=>item.code===code);
     qs("#globalCountryExplorer").setAttribute("aria-busy","true");
     qs("#globalCountryTitle").textContent=`Loading ${country?.name||code}`;
-    qs("#globalCountryIntro").textContent="Retrieving validated country indicators, trends, and linked public events.";
+    qs("#globalCountryIntro").textContent="Retrieving validated country indicators, trends, and linked public records.";
     qs("#globalCountryMetrics").innerHTML='<div class="loading-block">Loading country indicators…</div>';
     qs("#globalTrendSelect").innerHTML="";
     qs("#globalTrendTitle").textContent="Loading trend";
     qs("#globalTrendChart").innerHTML='<div class="loading-block">Loading multi-year series…</div>';
-    qs("#countryEventsList").innerHTML='<div class="loading-block">Loading country-linked events…</div>';
+    qs("#countryEventsList").innerHTML='<div class="loading-block">Loading country-linked records…</div>';
   }
   async function selectGlobalCountry(code,pushState=true){
     const requested=String(code||"").trim().toUpperCase();
@@ -614,7 +614,7 @@
       if(sequence!==globalCountryState.requestSequence)return;
       qs("#globalCountryMetrics").innerHTML=publicErrorBlock("Country intelligence unavailable","The country service may be waking up or temporarily unavailable.",()=>selectGlobalCountry(normalized,false));
       qs("#globalTrendChart").innerHTML='<div class="empty-state"><div><strong>Trend unavailable</strong><span>Retry the country request to load a validated series.</span></div></div>';
-      qs("#countryEventsList").innerHTML='<div class="empty-state"><div><strong>Events unavailable</strong><span>Country indicator failure does not imply that no events exist.</span></div></div>';
+      qs("#countryEventsList").innerHTML='<div class="empty-state"><div><strong>Country records unavailable</strong><span>Country indicator failure does not imply that no linked records or humanitarian conditions exist.</span></div></div>';
     }finally{
       if(sequence===globalCountryState.requestSequence)qs("#globalCountryExplorer").setAttribute("aria-busy","false");
     }
@@ -1538,7 +1538,7 @@
   }
   function closeAuditablePublicObservatory(){const panel=qs("#auditablePublicObservatory");if(panel)panel.hidden=true;const button=qs("#saveViewButton");if(button)button.disabled=false}
 
-  // registered route recovery is enforced after every route transition by v4.35.19.
+  // registered route recovery is enforced after every route transition by v4.35.20.
   async function setRoute(route){
     qs("#main").classList.remove("route-enter");void qs("#main").offsetWidth;qs("#main").classList.add("route-enter");
     state.route=route;
@@ -1814,7 +1814,7 @@
     qs("#globalTrendSelect").addEventListener("change",e=>{const item=globalCountryState.trends.find(x=>x.key===e.target.value);if(item){qs("#globalTrendTitle").textContent=item.label;renderGlobalTrend(item)}});
     qs("#countryShare").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("Country view link copied")});
     qs("#countryOpenEarth").addEventListener("click",()=>setRoute("earth"));
-    qs("#countryOpenEvents").addEventListener("click",()=>{qs("#eventCountry").value=globalCountryState.activeCode;setRoute("events")});
+    qs("#countryOpenEvents").addEventListener("click",()=>setRoute("humanitarian"));
     qs("#eventApply").addEventListener("click",()=>applyEventFilters(true));
     qs("#eventReset").addEventListener("click",async()=>{qs("#eventDays").value="14";qs("#eventCategory").value="";qs("#eventSource").value="";qs("#eventCountry").value="";await applyEventFilters(true)});
     qs("#eventShare").addEventListener("click",async()=>{await navigator.clipboard.writeText(location.href);toast("Event view link copied")});
@@ -1890,7 +1890,7 @@
     hydration.then(results=>{const failed=results.filter(result=>result.status==="rejected");const status=qs("#statusText");if(failed.length){console.warn("[Site Intelligence] Startup hydration completed with limited services.",failed.map(result=>result.reason));if(status)status.textContent="Partial public data";toast("Some optional public data is temporarily unavailable.")}else if(status)status.textContent="Live public data";window.dispatchEvent(new CustomEvent("scsi:startup-hydrated",{detail:{version:APP_VERSION,state:failed.length?"limited":"ready",failed:failed.length}}));reportHeight()});
   }
   window.SCSIOverviewMapV3232={version:APP_VERSION,getMap:()=>state.map,getEvents:()=>state.events?.features||[],getFilteredEvents:()=>state.filteredEvents.slice(),getFilters:()=>({...state.overviewFilters}),setFilters:setOverviewFilters,selectEvent:selectOverviewEvent,fitResults:fitOverviewResults,setImageryOpacity:value=>state.imagery?.setOpacity?.(Math.max(0,Math.min(1,Number(value)))),setBaseStyle:style=>{const map=qs("#map");if(map)map.dataset.mapStyle=String(style||"institutional-dark");syncOverviewMapUrl()},syncUrl:syncOverviewMapUrl,render:renderOverviewFeatures};
-  window.SCSIRouterV3228={version:"4.35.19",navigate:navigateToRoute,current:()=>state.route};
+  window.SCSIRouterV3228={version:"4.35.20",navigate:navigateToRoute,current:()=>state.route};
   if(!FIXED_WORDPRESS_EMBED){
     window.addEventListener("load",reportHeight,{once:true});
     window.addEventListener("resize",reportHeight,{passive:true});
@@ -1916,5 +1916,5 @@ visualStyle.textContent=`
 document.head.appendChild(visualStyle);
 
 
-/* v4.35.19 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v4.35.19 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v4.35.20 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v4.35.20 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

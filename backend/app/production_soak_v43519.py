@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Deterministic production-soak/fault-injection control plane for v4.35.19.
+"""Deterministic production-soak/fault-injection control plane for v4.35.20.
 
 Every scenario runs entirely in process with a fake clock and fake upstream. It
 exercises the same ResilientTransport implementation used by authoritative

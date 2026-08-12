@@ -127,7 +127,7 @@ def test_public_endpoints_and_sources_workspace_surface_soak_and_semantic_truth(
     assert classified.status_code == 200 and classified.json()["evidence_class"] == "harmonized-benchmark"
     html = (ROOT / "backend/public_app/index.html").read_text(encoding="utf-8")
     js = (ROOT / "backend/public_app/assets/app.js").read_text(encoding="utf-8")
-    assert "LIVE-OPERATION STRESS LAYER · v4.35.19" in html
+    assert "LIVE-OPERATION STRESS LAYER · v4.35.20" in html
     assert "productionSoakScenarioMetric" in html
     assert 'apiWithRetry("/public/production-soak"' in js
     assert "item.evidence_label||item.data_state" in js

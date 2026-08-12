@@ -1,9 +1,8 @@
-# Current release: Site Intelligence v4.35.19 — Live-Operation Stress, Semantic Truth & Recovery Integrity
+# Current release: Site Intelligence v4.35.20 — Country-Linked Record Recovery, Source-Bounded Filtering & Humanitarian Discovery
 
-**Current release:** v4.35.19
+**Current release:** v4.35.20
 
-Site Intelligence v4.35.19 adds a deterministic live-operation stress layer and separates transport freshness from evidence meaning. The first-party release gate now requires eight failure/recovery soak scenarios, the inherited 35-route browser control plane, external resilience, canonical workspace evidence/Truth, and semantic evidence guards. Real provider health remains non-blocking. Country cards no longer use a successful or fresh World Bank retrieval as evidence that an annual statistic is a live operational condition; World Bank annual country series are presented as harmonized benchmarks, while explicit source-priority rules preserve higher-precedence national and sector evidence where available.
-
+Site Intelligence v4.35.20 repairs the country-linked record path. Country workspaces now use a dedicated linked-record contract instead of the hazard-only public-events route; ReliefWeb retrieval is country-bounded at the source when configured; and an HDX/OCHA public-discovery lane can retain explicitly country-matched humanitarian dataset metadata when the report source is unavailable. Discovery metadata stays visibly distinct from operational events/reports and cannot be promoted into current-condition truth. The inherited v4.35.19 production-soak and semantic-truth gates remain in force, and external provider health remains non-blocking.
 ## v4.35.15 — Authoritative Connector Expansion II
 
 Site Intelligence v4.35.15 adds five additional first-class authoritative machine interfaces: NOAA CO-OPS coastal/tide observations and predictions, NOAA NCEI Access Data Service retrieval, IOC-UNESCO OBIS marine-biodiversity occurrences, Eurostat Statistics API JSON-stat retrieval, and USDA-NRCS Soil Data Access map-unit retrieval. These join the five Expansion I interfaces while preserving source provenance, null values, quality/status metadata, bounded queries, and explicit evidence limitations.
@@ -1556,26 +1555,26 @@ Adds deferred Earth Observation orientation for NASA FIRMS fire/burned-area evid
 
 ## Current-release compatibility ledger
 
-- **Release:** v4.35.19 — Connected Public Intelligence and Evidence Platform
-- Current release:** v4.35.19 — Connected Public Intelligence and Evidence Platform
-- v4.35.19 — Analytics and Public-Value Measurement
-- v4.35.19 — Archive Verification, Preservation Audits, and Institutional Custody
-- v4.35.19 — Collection Publication, Citation Exports, and Research Brief Packages
-- v4.35.19 — Connected Live Intelligence Surface
-- v4.35.19 — Corrections, Retractions, and Public Change History
-- v4.35.19 — Editorial Workspace, Review Queues, and Publication Orchestration
-- v4.35.19 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
-- v4.35.19 — Homepage Intelligence Gateway
-- v4.35.19 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
-- v4.35.19 — Live Intelligence presentation
-- v4.35.19 — Preservation Interoperability, External Verification, and Institutional Exchange
-- v4.35.19 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
-- v4.35.19 — Public Registry Discovery, Evidence Search, and Institutional Profiles
-- v4.35.19 — Publication Adapters, Institutional Handoffs, and Release Governance
-- v4.35.19 — Registry Governance, Challenges, Revocation, and Appeals
-- v4.35.19 — Release Monitoring, Rollback, and Post-Publication Governance
-- v4.35.19 — Saved Discovery Views, Public Research Collections, and Evidence Pathways
-- v4.35.19 — Signal Context and Drill-Down
-- v4.35.19 — Signal Relevance and Rotation Intelligence
-- v4.35.19 — Signal Subscriptions, Alerts, and Scheduled Intelligence
-- v4.35.19 — Topic and Regional Channels
+- **Release:** v4.35.20 — Connected Public Intelligence and Evidence Platform
+- Current release:** v4.35.20 — Connected Public Intelligence and Evidence Platform
+- v4.35.20 — Analytics and Public-Value Measurement
+- v4.35.20 — Archive Verification, Preservation Audits, and Institutional Custody
+- v4.35.20 — Collection Publication, Citation Exports, and Research Brief Packages
+- v4.35.20 — Connected Live Intelligence Surface
+- v4.35.20 — Corrections, Retractions, and Public Change History
+- v4.35.20 — Editorial Workspace, Review Queues, and Publication Orchestration
+- v4.35.20 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
+- v4.35.20 — Homepage Intelligence Gateway
+- v4.35.20 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
+- v4.35.20 — Live Intelligence presentation
+- v4.35.20 — Preservation Interoperability, External Verification, and Institutional Exchange
+- v4.35.20 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
+- v4.35.20 — Public Registry Discovery, Evidence Search, and Institutional Profiles
+- v4.35.20 — Publication Adapters, Institutional Handoffs, and Release Governance
+- v4.35.20 — Registry Governance, Challenges, Revocation, and Appeals
+- v4.35.20 — Release Monitoring, Rollback, and Post-Publication Governance
+- v4.35.20 — Saved Discovery Views, Public Research Collections, and Evidence Pathways
+- v4.35.20 — Signal Context and Drill-Down
+- v4.35.20 — Signal Relevance and Rotation Intelligence
+- v4.35.20 — Signal Subscriptions, Alerts, and Scheduled Intelligence
+- v4.35.20 — Topic and Regional Channels

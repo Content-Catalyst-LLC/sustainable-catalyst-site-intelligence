@@ -10,7 +10,7 @@ CONTRACT='authoritative-api-coverage-production-audit-v43516'
 
 def closure_ledger(settings=None):
     p=prior_prod.closure_ledger(settings); p['version']=VERSION
-    # Replace gap records with canonical v4.35.19 configuration metadata.
+    # Replace gap records with canonical v4.35.20 configuration metadata.
     rows=audit.source_inventory(settings); gaps=[]
     for r in rows:
         if r.get('machine_readable') and r.get('access_class') in {'REGISTERED','AUTH_REQUIRED','BULK','STALE'}:

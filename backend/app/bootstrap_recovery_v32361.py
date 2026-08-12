@@ -1,4 +1,4 @@
-"""Single-owner bootstrap and loading recovery contract for Site Intelligence v4.35.19."""
+"""Single-owner bootstrap and loading recovery contract for Site Intelligence v4.35.20."""
 from __future__ import annotations
 from copy import deepcopy
 import json
