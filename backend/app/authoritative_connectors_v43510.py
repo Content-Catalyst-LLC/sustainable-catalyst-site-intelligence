@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Site Intelligence v4.35.22 — Authoritative Connector Expansion IV.
+"""Site Intelligence v4.35.23 — Authoritative Connector Expansion IV.
 
 Adds bounded first-party connectors for FAOSTAT, ILOSTAT, OECD Data Explorer
 SDMX, U.S. EPA Facility Registry Service, and USGS Volcano HANS.  Readiness is

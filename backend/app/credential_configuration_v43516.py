@@ -1,5 +1,5 @@
 from __future__ import annotations
-"""v4.35.22 — canonical credential/configuration control plane.
+"""v4.35.23 — canonical credential/configuration control plane.
 
 Public output is intentionally secret-free. The module only reports whether the
 required settings are present and syntactically plausible; it never returns,

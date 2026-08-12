@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Wikimedia Knowledge Context for Site Intelligence v4.35.22.
+"""Wikimedia Knowledge Context for Site Intelligence v4.35.23.
 
 Wikimedia is a context/entity-resolution layer. It cannot outrank official,
 operational, scientific, or statistical evidence in Site Intelligence Truth.

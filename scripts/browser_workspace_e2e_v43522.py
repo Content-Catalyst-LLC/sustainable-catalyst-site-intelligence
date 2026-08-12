@@ -67,7 +67,7 @@ def main() -> int:
     args = parser.parse_args()
     result = run_mode(args.mode)
     print(json.dumps(result, indent=2))
-    print(f"PASS: v4.35.22 {args.mode} browser workspace gate: 35/35 routes visible or explicitly degraded.")
+    print(f"PASS: v4.35.23 {args.mode} browser workspace gate: 35/35 routes visible or explicitly degraded.")
     return 0
 
 

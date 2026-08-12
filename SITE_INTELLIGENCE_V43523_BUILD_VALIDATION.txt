@@ -1,0 +1,56 @@
+Site Intelligence v4.35.23 — Build Validation
+Release: Canonical Country Identity & Selector Routing Repair
+Date: 2026-08-12
+
+COUNTRY IDENTITY / ROUTING
+PASS - Canonical first-party country identity registry present (172 countries)
+PASS - ISR -> IL -> Israel
+PASS - PSE -> PS -> Palestine
+PASS - Direct Palestine selection renders PSE / Palestine
+PASS - Direct Israel selection renders ISR / Israel
+PASS - Rapid PSE -> ISR resolves to final ISR / Israel
+PASS - Rapid ISR -> PSE resolves to final PSE / Palestine
+PASS - Cross-identity country response rendering is blocked
+PASS - External country catalog is metadata enrichment only
+PASS - /public/country-identity/readiness is network-free and release-gated
+
+TARGETED TESTS
+PASS - Country/Palestine inherited targeted slice: 61/61
+PASS - New v4.35.23 identity/routing + release-gate layer: 8/8
+
+FULL DETERMINISTIC SUITE
+PASS - 1,644/1,644 tests
+  chunk 1: 392/392
+  chunk 2: 374/374
+  chunk 3: 315/315
+  chunk 4: 331/331
+  chunk 5: 232/232
+
+BROWSER CONTROL PLANE
+PASS - Dedicated ISR/PSE browser identity regression
+PASS - Desktop workspace: 35/35 ready, 0 degraded
+PASS - Mobile workspace: 35/35 ready, 0 degraded
+PASS - WordPress/iframe workspace: 35/35 ready, 0 degraded
+
+STATIC / SECURITY
+PASS - JSON/GeoJSON parsed: 135
+PASS - JavaScript syntax: 152 files
+PASS - PHP syntax
+PASS - Static security scan: 0 findings
+PASS - verify/deploy/promote shell syntax
+
+EXPERIENCE BUDGETS
+PASS - HTML: 171,981 / 172,000 bytes
+PASS - CSS: 101,860 / 102,000 bytes
+PASS - HTML + CSS + application JS: 486,415 / 500,000 bytes
+
+IMMUTABLE TREE
+PASS - Manifest release: 4.35.23
+PASS - Manifest entries: 2,432
+
+INHERITED RELEASE GATES
+PASS - v4.35.22 Country Evidence Reconciliation & Scope Integrity
+PASS - v4.35.21 Palestine Data Federation & Wikimedia Knowledge Context
+PASS - v4.35.20 Country-Linked Record Recovery
+PASS - v4.35.19 Production Soak & Semantic Truth
+PASS - External upstream health remains non-blocking for promotion

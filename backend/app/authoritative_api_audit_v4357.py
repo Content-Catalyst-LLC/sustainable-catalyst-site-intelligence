@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""v4.35.22 authoritative-source audit enriched with evidence-selection intelligence."""
+"""v4.35.23 authoritative-source audit enriched with evidence-selection intelligence."""
 
 from typing import Any
 from .version import APP_VERSION

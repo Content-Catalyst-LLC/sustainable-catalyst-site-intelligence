@@ -1,6 +1,6 @@
 (function(window,document){
   "use strict";
-  const VERSION="4.35.22";
+  const VERSION="4.35.23";
   const OVERVIEW_IDS=["map"];
   let overviewLayout=null;
   let evidenceRail=null;
@@ -52,12 +52,19 @@
 
   async function loadCountryCatalog(){
     if(countryCatalog)return countryCatalog;
-    try{const response=await fetch('/public/countries',{headers:{Accept:'application/json'},cache:'no-store'});if(!response.ok)throw new Error(String(response.status));const payload=await response.json();countryCatalog=new Map((payload.countries||[]).map(item=>[item.code,item]));return countryCatalog}catch(_){return new Map()}
+    // v4.35.23: map focus consumes the same first-party identity plane as the
+    // selector. Live country metadata can enrich it but cannot define whether an
+    // ISO3 code exists. This prevents a partial upstream catalog from leaving the
+    // map focused on the previously selected country.
+    const merged=new Map();
+    try{const response=await fetch('/public/data-truth/countries',{headers:{Accept:'application/json'},cache:'no-store'});if(response.ok){const payload=await response.json();(payload.countries||[]).forEach(item=>{if(item?.code)merged.set(item.code,{...item})})}}catch(_){}
+    try{const response=await fetch('/public/countries',{headers:{Accept:'application/json'},cache:'no-store'});if(response.ok){const payload=await response.json();(payload.countries||[]).forEach(item=>{if(item?.code)merged.set(item.code,{...(merged.get(item.code)||{}),...item})})}}catch(_){}
+    countryCatalog=merged;return countryCatalog;
   }
   async function focusSelectedCountry(){
     if(activeRoute()!=='overview')return;
     const code=qs('#countrySelect')?.value||'KEN';const catalog=await loadCountryCatalog();const country=catalog.get(code);const map=mapApi()?.getMap?.('map');
-    if(!map||!country||!Number.isFinite(Number(country.latitude))||!Number.isFinite(Number(country.longitude)))return;
+    if(!map||!country||String(country.code||code).toUpperCase()!==String(code).toUpperCase()||!Number.isFinite(Number(country.latitude))||!Number.isFinite(Number(country.longitude)))return;
     map.flyTo([Number(country.latitude),Number(country.longitude)],Number(country.default_zoom||5));
     const strip=qs('#mapPresentationStatus');if(strip){strip.querySelector('span:last-child').textContent=`Focused on ${country.name} with regional geographic context.`}
   }

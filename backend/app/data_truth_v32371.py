@@ -1,4 +1,4 @@
-"""Global country data truth and coverage matrix for Site Intelligence v4.35.22."""
+"""Global country data truth and coverage matrix for Site Intelligence v4.35.23."""
 from __future__ import annotations
 
 from datetime import datetime, timezone
@@ -9,7 +9,8 @@ import json
 
 from .config import Settings
 from .data_truth_v3233 import DataTruthCenter as SourceTruthCenter
-from .live_country_intelligence import COUNTRIES, FALLBACK_COUNTRY_CATALOG, FALLBACKS, INDICATORS
+from .live_country_intelligence import FALLBACKS, INDICATORS
+from .country_identity_v43523 import country_identity_registry
 from .version import APP_VERSION
 
 SCHEMA_VERSION = "sc-site-intelligence-global-country-data-truth/1.0"
@@ -31,28 +32,25 @@ def _code(value: Any) -> str:
 
 @lru_cache(maxsize=1)
 def _bundled_country_catalog() -> dict[str, dict[str, Any]]:
-    path = Path(__file__).resolve().parents[1] / "public_app" / "assets" / "world-cartography-v3230.geojson"
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    enriched = {**FALLBACK_COUNTRY_CATALOG, **COUNTRIES}
-    rows: dict[str, dict[str, Any]] = {}
-    for feature in payload.get("features", []):
-        properties = feature.get("properties") or {}
-        code = str(properties.get("iso_a3") or "").upper()
-        if len(code) != 3 or code == "-99":
-            continue
-        known = enriched.get(code, {})
+    # v4.35.23: Data Truth and the interactive selector share one canonical
+    # first-party identity registry. This eliminates split catalog behavior where
+    # the selector could expose a country that downstream routing could not resolve.
+    rows = {}
+    for code, record in country_identity_registry().items():
         rows[code] = {
             "code": code,
-            "iso2": known.get("iso2"),
-            "name": known.get("display_name") or known.get("name") or properties.get("name") or code,
-            "region": known.get("region") or properties.get("continent") or "Unclassified",
-            "continent": properties.get("continent") or known.get("region") or "Unclassified",
-            "capital": known.get("capital"),
-            "latitude": known.get("latitude", properties.get("label_lat")),
-            "longitude": known.get("longitude", properties.get("label_lng")),
-            "catalog_source": "bundled-world-cartography",
+            "iso2": record.get("iso2"),
+            "name": record.get("name") or code,
+            "region": record.get("region") or record.get("continent") or "Unclassified",
+            "continent": record.get("continent") or record.get("region") or "Unclassified",
+            "capital": record.get("capital"),
+            "latitude": record.get("latitude"),
+            "longitude": record.get("longitude"),
+            "alternate_names": record.get("alternate_names") or [],
+            "catalog_source": "bundled-canonical-country-identity-v43523",
         }
     return dict(sorted(rows.items(), key=lambda item: (item[1]["name"], item[0])))
+
 
 
 class GlobalCountryDataTruth:

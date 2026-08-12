@@ -25,7 +25,7 @@
     }
     throw last;
   }
-  const APP_VERSION="4.35.22";
+  const APP_VERSION="4.35.23";
   const FIXED_WORDPRESS_EMBED=window.SCSI_FIXED_WORDPRESS_EMBED===true;
   let heightFrame=0;
   function documentHeight(){
@@ -630,13 +630,22 @@
     const controller=new AbortController();globalCountryState.selectionController=controller;
     const signal=controller.signal,sequence=++globalCountryState.requestSequence;
     globalCountryState.activeCode=normalized;state.country=normalized;qs("#countrySelect").value=normalized;setCountryLoading(normalized);
+    // v4.35.23: commit the selected identity to the URL before any upstream work.
+    // A slow/failed indicator request must not make the picker appear to ignore the
+    // selected country or leave the previous country encoded in browser state.
+    if(pushState||!supported){const params=new URLSearchParams(location.search);params.set("view","country");params.set("country",normalized);history.replaceState(null,"",`?${params.toString()}`)}
     try{
       const [overview,trends]=await Promise.all([
         apiWithRetry(`/public/country/${encodeURIComponent(normalized)}/overview`,3,{signal}),
         apiWithRetry(`/public/country/${encodeURIComponent(normalized)}/trends`,3,{signal})
       ]);
       if(signal.aborted||sequence!==globalCountryState.requestSequence)return;
-      const country=overview.country;
+      const country=overview.country||{};
+      const overviewCode=String(country.code||"").trim().toUpperCase();
+      const trendsCode=String(trends?.country?.code||overviewCode).trim().toUpperCase();
+      if(overviewCode!==normalized||trendsCode!==normalized){
+        throw new Error(`country_identity_mismatch:${normalized}:${overviewCode||"missing"}:${trendsCode||"missing"}`);
+      }
       qs("#globalCountryTitle").textContent=overview.headline;
       qs("#globalCountryIntro").textContent=overview.summary;
       qs("#countryIdentityCode").textContent=country.code;
@@ -658,12 +667,12 @@
       loadCountryEvidenceReconciliation(normalized,signal,sequence);
       loadCountryKnowledgeContext(normalized,signal,sequence);
       qs("#countrySearchResults").hidden=true;
-      if(pushState||!supported){const params=new URLSearchParams(location.search);params.set("view","country");params.set("country",normalized);history.replaceState(null,"",`?${params.toString()}`)}
       setTimeout(()=>{globalCountryState.overviewMap.invalidateSize();reportHeight()},80);
     }catch(error){
       if(error?.name==="AbortError")return;
       if(sequence!==globalCountryState.requestSequence)return;
-      qs("#globalCountryMetrics").innerHTML=publicErrorBlock("Country intelligence unavailable","The country service may be waking up or temporarily unavailable.",()=>selectGlobalCountry(normalized,false));
+      const identityMismatch=String(error?.message||"").startsWith("country_identity_mismatch:");
+      qs("#globalCountryMetrics").innerHTML=publicErrorBlock(identityMismatch?"Country identity mismatch blocked":"Country intelligence unavailable",identityMismatch?`Site Intelligence refused to render a response that did not match ${normalized}. The selected country remains ${normalized}; retry after the country service synchronizes.`:"The country service may be waking up or temporarily unavailable.",()=>selectGlobalCountry(normalized,false));
       qs("#globalTrendChart").innerHTML='<div class="empty-state"><div><strong>Trend unavailable</strong><span>Retry the country request to load a validated series.</span></div></div>';
       qs("#countryEventsList").innerHTML='<div class="empty-state"><div><strong>Country records unavailable</strong><span>Country indicator failure does not imply that no linked records or humanitarian conditions exist.</span></div></div>';
       ensureCountryReconciliationPanel();qs("#countryEvidenceReconciliation").innerHTML='<div class="empty-state"><div><strong>Reconciliation deferred</strong><span>Country indicator failure prevented the selection/scope explanation from loading.</span></div></div>';
@@ -1591,7 +1600,7 @@
   }
   function closeAuditablePublicObservatory(){const panel=qs("#auditablePublicObservatory");if(panel)panel.hidden=true;const button=qs("#saveViewButton");if(button)button.disabled=false}
 
-  // registered route recovery is enforced after every route transition by v4.35.22.
+  // registered route recovery is enforced after every route transition by v4.35.23.
   async function setRoute(route){
     qs("#main").classList.remove("route-enter");void qs("#main").offsetWidth;qs("#main").classList.add("route-enter");
     state.route=route;
@@ -1855,7 +1864,7 @@
     qs("#mobileNavToggle")?.addEventListener("click",()=>setMobileNavigation(!document.body.classList.contains("mobile-nav-open")));
     qs("#mobileNavBackdrop")?.addEventListener("click",()=>setMobileNavigation(false,{restoreFocus:true}));
     qsa("[data-route-link]").forEach(b=>b.addEventListener("click",()=>navigateToRoute(b.dataset.routeLink)));
-    qs("#countrySelect").addEventListener("change",async e=>{state.country=e.target.value;if(state.route==="country"){await selectGlobalCountry(e.target.value,true)}else if(state.route==="thematic"){qs("#thematicCountry").value=e.target.value;await loadThematicDashboard(true)}else{await loadCountry(e.target.value);history.replaceState(null,"",`?country=${encodeURIComponent(e.target.value)}&view=${encodeURIComponent(state.route)}`)}});
+    qs("#countrySelect").addEventListener("change",async e=>{const selected=String(e.currentTarget.value||"").trim().toUpperCase();state.country=selected;if(state.route==="country"){await selectGlobalCountry(selected,true)}else if(state.route==="thematic"){qs("#thematicCountry").value=selected;await loadThematicDashboard(true)}else{await loadCountry(selected);history.replaceState(null,"",`?country=${encodeURIComponent(selected)}&view=${encodeURIComponent(state.route)}`)}});
     qs("#dateSelect").addEventListener("change",()=>setImagery(qs(".layer-tab.active").dataset.layer));
     qs("#eventsToggle").addEventListener("change",e=>e.target.checked?state.markers.addTo(state.map):state.map.removeLayer(state.markers));
     qs("#heatToggle").addEventListener("change",e=>toast(e.target.checked?"Density layer enabled for supported records":"Density layer hidden"));
@@ -1943,7 +1952,7 @@
     hydration.then(results=>{const failed=results.filter(result=>result.status==="rejected");const status=qs("#statusText");if(failed.length){console.warn("[Site Intelligence] Startup hydration completed with limited services.",failed.map(result=>result.reason));if(status)status.textContent="Partial public data";toast("Some optional public data is temporarily unavailable.")}else if(status)status.textContent="Live public data";window.dispatchEvent(new CustomEvent("scsi:startup-hydrated",{detail:{version:APP_VERSION,state:failed.length?"limited":"ready",failed:failed.length}}));reportHeight()});
   }
   window.SCSIOverviewMapV3232={version:APP_VERSION,getMap:()=>state.map,getEvents:()=>state.events?.features||[],getFilteredEvents:()=>state.filteredEvents.slice(),getFilters:()=>({...state.overviewFilters}),setFilters:setOverviewFilters,selectEvent:selectOverviewEvent,fitResults:fitOverviewResults,setImageryOpacity:value=>state.imagery?.setOpacity?.(Math.max(0,Math.min(1,Number(value)))),setBaseStyle:style=>{const map=qs("#map");if(map)map.dataset.mapStyle=String(style||"institutional-dark");syncOverviewMapUrl()},syncUrl:syncOverviewMapUrl,render:renderOverviewFeatures};
-  window.SCSIRouterV3228={version:"4.35.22",navigate:navigateToRoute,current:()=>state.route};
+  window.SCSIRouterV3228={version:"4.35.23",navigate:navigateToRoute,current:()=>state.route};
   if(!FIXED_WORDPRESS_EMBED){
     window.addEventListener("load",reportHeight,{once:true});
     window.addEventListener("resize",reportHeight,{passive:true});
@@ -1969,5 +1978,5 @@ visualStyle.textContent=`
 document.head.appendChild(visualStyle);
 
 
-/* v4.35.22 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v4.35.22 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v4.35.23 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v4.35.23 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

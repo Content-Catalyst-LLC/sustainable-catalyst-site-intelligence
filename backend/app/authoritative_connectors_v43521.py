@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Site Intelligence v4.35.22 — Palestine official open-data connector extension."""
+"""Site Intelligence v4.35.23 — Palestine official open-data connector extension."""
 
 from datetime import datetime, timezone
 import re

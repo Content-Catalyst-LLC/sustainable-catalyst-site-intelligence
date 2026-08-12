@@ -9,7 +9,7 @@ from app.authoritative_api_production_audit_v43513 import production_audit, clos
 CLIENT=TestClient(app)
 
 def test_release_and_catalog_contract():
-    assert APP_VERSION=='4.35.22'
+    assert APP_VERSION=='4.35.23'
     s=Settings(_env_file=None)
     cat=c.connector_catalog(s)
     assert cat['connector_count']==40

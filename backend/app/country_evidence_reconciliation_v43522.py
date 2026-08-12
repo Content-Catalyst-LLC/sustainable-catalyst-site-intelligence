@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Country evidence reconciliation and geographic-scope integrity for Site Intelligence v4.35.22.
+"""Country evidence reconciliation and geographic-scope integrity for Site Intelligence v4.35.23.
 
 This layer compares already disclosed evidence. It never averages or manufactures a country value.
 It keeps concept, geography, reference period, methodology and authority separate so disagreement can

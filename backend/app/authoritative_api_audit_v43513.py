@@ -8,11 +8,11 @@ from . import authoritative_api_audit_v43512 as prior
 
 VERSION=APP_VERSION; CONTRACT=prior.CONTRACT; AUDIT_DATE='2026-08-11'; ACCESS_CLASSES=prior.ACCESS_CLASSES
 COMPLETED_CONNECTOR_TARGETS=tuple(prior.COMPLETED_CONNECTOR_TARGETS)+(
- {'id':'osm-water-infrastructure','workspace':'Water, Wastewater & Sanitation','state':'LIVE','completed_in':'4.35.22'},
- {'id':'epa-sdwis-drinking-water','workspace':'Water, Wastewater & Sanitation','state':'LIVE','completed_in':'4.35.22'},
- {'id':'drought-gov','workspace':'Hydrology, Rivers, Flood & Drought','state':'LIVE','completed_in':'4.35.22'},
- {'id':'nasa-gpm-imerg','workspace':'Hydrology, Rivers, Flood & Drought','state':'DISCOVERY','completed_in':'4.35.22'},
- {'id':'copernicus-glofas','workspace':'Hydrology, Rivers, Flood & Drought','state':'DISCOVERY','completed_in':'4.35.22'},
+ {'id':'osm-water-infrastructure','workspace':'Water, Wastewater & Sanitation','state':'LIVE','completed_in':'4.35.23'},
+ {'id':'epa-sdwis-drinking-water','workspace':'Water, Wastewater & Sanitation','state':'LIVE','completed_in':'4.35.23'},
+ {'id':'drought-gov','workspace':'Hydrology, Rivers, Flood & Drought','state':'LIVE','completed_in':'4.35.23'},
+ {'id':'nasa-gpm-imerg','workspace':'Hydrology, Rivers, Flood & Drought','state':'DISCOVERY','completed_in':'4.35.23'},
+ {'id':'copernicus-glofas','workspace':'Hydrology, Rivers, Flood & Drought','state':'DISCOVERY','completed_in':'4.35.23'},
 )
 PRIORITY_CONNECTOR_TARGETS=tuple(x for x in prior.PRIORITY_CONNECTOR_TARGETS if x.get('id') not in {'osm-water-infrastructure','epa-sdwis-drinking-water','drought-gov','nasa-gpm-imerg','copernicus-glofas'})
 def _now(): return datetime.now(timezone.utc).isoformat()

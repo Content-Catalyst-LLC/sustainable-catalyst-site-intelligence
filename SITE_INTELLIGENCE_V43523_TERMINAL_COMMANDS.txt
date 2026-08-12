@@ -1,0 +1,17 @@
+Site Intelligence v4.35.23 — Canonical Country Identity & Selector Routing Repair
+
+DEPLOY
+cd ~/Downloads
+chmod +x deploy_and_validate_site_intelligence_v4_35_23_macos.sh
+./deploy_and_validate_site_intelligence_v4_35_23_macos.sh sustainable-catalyst-site-intelligence-v4.35.23-release-bundle.zip
+
+VERIFY SOURCE TREE
+bash verify_site_intelligence_v4_35_23_macos.sh
+
+RUN DEDICATED ISR/PSE BROWSER REGRESSION
+PYTHONPATH=backend:scripts python scripts/browser_country_identity_routing_v43523.py
+
+RUN 35-ROUTE BROWSER GATES
+PYTHONPATH=backend:scripts python scripts/browser_workspace_e2e_v43523.py --mode desktop
+PYTHONPATH=backend:scripts python scripts/browser_workspace_e2e_v43523.py --mode mobile
+PYTHONPATH=backend:scripts python scripts/browser_workspace_e2e_v43523.py --mode iframe

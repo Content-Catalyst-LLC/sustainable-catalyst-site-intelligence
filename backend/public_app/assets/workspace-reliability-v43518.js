@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const VERSION = "4.35.22";
+  const VERSION = "4.35.23";
   const SURFACES = Object.freeze({
     overview:"#map",global:"#globalConditionsObservatory",events:"#eventStudio",alerts:"#alertsStudio",
     country:"#globalCountryExplorer",dossiers:"#dossierStudio",economics:"#economicsStudio",law:"#lawStudio",

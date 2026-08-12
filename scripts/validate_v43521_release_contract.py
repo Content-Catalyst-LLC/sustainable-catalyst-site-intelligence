@@ -20,7 +20,7 @@ from app.workspace_browser_audit_v43518 import workspace_browser_readiness
 from app.external_resilience_v43517 import resilience_readiness
 from app.workspace_evidence_unification_v4358 import readiness as workspace_evidence_readiness
 
-assert APP_VERSION == "4.35.22"
+assert APP_VERSION == "4.35.23"
 settings = Settings(_env_file=None)
 
 linked = linked_record_readiness()
@@ -135,4 +135,4 @@ for marker in (
 ):
     assert marker in app_js, marker
 
-print("PASS: v4.35.22 Palestine Data Federation + Wikimedia Knowledge Context release contract")
+print("PASS: v4.35.23 Palestine Data Federation + Wikimedia Knowledge Context release contract")

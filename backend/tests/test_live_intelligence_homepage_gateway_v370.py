@@ -69,7 +69,7 @@ def test_gateway_payload_summarizes_families_geography_and_destinations():
 
 def test_gateway_policy_is_public_and_bounded():
     policy = homepage_gateway_policy()
-    assert policy["version"] == "4.35.22"
+    assert policy["version"] == "4.35.23"
     assert policy["default_signal_limit"] == DEFAULT_HOMEPAGE_SIGNAL_LIMIT == 8
     assert policy["maximum_signal_limit"] == 12
     assert policy["sticky"] is False
@@ -82,13 +82,13 @@ def test_gateway_policy_endpoint():
     assert response.status_code == 200
     payload = response.json()
     assert payload["schema"] == GATEWAY_SCHEMA_VERSION
-    assert payload["version"] == "4.35.22"
+    assert payload["version"] == "4.35.23"
 
 
 def test_homepage_endpoint_uses_gateway_surface(monkeypatch):
     monkeypatch.setattr(main, "build_live_intelligence", lambda *args, **kwargs: {
         "ok": True,
-        "version": "4.35.22",
+        "version": "4.35.23",
         "signals": [sample_signal()],
         "display": {},
         "boundaries": [],

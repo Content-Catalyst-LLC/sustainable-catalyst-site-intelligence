@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Palestine data federation and source-precedence contract for Site Intelligence v4.35.22."""
+"""Palestine data federation and source-precedence contract for Site Intelligence v4.35.23."""
 
 from datetime import datetime, timezone
 from typing import Any, Mapping
@@ -55,7 +55,7 @@ def _dataset_rows(payload: Mapping[str, Any], source_id: str, source_name: str, 
 def build_palestine_data_federation(settings: Any = None, *, country_code: str = "PSE", query: str = "", limit: int = 12) -> dict[str, Any]:
     code, country = _country(country_code)
     if code != "PSE":
-        raise ValueError("The v4.35.22 Palestine federation route is scoped to PSE.")
+        raise ValueError("The v4.35.23 Palestine federation route is scoped to PSE.")
     bounded = max(1, min(int(limit), 30))
     search_query = str(query or "").strip()
     records: list[dict[str, Any]] = []

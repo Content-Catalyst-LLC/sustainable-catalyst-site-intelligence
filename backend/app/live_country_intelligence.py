@@ -10,6 +10,7 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 from .country_cache import country_cache
+from .country_identity_v43523 import country_identity_registry, canonical_country
 from .platform_core_integration import PlatformCoreClient, utc_now
 from .version import APP_VERSION
 
@@ -182,8 +183,17 @@ def _catalog_from_world_bank() -> dict[str, dict[str, Any]]:
 
 
 def _normalized_static_catalog() -> dict[str, dict[str, Any]]:
-    merged = {**FALLBACK_COUNTRY_CATALOG, **COUNTRIES}
-    return {code: _normalize_country(code, metadata) for code, metadata in merged.items()}
+    # v4.35.23: country identity is first-party and complete enough for selector/routing.
+    # World Bank is metadata/statistics enrichment only; it is no longer required to
+    # make a country selectable or resolvable. Preserve the richer hand-maintained
+    # metadata for existing release-control countries while keeping canonical ISO keys.
+    registry = {code: dict(metadata) for code, metadata in country_identity_registry().items()}
+    overrides = {**FALLBACK_COUNTRY_CATALOG, **COUNTRIES}
+    for code, metadata in overrides.items():
+        if code not in registry:
+            continue
+        registry[code] = {**registry[code], **_normalize_country(code, metadata), "code": code}
+    return registry
 
 
 def country_catalog(force_refresh: bool = False) -> dict[str, Any]:
@@ -204,7 +214,13 @@ def country_catalog(force_refresh: bool = False) -> dict[str, Any]:
                 live = {}
             if live:
                 live = {code: _normalize_country(code, metadata) for code, metadata in live.items()}
-                merged = {**_normalized_static_catalog(), **live}
+                canonical = _normalized_static_catalog()
+                # v4.35.23: enrich canonical identities field-by-field. A live provider
+                # cannot remove a bundled ISO2/ISO3 binding, alias, or coordinate merely
+                # because one metadata field is absent upstream.
+                merged = {code: dict(metadata) for code, metadata in canonical.items()}
+                for code, metadata in live.items():
+                    merged[code] = {**merged.get(code, {}), **metadata, "code": code}
                 _COUNTRY_CATALOG_CACHE = merged
                 _COUNTRY_CATALOG_FETCHED_AT = country_cache.set(f"v{VERSION}:country-catalog", merged)
                 _COUNTRY_CATALOG_STATE = "live"
@@ -272,26 +288,16 @@ def country_regions() -> dict[str, Any]:
 
 def _country(code: str) -> tuple[str, dict[str, Any]]:
     requested = _clean_text(code)
-    normalized = requested.upper()
-    folded = requested.casefold()
+    # Resolve against the canonical first-party registry first. This prevents an
+    # upstream country-catalog outage from making ISR/PSE (or any other bundled
+    # identity) disappear or alias to the previously selected country.
+    canonical_code, canonical_metadata = canonical_country(requested)
     payload = country_catalog()
-
-    def matches(item: dict[str, Any]) -> bool:
-        if item.get("code") == normalized or str(item.get("iso2") or "").upper() == normalized:
-            return True
-        names = [
-            item.get("name"),
-            item.get("display_name"),
-            item.get("source_name"),
-            *(item.get("alternate_names") or []),
-        ]
-        return bool(folded and any(_clean_text(name).casefold() == folded for name in names if name))
-
-    match = next((item for item in payload["countries"] if matches(item)), None)
-    if not match:
-        raise ValueError("unsupported_country")
-    metadata = dict(match)
-    canonical_code = metadata.pop("code")
+    match = next((item for item in payload["countries"] if item.get("code") == canonical_code), None)
+    metadata = dict(canonical_metadata)
+    if match:
+        metadata = {**metadata, **dict(match)}
+    metadata.pop("code", None)
     return canonical_code, metadata
 
 
@@ -440,7 +446,7 @@ def country_indicators(code: str) -> dict[str, Any]:
                 "reason": "Reference snapshots and unavailable records are not published as live evidence.",
             }
             merged.append(fallback)
-    # v4.35.22: attach the single canonical observation consumed by workspace, evidence and Truth surfaces.
+    # v4.35.23: attach the single canonical observation consumed by workspace, evidence and Truth surfaces.
     from .workspace_evidence_unification_v4358 import canonicalize_country_indicator
     for item in merged:
         item["canonical_observation"] = canonicalize_country_indicator({"code": normalized, **country}, item)

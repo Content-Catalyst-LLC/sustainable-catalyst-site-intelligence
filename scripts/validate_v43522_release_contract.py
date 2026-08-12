@@ -20,7 +20,7 @@ from app.workspace_browser_audit_v43518 import workspace_browser_readiness
 from app.external_resilience_v43517 import resilience_readiness
 from app.workspace_evidence_unification_v4358 import readiness as workspace_evidence_readiness
 
-assert APP_VERSION == "4.35.22"
+assert APP_VERSION == "4.35.23"
 settings = Settings(_env_file=None)
 
 reconciliation = reconciliation_readiness()
@@ -88,4 +88,4 @@ response = client.get("/public/deployment-verification")
 assert response.status_code == 200
 assert response.json()["checks"]["country_evidence_reconciliation_ready"] is True
 
-print("PASS: v4.35.22 country evidence reconciliation & scope-integrity release contract")
+print("PASS: v4.35.23 country evidence reconciliation & scope-integrity release contract")

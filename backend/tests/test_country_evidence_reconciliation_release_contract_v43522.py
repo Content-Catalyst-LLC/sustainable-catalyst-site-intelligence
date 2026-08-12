@@ -8,7 +8,7 @@ from app.release_health_v43522 import deployment_verification, source_health_pol
 
 
 def test_v43522_release_contract_is_network_free_and_scope_guarded():
-    assert APP_VERSION == "4.35.22"
+    assert APP_VERSION == "4.35.23"
     ready = readiness()
     assert ready["ok"] is True
     assert ready["network_calls_performed"] is False

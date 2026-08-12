@@ -4,12 +4,12 @@ ROOT=Path(__file__).resolve().parents[2]
 
 def test_release_contract_markers():
     checks={
-      "backend/app/version.py":["4.35.22","Connected Public Intelligence and Evidence Platform"],
+      "backend/app/version.py":["4.35.23","Connected Public Intelligence and Evidence Platform"],
       "backend/app/cross_platform_workflows_v2230.py":["class CrossPlatformWorkflowCenter","def create_packet(","def record_receipt(","def retry_failed(","def add_linkback("],
       "backend/public_app/index.html":["data-route=\"workflows\"","id=\"crossPlatformWorkflowStudio\""],
       "backend/public_app/service-worker.js":["/app/assets/workflows-v2230.js","/app/assets/workflows-v2230.css"],
-      "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php":["Version: 4.35.22","sc_public_cross_platform_workflows","sc_cross_platform_workflows_control_center"],
-      "README.md":["Current release:** v4.35.22 — Connected Public Intelligence and Evidence Platform"],
+      "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php":["Version: 4.35.23","sc_public_cross_platform_workflows","sc_cross_platform_workflows_control_center"],
+      "README.md":["Current release:** v4.35.23 — Connected Public Intelligence and Evidence Platform"],
     }
     for rel,markers in checks.items():
       text=(ROOT/rel).read_text()
