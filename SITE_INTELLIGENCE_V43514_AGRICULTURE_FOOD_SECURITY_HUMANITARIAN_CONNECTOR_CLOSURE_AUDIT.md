@@ -1,4 +1,4 @@
-# Site Intelligence v4.35.14 — Agriculture, Food Security & Humanitarian Connector Closure Audit
+# Site Intelligence v4.35.15 — Agriculture, Food Security & Humanitarian Connector Closure Audit
 
 ## Purpose
 Advance the “simply works” milestone by closing ambiguous machine-interface registrations in Agriculture/Food Security and Humanitarian Intelligence and replacing them with implemented LIVE, DISCOVERY, or explicit AUTH_REQUIRED states.

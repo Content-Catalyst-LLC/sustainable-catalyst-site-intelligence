@@ -1,0 +1,39 @@
+Site Intelligence v4.35.15 — Build Validation
+Release: High-Priority Workspace Connector Closure V: Mining, Critical Materials & Industrial Systems
+
+DETERMINISTIC PYTEST
+PASS — 1,567 / 1,567 tests
+Final frozen-tree reconciliation: 408 + 359 + 349 + 135 + 217 + 99 = 1,567
+New v4.35.15 closure regressions: 14 / 14 PASS
+
+STATIC / FORMAT GATES
+PASS — immutable repository manifest: 2,308 files
+PASS — 134 JSON/GeoJSON files parsed
+PASS — 151 JavaScript files syntax-validated
+PASS — WordPress PHP syntax
+PASS — static security scan, 0 findings
+PASS — v4.35.15 release contract
+PASS — Mining/Critical Materials/Industrial browser/static connector gate
+
+AUDIT SNAPSHOT
+Source registrations: 191
+Machine-readable registrations: 112
+LIVE: 51
+DISCOVERY: 15
+AUTH_REQUIRED: 17
+REGISTERED/not retrieved: 27
+BULK: 2
+STALE: 0
+Implemented/discovery/configuration-gated: 83
+Public connector catalog: 50 (31 LIVE / 11 DISCOVERY / 8 AUTH_REQUIRED)
+Mining & Critical Materials REGISTERED backlog: 0
+Industrial Manufacturing & Trade REGISTERED backlog: 0
+
+FINAL PACKAGING
+PASS — repository ZIP integrity
+PASS — WordPress ZIP integrity
+PASS — release-bundle ZIP integrity
+PASS — SHA-256 verification of every bundle component
+PASS — standalone macOS installer bundle-only verification
+PASS — extracted repository ZIP immutable-manifest/static/browser verification
+PASS — extracted repository ZIP v4.35.15 closure regressions: 14 / 14

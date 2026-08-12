@@ -75,4 +75,4 @@ def test_public_production_audit_routes_exist():
     for endpoint in ('/public/authoritative-apis/production-audit','/public/authoritative-apis/closure-ledger','/public/authoritative-apis/production-readiness'):
         response=client.get(endpoint)
         assert response.status_code==200, endpoint
-        assert response.json()['version']=='4.35.14'
+        assert response.json()['version']=='4.35.15'

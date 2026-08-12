@@ -1,4 +1,4 @@
-# Site Intelligence v4.35.14 — High-Priority Workspace Connector Closure IV: Agriculture, Food Security & Humanitarian Conditions
+# Site Intelligence v4.35.15 — High-Priority Workspace Connector Closure IV: Agriculture, Food Security & Humanitarian Conditions
 
 ## Release objective
 Close the ambiguous machine-interface backlog in Agriculture, Crops & Food Systems and Humanitarian Intelligence while preserving source semantics, provenance, bounded retrieval, configuration truth, and non-blocking external source health.

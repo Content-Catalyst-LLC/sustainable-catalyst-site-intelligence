@@ -34,7 +34,7 @@
 @media(max-width:680px){.scsi-map-engine-label{left:8px;top:8px}.scsi-map-quality{display:none}.scsi-map-controls{right:8px;top:8px}.scsi-map-coordinate-readout{display:none}.scsi-map-attribution{max-width:55%;text-align:right}.scsi-country-label{font-size:8px}.scsi-label-rank-1{font-size:10px}}
 @media(prefers-reduced-motion:reduce){.scsi-map-managed *{scroll-behavior:auto!important;transition:none!important}}
 
-/* v4.35.14 cartographic presentation */
+/* v4.35.15 cartographic presentation */
 .scsi-map-tile{transform:translateZ(0);will-change:transform;object-fit:cover}
 .scsi-map-tile-layer--imagery{opacity:var(--scsi-imagery-opacity,.62)!important}
 .scsi-map-tile-layer--imagery .scsi-map-tile{filter:saturate(.82) brightness(.9) contrast(1.06)}

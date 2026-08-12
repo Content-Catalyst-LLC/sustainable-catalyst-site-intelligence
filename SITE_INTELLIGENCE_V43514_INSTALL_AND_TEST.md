@@ -1,4 +1,4 @@
-# Site Intelligence v4.35.14 — Install & Test
+# Site Intelligence v4.35.15 — Install & Test
 
 ## macOS deployment
 Place the release bundle and installer in `~/Downloads`, then run:
@@ -6,7 +6,7 @@ Place the release bundle and installer in `~/Downloads`, then run:
 ```bash
 cd ~/Downloads
 INSTALLER="$(find . -maxdepth 1 -type f -name 'deploy_and_validate_site_intelligence_v4_35_14_macos*.sh' -print0 | xargs -0 ls -t | head -1)"
-BUNDLE="$(find . -maxdepth 1 -type f -name 'sustainable-catalyst-site-intelligence-v4.35.14-release-bundle*.zip' -print0 | xargs -0 ls -t | head -1)"
+BUNDLE="$(find . -maxdepth 1 -type f -name 'sustainable-catalyst-site-intelligence-v4.35.15-release-bundle*.zip' -print0 | xargs -0 ls -t | head -1)"
 chmod +x "$INSTALLER"
 bash "$INSTALLER" "$BUNDLE"
 ```

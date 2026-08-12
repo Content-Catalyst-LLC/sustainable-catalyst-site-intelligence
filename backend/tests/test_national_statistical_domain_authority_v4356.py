@@ -16,7 +16,7 @@ def settings(**updates):
 
 
 def test_release_catalog_expands_to_twenty_interfaces():
-    assert APP_VERSION == "4.35.14"
+    assert APP_VERSION == "4.35.15"
     data = connectors.connector_catalog(settings())
     assert data["connector_count"] == 20
     assert data["live_connector_count"] == 16
@@ -151,7 +151,7 @@ def test_audit_readiness_tracks_national_statistical_expansion_without_network()
 def test_public_routes_validate_before_upstream_network():
     client=TestClient(app)
     catalog=client.get("/public/authoritative-connectors")
-    assert catalog.status_code == 200 and catalog.json()["connector_count"] == 45
+    assert catalog.status_code == 200 and catalog.json()["connector_count"] == 50
     assert client.get("/public/authoritative-connectors/pcbs/pxweb/data",params={"table_path":"myDb/X"}).status_code == 400
     assert client.get("/public/authoritative-connectors/statcan/vectors").status_code == 400
     assert client.get("/public/authoritative-connectors/ons/observations",params={"dataset_id":"cpih01","edition":"time-series","version":6}).status_code == 400

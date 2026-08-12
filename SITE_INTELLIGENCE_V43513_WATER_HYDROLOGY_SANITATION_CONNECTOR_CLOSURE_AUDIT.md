@@ -1,4 +1,4 @@
-# Site Intelligence v4.35.14 — Water, Hydrology & Sanitation Connector Closure Audit
+# Site Intelligence v4.35.15 — Water, Hydrology & Sanitation Connector Closure Audit
 
 ## Purpose
 Close ambiguous machine-interface gaps in the Hydrology, Rivers, Flood & Drought and Water, Wastewater & Sanitation workspaces without overstating regulatory records, community mapping, satellite estimates, model products, or discovery metadata.

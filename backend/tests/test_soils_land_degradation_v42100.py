@@ -4,7 +4,7 @@ from app.soils_land_degradation_v42100 import normalize_measurement, normalize_a
 client=TestClient(app)
 def test_overview_and_catalog():
     o=client.get('/public/soils-land').json(); c=client.get('/public/soils-land/catalog').json()
-    assert o['ok'] and o['version']=='4.35.14' and o['contract']=='global-soils-land-degradation-desertification-intelligence'
+    assert o['ok'] and o['version']=='4.35.15' and o['contract']=='global-soils-land-degradation-desertification-intelligence'
     assert o['source_count']==4 and c['truth_boundaries']['soilgrids_equals_ground_sample'] is False
     assert {'isric-soilgrids','usda-nrcs-soil-data-access','nasa-smap-soil-moisture','unccd-land-degradation'} <= {x['id'] for x in c['sources']}
 def test_empty_state_has_no_soil_health_claim():

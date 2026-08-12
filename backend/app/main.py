@@ -693,7 +693,7 @@ from .source_methodology_studio import (
     studio_export as build_source_methodology_export,
     SourceMethodologyError,
 )
-from .authoritative_api_production_audit_v43514 import (
+from .authoritative_api_production_audit_v43515 import (
     audit_overview as build_authoritative_api_audit,
     audit_catalog as build_authoritative_api_catalog,
     workspace_matrix as build_authoritative_api_workspace_matrix,
@@ -702,7 +702,7 @@ from .authoritative_api_production_audit_v43514 import (
     closure_ledger as build_authoritative_api_closure_ledger,
     production_readiness as build_authoritative_api_production_readiness,
 )
-from .authoritative_connectors_v43514 import (
+from .authoritative_connectors_v43515 import (
     connector_catalog as build_authoritative_connector_catalog,
     connector_readiness as build_authoritative_connector_readiness,
     usgs_water_latest as build_usgs_water_latest,
@@ -752,6 +752,11 @@ from .authoritative_connectors_v43514 import (
     hdx_hapi as build_hdx_hapi_v43514,
     ipc_food_security as build_ipc_food_security_v43514,
     fews_net_data as build_fews_net_data_v43514,
+    osm_mining as build_osm_mining_v43515,
+    usgs_usmin_discovery as build_usgs_usmin_discovery_v43515,
+    usgs_mcs_2026_discovery as build_usgs_mcs_2026_discovery_v43515,
+    osm_industrial as build_osm_industrial_v43515,
+    wits_trade_stats as build_wits_trade_stats_v43515,
 )
 from .evidence_intelligence_v4357 import (
     overview as build_evidence_intelligence_overview,
@@ -913,7 +918,7 @@ async def public_experience_headers(request, call_next):
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
-        response.headers["X-SC-Release-Gate"] = "v4.35.14"
+        response.headers["X-SC-Release-Gate"] = "v4.35.15"
     elif path == "/app/service-worker.js":
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
@@ -4382,7 +4387,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.35.14 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v4.35.15 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -4524,7 +4529,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.35.14 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v4.35.15 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -4641,7 +4646,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.35.14 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v4.35.15 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -4763,7 +4768,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.35.14 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v4.35.15 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -4899,7 +4904,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.35.14 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v4.35.15 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -6068,6 +6073,42 @@ def public_food_security_ipc(resource: str=Query("country",max_length=20), count
 @app.get("/public/food-security/live/fews-net")
 def public_food_security_fews_net(dataset: str=Query("food-security-phase",max_length=40), country_code: str=Query("",max_length=2), start_date: str=Query("",max_length=10), end_date: str=Query("",max_length=10), scenario: str=Query("",max_length=8), page_size: int=Query(100,ge=1,le=500), offset: int=Query(0,ge=0,le=100000), settings: Settings=Depends(get_settings)):
     try: return build_fews_net_data_v43514(settings,dataset=dataset,country_code=country_code,start_date=start_date,end_date=end_date,scenario=scenario,page_size=page_size,offset=offset)
+    except ValueError as exc: raise HTTPException(status_code=400,detail=str(exc)) from exc
+    except RuntimeError as exc: raise HTTPException(status_code=502,detail=str(exc)) from exc
+
+
+@app.get("/public/authoritative-connectors/osm-mining")
+@app.get("/public/mining-critical-materials/live/osm-mining")
+def public_mining_osm_features(latitude: float=Query(...,ge=-90,le=90), longitude: float=Query(...,ge=-180,le=180), radius_km: float=Query(10,gt=0,le=50), settings: Settings=Depends(get_settings)):
+    try: return build_osm_mining_v43515(settings,latitude=latitude,longitude=longitude,radius_km=radius_km)
+    except ValueError as exc: raise HTTPException(status_code=400,detail=str(exc)) from exc
+    except RuntimeError as exc: raise HTTPException(status_code=502,detail=str(exc)) from exc
+
+@app.get("/public/authoritative-connectors/usgs-usmin/discovery")
+@app.get("/public/mining-critical-materials/discovery/usgs-usmin")
+def public_mining_usgs_usmin(record_id: str=Query("USGS:6464de5bd34ec179a83d9e6c",max_length=80), settings: Settings=Depends(get_settings)):
+    try: return build_usgs_usmin_discovery_v43515(settings,record_id=record_id)
+    except ValueError as exc: raise HTTPException(status_code=400,detail=str(exc)) from exc
+    except RuntimeError as exc: raise HTTPException(status_code=502,detail=str(exc)) from exc
+
+@app.get("/public/authoritative-connectors/usgs-mcs-2026/discovery")
+@app.get("/public/mining-critical-materials/discovery/usgs-mcs-2026")
+def public_mining_usgs_mcs_2026(record_id: str=Query("USGS:69837e43b66b01367d7ec7c7",max_length=80), settings: Settings=Depends(get_settings)):
+    try: return build_usgs_mcs_2026_discovery_v43515(settings,record_id=record_id)
+    except ValueError as exc: raise HTTPException(status_code=400,detail=str(exc)) from exc
+    except RuntimeError as exc: raise HTTPException(status_code=502,detail=str(exc)) from exc
+
+@app.get("/public/authoritative-connectors/osm-industrial")
+@app.get("/public/industrial-manufacturing/live/osm-industrial")
+def public_industrial_osm_features(latitude: float=Query(...,ge=-90,le=90), longitude: float=Query(...,ge=-180,le=180), radius_km: float=Query(10,gt=0,le=50), settings: Settings=Depends(get_settings)):
+    try: return build_osm_industrial_v43515(settings,latitude=latitude,longitude=longitude,radius_km=radius_km)
+    except ValueError as exc: raise HTTPException(status_code=400,detail=str(exc)) from exc
+    except RuntimeError as exc: raise HTTPException(status_code=502,detail=str(exc)) from exc
+
+@app.get("/public/authoritative-connectors/wits/trade-stats")
+@app.get("/public/industrial-manufacturing/live/wits")
+def public_industrial_wits_trade_stats(reporter: str=Query(...,min_length=3,max_length=3), year: int=Query(...,ge=1988,le=2100), partner: str=Query("wld",max_length=3), product: str=Query("999999",max_length=20), indicator: str=Query("XPRT-TRD-VL",max_length=40), dataset: str=Query("tradestats-trade",max_length=40), settings: Settings=Depends(get_settings)):
+    try: return build_wits_trade_stats_v43515(settings,reporter=reporter,year=year,partner=partner,product=product,indicator=indicator,dataset=dataset)
     except ValueError as exc: raise HTTPException(status_code=400,detail=str(exc)) from exc
     except RuntimeError as exc: raise HTTPException(status_code=502,detail=str(exc)) from exc
 
@@ -9045,7 +9086,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v4.35.14 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v4.35.15 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -9279,7 +9320,7 @@ def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     return build_reliability(settings)
 
 
-# Site Intelligence v4.35.14 — Open Standards, Federation, and Institutional Data Exchange.
+# Site Intelligence v4.35.15 — Open Standards, Federation, and Institutional Data Exchange.
 def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
     if not settings.federation_exchange_enabled:
         raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
@@ -9369,7 +9410,7 @@ def admin_federation_accept_import_endpoint(request: dict = Body(default={}), se
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.35.14 — Security, Privacy, Governance, and Production Scale.
+# Site Intelligence v4.35.15 — Security, Privacy, Governance, and Production Scale.
 def _production_governance(settings: Settings) -> ProductionGovernanceCenter:
     if not settings.production_governance_enabled:
         raise HTTPException(status_code=503, detail="Production governance is disabled.")
@@ -9518,7 +9559,7 @@ def admin_production_governance_deployment_endpoint(request: dict = Body(default
 def admin_production_governance_load_probe_endpoint(requests: int = Query(default=250, ge=1, le=5000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return _production_governance(settings).load_probe(requests)
 
-# Site Intelligence v4.35.14 — Connected Live Intelligence Surface.
+# Site Intelligence v4.35.15 — Connected Live Intelligence Surface.
 def _connected_platform(settings: Settings) -> ConnectedPublicIntelligencePlatform:
     if not settings.connected_platform_enabled:
         raise HTTPException(status_code=404, detail="Connected platform is disabled.")

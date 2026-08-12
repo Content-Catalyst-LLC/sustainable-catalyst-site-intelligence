@@ -9,7 +9,7 @@ from app.main import app
 from app.version import APP_VERSION
 from app.authoritative_api_production_audit_v43513 import production_audit, production_readiness, closure_ledger
 from app.authoritative_connectors_v43513 import connector_catalog, connector_readiness
-assert APP_VERSION=='4.35.14'
+assert APP_VERSION=='4.35.15'
 settings=Settings(_env_file=None, reliefweb_appname='', nasa_firms_map_key='', usda_nass_api_key='')
 a=production_audit(settings)
 assert a['production_controls_ready'] is True
@@ -42,4 +42,4 @@ for marker in ('authoritative_api_production_audit_v43513','authoritative_connec
  assert marker in main,marker
 promotion=(ROOT/'promote_site_intelligence_v4_35_13_to_github_and_render_macos.sh').read_text()
 assert 'Deep gate:' not in promotion
-print('PASS: v4.35.14 High-Priority Workspace Connector Closure III: Water, Hydrology & Sanitation release contract')
+print('PASS: v4.35.15 High-Priority Workspace Connector Closure III: Water, Hydrology & Sanitation release contract')

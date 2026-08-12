@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""v4.35.14 semantic/freshness enrichment for record-level provenance."""
+"""v4.35.15 semantic/freshness enrichment for record-level provenance."""
 
 from typing import Any, Mapping
 from .config import Settings

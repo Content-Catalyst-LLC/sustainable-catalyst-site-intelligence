@@ -10,7 +10,7 @@ from app.release_health_v43531 import deployment_verification, source_health_pol
 from app.version import APP_VERSION
 from app.authoritative_connectors_v4356 import connector_catalog, connector_readiness
 from app.authoritative_api_audit_v4356 import audit_overview
-assert APP_VERSION=='4.35.14'
+assert APP_VERSION=='4.35.15'
 settings=Settings(_env_file=None, reliefweb_appname='', nasa_firms_map_key='', usda_nass_api_key='')
 verify=deployment_verification(settings)
 assert verify['ok'] and verify['version']==APP_VERSION and verify['source_health_blocks_release'] is False
@@ -40,6 +40,6 @@ promotion=(ROOT/'promote_site_intelligence_v4_35_6_to_github_and_render_macos.sh
 assert 'Deep gate:' not in promotion and '/public/deployment-verification' in promotion and '/public/source-health-policy' in promotion
 assert '/public/climate/state' not in promotion and 'External source availability is intentionally excluded' in promotion
 render=(ROOT/'render.yaml').read_text()
-for marker in ('site-intelligence-v4.35.14','SC_SI_NASA_FIRMS_MAP_KEY','SC_SI_USDA_NASS_API_KEY','SC_SI_NASA_EARTHDATA_TOKEN'):
+for marker in ('site-intelligence-v4.35.15','SC_SI_NASA_FIRMS_MAP_KEY','SC_SI_USDA_NASS_API_KEY','SC_SI_NASA_EARTHDATA_TOKEN'):
     assert marker in render
-print('PASS: v4.35.14 national statistical & domain-authority connector expansion release contract')
+print('PASS: v4.35.15 national statistical & domain-authority connector expansion release contract')
