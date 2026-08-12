@@ -1,4 +1,4 @@
-# Site Intelligence v4.35.20 — Workspace End-to-End Browser Audit
+# Site Intelligence v4.35.21 — Workspace End-to-End Browser Audit
 
 ## Audit scope
 The audit covers the entire 35-route public workspace contract across six primary navigation areas, not only recently added domain workspaces.
@@ -22,10 +22,10 @@ The automated browser audit exercises all 35 routes in:
 
 ## Defects found and repaired
 ### Missing Workflows metadata
-The `workflows` route was registered but lacked an explicit `routeMeta()` entry. v4.35.20 adds the missing title, eyebrow, description, and announcement metadata.
+The `workflows` route was registered but lacked an explicit `routeMeta()` entry. v4.35.21 adds the missing title, eyebrow, description, and announcement metadata.
 
 ### Registered-route recovery
-Previously, an optional module failing during route initialization could leave a registered route without a usable first-party workspace surface. v4.35.20 enforces the expected surface after every route transition. If the surface is absent or hidden, an explicit degraded workspace appears with `Retry workspace` and `Sources & methods` actions.
+Previously, an optional module failing during route initialization could leave a registered route without a usable first-party workspace surface. v4.35.21 enforces the expected surface after every route transition. If the surface is absent or hidden, an explicit degraded workspace appears with `Retry workspace` and `Sources & methods` actions.
 
 ### Mobile horizontal overflow
 Hidden evidence drawers and the overview evidence rail could widen a 390 px document to roughly 796 px even while visually off-canvas. The application shell now contains those surfaces within the viewport.

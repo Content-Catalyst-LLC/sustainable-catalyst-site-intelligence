@@ -8,12 +8,12 @@ from . import authoritative_api_audit_v43510 as prior
 
 VERSION=APP_VERSION; CONTRACT=prior.CONTRACT; AUDIT_DATE='2026-08-11'; ACCESS_CLASSES=prior.ACCESS_CLASSES
 COMPLETED_CONNECTOR_TARGETS=tuple(prior.COMPLETED_CONNECTOR_TARGETS)+(
- {'id':'osm-power-overpass','workspace':'Energy Infrastructure & Power Systems','state':'LIVE','completed_in':'4.35.20'},
- {'id':'ember-electricity-data','workspace':'Energy Infrastructure & Power Systems','state':'AUTH_REQUIRED','completed_in':'4.35.20'},
- {'id':'entsoe-transparency','workspace':'Energy Infrastructure & Power Systems','state':'AUTH_REQUIRED','completed_in':'4.35.20'},
- {'id':'openstreetmap-telecom','workspace':'Digital Connectivity','state':'LIVE','completed_in':'4.35.20'},
- {'id':'mlab-network-performance','workspace':'Digital Connectivity','state':'DISCOVERY','completed_in':'4.35.20'},
- {'id':'fcc-broadband-data','workspace':'Digital Connectivity','state':'DISCOVERY','completed_in':'4.35.20'},
+ {'id':'osm-power-overpass','workspace':'Energy Infrastructure & Power Systems','state':'LIVE','completed_in':'4.35.21'},
+ {'id':'ember-electricity-data','workspace':'Energy Infrastructure & Power Systems','state':'AUTH_REQUIRED','completed_in':'4.35.21'},
+ {'id':'entsoe-transparency','workspace':'Energy Infrastructure & Power Systems','state':'AUTH_REQUIRED','completed_in':'4.35.21'},
+ {'id':'openstreetmap-telecom','workspace':'Digital Connectivity','state':'LIVE','completed_in':'4.35.21'},
+ {'id':'mlab-network-performance','workspace':'Digital Connectivity','state':'DISCOVERY','completed_in':'4.35.21'},
+ {'id':'fcc-broadband-data','workspace':'Digital Connectivity','state':'DISCOVERY','completed_in':'4.35.21'},
 )
 PRIORITY_CONNECTOR_TARGETS=tuple(x for x in prior.PRIORITY_CONNECTOR_TARGETS if x.get('id')!='measurement-lab')
 

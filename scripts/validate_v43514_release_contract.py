@@ -9,7 +9,7 @@ from app.main import app
 from app.version import APP_VERSION
 from app.authoritative_api_production_audit_v43514 import production_audit, production_readiness, closure_ledger
 from app.authoritative_connectors_v43514 import connector_catalog, connector_readiness
-assert APP_VERSION=='4.35.20'
+assert APP_VERSION=='4.35.21'
 settings=Settings(_env_file=None, reliefweb_appname='', hdx_hapi_app_identifier='', ipc_api_key='')
 a=production_audit(settings)
 assert a['production_controls_ready'] is True and a['coverage_closure_complete'] is False
@@ -38,4 +38,4 @@ for marker in ('authoritative_api_production_audit_v43514','authoritative_connec
     assert marker in main,marker
 promotion=(ROOT/'promote_site_intelligence_v4_35_14_to_github_and_render_macos.sh').read_text()
 assert 'Deep gate:' not in promotion
-print('PASS: v4.35.20 High-Priority Workspace Connector Closure IV: Agriculture, Food Security & Humanitarian Conditions release contract')
+print('PASS: v4.35.21 High-Priority Workspace Connector Closure IV: Agriculture, Food Security & Humanitarian Conditions release contract')

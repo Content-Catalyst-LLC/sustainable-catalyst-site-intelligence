@@ -109,7 +109,7 @@ def test_public_routes_are_secret_safe_and_network_free():
     c=TestClient(app)
     for route in ('/public/credential-configuration','/public/credential-configuration/readiness','/public/credential-configuration/workspaces'):
         r=c.get(route); assert r.status_code==200
-        p=r.json(); assert p['version']=='4.35.20'; assert p.get('network_calls_performed') is False
+        p=r.json(); assert p['version']=='4.35.21'; assert p.get('network_calls_performed') is False
     text=c.get('/public/credential-configuration').text.lower()
     assert 'api_key=' not in text and 'password=' not in text and 'bearer ' not in text
 

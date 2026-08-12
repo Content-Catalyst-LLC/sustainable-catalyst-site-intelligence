@@ -13,7 +13,7 @@ CLIENT = TestClient(app)
 def test_indicator_truth_discloses_canonical_workspace_units_dates_and_fingerprint():
     payload = CLIENT.get('/public/record-truth/indicator/KEN/SP.POP.TOTL').json()
     assert payload['ok'] is True
-    assert payload['version'] == '4.35.20'
+    assert payload['version'] == '4.35.21'
     assert payload['record_id'] == 'indicator:KEN:SP.POP.TOTL'
     assert payload['record_type'] == 'indicator'
     assert payload['truth_state'] in {'observed', 'historical_snapshot'}
@@ -124,8 +124,8 @@ def test_browser_assets_expose_record_truth_controls_and_wordpress_parity():
     truth_js = (ROOT / 'backend/public_app/assets/data-truth-v32371.js').read_text()
     record_js = (ROOT / 'backend/public_app/assets/record-provenance-v3238.js').read_text()
     worker = (ROOT / 'backend/public_app/service-worker.js').read_text()
-    assert 'record-provenance-v3238.css?v=4.35.20' in html
-    assert 'record-provenance-v3238.js?v=4.35.20' in html
+    assert 'record-provenance-v3238.css?v=4.35.21' in html
+    assert 'record-provenance-v3238.js?v=4.35.21' in html
     assert 'data-record-truth-layer="true-color"' in html
     assert 'data-record-truth-indicator' in truth_js
     assert 'eventRecordTruthButton' in app_js

@@ -758,6 +758,7 @@ from .authoritative_connectors_v43515 import (
     osm_industrial as build_osm_industrial_v43515,
     wits_trade_stats as build_wits_trade_stats_v43515,
 )
+from .authoritative_connectors_v43521 import palestine_open_data_search as build_palestine_open_data_search_v43521
 from .evidence_intelligence_v4357 import (
     overview as build_evidence_intelligence_overview,
     metric_catalog as build_evidence_metric_catalog,
@@ -768,7 +769,7 @@ from .evidence_intelligence_v4357 import (
     select_evidence as build_evidence_selection,
     readiness as build_evidence_intelligence_readiness,
 )
-from .release_health_v43520 import (
+from .release_health_v43521 import (
     deployment_verification as build_deployment_verification_v43531,
     source_health_policy as build_source_health_policy_v43531,
 )
@@ -941,7 +942,7 @@ async def public_experience_headers(request, call_next):
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
-        response.headers["X-SC-Release-Gate"] = "v4.35.20"
+        response.headers["X-SC-Release-Gate"] = "v4.35.21"
     elif path == "/app/service-worker.js":
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
@@ -3304,6 +3305,87 @@ def public_country_linked_records(
         raise HTTPException(status_code=404, detail="Unsupported country code.")
 
 
+@app.get("/public/country/{country_code}/data-federation")
+def public_country_data_federation_v43521(
+    country_code: str,
+    query: str = Query(default="", max_length=160),
+    limit: int = Query(default=12, ge=1, le=30),
+    settings: Settings = Depends(get_settings),
+):
+    from .palestine_data_federation_v43521 import build_palestine_data_federation
+    try:
+        return build_palestine_data_federation(settings, country_code=country_code, query=query, limit=limit)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@app.get("/public/country/{country_code}/knowledge-context")
+def public_country_knowledge_context_v43521(
+    country_code: str,
+    language: str = Query(default="en", min_length=2, max_length=12),
+    media_limit: int = Query(default=4, ge=1, le=8),
+    pageview_days: int = Query(default=30, ge=1, le=90),
+    settings: Settings = Depends(get_settings),
+):
+    from .wikimedia_knowledge_context_v43521 import country_knowledge_context
+    try:
+        return country_knowledge_context(
+            settings, country_code=country_code, language=language, media_limit=media_limit, pageview_days=pageview_days
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@app.get("/public/palestine-open-data/search")
+def public_palestine_open_data_search_v43521(
+    q: str = Query(default="", max_length=160),
+    rows: int = Query(default=20, ge=1, le=50),
+    settings: Settings = Depends(get_settings),
+):
+    try:
+        return build_palestine_open_data_search_v43521(settings, query=q, rows=rows)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/public/knowledge-context/wikidata/search")
+def public_wikidata_search_v43521(
+    q: str = Query(..., min_length=1, max_length=180), language: str = Query("en", min_length=2, max_length=12),
+    limit: int = Query(5, ge=1, le=20), settings: Settings = Depends(get_settings),
+):
+    from .wikimedia_knowledge_context_v43521 import wikidata_search
+    try: return wikidata_search(settings, query=q, language=language, limit=limit)
+    except ValueError as exc: raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/public/knowledge-context/wikidata/entity/{entity_id}")
+def public_wikidata_entity_v43521(entity_id: str, language: str = Query("en", min_length=2, max_length=12), settings: Settings = Depends(get_settings)):
+    from .wikimedia_knowledge_context_v43521 import wikidata_entity
+    try: return wikidata_entity(settings, entity_id=entity_id, language=language)
+    except ValueError as exc: raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/public/knowledge-context/wikipedia/page")
+def public_wikipedia_context_v43521(title: str = Query(..., min_length=1, max_length=240), language: str = Query("en", min_length=2, max_length=12), settings: Settings = Depends(get_settings)):
+    from .wikimedia_knowledge_context_v43521 import wikipedia_page_context
+    try: return wikipedia_page_context(settings, title=title, language=language)
+    except ValueError as exc: raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/public/knowledge-context/commons/search")
+def public_commons_context_v43521(q: str = Query(..., min_length=1, max_length=180), limit: int = Query(6, ge=1, le=12), settings: Settings = Depends(get_settings)):
+    from .wikimedia_knowledge_context_v43521 import commons_media_search
+    try: return commons_media_search(settings, query=q, limit=limit)
+    except ValueError as exc: raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/public/knowledge-context/pageviews")
+def public_pageviews_context_v43521(article: str = Query(..., min_length=1, max_length=240), language: str = Query("en", min_length=2, max_length=12), days: int = Query(30, ge=1, le=90), settings: Settings = Depends(get_settings)):
+    from .wikimedia_knowledge_context_v43521 import pageviews
+    try: return pageviews(settings, article=article, language=language, days=days)
+    except ValueError as exc: raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
 @app.get("/public/country/{country_code}")
 def public_live_country_profile(country_code: str):
     try:
@@ -4427,7 +4509,7 @@ def admin_spatial_export_endpoint(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.35.20 — Statistical Harmonization and Comparable-Series Engine.
+# Site Intelligence v4.35.21 — Statistical Harmonization and Comparable-Series Engine.
 def _harmonization(settings: Settings) -> StatisticalHarmonizationEngine:
     if not settings.statistical_harmonization_enabled:
         raise HTTPException(status_code=403, detail="Statistical harmonization is disabled.")
@@ -4569,7 +4651,7 @@ def admin_harmonization_workbench_handoff_endpoint(
         raise HTTPException(status_code=404, detail=f"Unknown comparable series: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.35.20 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
+# Site Intelligence v4.35.21 — Model Registry, Forecast Evaluation, and Early-Warning Indicators.
 def _model_governance(settings: Settings) -> ModelForecastEarlyWarningCenter:
     if not settings.model_governance_enabled:
         raise HTTPException(status_code=403, detail="Model governance is disabled.")
@@ -4686,7 +4768,7 @@ def admin_model_governance_export_endpoint(model_id: str = Query(..., min_length
         raise HTTPException(status_code=404, detail=f"Unknown model: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.35.20 — Evidence Synthesis, Claims, and Contradiction Review.
+# Site Intelligence v4.35.21 — Evidence Synthesis, Claims, and Contradiction Review.
 def _evidence_synthesis(settings: Settings) -> EvidenceSynthesisCenter:
     if not settings.evidence_synthesis_enabled:
         raise HTTPException(status_code=403, detail="Evidence synthesis is disabled.")
@@ -4808,7 +4890,7 @@ def admin_evidence_synthesis_handoff_endpoint(claim_id: str = Query(..., min_len
         raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.35.20 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v4.35.21 — Intelligence Publishing and Story Map Studio.
 def _knowledge_graph(settings: Settings) -> KnowledgeGraphExplorer:
     if not settings.knowledge_graph_enabled:
         raise HTTPException(status_code=403, detail="Knowledge graph is disabled.")
@@ -4944,7 +5026,7 @@ def admin_knowledge_graph_core_handoff_endpoint(entity_id: str = Query(..., min_
         raise HTTPException(status_code=404, detail=f"Unknown entity: {exc.args[0]}") from exc
 
 
-# Site Intelligence v4.35.20 — Intelligence Publishing and Story Map Studio.
+# Site Intelligence v4.35.21 — Intelligence Publishing and Story Map Studio.
 def _intelligence_publishing(settings: Settings) -> IntelligencePublishingStudio:
     if not settings.intelligence_publishing_enabled:
         raise HTTPException(status_code=403, detail="Intelligence publishing is disabled.")
@@ -6186,6 +6268,18 @@ def public_external_resilience_providers():
 @app.get("/public/country-linked-records/readiness")
 def public_country_linked_records_readiness_v43520():
     from .country_linked_records_v43520 import readiness
+    return readiness()
+
+
+@app.get("/public/country-data-federation/readiness")
+def public_country_data_federation_readiness_v43521():
+    from .palestine_data_federation_v43521 import readiness
+    return readiness()
+
+
+@app.get("/public/knowledge-context/readiness")
+def public_knowledge_context_readiness_v43521():
+    from .wikimedia_knowledge_context_v43521 import readiness
     return readiness()
 
 
@@ -9202,7 +9296,7 @@ def public_data_api_catalog(settings: Settings = Depends(get_settings)):
     return build_catalog(settings)
 
 
-# Site Intelligence v4.35.20 — Typed Cross-Platform Intelligence Workflows.
+# Site Intelligence v4.35.21 — Typed Cross-Platform Intelligence Workflows.
 def _cross_platform_workflows(settings: Settings) -> CrossPlatformWorkflowCenter:
     if not settings.cross_platform_workflows_enabled:
         raise HTTPException(status_code=503, detail="Cross-platform workflows are disabled.")
@@ -9436,7 +9530,7 @@ def offline_experience_reliability(settings: Settings = Depends(get_settings)):
     return build_reliability(settings)
 
 
-# Site Intelligence v4.35.20 — Open Standards, Federation, and Institutional Data Exchange.
+# Site Intelligence v4.35.21 — Open Standards, Federation, and Institutional Data Exchange.
 def _federation_exchange(settings: Settings) -> InstitutionalDataExchange:
     if not settings.federation_exchange_enabled:
         raise HTTPException(status_code=503, detail="Institutional data exchange is disabled.")
@@ -9526,7 +9620,7 @@ def admin_federation_accept_import_endpoint(request: dict = Body(default={}), se
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
-# Site Intelligence v4.35.20 — Security, Privacy, Governance, and Production Scale.
+# Site Intelligence v4.35.21 — Security, Privacy, Governance, and Production Scale.
 def _production_governance(settings: Settings) -> ProductionGovernanceCenter:
     if not settings.production_governance_enabled:
         raise HTTPException(status_code=503, detail="Production governance is disabled.")
@@ -9675,7 +9769,7 @@ def admin_production_governance_deployment_endpoint(request: dict = Body(default
 def admin_production_governance_load_probe_endpoint(requests: int = Query(default=250, ge=1, le=5000), settings: Settings = Depends(get_settings), _: None = Depends(require_token)):
     return _production_governance(settings).load_probe(requests)
 
-# Site Intelligence v4.35.20 — Connected Live Intelligence Surface.
+# Site Intelligence v4.35.21 — Connected Live Intelligence Surface.
 def _connected_platform(settings: Settings) -> ConnectedPublicIntelligencePlatform:
     if not settings.connected_platform_enabled:
         raise HTTPException(status_code=404, detail="Connected platform is disabled.")

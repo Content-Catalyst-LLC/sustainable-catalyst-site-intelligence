@@ -1,4 +1,4 @@
-Site Intelligence v4.35.20 — Build Validation
+Site Intelligence v4.35.21 — Build Validation
 ============================================================
 Release: Live-Operation Stress, Semantic Truth & Recovery Integrity
 
@@ -7,7 +7,7 @@ Deterministic pytest suite:
   Chunk reconciliation: 373 + 353 + 263 + 291 + 337 = 1,617
   Test files: 247
 
-v4.35.20 targeted fault-injection / semantic layer:
+v4.35.21 targeted fault-injection / semantic layer:
   PASS — 14 / 14 tests
   Eight soak scenarios: 8 / 8
   Provider flapping: 24 cycles
@@ -52,8 +52,8 @@ Performance/static gates:
   JavaScript syntax: PASS — 152 files
   WordPress PHP syntax: PASS
   Static security scan: PASS — 0 findings
-  v4.35.20 release contract: PASS
-  v4.35.20 static release validation: PASS
+  v4.35.21 release contract: PASS
+  v4.35.21 static release validation: PASS
 
 Frozen artifact gates:
   Immutable manifest: PASS — 2,372 files

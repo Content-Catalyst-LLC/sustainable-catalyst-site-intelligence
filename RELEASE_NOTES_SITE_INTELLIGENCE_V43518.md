@@ -1,4 +1,4 @@
-# Site Intelligence v4.35.20 — Full Workspace End-to-End Browser Audit & “Simply Works” Reliability
+# Site Intelligence v4.35.21 — Full Workspace End-to-End Browser Audit & “Simply Works” Reliability
 
 ## Release objective
 Make the complete public Site Intelligence workspace contract behave predictably for a visitor: every registered route must render its intended workspace or an explicit degraded recovery surface; registered routes may not silently become blank or fall through to the generic unavailable view.

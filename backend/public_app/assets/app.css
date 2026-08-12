@@ -707,12 +707,12 @@ html[data-low-bandwidth="1"] .orbital-glow,html[data-low-bandwidth="1"] .launch-
 
 /* Immersive visual foundation */
 
-/* v4.35.20: native country picker must retain browser-managed scrolling and gestures. */
+/* v4.35.21: native country picker must retain browser-managed scrolling and gestures. */
 #countrySelect{touch-action:auto;overscroll-behavior:auto;scroll-behavior:auto}
 
 .source-api-connector-label{margin:.75rem 0 .35rem;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;opacity:.65}
 
-/* v4.35.20 — registered workspaces never collapse to a blank surface. */
+/* v4.35.21 — registered workspaces never collapse to a blank surface. */
 .workspace-recovery{min-height:260px;display:block!important}
 .workspace-recovery-card{max-width:880px;margin:0 auto;padding:clamp(22px,4vw,38px);border:1px solid rgba(255,255,255,.13);background:rgba(8,15,21,.96)}
 .workspace-recovery-card h2{margin:.35rem 0 .75rem;font-size:clamp(1.6rem,3vw,2.6rem)}
@@ -721,6 +721,7 @@ html[data-low-bandwidth="1"] .orbital-glow,html[data-low-bandwidth="1"] .launch-
 .workspace-recovery-actions{display:flex;flex-wrap:wrap;gap:.65rem;margin:1rem 0}
 .workspace-recovery-card small{display:block;opacity:.68;overflow-wrap:anywhere}
 @media(max-width:760px){.workspace-recovery-card{padding:20px 16px}.workspace-recovery-actions .ghost-button{width:100%;justify-content:center}}
-/* v4.35.20 — mobile/off-canvas containment: hidden drawers must never widen the document. */
+/* v4.35.21 — mobile/off-canvas containment: hidden drawers must never widen the document. */
 html,body,#app,#main{max-width:100%;overflow-x:hidden}
 .evidence-drawer{max-width:100vw}
+.country-knowledge-panel{margin-top:14px}.knowledge-context-grid,.knowledge-media-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.knowledge-context-card{min-height:0}.knowledge-context-card>span,.country-federation-strip>span{font-size:8px;font-weight:900;letter-spacing:.1em;color:#6fe2ff}.knowledge-context-card p,.knowledge-boundary{color:#8f9aa7;font-size:10px;line-height:1.55}.knowledge-media-grid{grid-template-columns:repeat(4,1fr);margin-top:10px}.knowledge-media-card{overflow:hidden;color:#fff;text-decoration:none}.knowledge-media-card img{width:100%;height:100px;object-fit:cover}.knowledge-media-card span,.knowledge-media-card small{display:block;font-size:9px;padding:4px}.country-federation-strip{display:flex;gap:7px;flex-wrap:wrap;padding:9px;margin-bottom:9px;border:1px solid rgba(111,226,255,.12)}.country-federation-strip b,.country-federation-strip small{font-size:8px;color:#9aa6b2}@media(max-width:760px){.knowledge-context-grid,.knowledge-media-grid{grid-template-columns:1fr}}

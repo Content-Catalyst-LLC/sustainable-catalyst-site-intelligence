@@ -1,9 +1,9 @@
 (()=>{"use strict";
-const VERSION="4.35.20",API=window.SC_SITE_INTELLIGENCE_API||location.origin,q=s=>document.querySelector(s);let catalog=null,last=null;
+const VERSION="4.35.21",API=window.SC_SITE_INTELLIGENCE_API||location.origin,q=s=>document.querySelector(s);let catalog=null,last=null;
 const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
 async function get(path){const r=await fetch(API+path,{headers:{Accept:"application/json"}});if(!r.ok)throw new Error(`Water column ${r.status}`);return r.json()}
 function ensureShell(){
-  if(!document.querySelector('link[data-water4600]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/app/assets/water-column-v4600.css?v=4.35.20';l.dataset.water4600='1';document.head.appendChild(l)}
+  if(!document.querySelector('link[data-water4600]')){const l=document.createElement('link');l.rel='stylesheet';l.href='/app/assets/water-column-v4600.css?v=4.35.21';l.dataset.water4600='1';document.head.appendChild(l)}
   const ocean=q('#oceanSurfacePanel');if(!ocean)return;
   const actions=ocean.querySelector('.ocean4500-actions');
   if(actions&&!q('#oceanDepthEnter')){const b=document.createElement('button');b.id='oceanDepthEnter';b.className='earth-primary-button';b.type='button';b.textContent='Descend into water column';actions.appendChild(b)}
@@ -32,7 +32,7 @@ async function refresh(){if(!q('#waterVariable')||!q('#waterSource'))return;cons
 async function enter(){ensureShell();build();q('#waterColumnPanel').hidden=false;await load();q('#waterColumnPanel').scrollIntoView({block:'nearest',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});window.dispatchEvent(new CustomEvent('scsi:water-column-enter',{detail:{version:VERSION}}))}
 function leave(){q('#waterColumnPanel').hidden=true;q('#oceanSurfacePanel')?.scrollIntoView({block:'nearest',behavior:'auto'})}
 async function download(){if(!last)return;const d=await get(`/public/water-column/export-manifest?variable=${encodeURIComponent(last.variable.id)}&source=${encodeURIComponent(last.source.id)}&latitude=${encodeURIComponent(last.point.latitude)}&longitude=${encodeURIComponent(last.point.longitude)}&date=${encodeURIComponent(last.date||'')}&depth_m=${encodeURIComponent(last.depth_m)}`),b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`site-intelligence-water-column-${last.variable.id}-${last.depth_m}m.json`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-function loadSeafloor(){if(document.querySelector('script[data-seafloor4700]'))return;const s=document.createElement('script');s.src='/app/assets/seafloor-bathymetry-v4700.js?v=4.35.20';s.defer=true;s.dataset.seafloor4700='1';document.head.appendChild(s)}function bind(){ensureShell();build();loadSeafloor();q('#oceanDepthEnter')?.addEventListener('click',enter)}
+function loadSeafloor(){if(document.querySelector('script[data-seafloor4700]'))return;const s=document.createElement('script');s.src='/app/assets/seafloor-bathymetry-v4700.js?v=4.35.21';s.defer=true;s.dataset.seafloor4700='1';document.head.appendChild(s)}function bind(){ensureShell();build();loadSeafloor();q('#oceanDepthEnter')?.addEventListener('click',enter)}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
 window.SCSIWaterColumnV4600={version:VERSION,enter,leave,refresh};
 })();

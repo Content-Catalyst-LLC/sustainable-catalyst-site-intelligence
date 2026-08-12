@@ -19,7 +19,7 @@ from app.production_soak_v43519 import run_soak_suite, readiness as soak_readine
 from app.evidence_presentation_v43519 import readiness as evidence_presentation_readiness, classify_evidence, source_priority
 from app.workspace_evidence_unification_v4358 import readiness as workspace_evidence_readiness
 
-assert APP_VERSION == "4.35.20"
+assert APP_VERSION == "4.35.21"
 settings = Settings(_env_file=None)
 
 # 35-route first-party browser control plane remains deterministic and provider-independent.
@@ -120,7 +120,7 @@ for marker in ("release_health_v43519", "production_soak_v43519", "evidence_pres
     assert marker in main, marker
 app_js=(ROOT/"backend/public_app/assets/app.js").read_text()
 index=(ROOT/"backend/public_app/index.html").read_text()
-for marker in ("LIVE-OPERATION STRESS LAYER · v4.35.20", "productionSoakScenarioMetric"):
+for marker in ("LIVE-OPERATION STRESS LAYER · v4.35.21", "productionSoakScenarioMetric"):
     assert marker in index, marker
 for marker in ('apiWithRetry("/public/production-soak"', "item.evidence_label||item.data_state", "overview.evidence_summary"):
     assert marker in app_js, marker
@@ -130,4 +130,4 @@ assert "Deep gate:" not in promotion
 assert "/public/production-soak/readiness" in promotion
 assert "/public/evidence-presentation/readiness" in promotion
 assert "production_soak_ready" in promotion and "evidence_presentation_ready" in promotion
-print("PASS: v4.35.20 Live-Operation Stress, Semantic Truth & Recovery Integrity release contract")
+print("PASS: v4.35.21 Live-Operation Stress, Semantic Truth & Recovery Integrity release contract")

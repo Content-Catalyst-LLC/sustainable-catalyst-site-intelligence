@@ -1,7 +1,7 @@
-# Site Intelligence v4.35.20 — Install & Test
+# Site Intelligence v4.35.21 — Install & Test
 
 ## Install
-Use the standalone macOS installer together with the matching v4.35.20 release bundle.
+Use the standalone macOS installer together with the matching v4.35.21 release bundle.
 
 ```bash
 cd ~/Downloads
@@ -11,7 +11,7 @@ INSTALLER="$(find . -maxdepth 1 -type f \
   -print0 | xargs -0 ls -t | head -1)"
 
 BUNDLE="$(find . -maxdepth 1 -type f \
-  -name 'sustainable-catalyst-site-intelligence-v4.35.20-release-bundle*.zip' \
+  -name 'sustainable-catalyst-site-intelligence-v4.35.21-release-bundle*.zip' \
   -print0 | xargs -0 ls -t | head -1)"
 
 chmod +x "$INSTALLER"
@@ -33,4 +33,4 @@ PYTHON=.venv/bin/python bash verify_site_intelligence_v4_35_19_macos.sh
 SC_SI_SKIP_TESTS=1 SC_SI_RUN_BROWSER=1 PYTHON=.venv/bin/python bash verify_site_intelligence_v4_35_19_macos.sh
 ```
 
-The deterministic pass verifies the v4.35.20 soak/semantic release contract and complete pytest suite. The browser pass preserves the 35-route desktop/mobile/iframe reliability gate.
+The deterministic pass verifies the v4.35.21 soak/semantic release contract and complete pytest suite. The browser pass preserves the 35-route desktop/mobile/iframe reliability gate.

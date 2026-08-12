@@ -61,7 +61,7 @@ def main():
     summary={mode:{"routes":len(rows),"ready":sum(1 for r in rows if r['surfaceVisible']),"degraded":sum(1 for r in rows if r['recoveryVisible'])} for mode,rows in results.items()}
     assert all(v['routes']==35 for v in summary.values()), summary
     print(json.dumps({"browser":browser_path,"summary":summary},indent=2))
-    print("PASS: v4.35.20 all 35 registered workspaces open visibly or explicitly degraded across desktop, mobile, and iframe modes.")
+    print("PASS: v4.35.21 all 35 registered workspaces open visibly or explicitly degraded across desktop, mobile, and iframe modes.")
     return 0
 
 if __name__ == "__main__":

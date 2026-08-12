@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Country-linked public record recovery for Site Intelligence v4.35.20.
+"""Country-linked public record recovery for Site Intelligence v4.35.21.
 
 The country workspace must not equate "records" with only hazard/event feeds.
 This layer combines country-bounded public events with credential-free HDX/OCHA
@@ -16,6 +16,7 @@ from .version import APP_VERSION
 from .live_country_intelligence import _country
 from .unified_live_events import unified_events
 from .authoritative_connectors_v43514 import hdx_dataset_search
+from .authoritative_connectors_v43521 import palestine_open_data_search
 
 VERSION = APP_VERSION
 CONTRACT = "country-linked-record-recovery"
@@ -149,6 +150,50 @@ def _hdx_records(payload: Mapping[str, Any], code: str, aliases: list[str], limi
     return rows
 
 
+def _palestine_open_data_records(payload: Mapping[str, Any], limit: int) -> list[dict[str, Any]]:
+    data = payload.get("data") if isinstance(payload, Mapping) else None
+    result = data.get("result") if isinstance(data, Mapping) else None
+    datasets = result.get("results") if isinstance(result, Mapping) else None
+    if not isinstance(datasets, list):
+        return []
+    rows: list[dict[str, Any]] = []
+    for dataset in datasets:
+        if not isinstance(dataset, Mapping):
+            continue
+        name = _text(dataset.get("name"), 240)
+        url = str(dataset.get("url") or "").strip()
+        if not url.startswith(("http://", "https://")) and name:
+            url = f"https://opendata.ps/dataset/{name}"
+        organization = dataset.get("organization") if isinstance(dataset.get("organization"), Mapping) else {}
+        dataset_id = str(dataset.get("id") or name or f"palestine-open-data:{len(rows)}")
+        rows.append({
+            "id": f"palestine-open-data:{dataset_id}",
+            "record_class": "official-dataset-discovery",
+            "evidence_class": "official-discovery-metadata",
+            "title": _text(dataset.get("title") or name, 500) or "Palestinian public dataset",
+            "summary": _text(dataset.get("notes"), 1200),
+            "category": "official-open-data",
+            "category_label": "Palestinian official dataset",
+            "source_id": "palestine-open-data-ckan",
+            "source_name": _text(organization.get("title") or "Palestine Open Data Portal", 180),
+            "source_url": url,
+            "observed_at": _date(dataset.get("metadata_modified") or dataset.get("metadata_created")),
+            "updated_at": _date(dataset.get("metadata_modified") or dataset.get("metadata_created")),
+            "country_code": "PSE",
+            "country_match_method": "country-scoped-official-portal",
+            "country_match_confidence": 1.0,
+            "country_match_evidence": "Palestine Open Data Portal",
+            "data_state": "discovery",
+            "limitations": [
+                "Palestine Open Data Portal metadata is official/public-institution dataset discovery, not a current-condition observation.",
+                "Dataset reference period, methodology, resource quality, licensing and publishing institution must remain visible before substantive use.",
+            ],
+        })
+        if len(rows) >= limit:
+            break
+    return rows
+
+
 def _dedupe(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
     seen: set[tuple[str, str, str]] = set()
     output = []
@@ -184,6 +229,15 @@ def build_country_linked_records(
 
     discovery_count = 0
     if include_discovery:
+        if code == "PSE" and settings is not None:
+            try:
+                official = palestine_open_data_search(settings, query="", rows=min(50, max(12, bounded_limit * 2)))
+                official_rows = _palestine_open_data_records(official, bounded_limit)
+                records.extend(official_rows)
+                discovery_count += len(official_rows)
+                source_states["palestine-open-data-ckan"] = "connected" if official.get("ok") else "unavailable"
+            except Exception:
+                source_states["palestine-open-data-ckan"] = "unavailable"
         try:
             # Use the public country name rather than the World Bank source name
             # so PSE resolves to Palestine, while explicit alias/ISO matching is
@@ -192,7 +246,7 @@ def build_country_linked_records(
             hdx = hdx_dataset_search(settings, query=query, rows=min(50, max(12, bounded_limit * 2)))
             hdx_rows = _hdx_records(hdx, code, list(country.get("aliases") or []), bounded_limit)
             records.extend(hdx_rows)
-            discovery_count = len(hdx_rows)
+            discovery_count += len(hdx_rows)
             source_states["hdx-ckan-discovery"] = "connected" if hdx.get("ok") else "unavailable"
         except Exception:
             source_states["hdx-ckan-discovery"] = "unavailable"
@@ -228,7 +282,8 @@ def build_country_linked_records(
             "Country-linked records combine source-bounded public events/reports with explicitly labeled humanitarian dataset discovery metadata.",
             "Discovery metadata is never promoted to an observation or current-condition claim.",
             "A zero record count means no matching record was retained from currently connected sources; it does not mean no real-world event or humanitarian condition exists.",
-            "ReliefWeb availability may require configured appname credentials; HDX CKAN discovery remains a public credential-free fallback lane.",
+            "ReliefWeb availability may require configured appname credentials; HDX CKAN discovery remains a public credential-free humanitarian fallback lane.",
+            "For PSE, Palestine Open Data Portal discovery is a separate official/public-institution lane and is never promoted to an operational observation.",
         ],
     }
 
@@ -238,6 +293,7 @@ def readiness() -> dict[str, Any]:
         "country_linked_record_schema_defined": SCHEMA.endswith("/1.0"),
         "reliefweb_country_query_is_source_bounded": True,
         "hdx_public_discovery_lane_present": True,
+        "palestine_official_open_data_lane_present": True,
         "discovery_metadata_not_promoted_to_observation": True,
         "zero_records_not_interpreted_as_zero_incidence": True,
         "country_workspace_uses_linked_record_contract": True,
