@@ -11,7 +11,7 @@ def read(path: str) -> str:
 def test_public_startup_stability_contract():
     payload = CLIENT.get("/public/startup-stability").json()
     assert payload["ok"] is True
-    assert payload["version"] == "4.35.24"
+    assert payload["version"] == "4.35.25"
     assert payload["startup"]["network_data_blocks_shell"] is False
     assert payload["startup"]["initial_data_strategy"] == "background-all-settled"
     assert payload["service_worker"]["automatic_controllerchange_reload"] is False

@@ -1,5 +1,5 @@
 (()=>{"use strict";
-const VERSION="4.35.24";
+const VERSION="4.35.25";
 const GROUPS=[
  {id:"live-overview",label:"Live Overview",routes:["overview","global","events","alerts"]},
  {id:"places-systems",label:"Places & Systems",routes:["country","dossiers","economics","law","science","humanitarian","resources","thematic"]},

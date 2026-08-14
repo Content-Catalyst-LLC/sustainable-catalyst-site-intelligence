@@ -199,7 +199,7 @@ def _normalized_static_catalog() -> dict[str, dict[str, Any]]:
 def _merge_country_catalogs(canonical: dict[str, dict[str, Any]], live: dict[str, dict[str, Any]]) -> dict[str, dict[str, Any]]:
     """Merge external metadata without allowing identity/geography override.
 
-    v4.35.24 makes this a pure, directly testable boundary. External country
+    v4.35.25 makes this a pure, directly testable boundary. External country
     catalogs may enrich classification/search metadata, but selector/routing
     identity and map focus remain first-party.
     """
@@ -252,7 +252,7 @@ def country_catalog(force_refresh: bool = False) -> dict[str, Any]:
                 # v4.35.23: enrich canonical identities field-by-field. A live provider
                 # cannot remove a bundled ISO2/ISO3 binding, alias, or coordinate merely
                 # because one metadata field is absent upstream.
-                # v4.35.24: the pure merge boundary is release-tested against
+                # v4.35.25: the pure merge boundary is release-tested against
                 # hostile/swapped Palestine/Israel upstream metadata.
                 merged = _merge_country_catalogs(canonical, live)
                 _COUNTRY_CATALOG_CACHE = merged
@@ -548,11 +548,15 @@ def country_profile(code: str) -> dict[str, Any]:
                 "semantics": observation.get("semantics"), "freshness": observation.get("freshness"), "canonical_observation": observation,
                 "truth_endpoint": f"/public/record-truth/indicator/{country['code']}/{item['id']}",
             })
+    from .country_evidence_presentation_v43525 import build_country_presentation
+    presentation = build_country_presentation(country, highlights, missing_indicators=payload.get("missing_indicators", []))
+    highlights = presentation["indicators"]
     return {
         "ok": True, "version": VERSION, "generated_at": payload["generated_at"], "country": country,
         "data_state": payload["data_state"], "transport_state": payload["data_state"], "stale": payload.get("stale", False),
-        "evidence_summary": "Mixed-period official and harmonized statistics · retrieval state shown separately",
-        "summary": f"{country['name']} country intelligence combines period-specific public statistics, source-aware evidence, satellite context, and recent public event records.",
+        "evidence_summary": presentation["evidence_status"],
+        "summary": f"{country['name']} country intelligence separates current operational reporting, official statistics, harmonized international benchmarks, and contextual evidence rather than flattening them into one data tier.",
+        "presentation": presentation,
         "highlights": highlights, "missing_indicators": payload.get("missing_indicators", []), "state_counts": payload.get("state_counts", {}),
         "indicator_endpoint": f"/public/country/{country['code']}/indicators", "trends_endpoint": f"/public/country/{country['code']}/trends",
         "events_endpoint": f"/public/events?country_code={country['code']}",
@@ -584,7 +588,8 @@ def global_country_overview(code: str) -> dict[str, Any]:
     return {
         "ok": True, "version": VERSION, "generated_at": profile["generated_at"], "country": country,
         "data_state": profile["data_state"], "transport_state": profile.get("transport_state"), "evidence_summary": profile.get("evidence_summary"), "stale": profile.get("stale", False),
-        "headline": f"{country['name']} — Global Country Intelligence", "summary": profile["summary"],
+        "headline": f"{country['name']} — Country Intelligence Brief", "summary": profile["summary"],
+        "presentation": profile.get("presentation", {}),
         "map": {"latitude": country.get("latitude"), "longitude": country.get("longitude"), "default_zoom": 5 if country.get("latitude") is not None and country.get("longitude") is not None else 2},
         "highlights": profile["highlights"], "missing_indicators": profile.get("missing_indicators", []),
         "routes": {

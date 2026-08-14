@@ -333,6 +333,7 @@ def country_reconciliation_snapshot(country_code: str) -> dict[str, Any]:
                 "label": item.get("label"),
                 "concept_id": concept,
                 "selected_source_id": reconciled.get("selected", {}).get("source_id") if reconciled.get("selected") else None,
+                "selected_source_name": item.get("source") or candidate.get("publisher") or (reconciled.get("selected", {}) or {}).get("source_id"),
                 "selected_value": latest.get("value"),
                 "unit": item.get("unit"),
                 "reference_period": str(latest.get("year")),

@@ -1,6 +1,13 @@
+# v4.35.25 — Country Intelligence Presentation & Evidence Hierarchy
+
+- Added a Country Intelligence Brief and explicit evidence-role hierarchy.
+- Separated Conditions Now from structural/annual country statistics.
+- Reframed World Bank annual series as harmonized benchmarks and added service-continuity warnings for electricity and water access.
+- Added network-free country-presentation readiness to the deployment gate.
+
 # Changelog
 
-## v4.35.24 — Palestine-First Country Navigation Integrity Repair
+## v4.35.25 — Palestine-First Country Navigation Integrity Repair
 
 - Fixed the remaining Overview-route Palestine/Israel selector defect left open by v4.35.23.
 - Made the first-party canonical registry authoritative for ISO3, ISO2, display name, and map-focus coordinates.

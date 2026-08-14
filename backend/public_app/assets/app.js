@@ -25,7 +25,7 @@
     }
     throw last;
   }
-  const APP_VERSION="4.35.24";
+  const APP_VERSION="4.35.25";
   const FIXED_WORDPRESS_EMBED=window.SCSI_FIXED_WORDPRESS_EMBED===true;
   let heightFrame=0;
   function documentHeight(){
@@ -212,7 +212,7 @@
     const name=canonical?.name||names[normalized]||normalized;
     state.country=normalized;names[normalized]=name;
     qs("#countryName").textContent=name;qs("#countryCode").textContent=normalized;qs("#countryPanelTitle").textContent=`${name} at a glance`;
-    // v4.35.24: focus immediately from the first-party canonical registry.
+    // v4.35.25: focus immediately from the first-party canonical registry.
     // Upstream country-overview responses may add evidence, but they are not
     // allowed to decide where a selected country exists on the map.
     if(state.route==="overview"&&canonical&&Number.isFinite(Number(canonical.latitude))&&Number.isFinite(Number(canonical.longitude))){
@@ -506,7 +506,7 @@
       try{primary=await apiWithRetry("/public/countries",3)}catch(primaryError){console.warn("[Site Intelligence] Live country metadata is unavailable; the bundled global selector remains active.",primaryError)}
       const merged=new Map();
       (bundled.countries||[]).forEach(item=>{if(item?.code&&item?.name)merged.set(item.code,{...item})});
-      // v4.35.24: live provider metadata may enrich a country, but it must never
+      // v4.35.25: live provider metadata may enrich a country, but it must never
       // overwrite first-party identity fields (ISO codes, name, coordinates).
       // This closes the remaining Palestine/Israel split-path defect where an
       // upstream catalog could replace a canonical selector identity after the
@@ -582,10 +582,13 @@
       const payload=await apiWithRetry(`/public/country/${encodeURIComponent(code)}/linked-records?days=90&limit=24`,2,{signal});
       if(signal.aborted||sequence!==globalCountryState.requestSequence)return;
       globalCountryState.events=payload.records||[];
+      const sourceCount=new Set(globalCountryState.events.map(record=>record.source_name||record.source_id).filter(Boolean)).size;
+      const operationalSummary=qs("#countryOperationalSummary"),operationalState=qs("#countryOperationalState");
+      if(globalCountryState.events.length){if(operationalSummary)operationalSummary.textContent=`${globalCountryState.events.length} recent country-linked public record${globalCountryState.events.length===1?"":"s"} retained from ${sourceCount||1} source${sourceCount===1?"":"s"}. Records retain their own dates and evidence classes; record counts are not combined into a condition score.`;if(operationalState)operationalState.textContent="REPORTING AVAILABLE";}else{if(operationalSummary)operationalSummary.textContent="No matching operational or humanitarian record was retained from the currently connected sources. This does not establish normal conditions, uninterrupted services, or absence of humanitarian need.";if(operationalState)operationalState.textContent="NO CONNECTED RECORD";}
       qs("#countryEventsList").innerHTML=globalCountryState.events.length?globalCountryState.events.slice(0,8).map(record=>{const title=escapeHtml(record.title||"Public record"),label=escapeHtml(record.category_label||record.category||record.record_class||"Public record"),source=escapeHtml(record.source_name||record.source_id||"Public source"),match=record.country_match_method?` · ${escapeHtml(record.country_match_method)}`:"",body=`<div class="event-title">${record.source_url?`<a href="${escapeHtml(record.source_url)}" target="_blank" rel="noopener">${title}</a>`:title}</div><div class="event-meta">${label} · ${source}${match}</div>`;return `<div class="event-row"><span class="event-marker"></span><div>${body}</div><div class="event-time">${cleanDate(record.updated_at||record.observed_at)}</div></div>`}).join(""):`<div class="empty-state"><div><strong>No country-linked records</strong><span>No matching record was retained from the currently connected sources. This does not mean no event or humanitarian condition exists.</span></div></div>`;
     }catch(error){
       if(error?.name==="AbortError")return;
-      if(sequence===globalCountryState.requestSequence)qs("#countryEventsList").innerHTML=publicErrorBlock("Country records unavailable","The linked-record service did not respond.",()=>selectGlobalCountry(code,false));
+      if(sequence===globalCountryState.requestSequence){qs("#countryEventsList").innerHTML=publicErrorBlock("Country records unavailable","The linked-record service did not respond.",()=>selectGlobalCountry(code,false));const summary=qs("#countryOperationalSummary"),status=qs("#countryOperationalState");if(summary)summary.textContent="Operational reporting could not be retrieved. Structural country statistics must not be used as a substitute for current conditions.";if(status)status.textContent="REPORTING UNAVAILABLE";}
     }
   }
   function ensureCountryReconciliationPanel(){
@@ -597,7 +600,7 @@
   }
   function renderCountryEvidenceReconciliation(data){
     const box=qs("#countryEvidenceReconciliation");if(!box)return;const rows=data?.indicators||[],summary=data?.summary||{};
-    const cards=rows.slice(0,8).map(row=>`<div class="country-indicator knowledge-context-card"><span>${escapeHtml(row.label||row.indicator_id||"INDICATOR")}</span><strong>${escapeHtml(String(row.selected_source_id||"No eligible source"))}</strong><p>${escapeHtml(row.reference_period||"Period unavailable")} · ${escapeHtml(row.reconciliation_state||"unavailable")}</p><p>${escapeHtml(row.note||"Selection rationale unavailable.")}</p></div>`).join("");
+    const cards=rows.slice(0,8).map(row=>`<div class="country-indicator knowledge-context-card"><span>${escapeHtml(row.label||row.indicator_id||"INDICATOR")}</span><strong>${escapeHtml(String(row.selected_source_name||row.selected_source_id||"No eligible source"))}</strong><p>${escapeHtml(row.reference_period||"Period unavailable")} · ${escapeHtml(row.reconciliation_state||"unavailable")}</p><p>${escapeHtml(row.note||"Selection rationale unavailable.")}</p></div>`).join("");
     box.innerHTML=`<div class="country-federation-strip"><span>RECONCILIATION STATE</span><b>${escapeHtml(String(summary.reconciled_multi_source||0))} multi-source reconciled</b><b>${escapeHtml(String(summary.single_source||0))} single-source</b><b>${escapeHtml(String(summary.fallback_without_preferred_candidate||0))} fallback / preferred source absent</b><small>Scope, concept and reference period are checked before authority or freshness. No conflicting values are averaged.</small></div><div class="knowledge-context-grid">${cards||'<div class="empty-state"><div><strong>No reconciliation candidates</strong><span>No exact-concept country indicators are currently available for reconciliation.</span></div></div>'}</div><p class="knowledge-boundary">${escapeHtml(data?.boundary||"A preferred source that is not present in the current candidate set is disclosed as absent rather than silently replaced.")}</p>`;reportHeight();
   }
   async function loadCountryEvidenceReconciliation(code,signal,sequence){
@@ -635,12 +638,31 @@
       if(knowledge)renderCountryKnowledgeContext(knowledge,federation);else if(box)box.innerHTML='<div class="empty-state"><div><strong>Knowledge context unavailable</strong><span>Optional Wikimedia context did not respond. Country evidence remains available independently.</span></div></div>';
     }catch(error){if(error?.name!=="AbortError"&&sequence===globalCountryState.requestSequence&&box)box.innerHTML='<div class="empty-state"><div><strong>Knowledge context unavailable</strong><span>Optional context failed without affecting country evidence.</span></div></div>'}
   }
+  const COUNTRY_EVIDENCE_ROLES=["OPERATIONAL","PRIMARY OFFICIAL","SECTOR OFFICIAL","HARMONIZED BENCHMARK","PUBLISHED EVIDENCE"];
+  function renderCountryEvidenceHierarchy(presentation){
+    const status=qs("#countryEvidenceStatusTitle"),authority=qs("#countryAuthoritySummary"),layers=qs("#countryEvidenceLayers");
+    if(status)status.textContent=presentation?.evidence_status||"Published country evidence · source roles remain explicit";
+    if(authority)authority.textContent=presentation?.authority_summary||"Source authority, evidence class, reporting period, and geographic scope remain visible.";
+    if(layers){const rows=presentation?.layers||[];layers.innerHTML=rows.map(row=>`<div class="country-evidence-layer country-evidence-layer-${escapeHtml(row.id||"published")}"><span>${escapeHtml(row.label||"EVIDENCE")}</span><p>${escapeHtml(row.description||"")}</p></div>`).join("");}
+    const summary=qs("#countryOperationalSummary");if(summary)summary.textContent=presentation?.operational_boundary||"Operational conditions remain separate from annual and structural statistics.";
+  }
+  function renderCountryIndicatorCard(item,normalized){
+    const p=item.presentation||{},role=p.role_label||item.evidence_label||item.data_state||"PUBLISHED EVIDENCE",scope=p.scope_label||"PUBLISHED INDICATOR";
+    const classes=["country-indicator",p.section?`country-indicator-${p.section}`:"",p.condition_status==="not-established-by-this-indicator"?"country-indicator-structural":""].filter(Boolean).join(" ");
+    const note=p.interpretation_note?`<p class="country-indicator-meaning">${escapeHtml(p.interpretation_note)}</p>`:"";
+    return `<article class="${classes}"><div class="country-indicator-role">${escapeHtml(role)}</div><span class="country-indicator-label">${escapeHtml(item.label)}</span><strong class="country-indicator-value">${escapeHtml(formatCountryValue(item.value,item.format,item.unit))}</strong><div class="country-indicator-meta"><b>${escapeHtml(scope)}</b><span>${escapeHtml(item.unit)} · ${escapeHtml(item.year)}</span></div>${note}<span class="country-indicator-source">${item.source_url?`<a href="${escapeHtml(item.source_url)}" target="_blank" rel="noopener">${escapeHtml(item.source)} ↗</a>`:escapeHtml(item.source)} · ${escapeHtml(item.evidence_label||item.data_state)}</span><button type="button" class="ghost-button scsi-record-truth-button" data-record-truth-indicator="${escapeHtml(item.id)}" data-record-truth-country="${escapeHtml(normalized)}">Evidence details</button></article>`;
+  }
   function setCountryLoading(code){
     const country=globalCountryState.catalog.find(item=>item.code===code);
     qs("#globalCountryExplorer").setAttribute("aria-busy","true");
     qs("#globalCountryTitle").textContent=`Loading ${country?.name||code}`;
-    qs("#globalCountryIntro").textContent="Retrieving validated country indicators, trends, and linked public records.";
-    qs("#globalCountryMetrics").innerHTML='<div class="loading-block">Loading country indicators…</div>';
+    qs("#globalCountryIntro").textContent="Retrieving country evidence with source authority, period, scope, and evidence class preserved.";
+    const evidenceStatus=qs("#countryEvidenceStatusTitle");if(evidenceStatus)evidenceStatus.textContent="Loading source roles and reference periods";
+    const authority=qs("#countryAuthoritySummary");if(authority)authority.textContent="Checking official, operational, and harmonized evidence roles.";
+    const layers=qs("#countryEvidenceLayers");if(layers)layers.innerHTML='<div class="loading-block">Building evidence hierarchy…</div>';
+    const operational=qs("#countryOperationalSummary");if(operational)operational.textContent="Loading country-linked operational and humanitarian reporting. Annual access percentages do not establish present service availability.";
+    const operationalState=qs("#countryOperationalState");if(operationalState)operationalState.textContent="CHECKING REPORTING";
+    qs("#globalCountryMetrics").innerHTML='<div class="loading-block">Loading source-classified country indicators…</div>';
     qs("#globalTrendSelect").innerHTML="";
     qs("#globalTrendTitle").textContent="Loading trend";
     qs("#globalTrendChart").innerHTML='<div class="loading-block">Loading multi-year series…</div>';
@@ -657,7 +679,7 @@
     const controller=new AbortController();globalCountryState.selectionController=controller;
     const signal=controller.signal,sequence=++globalCountryState.requestSequence;
     globalCountryState.activeCode=normalized;state.country=normalized;qs("#countrySelect").value=normalized;setCountryLoading(normalized);
-    // v4.35.24: commit the selected identity to the URL before any upstream work.
+    // v4.35.25: commit the selected identity to the URL before any upstream work.
     // A slow/failed indicator request must not make the picker appear to ignore the
     // selected country or leave the previous country encoded in browser state.
     if(pushState||!supported){const params=new URLSearchParams(location.search);params.set("view","country");params.set("country",normalized);history.replaceState(null,"",`?${params.toString()}`)}
@@ -679,8 +701,10 @@
       qs("#countryIdentityRegion").textContent=(country.region||"Region unavailable").toUpperCase();
       qs("#countryIdentityName").textContent=country.name;
       qs("#countryIdentityMeta").textContent=`Capital: ${country.capital||"Unavailable"}${country.income_level?` · ${country.income_level}`:""} · ${overview.evidence_summary||"period-specific public evidence"}`;
+      renderCountryEvidenceHierarchy(overview.presentation||{});
       const highlights=overview.highlights||[];
-      qs("#globalCountryMetrics").innerHTML=highlights.length?highlights.map(item=>`<article class="country-indicator"><span class="country-indicator-label">${escapeHtml(item.label)}</span><strong class="country-indicator-value">${escapeHtml(formatCountryValue(item.value,item.format,item.unit))}</strong><div class="country-indicator-meta">${escapeHtml(item.unit)} · ${escapeHtml(item.year)}</div><span class="country-indicator-source">${item.source_url?`<a href="${escapeHtml(item.source_url)}" target="_blank" rel="noopener">${escapeHtml(item.source)} ↗</a>`:escapeHtml(item.source)} · ${escapeHtml(item.evidence_label||item.data_state)}</span><button type="button" class="ghost-button scsi-record-truth-button" data-record-truth-indicator="${escapeHtml(item.id)}" data-record-truth-country="${escapeHtml(normalized)}">Truth</button></article>`).join(""):'<div class="empty-state"><div><strong>No validated indicators</strong><span>No validated public value is currently available for this country.</span></div></div>';
+      const ordered=[...highlights].sort((a,b)=>{const rank={operational:0,official:1,published:2,"international-benchmark":3};return (rank[a.presentation?.section]??2)-(rank[b.presentation?.section]??2)});
+      qs("#globalCountryMetrics").innerHTML=ordered.length?ordered.map(item=>renderCountryIndicatorCard(item,normalized)).join(""):'<div class="empty-state"><div><strong>No validated indicators</strong><span>No validated public value is currently available for this country.</span></div></div>';
       globalCountryState.trends=trends.trends||[];
       qs("#globalTrendSelect").innerHTML=globalCountryState.trends.map(item=>`<option value="${escapeHtml(item.key)}">${escapeHtml(item.label)}</option>`).join("");
       if(globalCountryState.trends.length){qs("#globalTrendTitle").textContent=globalCountryState.trends[0].label;renderGlobalTrend(globalCountryState.trends[0])}else{qs("#globalTrendTitle").textContent="Trend unavailable";renderGlobalTrend(null)}
@@ -1627,7 +1651,7 @@
   }
   function closeAuditablePublicObservatory(){const panel=qs("#auditablePublicObservatory");if(panel)panel.hidden=true;const button=qs("#saveViewButton");if(button)button.disabled=false}
 
-  // registered route recovery is enforced after every route transition by v4.35.24.
+  // registered route recovery is enforced after every route transition by v4.35.25.
   async function setRoute(route){
     qs("#main").classList.remove("route-enter");void qs("#main").offsetWidth;qs("#main").classList.add("route-enter");
     state.route=route;
@@ -1979,7 +2003,7 @@
     hydration.then(results=>{const failed=results.filter(result=>result.status==="rejected");const status=qs("#statusText");if(failed.length){console.warn("[Site Intelligence] Startup hydration completed with limited services.",failed.map(result=>result.reason));if(status)status.textContent="Partial public data";toast("Some optional public data is temporarily unavailable.")}else if(status)status.textContent="Live public data";window.dispatchEvent(new CustomEvent("scsi:startup-hydrated",{detail:{version:APP_VERSION,state:failed.length?"limited":"ready",failed:failed.length}}));reportHeight()});
   }
   window.SCSIOverviewMapV3232={version:APP_VERSION,getMap:()=>state.map,getEvents:()=>state.events?.features||[],getFilteredEvents:()=>state.filteredEvents.slice(),getFilters:()=>({...state.overviewFilters}),setFilters:setOverviewFilters,selectEvent:selectOverviewEvent,fitResults:fitOverviewResults,setImageryOpacity:value=>state.imagery?.setOpacity?.(Math.max(0,Math.min(1,Number(value)))),setBaseStyle:style=>{const map=qs("#map");if(map)map.dataset.mapStyle=String(style||"institutional-dark");syncOverviewMapUrl()},syncUrl:syncOverviewMapUrl,render:renderOverviewFeatures};
-  window.SCSIRouterV3228={version:"4.35.24",navigate:navigateToRoute,current:()=>state.route};
+  window.SCSIRouterV3228={version:"4.35.25",navigate:navigateToRoute,current:()=>state.route};
   if(!FIXED_WORDPRESS_EMBED){
     window.addEventListener("load",reportHeight,{once:true});
     window.addEventListener("resize",reportHeight,{passive:true});
@@ -2005,5 +2029,5 @@ visualStyle.textContent=`
 document.head.appendChild(visualStyle);
 
 
-/* v4.35.24 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v4.35.24 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v4.35.25 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v4.35.25 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
