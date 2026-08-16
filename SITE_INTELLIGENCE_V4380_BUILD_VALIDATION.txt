@@ -1,0 +1,29 @@
+Site Intelligence v4.38.0 — Build Validation
+
+Release: Live Space Observation, Planetary Imagery & Archive Retrieval + Iframe Navigation Repair
+Status: CERTIFIED FOR PACKAGING
+
+Deterministic pytest: 1708 / 1708 passed
+Immutable repository manifest: 2549 files (expected after final manifest regeneration)
+JSON/GeoJSON parsed: 135
+JavaScript validated by release checker: 158
+PHP syntax: PASS
+Static security scan: 0 findings
+
+Browser certification:
+- Live Space + iframe responsive gate: PASS at 1024 / 900 / 768 px
+- Live Space default provider: astronomy-observations
+- Live Space module handoffs: 6 / 6
+- Ocean standalone: 11 systems / 5 groups / PASS
+- Science/Ocean controller + Ocean/Space prominence: PASS
+- Palestine/Israel canonical identity integrity: PASS
+- Country evidence presentation hierarchy: PASS
+- Desktop workspace gate: 35 / 35
+- Mobile workspace gate: 35 / 35
+- Iframe workspace gate: 35 / 35
+
+Release boundaries:
+- Five core Space lanes are credential-free from the Site Intelligence release perspective.
+- Readiness is network-free; release verification does not probe live upstream providers.
+- Provider failure is non-blocking and does not fabricate observations or substitute another provider silently.
+- Six primary areas / 35 canonical routes are preserved.

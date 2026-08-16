@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Site Intelligence v4.37.0 — live underwater media discovery.
+"""Site Intelligence v4.38.0 — live underwater media discovery.
 
 Three provider lanes remain independent:
 - FathomNet public REST imagery/annotation discovery.

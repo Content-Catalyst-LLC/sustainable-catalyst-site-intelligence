@@ -14,7 +14,7 @@ catalog = c.get("/public/ocean-observation/catalog").json()
 ready = c.get("/public/ocean-observation/readiness").json()
 manifest = c.get("/public/ocean-observation/manifest").json()
 nav = c.get("/public/v4/navigation").json()
-assert overview["ok"] and overview["version"] == "4.37.0" and overview["system_count"] == 11
+assert overview["ok"] and overview["version"] == "4.38.0" and overview["system_count"] == 11
 assert overview["route"] == "earth" and overview["public_route_count_delta"] == 0
 assert catalog["system_count"] == 11 and catalog["source_registration_count"] >= 40 and catalog["unique_source_count"] >= 30
 assert ready["ok"] and ready["network_calls_performed"] is False and ready["inherited_route_count"] == 35
@@ -26,7 +26,7 @@ index = (ROOT / "backend/public_app/index.html").read_text(encoding="utf-8")
 assert 'data-ocean-entry="hub" data-nav-group="analysis" data-nav-after-route="earth" data-nav-featured="true" data-route-alias="earth"' in index and "Open Ocean Intelligence" in index
 assert 'data-space-entry="hub" data-nav-group="places-systems" data-nav-after-route="science" data-nav-featured="true" data-route-alias="science"' in index
 assert "Explore Ocean" in index and "Explore Space" in index and "Open Space Intelligence" in index
-assert 'ocean-observation-v4360.js?v=4.37.0' in index and 'ocean-observation-v4360.css?v=4.37.0' in index
+assert 'ocean-observation-v4360.js?v=4.38.0' in index and 'ocean-observation-v4360.css?v=4.38.0' in index
 unified = (ROOT / "backend/public_app/assets/unified-platform-v4000.js").read_text(encoding="utf-8")
 assert '.nav-item[data-nav-group]:not([data-route])' in unified
 assert 'item.dataset.navAfterRoute===route' in unified
@@ -54,4 +54,4 @@ assert 'setDomainNav(domain)' in science
 production=(ROOT / "backend/public_app/assets/production-truth-v3231.js").read_text(encoding="utf-8")
 assert "route==='earth'&&oceanModeActive()" in production
 assert "cards!==11" in production
-print("PASS: v4.37.0 R4 Science/Ocean controller, route ownership and Ocean/Space prominence release contract")
+print("PASS: v4.38.0 R4 Science/Ocean controller, route ownership and Ocean/Space prominence release contract")

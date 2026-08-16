@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
-RELEASE="4.37.0"; RELEASE_ID="site-intelligence-v${RELEASE}"; RELEASE_TAG="v${RELEASE}"
+RELEASE="4.38.0"; RELEASE_ID="site-intelligence-v${RELEASE}"; RELEASE_TAG="v${RELEASE}"
 REPO_SLUG="${SC_SI_GITHUB_REPOSITORY:-Content-Catalyst-LLC/sustainable-catalyst-site-intelligence}"
 RENDER_URL="${SC_SI_RENDER_URL:-https://sustainable-catalyst-site-intelligence.onrender.com}"
 SOURCE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -80,11 +80,11 @@ for ((attempt=1; attempt<=ATTEMPTS; attempt++)); do
     uw_ok="$(python3 -c 'import json,sys; d=json.load(sys.stdin); c=d.get("checks",{}); print("true" if d.get("ok") and d.get("version")==sys.argv[1] and c.get("three_provider_lanes_registered") and c.get("fathomnet_public_lane_ready") and c.get("noaa_public_lane_ready") and c.get("onc_missing_credential_non_blocking") and d.get("network_calls_performed") is False else "false")' "$RELEASE" <<<"$uw" 2>/dev/null || echo false)"
     providers_ok="$(python3 -c 'import json,sys; d=json.load(sys.stdin); ids={x.get("id") for x in d.get("providers",[])}; print("true" if d.get("version")==sys.argv[1] and d.get("provider_count")==3 and d.get("default_provider")=="fathomnet" and ids=={"fathomnet","noaa-ocean-exploration","onc-oceans-3"} else "false")' "$RELEASE" <<<"$providers" 2>/dev/null || echo false)"
     ocean_ok="$(python3 -c 'import json,sys; d=json.load(sys.stdin); print("true" if d.get("ok") and d.get("version")==sys.argv[1] and d.get("system_count")==11 and d.get("systems",{}).get("underwater",{}).get("ok") is True and d.get("inherited_route_count")==35 else "false")' "$RELEASE" <<<"$ocean" 2>/dev/null || echo false)"
-    science_ok="$(python3 -c 'import json,sys; d=json.load(sys.stdin); domains={x.get("id") for x in d.get("domains",[])}; print("true" if d.get("ok") and d.get("version")==sys.argv[1] and d.get("release_lineage")=="v4.37.0" and d.get("local_workspace_count")==8 and domains=={"earth","ocean","space"} else "false")' "$RELEASE" <<<"$science" 2>/dev/null || echo false)"
-    app_ok=false; [[ "$app" == *'/app/assets/app.js?v=4.37.0'* && "$app" == *'data-ocean-entry="hub"'* && "$app" == *'data-space-entry="hub"'* && "$seafloor" == *'underwater-observation-v4800.js?v=4.37.0'* ]] && app_ok=true
+    science_ok="$(python3 -c 'import json,sys; d=json.load(sys.stdin); domains={x.get("id") for x in d.get("domains",[])}; print("true" if d.get("ok") and d.get("version")==sys.argv[1] and d.get("release_lineage")=="v4.38.0" and d.get("local_workspace_count")==8 and domains=={"earth","ocean","space"} else "false")' "$RELEASE" <<<"$science" 2>/dev/null || echo false)"
+    app_ok=false; [[ "$app" == *'/app/assets/app.js?v=4.38.0'* && "$app" == *'data-ocean-entry="hub"'* && "$app" == *'data-space-entry="hub"'* && "$seafloor" == *'underwater-observation-v4800.js?v=4.38.0'* ]] && app_ok=true
     printf 'Release verification: health=%s deployment=%s underwater=%s providers=%s ocean=%s science=%s app=%s\n' "$health_ok" "$dep_ok" "$uw_ok" "$providers_ok" "$ocean_ok" "$science_ok" "$app_ok"
     if [[ "$health_ok" == true && "$dep_ok" == true && "$uw_ok" == true && "$providers_ok" == true && "$ocean_ok" == true && "$science_ok" == true && "$app_ok" == true ]]; then
-      write_receipt verified 'v4.37.0 release identity, live underwater media control plane, Ocean/Space discovery and application assets synchronized.'
+      write_receipt verified 'v4.38.0 release identity, live underwater media control plane, Ocean/Space discovery and application assets synchronized.'
       printf '\nSUCCESS: Site Intelligence v%s is live with Live Underwater Media Discovery at commit %s.\nDeployment receipt: %s\nRollback tag: %s (%s)\n' "$RELEASE" "${COMMIT:0:12}" "$RECEIPT" "$ROLLBACK_TAG" "${PREVIOUS_COMMIT:0:12}"
       exit 0
     fi

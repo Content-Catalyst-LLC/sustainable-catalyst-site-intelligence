@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Browser certification for v4.37.0 live underwater media discovery."""
+"""Browser certification for v4.38.0 live underwater media discovery."""
 from __future__ import annotations
 import base64, json, os, sys, traceback
 from pathlib import Path
@@ -12,7 +12,7 @@ from browser_complete_shell_gate_v32362 import find_browser
 PNG=base64.b64decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=')
 
 PROVIDERS={
-  'ok':True,'version':'4.37.0','default_provider':'fathomnet','provider_count':3,
+  'ok':True,'version':'4.38.0','default_provider':'fathomnet','provider_count':3,
   'providers':[
     {'id':'fathomnet','title':'FathomNet','configured':True,'configuration_required':False,'boundary':'Public source-attributed images and annotations.'},
     {'id':'noaa-ocean-exploration','title':'NOAA Ocean Exploration','configured':True,'configuration_required':False,'boundary':'Public expedition and media discovery.'},
@@ -20,7 +20,7 @@ PROVIDERS={
   ]
 }
 SEARCH={
-  'ok':True,'version':'4.37.0','contract':'live-underwater-media-discovery-imagery-video-retrieval',
+  'ok':True,'version':'4.38.0','contract':'live-underwater-media-discovery-imagery-video-retrieval',
   'query':{'provider':'fathomnet','query':None,'expedition_id':None,'dive_id':None,'location_code':None,'date_from':None,'date_to':None,'latitude':None,'longitude':None,'depth_m':None,'limit':12},
   'record_count':2,
   'results':[
@@ -35,11 +35,11 @@ SEARCH={
 def main()->int:
     browser_path=find_browser()
     if not browser_path:
-        print('ERROR: Chromium or Chrome is required for v4.37.0 underwater browser certification.'); return 2
+        print('ERROR: Chromium or Chrome is required for v4.38.0 underwater browser certification.'); return 2
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
-        print('ERROR: Playwright is required for v4.37.0 underwater browser certification.'); return 2
+        print('ERROR: Playwright is required for v4.38.0 underwater browser certification.'); return 2
     js=(ROOT/'backend/public_app/assets/underwater-observation-v4800.js').read_text(encoding='utf-8')
     errors=[]
     with sync_playwright() as pw:
@@ -73,7 +73,7 @@ HarnessURL.revokeObjectURL=NativeURL.revokeObjectURL?.bind(NativeURL);
 window.URL=HarnessURL;
 </script></body></html>""",wait_until='domcontentloaded')
         page.add_script_tag(content=js)
-        page.wait_for_function('window.SCSIUnderwaterV4800?.version === "4.37.0"',timeout=5000)
+        page.wait_for_function('window.SCSIUnderwaterV4800?.version === "4.38.0"',timeout=5000)
         page.evaluate('()=>window.SCSIUnderwaterV4800.enter()')
         page.wait_for_function('document.querySelectorAll("#uwResults [data-index]").length === 2',timeout=10000)
         page.wait_for_function('document.querySelector("#uwImage") && !document.querySelector("#uwImage").hidden',timeout=5000)
@@ -99,7 +99,7 @@ window.URL=HarnessURL;
         browser.close()
     assert not errors,errors
     print(json.dumps({'browser':browser_path,'state':state,'errors':errors},indent=2))
-    print('PASS: v4.37.0 renders live underwater candidate media, defaults to FathomNet, keeps ONC optional, and does not fabricate 0,0/depth defaults.')
+    print('PASS: v4.38.0 renders live underwater candidate media, defaults to FathomNet, keeps ONC optional, and does not fabricate 0,0/depth defaults.')
     return 0
 
 if __name__=='__main__':

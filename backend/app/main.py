@@ -194,6 +194,11 @@ from .live_underwater_media_v4370 import (
     readiness as build_live_underwater_readiness,
     fetch_onc_image as build_live_underwater_onc_image,
 )
+from .live_space_observation_v4380 import (
+    provider_catalog as build_live_space_provider_catalog,
+    search as build_live_space_search,
+    readiness as build_live_space_readiness,
+)
 from .marine_biodiversity_v4900 import (
     overview as build_marine_biodiversity_overview,
     catalog as build_marine_biodiversity_catalog,
@@ -781,9 +786,9 @@ from .evidence_intelligence_v4357 import (
     select_evidence as build_evidence_selection,
     readiness as build_evidence_intelligence_readiness,
 )
-from .release_health_v4370 import (
-    deployment_verification as build_deployment_verification_v4370,
-    source_health_policy as build_source_health_policy_v4370,
+from .release_health_v4380 import (
+    deployment_verification as build_deployment_verification_v4380,
+    source_health_policy as build_source_health_policy_v4380,
 )
 from .workspace_browser_audit_v43518 import (
     workspace_browser_audit as build_workspace_browser_audit_v43518,
@@ -1863,6 +1868,22 @@ def public_solar_system_manifest(
 @app.get("/public/solar-system-navigation/readiness")
 def public_solar_system_readiness():
     return build_solar_system_readiness()
+
+
+@app.get("/public/space-observation/providers")
+def public_space_observation_providers():
+    return build_live_space_provider_catalog(get_settings())
+
+@app.get("/public/space-observation/readiness")
+def public_space_observation_readiness():
+    return build_live_space_readiness(get_settings())
+
+@app.post("/public/space-observation/search")
+def public_space_observation_search(request: dict[str, Any] = Body(default={})):
+    try:
+        return build_live_space_search(request, get_settings())
+    except (ValueError, TypeError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
 @app.get("/public/ocean-observation")
@@ -5632,12 +5653,12 @@ def public_evidence_intelligence_readiness_endpoint():
 
 @app.get("/public/deployment-verification")
 def public_deployment_verification_v43531_endpoint(settings: Settings = Depends(get_settings)):
-    return build_deployment_verification_v4370(settings)
+    return build_deployment_verification_v4380(settings)
 
 
 @app.get("/public/source-health-policy")
 def public_source_health_policy_v43531_endpoint(settings: Settings = Depends(get_settings)):
-    return build_source_health_policy_v4370(settings)
+    return build_source_health_policy_v4380(settings)
 
 
 @app.get("/public/workspace-browser-audit")

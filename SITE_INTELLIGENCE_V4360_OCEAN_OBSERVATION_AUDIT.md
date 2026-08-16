@@ -1,8 +1,8 @@
-# Site Intelligence v4.37.0 — Ocean Observation Architecture Audit
+# Site Intelligence v4.38.0 — Ocean Observation Architecture Audit
 
 ## Finding
 
-Ocean capabilities were already broad in the v4.35.25 repository but were difficult to discover because the public experience entered the marine stack through Earth Observation and progressively chained specialized modules. v4.37.0 resolves the discoverability problem by adding a first-class Ocean entry and a composition layer rather than duplicating mature implementation.
+Ocean capabilities were already broad in the v4.35.25 repository but were difficult to discover because the public experience entered the marine stack through Earth Observation and progressively chained specialized modules. v4.38.0 resolves the discoverability problem by adding a first-class Ocean entry and a composition layer rather than duplicating mature implementation.
 
 ## Architecture decision
 
@@ -14,7 +14,7 @@ This avoids creating a 36th canonical route while still making Ocean independent
 
 ## Composed marine systems
 
-| System | Existing public contract | Role in v4.37.0 |
+| System | Existing public contract | Role in v4.38.0 |
 |---|---|---|
 | Ocean Surface | `/public/ocean-intelligence` | Physical surface conditions and derived products |
 | Water Column | `/public/water-column` | Depth/profile observations |
@@ -48,4 +48,4 @@ This avoids creating a 36th canonical route while still making Ocean independent
 
 ## R1 browser-certification repair
 
-R1 verified that the original HTML Ocean entry was lost when the v4 navigation grouper rebuilt `#primaryNavigation` from only canonical `[data-route]` controls. The repair preserves supplemental first-class controls and promotes Ocean into a permanently visible featured-workspace band above the six collapsible groups. `data-route-alias="earth"` preserves the existing route model, and Ocean initialization no longer waits for Earth imagery services. The complete-shell browser harness was also updated to current `4.37.0` identity and Ocean/Earth deterministic fixtures.
+R1 verified that the original HTML Ocean entry was lost when the v4 navigation grouper rebuilt `#primaryNavigation` from only canonical `[data-route]` controls. The repair preserves supplemental first-class controls and promotes Ocean into a permanently visible featured-workspace band above the six collapsible groups. `data-route-alias="earth"` preserves the existing route model, and Ocean initialization no longer waits for Earth imagery services. The complete-shell browser harness was also updated to current `4.38.0` identity and Ocean/Earth deterministic fixtures.

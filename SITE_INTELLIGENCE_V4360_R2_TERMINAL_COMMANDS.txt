@@ -1,21 +1,21 @@
-Site Intelligence v4.37.0 R2 — Mac Terminal / GitHub deployment
+Site Intelligence v4.38.0 R2 — Mac Terminal / GitHub deployment
 
 cd ~/Downloads
 
 BUNDLE="$(find . -maxdepth 1 -type f \
-  -name 'sustainable-catalyst-site-intelligence-v4.37.0-R2-release-bundle*.zip' \
+  -name 'sustainable-catalyst-site-intelligence-v4.38.0-R2-release-bundle*.zip' \
   -print | sort | tail -1)"
 
 [ -n "$BUNDLE" ] || {
-  echo "ERROR: v4.37.0 R2 release bundle not found in Downloads."
+  echo "ERROR: v4.38.0 R2 release bundle not found in Downloads."
   exit 1
 }
 
-rm -rf sustainable-catalyst-site-intelligence-v4.37.0-R2-deployment
-unzip -q "$BUNDLE" -d sustainable-catalyst-site-intelligence-v4.37.0-R2-deployment
-cd sustainable-catalyst-site-intelligence-v4.37.0-R2-deployment
+rm -rf sustainable-catalyst-site-intelligence-v4.38.0-R2-deployment
+unzip -q "$BUNDLE" -d sustainable-catalyst-site-intelligence-v4.38.0-R2-deployment
+cd sustainable-catalyst-site-intelligence-v4.38.0-R2-deployment
 chmod +x deploy_and_validate_site_intelligence_v4_36_0_R2_macos.sh
 ./deploy_and_validate_site_intelligence_v4_36_0_R2_macos.sh
 
-Git tag created by promotion: v4.37.0
+Git tag created by promotion: v4.38.0
 Repository: Content-Catalyst-LLC/sustainable-catalyst-site-intelligence

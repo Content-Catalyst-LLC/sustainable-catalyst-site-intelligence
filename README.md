@@ -1,12 +1,14 @@
-# Sustainable Catalyst Site Intelligence v4.37.0
+# Sustainable Catalyst Site Intelligence v4.38.0
 
-**Current release:** v4.37.0 — Live Underwater Media Discovery, Imagery & Video Retrieval
+**Current release:** v4.38.0 — Live Space Observation, Planetary Imagery & Archive Retrieval + Iframe Navigation Repair
 
-Site Intelligence v4.37.0 turns Underwater Observation from a source-aware orientation scaffold into a live media-discovery workspace while preserving the six-area / 35-route architecture and the first-class Ocean + Space navigation introduced in v4.36.0 R4.
+Site Intelligence v4.38.0 promotes Space from a source-aware discovery layer into a live, provider-bounded observation and archive workspace while preserving the six-area / 35-route architecture and the first-class Ocean + Space navigation.
 
-> **Live underwater media:** FathomNet is the default public image/annotation lane; NOAA Ocean Exploration provides public expedition/video/archive discovery; Ocean Networks Canada Oceans 3.0 provides token-authenticated camera/archive discovery through a server-side connector. Provider failures remain independent, missing media remains missing, and ONC credential material is never returned to the browser.
+> **Five public Space lanes:** planetary imagery through USGS Astrogeology STAC, telescope-observation discovery through MAST/STScI, authoritative solar-system ephemerides through JPL Horizons, exoplanet records through NASA Exoplanet Archive TAP, and SETI archive discovery through Breakthrough Listen. No single Space credential gates the core workspace.
 
-> **No fake 0,0 observation:** The Underwater workspace no longer presents 0,0 / 0 m as a meaningful default query. Location, depth and time remain unset unless supplied by the user or returned by a source record.
+> **Iframe navigation repair:** WordPress embeds between tablet and desktop widths retain a readable text sidebar instead of forcing Ocean/Space labels into the legacy 80px rail. At narrow mobile widths the existing mobile navigation model remains authoritative.
+
+> **Evidence boundaries:** archive discovery is not a live telescope feed; planetary imagery retains source/product processing limits; Horizons values remain tied to the submitted observer/epoch request; exoplanet parameters do not establish habitability; and SETI archive/event metadata is not confirmation of extraterrestrial intelligence.
 
 ## Previous release — v4.35.25
 
@@ -1572,27 +1574,27 @@ Adds deferred Earth Observation orientation for NASA FIRMS fire/burned-area evid
 
 ## Current-release compatibility ledger
 
-- Current release:** v4.37.0 — Palestine-First Country Navigation Integrity Repair
-- **Release:** v4.37.0 — Connected Public Intelligence and Evidence Platform
-- Current release:** v4.37.0 — Connected Public Intelligence and Evidence Platform
-- v4.37.0 — Analytics and Public-Value Measurement
-- v4.37.0 — Archive Verification, Preservation Audits, and Institutional Custody
-- v4.37.0 — Collection Publication, Citation Exports, and Research Brief Packages
-- v4.37.0 — Connected Live Intelligence Surface
-- v4.37.0 — Corrections, Retractions, and Public Change History
-- v4.37.0 — Editorial Workspace, Review Queues, and Publication Orchestration
-- v4.37.0 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
-- v4.37.0 — Homepage Intelligence Gateway
-- v4.37.0 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
-- v4.37.0 — Live Intelligence presentation
-- v4.37.0 — Preservation Interoperability, External Verification, and Institutional Exchange
-- v4.37.0 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
-- v4.37.0 — Public Registry Discovery, Evidence Search, and Institutional Profiles
-- v4.37.0 — Publication Adapters, Institutional Handoffs, and Release Governance
-- v4.37.0 — Registry Governance, Challenges, Revocation, and Appeals
-- v4.37.0 — Release Monitoring, Rollback, and Post-Publication Governance
-- v4.37.0 — Saved Discovery Views, Public Research Collections, and Evidence Pathways
-- v4.37.0 — Signal Context and Drill-Down
-- v4.37.0 — Signal Relevance and Rotation Intelligence
-- v4.37.0 — Signal Subscriptions, Alerts, and Scheduled Intelligence
-- v4.37.0 — Topic and Regional Channels
+- Current release:** v4.38.0 — Palestine-First Country Navigation Integrity Repair
+- **Release:** v4.38.0 — Connected Public Intelligence and Evidence Platform
+- Current release:** v4.38.0 — Connected Public Intelligence and Evidence Platform
+- v4.38.0 — Analytics and Public-Value Measurement
+- v4.38.0 — Archive Verification, Preservation Audits, and Institutional Custody
+- v4.38.0 — Collection Publication, Citation Exports, and Research Brief Packages
+- v4.38.0 — Connected Live Intelligence Surface
+- v4.38.0 — Corrections, Retractions, and Public Change History
+- v4.38.0 — Editorial Workspace, Review Queues, and Publication Orchestration
+- v4.38.0 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
+- v4.38.0 — Homepage Intelligence Gateway
+- v4.38.0 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
+- v4.38.0 — Live Intelligence presentation
+- v4.38.0 — Preservation Interoperability, External Verification, and Institutional Exchange
+- v4.38.0 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
+- v4.38.0 — Public Registry Discovery, Evidence Search, and Institutional Profiles
+- v4.38.0 — Publication Adapters, Institutional Handoffs, and Release Governance
+- v4.38.0 — Registry Governance, Challenges, Revocation, and Appeals
+- v4.38.0 — Release Monitoring, Rollback, and Post-Publication Governance
+- v4.38.0 — Saved Discovery Views, Public Research Collections, and Evidence Pathways
+- v4.38.0 — Signal Context and Drill-Down
+- v4.38.0 — Signal Relevance and Rotation Intelligence
+- v4.38.0 — Signal Subscriptions, Alerts, and Scheduled Intelligence
+- v4.38.0 — Topic and Regional Channels

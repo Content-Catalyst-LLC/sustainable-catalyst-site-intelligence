@@ -1,5 +1,5 @@
-const RELEASE="4.37.0";
-const REPAIR="v4370";
+const RELEASE="4.38.0";
+const REPAIR="v4380";
 const CACHE_PREFIX="scsi-";
 const VERSION=`${CACHE_PREFIX}v${RELEASE}-${REPAIR}`;
 const IMMUTABLE=`${VERSION}-immutable`;

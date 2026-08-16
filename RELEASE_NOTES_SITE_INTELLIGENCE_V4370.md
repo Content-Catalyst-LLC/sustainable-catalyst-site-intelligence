@@ -1,8 +1,8 @@
-# Site Intelligence v4.37.0 — Live Underwater Media Discovery, Imagery & Video Retrieval
+# Site Intelligence v4.38.0 — Live Underwater Media Discovery, Imagery & Video Retrieval
 
 ## Release purpose
 
-v4.37.0 completes the first live acquisition layer for Underwater Observation. The previous workspace could describe ONC, FathomNet and NOAA source boundaries but did not execute media discovery. This release makes underwater imagery/video a source-backed public workflow while preserving missing-data and evidence-class boundaries.
+v4.38.0 completes the first live acquisition layer for Underwater Observation. The previous workspace could describe ONC, FathomNet and NOAA source boundaries but did not execute media discovery. This release makes underwater imagery/video a source-backed public workflow while preserving missing-data and evidence-class boundaries.
 
 ## Live provider lanes
 

@@ -9,7 +9,7 @@ echo '==> Verifying immutable repository manifest'
 import hashlib,json,sys
 from pathlib import Path
 root=Path(sys.argv[1]); m=json.loads((root/'MANIFEST.json').read_text())
-assert m.get('release')=='4.37.0'
+assert m.get('release')=='4.38.0'
 assert m.get('file_count')==len(m.get('files',[]))
 for row in m['files']:
  p=root/row['path']; assert p.is_file(),row['path']; assert hashlib.sha256(p.read_bytes()).hexdigest()==row['sha256'],row['path']
@@ -47,4 +47,4 @@ if [[ "${SC_SI_RUN_BROWSER:-0}" == "1" ]]; then
   done
   for mode in desktop mobile iframe; do PYTHON="$PYTHON" "$PYTHON" "$ROOT/scripts/browser_workspace_e2e_v4360.py" --mode "$mode"; done
 fi
-echo 'SUCCESS: Site Intelligence v4.37.0 passed live underwater media discovery, three-provider readiness, inherited 11-system Ocean, Ocean/Space prominence, country/evidence, and 35-route platform validation.'
+echo 'SUCCESS: Site Intelligence v4.38.0 passed live underwater media discovery, three-provider readiness, inherited 11-system Ocean, Ocean/Space prominence, country/evidence, and 35-route platform validation.'

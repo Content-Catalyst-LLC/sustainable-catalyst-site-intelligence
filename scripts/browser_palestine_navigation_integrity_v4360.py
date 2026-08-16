@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Overview-route browser regression for the v4.37.0 Palestine navigation repair."""
+"""Overview-route browser regression for the v4.38.0 Palestine navigation repair."""
 from __future__ import annotations
 
 import json
@@ -16,12 +16,12 @@ from browser_complete_shell_gate_v32362 import document, find_browser
 def main() -> int:
     browser_path = find_browser()
     if not browser_path:
-        print("ERROR: Chromium or Chrome is required for v4.37.0 Palestine navigation gate.")
+        print("ERROR: Chromium or Chrome is required for v4.38.0 Palestine navigation gate.")
         return 2
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
-        print("ERROR: Playwright is required for v4.37.0 Palestine navigation gate.")
+        print("ERROR: Playwright is required for v4.38.0 Palestine navigation gate.")
         return 2
 
     html, _ = document("disabled")
@@ -98,7 +98,7 @@ def main() -> int:
     assert "identity mismatch" in results["palestine"]["summary"].lower(),results
     assert "identity mismatch" in results["israel"]["summary"].lower(),results
     print(json.dumps({"browser":browser_path,"results":results,"errors":errors},indent=2))
-    print("PASS: v4.37.0 keeps Palestine and Israel canonical on the Overview selector even when external catalog/overview payloads attempt to swap them.")
+    print("PASS: v4.38.0 keeps Palestine and Israel canonical on the Overview selector even when external catalog/overview payloads attempt to swap them.")
     return 0
 
 

@@ -1,5 +1,5 @@
 (()=>{"use strict";
-const VERSION="4.37.0",REPAIR="r4",API=window.SC_SITE_INTELLIGENCE_API||location.origin,q=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];
+const VERSION="4.38.0",REPAIR="r4",API=window.SC_SITE_INTELLIGENCE_API||location.origin,q=s=>document.querySelector(s),qa=s=>[...document.querySelectorAll(s)];
 let catalog=null,hydrated=false,opening=false;
 const ORDER=[
 {id:"surface",global:"SCSIOceanSurfaceV4500",asset:"ocean-surface-v4500"},
@@ -35,7 +35,7 @@ async function ensureThrough(id){const target=ORDER.findIndex(x=>x.id===id);if(t
 function hideLegacy(){for(const id of PANELS){const panel=q(`#${id}`);if(panel)panel.hidden=true}}
 function showHome(){hideLegacy();const hub=q("#oceanObservationStudio");hub?.classList.remove("system-open");q("#ocean4360HomeBar")&&(q("#ocean4360HomeBar").hidden=true);syncUrl()}
 async function openSystem(id){if(opening)return;opening=true;try{const row=catalog?.systems?.find(x=>x.id===id);q("#ocean4360HomeBar")&&(q("#ocean4360HomeBar").hidden=false);q("#ocean4360ActiveSystem")&&(q("#ocean4360ActiveSystem").textContent=row?.title||"Marine system");q("#oceanObservationStudio")?.classList.add("system-open");hideLegacy();const module=await ensureThrough(id);await module?.enter?.();syncUrl(id)}catch(error){console.error("[Site Intelligence] Ocean module failed",error);q("#ocean4360ActiveSystem")&&(q("#ocean4360ActiveSystem").textContent="This marine system could not be opened. Return to Ocean home and retry.")}finally{opening=false}}
-async function downloadManifest(){try{const data=await get("/public/ocean-observation/manifest"),blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="site-intelligence-ocean-observation-v4.37.0.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}catch(error){console.error(error)}}
+async function downloadManifest(){try{const data=await get("/public/ocean-observation/manifest"),blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="site-intelligence-ocean-observation-v4.38.0.json";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}catch(error){console.error(error)}}
 async function open({skipRoute=false,system=""}={}){
   if(!skipRoute){try{await Promise.resolve(window.SCSIRouterV3228?.navigate?.("earth"))}catch(error){console.warn("[Site Intelligence] Earth route opened in limited mode while Ocean remained available",error)}}
   const earth=q("#earthStudio"),panel=q("#oceanObservationStudio");if(!earth||!panel)return false;

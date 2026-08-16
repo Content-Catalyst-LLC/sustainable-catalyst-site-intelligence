@@ -91,7 +91,7 @@ def test_runtime_release_is_v43525_and_new_css_is_loaded():
     html = (ROOT / "backend/public_app/index.html").read_text(encoding="utf-8")
     app_js = (ROOT / "backend/public_app/assets/app.js").read_text(encoding="utf-8")
     plugin = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text(encoding="utf-8")
-    assert 'data-scsi-release="4.37.0"' in html
-    assert 'country-presentation-v43525.css?v=4.37.0' in html
-    assert 'const APP_VERSION="4.37.0"' in app_js
-    assert "Version: 4.37.0" in plugin
+    assert 'data-scsi-release="4.38.0"' in html
+    assert 'country-presentation-v43525.css?v=4.38.0' in html
+    assert 'const APP_VERSION="4.38.0"' in app_js
+    assert "Version: 4.38.0" in plugin

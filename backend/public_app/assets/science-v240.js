@@ -1,16 +1,16 @@
 (() => {
   "use strict";
-  const VERSION="2.4.0",REPAIR="4.37.0";
+  const VERSION="2.4.0",REPAIR="4.38.0";
   const state={map:null,base:null,markers:null,records:[],allRecords:[],assets:[],layers:[],series:[],stac:[],overview:null,facets:null,discovery:null};
   const LOCAL_FALLBACK=[
     {id:"earth-observation",domain:"earth",title:"Earth Observation",summary:"Satellite-derived imagery, environmental layers, comparison, timelines, and source-aware Earth-system observation.",action:"earth"},
     {id:"ocean-intelligence",domain:"ocean",title:"Ocean Intelligence",summary:"Eleven marine systems spanning physical ocean conditions, seafloor, underwater evidence, biodiversity, hazards, pollution, coastal change, human activity, and governance.",action:"ocean"},
     {id:"orbital-earth",domain:"space",title:"Orbital Earth",summary:"Satellite-imagery perspective with platform, instrument, observation-date, source, and footprint context.",action:"orbital-earth"},
-    {id:"lunar-planetary",domain:"space",title:"Lunar & Planetary Intelligence",summary:"Moon and Mars mission-product context with NASA and USGS source handoffs.",action:"planetary"},
-    {id:"astronomy",domain:"space",title:"Astronomical Observation",summary:"Multi-wavelength deep-sky target and survey discovery with archival source handoffs.",action:"astronomy"},
-    {id:"solar-system",domain:"space",title:"Solar System Navigation",summary:"Bodies, mission context, frames, observers, and JPL/NAIF ephemeris handoffs.",action:"solar-system"},
-    {id:"exoplanets",domain:"space",title:"Exoplanets & Atmospheres",summary:"Planetary-system and atmospheric-spectrum evidence context with explicit habitability boundaries.",action:"exoplanets"},
-    {id:"seti",domain:"space",title:"SETI & Technosignatures",summary:"Radio-search evidence and target context without turning candidates into conclusions.",action:"seti"}
+    {id:"lunar-planetary",domain:"space",title:"Lunar & Planetary Intelligence",summary:"Moon and Mars mission products with live USGS/NASA archive retrieval.",action:"planetary"},
+    {id:"astronomy",domain:"space",title:"Astronomical Observation",summary:"Multi-wavelength deep-sky observation discovery with live archive retrieval.",action:"astronomy"},
+    {id:"solar-system",domain:"space",title:"Solar System Navigation",summary:"Bodies, mission context and live JPL Horizons ephemeris retrieval.",action:"solar-system"},
+    {id:"exoplanets",domain:"space",title:"Exoplanets & Atmospheres",summary:"Live NASA Exoplanet Archive system records with explicit habitability boundaries.",action:"exoplanets"},
+    {id:"seti",domain:"space",title:"SETI & Technosignatures",summary:"Live public SETI archive discovery without turning candidates into conclusions.",action:"seti"}
   ];
   const qs=(s,r=document)=>r.querySelector(s), esc=v=>String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));
   const text=(v,f="—")=>v===null||v===undefined||v===""?f:String(v);

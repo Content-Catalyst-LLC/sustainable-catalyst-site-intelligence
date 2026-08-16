@@ -35,7 +35,7 @@ def test_r3_ocean_and_science_assets_are_mirrored_to_wordpress():
 def test_r3_assets_have_repair_specific_cache_bust_and_service_worker_namespace():
     index=(ROOT/"backend/public_app/index.html").read_text(encoding="utf-8")
     sw=(ROOT/"backend/public_app/service-worker.js").read_text(encoding="utf-8")
-    assert '/app/assets/science-v240.js?v=4.37.0' in index
-    assert '/app/assets/ocean-observation-v4360.js?v=4.37.0' in index
-    assert 'const REPAIR="v4370"' in sw
+    assert '/app/assets/science-v240.js?v=4.38.0' in index
+    assert '/app/assets/ocean-observation-v4360.js?v=4.38.0' in index
+    assert 'const REPAIR="v4380"' in sw
     assert 'v${RELEASE}-${REPAIR}' in sw
