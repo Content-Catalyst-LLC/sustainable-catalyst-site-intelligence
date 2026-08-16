@@ -1,5 +1,5 @@
 (()=>{"use strict";
-const VERSION="4.35.25";
+const VERSION="4.36.0";
 const GROUPS=[
  {id:"live-overview",label:"Live Overview",routes:["overview","global","events","alerts"]},
  {id:"places-systems",label:"Places & Systems",routes:["country","dossiers","economics","law","science","humanitarian","resources","thematic"]},
@@ -14,11 +14,18 @@ function groupFor(route){return GROUPS.find(g=>g.routes.includes(route))||null}
 function applyNavigation(){
  if(applied)return true; const nav=q("#primaryNavigation"); if(!nav)return false;
  const buttons=new Map(qa(".nav-item[data-route]",nav).map(b=>[b.dataset.route,b]));
+ const supplemental=qa(".nav-item[data-nav-group]:not([data-route])",nav);
  if(buttons.size<35)return false;
  const fragment=document.createDocumentFragment();
+ const featured=supplemental.filter(item=>item.dataset.navFeatured==="true");
+ if(featured.length){const featuredWrap=document.createElement("div");featuredWrap.className="v4000-nav-featured";featuredWrap.setAttribute("aria-label","Featured workspaces");featured.forEach(item=>featuredWrap.appendChild(item));fragment.appendChild(featuredWrap)}
  GROUPS.forEach((g,index)=>{const details=document.createElement("details");details.className="v4000-nav-group";details.dataset.area=g.id;details.open=index===0;
   const summary=document.createElement("summary");summary.textContent=g.label;summary.setAttribute("aria-label",`${g.label} workspace group`);details.appendChild(summary);
-  const routes=document.createElement("div");routes.className="v4000-nav-routes";g.routes.forEach(route=>{const b=buttons.get(route);if(b)routes.appendChild(b)});details.appendChild(routes);fragment.appendChild(details)});
+  const routes=document.createElement("div");routes.className="v4000-nav-routes";
+  const pending=supplemental.filter(item=>item.dataset.navFeatured!=="true"&&item.dataset.navGroup===g.id);
+  g.routes.forEach(route=>{const b=buttons.get(route);if(b)routes.appendChild(b);pending.filter(item=>item.dataset.navAfterRoute===route).forEach(item=>routes.appendChild(item))});
+  pending.filter(item=>!item.isConnected).forEach(item=>routes.appendChild(item));
+  details.appendChild(routes);fragment.appendChild(details)});
  nav.replaceChildren(fragment);applied=true;document.documentElement.dataset.v4Navigation="ready";syncActive();return true;
 }
 function syncActive(){const route=window.SCSIRouterV3228?.current?.()||q('.nav-item[aria-current="page"]')?.dataset.route||new URLSearchParams(location.search).get("view")||"overview";qa(".v4000-nav-group").forEach(d=>{const active=d.dataset.area===groupFor(route)?.id;d.dataset.active=String(active);if(active)d.open=true})}

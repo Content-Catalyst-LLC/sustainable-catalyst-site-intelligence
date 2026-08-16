@@ -4,7 +4,7 @@ from app.transportation_infrastructure_v42700 import normalize_feature,normalize
 client=TestClient(app)
 def test_source_registry_and_truth_boundary():
  o=client.get('/public/transportation-infrastructure').json();c=client.get('/public/transportation-infrastructure/catalog').json()
- assert o['ok'] and o['version']=='4.35.25' and o['source_count']==4 and o['route']=='earth'
+ assert o['ok'] and o['version']=='4.36.0' and o['source_count']==4 and o['route']=='earth'
  assert {'overture-transportation','unece-unlocode','ourairports','mobilitydata-database'}<={x['id'] for x in c['sources']}
  assert c['truth_boundaries']['network_segment_equals_navigable_route'] is False
 def test_empty_state_not_no_infrastructure_or_navigation():

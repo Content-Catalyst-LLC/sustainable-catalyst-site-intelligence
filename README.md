@@ -1,4 +1,15 @@
-# Sustainable Catalyst Site Intelligence v4.35.25
+# Sustainable Catalyst Site Intelligence v4.36.0
+
+**Current release:** v4.36.0 R1 — Ocean Navigation Runtime & Browser Certification Repair
+
+Site Intelligence v4.36.0 makes Ocean Intelligence a first-class, discoverable public workspace while preserving the established six-area / 35-route v4 architecture. The release composes the existing ocean-surface, water-column, seafloor, underwater-observation, marine-biodiversity, mission, event, human-activity, pollution, coastal-change and ocean-governance systems behind a unified Ocean hub rather than creating a parallel or duplicate marine platform.
+
+> **R1 certification repair:** The v4.36.0 Ocean backend and 11-system readiness contract were already green. R1 repairs the runtime ownership conflict that caused the v4 navigation grouper to discard the supplemental Ocean button after initial HTML parse. The Ocean entry is now retained inside the Analysis navigation group immediately after Earth, and the browser smoke gate verifies the post-grouping DOM before promotion.
+
+
+The Ocean workspace is available at `/app/?view=earth&oceanMode=hub`, exposes direct access to all 11 inherited marine systems, registers a network-free readiness and source-catalog contract, persists Ocean saved-view state, and places the new shell assets in the critical offline cache. Evidence classes remain distinct, missing data remains missing, and marine hazard, pollution, imagery and jurisdiction records retain their source-defined limitations.
+
+## Previous release — v4.35.25
 
 **Current release focus:** Country Intelligence Presentation & Evidence Hierarchy. Country profiles now separate current operational reporting, primary/sector official evidence, published evidence, and harmonized international benchmarks rather than presenting all retrieved numbers as equivalent forms of truth. Structural electricity and water access indicators explicitly do not establish current service availability.
 
@@ -1562,26 +1573,27 @@ Adds deferred Earth Observation orientation for NASA FIRMS fire/burned-area evid
 
 ## Current-release compatibility ledger
 
-- **Release:** v4.35.25 — Connected Public Intelligence and Evidence Platform
-- Current release:** v4.35.25 — Connected Public Intelligence and Evidence Platform
-- v4.35.25 — Analytics and Public-Value Measurement
-- v4.35.25 — Archive Verification, Preservation Audits, and Institutional Custody
-- v4.35.25 — Collection Publication, Citation Exports, and Research Brief Packages
-- v4.35.25 — Connected Live Intelligence Surface
-- v4.35.25 — Corrections, Retractions, and Public Change History
-- v4.35.25 — Editorial Workspace, Review Queues, and Publication Orchestration
-- v4.35.25 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
-- v4.35.25 — Homepage Intelligence Gateway
-- v4.35.25 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
-- v4.35.25 — Live Intelligence presentation
-- v4.35.25 — Preservation Interoperability, External Verification, and Institutional Exchange
-- v4.35.25 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
-- v4.35.25 — Public Registry Discovery, Evidence Search, and Institutional Profiles
-- v4.35.25 — Publication Adapters, Institutional Handoffs, and Release Governance
-- v4.35.25 — Registry Governance, Challenges, Revocation, and Appeals
-- v4.35.25 — Release Monitoring, Rollback, and Post-Publication Governance
-- v4.35.25 — Saved Discovery Views, Public Research Collections, and Evidence Pathways
-- v4.35.25 — Signal Context and Drill-Down
-- v4.35.25 — Signal Relevance and Rotation Intelligence
-- v4.35.25 — Signal Subscriptions, Alerts, and Scheduled Intelligence
-- v4.35.25 — Topic and Regional Channels
+- Current release:** v4.36.0 — Palestine-First Country Navigation Integrity Repair
+- **Release:** v4.36.0 — Connected Public Intelligence and Evidence Platform
+- Current release:** v4.36.0 — Connected Public Intelligence and Evidence Platform
+- v4.36.0 — Analytics and Public-Value Measurement
+- v4.36.0 — Archive Verification, Preservation Audits, and Institutional Custody
+- v4.36.0 — Collection Publication, Citation Exports, and Research Brief Packages
+- v4.36.0 — Connected Live Intelligence Surface
+- v4.36.0 — Corrections, Retractions, and Public Change History
+- v4.36.0 — Editorial Workspace, Review Queues, and Publication Orchestration
+- v4.36.0 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
+- v4.36.0 — Homepage Intelligence Gateway
+- v4.36.0 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
+- v4.36.0 — Live Intelligence presentation
+- v4.36.0 — Preservation Interoperability, External Verification, and Institutional Exchange
+- v4.36.0 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
+- v4.36.0 — Public Registry Discovery, Evidence Search, and Institutional Profiles
+- v4.36.0 — Publication Adapters, Institutional Handoffs, and Release Governance
+- v4.36.0 — Registry Governance, Challenges, Revocation, and Appeals
+- v4.36.0 — Release Monitoring, Rollback, and Post-Publication Governance
+- v4.36.0 — Saved Discovery Views, Public Research Collections, and Evidence Pathways
+- v4.36.0 — Signal Context and Drill-Down
+- v4.36.0 — Signal Relevance and Rotation Intelligence
+- v4.36.0 — Signal Subscriptions, Alerts, and Scheduled Intelligence
+- v4.36.0 — Topic and Regional Channels

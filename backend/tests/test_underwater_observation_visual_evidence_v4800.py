@@ -15,7 +15,7 @@ CLIENT = TestClient(app)
 
 def test_overview_preserves_v4_architecture_and_truth_boundaries():
     p = CLIENT.get('/public/underwater-observation').json()
-    assert p['ok'] and p['version'] == '4.35.25' and p['route'] == 'earth'
+    assert p['ok'] and p['version'] == '4.36.0' and p['route'] == 'earth'
     assert p['contract'] == 'underwater-observation-visual-evidence'
     assert p['source_count'] == 3 and p['media_type_count'] == 4
     assert any('orientation view' in x.lower() for x in p['truth_boundaries'])

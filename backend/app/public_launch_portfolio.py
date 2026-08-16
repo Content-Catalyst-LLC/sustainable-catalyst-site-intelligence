@@ -10,7 +10,7 @@ LAUNCH_PROFILE_SCHEMA = "sc-site-intelligence-launch/1.0"
 PORTFOLIO_SCHEMA = "sc-site-intelligence-portfolio/1.0"
 PUBLIC_POSITIONING = (
     "Sustainable Catalyst Site Intelligence is an auditable public observatory for satellite imagery, "
-    "official economics, trade, energy, resource-security, unified country and regional dossiers, reconnectable live intelligence streams, browser-local monitoring, sustainability, global country indicators, natural hazards, humanitarian reporting, source-aware comparative research, and evidence lineage."
+    "official economics, trade, energy, resource-security, unified country and regional dossiers, reconnectable live intelligence streams, browser-local monitoring, sustainability, global country indicators, Earth and ocean observation, natural hazards, humanitarian reporting, source-aware comparative research, and evidence lineage."
 )
 
 PUBLIC_WORKSPACES = [
@@ -27,6 +27,7 @@ PUBLIC_WORKSPACES = [
     {"id": "research", "title": "Research Paths, Saved Investigations, and Briefing Workflows", "route": "/app/?view=research", "summary": "Organize browser-local investigations, evidence sets, notes, checkpoints, briefing packets, and explicit cross-product handoffs."},
     {"id": "integration", "title": "Public Data API, Embeds, and Institutional Integration", "route": "/app/?view=integration", "summary": "Discover versioned read-only public endpoints, generate portable embeds, and publish institutional presentation metadata without exposing provider credentials."},
     {"id": "earth", "title": "Earth Observation Studio", "route": "/app/?view=earth", "summary": "Compare satellite-derived layers across dates with source and imagery limits."},
+    {"id": "ocean", "title": "Global Ocean Intelligence", "route": "/app/?view=earth&oceanMode=hub", "summary": "Explore ocean surface, water-column, seafloor, underwater, biodiversity, mission, hazard, pollution, coastal-change, human-activity, and governance evidence in one marine workspace."},
     {"id": "events", "title": "Live Event Intelligence", "route": "/app/?view=events", "summary": "Filter public hazard and humanitarian records while retaining source identity."},
     {"id": "country", "title": "Global Country Intelligence", "route": "/app/?view=country&country=KEN", "summary": "Explore country indicators, trends, event context, and reporting-year differences."},
     {"id": "compare", "title": "Comparative Intelligence", "route": "/app/?view=compare&country=KEN&compare=GHA", "summary": "Align two-country evidence without hiding units, dates, or missing values."},
@@ -88,7 +89,7 @@ def launch_profile() -> dict[str, Any]:
 
 def launch_checklist() -> dict[str, Any]:
     groups = [
-        {"id": "product", "title": "Public product", "status": "implemented", "items": ["single primary application embed", "nineteen public research workspaces", "public launch route", "responsible-use boundary"]},
+        {"id": "product", "title": "Public product", "status": "implemented", "items": ["single primary application embed", "twenty-one public research workspaces", "public launch route", "responsible-use boundary"]},
         {"id": "evidence", "title": "Evidence and provenance", "status": "implemented", "items": ["source registry", "methodology registry", "visible data states", "source-aware exports"]},
         {"id": "delivery", "title": "Delivery quality", "status": "implemented", "items": ["mobile navigation", "keyboard behavior", "reduced motion", "performance budgets", "responsive WordPress embed"]},
         {"id": "portfolio", "title": "Portfolio materials", "status": "implemented", "items": ["project description", "launch post", "homepage feature copy", "Platform page copy", "demo shot list"]},
@@ -132,6 +133,7 @@ def launch_materials() -> dict[str, Any]:
         "demo_shot_list": [
             "Open the Global Observatory and change satellite layers.",
             "Compare two Earth-observation dates with the swipe control.",
+            "Open Ocean Intelligence and move from surface conditions through the water column and seafloor.",
             "Open a country profile and inspect an indicator source.",
             "Filter live event records and open a source-linked event detail.",
             "Compare Kenya and Ghana while preserving dates and missing values.",

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Mandatory complete production-shell browser gate for Site Intelligence v4.17.0.
+"""Mandatory complete production-shell browser gate for Site Intelligence v4.36.0 R1.
 
 The harness uses the exact shipped index HTML and every first-party script in document
 order. It runs in-memory because some managed validation environments administratively
@@ -19,7 +19,7 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
 APP=ROOT/'backend/public_app'
-VERSION='4.17.0'
+VERSION='4.36.0'
 
 def find_browser():
     candidates=[
@@ -43,7 +43,7 @@ def endpoint_payloads():
     from fastapi.testclient import TestClient
     from app.main import app
     client=TestClient(app)
-    paths=['/public/browser-reliability','/public/performance-offline','/public/bootstrap-recovery','/public/mutation-observer-recovery','/public/startup-stability','/public/data-truth','/public/data-truth/countries','/public/data-truth/country/KEN','/public/data-truth/country/BRA','/public/countries','/public/countries/regions','/public/workspaces/production-truth','/public/maps/interaction','/public/workflows/analytical','/public/runtime-health','/public/record-truth/indicator/KEN/SP.POP.TOTL','/public/record-truth/map-layer/true-color','/public/record-truth/manifest','/public/data-truth/control-plane','/public/data-truth/control-plane/schema-drift','/public/data-truth/control-plane/outages','/public/data-truth/control-plane/coverage?countries=KEN,BRA,USA','/public/data-truth/control-plane/workspaces?country=KEN','/public/data-truth/control-plane/export?country=KEN','/public/assurance','/public/assurance/model-cards','/public/research-integration','/public/monitoring-operations','/public/publication-studio','/public/institutional-governance','/public/production-assurance','/public/production-assurance/security','/public/production-assurance/observability','/public/production-assurance/performance','/public/production-assurance/supply-chain','/public/v4','/public/v4/navigation','/public/v4/contracts','/public/v4/readiness','/public/orbital-earth','/public/orbital-earth/catalog','/public/orbital-earth/state?layer=true-color&date=2026-08-01&latitude=0&longitude=20&altitude_km=1200','/public/orbital-earth/readiness']
+    paths=['/public/browser-reliability','/public/performance-offline','/public/bootstrap-recovery','/public/mutation-observer-recovery','/public/startup-stability','/public/data-truth','/public/data-truth/countries','/public/data-truth/country/KEN','/public/data-truth/country/BRA','/public/countries','/public/countries/regions','/public/workspaces/production-truth','/public/maps/interaction','/public/workflows/analytical','/public/runtime-health','/public/record-truth/indicator/KEN/SP.POP.TOTL','/public/record-truth/map-layer/true-color','/public/record-truth/manifest','/public/data-truth/control-plane','/public/data-truth/control-plane/schema-drift','/public/data-truth/control-plane/outages','/public/data-truth/control-plane/coverage?countries=KEN,BRA,USA','/public/data-truth/control-plane/workspaces?country=KEN','/public/data-truth/control-plane/export?country=KEN','/public/assurance','/public/assurance/model-cards','/public/research-integration','/public/monitoring-operations','/public/publication-studio','/public/institutional-governance','/public/production-assurance','/public/production-assurance/security','/public/production-assurance/observability','/public/production-assurance/performance','/public/production-assurance/supply-chain','/public/v4','/public/v4/navigation','/public/v4/contracts','/public/v4/readiness','/public/orbital-earth','/public/orbital-earth/catalog','/public/orbital-earth/state?layer=true-color&date=2026-08-01&latitude=0&longitude=20&altitude_km=1200','/public/orbital-earth/readiness','/public/earth-observation/layers','/public/earth-observation/compare?layer=true-color&date_a=2026-08-08&date_b=2026-08-15','/public/earth-observation/timeline?layer=true-color&end_date=2026-08-15&days=14','/public/ocean-observation','/public/ocean-observation/catalog','/public/ocean-observation/readiness']
     payloads={path:client.get(path).json() for path in paths}
     for path, payload in list(payloads.items()):
         payloads.setdefault(path.split('?', 1)[0], payload)
@@ -125,7 +125,7 @@ def main():
     actionable=[item for item in console if not any(token in item.lower() for token in ('failed to load resource','net::err_','favicon'))]
     assert not actionable,actionable
     print(json.dumps({'browser':browser_path,'results':results,'filteredConsoleErrors':console},indent=2))
-    print('PASS: complete v4.17.0 production shell is responsive, observer-bounded, and fully initialized in direct and iframe modes.')
+    print('PASS: complete v4.36.0 R1 production shell is responsive, observer-bounded, and fully initialized in direct and iframe modes.')
     return 0
 if __name__ == "__main__":
     try:

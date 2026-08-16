@@ -17,7 +17,7 @@ client = TestClient(app)
 def test_root_reports_v1151():
     response = client.get("/")
     assert response.status_code == 200
-    assert response.json()["version"] == "4.35.25"
+    assert response.json()["version"] == "4.36.0"
 
 
 def test_stable_ids_are_deterministic():

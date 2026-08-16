@@ -1,3 +1,21 @@
+# v4.36.0 — Global Ocean Intelligence II — Ocean Observation & Marine Systems
+
+## v4.36.0 R1 — Ocean Navigation Runtime & Browser Certification Repair
+
+- Preserves the first-class Ocean navigation control when the v4 six-area navigation grouper reconstructs `#primaryNavigation`.
+- Places Ocean in the Analysis group immediately after Earth without adding a 36th public route.
+- Mirrors the repaired navigation owner into the WordPress plugin asset set.
+- Strengthens the deterministic browser smoke to wait for v4 navigation readiness and assert the Ocean entry survives post-DOM grouping before click-through.
+- Keeps the 11-system Ocean backend, evidence contracts, and `4.36.0` deployment identity unchanged.
+
+
+- Promoted Ocean Intelligence to an explicit, first-class navigation entry without expanding the canonical six-area / 35-route v4 registry.
+- Added a unified Ocean Observation hub at `view=earth&oceanMode=hub` spanning 11 inherited marine systems: surface, water column, seafloor, underwater observation, biodiversity, missions, events, human activity, pollution, coastal change and governance.
+- Added `/public/ocean-observation`, `/catalog`, `/manifest` and `/readiness` contracts for network-free release verification, source registration, capability discovery and evidence-boundary inspection.
+- Added direct lazy-loading launch controls for all existing Ocean modules and preserved their original specialized APIs and evidence semantics.
+- Added Ocean saved-view state, launch-portfolio visibility and critical offline shell caching.
+- Preserved missing-data, evidence-class, underwater-imagery, marine-hazard, pollution and maritime-jurisdiction truth boundaries.
+
 # v4.35.25 — Country Intelligence Presentation & Evidence Hierarchy
 
 - Added a Country Intelligence Brief and explicit evidence-role hierarchy.

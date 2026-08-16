@@ -146,6 +146,12 @@ from .solar_system_navigation_v4400 import (
     export_manifest as build_solar_system_export_manifest,
     readiness as build_solar_system_readiness,
 )
+from .ocean_observation_marine_systems_v4360 import (
+    overview as build_ocean_observation_overview,
+    catalog as build_ocean_observation_catalog,
+    workspace_manifest as build_ocean_observation_manifest,
+    readiness as build_ocean_observation_readiness,
+)
 from .ocean_surface_v4500 import (
     overview as build_ocean_surface_overview,
     catalog as build_ocean_surface_catalog,
@@ -1851,6 +1857,23 @@ def public_solar_system_manifest(
 @app.get("/public/solar-system-navigation/readiness")
 def public_solar_system_readiness():
     return build_solar_system_readiness()
+
+
+@app.get("/public/ocean-observation")
+def public_ocean_observation_overview():
+    return build_ocean_observation_overview()
+
+@app.get("/public/ocean-observation/catalog")
+def public_ocean_observation_catalog():
+    return build_ocean_observation_catalog()
+
+@app.get("/public/ocean-observation/manifest")
+def public_ocean_observation_manifest():
+    return build_ocean_observation_manifest()
+
+@app.get("/public/ocean-observation/readiness")
+def public_ocean_observation_readiness():
+    return build_ocean_observation_readiness()
 
 
 @app.get("/public/ocean-intelligence")

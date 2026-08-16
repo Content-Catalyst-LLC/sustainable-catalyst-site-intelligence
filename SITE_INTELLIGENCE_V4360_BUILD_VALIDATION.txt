@@ -1,0 +1,77 @@
+SITE INTELLIGENCE v4.36.0 R1 — BUILD VALIDATION
+Ocean Navigation Runtime & Browser Certification Repair
+
+RELEASE IDENTITY
+----------------
+Backend version: 4.36.0
+WordPress plugin version: 4.36.0
+Release ID: site-intelligence-v4.36.0
+Repair designation: R1
+Canonical v4 primary areas: 6
+Canonical v4 routes: 35
+Ocean canonical route delta: 0
+
+ROOT-CAUSE REPAIR
+-----------------
+PASS — v4 navigation consolidation preserves supplemental navigation controls.
+PASS — Ocean is rendered as a visible featured workspace above collapsed route groups.
+PASS — Ocean carries the Earth route alias without creating a 36th route.
+PASS — Cartographic route visibility recognizes active route aliases.
+PASS — Ocean opening is non-blocking with respect to Earth imagery initialization.
+PASS — Complete-shell deterministic fetch fixtures include Ocean contracts.
+PASS — Backend/WordPress repaired asset parity.
+
+OCEAN COMPOSITION CONTRACT
+--------------------------
+Ocean systems composed: 11
+Ocean system groups: 5
+Source registrations: 40
+Unique source ID/title pairs: 39
+Network-free Ocean readiness: PASS
+Inherited Ocean systems ready: 11/11
+Explicit Ocean navigation entry: PASS
+Launch portfolio Ocean entry: PASS
+Critical offline shell assets: PASS
+
+FOCUSED REGRESSION
+------------------
+Command:
+PYTHONPATH=backend PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest -q \
+  backend/tests/test_global_ocean_intelligence_ii_v4360.py
+
+Result: 10 passed
+
+FULL BACKEND REGRESSION
+-----------------------
+Command:
+PYTHONPATH=backend PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 python3 -m pytest -q backend/tests
+
+Result: 1667 passed
+
+HEADLESS BROWSER CERTIFICATION
+------------------------------
+PASS — Ocean browser gate: visible featured navigation; 11 cards; 5 groups; Data Truth; no page errors.
+PASS — Complete shell: service-worker disabled mode.
+PASS — Complete shell: service-worker registration failure mode.
+PASS — Complete shell: iframe mode.
+PASS — Palestine/Israel canonical navigation integrity.
+PASS — Country evidence presentation hierarchy.
+PASS — Workspace E2E desktop: 35/35 routes ready.
+PASS — Workspace E2E mobile: 35/35 routes ready.
+PASS — Workspace E2E iframe: 35/35 routes ready.
+
+TRUTH / GOVERNANCE INVARIANTS
+-----------------------------
+- Existing specialized Ocean modules are composed, not reimplemented.
+- Missing ocean data remains missing; no nearest/zero/model substitution is inferred.
+- Observations, derived products, models, forecasts, media, occurrences, hazards,
+  human-activity records and legal-orientation records remain distinct evidence classes.
+- Underwater imagery is not promoted into abundance or habitat-condition claims.
+- Maritime boundaries remain orientation evidence, not legal or sovereignty decisions.
+- Pollution/hazard/coastal records are not converted into local safety, health,
+  damage or property determinations.
+
+BUILD STATUS
+------------
+PASS — R1 repairs the failed Ocean browser certification boundary without changing the
+4.36.0 backend/plugin identity or the 6-area/35-route public platform contract.

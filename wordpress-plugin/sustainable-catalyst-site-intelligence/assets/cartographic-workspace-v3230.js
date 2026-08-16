@@ -1,6 +1,6 @@
 (function(window,document){
   "use strict";
-  const VERSION="4.35.25";
+  const VERSION="4.36.0";
   const OVERVIEW_IDS=["map"];
   let overviewLayout=null;
   let evidenceRail=null;
@@ -9,7 +9,7 @@
 
   function qs(selector,root=document){return root.querySelector(selector)}
   function qsa(selector,root=document){return Array.from(root.querySelectorAll(selector))}
-  function activeRoute(){return qs('.nav-item.active[data-route]')?.dataset.route||new URLSearchParams(location.search).get('view')||'overview'}
+  function activeRoute(){return qs('.nav-item.active[data-route]')?.dataset.route||qs('.nav-item.active[data-route-alias]')?.dataset.routeAlias||new URLSearchParams(location.search).get('view')||'overview'}
   function mapApi(){return window.SCSIMapReliability||null}
 
   function buildOverviewWorkspace(){
@@ -52,7 +52,7 @@
 
   async function loadCountryCatalog(){
     if(countryCatalog)return countryCatalog;
-    // v4.35.25: map focus consumes the same first-party identity plane as the
+    // v4.36.0: map focus consumes the same first-party identity plane as the
     // selector. Live country metadata can enrich it but cannot define whether an
     // ISO3 code exists. This prevents a partial upstream catalog from leaving the
     // map focused on the previously selected country.

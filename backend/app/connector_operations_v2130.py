@@ -14,7 +14,7 @@ from uuid import uuid4
 from .config import Settings
 
 SCHEMA_VERSION = "sc-site-intelligence-connector-operations/1.0"
-RELEASE_VERSION = "4.35.25"
+RELEASE_VERSION = "4.36.0"
 
 _LOCK = threading.RLock()
 _SECRET_FRAGMENTS = ("key", "token", "secret", "password", "authorization", "credential", "cookie")

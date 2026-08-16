@@ -103,7 +103,7 @@ def test_runtime_release_is_v43524():
     index = (root / "backend/public_app/index.html").read_text(encoding="utf-8")
     app_js = (root / "backend/public_app/assets/app.js").read_text(encoding="utf-8")
     plugin = (root / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text(encoding="utf-8")
-    assert 'data-scsi-release="4.35.25"' in index
-    assert 'const APP_VERSION="4.35.25"' in app_js
-    assert "Version: 4.35.25" in plugin
-    assert "site-intelligence-v4.35.25" in plugin
+    assert 'data-scsi-release="4.36.0"' in index
+    assert 'const APP_VERSION="4.36.0"' in app_js
+    assert "Version: 4.36.0" in plugin
+    assert "site-intelligence-v4.36.0" in plugin

@@ -172,7 +172,7 @@
     try {
       const item = JSON.parse(sessionStorage.getItem(recoveryCacheKey(url)) || 'null');
       if (!item || !item.savedAt || Date.now() - item.savedAt > 21600000) return null;
-      window.dispatchEvent(new CustomEvent('scsi:service-fallback', {detail: {version: cfg.version || '4.35.25', group: 'wordpress-proxy', path: url, reason: 'last-known-good', staleAgeMs: Date.now() - item.savedAt}}));
+      window.dispatchEvent(new CustomEvent('scsi:service-fallback', {detail: {version: cfg.version || '4.36.0', group: 'wordpress-proxy', path: url, reason: 'last-known-good', staleAgeMs: Date.now() - item.savedAt}}));
       return item.data;
     } catch (e) { return null; }
   }
@@ -200,7 +200,7 @@
       return fetchJsonAttempt(url).catch(function (error) {
         const retryable = !error.status || recoveryStatuses.indexOf(Number(error.status)) !== -1;
         if (retryable && attempt < 3) {
-          window.dispatchEvent(new CustomEvent('scsi:service-retry', {detail: {version: cfg.version || '4.35.25', group: 'wordpress-proxy', path: url, attempt: attempt + 1}}));
+          window.dispatchEvent(new CustomEvent('scsi:service-retry', {detail: {version: cfg.version || '4.36.0', group: 'wordpress-proxy', path: url, attempt: attempt + 1}}));
           return new Promise(function (resolve) { setTimeout(resolve, attempt === 1 ? 600 : 1400); }).then(run);
         }
         const recovered = readRecoveredJson(url);
