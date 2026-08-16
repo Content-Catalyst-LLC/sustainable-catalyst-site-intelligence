@@ -1,14 +1,19 @@
-# Sustainable Catalyst Site Intelligence v4.36.1
+# Sustainable Catalyst Site Intelligence v4.36.0
 
-**Current release:** v4.36.1 — Ocean & Space Live Evidence Rendering, Connector Binding & OpenAPI Recovery
+**Current release:** v4.36.0 R4 — Science/Ocean Workspace Controller, Route Ownership & Ocean/Space Prominence Repair
 
-Site Intelligence v4.36.1 carries the verified NOAA, OBIS and NASA connector layer through to the public Ocean and Space workspaces. Ocean Surface now renders live NOAA ERDDAP dataset discovery, Marine Biodiversity renders bounded OBIS occurrence records, Coastal Change renders NOAA CO-OPS station observations, Exoplanets renders NASA Exoplanet Archive system records, and Lunar & Planetary Intelligence renders NASA CMR collection discovery. Orbital Earth retains real NASA GIBS imagery with its established source and interpretation boundaries.
+Site Intelligence v4.36.0 makes Ocean Intelligence a first-class, discoverable public workspace while preserving the established six-area / 35-route v4 architecture.
 
-The release also repairs production `/openapi.json` generation by removing unresolved `Dict[str, Any]` forward references from FastAPI request-body annotations. Live provider failures remain non-blocking and are shown as explicit unavailable states; missing observations are never fabricated or silently replaced.
+> **R4 controller / route-ownership / prominence repair:** Science no longer silently succeeds when its controller is missing or stale. The main router can reload the R4 Science controller after `DOMContentLoaded`, Ocean awaits Earth-route ownership before hydration, and Production Truth recognizes the Ocean-owned surface instead of incorrectly declaring the Earth route unavailable. Ocean and Space are also promoted together into a persistent **Featured science systems** block, top-level Launch actions, and dedicated portfolio cards. Space opens directly into its six local workspaces without requiring Platform Core. Main-router, Science, Ocean, Production Truth, bootstrap and service-worker cache lineage are R4-specific to prevent mixed-generation frontend assets. The release composes the existing ocean-surface, water-column, seafloor, underwater-observation, marine-biodiversity, mission, event, human-activity, pollution, coastal-change and ocean-governance systems behind a unified Ocean hub rather than creating a parallel or duplicate marine platform.
 
-## Inherited v4.36.0 Ocean/Science line
+> **R3 hydration/promotion repair:** Science→Ocean launch now exposes an explicit Ocean `loading → ready/error` hydration state. The Science launcher awaits the Ocean open contract, and browser certification waits for the ready state plus all 11 marine cards before promotion. This repairs the R2 false-negative race without weakening the no-fabricated-records boundary or the Core-decoupled Earth/Ocean/Space discovery model.
 
-The v4.36.0 R3 Science→Ocean hydration contract remains inherited: Ocean maintains the explicit `idle → loading → ready/error` lifecycle, Science awaits all 11 marine cards, and Earth/Ocean/Space discovery remains available independently of optional Platform Core scientific records.
+> **R2 science-front-door repair:** Science now separates local Site Intelligence workspace discovery from the optional Platform Core scientific-record fabric. Earth, Ocean, and Space are always selectable. Ocean opens the v4.36.0 11-system hub; Space exposes Orbital Earth, Lunar & Planetary Intelligence, Astronomy, Solar System Navigation, Exoplanets & Atmospheres, and SETI & Technosignatures even when Platform Core is unconfigured. No scientific records are fabricated to provide this navigation layer.
+
+> **R1 certification repair:** The v4.36.0 Ocean backend and 11-system readiness contract were already green. R1 repairs the runtime ownership conflict that caused the v4 navigation grouper to discard the supplemental Ocean button after initial HTML parse. The Ocean entry is now retained inside the Analysis navigation group immediately after Earth, and the browser smoke gate verifies the post-grouping DOM before promotion.
+
+
+The Ocean workspace is available at `/app/?view=earth&oceanMode=hub`, exposes direct access to all 11 inherited marine systems, registers a network-free readiness and source-catalog contract, persists Ocean saved-view state, and places the new shell assets in the critical offline cache. Evidence classes remain distinct, missing data remains missing, and marine hazard, pollution, imagery and jurisdiction records retain their source-defined limitations.
 
 ## Previous release — v4.35.25
 
@@ -1574,27 +1579,27 @@ Adds deferred Earth Observation orientation for NASA FIRMS fire/burned-area evid
 
 ## Current-release compatibility ledger
 
-- Current release:** v4.36.1 — Palestine-First Country Navigation Integrity Repair
-- **Release:** v4.36.1 — Connected Public Intelligence and Evidence Platform
-- Current release:** v4.36.1 — Connected Public Intelligence and Evidence Platform
-- v4.36.1 — Analytics and Public-Value Measurement
-- v4.36.1 — Archive Verification, Preservation Audits, and Institutional Custody
-- v4.36.1 — Collection Publication, Citation Exports, and Research Brief Packages
-- v4.36.1 — Connected Live Intelligence Surface
-- v4.36.1 — Corrections, Retractions, and Public Change History
-- v4.36.1 — Editorial Workspace, Review Queues, and Publication Orchestration
-- v4.36.1 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
-- v4.36.1 — Homepage Intelligence Gateway
-- v4.36.1 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
-- v4.36.1 — Live Intelligence presentation
-- v4.36.1 — Preservation Interoperability, External Verification, and Institutional Exchange
-- v4.36.1 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
-- v4.36.1 — Public Registry Discovery, Evidence Search, and Institutional Profiles
-- v4.36.1 — Publication Adapters, Institutional Handoffs, and Release Governance
-- v4.36.1 — Registry Governance, Challenges, Revocation, and Appeals
-- v4.36.1 — Release Monitoring, Rollback, and Post-Publication Governance
-- v4.36.1 — Saved Discovery Views, Public Research Collections, and Evidence Pathways
-- v4.36.1 — Signal Context and Drill-Down
-- v4.36.1 — Signal Relevance and Rotation Intelligence
-- v4.36.1 — Signal Subscriptions, Alerts, and Scheduled Intelligence
-- v4.36.1 — Topic and Regional Channels
+- Current release:** v4.36.0 — Palestine-First Country Navigation Integrity Repair
+- **Release:** v4.36.0 — Connected Public Intelligence and Evidence Platform
+- Current release:** v4.36.0 — Connected Public Intelligence and Evidence Platform
+- v4.36.0 — Analytics and Public-Value Measurement
+- v4.36.0 — Archive Verification, Preservation Audits, and Institutional Custody
+- v4.36.0 — Collection Publication, Citation Exports, and Research Brief Packages
+- v4.36.0 — Connected Live Intelligence Surface
+- v4.36.0 — Corrections, Retractions, and Public Change History
+- v4.36.0 — Editorial Workspace, Review Queues, and Publication Orchestration
+- v4.36.0 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
+- v4.36.0 — Homepage Intelligence Gateway
+- v4.36.0 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
+- v4.36.0 — Live Intelligence presentation
+- v4.36.0 — Preservation Interoperability, External Verification, and Institutional Exchange
+- v4.36.0 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
+- v4.36.0 — Public Registry Discovery, Evidence Search, and Institutional Profiles
+- v4.36.0 — Publication Adapters, Institutional Handoffs, and Release Governance
+- v4.36.0 — Registry Governance, Challenges, Revocation, and Appeals
+- v4.36.0 — Release Monitoring, Rollback, and Post-Publication Governance
+- v4.36.0 — Saved Discovery Views, Public Research Collections, and Evidence Pathways
+- v4.36.0 — Signal Context and Drill-Down
+- v4.36.0 — Signal Relevance and Rotation Intelligence
+- v4.36.0 — Signal Subscriptions, Alerts, and Scheduled Intelligence
+- v4.36.0 — Topic and Regional Channels

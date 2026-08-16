@@ -1,8 +1,7 @@
 (function(window,document){
   "use strict";
-  const VERSION="4.36.1";
-  const APP_ROOT=document.querySelector('#app[data-scsi-release]');
-  if(!APP_ROOT||!document.querySelector('#primaryNavigation')||!document.querySelector('#main.workspace'))return;
+  const VERSION="4.36.0",REPAIR="r4";
+  const APP_ROOT=document.querySelector('#app[data-scsi-release]');if(!APP_ROOT||!document.querySelector('#primaryNavigation')||!document.querySelector('#main.workspace'))return
   const ENDPOINT="/public/workspaces/production-truth";
   const CORE_ROUTES=new Set(["overview","global","economics","law","science","humanitarian","resources","dossiers","alerts","scenarios","earth","spatial","harmonization","country","events","compare","thematic","briefing","sources"]);
   const CONTROLLERS={platform:"SCConnectedPlatformV300",global:"SCGlobalConditionsV210",economics:"SCEconomicsV220",law:"SCLawV230",science:"SCScienceV240",humanitarian:"SCHumanitarianV250",resources:"SCResourcesV260",dossiers:"SCDossiersV270",alerts:"SCAlertsV280",scenarios:"SCScenariosV290",research:"SCResearchV2100",integration:"SCIntegrationV2110",experience:"SCExperienceV2120",spatial:"SCSpatialV2150",harmonization:"SCHarmonizationV2160",models:"SCModelsV2170",evidence:"SCEvidenceV2180",graph:"SCKnowledgeGraphV2190",publishing:"SCIntelligencePublishingV2200",monitoring:"SCScheduledMonitoringV2210",workspaces:"SCInstitutionalWorkspacesV2220",workflows:"SCCrossPlatformWorkflowsV2230",federation:"SCInstitutionalFederationV2240",governance:"SCProductionGovernanceV2250"};
@@ -13,6 +12,8 @@
   function qs(s,r=document){return r.querySelector(s)}
   function qsa(s,r=document){return Array.from(r.querySelectorAll(s))}
   function currentRoute(){return window.SCSIRouterV3228?.current?.()||qs('.nav-item.active[data-route]')?.dataset.route||new URLSearchParams(location.search).get('view')||'overview'}
+  function oceanModeActive(){const params=new URLSearchParams(location.search);const panel=qs('#oceanObservationStudio');return (params.get('view')==='earth'&&params.get('oceanMode')==='hub')||(!panel?.hidden&&panel?.dataset.oceanWorkspaceOwner==='earth:ocean')}
+  function activeWorkspaceLabel(route){return route==='earth'&&oceanModeActive()?'Ocean observation & marine systems':contract(route).label}
   function contract(route){return state.directory?.routes?.find(item=>item.route_id===route)||{route_id:route,label:qs(`.nav-item[data-route="${route}"] span`)?.textContent||route,completion:CORE_ROUTES.has(route)?"operational":"operational-bounded",empty_state:"No public records are available for this workspace.",degraded_state:"This workspace is partially available while public services recover.",limitation:"Public evidence remains subject to source, coverage, and methodology limits."}}
   function escapeHtml(value){return String(value??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]))}
 
@@ -31,17 +32,19 @@
     state.phase=phase;state.reason=reason;bar.dataset.state=phase;
     const item=contract(state.route||currentRoute());
     const labels={initial:"Opening workspace",ready:"Workspace ready",empty:"No matching public records",degraded:"Workspace partially available",unavailable:"Workspace unavailable"};
-    const detail=reason||({initial:"The route is opening and its public surface is being verified.",ready:`${item.label} is operational within its published public scope.`,empty:item.empty_state,degraded:item.degraded_state,unavailable:"The required public controller or workspace surface is not available in this release."}[phase]);
+    const activeLabel=activeWorkspaceLabel(state.route||currentRoute());
+    const detail=reason||({initial:"The route is opening and its public surface is being verified.",ready:`${activeLabel} is operational within its published public scope.`,empty:item.empty_state,degraded:item.degraded_state,unavailable:"The required public controller or workspace surface is not available in this release."}[phase]);
     qs('#truthStateLabel',bar).textContent=labels[phase]||labels.initial;
     qs('#truthStateDetail',bar).textContent=detail;
     const badge=qs('#truthScopeBadge',bar);badge.textContent=item.completion==='operational'?'Operational':'Operational · bounded';
-    const disclosure=qs('#truthDisclosure',bar);disclosure.innerHTML=`<strong>${escapeHtml(item.label)} production contract</strong><p>${escapeHtml(item.limitation||'Public evidence limits remain visible.')}</p><dl><div><dt>Route</dt><dd>${escapeHtml(item.route_id)}</dd></div><div><dt>State</dt><dd>${escapeHtml(phase)}</dd></div><div><dt>Loading</dt><dd>${item.lazy_load===false?'eager':'active route only'}</dd></div></dl>`;
+    const disclosure=qs('#truthDisclosure',bar);disclosure.innerHTML=`<strong>${escapeHtml(activeLabel)} production contract</strong><p>${escapeHtml(item.limitation||'Public evidence limits remain visible.')}</p><dl><div><dt>Route</dt><dd>${escapeHtml(item.route_id)}</dd></div><div><dt>State</dt><dd>${escapeHtml(phase)}</dd></div><div><dt>Loading</dt><dd>${item.lazy_load===false?'eager':'active route only'}</dd></div></dl>`;
     document.body.dataset.workspaceState=phase;
     document.body.dataset.workspaceRoute=state.route||currentRoute();
     window.dispatchEvent(new CustomEvent('scsi:workspace-state',{detail:{version:VERSION,route:state.route||currentRoute(),state:phase,reason:detail}}));
   }
 
   function surfaceFor(route){
+    if(route==='earth'&&oceanModeActive()){const ocean=qs('#oceanObservationStudio');if(ocean&&!ocean.hidden&&ocean.getClientRects().length)return ocean}
     const item=contract(route);const selectors=[...(item.surface_selectors||[]),...(NATIVE_SURFACES[route]||[])];
     for(const selector of selectors){const node=qs(selector);if(node&&node.getClientRects().length)return node}
     const routePanel=qs('#routePanel');if(routePanel&&!routePanel.hidden&&routePanel.getClientRects().length)return routePanel;
@@ -49,7 +52,14 @@
   }
   function controllerAvailable(route){const name=contract(route).controller||CONTROLLERS[route];return !name||Boolean(window[name])}
   function classifySurface(route){
-    if(!APP_ROOT.classList.contains('app-ready'))return {phase:'initial',reason:'The Site Intelligence application is still completing its launch sequence.'};
+    if(route==='earth'&&oceanModeActive()){
+      const surface=surfaceFor(route);if(!surface)return {phase:'unavailable',reason:'Ocean Intelligence opened without its visible workspace surface.'};
+      const hydration=surface.dataset.oceanHydrationState||'idle',cards=surface.querySelectorAll('[data-ocean-card]').length;
+      if(hydration==='error')return {phase:'degraded',reason:'Ocean Intelligence is visible, but its marine catalog did not finish loading.'};
+      if(hydration!=='ready')return {phase:'initial',reason:'Ocean Intelligence is loading its public marine systems.'};
+      if(cards!==11)return {phase:'degraded',reason:`Ocean Intelligence is visible, but ${cards} of 11 marine systems rendered.`};
+      return {phase:'ready',reason:'Ocean Intelligence is ready · 11 marine systems visible.'};
+    }
     if(!controllerAvailable(route))return {phase:'unavailable',reason:`The ${contract(route).label} controller is not packaged in this release.`};
     const surface=surfaceFor(route);if(!surface)return {phase:'unavailable',reason:`The ${contract(route).label} route opened without a visible workspace surface.`};
     const text=(surface.textContent||'').replace(/\s+/g,' ').trim();
@@ -86,15 +96,20 @@
     window.addEventListener('popstate',()=>{const route=new URLSearchParams(location.search).get('view')||'overview';state.historyLock=true;beginRoute(route);Promise.resolve(window.SCSIRouterV3228?.navigate?.(route)).finally(()=>{state.historyLock=false;evaluateRoute(200)})});
   }
   function bindSignals(){
+    window.addEventListener('scsi:route-transition-start',event=>{const route=event.detail?.route;if(route)beginRoute(route)});
+    window.addEventListener('scsi:route-transition-end',event=>{const route=event.detail?.route;if(route)state.route=route;evaluateRoute(0)});
     window.addEventListener('scsi:service-fallback',event=>{if(event.detail?.path||event.detail?.group)setPhase('degraded',contract(state.route||currentRoute()).degraded_state)});
     window.addEventListener('scsi:service-recovered',()=>evaluateRoute(250));
     window.addEventListener('scsi:map-recovered',()=>evaluateRoute(100));
+    window.addEventListener('scsi:ocean-observation-open',()=>evaluateRoute(0));
+    window.addEventListener('scsi:ocean-observation-ready',()=>evaluateRoute(0));
+    window.addEventListener('scsi:ocean-observation-error',()=>evaluateRoute(0));
     window.addEventListener('scsi:visible-map-health',event=>{if((state.route||currentRoute())==='overview')setPhase(event.detail?.ready?'ready':'degraded',event.detail?.ready?'':contract('overview').degraded_state)});
     window.addEventListener('error',event=>{if(event.filename&&/\/app\/assets\//.test(event.filename))setPhase('degraded','A workspace script reported an error; available public evidence remains visible.')});
     window.addEventListener('unhandledrejection',()=>setPhase('degraded','A workspace request did not complete; retry the active workspace.'));
-    const root=qs('#main')||document.body;new MutationObserver(()=>evaluateRoute(180)).observe(root,{subtree:true,childList:true,attributes:true,attributeFilter:['hidden','class','data-state']});
+    const root=qs('#main')||document.body;new MutationObserver(()=>evaluateRoute(180)).observe(root,{subtree:true,childList:true,attributes:true,attributeFilter:['hidden','class','data-state','data-ocean-hydration-state','data-ocean-workspace-owner']});
   }
   function bind(){buildBar();state.route=currentRoute();bindHistory();bindSignals();loadDirectory();beginRoute(state.route);}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
-  window.SCSIProductionTruthV3231={version:VERSION,current:()=>({route:state.route,state:state.phase,reason:state.reason}),evaluate:()=>evaluateRoute(0),retry:retryActiveRoute,directory:()=>state.directory};
+  window.SCSIProductionTruthV3231={version:VERSION,repair:REPAIR,current:()=>({route:state.route,state:state.phase,reason:state.reason}),evaluate:()=>evaluateRoute(0),retry:retryActiveRoute,directory:()=>state.directory};
 })(window,document);

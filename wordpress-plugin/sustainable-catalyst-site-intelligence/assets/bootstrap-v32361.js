@@ -1,6 +1,6 @@
 (()=>{
   'use strict';
-  const VERSION='4.36.1';
+  const VERSION='4.36.0';
   const ROOT_SELECTOR=`#app[data-scsi-release="${VERSION}"]`;
   const root=()=>document.querySelector(ROOT_SELECTOR),launch=()=>document.querySelector('#launchScreen'),message=()=>document.querySelector('#launchMessage'),progress=()=>document.querySelector('#launchProgressBar'),retry=()=>document.querySelector('#launchRetry');
   const state={version:VERSION,startedAt:performance.now(),ready:false,limited:false,workerState:'not-started',controllerAtStart:Boolean(navigator.serviceWorker?.controller),reloadScheduled:false,automaticReloads:0};
@@ -17,7 +17,7 @@
   async function activateWaitingWorker(){const registration=await ensureWorker();if(!registration?.waiting)return false;registration.waiting.postMessage({type:'SC_SI_ACTIVATE_UPDATE'});return true}
   async function ensureWorker(){
     if(workerPromise)return workerPromise;if(!('serviceWorker' in navigator)){state.workerState='unsupported';publish();return null}
-    workerPromise=(async()=>{try{state.workerState='registering';publish();const registration=await navigator.serviceWorker.register(`/app/service-worker.js?v=${encodeURIComponent(VERSION)}`,{scope:'/app/',updateViaCache:'none'});state.workerState='registered';publish();registration.update().catch(()=>{});if(registration.waiting)updateReady('waiting-at-registration');registration.addEventListener?.('updatefound',()=>{const worker=registration.installing;if(!worker)return;worker.addEventListener?.('statechange',()=>{if(worker.state==='installed'&&navigator.serviceWorker.controller)updateReady('new-worker-installed')})});return registration}catch(error){state.workerState='failed';publish();console.warn('[Site Intelligence] Offline shell unavailable; continuing without it.',error);return null}})();return workerPromise;
+    workerPromise=(async()=>{try{state.workerState='registering';publish();const registration=await navigator.serviceWorker.register(`/app/service-worker.js?v=${encodeURIComponent(VERSION+"-r4")}`,{scope:'/app/',updateViaCache:'none'});state.workerState='registered';publish();registration.update().catch(()=>{});if(registration.waiting)updateReady('waiting-at-registration');registration.addEventListener?.('updatefound',()=>{const worker=registration.installing;if(!worker)return;worker.addEventListener?.('statechange',()=>{if(worker.state==='installed'&&navigator.serviceWorker.controller)updateReady('new-worker-installed')})});return registration}catch(error){state.workerState='failed';publish();console.warn('[Site Intelligence] Offline shell unavailable; continuing without it.',error);return null}})();return workerPromise;
   }
   function scheduleWorker(){const run=()=>ensureWorker();if('requestIdleCallback'in window)requestIdleCallback(run,{timeout:2500});else setTimeout(run,600)}
   function init(){

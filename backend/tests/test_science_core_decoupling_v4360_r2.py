@@ -24,8 +24,8 @@ def unconfigured_settings():
 def test_local_science_discovery_remains_available_without_platform_core():
     payload = science.build_science_discovery(unconfigured_settings())
     assert payload["ok"] is True
-    assert payload["version"] == "4.36.1"
-    assert payload["release_lineage"] == "v4.36.1-r3"
+    assert payload["version"] == "4.36.0"
+    assert payload["release_lineage"] == "v4.36.0-r4"
     assert payload["contract"] == "science-core-decoupled-ocean-space-discovery"
     assert payload["local_discovery_available"] is True
     assert payload["core_records_optional"] is True

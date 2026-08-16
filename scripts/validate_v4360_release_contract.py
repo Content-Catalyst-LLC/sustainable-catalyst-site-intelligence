@@ -24,7 +24,9 @@ assert manifest["review"]["new_public_route_created"] is False
 assert nav["route_count"] == 35 and nav["primary_area_count"] == 6
 index = (ROOT / "backend/public_app/index.html").read_text(encoding="utf-8")
 assert 'data-ocean-entry="hub" data-nav-group="analysis" data-nav-after-route="earth" data-nav-featured="true" data-route-alias="earth"' in index and "Open Ocean Intelligence" in index
-assert 'ocean-observation-v4360.js?v=4.36.0-r3' in index and 'ocean-observation-v4360.css?v=4.36.0' in index
+assert 'data-space-entry="hub" data-nav-group="places-systems" data-nav-after-route="science" data-nav-featured="true" data-route-alias="science"' in index
+assert "Explore Ocean" in index and "Explore Space" in index and "Open Space Intelligence" in index
+assert 'ocean-observation-v4360.js?v=4.36.0-r4' in index and 'ocean-observation-v4360.css?v=4.36.0' in index
 unified = (ROOT / "backend/public_app/assets/unified-platform-v4000.js").read_text(encoding="utf-8")
 assert '.nav-item[data-nav-group]:not([data-route])' in unified
 assert 'item.dataset.navAfterRoute===route' in unified
@@ -32,7 +34,8 @@ assert 'featuredWrap.className="v4000-nav-featured"' in unified
 cartographic = (ROOT / "backend/public_app/assets/cartographic-workspace-v3230.js").read_text(encoding="utf-8")
 assert ".nav-item.active[data-route-alias]" in cartographic
 ocean_js = (ROOT / "backend/public_app/assets/ocean-observation-v4360.js").read_text(encoding="utf-8")
-assert 'void Promise.resolve(window.SCSIRouterV3228?.navigate?.("earth"))' in ocean_js
+assert 'await Promise.resolve(window.SCSIRouterV3228?.navigate?.("earth"))' in ocean_js
+assert 'panel.dataset.oceanWorkspaceOwner="earth:ocean"' in ocean_js
 shell_gate = (ROOT / "scripts/browser_complete_shell_gate_v32362.py").read_text(encoding="utf-8")
 assert "'/public/ocean-observation/catalog'" in shell_gate and "'/public/ocean-observation/readiness'" in shell_gate
 assert (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/unified-platform-v4000.js").read_bytes() == (ROOT / "backend/public_app/assets/unified-platform-v4000.js").read_bytes()
@@ -42,4 +45,13 @@ assert 'panel?.dataset.oceanHydrationState==="ready"' in science
 assert 'cards===11' in science
 assert 'scsi:ocean-observation-ready' in ocean_js
 assert 'dataset.oceanHydrationState="ready"' in ocean_js
-print("PASS: v4.36.0 R3 Science→Ocean hydration and browser promotion release contract")
+app_js=(ROOT / "backend/public_app/assets/app.js").read_text(encoding="utf-8")
+assert 'async function openFeaturedScienceDomain(domain="space")' in app_js
+assert 'openFeaturedScienceDomain("space")' in app_js
+science=(ROOT / "backend/public_app/assets/science-v240.js").read_text(encoding="utf-8")
+assert 'function openDomain(domain)' in science
+assert 'setDomainNav(domain)' in science
+production=(ROOT / "backend/public_app/assets/production-truth-v3231.js").read_text(encoding="utf-8")
+assert "route==='earth'&&oceanModeActive()" in production
+assert "cards!==11" in production
+print("PASS: v4.36.0 R4 Science/Ocean controller, route ownership and Ocean/Space prominence release contract")

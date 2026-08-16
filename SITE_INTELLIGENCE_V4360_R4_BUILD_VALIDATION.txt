@@ -1,0 +1,50 @@
+Site Intelligence v4.36.0 R4 — Build Validation
+Science/Ocean Workspace Controller, Route Ownership & Ocean/Space Prominence Repair
+
+RESULT: PASS
+
+Release identity
+- Backend semantic version: 4.36.0
+- WordPress plugin semantic version: 4.36.0
+- Release lineage: v4.36.0-r4
+- Canonical architecture: 6 primary areas / 35 routes
+
+Deterministic backend regression
+- Collected tests: 1,684
+- Chunk 1: 405 passed
+- Chunk 2: 387 passed
+- Chunk 3: 335 passed
+- Chunk 4: 341 passed
+- Chunk 5: 216 passed
+- Total: 1,684 / 1,684 passed
+
+R4 browser certification
+- Featured science navigation: Ocean + Space present and persistent
+- Missing/stale Science controller recovery: PASS
+- Direct Space entry: PASS — Science opens in Space mode
+- Space workspace cards: 6 / 6
+- Space modules: Orbital Earth; Lunar & Planetary; Astronomy; Solar System; Exoplanets; SETI
+- Direct Ocean entry: PASS
+- Ocean hydration state: ready
+- Ocean workspace ownership: earth:ocean
+- Ocean marine cards: 11 / 11
+- Production Truth for Ocean-owned Earth route: ready
+- Browser page errors: 0
+
+Inherited browser gates
+- Standalone Ocean workspace: PASS — 11 systems / 5 groups
+- Country evidence hierarchy: PASS
+- Palestine / Israel canonical identity integrity: PASS
+- Desktop route gate: 35 / 35 ready, 0 degraded
+- Mobile route gate: 35 / 35 ready, 0 degraded
+- Iframe route gate: 35 / 35 ready, 0 degraded
+
+Static / packaging gates
+- JavaScript validation: 156 files validated
+- WordPress PHP syntax: PASS
+- Security static scan: 0 findings
+- R4 release contract: PASS
+- R4 static release validation: PASS
+
+Truth boundary
+Platform Core remains optional for local Earth/Ocean/Space discovery. R4 does not fabricate scientific records, observations, trajectories, measurements, or conclusions when Core or upstream sources are unavailable.

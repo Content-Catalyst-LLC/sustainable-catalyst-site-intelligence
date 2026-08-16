@@ -33,6 +33,9 @@ for file in (
     "SITE_INTELLIGENCE_V4360_R2_INSTALL_AND_TEST.md",
     "SITE_INTELLIGENCE_V4360_R3_INSTALL_AND_TEST.md",
     "SITE_INTELLIGENCE_V4360_R3_TERMINAL_COMMANDS.txt",
+    "SITE_INTELLIGENCE_V4360_R4_INSTALL_AND_TEST.md",
+    "SITE_INTELLIGENCE_V4360_R4_TERMINAL_COMMANDS.txt",
+    "SITE_INTELLIGENCE_V4360_R4_BUILD_VALIDATION.txt",
     "SITE_INTELLIGENCE_V4360_R2_TERMINAL_COMMANDS.txt",
     "backend/tests/test_science_core_decoupling_v4360_r2.py",
     "backend/tests/test_science_ocean_hydration_v4360_r3.py",
@@ -40,14 +43,22 @@ for file in (
     "scripts/browser_science_ocean_hydration_v4360_r3.py",
     "RELEASE_NOTES_SITE_INTELLIGENCE_V4360_R2.md",
     "RELEASE_NOTES_SITE_INTELLIGENCE_V4360_R3.md",
+    "RELEASE_NOTES_SITE_INTELLIGENCE_V4360_R4.md",
     "SITE_INTELLIGENCE_V4360_R2_SCIENCE_DISCOVERY_AUDIT.md",
     "SITE_INTELLIGENCE_V4360_R3_HYDRATION_AUDIT.md",
+    "SITE_INTELLIGENCE_V4360_R4_CONTROLLER_ROUTE_PROMINENCE_AUDIT.md",
+    "backend/tests/test_science_ocean_workspace_controller_r4.py",
+    "scripts/browser_science_ocean_workspace_controller_v4360_r4.py",
 ):
     assert (ROOT / file).is_file(), file
 assert 'data-ocean-hydration-state="idle"' in index
 assert 'oceanHydrationState="ready"' in (ROOT / "backend/public_app/assets/ocean-observation-v4360.js").read_text(encoding="utf-8")
-assert 'v4.36.0-r3' in (ROOT / "backend/app/scientific_earth_systems_observatory.py").read_text(encoding="utf-8")
-assert '/app/assets/science-v240.js?v=4.36.0-r3' in index
-assert '/app/assets/ocean-observation-v4360.js?v=4.36.0-r3' in index
-assert 'const REPAIR="r3"' in sw
-print("PASS: v4.36.0 R3 static release validation")
+assert 'v4.36.0-r4' in (ROOT / "backend/app/scientific_earth_systems_observatory.py").read_text(encoding="utf-8")
+assert '/app/assets/science-v240.js?v=4.36.0-r4' in index
+assert '/app/assets/ocean-observation-v4360.js?v=4.36.0-r4' in index
+assert '/app/assets/app.js?v=4.36.0-r4' in index
+assert '/app/assets/unified-platform-v4000.css?v=4.36.0-r4' in index
+assert 'data-space-entry="hub" data-nav-group="places-systems"' in index
+assert 'Explore Ocean' in index and 'Explore Space' in index
+assert 'const REPAIR="r4"' in sw
+print("PASS: v4.36.0 R4 static release validation")

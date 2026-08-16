@@ -15,7 +15,7 @@ CLIENT = TestClient(app)
 
 def test_overview_preserves_v4_architecture_and_no_compliance_claims():
     p = CLIENT.get('/public/marine-human-activity').json()
-    assert p['ok'] and p['version'] == '4.36.1' and p['route'] == 'earth'
+    assert p['ok'] and p['version'] == '4.36.0' and p['route'] == 'earth'
     assert p['contract'] == 'marine-human-activity-protected-areas-maritime-pressure'
     assert p['source_count'] == 4 and p['activity_type_count'] >= 8
     assert any('AIS presence' in x for x in p['truth_boundaries'])

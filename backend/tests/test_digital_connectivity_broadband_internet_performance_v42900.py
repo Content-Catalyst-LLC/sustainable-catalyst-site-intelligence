@@ -4,7 +4,7 @@ from app.digital_connectivity_v42900 import normalize_feature,normalize_measurem
 client=TestClient(app)
 def test_source_registry_and_truth_boundary():
  o=client.get('/public/digital-connectivity').json();c=client.get('/public/digital-connectivity/catalog').json()
- assert o['ok'] and o['version']=='4.36.1' and o['source_count']==4 and o['route']=='earth'
+ assert o['ok'] and o['version']=='4.36.0' and o['source_count']==4 and o['route']=='earth'
  assert {'openstreetmap-telecom','mlab-network-performance','world-bank-connectivity','fcc-broadband-data'}<={x['id'] for x in c['sources']}
  assert c['truth_boundaries']['mapped_telecom_feature_equals_coverage_or_operating_asset'] is False
 def test_empty_state_not_outage_or_absence_finding():

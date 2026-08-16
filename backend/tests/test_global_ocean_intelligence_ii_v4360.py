@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 def test_ocean_observation_overview_composes_existing_marine_systems_without_new_public_route():
     payload = CLIENT.get("/public/ocean-observation").json()
     assert payload["ok"] is True
-    assert payload["version"] == "4.36.1"
+    assert payload["version"] == "4.36.0"
     assert payload["contract"] == "global-ocean-intelligence-ii-ocean-observation-marine-systems"
     assert payload["route"] == "earth" and payload["mode"] == "ocean"
     assert payload["system_count"] == 11 == len(SYSTEMS)
@@ -67,8 +67,8 @@ def test_ocean_is_explicitly_visible_in_primary_navigation_and_launch_portfolio(
     assert "Open Ocean Intelligence" in index
     assert 'id="oceanObservationStudio"' in index
     assert 'data-scsi-ocean-contract="global-ocean-intelligence-ii-ocean-observation-marine-systems"' in index
-    assert "/app/assets/ocean-observation-v4360.js?v=4.36.1" in index
-    assert "/app/assets/ocean-observation-v4360.css?v=4.36.1" in index
+    assert "/app/assets/ocean-observation-v4360.js?v=4.36.0" in index
+    assert "/app/assets/ocean-observation-v4360.css?v=4.36.0" in index
     unified = (ROOT / "backend/public_app/assets/unified-platform-v4000.js").read_text(encoding="utf-8")
     assert '.nav-item[data-nav-group]:not([data-route])' in unified
     assert 'item.dataset.navAfterRoute===route' in unified
@@ -87,7 +87,7 @@ def test_ocean_browser_controller_exposes_direct_access_to_every_inherited_marin
         assert system["asset"] in js
     assert "SCSIOceanObservationV4360" in js
     assert "oceanMode" in js and "oceanSystem" in js
-    assert 'void Promise.resolve(window.SCSIRouterV3228?.navigate?.("earth"))' in js
+    assert 'await Promise.resolve(window.SCSIRouterV3228?.navigate?.("earth"))' in js
     shell_gate = (ROOT / "scripts/browser_complete_shell_gate_v32362.py").read_text(encoding="utf-8")
     assert "'/public/ocean-observation/catalog'" in shell_gate
     assert "'/public/ocean-observation/readiness'" in shell_gate
@@ -116,9 +116,9 @@ def test_public_launch_profile_has_a_direct_ocean_workspace_without_expanding_v4
 
 
 def test_release_identity_is_v4360_across_backend_app_and_wordpress_plugin():
-    assert CLIENT.get("/public/build-info").json()["version"] == "4.36.1"
+    assert CLIENT.get("/public/build-info").json()["version"] == "4.36.0"
     app_js = (ROOT / "backend/public_app/assets/app.js").read_text(encoding="utf-8")
     plugin = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text(encoding="utf-8")
-    assert 'const APP_VERSION="4.36.1"' in app_js
-    assert "Version: 4.36.1" in plugin
-    assert "site-intelligence-v4.36.1" in plugin
+    assert 'const APP_VERSION="4.36.0"' in app_js
+    assert "Version: 4.36.0" in plugin
+    assert "site-intelligence-v4.36.0" in plugin

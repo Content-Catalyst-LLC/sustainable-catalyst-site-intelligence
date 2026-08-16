@@ -1,13 +1,13 @@
-# v4.36.1 — Ocean & Space Live Evidence Rendering, Connector Binding & OpenAPI Recovery
+# v4.36.0 R4 — Science/Ocean Workspace Controller, Route Ownership & Ocean/Space Prominence Repair
 
-- Binds Ocean Surface to live NOAA CoastWatch ERDDAP dataset discovery.
-- Binds Marine Biodiversity to live IOC-UNESCO OBIS occurrence evidence.
-- Binds Coastal Change to live NOAA CO-OPS station records.
-- Binds Exoplanets to NASA Exoplanet Archive TAP records.
-- Binds Lunar & Planetary Intelligence to NASA EOSDIS CMR collection discovery.
-- Preserves real NASA GIBS Orbital Earth imagery and all evidence/non-inference boundaries.
-- Repairs `/openapi.json` generation by replacing unresolved `Dict[str, Any]` request annotations with `dict[str, Any]`.
-- Adds OpenAPI and browser live-evidence regression gates.
+- Repaired the Science route so a missing/stale `SCScienceV240` controller is reloaded and initialized rather than silently returning with no visible workspace.
+- Repaired Ocean route ownership: Ocean awaits the Earth route handoff, establishes `earth:ocean` ownership, then hydrates its 11-system catalog.
+- Repaired Production Truth so `earth + ocean` is certified against the visible Ocean surface and its 11-card ready state instead of the ordinary Earth surface.
+- Added R4 cache lineage for the main router, Science, Ocean, Production Truth, bootstrap and service worker to prevent mixed frontend generations.
+- Promoted Ocean and Space into a persistent **Featured science systems** navigation block without adding a 36th canonical route.
+- Added top-level Launch actions and dedicated Ocean/Space portfolio cards.
+- Added direct Space entry into the six local Space workspaces: Orbital Earth, Lunar & Planetary, Astronomy, Solar System, Exoplanets, and SETI.
+- Preserved Platform Core as optional for local Ocean and Space discovery; no scientific records are fabricated.
 
 # v4.36.0 — Global Ocean Intelligence II — Ocean Observation & Marine Systems
 
