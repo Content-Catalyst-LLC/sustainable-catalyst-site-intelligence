@@ -1,0 +1,48 @@
+Site Intelligence v4.36.0 R3 — Build Validation
+Science→Ocean Hydration & Browser Promotion Gate Repair
+
+RESULT: PASS
+
+Root cause reproduced:
+- R2 Science→Ocean browser gate observed panel visible=true, correct Ocean title, cards=0.
+- Ocean panel visibility precedes async catalog/readiness hydration.
+- Browser click completion does not await an async click listener, creating a false-negative promotion race.
+
+R3 repair:
+- explicit Ocean hydration states: idle / loading / ready / error
+- scsi:ocean-observation-ready event emitted after catalog render
+- ready event includes rendered cardCount and contract systemCount
+- Science→Ocean launcher awaits Ocean open contract
+- Science reports Ocean ready only with hydration=ready and 11 rendered marine cards
+- R3 browser gate waits for hydration=ready and 11 cards
+- Science/Ocean script URLs use repair-specific v4.36.0-r3 cache-busting
+- service worker uses an R3-specific immutable-cache namespace
+- Core-decoupled Earth/Ocean/Space discovery and no-fabrication boundary preserved
+
+Focused regression:
+- 20 targeted Science/Ocean tests passed before final manifest freeze.
+
+Full deterministic suite by immutable source chunks:
+- chunk 1: 405 passed
+- chunk 2: 387 passed
+- chunk 3: 335 passed
+- chunk 4: 342 passed
+- chunk 5: 208 passed
+- TOTAL: 1,677 / 1,677 passed
+
+Browser certification:
+- Science with Platform Core unconfigured: PASS
+- Science selector: Earth / Ocean / Space
+- Science→Ocean: hydration=ready, 11 marine cards, no page errors
+- Space discovery: 6 modules (Orbital Earth, Lunar & Planetary, Astronomy, Solar System, Exoplanets, SETI)
+- Ocean standalone: 11 systems / 5 groups / Data Truth present
+- Palestine/Israel canonical identity integrity: PASS
+- Country evidence presentation: PASS
+- desktop workspace gate: 35/35 ready
+- mobile workspace gate: 35/35 ready
+- iframe workspace gate: 35/35 ready
+
+Release identity:
+- backend/plugin runtime version: 4.36.0
+- repaired release lineage: v4.36.0-r3
+- Git release tag: v4.36.0-r3

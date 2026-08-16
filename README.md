@@ -1,8 +1,12 @@
 # Sustainable Catalyst Site Intelligence v4.36.0
 
-**Current release:** v4.36.0 R1 — Ocean Navigation Runtime & Browser Certification Repair
+**Current release:** v4.36.0 R3 — Science→Ocean Hydration & Browser Promotion Gate Repair
 
 Site Intelligence v4.36.0 makes Ocean Intelligence a first-class, discoverable public workspace while preserving the established six-area / 35-route v4 architecture. The release composes the existing ocean-surface, water-column, seafloor, underwater-observation, marine-biodiversity, mission, event, human-activity, pollution, coastal-change and ocean-governance systems behind a unified Ocean hub rather than creating a parallel or duplicate marine platform.
+
+> **R3 hydration/promotion repair:** Science→Ocean launch now exposes an explicit Ocean `loading → ready/error` hydration state. The Science launcher awaits the Ocean open contract, and browser certification waits for the ready state plus all 11 marine cards before promotion. This repairs the R2 false-negative race without weakening the no-fabricated-records boundary or the Core-decoupled Earth/Ocean/Space discovery model.
+
+> **R2 science-front-door repair:** Science now separates local Site Intelligence workspace discovery from the optional Platform Core scientific-record fabric. Earth, Ocean, and Space are always selectable. Ocean opens the v4.36.0 11-system hub; Space exposes Orbital Earth, Lunar & Planetary Intelligence, Astronomy, Solar System Navigation, Exoplanets & Atmospheres, and SETI & Technosignatures even when Platform Core is unconfigured. No scientific records are fabricated to provide this navigation layer.
 
 > **R1 certification repair:** The v4.36.0 Ocean backend and 11-system readiness contract were already green. R1 repairs the runtime ownership conflict that caused the v4 navigation grouper to discard the supplemental Ocean button after initial HTML parse. The Ocean entry is now retained inside the Analysis navigation group immediately after Earth, and the browser smoke gate verifies the post-grouping DOM before promotion.
 

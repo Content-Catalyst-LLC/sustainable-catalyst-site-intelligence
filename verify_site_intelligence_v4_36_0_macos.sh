@@ -3,11 +3,20 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"; BACKEND="$ROOT/backend"; PYTHON="${PYTHON:-python3}"
 grep -q 'APP_VERSION = "4.36.0"' "$BACKEND/app/version.py"
 grep -q 'Version: 4.36.0' "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php"
-for endpoint in /public/ocean-observation /public/ocean-observation/catalog /public/ocean-observation/manifest /public/ocean-observation/readiness; do grep -q "$endpoint" "$BACKEND/app/main.py"; done
+for endpoint in /public/ocean-observation /public/ocean-observation/catalog /public/ocean-observation/manifest /public/ocean-observation/readiness /public/scientific-earth-systems/discovery; do grep -q "$endpoint" "$BACKEND/app/main.py"; done
 cmp -s "$BACKEND/public_app/assets/ocean-observation-v4360.js" "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/assets/ocean-observation-v4360.js"
 cmp -s "$BACKEND/public_app/assets/ocean-observation-v4360.css" "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/assets/ocean-observation-v4360.css"
 cmp -s "$BACKEND/public_app/assets/unified-platform-v4000.js" "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/assets/unified-platform-v4000.js"
 cmp -s "$BACKEND/public_app/assets/unified-platform-v4000.css" "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/assets/unified-platform-v4000.css"
+
+cmp -s "$BACKEND/public_app/assets/science-v240.js" "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/assets/science-v240.js"
+cmp -s "$BACKEND/public_app/assets/science-v240.css" "$ROOT/wordpress-plugin/sustainable-catalyst-site-intelligence/assets/science-v240.css"
+grep -q 'id="scienceWorkspaceSelect"' "$BACKEND/public_app/index.html"
+grep -q '<option value="earth">Earth</option>' "$BACKEND/public_app/index.html"
+grep -q '<option value="ocean">Ocean</option>' "$BACKEND/public_app/index.html"
+grep -q '<option value="space">Space</option>' "$BACKEND/public_app/index.html"
+grep -q 'SCSIOceanObservationV4360' "$BACKEND/public_app/assets/science-v240.js"
+grep -q 'SCSISolarSystemV4400' "$BACKEND/public_app/assets/science-v240.js"
 grep -q 'data-ocean-entry="hub" data-nav-group="analysis" data-nav-after-route="earth" data-nav-featured="true" data-route-alias="earth"' "$BACKEND/public_app/index.html"
 grep -q '.nav-item\[data-nav-group\]:not(\[data-route\])' "$BACKEND/public_app/assets/unified-platform-v4000.js"
 grep -q '/app/assets/ocean-observation-v4360.js?v=4.36.0' "$BACKEND/public_app/index.html"
@@ -44,7 +53,7 @@ if command -v php >/dev/null 2>&1; then php -l "$ROOT/wordpress-plugin/sustainab
 if [[ "${SC_SI_SKIP_TESTS:-0}" != "1" ]]; then
   printf '==> Collecting deterministic pytest suite\n'
   COLLECTED="$(cd "$BACKEND" && PYTHONPATH=. PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 "$PYTHON" -m pytest --collect-only -q | sed -n 's/^\([0-9][0-9]*\) tests collected.*/\1/p' | tail -1)"
-  [[ "$COLLECTED" == "1667" ]] || { echo "ERROR: expected 1667 collected tests, got ${COLLECTED:-unknown}" >&2; exit 1; }
+  [[ "$COLLECTED" == "1677" ]] || { echo "ERROR: expected 1677 collected tests, got ${COLLECTED:-unknown}" >&2; exit 1; }
   TEST_FILES=("$BACKEND"/tests/test_*.py)
   CHUNK_SIZE="${SC_SI_PYTEST_CHUNK_FILES:-57}"
   OFFSET=0; CHUNK=1
@@ -58,6 +67,7 @@ if [[ "${SC_SI_SKIP_TESTS:-0}" != "1" ]]; then
 fi
 if [[ "${SC_SI_RUN_BROWSER:-0}" == "1" ]]; then
   PYTHON="$PYTHON" PYTHONPATH="$BACKEND:$ROOT/scripts" "$PYTHON" "$ROOT/scripts/browser_ocean_observation_v4360.py"
+  PYTHON="$PYTHON" PYTHONPATH="$BACKEND:$ROOT/scripts" "$PYTHON" "$ROOT/scripts/browser_science_ocean_hydration_v4360_r3.py"
   PYTHON="$PYTHON" PYTHONPATH="$BACKEND:$ROOT/scripts" "$PYTHON" "$ROOT/scripts/browser_palestine_navigation_integrity_v4360.py"
   PYTHON="$PYTHON" PYTHONPATH="$BACKEND:$ROOT/scripts" "$PYTHON" "$ROOT/scripts/browser_country_evidence_presentation_v4360.py"
   for mode in desktop mobile iframe; do
@@ -71,4 +81,4 @@ for endpoint in /public/authoritative-connectors/osm-mining /public/mining-criti
 
 for endpoint in /public/external-resilience /public/external-resilience/readiness /public/external-resilience/providers; do grep -q "$endpoint" "$BACKEND/app/main.py"; done
 for endpoint in /public/workspace-browser-audit /public/workspace-browser-audit/readiness /public/workspace-browser-audit/route/ /public/production-soak /public/production-soak/readiness /public/evidence-presentation/readiness /public/evidence-presentation/classify /public/country-linked-records/readiness /public/country/{country_code}/linked-records /public/country-data-federation/readiness /public/country/{country_code}/data-federation /public/knowledge-context/readiness /public/country/{country_code}/knowledge-context /public/palestine-open-data/search /public/knowledge-context/wikidata/search /public/knowledge-context/wikidata/entity/ /public/knowledge-context/wikipedia/page /public/knowledge-context/commons/search /public/knowledge-context/pageviews /public/country-evidence-reconciliation/readiness /public/country-evidence-reconciliation/reconcile /public/country/{country_code}/evidence-reconciliation /public/country-identity/readiness /public/country-navigation-integrity/readiness /public/country-evidence-presentation/readiness; do grep -q "$endpoint" "$BACKEND/app/main.py"; done
-echo 'SUCCESS: Site Intelligence v4.36.0 R1 passed Ocean navigation runtime repair, browser certification gate, 11-system Ocean readiness, inherited country/evidence gates, and full platform validation.'
+echo 'SUCCESS: Site Intelligence v4.36.0 R3 passed Science→Ocean hydration, Core-decoupled Ocean/Space discovery, inherited Ocean browser/readiness gates, country/evidence gates, and full platform validation.'

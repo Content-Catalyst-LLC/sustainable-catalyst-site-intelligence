@@ -87,6 +87,87 @@ _SENSITIVE_KEYS = {
 }
 
 
+# v4.36.0 R2 — Science workspace Core-decoupling and local discovery front door.
+# These are navigation/workspace descriptors, not scientific records. They expose
+# Site Intelligence capabilities that already exist locally even when Platform Core
+# is not configured. No observations, measurements, or scientific claims are
+# fabricated by this catalog.
+LOCAL_SCIENCE_WORKSPACES = (
+    {
+        "id": "earth-observation",
+        "domain": "earth",
+        "title": "Earth Observation",
+        "summary": "Satellite-derived imagery, environmental layers, comparison, timelines, and source-aware Earth-system observation.",
+        "action": "earth",
+        "availability": "local",
+        "core_required": False,
+    },
+    {
+        "id": "ocean-intelligence",
+        "domain": "ocean",
+        "title": "Ocean Intelligence",
+        "summary": "Eleven marine systems spanning surface conditions, water column, seafloor, underwater evidence, biodiversity, missions, hazards, pollution, coastal change, human activity, and governance.",
+        "action": "ocean",
+        "availability": "local",
+        "core_required": False,
+    },
+    {
+        "id": "orbital-earth",
+        "domain": "space",
+        "title": "Orbital Earth",
+        "summary": "Satellite-imagery perspective with platform, instrument, observation-date, source, and footprint truth boundaries.",
+        "action": "orbital-earth",
+        "availability": "local",
+        "core_required": False,
+    },
+    {
+        "id": "lunar-planetary",
+        "domain": "space",
+        "title": "Lunar & Planetary Intelligence",
+        "summary": "Moon and Mars mission-product context with NASA and USGS source handoffs and explicit imagery/telemetry boundaries.",
+        "action": "planetary",
+        "availability": "local",
+        "core_required": False,
+    },
+    {
+        "id": "astronomy",
+        "domain": "space",
+        "title": "Astronomical Observation",
+        "summary": "Multi-wavelength deep-sky target and survey discovery with archival source handoffs and coordinate context.",
+        "action": "astronomy",
+        "availability": "local",
+        "core_required": False,
+    },
+    {
+        "id": "solar-system",
+        "domain": "space",
+        "title": "Solar System Navigation",
+        "summary": "Bodies, mission context, frames, observers, and authoritative JPL/NAIF ephemeris handoffs without locally fabricated trajectories.",
+        "action": "solar-system",
+        "availability": "local",
+        "core_required": False,
+    },
+    {
+        "id": "exoplanets",
+        "domain": "space",
+        "title": "Exoplanets & Atmospheres",
+        "summary": "Planetary-system and atmospheric-spectrum evidence context with explicit habitability and biosignature interpretation boundaries.",
+        "action": "exoplanets",
+        "availability": "local",
+        "core_required": False,
+    },
+    {
+        "id": "seti",
+        "domain": "space",
+        "title": "SETI & Technosignatures",
+        "summary": "Radio-search evidence, target context, and public archive handoffs without treating candidate events as confirmed extraterrestrial intelligence.",
+        "action": "seti",
+        "availability": "local",
+        "core_required": False,
+    },
+)
+
+
 @dataclass(frozen=True)
 class ScienceObservatoryConfig:
     enabled: bool
@@ -591,6 +672,46 @@ def build_science_series_points(settings: Any = None, *, series_id: str, start: 
         return {"ok": True, "schema": SERIES_SCHEMA, "version": "2.5.0", "generated_at": generated_at, "series_id": series_id, "points": points, "total": int(pagination.get("total") or len(points)), "integration": _integration_state(settings)}
     except RuntimeError as exc:
         return {"ok": True, "schema": SERIES_SCHEMA, "version": "2.5.0", "generated_at": generated_at, "series_id": series_id, "points": [], "total": 0, "integration": _integration_state(settings, str(exc))}
+
+
+def build_science_discovery(settings: Any = None) -> dict[str, Any]:
+    """Return local Science navigation capabilities independently of Platform Core.
+
+    The payload is a workspace catalog only. It does not synthesize scientific
+    records, observations, measurements, datasets, or claims. Core remains the
+    optional provider for the legacy scientific-record/data-fabric explorer.
+    """
+    integration = _integration_state(settings)
+    workspaces = [dict(item) for item in LOCAL_SCIENCE_WORKSPACES]
+    domains = []
+    for domain, title, summary in (
+        ("earth", "Earth", "Earth observation and environmental systems."),
+        ("ocean", "Ocean", "Ocean observation and marine systems."),
+        ("space", "Space", "Orbital, planetary, astronomical, exoplanet, solar-system, and SETI workspaces."),
+    ):
+        rows = [item for item in workspaces if item["domain"] == domain]
+        domains.append({"id": domain, "title": title, "summary": summary, "workspace_count": len(rows)})
+    return {
+        "ok": True,
+        "schema": "sc-site-intelligence-science-local-discovery/1.0",
+        "version": "4.36.0",
+        "release_lineage": "v4.36.0-r3",
+        "contract": "science-core-decoupled-ocean-space-discovery",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "domains": domains,
+        "workspaces": workspaces,
+        "local_workspace_count": len(workspaces),
+        "local_discovery_available": True,
+        "core_records_optional": True,
+        "core_records_configured": bool(integration.get("configured")),
+        "integration": integration,
+        "truth_boundaries": [
+            "Local workspace availability does not imply that Platform Core scientific records are configured.",
+            "Workspace descriptors are navigation metadata, not scientific observations or datasets.",
+            "Missing Core records remain missing; Site Intelligence does not fabricate replacement scientific records.",
+            "Ocean and Space workspaces remain discoverable when Core is unavailable or unconfigured.",
+        ],
+    }
 
 
 def build_science_overview(settings: Any = None) -> dict[str, Any]:

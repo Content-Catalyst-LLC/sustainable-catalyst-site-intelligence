@@ -24,7 +24,7 @@ assert manifest["review"]["new_public_route_created"] is False
 assert nav["route_count"] == 35 and nav["primary_area_count"] == 6
 index = (ROOT / "backend/public_app/index.html").read_text(encoding="utf-8")
 assert 'data-ocean-entry="hub" data-nav-group="analysis" data-nav-after-route="earth" data-nav-featured="true" data-route-alias="earth"' in index and "Open Ocean Intelligence" in index
-assert 'ocean-observation-v4360.js?v=4.36.0' in index and 'ocean-observation-v4360.css?v=4.36.0' in index
+assert 'ocean-observation-v4360.js?v=4.36.0-r3' in index and 'ocean-observation-v4360.css?v=4.36.0' in index
 unified = (ROOT / "backend/public_app/assets/unified-platform-v4000.js").read_text(encoding="utf-8")
 assert '.nav-item[data-nav-group]:not([data-route])' in unified
 assert 'item.dataset.navAfterRoute===route' in unified
@@ -37,4 +37,9 @@ shell_gate = (ROOT / "scripts/browser_complete_shell_gate_v32362.py").read_text(
 assert "'/public/ocean-observation/catalog'" in shell_gate and "'/public/ocean-observation/readiness'" in shell_gate
 assert (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/unified-platform-v4000.js").read_bytes() == (ROOT / "backend/public_app/assets/unified-platform-v4000.js").read_bytes()
 assert (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/unified-platform-v4000.css").read_bytes() == (ROOT / "backend/public_app/assets/unified-platform-v4000.css").read_bytes()
-print("PASS: v4.36.0 R1 Ocean navigation runtime and browser certification release contract")
+science=(ROOT / "backend/public_app/assets/science-v240.js").read_text(encoding="utf-8")
+assert 'panel?.dataset.oceanHydrationState==="ready"' in science
+assert 'cards===11' in science
+assert 'scsi:ocean-observation-ready' in ocean_js
+assert 'dataset.oceanHydrationState="ready"' in ocean_js
+print("PASS: v4.36.0 R3 Science→Ocean hydration and browser promotion release contract")

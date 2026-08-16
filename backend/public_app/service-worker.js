@@ -1,6 +1,7 @@
 const RELEASE="4.36.0";
+const REPAIR="r3";
 const CACHE_PREFIX="scsi-";
-const VERSION=`${CACHE_PREFIX}v${RELEASE}`;
+const VERSION=`${CACHE_PREFIX}v${RELEASE}-${REPAIR}`;
 const IMMUTABLE=`${VERSION}-immutable`;
 const SHELL=`${VERSION}-shell`;
 const DATA=`${VERSION}-data`;

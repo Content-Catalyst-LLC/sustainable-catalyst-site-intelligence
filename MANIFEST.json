@@ -1,6 +1,6 @@
 {
   "release": "4.36.0",
-  "file_count": 2486,
+  "file_count": 2504,
   "files": [
     {
       "path": ".gitignore",
@@ -9,8 +9,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 122886,
-      "sha256": "b8fc93b131fe3f0c820409ccd4e2d2baa83a032969e08e211b315113b0d2c12f"
+      "bytes": 123704,
+      "sha256": "83e2766aca9e57d5ad4db5989d151b5093792bab0e5b9a74e3fb203d015b4cc6"
     },
     {
       "path": "LICENSE",
@@ -19,8 +19,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 97101,
-      "sha256": "4d5ab312a7a08588a01700ec24a38d508961c9d005b5b1ae8b35007666ffe579"
+      "bytes": 98045,
+      "sha256": "9b6b4c1ee035a9dbcf27d4217dbd8195c3d2d3f1a53fdb432ee7aa2db92e380f"
     },
     {
       "path": "RELEASE_NOTES_SITE_INTELLIGENCE_V2100.md",
@@ -726,6 +726,16 @@
       "path": "RELEASE_NOTES_SITE_INTELLIGENCE_V4360.md",
       "bytes": 3565,
       "sha256": "040b01cd7f78f5e776be95b37c11e0050bcbfb57061a5fcdc4f8ae7af828b6cd"
+    },
+    {
+      "path": "RELEASE_NOTES_SITE_INTELLIGENCE_V4360_R2.md",
+      "bytes": 1456,
+      "sha256": "6d05943b51eeff858038b9d8ccd735f669588043216d62ac43a44f6ada2af484"
+    },
+    {
+      "path": "RELEASE_NOTES_SITE_INTELLIGENCE_V4360_R3.md",
+      "bytes": 1435,
+      "sha256": "de8840674da732aec7d22a4a41d9fb3d537c7c6dbbdcdf5f05d94d9784f60950"
     },
     {
       "path": "RELEASE_NOTES_SITE_INTELLIGENCE_V4400.md",
@@ -3038,6 +3048,41 @@
       "sha256": "d5532627ab4948c2c6be2c750d9751b59e8191c26c310b149fafb28e58f86990"
     },
     {
+      "path": "SITE_INTELLIGENCE_V4360_R2_INSTALL_AND_TEST.md",
+      "bytes": 1514,
+      "sha256": "a52e7c20e7c7e4f210205e6791db452e129f973ae43e2bb847061f8a3c13b0e7"
+    },
+    {
+      "path": "SITE_INTELLIGENCE_V4360_R2_SCIENCE_DISCOVERY_AUDIT.md",
+      "bytes": 1554,
+      "sha256": "7b57b7a5265c1dbd005e4ff00e539cbd31b6d61633ef0288914241fdddb7b709"
+    },
+    {
+      "path": "SITE_INTELLIGENCE_V4360_R2_TERMINAL_COMMANDS.txt",
+      "bytes": 789,
+      "sha256": "9f53192ce1ec6b0968594a754bc62df267e2acb225b7f44a5e5f746711b22c47"
+    },
+    {
+      "path": "SITE_INTELLIGENCE_V4360_R3_BUILD_VALIDATION.txt",
+      "bytes": 2014,
+      "sha256": "281042d9fafa0ba1f392424d1fd06b9c3b141f7d159b279b140f87365ef6cbb7"
+    },
+    {
+      "path": "SITE_INTELLIGENCE_V4360_R3_HYDRATION_AUDIT.md",
+      "bytes": 1912,
+      "sha256": "4868e95e329ed63f7da576ce59f5b53bceab3e21f02059495f276ff62537b0cf"
+    },
+    {
+      "path": "SITE_INTELLIGENCE_V4360_R3_INSTALL_AND_TEST.md",
+      "bytes": 1128,
+      "sha256": "1c3cd1ab5e68f94640dc9a2f0d9ad80f74c16b561740a1fa2ec5dab3171a3254"
+    },
+    {
+      "path": "SITE_INTELLIGENCE_V4360_R3_TERMINAL_COMMANDS.txt",
+      "bytes": 695,
+      "sha256": "58988d857829db290fbcbe42f1a8d09ffa919010064f6db358c68f27595fc2dd"
+    },
+    {
       "path": "SITE_INTELLIGENCE_V4360_TERMINAL_COMMANDS.txt",
       "bytes": 874,
       "sha256": "b499e6635e09f7b3f8602a8f4871106a72708faea5425ed4b825fa9a34ce75e0"
@@ -3849,8 +3894,8 @@
     },
     {
       "path": "backend/app/main.py",
-      "bytes": 607620,
-      "sha256": "183570d4437e3346f3dad10fe110b73455040da0d01a89244ad81413532d7d6b"
+      "bytes": 607891,
+      "sha256": "f83b30bcb8b8a17e20afe4adc72a14c9bbde92868bfa59e6df221755b76a66ca"
     },
     {
       "path": "backend/app/marine_biodiversity_v4900.py",
@@ -4174,8 +4219,8 @@
     },
     {
       "path": "backend/app/scientific_earth_systems_observatory.py",
-      "bytes": 35305,
-      "sha256": "d8e4300c5a4535c8421bb03c6c3ad3d4f84e025e390b24a9ae63b1e8c5676b7c"
+      "bytes": 40685,
+      "sha256": "8b17a47ef7e7c2d32a9bc57bca0248f7f0e8edcb24b0529a8065d201f7b313e5"
     },
     {
       "path": "backend/app/seafloor_bathymetry_v4700.py",
@@ -5074,8 +5119,8 @@
     },
     {
       "path": "backend/public_app/assets/ocean-observation-v4360.js",
-      "bytes": 11019,
-      "sha256": "00c3f7821c0477451d848c25af9407a26e0491a32f7f62b8f4702ca40b02c02f"
+      "bytes": 11646,
+      "sha256": "fc42706ef263ff9f49dfe5e1893548ddb3675904c5ce31697fab94728b0214a1"
     },
     {
       "path": "backend/public_app/assets/ocean-surface-v4500.css",
@@ -5239,13 +5284,13 @@
     },
     {
       "path": "backend/public_app/assets/science-v240.css",
-      "bytes": 6565,
-      "sha256": "1a336fd5d1e629f25ea1e728e2a1a5be524e21aa1b01260aaf31ec4dbf528d93"
+      "bytes": 8854,
+      "sha256": "ca09a22a927ae748fe62267f0b279be469ce12b8fd9b952636350a2fcba6bcb7"
     },
     {
       "path": "backend/public_app/assets/science-v240.js",
-      "bytes": 15860,
-      "sha256": "2009df7fe9d882cf3dd886e805784ff50486047b9d3cea74aca61f7e545f208f"
+      "bytes": 22374,
+      "sha256": "81673301dfeeed81f52d16cb4103a2fbfe5ee9f84e5eec743dd0278362a2ceae"
     },
     {
       "path": "backend/public_app/assets/seafloor-bathymetry-v4700.css",
@@ -5459,8 +5504,8 @@
     },
     {
       "path": "backend/public_app/index.html",
-      "bytes": 160501,
-      "sha256": "1548f0e8047050df15a4b9b54c57c504ed02022029a7accc28fbe3f1312eaba3"
+      "bytes": 161411,
+      "sha256": "61120913de6632c68fd0195fd8a4b632ed33845bac2470d582e3d190e7e365ba"
     },
     {
       "path": "backend/public_app/manifest.webmanifest",
@@ -5474,8 +5519,8 @@
     },
     {
       "path": "backend/public_app/service-worker.js",
-      "bytes": 14170,
-      "sha256": "270d653252c60cfed01a17bf983274a5907891746fd09c0054730af07c37ca04"
+      "bytes": 14199,
+      "sha256": "72fac82d311acf87e6c8d9903e22cc8796796c781377961cedce0ef86c3313b6"
     },
     {
       "path": "backend/render.yaml",
@@ -6583,6 +6628,16 @@
       "sha256": "39281581ab23f923eb3a561b66c87b53c65c40c5d03afc8e04275aac414df1a0"
     },
     {
+      "path": "backend/tests/test_science_core_decoupling_v4360_r2.py",
+      "bytes": 3730,
+      "sha256": "3d3b2f11b447f7d170806b9405081f8cca8b2d78f0159640ebc2f6b25beca9f1"
+    },
+    {
+      "path": "backend/tests/test_science_ocean_hydration_v4360_r3.py",
+      "bytes": 1989,
+      "sha256": "a5e19ddb58285835052cf17ae3899d6518f6721f758338982b0ba4be62844f11"
+    },
+    {
       "path": "backend/tests/test_scientific_earth_systems_observatory_v240.py",
       "bytes": 9790,
       "sha256": "44dc609f9e9c04b6d99ce9419df5abc10929fe3ab74b62aade31a4ceb0c14c15"
@@ -7146,6 +7201,11 @@
       "path": "deploy_and_validate_site_intelligence_v4_35_9_macos.sh",
       "bytes": 2714,
       "sha256": "1bcab98d976f430f83702535d042113ae71f49f1495be76c46f8ad95fa4db1a2"
+    },
+    {
+      "path": "deploy_and_validate_site_intelligence_v4_36_0_R3_macos.sh",
+      "bytes": 2808,
+      "sha256": "1c472d8f2331d889a9f2f7c48cd6facaeac76369f637192c6915a10a0ef5d314"
     },
     {
       "path": "deploy_and_validate_site_intelligence_v4_36_0_macos.sh",
@@ -8504,8 +8564,8 @@
     },
     {
       "path": "promote_site_intelligence_v4_36_0_to_github_and_render_macos.sh",
-      "bytes": 25885,
-      "sha256": "e566cab12d60c2a5dc47f79a585ead3d644794d95970cb06c02479d7f5c5de2f"
+      "bytes": 26939,
+      "sha256": "12388622373268e7b525065b629475b093a49a3187491d0d0f62695c8f2b90b9"
     },
     {
       "path": "promote_site_intelligence_v4_3_0_to_github_and_render_macos.sh",
@@ -8886,6 +8946,16 @@
       "path": "scripts/browser_research_integration_v3270.py",
       "bytes": 2822,
       "sha256": "4498d9ace73243074e9be460a25f36821a9c1d2371f4462d09cedb15dd7097c1"
+    },
+    {
+      "path": "scripts/browser_science_core_decoupling_v4360_r2.py",
+      "bytes": 6144,
+      "sha256": "9e1262bb87a128885e0ab2eec3f40455f7149c010e20e591e99dbe9e4f3bf57e"
+    },
+    {
+      "path": "scripts/browser_science_ocean_hydration_v4360_r3.py",
+      "bytes": 6744,
+      "sha256": "67167fee5ddec8347d9a9632c2e1b73775365a23d04d63ee55f0544a967f71da"
     },
     {
       "path": "scripts/browser_seafloor_bathymetry_v4700.py",
@@ -9569,6 +9639,11 @@
     },
     {
       "path": "scripts/build_v4360_manifest.py",
+      "bytes": 3553,
+      "sha256": "e4f3a925093ca11a808cca2ca0c8374593450516a431d86ee088c480eac0aab3"
+    },
+    {
+      "path": "scripts/build_v4360_r2_manifest.py",
       "bytes": 3553,
       "sha256": "e4f3a925093ca11a808cca2ca0c8374593450516a431d86ee088c480eac0aab3"
     },
@@ -11294,13 +11369,13 @@
     },
     {
       "path": "scripts/validate_v4360_release.py",
-      "bytes": 1492,
-      "sha256": "7a3721bd284ce682c183bc26d1fb277d08ffef96ca2620b15c3ff01613d91cd3"
+      "bytes": 3123,
+      "sha256": "296e598344dc357bed44ae9b9c88ddfefcb9f25f464315a4dcbb79061ccdb5f2"
     },
     {
       "path": "scripts/validate_v4360_release_contract.py",
-      "bytes": 2946,
-      "sha256": "810abc7fce94f1d45af71e6392cb17091d089032c10125267af304412fcd9b71"
+      "bytes": 3238,
+      "sha256": "ae74dfa3aab0fbbc01ea135eefbb053f5042685324b4c5f39034c7b11f7b9775"
     },
     {
       "path": "scripts/validate_v4400_release.py",
@@ -11764,8 +11839,8 @@
     },
     {
       "path": "verify_site_intelligence_v4_36_0_macos.sh",
-      "bytes": 18731,
-      "sha256": "a0b78c60467b73d0d7f4822340a22d6b01910b14cc96f997a978cd11cef9f39d"
+      "bytes": 19656,
+      "sha256": "d6e5aa27e9dda4767d3bcd5ebea0e52cbeb6c0e1b8d1dafc2475b26f9c8ee1e6"
     },
     {
       "path": "verify_site_intelligence_v4_3_0_macos.sh",
@@ -12043,6 +12118,11 @@
       "sha256": "8accc22f1c1352798e5fc55766c1d52e8d6a8ea85f7adf3ca578910211b17da2"
     },
     {
+      "path": "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/index.html",
+      "bytes": 161377,
+      "sha256": "3078a6dbd90f3064daba91f0f9ec3270b772d77f08c4bf61a241681a0027649e"
+    },
+    {
       "path": "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/industrial-manufacturing-v43000.css",
       "bytes": 1402,
       "sha256": "051453c927bac40b0a350d2ac312a17bb94d62527ba3d49ad92653fc0b19a0e2"
@@ -12179,8 +12259,8 @@
     },
     {
       "path": "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/ocean-observation-v4360.js",
-      "bytes": 11019,
-      "sha256": "00c3f7821c0477451d848c25af9407a26e0491a32f7f62b8f4702ca40b02c02f"
+      "bytes": 11646,
+      "sha256": "fc42706ef263ff9f49dfe5e1893548ddb3675904c5ce31697fab94728b0214a1"
     },
     {
       "path": "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/ocean-surface-v4500.css",
@@ -12261,6 +12341,16 @@
       "path": "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js",
       "bytes": 289420,
       "sha256": "a241dc426f9b926f42867717bc20d4138bf6ac189abb9d5efa75be0c1e995692"
+    },
+    {
+      "path": "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/science-v240.css",
+      "bytes": 8854,
+      "sha256": "ca09a22a927ae748fe62267f0b279be469ce12b8fd9b952636350a2fcba6bcb7"
+    },
+    {
+      "path": "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/science-v240.js",
+      "bytes": 22374,
+      "sha256": "81673301dfeeed81f52d16cb4103a2fbfe5ee9f84e5eec743dd0278362a2ceae"
     },
     {
       "path": "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/seafloor-bathymetry-v4700.css",

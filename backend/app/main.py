@@ -8893,6 +8893,12 @@ def public_scientific_earth_systems_overview(settings: Settings = Depends(get_se
     return build_science_overview(settings)
 
 
+@app.get("/public/scientific-earth-systems/discovery")
+def public_scientific_earth_systems_discovery(settings: Settings = Depends(get_settings)):
+    from .scientific_earth_systems_observatory import build_science_discovery
+    return build_science_discovery(settings)
+
+
 @app.get("/public/scientific-earth-systems/records")
 def public_scientific_earth_systems_records(
     record_type: str = Query(default="", max_length=100),

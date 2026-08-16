@@ -1,5 +1,14 @@
 # v4.36.0 — Global Ocean Intelligence II — Ocean Observation & Marine Systems
 
+## v4.36.0 R2 — Science Workspace Core-Decoupling & Ocean/Space Discovery Repair
+
+- Decoupled the Science front door from Platform Core record-catalog configuration.
+- Added an always-populated Earth / Ocean / Space domain selector and eight local science workspace launchers.
+- Added `/public/scientific-earth-systems/discovery` as a network-free navigation/workspace contract.
+- Kept Platform Core scientific records, assets, layers, STAC items and time series optional; only those record controls disable when Core is unconfigured.
+- Preserved the no-fabrication rule for scientific records, observations, datasets, measurements, trajectories and scientific conclusions.
+- Added browser certification for the reported `core-unconfigured` condition and verified Ocean plus six Space surfaces remain discoverable.
+
 ## v4.36.0 R1 — Ocean Navigation Runtime & Browser Certification Repair
 
 - Preserves the first-class Ocean navigation control when the v4 six-area navigation grouper reconstructs `#primaryNavigation`.
