@@ -199,7 +199,7 @@ def _normalized_static_catalog() -> dict[str, dict[str, Any]]:
 def _merge_country_catalogs(canonical: dict[str, dict[str, Any]], live: dict[str, dict[str, Any]]) -> dict[str, dict[str, Any]]:
     """Merge external metadata without allowing identity/geography override.
 
-    v4.36.0 makes this a pure, directly testable boundary. External country
+    v4.36.1 makes this a pure, directly testable boundary. External country
     catalogs may enrich classification/search metadata, but selector/routing
     identity and map focus remain first-party.
     """
@@ -252,7 +252,7 @@ def country_catalog(force_refresh: bool = False) -> dict[str, Any]:
                 # v4.35.23: enrich canonical identities field-by-field. A live provider
                 # cannot remove a bundled ISO2/ISO3 binding, alias, or coordinate merely
                 # because one metadata field is absent upstream.
-                # v4.36.0: the pure merge boundary is release-tested against
+                # v4.36.1: the pure merge boundary is release-tested against
                 # hostile/swapped Palestine/Israel upstream metadata.
                 merged = _merge_country_catalogs(canonical, live)
                 _COUNTRY_CATALOG_CACHE = merged

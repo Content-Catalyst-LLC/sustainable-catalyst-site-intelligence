@@ -4126,7 +4126,7 @@ def admin_connector_run_due_jobs_endpoint(
 @app.post("/admin/connectors/jobs/{job_id}/run")
 def admin_connector_run_job_endpoint(
     job_id: str,
-    request: Dict[str, Any] = Body(default={}),
+    request: dict[str, Any] = Body(default={}),
     settings: Settings = Depends(get_settings),
     _: None = Depends(require_token),
 ):
@@ -4172,7 +4172,7 @@ def admin_connector_quarantine_endpoint(
 @app.post("/admin/connectors/quarantine/{quarantine_id}/resolve")
 def admin_connector_quarantine_resolve_endpoint(
     quarantine_id: str,
-    request: Dict[str, Any] = Body(default={}),
+    request: dict[str, Any] = Body(default={}),
     settings: Settings = Depends(get_settings),
     _: None = Depends(require_token),
 ):

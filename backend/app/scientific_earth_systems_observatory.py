@@ -87,7 +87,7 @@ _SENSITIVE_KEYS = {
 }
 
 
-# v4.36.0 R2 — Science workspace Core-decoupling and local discovery front door.
+# v4.36.1 R2 — Science workspace Core-decoupling and local discovery front door.
 # These are navigation/workspace descriptors, not scientific records. They expose
 # Site Intelligence capabilities that already exist locally even when Platform Core
 # is not configured. No observations, measurements, or scientific claims are
@@ -694,8 +694,8 @@ def build_science_discovery(settings: Any = None) -> dict[str, Any]:
     return {
         "ok": True,
         "schema": "sc-site-intelligence-science-local-discovery/1.0",
-        "version": "4.36.0",
-        "release_lineage": "v4.36.0-r3",
+        "version": "4.36.1",
+        "release_lineage": "v4.36.1-r3",
         "contract": "science-core-decoupled-ocean-space-discovery",
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "domains": domains,

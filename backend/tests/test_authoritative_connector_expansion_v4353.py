@@ -20,9 +20,9 @@ def settings(**updates):
 
 
 def test_release_and_connector_catalog_are_v4353():
-    assert APP_VERSION == "4.36.0"
+    assert APP_VERSION == "4.36.1"
     data = connectors.connector_catalog(settings())
-    assert data["version"] == "4.36.0"
+    assert data["version"] == "4.36.1"
     assert data["connector_count"] == 5
     assert data["live_connector_count"] == 4
     assert data["discovery_connector_count"] == 1

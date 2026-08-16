@@ -1,4 +1,4 @@
-const RELEASE="4.36.0";
+const RELEASE="4.36.1";
 const REPAIR="r3";
 const CACHE_PREFIX="scsi-";
 const VERSION=`${CACHE_PREFIX}v${RELEASE}-${REPAIR}`;

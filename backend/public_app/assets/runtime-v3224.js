@@ -1,13 +1,13 @@
 (function (window, document) {
   "use strict";
 
-  const VERSION = "4.36.0";
+  const VERSION = "4.36.1";
   const EVENT_LIMIT = 30;
   const ENDPOINTS = [
     ["Service", "/health"],
     ["Build", "/public/build-info"],
     ["Deployment Receipt", "/public/deployment-receipt"],
-    ["Release Gate", "/public/release-gate?plugin_version=4.36.0&expected_release_id=site-intelligence-v4.36.0"],
+    ["Release Gate", "/public/release-gate?plugin_version=4.36.1&expected_release_id=site-intelligence-v4.36.1"],
     ["Runtime", "/public/runtime-health"],
     ["Recovery", "/public/runtime-recovery"],
     ["Geospatial", "/public/geospatial/diagnostics"],

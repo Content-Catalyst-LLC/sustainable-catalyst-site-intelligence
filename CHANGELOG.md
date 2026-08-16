@@ -1,3 +1,14 @@
+# v4.36.1 — Ocean & Space Live Evidence Rendering, Connector Binding & OpenAPI Recovery
+
+- Binds Ocean Surface to live NOAA CoastWatch ERDDAP dataset discovery.
+- Binds Marine Biodiversity to live IOC-UNESCO OBIS occurrence evidence.
+- Binds Coastal Change to live NOAA CO-OPS station records.
+- Binds Exoplanets to NASA Exoplanet Archive TAP records.
+- Binds Lunar & Planetary Intelligence to NASA EOSDIS CMR collection discovery.
+- Preserves real NASA GIBS Orbital Earth imagery and all evidence/non-inference boundaries.
+- Repairs `/openapi.json` generation by replacing unresolved `Dict[str, Any]` request annotations with `dict[str, Any]`.
+- Adds OpenAPI and browser live-evidence regression gates.
+
 # v4.36.0 — Global Ocean Intelligence II — Ocean Observation & Marine Systems
 
 ## v4.36.0 R2 — Science Workspace Core-Decoupling & Ocean/Space Discovery Repair
