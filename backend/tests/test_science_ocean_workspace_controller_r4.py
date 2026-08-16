@@ -10,9 +10,9 @@ def text(path):
 def test_main_router_cache_busts_and_recovers_science_controller():
     index=text("backend/public_app/index.html")
     app=text("backend/public_app/assets/app.js")
-    assert '/app/assets/app.js?v=4.36.0-r4' in index
-    assert '/app/assets/science-v240.js?v=4.36.0-r4' in index
-    assert 'const SCIENCE_CONTROLLER_SRC="/app/assets/science-v240.js?v=4.36.0-r4"' in app
+    assert '/app/assets/app.js?v=4.37.0' in index
+    assert '/app/assets/science-v240.js?v=4.37.0' in index
+    assert 'const SCIENCE_CONTROLLER_SRC="/app/assets/science-v240.js?v=4.37.0"' in app
     assert 'async function ensureScienceController()' in app
     assert 'data-scsi-repair-loader' not in app  # DOM dataset property is used instead of unsafe markup injection.
     assert 'script.dataset.scsiRepairLoader="science-r4"' in app
@@ -23,7 +23,7 @@ def test_main_router_cache_busts_and_recovers_science_controller():
 
 def test_science_controller_initializes_when_loaded_after_domcontentloaded():
     js=text("backend/public_app/assets/science-v240.js")
-    assert 'REPAIR="4.36.0-r4"' in js
+    assert 'REPAIR="4.37.0"' in js
     assert 'let bound=false;' in js
     assert 'if(bound)return;bound=true' in js
     assert 'if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bind,{once:true});else bind()' in js
@@ -56,9 +56,9 @@ def test_production_truth_certifies_ocean_mode_against_ocean_surface():
 def test_r4_cache_namespace_and_assets_are_mirrored_to_wordpress():
     index=text("backend/public_app/index.html")
     sw=text("backend/public_app/service-worker.js")
-    assert '/app/assets/production-truth-v3231.js?v=4.36.0-r4' in index
-    assert '/app/assets/bootstrap-v32361.js?v=4.36.0-r4' in index
-    assert 'const REPAIR="r4"' in sw
+    assert '/app/assets/production-truth-v3231.js?v=4.37.0' in index
+    assert '/app/assets/bootstrap-v32361.js?v=4.37.0' in index
+    assert 'const REPAIR="v4370"' in sw
     for name in ('app.js','science-v240.js','ocean-observation-v4360.js','production-truth-v3231.js','bootstrap-v32361.js'):
         assert (ROOT/'backend/public_app/assets'/name).read_bytes()==(ROOT/'wordpress-plugin/sustainable-catalyst-site-intelligence/assets'/name).read_bytes()
     assert (ROOT/'backend/public_app/index.html').read_bytes()==(ROOT/'wordpress-plugin/sustainable-catalyst-site-intelligence/assets/index.html').read_bytes()
@@ -66,7 +66,7 @@ def test_r4_cache_namespace_and_assets_are_mirrored_to_wordpress():
 
 def test_science_discovery_reports_r4_release_lineage():
     source=text("backend/app/scientific_earth_systems_observatory.py")
-    assert '"release_lineage": "v4.36.0-r4"' in source
+    assert '"release_lineage": "v4.37.0"' in source
 
 
 def test_ocean_and_space_are_first_class_featured_science_workspaces():
@@ -81,7 +81,7 @@ def test_ocean_and_space_are_first_class_featured_science_workspaces():
     assert 'data-space-entry="hub">Explore Space</button>' in index
     assert '<span>SPACE</span><h3>Space Intelligence</h3>' in index
     assert 'Featured science systems' in unified
-    assert '/app/assets/unified-platform-v4000.css?v=4.36.0-r4' in index
+    assert '/app/assets/unified-platform-v4000.css?v=4.37.0' in index
     assert 'async function openFeaturedScienceDomain(domain="space")' in app
     assert 'openFeaturedScienceDomain("space")' in app
     assert 'function openDomain(domain)' in science

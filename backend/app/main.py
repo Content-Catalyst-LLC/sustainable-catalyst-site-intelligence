@@ -188,6 +188,12 @@ from .underwater_observation_v4800 import (
     export_manifest as build_underwater_export_manifest,
     readiness as build_underwater_readiness,
 )
+from .live_underwater_media_v4370 import (
+    provider_catalog as build_live_underwater_provider_catalog,
+    search as build_live_underwater_search,
+    readiness as build_live_underwater_readiness,
+    fetch_onc_image as build_live_underwater_onc_image,
+)
 from .marine_biodiversity_v4900 import (
     overview as build_marine_biodiversity_overview,
     catalog as build_marine_biodiversity_catalog,
@@ -775,9 +781,9 @@ from .evidence_intelligence_v4357 import (
     select_evidence as build_evidence_selection,
     readiness as build_evidence_intelligence_readiness,
 )
-from .release_health_v43525 import (
-    deployment_verification as build_deployment_verification_v43525,
-    source_health_policy as build_source_health_policy_v43525,
+from .release_health_v4370 import (
+    deployment_verification as build_deployment_verification_v4370,
+    source_health_policy as build_source_health_policy_v4370,
 )
 from .workspace_browser_audit_v43518 import (
     workspace_browser_audit as build_workspace_browser_audit_v43518,
@@ -2002,6 +2008,31 @@ def public_underwater_manifest(source: str = Query(default="onc-oceans-3"), medi
 @app.get("/public/underwater-observation/readiness")
 def public_underwater_readiness():
     return build_underwater_readiness()
+
+@app.get("/public/underwater-media/providers")
+def public_underwater_media_providers():
+    return build_live_underwater_provider_catalog(get_settings())
+
+@app.get("/public/underwater-media/readiness")
+def public_underwater_media_readiness():
+    return build_live_underwater_readiness(get_settings())
+
+@app.post("/public/underwater-media/search")
+def public_underwater_media_search(request: dict[str, Any] = Body(default={})):
+    try:
+        return build_live_underwater_search(request, get_settings())
+    except (ValueError, TypeError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+@app.get("/public/underwater-media/onc/file")
+def public_underwater_media_onc_file(filename: str = Query(..., min_length=1, max_length=500)):
+    try:
+        body, content_type = build_live_underwater_onc_image(filename, get_settings())
+        return Response(content=body, media_type=content_type, headers={"Cache-Control": "public, max-age=300", "X-Content-Type-Options": "nosniff"})
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=503, detail=str(exc)) from exc
 
 @app.get("/public/marine-biodiversity")
 def public_marine_biodiversity_overview():
@@ -5601,12 +5632,12 @@ def public_evidence_intelligence_readiness_endpoint():
 
 @app.get("/public/deployment-verification")
 def public_deployment_verification_v43531_endpoint(settings: Settings = Depends(get_settings)):
-    return build_deployment_verification_v43525(settings)
+    return build_deployment_verification_v4370(settings)
 
 
 @app.get("/public/source-health-policy")
 def public_source_health_policy_v43531_endpoint(settings: Settings = Depends(get_settings)):
-    return build_source_health_policy_v43525(settings)
+    return build_source_health_policy_v4370(settings)
 
 
 @app.get("/public/workspace-browser-audit")

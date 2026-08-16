@@ -1,4 +1,15 @@
-# v4.36.0 R4 — Science/Ocean Workspace Controller, Route Ownership & Ocean/Space Prominence Repair
+# v4.37.0 — Live Underwater Media Discovery, Imagery & Video Retrieval
+
+- Replaced the Underwater Observation orientation-only scaffold with live source discovery and candidate-media rendering.
+- Added three independent provider lanes: FathomNet public imagery/annotations, NOAA Ocean Exploration/NCEI expedition media discovery, and optional token-authenticated Ocean Networks Canada Oceans 3.0 archive discovery.
+- Added `/public/underwater-media/providers`, `/readiness`, `/search`, and a server-side ONC still-image proxy so credential material never enters browser URLs.
+- Made FathomNet the default public discovery lane and removed misleading `0,0 / 0 m` default observation values.
+- Added image/video candidate cards, selected-record provenance, source/depth/time/coordinates when actually supplied, rights/citation context, and evidence JSON export.
+- Kept provider failures independent: missing ONC credentials do not block FathomNet or NOAA, and upstream health remains non-blocking for release promotion.
+- Extended the 11-system Ocean readiness contract so Underwater is not considered ready unless the v4.37 live-media control plane is present.
+- Preserved the R4 first-class Ocean + Space featured navigation and the six-area / 35-route public architecture.
+
+# v4.37.0 R4 — Science/Ocean Workspace Controller, Route Ownership & Ocean/Space Prominence Repair
 
 - Repaired the Science route so a missing/stale `SCScienceV240` controller is reloaded and initialized rather than silently returning with no visible workspace.
 - Repaired Ocean route ownership: Ocean awaits the Earth route handoff, establishes `earth:ocean` ownership, then hydrates its 11-system catalog.
@@ -9,9 +20,9 @@
 - Added direct Space entry into the six local Space workspaces: Orbital Earth, Lunar & Planetary, Astronomy, Solar System, Exoplanets, and SETI.
 - Preserved Platform Core as optional for local Ocean and Space discovery; no scientific records are fabricated.
 
-# v4.36.0 — Global Ocean Intelligence II — Ocean Observation & Marine Systems
+# v4.37.0 — Global Ocean Intelligence II — Ocean Observation & Marine Systems
 
-## v4.36.0 R2 — Science Workspace Core-Decoupling & Ocean/Space Discovery Repair
+## v4.37.0 R2 — Science Workspace Core-Decoupling & Ocean/Space Discovery Repair
 
 - Decoupled the Science front door from Platform Core record-catalog configuration.
 - Added an always-populated Earth / Ocean / Space domain selector and eight local science workspace launchers.
@@ -20,13 +31,13 @@
 - Preserved the no-fabrication rule for scientific records, observations, datasets, measurements, trajectories and scientific conclusions.
 - Added browser certification for the reported `core-unconfigured` condition and verified Ocean plus six Space surfaces remain discoverable.
 
-## v4.36.0 R1 — Ocean Navigation Runtime & Browser Certification Repair
+## v4.37.0 R1 — Ocean Navigation Runtime & Browser Certification Repair
 
 - Preserves the first-class Ocean navigation control when the v4 six-area navigation grouper reconstructs `#primaryNavigation`.
 - Places Ocean in the Analysis group immediately after Earth without adding a 36th public route.
 - Mirrors the repaired navigation owner into the WordPress plugin asset set.
 - Strengthens the deterministic browser smoke to wait for v4 navigation readiness and assert the Ocean entry survives post-DOM grouping before click-through.
-- Keeps the 11-system Ocean backend, evidence contracts, and `4.36.0` deployment identity unchanged.
+- Keeps the 11-system Ocean backend, evidence contracts, and `4.37.0` deployment identity unchanged.
 
 
 - Promoted Ocean Intelligence to an explicit, first-class navigation entry without expanding the canonical six-area / 35-route v4 registry.

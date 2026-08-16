@@ -7,6 +7,7 @@ from typing import Any
 from urllib.parse import urlparse
 
 from .version import APP_VERSION
+from .live_underwater_media_v4370 import provider_catalog as live_media_provider_catalog, readiness as live_media_readiness
 
 VERSION = APP_VERSION
 CONTRACT = "underwater-observation-visual-evidence"
@@ -262,6 +263,7 @@ def overview():
 
 
 def catalog():
+    live_media = live_media_provider_catalog()
     return {
         "ok": True,
         "version": VERSION,
@@ -272,6 +274,8 @@ def catalog():
         "sources": [{"id": key, **value} for key, value in SOURCES.items()],
         "media_types": [{"id": key, **value} for key, value in MEDIA_TYPES.items()],
         "annotation_types": [{"id": key, **value} for key, value in ANNOTATION_TYPES.items()],
+        "live_media": live_media,
+        "live_media_provider_count": live_media.get("provider_count", 0),
         "generated_at": _now(),
     }
 
@@ -515,6 +519,8 @@ def export_manifest(
 
 
 def readiness():
+    live = live_media_readiness()
+    live_checks = live.get("checks", {})
     checks = {
         "sources_registered": len(SOURCES) >= 3,
         "media_types_registered": len(MEDIA_TYPES) >= 4,
@@ -528,6 +534,11 @@ def readiness():
         "sensor_context_not_assumed_synchronized": True,
         "rights_not_inferred": True,
         "route_count_unchanged": True,
+        "live_media_extension_ready": live.get("ok") is True,
+        "three_live_media_provider_lanes_registered": live_checks.get("three_provider_lanes_registered") is True,
+        "fathomnet_live_lane_ready": live_checks.get("fathomnet_public_lane_ready") is True,
+        "noaa_live_lane_ready": live_checks.get("noaa_public_lane_ready") is True,
+        "onc_missing_credential_non_blocking": live_checks.get("onc_missing_credential_non_blocking") is True,
     }
     return {
         "ok": all(checks.values()),
@@ -540,6 +551,9 @@ def readiness():
             "annotation_types": len(ANNOTATION_TYPES),
             "route": ROUTE,
             "public_route_count_delta": 0,
+            "live_media_provider_count": live.get("provider_configuration") and 3 or 0,
+            "onc_configuration": live.get("provider_configuration", {}).get("onc-oceans-3"),
         },
+        "live_media": live,
         "generated_at": _now(),
     }

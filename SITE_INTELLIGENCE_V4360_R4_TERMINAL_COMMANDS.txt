@@ -1,10 +1,10 @@
 cd ~/Downloads
 
-BUNDLE="$(find . -maxdepth 1 -type f -name 'sustainable-catalyst-site-intelligence-v4.36.0-R4-release-bundle*.zip' -print | sort | tail -1)"
-[ -n "$BUNDLE" ] || { echo "ERROR: v4.36.0 R4 release bundle not found in Downloads."; exit 1; }
-rm -rf sustainable-catalyst-site-intelligence-v4.36.0-R4-release
-mkdir -p sustainable-catalyst-site-intelligence-v4.36.0-R4-release
-unzip -q "$BUNDLE" -d sustainable-catalyst-site-intelligence-v4.36.0-R4-release
-cd sustainable-catalyst-site-intelligence-v4.36.0-R4-release
+BUNDLE="$(find . -maxdepth 1 -type f -name 'sustainable-catalyst-site-intelligence-v4.37.0-R4-release-bundle*.zip' -print | sort | tail -1)"
+[ -n "$BUNDLE" ] || { echo "ERROR: v4.37.0 R4 release bundle not found in Downloads."; exit 1; }
+rm -rf sustainable-catalyst-site-intelligence-v4.37.0-R4-release
+mkdir -p sustainable-catalyst-site-intelligence-v4.37.0-R4-release
+unzip -q "$BUNDLE" -d sustainable-catalyst-site-intelligence-v4.37.0-R4-release
+cd sustainable-catalyst-site-intelligence-v4.37.0-R4-release
 chmod +x deploy_and_validate_site_intelligence_v4_36_0_R4_macos.sh
 ./deploy_and_validate_site_intelligence_v4_36_0_R4_macos.sh

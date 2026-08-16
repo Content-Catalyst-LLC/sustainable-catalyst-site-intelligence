@@ -1,22 +1,22 @@
-SITE INTELLIGENCE v4.36.0 R1 — OCEAN NAVIGATION RUNTIME & BROWSER CERTIFICATION REPAIR
+SITE INTELLIGENCE v4.37.0 R1 — OCEAN NAVIGATION RUNTIME & BROWSER CERTIFICATION REPAIR
 
 RELEASE BUNDLE
 --------------
 cd ~/Downloads
-BUNDLE="$(find . -maxdepth 1 -type f -name 'sustainable-catalyst-site-intelligence-v4.36.0-R1-release-bundle*.zip' -print | sort | tail -1)"
-[ -n "$BUNDLE" ] || { echo "ERROR: v4.36.0 R1 release bundle not found."; exit 1; }
-rm -rf site-intelligence-v4.36.0-R1-release
-mkdir -p site-intelligence-v4.36.0-R1-release
-unzip -q "$BUNDLE" -d site-intelligence-v4.36.0-R1-release
-cd site-intelligence-v4.36.0-R1-release
+BUNDLE="$(find . -maxdepth 1 -type f -name 'sustainable-catalyst-site-intelligence-v4.37.0-R1-release-bundle*.zip' -print | sort | tail -1)"
+[ -n "$BUNDLE" ] || { echo "ERROR: v4.37.0 R1 release bundle not found."; exit 1; }
+rm -rf site-intelligence-v4.37.0-R1-release
+mkdir -p site-intelligence-v4.37.0-R1-release
+unzip -q "$BUNDLE" -d site-intelligence-v4.37.0-R1-release
+cd site-intelligence-v4.37.0-R1-release
 chmod +x deploy_and_validate_site_intelligence_v4_36_0_R1_macos.sh
 ./deploy_and_validate_site_intelligence_v4_36_0_R1_macos.sh
 
 EXPECTED RELEASE IDENTITY
 -------------------------
-Version: 4.36.0
+Version: 4.37.0
 Repair: R1
-Release ID: site-intelligence-v4.36.0
+Release ID: site-intelligence-v4.37.0
 Ocean systems: 11
 Primary areas: 6
 Canonical v4 routes: 35

@@ -25,12 +25,12 @@
     }
     throw last;
   }
-  const APP_VERSION="4.36.0";
-  const RELEASE_LINEAGE="v4.36.0-r4";
-  const SCIENCE_CONTROLLER_SRC="/app/assets/science-v240.js?v=4.36.0-r4";
+  const APP_VERSION="4.37.0";
+  const RELEASE_LINEAGE="v4.37.0";
+  const SCIENCE_CONTROLLER_SRC="/app/assets/science-v240.js?v=4.37.0";
   let scienceControllerPromise=null;
   function scienceControllerCurrent(){
-    try{return window.SCScienceV240?.open&&window.SCScienceV240?.status?.().repair==="4.36.0-r4"?window.SCScienceV240:null}catch{return null}
+    try{return window.SCScienceV240?.open&&window.SCScienceV240?.status?.().repair==="4.37.0"?window.SCScienceV240:null}catch{return null}
   }
   async function ensureScienceController(){
     const current=scienceControllerCurrent();if(current)return current;
@@ -242,7 +242,7 @@
     const name=canonical?.name||names[normalized]||normalized;
     state.country=normalized;names[normalized]=name;
     qs("#countryName").textContent=name;qs("#countryCode").textContent=normalized;qs("#countryPanelTitle").textContent=`${name} at a glance`;
-    // v4.36.0: focus immediately from the first-party canonical registry.
+    // v4.37.0: focus immediately from the first-party canonical registry.
     // Upstream country-overview responses may add evidence, but they are not
     // allowed to decide where a selected country exists on the map.
     if(state.route==="overview"&&canonical&&Number.isFinite(Number(canonical.latitude))&&Number.isFinite(Number(canonical.longitude))){
@@ -536,7 +536,7 @@
       try{primary=await apiWithRetry("/public/countries",3)}catch(primaryError){console.warn("[Site Intelligence] Live country metadata is unavailable; the bundled global selector remains active.",primaryError)}
       const merged=new Map();
       (bundled.countries||[]).forEach(item=>{if(item?.code&&item?.name)merged.set(item.code,{...item})});
-      // v4.36.0: live provider metadata may enrich a country, but it must never
+      // v4.37.0: live provider metadata may enrich a country, but it must never
       // overwrite first-party identity fields (ISO codes, name, coordinates).
       // This closes the remaining Palestine/Israel split-path defect where an
       // upstream catalog could replace a canonical selector identity after the
@@ -709,7 +709,7 @@
     const controller=new AbortController();globalCountryState.selectionController=controller;
     const signal=controller.signal,sequence=++globalCountryState.requestSequence;
     globalCountryState.activeCode=normalized;state.country=normalized;qs("#countrySelect").value=normalized;setCountryLoading(normalized);
-    // v4.36.0: commit the selected identity to the URL before any upstream work.
+    // v4.37.0: commit the selected identity to the URL before any upstream work.
     // A slow/failed indicator request must not make the picker appear to ignore the
     // selected country or leave the previous country encoded in browser state.
     if(pushState||!supported){const params=new URLSearchParams(location.search);params.set("view","country");params.set("country",normalized);history.replaceState(null,"",`?${params.toString()}`)}
@@ -1681,7 +1681,7 @@
   }
   function closeAuditablePublicObservatory(){const panel=qs("#auditablePublicObservatory");if(panel)panel.hidden=true;const button=qs("#saveViewButton");if(button)button.disabled=false}
 
-  // registered route recovery is enforced after every route transition by v4.36.0.
+  // registered route recovery is enforced after every route transition by v4.37.0.
   async function setRoute(route){
     qs("#main").classList.remove("route-enter");void qs("#main").offsetWidth;qs("#main").classList.add("route-enter");
     state.route=route;
@@ -2043,7 +2043,7 @@
     hydration.then(results=>{const failed=results.filter(result=>result.status==="rejected");const status=qs("#statusText");if(failed.length){console.warn("[Site Intelligence] Startup hydration completed with limited services.",failed.map(result=>result.reason));if(status)status.textContent="Partial public data";toast("Some optional public data is temporarily unavailable.")}else if(status)status.textContent="Live public data";window.dispatchEvent(new CustomEvent("scsi:startup-hydrated",{detail:{version:APP_VERSION,state:failed.length?"limited":"ready",failed:failed.length}}));reportHeight()});
   }
   window.SCSIOverviewMapV3232={version:APP_VERSION,getMap:()=>state.map,getEvents:()=>state.events?.features||[],getFilteredEvents:()=>state.filteredEvents.slice(),getFilters:()=>({...state.overviewFilters}),setFilters:setOverviewFilters,selectEvent:selectOverviewEvent,fitResults:fitOverviewResults,setImageryOpacity:value=>state.imagery?.setOpacity?.(Math.max(0,Math.min(1,Number(value)))),setBaseStyle:style=>{const map=qs("#map");if(map)map.dataset.mapStyle=String(style||"institutional-dark");syncOverviewMapUrl()},syncUrl:syncOverviewMapUrl,render:renderOverviewFeatures};
-  window.SCSIRouterV3228={version:"4.36.0",releaseLineage:RELEASE_LINEAGE,navigate:navigateToRoute,current:()=>state.route,ensureScienceController,openFeaturedScienceDomain};
+  window.SCSIRouterV3228={version:APP_VERSION,releaseLineage:RELEASE_LINEAGE,navigate:navigateToRoute,current:()=>state.route,ensureScienceController,openFeaturedScienceDomain};
   if(!FIXED_WORDPRESS_EMBED){
     window.addEventListener("load",reportHeight,{once:true});
     window.addEventListener("resize",reportHeight,{passive:true});
@@ -2069,5 +2069,5 @@ visualStyle.textContent=`
 document.head.appendChild(visualStyle);
 
 
-/* v4.36.0 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v4.36.0 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v4.37.0 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v4.37.0 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

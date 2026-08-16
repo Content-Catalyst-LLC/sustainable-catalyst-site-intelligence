@@ -1,0 +1,48 @@
+Sustainable Catalyst Site Intelligence v4.37.0
+Live Underwater Media Discovery, Imagery & Video Retrieval
+
+BUILD STATUS: CERTIFIED
+
+Release identity
+- Backend: 4.37.0
+- WordPress plugin: 4.37.0
+- Git tag: v4.37.0
+- Public architecture: six primary areas / 35 canonical routes
+
+Functional certification
+- Live Underwater provider lanes: 3
+- FathomNet: public, default provider
+- NOAA Ocean Exploration/NCEI: public discovery
+- Ocean Networks Canada Oceans 3.0: optional credential, non-blocking when absent
+- Ocean systems inherited: 11
+- Space local workspaces inherited: 6
+- Fake 0,0 / 0 m default query: removed
+- ONC token browser exposure: prohibited / server-side proxy for bounded still images
+
+Regression certification
+- Deterministic pytest suite: 1,697 / 1,697 passed (405 + 387 + 338 + 346 + 221)
+- Browser: live Underwater media gate passed
+- Browser: Ocean 11-system gate passed
+- Browser: featured Ocean/Space + Science controller recovery passed
+- Browser: Palestine/Israel identity integrity passed
+- Browser: Country evidence presentation passed
+- Browser: desktop/mobile/iframe 35-route gates passed
+- Security static scan: 0 findings
+- PHP syntax: passed
+- JavaScript validation: 156 files passed
+- Immutable manifest: 2,528 files verified
+
+Release-policy boundary
+- Readiness checks are network-free.
+- Live upstream provider health does not block release promotion.
+- SC_SI_ONC_API_TOKEN is optional; absence degrades ONC only.
+
+Static data validation
+- JSON/GeoJSON parsed: 135 files
+
+Browser route certification
+- Desktop: 35/35 ready
+- Mobile: 35/35 ready
+- Iframe: 35/35 ready
+
+Final certification: PASS

@@ -174,6 +174,12 @@ class Settings(BaseSettings):
     copernicus_marine_password: str = ""
     global_fishing_watch_api_token: str = ""
 
+    # Site Intelligence v4.37.0 — Live Underwater Media Discovery.
+    # ONC requires a server-side Oceans 3.0 token. FathomNet and NOAA lanes
+    # remain available when this optional credential is absent.
+    onc_api_token: str = ""
+    underwater_media_timeout_seconds: int = Field(default=10, ge=2, le=20)
+
     # Platform Core v2.5.0 integration — optional in Site Intelligence v1.20.0.
     # Write credentials remain backend-only and must never be exposed through
     # WordPress, browser JavaScript, public diagnostics, or export payloads.

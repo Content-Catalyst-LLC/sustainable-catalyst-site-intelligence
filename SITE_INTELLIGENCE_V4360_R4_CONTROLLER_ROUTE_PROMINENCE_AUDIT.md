@@ -1,4 +1,4 @@
-# Site Intelligence v4.36.0 R4 — Controller, Route Ownership & Prominence Audit
+# Site Intelligence v4.37.0 R4 — Controller, Route Ownership & Prominence Audit
 
 ## Reported production symptom
 
@@ -18,7 +18,7 @@ The public application could show the Ocean title while Production Truth reporte
 - `openFeaturedScienceDomain("space")` opens Science and selects Space through the recovered controller.
 - Ocean establishes `data-ocean-workspace-owner="earth:ocean"` after awaiting route ownership.
 - Production Truth resolves the Ocean surface when Ocean mode is active and certifies the 11-card ready state.
-- The main app controller and other ownership-critical assets use `4.36.0-r4` cache lineage.
+- The main app controller and other ownership-critical assets use `4.37.0` cache lineage.
 - Navigation consolidation retains two supplemental featured entries: Ocean and Space.
 
 ## Architecture boundary
