@@ -1,3 +1,12 @@
+# v4.39.0 R1 — Visual Intelligence Console & Integrated Live Ticker
+
+- Refined `[sc_site_intelligence_home]` into a tighter two-column intelligence-console presentation.
+- Added a responsive Earth, Space, and Ocean imagery triptych using self-hosted, web-optimized scientific imagery.
+- Added source credits for NASA Earth Observatory, NASA/ESA/CSA/STScI, and NOAA Ocean Exploration.
+- Integrated the existing governed Live Intelligence ticker directly into the homepage console, including pause, focus/hover pause, reduced-motion, and mobile presentation behavior.
+- Prevented the automatic top-of-page ticker from duplicating the ticker embedded by `[sc_site_intelligence_home]`.
+- Preserved the v4.39.0 backend summary contract, metrics, source-linked signals, truthful degraded state, and release-gate identity.
+
 # v4.39.0 — Homepage Live Intelligence Snapshot
 
 - Added the homepage-specific `[sc_site_intelligence_home]` shortcode without changing the full `[sc_site_intelligence_app]` embed.

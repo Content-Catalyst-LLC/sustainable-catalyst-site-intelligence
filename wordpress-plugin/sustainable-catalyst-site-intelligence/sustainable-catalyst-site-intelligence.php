@@ -3938,7 +3938,7 @@ final class SC_Site_Intelligence_Plugin {
         }
         if (($options['live_intelligence_duplicate_protection'] ?? '1') === '1') {
             global $post;
-            if ($post instanceof WP_Post && has_shortcode((string) $post->post_content, 'sc_live_intelligence')) {
+            if ($post instanceof WP_Post && (has_shortcode((string) $post->post_content, 'sc_live_intelligence') || has_shortcode((string) $post->post_content, 'sc_site_intelligence_home'))) {
                 return false;
             }
         }
@@ -6475,18 +6475,67 @@ final class SC_Site_Intelligence_Plugin {
         ];
         $endpoint = rest_url(self::REST_NAMESPACE . '/homepage-summary');
         $instance_id = 'scsi-home-' . wp_generate_uuid4();
+        $home_images = [
+            'earth' => plugins_url('assets/images/site-intelligence-home/earth-blue-marble.webp', __FILE__),
+            'space' => plugins_url('assets/images/site-intelligence-home/space-webb-deep-field.webp', __FILE__),
+            'ocean' => plugins_url('assets/images/site-intelligence-home/ocean-noaa-seafloor.webp', __FILE__),
+        ];
+        $ticker = $this->live_intelligence_shortcode([
+            'surface' => 'homepage',
+            'limit' => '12',
+            'placement' => 'content',
+            'label' => 'Live Intelligence',
+        ]);
 
         ob_start();
         ?>
         <section id="<?php echo esc_attr($instance_id); ?>" class="scsi-home-summary" data-scsi-home-summary data-endpoint="<?php echo esc_url($endpoint); ?>" data-app-base="<?php echo esc_url($app_base); ?>" aria-labelledby="<?php echo esc_attr($instance_id); ?>-title">
             <div class="scsi-home-summary__header">
-                <div>
+                <div class="scsi-home-summary__intro">
                     <p class="scsi-home-summary__eyebrow">Public Intelligence</p>
                     <h2 id="<?php echo esc_attr($instance_id); ?>-title"><?php echo esc_html($atts['title']); ?></h2>
                     <p class="scsi-home-summary__lede">Explore geographic, environmental, humanitarian, scientific, and institutional evidence through a provenance-aware public intelligence system.</p>
+                    <div class="scsi-home-summary__scope" aria-label="Site Intelligence capabilities">
+                        <span>Geographic</span>
+                        <span>Earth systems</span>
+                        <span>Ocean</span>
+                        <span>Orbital</span>
+                    </div>
                 </div>
-                <p class="scsi-home-summary__status" data-home-status data-state="connecting"><span aria-hidden="true"></span><strong>Connecting to Site Intelligence</strong></p>
+                <div class="scsi-home-summary__visual-column">
+                    <p class="scsi-home-summary__status" data-home-status data-state="connecting"><span aria-hidden="true"></span><strong>Connecting to Site Intelligence</strong></p>
+                    <div class="scsi-home-summary__visual" aria-label="Earth, space, and ocean intelligence capabilities">
+                        <div class="scsi-home-summary__visual-media">
+                            <figure class="scsi-home-summary__visual-frame scsi-home-summary__visual-frame--earth">
+                                <img src="<?php echo esc_url($home_images['earth']); ?>" alt="NASA Blue Marble composite view of Earth" width="1600" height="1600" loading="lazy" decoding="async" />
+                                <figcaption><strong>Earth</strong><span>Global systems</span></figcaption>
+                            </figure>
+                            <figure class="scsi-home-summary__visual-frame scsi-home-summary__visual-frame--space">
+                                <img src="<?php echo esc_url($home_images['space']); ?>" alt="James Webb Space Telescope First Deep Field" width="1254" height="1280" loading="lazy" decoding="async" />
+                                <figcaption><strong>Space</strong><span>Orbital observation</span></figcaption>
+                            </figure>
+                            <figure class="scsi-home-summary__visual-frame scsi-home-summary__visual-frame--ocean">
+                                <img src="<?php echo esc_url($home_images['ocean']); ?>" alt="Deep seafloor observed by NOAA Ocean Exploration" width="1536" height="1024" loading="lazy" decoding="async" />
+                                <figcaption><strong>Ocean</strong><span>Deep systems</span></figcaption>
+                            </figure>
+                        </div>
+                        <svg class="scsi-home-summary__visual-overlay" viewBox="0 0 360 240" aria-hidden="true" focusable="false">
+                            <path class="scsi-home-summary__orbit scsi-home-summary__orbit--outer" d="M28 188C83 41 263 5 337 91" />
+                            <path class="scsi-home-summary__orbit" d="M42 55C137 201 281 216 333 107" />
+                            <g class="scsi-home-summary__node scsi-home-summary__node--one" transform="translate(65 67)"><circle r="9" /><circle r="3" /></g>
+                            <g class="scsi-home-summary__node scsi-home-summary__node--two" transform="translate(293 51)"><circle r="9" /><circle r="3" /></g>
+                            <g class="scsi-home-summary__node scsi-home-summary__node--three" transform="translate(305 181)"><circle r="9" /><circle r="3" /></g>
+                            <g class="scsi-home-summary__node scsi-home-summary__node--four" transform="translate(85 198)"><circle r="9" /><circle r="3" /></g>
+                        </svg>
+                    </div>
+                    <p class="scsi-home-summary__image-credit">Imagery: <a href="https://science.nasa.gov/earth/earth-observatory/the-blue-marble-2181/" target="_blank" rel="noopener noreferrer">NASA Earth Observatory</a> · <a href="https://science.nasa.gov/asset/webb/webbs-first-deep-field-nircam-image/" target="_blank" rel="noopener noreferrer">NASA / ESA / CSA / STScI</a> · <a href="https://oceanexplorer.noaa.gov/multimedia/seafloor/" target="_blank" rel="noopener noreferrer">NOAA Ocean Exploration</a></p>
+                </div>
             </div>
+            <?php if ($ticker !== ''): ?>
+                <div class="scsi-home-summary__ticker" aria-label="Live public intelligence ticker">
+                    <?php echo $ticker; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                </div>
+            <?php endif; ?>
             <dl class="scsi-home-summary__metrics" aria-label="Site Intelligence coverage summary">
                 <?php foreach ([['country_profiles', 'country profiles'], ['registered_sources', 'registered live feeds'], ['enabled_sources', 'enabled by default'], ['current_signals', 'current signals']] as $metric): ?>
                     <div data-home-metric="<?php echo esc_attr($metric[0]); ?>"><dt><?php echo esc_html($metric[1]); ?></dt><dd>—</dd></div>

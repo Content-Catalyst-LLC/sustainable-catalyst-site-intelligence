@@ -1,6 +1,6 @@
 {
   "release": "4.39.0",
-  "file_count": 2563,
+  "file_count": 2578,
   "files": [
     {
       "path": ".gitignore",
@@ -9,8 +9,8 @@
     },
     {
       "path": "CHANGELOG.md",
-      "bytes": 127404,
-      "sha256": "4f85b2204ac06bc511504e8ce1de49a8f6bed560d110002048a606f23243b5ea"
+      "bytes": 128223,
+      "sha256": "47d9d92c7f837ca269540a749060580bdd4b5d7ede86b29fbb3f0626ab84d6b3"
     },
     {
       "path": "LICENSE",
@@ -19,8 +19,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 96996,
-      "sha256": "410f4c8d92304a51dc297ebf427addfe58fbb27357907e0e31d6136c5d7c6b19"
+      "bytes": 97592,
+      "sha256": "9c0dc1e091f135f9b20501c98e71c4393d631aaaab1899e4a3902dba80c098f3"
     },
     {
       "path": "RELEASE_NOTES_SITE_INTELLIGENCE_V2100.md",
@@ -756,6 +756,11 @@
       "path": "RELEASE_NOTES_SITE_INTELLIGENCE_V4390.md",
       "bytes": 1319,
       "sha256": "2dad83682f22493ea69aa0b8675fbd6abdcb2e5eb3546728773fd67c810eb632"
+    },
+    {
+      "path": "RELEASE_NOTES_SITE_INTELLIGENCE_V4390_R1.md",
+      "bytes": 1571,
+      "sha256": "b56d2c4d5678b9f7cd9335358a32b3a24d48b1feb4ce271931a615bbe71d42d1"
     },
     {
       "path": "RELEASE_NOTES_SITE_INTELLIGENCE_V4400.md",
@@ -3181,6 +3186,31 @@
       "path": "SITE_INTELLIGENCE_V4390_INSTALL_AND_TEST.md",
       "bytes": 1517,
       "sha256": "76ca7bdc655ab396f24721cc24f1367dac2cdb8457adb1d78276a0628d3b8b61"
+    },
+    {
+      "path": "SITE_INTELLIGENCE_V4390_R1_BUILD_VALIDATION.txt",
+      "bytes": 1272,
+      "sha256": "24e621ef9dcb5279cd9cf749f6c6556c14c7aaccf23f05b4f83689a4f72b4e6d"
+    },
+    {
+      "path": "SITE_INTELLIGENCE_V4390_R1_IMAGE_CREDITS.md",
+      "bytes": 1733,
+      "sha256": "447cabe396f1f3be80faab87ff396addb7ff87539af2a84117ccdb301676da89"
+    },
+    {
+      "path": "SITE_INTELLIGENCE_V4390_R1_INSTALL_AND_TEST.md",
+      "bytes": 1123,
+      "sha256": "e8179230e16e4b2d8371837aa8a33d949bb280d1ecf9c82e77eabdc84177a377"
+    },
+    {
+      "path": "SITE_INTELLIGENCE_V4390_R1_TERMINAL_COMMANDS.txt",
+      "bytes": 1191,
+      "sha256": "c9cc01ba8e8a7875cfd9acb675e70e581da5dffffca9c133bd968735e05ee205"
+    },
+    {
+      "path": "SITE_INTELLIGENCE_V4390_R1_VISUAL_AUDIT.md",
+      "bytes": 1658,
+      "sha256": "25294c5380e770b09a408c6356b45dbdf8824f09ddf8c88859315433da445a07"
     },
     {
       "path": "SITE_INTELLIGENCE_V4390_TERMINAL_COMMANDS.txt",
@@ -8363,6 +8393,11 @@
       "sha256": "19af82178c68d2ec077bcc888399b580f6add03615dbe0b350aa1bd251b9a1c6"
     },
     {
+      "path": "install_and_push_site_intelligence_v4_39_0_r1_macos.sh",
+      "bytes": 2677,
+      "sha256": "c8090dae5aa27ec584fa0746450d078530d6f4749c477d6fc51d09806a3e1f47"
+    },
+    {
       "path": "promote_site_intelligence_v3_22_6_to_github_and_render_macos.sh",
       "bytes": 8050,
       "sha256": "f1e43a51841e6d176467a1ce7513cbb2ed48938b8b6d85bbe0bb2b7898e9d80e"
@@ -11628,6 +11663,11 @@
       "sha256": "c9e6dc92c0ef52b447ad8a94d71c5f871749b2fa968a178351d114287e642625"
     },
     {
+      "path": "scripts/validate_v4390_r1_release_contract.py",
+      "bytes": 3923,
+      "sha256": "91f99301127cbeb23fff25b1682d40f304dfad2795c81b8b829c99aec55d5612"
+    },
+    {
       "path": "scripts/validate_v4390_release.py",
       "bytes": 668,
       "sha256": "f82503967eeddd61593c7eacb9db673a23ea7b1edb6f881564f1eada44ae5cbe"
@@ -11696,6 +11736,21 @@
       "path": "scripts/validate_v4900_release_contract.py",
       "bytes": 1518,
       "sha256": "33e52dc3ed6b4b0e48cf2d308003528692bfbba6412df7fb4bc1be744fff4ecf"
+    },
+    {
+      "path": "source-materials/site-intelligence-home/earth-blue-marble-source.jpg",
+      "bytes": 536295,
+      "sha256": "3b47b77b49ccd18ecf0aa58610a2047cc68a2e06a1de2e224295a1346aa2dc95"
+    },
+    {
+      "path": "source-materials/site-intelligence-home/ocean-noaa-seafloor-source.jpg",
+      "bytes": 442602,
+      "sha256": "2d75fc3fe16d9b9a5b822805786ef6e384b7b979b49f7be337bdb058271a6938"
+    },
+    {
+      "path": "source-materials/site-intelligence-home/space-webb-deep-field-source.png",
+      "bytes": 2105196,
+      "sha256": "a50a9e7031c32c6ca086b075155cd770c7e350f20c836375ff4099d445f72610"
     },
     {
       "path": "verify_site_intelligence_v3_22_1_macos.sh",
@@ -12118,6 +12173,11 @@
       "sha256": "41fb01fe3a68e4baefdc35e93f6ffe0dba4fc4c76090fed82321e3f83f88cd5a"
     },
     {
+      "path": "verify_site_intelligence_v4_39_0_r1_macos.sh",
+      "bytes": 429,
+      "sha256": "fdf3c787a2fde5896d14f1ef9b5e980188752e1e7163b84dd60861de6a707113"
+    },
+    {
       "path": "verify_site_intelligence_v4_3_0_macos.sh",
       "bytes": 3695,
       "sha256": "02f91bccf84ceab5544c795fca4c4b45bdae43948224271148e511b0b55e0df0"
@@ -12403,6 +12463,21 @@
       "sha256": "000089afce97750d0183df179dd48cf1453649626a8b97aa5fe27dadccaa87c9"
     },
     {
+      "path": "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/images/site-intelligence-home/earth-blue-marble.webp",
+      "bytes": 200284,
+      "sha256": "a3e0a416fcc049ac09bd3219373d0a7d57230e25242e5b26c5818f4e4cfbb2fe"
+    },
+    {
+      "path": "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/images/site-intelligence-home/ocean-noaa-seafloor.webp",
+      "bytes": 205616,
+      "sha256": "3711dcbc3cbf506cb41d79e878089c72d413cd74ffadca9820ff71951d4e6789"
+    },
+    {
+      "path": "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/images/site-intelligence-home/space-webb-deep-field.webp",
+      "bytes": 89846,
+      "sha256": "f06466ac9b7df769c8930b65e3e4c59e5a32d0f4082183159a3a31dcfde2cb35"
+    },
+    {
       "path": "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/index.html",
       "bytes": 162491,
       "sha256": "c12edae74abbb15da1be02b565f47dbfd626297b327e6981ec04819574986aec"
@@ -12629,8 +12704,8 @@
     },
     {
       "path": "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.css",
-      "bytes": 93899,
-      "sha256": "d421bb06da51d26b83be1c0f5309e7aa16f7dd927a8868da6505f80f7c758db1"
+      "bytes": 100226,
+      "sha256": "cd8984b54ebef65bbe9e8a64cdf8fe1aec4e27c480f47aeb72d36a89186ce365"
     },
     {
       "path": "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js",
@@ -12814,8 +12889,8 @@
     },
     {
       "path": "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php",
-      "bytes": 516180,
-      "sha256": "ad66dc4e76b39cf36b32972dc4443f0764e5e5ef64e5539e431468aa6057fd01"
+      "bytes": 520782,
+      "sha256": "341560b2dbbf77fdcd22dcc13f39a07ad4c4eb2f2bf79cc031250a2595300de9"
     }
   ]
 }

@@ -1,8 +1,14 @@
 # Sustainable Catalyst Site Intelligence v4.39.0
 
-**Current release:** v4.39.0 — Homepage Live Intelligence Snapshot
+**Current release:** v4.39.0 R1 — Visual Intelligence Console & Integrated Live Ticker
 
-Site Intelligence v4.39.0 adds `[sc_site_intelligence_home]`, a fast homepage-specific front door that does not load the full iframe application. It connects to a bounded public summary endpoint, presents registry-derived coverage counts and up to four current source-linked signals, and routes visitors into the World, Earth & Environment, and Ocean & Space workspaces.
+Site Intelligence v4.39.0 R1 refines `[sc_site_intelligence_home]` into a lightweight visual intelligence console. It combines self-hosted high-resolution NASA and NOAA imagery, a subtle capability overlay, the original governed Live Intelligence ticker, registry-derived coverage counts, up to four current source-linked signals, and direct World, Earth, Ocean, and Space pathways without loading the full iframe application.
+
+> **Presentation-only revision:** the backend and WordPress plugin both remain at compatible release version `4.39.0`; the R1 tag records the visual refinement without triggering a new version-gate cycle.
+
+> **Image performance and provenance:** the three homepage images retain 1254–1600 px dimensions while totaling approximately 500 KB. Visible credits identify NASA Earth Observatory, NASA/ESA/CSA/STScI, and NOAA Ocean Exploration.
+
+> **Certified base release:** v4.39.0 — Homepage Live Intelligence Snapshot.
 
 > **Live summary contract:** `/v1/public/site-intelligence/summary` returns the current registered country-profile count, registered and default-enabled Live Intelligence feeds, current bounded signals, refresh time, entry points, and explicit truth boundaries.
 
