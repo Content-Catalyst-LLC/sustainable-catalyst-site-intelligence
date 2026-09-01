@@ -1,25 +1,25 @@
-Site Intelligence v4.38.0 R3 — macOS Terminal / GitHub
+Site Intelligence v4.39.0 R3 — macOS Terminal / GitHub
 
 cd ~/Downloads
 
 BUNDLE="$(find . -maxdepth 1 -type f \
-  -name 'sustainable-catalyst-site-intelligence-v4.38.0-R3-release-bundle*.zip' \
+  -name 'sustainable-catalyst-site-intelligence-v4.39.0-R3-release-bundle*.zip' \
   -print | sort | tail -1)"
 
 [ -n "$BUNDLE" ] || {
-  echo "ERROR: v4.38.0 R3 release bundle not found in Downloads."
+  echo "ERROR: v4.39.0 R3 release bundle not found in Downloads."
   exit 1
 }
 
-rm -rf sustainable-catalyst-site-intelligence-v4.38.0-R3-release
+rm -rf sustainable-catalyst-site-intelligence-v4.39.0-R3-release
 
 unzip -q "$BUNDLE" \
-  -d sustainable-catalyst-site-intelligence-v4.38.0-R3-release
+  -d sustainable-catalyst-site-intelligence-v4.39.0-R3-release
 
-cd sustainable-catalyst-site-intelligence-v4.38.0-R3-release
+cd sustainable-catalyst-site-intelligence-v4.39.0-R3-release
 
 chmod +x deploy_and_validate_site_intelligence_v4_36_0_R3_macos.sh
 
 ./deploy_and_validate_site_intelligence_v4_36_0_R3_macos.sh
 
-Expected Git tag: v4.38.0
+Expected Git tag: v4.39.0

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic browser smoke for the v4.38.0 first-class Ocean workspace."""
+"""Deterministic browser smoke for the v4.39.0 first-class Ocean workspace."""
 from __future__ import annotations
 
 import json
@@ -19,12 +19,12 @@ from app.main import app
 def main() -> int:
     browser_path = find_browser()
     if not browser_path:
-        print("ERROR: Chromium or Chrome is required for v4.38.0 Ocean browser gate.")
+        print("ERROR: Chromium or Chrome is required for v4.39.0 Ocean browser gate.")
         return 2
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
-        print("ERROR: Playwright is required for v4.38.0 Ocean browser gate.")
+        print("ERROR: Playwright is required for v4.39.0 Ocean browser gate.")
         return 2
 
     client = TestClient(app)
@@ -86,7 +86,7 @@ def main() -> int:
     assert "Ocean observation" in result["title"], result
     assert catalog["system_count"] == 11 and readiness["ok"] is True
     print(json.dumps({"browser": browser_path, "result": result, "errors": errors}, indent=2))
-    print("PASS: v4.38.0 R1 Ocean workspace survives v4 navigation regrouping and is first-class, visible, grouped and source-bound.")
+    print("PASS: v4.39.0 R1 Ocean workspace survives v4 navigation regrouping and is first-class, visible, grouped and source-bound.")
     return 0
 
 

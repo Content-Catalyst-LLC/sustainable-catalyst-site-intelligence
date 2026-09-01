@@ -1,8 +1,8 @@
-# Site Intelligence v4.38.0 R1 — Ocean Navigation Runtime & Browser Certification Repair
+# Site Intelligence v4.39.0 R1 — Ocean Navigation Runtime & Browser Certification Repair
 
 ## Repair purpose
 
-v4.38.0 R1 repairs the browser-certification failure found after the original Global Ocean Intelligence II build passed its backend, static, security, manifest, and 1,667-test regression gates. The Ocean backend contract remains unchanged at version `4.38.0`; this repair is deliberately limited to navigation ownership, browser-shell fixtures, route aliasing, and certification behavior.
+v4.39.0 R1 repairs the browser-certification failure found after the original Global Ocean Intelligence II build passed its backend, static, security, manifest, and 1,667-test regression gates. The Ocean backend contract remains unchanged at version `4.39.0`; this repair is deliberately limited to navigation ownership, browser-shell fixtures, route aliasing, and certification behavior.
 
 ## Root cause repaired
 
@@ -50,9 +50,9 @@ The complete production-shell gate also passes with service workers disabled, se
 
 ## Release identity
 
-- Backend version: `4.38.0`
-- WordPress plugin version: `4.38.0`
-- Release ID: `site-intelligence-v4.38.0`
+- Backend version: `4.39.0`
+- WordPress plugin version: `4.39.0`
+- Release ID: `site-intelligence-v4.39.0`
 - Repair designation: `R1`
 - Canonical primary areas: `6`
 - Canonical routes: `35`

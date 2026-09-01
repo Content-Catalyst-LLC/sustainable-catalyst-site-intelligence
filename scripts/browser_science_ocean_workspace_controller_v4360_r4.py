@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Browser certification for v4.38.0 R4 Science/Ocean route ownership and recovery."""
+"""Browser certification for v4.39.0 R4 Science/Ocean route ownership and recovery."""
 from __future__ import annotations
 import json, os, sys, traceback
 from pathlib import Path
@@ -15,11 +15,11 @@ from app.main import app
 def main()->int:
     browser_path=find_browser()
     if not browser_path:
-        print('ERROR: Chromium or Chrome is required for the v4.38.0 R4 browser gate.'); return 2
+        print('ERROR: Chromium or Chrome is required for the v4.39.0 R4 browser gate.'); return 2
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
-        print('ERROR: Playwright is required for the v4.38.0 R4 browser gate.'); return 2
+        print('ERROR: Playwright is required for the v4.39.0 R4 browser gate.'); return 2
     client=TestClient(app)
     html,_=document('disabled')
     science_js=(ROOT/'backend/public_app/assets/science-v240.js').read_text(encoding='utf-8')
@@ -54,7 +54,7 @@ def main()->int:
         # then enter Space directly from the persistent featured control.
         page.evaluate("()=>{delete window.SCScienceV240; return true}")
         page.locator('#primaryNavigation [data-space-entry="hub"]').click()
-        page.wait_for_function("window.SCScienceV240?.status?.().repair === '4.38.0'",timeout=10000)
+        page.wait_for_function("window.SCScienceV240?.status?.().repair === '4.39.0'",timeout=10000)
         page.wait_for_function("!document.querySelector('#scienceStudio')?.hidden",timeout=10000)
         page.wait_for_function("document.querySelector('#scienceWorkspaceSelect')?.value === 'space'",timeout=10000)
         page.wait_for_selector('[data-science-local-action="seti"]',state='visible',timeout=5000)
@@ -67,7 +67,7 @@ def main()->int:
           spaceActive:document.querySelector('#primaryNavigation [data-space-entry=\"hub\"]')?.classList.contains('active')||false,
           spaceCards:document.querySelectorAll('#scienceWorkspaceCards .science-workspace-card').length
         })""")
-        assert science['route']=='science' and science['repair']=='4.38.0' and science['visible'],science
+        assert science['route']=='science' and science['repair']=='4.39.0' and science['visible'],science
         assert science['domain']=='space' and science['spaceActive'] and science['spaceCards']==6,science
         assert science['options']==['Earth','Ocean','Space'],science
         # Ocean must be equally prominent and transfer route ownership cleanly.
@@ -104,7 +104,7 @@ def main()->int:
         browser.close()
     assert not errors,errors
     print(json.dumps({'browser':browser_path,'featured':featured,'science':science,'ocean':ocean,'space':space,'errors':errors},indent=2))
-    print('PASS: v4.38.0 R4 keeps Ocean and Space first-class, recovers a missing Science controller, certifies six Space workspaces, transfers route ownership to Ocean, and certifies 11 visible marine systems.')
+    print('PASS: v4.39.0 R4 keeps Ocean and Space first-class, recovers a missing Science controller, certifies six Space workspaces, transfers route ownership to Ocean, and certifies 11 visible marine systems.')
     return 0
 
 if __name__=='__main__':

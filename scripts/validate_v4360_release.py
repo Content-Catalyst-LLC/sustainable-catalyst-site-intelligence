@@ -11,9 +11,9 @@ app = (ROOT / "backend/public_app/assets/app.js").read_text(encoding="utf-8")
 science = (ROOT / "backend/public_app/assets/science-v240.js").read_text(encoding="utf-8")
 main = (ROOT / "backend/app/main.py").read_text(encoding="utf-8")
 sw = (ROOT / "backend/public_app/service-worker.js").read_text(encoding="utf-8")
-assert "Version: 4.38.0" in wp and "site-intelligence-v4.38.0" in wp
-assert 'data-scsi-release="4.38.0"' in index
-assert 'const APP_VERSION="4.38.0"' in app
+assert "Version: 4.39.0" in wp and "site-intelligence-v4.39.0" in wp
+assert 'data-scsi-release="4.39.0"' in index
+assert 'const APP_VERSION="4.39.0"' in app
 assert 'data-ocean-entry="hub"' in index
 assert 'id="oceanObservationStudio"' in index
 assert "ocean-observation-v4360.js" in sw and "ocean-observation-v4360.css" in sw
@@ -53,12 +53,12 @@ for file in (
     assert (ROOT / file).is_file(), file
 assert 'data-ocean-hydration-state="idle"' in index
 assert 'oceanHydrationState="ready"' in (ROOT / "backend/public_app/assets/ocean-observation-v4360.js").read_text(encoding="utf-8")
-assert 'v4.38.0' in (ROOT / "backend/app/scientific_earth_systems_observatory.py").read_text(encoding="utf-8")
-assert '/app/assets/science-v240.js?v=4.38.0' in index
-assert '/app/assets/ocean-observation-v4360.js?v=4.38.0' in index
-assert '/app/assets/app.js?v=4.38.0' in index
-assert '/app/assets/unified-platform-v4000.css?v=4.38.0' in index
+assert 'v4.39.0' in (ROOT / "backend/app/scientific_earth_systems_observatory.py").read_text(encoding="utf-8")
+assert '/app/assets/science-v240.js?v=4.39.0' in index
+assert '/app/assets/ocean-observation-v4360.js?v=4.39.0' in index
+assert '/app/assets/app.js?v=4.39.0' in index
+assert '/app/assets/unified-platform-v4000.css?v=4.39.0' in index
 assert 'data-space-entry="hub" data-nav-group="places-systems"' in index
 assert 'Explore Ocean' in index and 'Explore Space' in index
 assert 'const REPAIR="r4"' in sw
-print("PASS: v4.38.0 R4 static release validation")
+print("PASS: v4.39.0 R4 static release validation")

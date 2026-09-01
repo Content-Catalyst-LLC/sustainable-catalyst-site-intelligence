@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const VERSION="2.4.0",REPAIR="4.38.0";
+  const VERSION="2.4.0",REPAIR="4.39.0";
   const state={map:null,base:null,markers:null,records:[],allRecords:[],assets:[],layers:[],series:[],stac:[],overview:null,facets:null,discovery:null};
   const LOCAL_FALLBACK=[
     {id:"earth-observation",domain:"earth",title:"Earth Observation",summary:"Satellite-derived imagery, environmental layers, comparison, timelines, and source-aware Earth-system observation.",action:"earth"},

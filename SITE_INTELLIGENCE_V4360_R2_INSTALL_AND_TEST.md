@@ -1,10 +1,10 @@
-# Site Intelligence v4.38.0 R2 — Install and Test
+# Site Intelligence v4.39.0 R2 — Install and Test
 
 ## Release identity
 
-- Runtime/plugin version: `4.38.0`
+- Runtime/plugin version: `4.39.0`
 - Repair lineage: `R2`
-- Git tag: `v4.38.0`
+- Git tag: `v4.39.0`
 - Release: **Science Workspace Core-Decoupling & Ocean/Space Discovery Repair**
 
 ## What this repairs

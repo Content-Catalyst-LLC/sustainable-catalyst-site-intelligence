@@ -1,4 +1,4 @@
-# Site Intelligence v4.38.0 — Live Space & Iframe Audit
+# Site Intelligence v4.39.0 — Live Space & Iframe Audit
 
 ## Scope
 

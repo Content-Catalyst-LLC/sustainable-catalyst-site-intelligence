@@ -1,4 +1,4 @@
-# v4.38.0 R2 Science Discovery Audit
+# v4.39.0 R2 Science Discovery Audit
 
 ## Reported production failure
 

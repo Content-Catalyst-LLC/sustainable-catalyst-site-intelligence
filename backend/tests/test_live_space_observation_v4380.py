@@ -14,7 +14,7 @@ SETTINGS=SimpleNamespace(space_observation_timeout_seconds=7)
 
 def test_space_provider_catalog_is_five_lane_public_and_credential_free():
     p=provider_catalog(SETTINGS)
-    assert p['ok'] is True and p['version']=='4.38.0'
+    assert p['ok'] is True and p['version']=='4.39.0'
     assert p['provider_count']==5 and p['default_provider']=='astronomy-observations'
     ids=[r['id'] for r in p['providers']]
     assert ids==['planetary-imagery','astronomy-observations','solar-system-ephemeris','exoplanets','seti-archive']
@@ -106,7 +106,7 @@ def test_public_space_readiness_and_provider_routes_are_live():
     providers=CLIENT.get('/public/space-observation/providers')
     ready=CLIENT.get('/public/space-observation/readiness')
     assert providers.status_code==200 and ready.status_code==200
-    assert providers.json()['version']=='4.38.0'
+    assert providers.json()['version']=='4.39.0'
     assert ready.json()['ok'] is True
 
 
@@ -114,20 +114,20 @@ def test_frontend_and_wordpress_include_live_space_and_iframe_repairs():
     js=(ROOT/'backend/public_app/assets/live-space-observation-v4380.js').read_text()
     css=(ROOT/'backend/public_app/assets/iframe-navigation-v4380.css').read_text()
     idx=(ROOT/'backend/public_app/index.html').read_text()
-    assert 'const VERSION="4.38.0"' in js
+    assert 'const VERSION="4.39.0"' in js
     assert '/public/space-observation/search' in js
     assert '5 live acquisition lanes' in js
     assert 'minmax(214px,236px)' in css
     assert 'html.scsi-wordpress-fixed-embed' in css
     assert 'id="liveSpaceObservation"' in idx
-    assert 'live-space-observation-v4380.js?v=4.38.0' in idx
+    assert 'live-space-observation-v4380.js?v=4.39.0' in idx
     wp=ROOT/'wordpress-plugin/sustainable-catalyst-site-intelligence/assets'
     assert (wp/'live-space-observation-v4380.js').read_bytes()==(ROOT/'backend/public_app/assets/live-space-observation-v4380.js').read_bytes()
     assert (wp/'iframe-navigation-v4380.css').read_bytes()==(ROOT/'backend/public_app/assets/iframe-navigation-v4380.css').read_bytes()
 
 
 def test_release_identity_and_deployment_gate_include_live_space():
-    assert CLIENT.get('/public/build-info').json()['version']=='4.38.0'
+    assert CLIENT.get('/public/build-info').json()['version']=='4.39.0'
     d=CLIENT.get('/public/deployment-verification').json()
     assert d['contract']=='deployment-verification-live-space-observation-v4380'
     assert d['checks']['live_space_observation_ready'] is True

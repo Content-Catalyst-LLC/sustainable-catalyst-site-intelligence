@@ -1,9 +1,9 @@
-# Site Intelligence v4.38.0 — Install and Test
+# Site Intelligence v4.39.0 — Install and Test
 
 ## Required deployment
 
 1. Run `deploy_and_validate_site_intelligence_v4_37_0_macos.sh` from the release bundle.
-2. The installer validates the immutable repository, runs the deterministic pytest suite and browser gates, pushes the certified tree to GitHub, creates tag `v4.38.0`, and waits for Render first-party verification.
+2. The installer validates the immutable repository, runs the deterministic pytest suite and browser gates, pushes the certified tree to GitHub, creates tag `v4.39.0`, and waits for Render first-party verification.
 3. Upload the bundled WordPress plugin ZIP and replace the existing Site Intelligence plugin.
 
 ## Optional ONC configuration
@@ -28,4 +28,4 @@ curl -fsS "$BASE/public/ocean-observation/readiness" | python3 -m json.tool
 curl -fsS "$BASE/public/deployment-verification" | python3 -m json.tool
 ```
 
-Expected first-party state: version `4.38.0`, underwater provider count `3`, FathomNet and NOAA public lanes ready, ONC missing credential non-blocking, Ocean system count `11`, and deployment verification `ok: true`.
+Expected first-party state: version `4.39.0`, underwater provider count `3`, FathomNet and NOAA public lanes ready, ONC missing credential non-blocking, Ocean system count `11`, and deployment verification `ok: true`.

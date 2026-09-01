@@ -1,4 +1,4 @@
-# Site Intelligence v4.38.0 R4
+# Site Intelligence v4.39.0 R4
 
 ## Science/Ocean Workspace Controller, Route Ownership & Ocean/Space Prominence Repair
 

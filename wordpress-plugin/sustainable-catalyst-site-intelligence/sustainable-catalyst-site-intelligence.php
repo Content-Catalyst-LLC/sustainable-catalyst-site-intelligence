@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 4.38.0
+ * Version: 4.39.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,8 +13,8 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '4.38.0';
-    const RELEASE_ID = 'site-intelligence-v4.38.0';
+    const VERSION = '4.39.0';
+    const RELEASE_ID = 'site-intelligence-v4.39.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -202,6 +202,7 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_public_dashboard_launch_readiness', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_public_dashboard_studio_navigation', [$this, 'public_connector_panel_shortcode']);
         add_shortcode('sc_site_intelligence_app', [$this, 'standalone_app_shortcode']);
+        add_shortcode('sc_site_intelligence_home', [$this, 'site_intelligence_home_shortcode']);
         add_shortcode('sc_auditable_public_observatory', [$this, 'auditable_public_observatory_shortcode']);
         add_shortcode('sc_site_intelligence_launch', [$this, 'site_intelligence_launch_shortcode']);
         add_shortcode('sc_earth_observation_studio', [$this, 'earth_observation_studio_shortcode']);
@@ -433,7 +434,7 @@ final class SC_Site_Intelligence_Plugin {
             return;
         }
 
-        // v4.38.0 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
+        // v4.39.0 preserves existing feed, freshness, and placement choices while adding presentation and accessibility controls.
         // Existing moving tickers remain moving unless an administrator selects static or manual presentation.
         $stored_options = get_option(self::OPTION_KEY, []);
         if (is_array($stored_options)) {
@@ -878,6 +879,11 @@ final class SC_Site_Intelligence_Plugin {
                 'region' => ['sanitize_callback' => 'sanitize_text_field'],
                 'country' => ['sanitize_callback' => 'sanitize_text_field'],
             ],
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/homepage-summary', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_homepage_summary'],
+            'permission_callback' => '__return_true',
         ]);
         register_rest_route(self::REST_NAMESPACE, '/live-intelligence/status', [
             'methods' => WP_REST_Server::READABLE,
@@ -3171,6 +3177,11 @@ final class SC_Site_Intelligence_Plugin {
     public function rest_live_intelligence_homepage(WP_REST_Request $request) {
         $request->set_param('surface', 'homepage');
         return $this->rest_live_intelligence($request);
+    }
+
+    public function rest_homepage_summary(WP_REST_Request $request) {
+        $result = $this->backend_request('v1/public/site-intelligence/summary');
+        return is_wp_error($result) ? $result : rest_ensure_response($result);
     }
 
     public function rest_live_intelligence_status(WP_REST_Request $request) {
@@ -6446,6 +6457,61 @@ final class SC_Site_Intelligence_Plugin {
             $title,
             $height
         );
+    }
+
+    public function site_intelligence_home_shortcode($atts = []) {
+        $atts = shortcode_atts([
+            'title' => 'Site Intelligence',
+            'cta_label' => 'Open Site Intelligence',
+        ], $atts, 'sc_site_intelligence_home');
+
+        $options = self::options();
+        $backend = rtrim((string) ($options['backend_url'] ?? ''), '/');
+        $app_base = $backend !== '' ? $backend . '/app/' : home_url('/platform/site-intelligence/');
+        $entry_points = [
+            ['label' => 'Explore the World', 'description' => 'Global map and current public evidence', 'query' => ['view' => 'overview']],
+            ['label' => 'Earth & Environment', 'description' => 'Earth observation and environmental systems', 'query' => ['view' => 'earth']],
+            ['label' => 'Ocean & Space', 'description' => 'Marine and space observation workspaces', 'query' => ['view' => 'science']],
+        ];
+        $endpoint = rest_url(self::REST_NAMESPACE . '/homepage-summary');
+        $instance_id = 'scsi-home-' . wp_generate_uuid4();
+
+        ob_start();
+        ?>
+        <section id="<?php echo esc_attr($instance_id); ?>" class="scsi-home-summary" data-scsi-home-summary data-endpoint="<?php echo esc_url($endpoint); ?>" data-app-base="<?php echo esc_url($app_base); ?>" aria-labelledby="<?php echo esc_attr($instance_id); ?>-title">
+            <div class="scsi-home-summary__header">
+                <div>
+                    <p class="scsi-home-summary__eyebrow">Public Intelligence</p>
+                    <h2 id="<?php echo esc_attr($instance_id); ?>-title"><?php echo esc_html($atts['title']); ?></h2>
+                    <p class="scsi-home-summary__lede">Explore geographic, environmental, humanitarian, scientific, and institutional evidence through a provenance-aware public intelligence system.</p>
+                </div>
+                <p class="scsi-home-summary__status" data-home-status data-state="connecting"><span aria-hidden="true"></span><strong>Connecting to Site Intelligence</strong></p>
+            </div>
+            <dl class="scsi-home-summary__metrics" aria-label="Site Intelligence coverage summary">
+                <?php foreach ([['country_profiles', 'country profiles'], ['registered_sources', 'registered live feeds'], ['enabled_sources', 'enabled by default'], ['current_signals', 'current signals']] as $metric): ?>
+                    <div data-home-metric="<?php echo esc_attr($metric[0]); ?>"><dt><?php echo esc_html($metric[1]); ?></dt><dd>—</dd></div>
+                <?php endforeach; ?>
+            </dl>
+            <div class="scsi-home-summary__signals" data-home-signals aria-live="polite" aria-busy="true">
+                <p>Loading the latest bounded public signals…</p>
+            </div>
+            <nav class="scsi-home-summary__entries" aria-label="Site Intelligence entry points">
+                <?php foreach ($entry_points as $entry): $href = add_query_arg($entry['query'], $app_base); ?>
+                    <a href="<?php echo esc_url($href); ?>" data-scsi-event="sc_site_intelligence_home_entry">
+                        <strong><?php echo esc_html($entry['label']); ?></strong>
+                        <span><?php echo esc_html($entry['description']); ?></span>
+                        <b aria-hidden="true">↗</b>
+                    </a>
+                <?php endforeach; ?>
+            </nav>
+            <div class="scsi-home-summary__footer">
+                <p data-home-refresh>Coverage counts and signal freshness are loaded from the public backend.</p>
+                <a class="scsi-home-summary__cta" href="<?php echo esc_url(add_query_arg(['view' => 'overview'], $app_base)); ?>" data-scsi-event="sc_site_intelligence_home_open"><?php echo esc_html($atts['cta_label']); ?><span aria-hidden="true"> →</span></a>
+            </div>
+            <noscript><p class="scsi-home-summary__notice">Live counts require JavaScript. The Site Intelligence entry points remain available.</p></noscript>
+        </section>
+        <?php
+        return ob_get_clean();
     }
 
     private function app_embed_url($backend, $query = []) {

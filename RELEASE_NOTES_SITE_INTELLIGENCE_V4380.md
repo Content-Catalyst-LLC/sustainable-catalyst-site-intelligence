@@ -1,8 +1,8 @@
-# Site Intelligence v4.38.0 — Live Space Observation, Planetary Imagery & Archive Retrieval + Iframe Navigation Repair
+# Site Intelligence v4.39.0 — Live Space Observation, Planetary Imagery & Archive Retrieval + Iframe Navigation Repair
 
 ## Release purpose
 
-v4.38.0 turns the featured Space pillar from a mostly source-aware handoff layer into a live, provider-bounded observation/archive workspace while repairing the text-control collision seen in WordPress iframe widths. It preserves the existing six primary areas and 35 canonical public routes.
+v4.39.0 turns the featured Space pillar from a mostly source-aware handoff layer into a live, provider-bounded observation/archive workspace while repairing the text-control collision seen in WordPress iframe widths. It preserves the existing six primary areas and 35 canonical public routes.
 
 ## Live Space acquisition lanes
 
@@ -20,7 +20,7 @@ The Science workspace now includes a first-class Live Space surface with provide
 
 ## Iframe navigation repair
 
-The legacy <=1050px rule compressed the sidebar to 80px while newer featured Ocean/Space controls forced their labels visible. v4.38.0 introduces an embed-aware 761–1180px layout with a 236px text sidebar, controlled wrapping, and no horizontal label overflow. At <=760px the existing mobile navigation model remains authoritative.
+The legacy <=1050px rule compressed the sidebar to 80px while newer featured Ocean/Space controls forced their labels visible. v4.39.0 introduces an embed-aware 761–1180px layout with a 236px text sidebar, controlled wrapping, and no horizontal label overflow. At <=760px the existing mobile navigation model remains authoritative.
 
 ## Inherited guarantees
 
@@ -33,7 +33,7 @@ The legacy <=1050px rule compressed the sidebar to 80px while newer featured Oce
 
 ## Release identity
 
-- Semantic version: `4.38.0`
-- Git tag: `v4.38.0`
-- Rollback tag: `site-intelligence-pre-v4.38.0`
+- Semantic version: `4.39.0`
+- Git tag: `v4.39.0`
+- Rollback tag: `site-intelligence-pre-v4.39.0`
 - Expected deterministic pytest collection: `1708`

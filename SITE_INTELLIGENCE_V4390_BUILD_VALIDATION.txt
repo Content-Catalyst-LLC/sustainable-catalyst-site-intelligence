@@ -1,0 +1,32 @@
+Sustainable Catalyst Site Intelligence v4.39.0
+Build validation: Homepage Live Intelligence Snapshot
+Date: 2026-09-01 UTC
+
+PASS - v4.39.0 static release contract
+PASS - backend homepage-summary module Python compilation
+PASS - backend main application Python compilation
+PASS - direct homepage-summary behavior
+       country profiles: 172 (registry-derived)
+       registered live feeds: 8 (registry-derived)
+       enabled-by-default feeds: 8 (registry-derived)
+       bounded live highlight normalization: verified
+       zero-signal truthful empty state: verified
+PASS - public route declarations
+       /v1/public/site-intelligence/summary
+       /public/site-intelligence/summary
+PASS - WordPress shortcode registration and proxy wiring
+       [sc_site_intelligence_home]
+       /wp-json/sc-site-intelligence/v1/homepage-summary
+PASS - homepage shortcode contains no iframe
+PASS - JavaScript syntax and repository JavaScript validator (158 files)
+PASS - repository security static scan (0 findings)
+PASS - JSON/GeoJSON parse validation (135 files)
+PASS - installer and verifier shell syntax
+
+NOT RUN IN THIS BUILD ENVIRONMENT
+- PHP lint: PHP executable unavailable.
+- Full pytest/FastAPI suite: pytest and FastAPI packages unavailable.
+
+The packaged verifier runs PHP lint when PHP is installed and runs the complete
+pytest suite when pytest/FastAPI are installed. These environment omissions are
+reported explicitly and are not represented as passing tests.

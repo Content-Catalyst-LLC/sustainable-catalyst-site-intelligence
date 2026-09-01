@@ -478,6 +478,7 @@ from .live_intelligence_gateway_v370 import (
     homepage_gateway_policy as live_intelligence_gateway_policy,
     DEFAULT_HOMEPAGE_SIGNAL_LIMIT, MAX_HOMEPAGE_SIGNAL_LIMIT,
 )
+from .homepage_summary_v4390 import build_homepage_summary
 from .live_intelligence_rotation_v371 import (
     apply_rotation_policy as apply_live_intelligence_rotation_policy,
     rotation_policy as live_intelligence_rotation_policy,
@@ -9966,6 +9967,22 @@ def public_live_intelligence_homepage_endpoint(
         return result
     except KeyError as exc:
         raise HTTPException(status_code=404, detail="Live Intelligence channel not found.") from exc
+
+
+@app.get("/public/site-intelligence/summary")
+@app.get("/v1/public/site-intelligence/summary")
+def public_site_intelligence_homepage_summary_endpoint(settings: Settings = Depends(get_settings)):
+    """Return a bounded homepage payload; no full-application bootstrap is required."""
+    try:
+        payload = build_live_intelligence(settings, limit=8, channel="global", max_per_source=2)
+        payload = apply_live_intelligence_gateway_policy(payload, surface="homepage")
+        payload = apply_live_intelligence_rotation_policy(payload, settings, limit=4, surface="homepage", record_history=False)
+        payload = apply_connected_surface_policy(payload, "homepage", limit=4)
+    except Exception:
+        # The endpoint itself remains truthful and useful when every upstream feed
+        # is unavailable; no live records or health claims are manufactured.
+        payload = {"signals": [], "generated_at": datetime.now(timezone.utc).isoformat(), "gateway": {}}
+    return build_homepage_summary(payload)
 
 
 @app.get("/public/live-intelligence/status")

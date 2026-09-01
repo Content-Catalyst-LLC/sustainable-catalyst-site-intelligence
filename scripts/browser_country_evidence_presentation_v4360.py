@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic browser regression for v4.38.0 country evidence hierarchy."""
+"""Deterministic browser regression for v4.39.0 country evidence hierarchy."""
 from __future__ import annotations
 
 import json
@@ -16,12 +16,12 @@ from browser_complete_shell_gate_v32362 import document, find_browser
 def main() -> int:
     browser_path = find_browser()
     if not browser_path:
-        print("ERROR: Chromium or Chrome is required for v4.38.0 country presentation gate.")
+        print("ERROR: Chromium or Chrome is required for v4.39.0 country presentation gate.")
         return 2
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
-        print("ERROR: Playwright is required for v4.38.0 country presentation gate.")
+        print("ERROR: Playwright is required for v4.39.0 country presentation gate.")
         return 2
 
     html, _ = document("disabled")
@@ -63,7 +63,7 @@ def main() -> int:
     # benchmark/warning cards are asserted in backend tests; the browser gate
     # requires that the rendered hierarchy and evidence-detail interaction exist.
     print(json.dumps({"browser": browser_path, "result": result, "errors": errors}, indent=2))
-    print("PASS: v4.38.0 country evidence hierarchy is visible and Conditions Now remains separate from structural indicators.")
+    print("PASS: v4.39.0 country evidence hierarchy is visible and Conditions Now remains separate from structural indicators.")
     return 0
 
 

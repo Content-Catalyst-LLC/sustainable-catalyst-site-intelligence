@@ -86,7 +86,7 @@ def test_audit_readiness_green_without_network():
 def test_public_catalog_and_readiness_routes_use_43510():
     client=TestClient(app)
     assert client.get('/public/authoritative-connectors').json()['connector_count'] == 50
-    assert client.get('/public/authoritative-connectors/readiness').json()['version']=='4.38.0'
+    assert client.get('/public/authoritative-connectors/readiness').json()['version']=='4.39.0'
 
 def test_new_routes_exist_and_validate_before_network():
     client=TestClient(app)

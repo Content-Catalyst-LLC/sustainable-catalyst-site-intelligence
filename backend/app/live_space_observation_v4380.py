@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Site Intelligence v4.38.0 — live Space observation and archive retrieval.
+"""Site Intelligence v4.39.0 — live Space observation and archive retrieval.
 
 Provider lanes are independent and public by default. Release readiness never performs
 upstream network probes and no provider failure fabricates observations, imagery,

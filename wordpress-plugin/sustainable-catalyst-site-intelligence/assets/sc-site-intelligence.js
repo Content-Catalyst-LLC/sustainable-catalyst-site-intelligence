@@ -172,7 +172,7 @@
     try {
       const item = JSON.parse(sessionStorage.getItem(recoveryCacheKey(url)) || 'null');
       if (!item || !item.savedAt || Date.now() - item.savedAt > 21600000) return null;
-      window.dispatchEvent(new CustomEvent('scsi:service-fallback', {detail: {version: cfg.version || '4.38.0', group: 'wordpress-proxy', path: url, reason: 'last-known-good', staleAgeMs: Date.now() - item.savedAt}}));
+      window.dispatchEvent(new CustomEvent('scsi:service-fallback', {detail: {version: cfg.version || '4.39.0', group: 'wordpress-proxy', path: url, reason: 'last-known-good', staleAgeMs: Date.now() - item.savedAt}}));
       return item.data;
     } catch (e) { return null; }
   }
@@ -200,7 +200,7 @@
       return fetchJsonAttempt(url).catch(function (error) {
         const retryable = !error.status || recoveryStatuses.indexOf(Number(error.status)) !== -1;
         if (retryable && attempt < 3) {
-          window.dispatchEvent(new CustomEvent('scsi:service-retry', {detail: {version: cfg.version || '4.38.0', group: 'wordpress-proxy', path: url, attempt: attempt + 1}}));
+          window.dispatchEvent(new CustomEvent('scsi:service-retry', {detail: {version: cfg.version || '4.39.0', group: 'wordpress-proxy', path: url, attempt: attempt + 1}}));
           return new Promise(function (resolve) { setTimeout(resolve, attempt === 1 ? 600 : 1400); }).then(run);
         }
         const recovered = readRecoveredJson(url);
@@ -4838,8 +4838,63 @@
     });
   }
 
+  function setupSiteIntelligenceHomeSummary() {
+    document.querySelectorAll('[data-scsi-home-summary]').forEach(function (root) {
+      const endpoint = root.dataset.endpoint || '';
+      const appBase = root.dataset.appBase || window.location.origin + '/';
+      const status = root.querySelector('[data-home-status]');
+      const signals = root.querySelector('[data-home-signals]');
+      const refresh = root.querySelector('[data-home-refresh]');
+      if (!endpoint || !status || !signals) return;
+
+      function appUrl(href) {
+        try { return new URL(String(href || ''), appBase).toString(); }
+        catch (_) { return appBase; }
+      }
+
+      fetch(endpoint, {headers: headers, credentials: 'same-origin'}).then(function (response) {
+        if (!response.ok) throw new Error('Homepage summary request failed.');
+        return response.json();
+      }).then(function (payload) {
+        const currentStatus = payload.status || {};
+        status.dataset.state = currentStatus.state || 'online';
+        status.querySelector('strong').textContent = currentStatus.label || 'Site Intelligence Online';
+        (Array.isArray(payload.metrics) ? payload.metrics : []).forEach(function (metric) {
+          const card = root.querySelector('[data-home-metric="' + CSS.escape(String(metric.id || '')) + '"]');
+          if (!card) return;
+          const value = Number(metric.value);
+          card.querySelector('dd').textContent = Number.isFinite(value) ? value.toLocaleString() : '—';
+          card.title = metric.basis || '';
+        });
+        const highlights = Array.isArray(payload.highlights) ? payload.highlights : [];
+        signals.innerHTML = highlights.length ? highlights.map(function (item) {
+          return '<a class="scsi-home-summary__signal" href="' + escapeHtml(appUrl(item.href)) + '">' +
+            '<span>' + escapeHtml(item.category || 'Public signal') + '</span>' +
+            '<strong>' + escapeHtml(item.label || 'Current evidence') + '</strong>' +
+            '<b>' + escapeHtml(item.value || 'Open context') + '</b>' +
+            '<small>' + escapeHtml(item.source || 'Source context available') + '</small>' +
+          '</a>';
+        }).join('') : '<p class="scsi-home-summary__empty">The platform is online. No current signals were returned for this bounded refresh.</p>';
+        signals.setAttribute('aria-busy', 'false');
+        if (refresh) {
+          const timestamp = payload.latest_refresh ? new Date(payload.latest_refresh) : null;
+          refresh.textContent = timestamp && !Number.isNaN(timestamp.getTime()) ? 'Latest public refresh: ' + timestamp.toLocaleString() + '. Counts reflect registered platform coverage.' : 'Counts reflect registered platform coverage.';
+        }
+        root.classList.add('is-ready');
+      }).catch(function () {
+        status.dataset.state = 'degraded';
+        status.querySelector('strong').textContent = 'Live summary temporarily unavailable';
+        signals.innerHTML = '<p class="scsi-home-summary__empty">The homepage summary could not refresh. Use the entry points below to open Site Intelligence directly.</p>';
+        signals.setAttribute('aria-busy', 'false');
+        if (refresh) refresh.textContent = 'Live counts are unavailable; no values have been estimated or fabricated.';
+        root.classList.add('has-error');
+      });
+    });
+  }
+
   function init() {
     setupActivePageLinks();
+    setupSiteIntelligenceHomeSummary();
     setupLiveIntelligenceSubscriptions();
     setupLiveIntelligenceEditorial();
     setupLiveIntelligencePublicationReleases();

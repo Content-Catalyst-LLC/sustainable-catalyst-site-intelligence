@@ -1,3 +1,14 @@
+# v4.39.0 — Homepage Live Intelligence Snapshot
+
+- Added the homepage-specific `[sc_site_intelligence_home]` shortcode without changing the full `[sc_site_intelligence_app]` embed.
+- Added public backend aliases at `/v1/public/site-intelligence/summary` and `/public/site-intelligence/summary`.
+- Derived coverage metrics from the first-party country and Live Intelligence source registries rather than hard-coding promotional counts.
+- Added up to four current source-linked signal highlights from the existing bounded homepage Live Intelligence pipeline.
+- Added direct entry points for Explore the World, Earth & Environment, and Ocean & Space plus a primary Open Site Intelligence action.
+- Added a non-iframe, responsive, accessible black/green institutional presentation suited to the homepage.
+- Added truthful degraded behavior: failed refreshes never receive estimated counts or fabricated signals, while navigation remains usable.
+- Preserved v4.38.0 live Space, Ocean, country/evidence, iframe-navigation, and six-area / 35-route contracts.
+
 # v4.38.0 — Live Space Observation, Planetary Imagery & Archive Retrieval + Iframe Navigation Repair
 
 - Added five independent live/public Space acquisition lanes: USGS Astrogeology planetary STAC, MAST/STScI astronomical observations, JPL Horizons ephemerides, NASA Exoplanet Archive TAP, and Breakthrough Listen archive discovery.
@@ -9,7 +20,7 @@
 - Added iframe browser certification at 1024, 900, and 768px plus inherited desktop/mobile/iframe 35-route certification.
 - Preserved Ocean 11/11 readiness, featured Ocean + Space controls, Palestine/Israel identity integrity, evidence hierarchy, and the six-area / 35-route public architecture.
 
-# v4.38.0 R4 — Science/Ocean Workspace Controller, Route Ownership & Ocean/Space Prominence Repair
+# v4.39.0 R4 — Science/Ocean Workspace Controller, Route Ownership & Ocean/Space Prominence Repair
 
 - Repaired the Science route so a missing/stale `SCScienceV240` controller is reloaded and initialized rather than silently returning with no visible workspace.
 - Repaired Ocean route ownership: Ocean awaits the Earth route handoff, establishes `earth:ocean` ownership, then hydrates its 11-system catalog.
@@ -20,9 +31,9 @@
 - Added direct Space entry into the six local Space workspaces: Orbital Earth, Lunar & Planetary, Astronomy, Solar System, Exoplanets, and SETI.
 - Preserved Platform Core as optional for local Ocean and Space discovery; no scientific records are fabricated.
 
-# v4.38.0 — Global Ocean Intelligence II — Ocean Observation & Marine Systems
+# v4.39.0 — Global Ocean Intelligence II — Ocean Observation & Marine Systems
 
-## v4.38.0 R2 — Science Workspace Core-Decoupling & Ocean/Space Discovery Repair
+## v4.39.0 R2 — Science Workspace Core-Decoupling & Ocean/Space Discovery Repair
 
 - Decoupled the Science front door from Platform Core record-catalog configuration.
 - Added an always-populated Earth / Ocean / Space domain selector and eight local science workspace launchers.
@@ -31,13 +42,13 @@
 - Preserved the no-fabrication rule for scientific records, observations, datasets, measurements, trajectories and scientific conclusions.
 - Added browser certification for the reported `core-unconfigured` condition and verified Ocean plus six Space surfaces remain discoverable.
 
-## v4.38.0 R1 — Ocean Navigation Runtime & Browser Certification Repair
+## v4.39.0 R1 — Ocean Navigation Runtime & Browser Certification Repair
 
 - Preserves the first-class Ocean navigation control when the v4 six-area navigation grouper reconstructs `#primaryNavigation`.
 - Places Ocean in the Analysis group immediately after Earth without adding a 36th public route.
 - Mirrors the repaired navigation owner into the WordPress plugin asset set.
 - Strengthens the deterministic browser smoke to wait for v4 navigation readiness and assert the Ocean entry survives post-DOM grouping before click-through.
-- Keeps the 11-system Ocean backend, evidence contracts, and `4.38.0` deployment identity unchanged.
+- Keeps the 11-system Ocean backend, evidence contracts, and `4.39.0` deployment identity unchanged.
 
 
 - Promoted Ocean Intelligence to an explicit, first-class navigation entry without expanding the canonical six-area / 35-route v4 registry.
