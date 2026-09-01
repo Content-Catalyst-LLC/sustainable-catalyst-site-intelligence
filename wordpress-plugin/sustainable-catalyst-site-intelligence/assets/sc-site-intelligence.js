@@ -3888,7 +3888,7 @@
       const shorten = function (value, maximum) {
         const clean = String(value || '').replace(/\s+/g, ' ').trim();
         if (clean.length <= maximum) return clean;
-        return clean.slice(0, Math.max(1, maximum - 1)).trimEnd() + '…';
+        return clean.slice(0, Math.max(1, maximum - 1)).replace(/\s+$/, '') + '…';
       };
       const normalizeDeliveryState = function (data) {
         const delivery = data && data.delivery ? data.delivery : {};
@@ -3962,6 +3962,59 @@
           '<strong class="scsi-live-intelligence__value">' + escapeHtml(shorten(fullValue, textLimit)) + '</strong>' +
           (metadata.length ? '<small>' + escapeHtml(metadata.join(' · ')) + '</small>' : '') + '</a>' + separator;
       };
+      const safeItemHtml = function (signal, includeSeparator, index) {
+        try {
+          return itemHtml(signal, includeSeparator, index);
+        } catch (error) {
+          try {
+            window.dispatchEvent(new CustomEvent('scsi:live-intelligence-render-error', {detail: {
+              version: cfg.version || '4.39.0',
+              signalId: String((signal && signal.signal_id) || ''),
+              message: String((error && error.message) || error || 'render error')
+            }}));
+          } catch (_) {}
+          return '';
+        }
+      };
+      const fallbackText = function (value, maximum) {
+        const clean = String(value == null ? '' : value).replace(/\s+/g, ' ').trim();
+        if (!clean) return '';
+        return clean.length <= maximum ? clean : clean.slice(0, Math.max(1, maximum - 1)).replace(/\s+$/, '') + '…';
+      };
+      const minimalSignalHtml = function (signal, includeSeparator, index) {
+        const item = signal && typeof signal === 'object' ? signal : {};
+        const label = fallbackText(item.label || item.short_label || 'LIVE SIGNAL', 72) || 'LIVE SIGNAL';
+        const value = fallbackText(item.value || item.formatted_value || 'AVAILABLE', textLimit) || 'AVAILABLE';
+        const source = fallbackText((compactSources && item.source_short_name) ? item.source_short_name : item.source_name, 90);
+        const separator = includeSeparator ? '<span class="scsi-live-intelligence__separator" aria-hidden="true">◆</span>' : '';
+        return '<span class="scsi-live-intelligence__signal scsi-live-intelligence__signal--fallback" data-scsi-signal-id="' + escapeHtml(item.signal_id || '') + '" aria-label="' + escapeHtml('Signal ' + (index + 1) + ': ' + label + '. ' + value + (source ? '. Source ' + source : '')) + '">' +
+          '<span class="scsi-live-intelligence__name">' + escapeHtml(label) + '</span>' +
+          '<strong class="scsi-live-intelligence__value">' + escapeHtml(value) + '</strong>' +
+          (source ? '<small>' + escapeHtml(source) + '</small>' : '') + '</span>' + separator;
+      };
+      const renderMinimalFallback = function (data, error) {
+        const fallbackSignals = Array.isArray(data && data.signals) ? data.signals.filter(function (signal) { return signal && typeof signal === 'object'; }).slice(0, maxVisible) : [];
+        signals = fallbackSignals;
+        stopRotation();
+        if (!fallbackSignals.length) {
+          renderEmpty(data || {});
+          return;
+        }
+        effectiveMode = resolveMode();
+        updatePresentationClasses(effectiveMode);
+        const content = fallbackSignals.map(function (signal, index) { return minimalSignalHtml(signal, index < fallbackSignals.length - 1, index); }).join('');
+        if (effectiveMode === 'ticker') {
+          track.innerHTML = '<div class="scsi-live-intelligence__set">' + content + '</div><div class="scsi-live-intelligence__set" aria-hidden="true">' + content + '</div>';
+        } else {
+          track.innerHTML = '<div class="scsi-live-intelligence__set scsi-live-intelligence__static-set">' + content + '</div>';
+        }
+        root.classList.remove('has-error', 'is-empty');
+        root.classList.add('is-ready', 'is-render-fallback');
+        setDeliveryState('delayed', 'Display recovery');
+        viewport.setAttribute('aria-busy', 'false');
+        recordComponentUse();
+        try { console.warn('Site Intelligence Live Intelligence recovered from a display error.', error); } catch (_) {}
+      };
       const resolveMode = function () {
         if (reducedMotion.matches) return reducedMotionMode;
         if (!mobileQuery.matches) return presentation;
@@ -3992,7 +4045,8 @@
       const showMobileSignal = function (index, shouldAnnounce) {
         if (!signals.length) return;
         currentIndex = (index + signals.length) % signals.length;
-        track.innerHTML = '<div class="scsi-live-intelligence__current-signal">' + itemHtml(signals[currentIndex], false, currentIndex) + '</div>';
+        const currentHtml = safeItemHtml(signals[currentIndex], false, currentIndex) || minimalSignalHtml(signals[currentIndex], false, currentIndex);
+        track.innerHTML = '<div class="scsi-live-intelligence__current-signal">' + currentHtml + '</div>';
         updatePosition();
         if (shouldAnnounce) announce(signalAccessibleText(signals[currentIndex], currentIndex), 'manual');
       };
@@ -4003,15 +4057,18 @@
         rotationTimer = window.setInterval(function () { showCurrentSignal(currentIndex + 1, false); }, mobileInterval);
       };
       const renderTicker = function () {
-        const content = signals.map(function (signal, index) { return itemHtml(signal, true, index); }).join('');
+        let content = signals.map(function (signal, index) { return safeItemHtml(signal, true, index); }).filter(Boolean).join('');
+        if (!content) content = signals.map(function (signal, index) { return minimalSignalHtml(signal, true, index); }).join('');
         track.innerHTML = '<div class="scsi-live-intelligence__set">' + content + '</div><div class="scsi-live-intelligence__set" aria-hidden="true">' + content + '</div>';
       };
       const renderStatic = function () {
-        const content = signals.map(function (signal, index) { return itemHtml(signal, index < signals.length - 1, index); }).join('');
+        let content = signals.map(function (signal, index) { return safeItemHtml(signal, index < signals.length - 1, index); }).filter(Boolean).join('');
+        if (!content) content = signals.map(function (signal, index) { return minimalSignalHtml(signal, index < signals.length - 1, index); }).join('');
         track.innerHTML = '<div class="scsi-live-intelligence__set scsi-live-intelligence__static-set">' + content + '</div>';
       };
       const renderStacked = function () {
-        const content = signals.map(function (signal, index) { return '<div class="scsi-live-intelligence__stacked-signal">' + itemHtml(signal, false, index) + '</div>'; }).join('');
+        let content = signals.map(function (signal, index) { const html = safeItemHtml(signal, false, index); return html ? '<div class="scsi-live-intelligence__stacked-signal">' + html + '</div>' : ''; }).filter(Boolean).join('');
+        if (!content) content = signals.map(function (signal, index) { return '<div class="scsi-live-intelligence__stacked-signal">' + minimalSignalHtml(signal, false, index) + '</div>'; }).join('');
         track.innerHTML = '<div class="scsi-live-intelligence__stacked-list">' + content + '</div>';
       };
       const renderMode = function () {
@@ -4076,10 +4133,15 @@
       const load = function () {
         viewport.setAttribute('aria-busy', 'true');
         fetchJson(endpoint).then(function (data) {
-          liveAnalyticsEvent('feed_load_success', null, {delivery_state: normalizeDeliveryState(data)});
-          render(data);
-        }).catch(function () {
-          liveAnalyticsEvent('feed_load_failure', null, {delivery_state: 'unavailable'});
+          try { liveAnalyticsEvent('feed_load_success', null, {delivery_state: normalizeDeliveryState(data)}); } catch (_) {}
+          try {
+            render(data);
+          } catch (error) {
+            try { liveAnalyticsEvent('feed_render_failure', null, {delivery_state: normalizeDeliveryState(data)}); } catch (_) {}
+            renderMinimalFallback(data, error);
+          }
+        }, function (error) {
+          try { liveAnalyticsEvent('feed_load_failure', null, {delivery_state: 'unavailable'}); } catch (_) {}
           viewport.setAttribute('aria-busy', 'false');
           if (root.classList.contains('is-ready')) {
             setDeliveryState('delayed', 'Refresh delayed');
@@ -4091,6 +4153,7 @@
           if (pause) pause.hidden = true;
           track.innerHTML = '<span class="scsi-live-intelligence__connecting">LIVE INTELLIGENCE TEMPORARILY UNAVAILABLE</span>';
           setDeliveryState('unavailable', 'Unavailable');
+          try { console.warn('Site Intelligence Live Intelligence fetch failed.', error); } catch (_) {}
         });
       };
 

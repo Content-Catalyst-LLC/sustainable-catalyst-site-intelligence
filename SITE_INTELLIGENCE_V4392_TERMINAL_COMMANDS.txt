@@ -1,0 +1,27 @@
+SITE INTELLIGENCE v4.39.2 — MAC / GITHUB
+
+cd ~/Downloads
+
+rm -rf sustainable-catalyst-site-intelligence-v4.39.2-release
+mkdir -p sustainable-catalyst-site-intelligence-v4.39.2-release
+
+unzip -q sustainable-catalyst-site-intelligence-v4.39.2-release-bundle.zip \
+  -d sustainable-catalyst-site-intelligence-v4.39.2-release
+
+cd sustainable-catalyst-site-intelligence-v4.39.2-release
+chmod +x install_and_push_site_intelligence_v4_39_2_macos.sh
+
+./install_and_push_site_intelligence_v4_39_2_macos.sh \
+  "$HOME/Downloads/sustainable-catalyst-site-intelligence"
+
+AFTER CONTABO + WORDPRESS DEPLOYMENT
+
+curl -fsS https://site-intelligence-api.sustainablecatalyst.com/health | python3 -m json.tool
+curl -fsS https://site-intelligence-api.sustainablecatalyst.com/public/build-info | python3 -m json.tool
+
+# On Bluehost:
+cd /home1/pctrqumy/public_html
+wp plugin get sustainable-catalyst-site-intelligence --field=version
+curl -sS 'https://sustainablecatalyst.com/?scsi_release=4392' \
+  | grep -oE 'https?[^"'"'"']*sc-site-intelligence\.js[^"'"'"']*' \
+  | head -5
