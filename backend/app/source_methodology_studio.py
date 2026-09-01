@@ -6,6 +6,7 @@ from html import escape
 from io import StringIO
 import json
 import re
+from app.platform_core_integration import platform_core_status
 from typing import Any, Iterable
 
 from .earth_observation_studio import diagnostics as earth_diagnostics
@@ -491,6 +492,39 @@ def _public_dynamic_states() -> tuple[dict[str, dict[str, Any]], list[dict[str, 
         for mapped in ("usgs-earthquakes", "nasa-eonet", "reliefweb"):
             states[mapped] = {"state": "temporarily-unavailable", "last_checked": checked, "status_note": "The optional event-source diagnostic did not complete."}
             issues.append({"source_id": mapped, "state": "temporarily-unavailable"})
+
+    try:
+        core = platform_core_status()
+        core_enabled = bool(core.get("enabled"))
+        core_configured = bool(core.get("configured"))
+
+        if core_enabled and core_configured:
+            states["platform-core"] = {
+                "state": "live",
+                "last_checked": checked,
+                "last_successful_retrieval": checked,
+                "status_note": "Platform Core integration is enabled and configured.",
+            }
+        elif core_enabled:
+            states["platform-core"] = {
+                "state": "temporarily-unavailable",
+                "last_checked": checked,
+                "status_note": "Platform Core integration is enabled but configuration is incomplete.",
+            }
+            issues.append({"source_id": "platform-core", "state": "temporarily-unavailable"})
+        else:
+            states["platform-core"] = {
+                "state": "disabled",
+                "last_checked": checked,
+                "status_note": "Platform Core integration is intentionally disabled.",
+            }
+    except Exception:
+        states["platform-core"] = {
+            "state": "temporarily-unavailable",
+            "last_checked": checked,
+            "status_note": "Platform Core integration diagnostic did not complete.",
+        }
+        issues.append({"source_id": "platform-core", "state": "temporarily-unavailable"})
 
     try:
         earth = earth_diagnostics()

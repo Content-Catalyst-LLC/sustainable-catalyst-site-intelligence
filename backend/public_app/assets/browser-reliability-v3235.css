@@ -2,7 +2,7 @@
 :root{--scsi-touch-target:44px;--scsi-safe-bottom:env(safe-area-inset-bottom,0px)}
 :where(button,a,input,select,textarea):focus-visible{outline:3px solid #fff;outline-offset:3px;box-shadow:0 0 0 5px #111}
 .skip-link{z-index:100000}
-.scsi-a11y-status{position:fixed;right:16px;bottom:calc(16px + var(--scsi-safe-bottom));z-index:1200;display:flex;gap:8px;align-items:center;max-width:min(420px,calc(100vw - 32px));padding:8px 10px;border:1px solid rgba(255,255,255,.2);background:#101417;color:#f3f6f7;font-size:.78rem}
+.scsi-a11y-status{position:fixed;right:16px;bottom:calc(72px + var(--scsi-safe-bottom));z-index:1200;display:flex;gap:8px;align-items:center;max-width:min(420px,calc(100vw - 32px));padding:8px 10px;border:1px solid rgba(255,255,255,.2);background:#101417;color:#f3f6f7;font-size:.78rem}
 .scsi-a11y-status[hidden]{display:none}.scsi-a11y-status button{min-height:var(--scsi-touch-target);padding:8px 10px}
 .scsi-map-summary{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 html[data-scsi-low-bandwidth="true"] [data-optional-imagery],html[data-scsi-low-bandwidth="true"] .imagery-pane,html[data-scsi-low-bandwidth="true"] .map-imagery-pane{display:none!important}

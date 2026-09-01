@@ -36,7 +36,7 @@ def _resolve_path(value: str) -> Path:
     path = Path(value).expanduser()
     if path.is_absolute():
         return path
-    root = Path(__file__).resolve().parents[2]
+    root = Path(__file__).resolve().parents[1]
     return root / path
 
 

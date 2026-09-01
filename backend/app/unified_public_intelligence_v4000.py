@@ -9,8 +9,8 @@ from .version import APP_VERSION
 
 RELEASE_VERSION = APP_VERSION
 CONTRACT = "unified-public-intelligence-platform"
-ROOT = Path(__file__).resolve().parents[2]
-POLICY_PATH = ROOT / "backend/data/unified_public_intelligence_policy_v4000.json"
+BACKEND_ROOT = Path(__file__).resolve().parents[1]
+POLICY_PATH = BACKEND_ROOT / "data/unified_public_intelligence_policy_v4000.json"
 
 
 def _policy() -> dict[str, Any]:

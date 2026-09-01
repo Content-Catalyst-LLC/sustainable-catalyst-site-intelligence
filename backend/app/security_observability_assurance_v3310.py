@@ -9,8 +9,8 @@ from .config import Settings
 
 RELEASE_VERSION = "4.38.0"
 CONTRACT = "security-observability-performance-scale-assurance"
-ROOT = Path(__file__).resolve().parents[2]
-POLICY_PATH = ROOT / "backend/data/security_observability_performance_policy_v3310.json"
+BACKEND_ROOT = Path(__file__).resolve().parents[1]
+POLICY_PATH = BACKEND_ROOT / "data/security_observability_performance_policy_v3310.json"
 
 def _policy() -> dict[str, Any]:
     return json.loads(POLICY_PATH.read_text(encoding="utf-8"))
@@ -20,7 +20,7 @@ def _digest(value: Any) -> str:
     return hashlib.sha256(raw).hexdigest()
 
 def _assets() -> list[Path]:
-    base=ROOT / "backend/public_app/assets"
+    base=BACKEND_ROOT / "public_app/assets"
     return [p for p in base.rglob("*") if p.is_file()]
 
 def public_security_observability_assurance(settings: Settings) -> dict[str, Any]:

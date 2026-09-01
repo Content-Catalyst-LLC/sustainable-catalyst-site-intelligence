@@ -46,14 +46,16 @@ def _parse_iso(value: Any) -> datetime | None:
 
 
 def _resolve_path(value: str) -> Path:
-    path = Path(value)
+    path = Path(value).expanduser()
     if path.is_absolute():
         return path
-    repository_root = Path(__file__).resolve().parents[2]
-    candidate = repository_root / path
-    if candidate.exists() or str(path).startswith("backend/"):
-        return candidate
-    return path
+
+    if path.parts and path.parts[0] == "backend":
+        backend_root = Path(__file__).resolve().parents[1]
+        return backend_root.joinpath(*path.parts[1:])
+
+    root = Path(__file__).resolve().parents[2]
+    return root / path
 
 
 def _read_json(path: Path, default: Mapping[str, Any]) -> dict[str, Any]:

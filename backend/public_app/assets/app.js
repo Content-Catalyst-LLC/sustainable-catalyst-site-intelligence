@@ -393,7 +393,7 @@
   function initEventExplorerMap(){
     if(eventState.map)return;
     eventState.map=L.map("eventExplorerMap",{zoomControl:true,worldCopyJump:true}).setView([12,20],2);
-    eventState.base=L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{attribution:"© OpenStreetMap contributors © CARTO",maxZoom:19}).addTo(eventState.map);
+    eventState.base=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"© OpenStreetMap contributors © CARTO",maxZoom:19}).addTo(eventState.map);
     eventState.markers=L.layerGroup().addTo(eventState.map);
   }
   function eventQuery(){
@@ -579,7 +579,7 @@
   function initCountryOverviewMap(){
     if(globalCountryState.overviewMap)return;
     globalCountryState.overviewMap=L.map("countryOverviewMap",{zoomControl:true,attributionControl:true}).setView([0,20],2);
-    globalCountryState.overviewBase=L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{attribution:"© OpenStreetMap contributors © CARTO",maxZoom:19}).addTo(globalCountryState.overviewMap);
+    globalCountryState.overviewBase=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"© OpenStreetMap contributors © CARTO",maxZoom:19}).addTo(globalCountryState.overviewMap);
   }
   function renderGlobalTrend(trend){
     const chart=qs("#globalTrendChart"),series=trend?.series||[];
@@ -869,7 +869,7 @@
   function initCompareMap(){
     if(compareState.map)return;
     compareState.map=L.map("compareMap",{zoomControl:true,worldCopyJump:true}).setView([10,20],2);
-    compareState.base=L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{attribution:"© OpenStreetMap contributors © CARTO",maxZoom:19}).addTo(compareState.map);
+    compareState.base=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"© OpenStreetMap contributors © CARTO",maxZoom:19}).addTo(compareState.map);
     compareState.markers=L.layerGroup().addTo(compareState.map);
   }
   function renderCompareMap(){
@@ -944,8 +944,8 @@
     if(earthState.mapA)return;
     earthState.mapA=L.map("earthMapA",{zoomControl:true,worldCopyJump:true}).setView([12,20],2);
     earthState.mapB=L.map("earthMapB",{zoomControl:false,worldCopyJump:true,attributionControl:false}).setView([12,20],2);
-    earthState.baseA=L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{attribution:"© OpenStreetMap contributors © CARTO",maxZoom:19,crossOrigin:true}).addTo(earthState.mapA);
-    earthState.baseB=L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{maxZoom:19,crossOrigin:true}).addTo(earthState.mapB);
+    earthState.baseA=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"© OpenStreetMap contributors © CARTO",maxZoom:19,crossOrigin:true}).addTo(earthState.mapA);
+    earthState.baseB=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,crossOrigin:true}).addTo(earthState.mapB);
     let syncing=false;
     const sync=(a,b)=>{if(syncing)return;syncing=true;syncEarthMaps(a,b);syncing=false};
     earthState.mapA.on("move zoom",()=>sync(earthState.mapA,earthState.mapB));
@@ -1143,7 +1143,7 @@
   function initThematicMap(){
     if(thematicState.map)return;
     thematicState.map=L.map("thematicMap",{zoomControl:true,worldCopyJump:true}).setView([12,20],2);
-    thematicState.base=L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{attribution:"© OpenStreetMap contributors © CARTO",maxZoom:19}).addTo(thematicState.map);
+    thematicState.base=L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{attribution:"© OpenStreetMap contributors © CARTO",maxZoom:19}).addTo(thematicState.map);
     thematicState.markers=L.layerGroup().addTo(thematicState.map);
   }
   function activeThematicLayer(){

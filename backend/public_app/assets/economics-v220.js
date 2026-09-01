@@ -146,7 +146,7 @@
   function ensureMap() {
     if (state.map || !window.L || !qs("#economicsMap")) return;
     state.map = L.map("economicsMap", {worldCopyJump: true, zoomControl: true}).setView([20, 8], 2);
-    state.base = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {attribution: "© OpenStreetMap contributors © CARTO", maxZoom: 19}).addTo(state.map);
+    state.base = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {attribution: "© OpenStreetMap contributors", maxZoom: 19}).addTo(state.map);
     state.markers = L.layerGroup().addTo(state.map);
   }
   function renderMap(records) {
