@@ -25,12 +25,12 @@
     }
     throw last;
   }
-  const APP_VERSION="4.39.0";
-  const RELEASE_LINEAGE="v4.39.0";
-  const SCIENCE_CONTROLLER_SRC="/app/assets/science-v240.js?v=4.39.0";
+  const APP_VERSION="4.39.1";
+  const RELEASE_LINEAGE="v4.39.1";
+  const SCIENCE_CONTROLLER_SRC="/app/assets/science-v240.js?v=4.39.1";
   let scienceControllerPromise=null;
   function scienceControllerCurrent(){
-    try{return window.SCScienceV240?.open&&window.SCScienceV240?.status?.().repair==="4.39.0"?window.SCScienceV240:null}catch{return null}
+    try{return window.SCScienceV240?.open&&window.SCScienceV240?.status?.().repair==="4.39.1"?window.SCScienceV240:null}catch{return null}
   }
   async function ensureScienceController(){
     const current=scienceControllerCurrent();if(current)return current;
@@ -246,7 +246,7 @@
     const name=canonical?.name||names[normalized]||normalized;
     state.country=normalized;names[normalized]=name;
     qs("#countryName").textContent=name;qs("#countryCode").textContent=normalized;qs("#countryPanelTitle").textContent=`${name} at a glance`;
-    // v4.39.0: focus immediately from the first-party canonical registry.
+    // v4.39.1: focus immediately from the first-party canonical registry.
     // Upstream country-overview responses may add evidence, but they are not
     // allowed to decide where a selected country exists on the map.
     if(state.route==="overview"&&canonical&&Number.isFinite(Number(canonical.latitude))&&Number.isFinite(Number(canonical.longitude))){
@@ -540,7 +540,7 @@
       try{primary=await apiWithRetry("/public/countries",3)}catch(primaryError){console.warn("[Site Intelligence] Live country metadata is unavailable; the bundled global selector remains active.",primaryError)}
       const merged=new Map();
       (bundled.countries||[]).forEach(item=>{if(item?.code&&item?.name)merged.set(item.code,{...item})});
-      // v4.39.0: live provider metadata may enrich a country, but it must never
+      // v4.39.1: live provider metadata may enrich a country, but it must never
       // overwrite first-party identity fields (ISO codes, name, coordinates).
       // This closes the remaining Palestine/Israel split-path defect where an
       // upstream catalog could replace a canonical selector identity after the
@@ -713,7 +713,7 @@
     const controller=new AbortController();globalCountryState.selectionController=controller;
     const signal=controller.signal,sequence=++globalCountryState.requestSequence;
     globalCountryState.activeCode=normalized;state.country=normalized;qs("#countrySelect").value=normalized;setCountryLoading(normalized);
-    // v4.39.0: commit the selected identity to the URL before any upstream work.
+    // v4.39.1: commit the selected identity to the URL before any upstream work.
     // A slow/failed indicator request must not make the picker appear to ignore the
     // selected country or leave the previous country encoded in browser state.
     if(pushState||!supported){const params=new URLSearchParams(location.search);params.set("view","country");params.set("country",normalized);history.replaceState(null,"",`?${params.toString()}`)}
@@ -1685,7 +1685,7 @@
   }
   function closeAuditablePublicObservatory(){const panel=qs("#auditablePublicObservatory");if(panel)panel.hidden=true;const button=qs("#saveViewButton");if(button)button.disabled=false}
 
-  // registered route recovery is enforced after every route transition by v4.39.0.
+  // registered route recovery is enforced after every route transition by v4.39.1.
   async function setRoute(route){
     qs("#main").classList.remove("route-enter");void qs("#main").offsetWidth;qs("#main").classList.add("route-enter");
     state.route=route;
@@ -2073,5 +2073,5 @@ visualStyle.textContent=`
 document.head.appendChild(visualStyle);
 
 
-/* v4.39.0 publishing integration: window.SCIntelligencePublishingV2200 */
-/* v4.39.0 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */
+/* v4.39.1 publishing integration: window.SCIntelligencePublishingV2200 */
+/* v4.39.1 scheduled monitoring integration: window.SCScheduledMonitoringV2210 */

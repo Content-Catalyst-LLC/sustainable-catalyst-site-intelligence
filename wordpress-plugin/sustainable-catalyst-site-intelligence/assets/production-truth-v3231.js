@@ -1,6 +1,6 @@
 (function(window,document){
   "use strict";
-  const VERSION="4.39.0",REPAIR="r4";
+  const VERSION="4.39.1",REPAIR="r4";
   const APP_ROOT=document.querySelector('#app[data-scsi-release]');if(!APP_ROOT||!document.querySelector('#primaryNavigation')||!document.querySelector('#main.workspace'))return
   const ENDPOINT="/public/workspaces/production-truth";
   const CORE_ROUTES=new Set(["overview","global","economics","law","science","humanitarian","resources","dossiers","alerts","scenarios","earth","spatial","harmonization","country","events","compare","thematic","briefing","sources"]);

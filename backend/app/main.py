@@ -478,7 +478,7 @@ from .live_intelligence_gateway_v370 import (
     homepage_gateway_policy as live_intelligence_gateway_policy,
     DEFAULT_HOMEPAGE_SIGNAL_LIMIT, MAX_HOMEPAGE_SIGNAL_LIMIT,
 )
-from .homepage_summary_v4390 import build_homepage_summary
+from .homepage_summary_v4391 import build_homepage_summary
 from .live_intelligence_rotation_v371 import (
     apply_rotation_policy as apply_live_intelligence_rotation_policy,
     rotation_policy as live_intelligence_rotation_policy,

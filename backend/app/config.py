@@ -174,13 +174,13 @@ class Settings(BaseSettings):
     copernicus_marine_password: str = ""
     global_fishing_watch_api_token: str = ""
 
-    # Site Intelligence v4.39.0 — Live Underwater Media Discovery.
+    # Site Intelligence v4.39.1 — Live Underwater Media Discovery.
     # ONC requires a server-side Oceans 3.0 token. FathomNet and NOAA lanes
     # remain available when this optional credential is absent.
     onc_api_token: str = ""
     underwater_media_timeout_seconds: int = Field(default=10, ge=2, le=20)
 
-    # Site Intelligence v4.39.0 — Live Space Observation & Archive Retrieval.
+    # Site Intelligence v4.39.1 — Live Space Observation & Archive Retrieval.
     # Core Space lanes use public authoritative services and require no shared credential.
     space_observation_timeout_seconds: int = Field(default=10, ge=2, le=20)
 

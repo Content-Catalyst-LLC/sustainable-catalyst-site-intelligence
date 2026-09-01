@@ -172,7 +172,7 @@
     try {
       const item = JSON.parse(sessionStorage.getItem(recoveryCacheKey(url)) || 'null');
       if (!item || !item.savedAt || Date.now() - item.savedAt > 21600000) return null;
-      window.dispatchEvent(new CustomEvent('scsi:service-fallback', {detail: {version: cfg.version || '4.39.0', group: 'wordpress-proxy', path: url, reason: 'last-known-good', staleAgeMs: Date.now() - item.savedAt}}));
+      window.dispatchEvent(new CustomEvent('scsi:service-fallback', {detail: {version: cfg.version || '4.39.1', group: 'wordpress-proxy', path: url, reason: 'last-known-good', staleAgeMs: Date.now() - item.savedAt}}));
       return item.data;
     } catch (e) { return null; }
   }
@@ -200,7 +200,7 @@
       return fetchJsonAttempt(url).catch(function (error) {
         const retryable = !error.status || recoveryStatuses.indexOf(Number(error.status)) !== -1;
         if (retryable && attempt < 3) {
-          window.dispatchEvent(new CustomEvent('scsi:service-retry', {detail: {version: cfg.version || '4.39.0', group: 'wordpress-proxy', path: url, attempt: attempt + 1}}));
+          window.dispatchEvent(new CustomEvent('scsi:service-retry', {detail: {version: cfg.version || '4.39.1', group: 'wordpress-proxy', path: url, attempt: attempt + 1}}));
           return new Promise(function (resolve) { setTimeout(resolve, attempt === 1 ? 600 : 1400); }).then(run);
         }
         const recovered = readRecoveredJson(url);
@@ -3888,7 +3888,7 @@
       const shorten = function (value, maximum) {
         const clean = String(value || '').replace(/\s+/g, ' ').trim();
         if (clean.length <= maximum) return clean;
-        return clean.slice(0, Math.max(1, maximum - 1)).trimEnd() + '…';
+        return clean.slice(0, Math.max(1, maximum - 1)).replace(/\s+$/, '') + '…';
       };
       const normalizeDeliveryState = function (data) {
         const delivery = data && data.delivery ? data.delivery : {};
@@ -3962,6 +3962,42 @@
           '<strong class="scsi-live-intelligence__value">' + escapeHtml(shorten(fullValue, textLimit)) + '</strong>' +
           (metadata.length ? '<small>' + escapeHtml(metadata.join(' · ')) + '</small>' : '') + '</a>' + separator;
       };
+      const safeItemHtml = function (signal, includeSeparator, index) {
+        try {
+          return itemHtml(signal, includeSeparator, index);
+        } catch (error) {
+          try {
+            window.dispatchEvent(new CustomEvent('scsi:live-intelligence-render-error', {detail: {version: cfg.version || '4.39.1', signalId: String((signal && signal.signal_id) || ''), message: String((error && error.message) || error || 'render error')}}));
+          } catch (_) {}
+          return '';
+        }
+      };
+      const minimalSignalHtml = function (signal, index) {
+        const label = shorten((signal && (signal.label || signal.short_label)) || 'LIVE SIGNAL', 72);
+        const value = shorten((signal && (signal.value || signal.formatted_value)) || 'AVAILABLE', textLimit);
+        const source = compactSources && signal && signal.source_short_name ? signal.source_short_name : (signal && signal.source_name ? signal.source_name : '');
+        return '<span class="scsi-live-intelligence__signal scsi-live-intelligence__signal--fallback" data-scsi-signal-id="' + escapeHtml((signal && signal.signal_id) || '') + '" aria-label="' + escapeHtml('Signal ' + (index + 1) + ': ' + label + '. ' + value + (source ? '. Source ' + source : '')) + '">' +
+          '<span class="scsi-live-intelligence__name">' + escapeHtml(label) + '</span>' +
+          '<strong class="scsi-live-intelligence__value">' + escapeHtml(value) + '</strong>' +
+          (source ? '<small>' + escapeHtml(source) + '</small>' : '') + '</span>';
+      };
+      const renderMinimalFallback = function (data, error) {
+        const fallbackSignals = Array.isArray(data && data.signals) ? data.signals.filter(function (signal) { return signal && typeof signal === 'object'; }).slice(0, maxVisible) : [];
+        signals = fallbackSignals;
+        stopRotation();
+        updatePresentationClasses('static');
+        if (!fallbackSignals.length) {
+          renderEmpty(data || {});
+          return;
+        }
+        track.innerHTML = '<div class="scsi-live-intelligence__set scsi-live-intelligence__static-set scsi-live-intelligence__fallback-set">' + fallbackSignals.map(minimalSignalHtml).join('<span class="scsi-live-intelligence__separator" aria-hidden="true">◆</span>') + '</div>';
+        root.classList.remove('has-error', 'is-empty');
+        root.classList.add('is-ready', 'is-render-fallback');
+        setDeliveryState('delayed', 'Display recovery');
+        viewport.setAttribute('aria-busy', 'false');
+        recordComponentUse();
+        try { console.warn('Site Intelligence Live Intelligence used minimal display recovery.', error); } catch (_) {}
+      };
       const resolveMode = function () {
         if (reducedMotion.matches) return reducedMotionMode;
         if (!mobileQuery.matches) return presentation;
@@ -3992,7 +4028,7 @@
       const showMobileSignal = function (index, shouldAnnounce) {
         if (!signals.length) return;
         currentIndex = (index + signals.length) % signals.length;
-        track.innerHTML = '<div class="scsi-live-intelligence__current-signal">' + itemHtml(signals[currentIndex], false, currentIndex) + '</div>';
+        track.innerHTML = '<div class="scsi-live-intelligence__current-signal">' + safeItemHtml(signals[currentIndex], false, currentIndex) + '</div>';
         updatePosition();
         if (shouldAnnounce) announce(signalAccessibleText(signals[currentIndex], currentIndex), 'manual');
       };
@@ -4003,15 +4039,15 @@
         rotationTimer = window.setInterval(function () { showCurrentSignal(currentIndex + 1, false); }, mobileInterval);
       };
       const renderTicker = function () {
-        const content = signals.map(function (signal, index) { return itemHtml(signal, true, index); }).join('');
+        const content = signals.map(function (signal, index) { return safeItemHtml(signal, true, index); }).filter(Boolean).join('');
         track.innerHTML = '<div class="scsi-live-intelligence__set">' + content + '</div><div class="scsi-live-intelligence__set" aria-hidden="true">' + content + '</div>';
       };
       const renderStatic = function () {
-        const content = signals.map(function (signal, index) { return itemHtml(signal, index < signals.length - 1, index); }).join('');
+        const content = signals.map(function (signal, index) { return safeItemHtml(signal, index < signals.length - 1, index); }).filter(Boolean).join('');
         track.innerHTML = '<div class="scsi-live-intelligence__set scsi-live-intelligence__static-set">' + content + '</div>';
       };
       const renderStacked = function () {
-        const content = signals.map(function (signal, index) { return '<div class="scsi-live-intelligence__stacked-signal">' + itemHtml(signal, false, index) + '</div>'; }).join('');
+        const content = signals.map(function (signal, index) { const html = safeItemHtml(signal, false, index); return html ? '<div class="scsi-live-intelligence__stacked-signal">' + html + '</div>' : ''; }).filter(Boolean).join('');
         track.innerHTML = '<div class="scsi-live-intelligence__stacked-list">' + content + '</div>';
       };
       const renderMode = function () {
@@ -4077,8 +4113,13 @@
         viewport.setAttribute('aria-busy', 'true');
         fetchJson(endpoint).then(function (data) {
           liveAnalyticsEvent('feed_load_success', null, {delivery_state: normalizeDeliveryState(data)});
-          render(data);
-        }).catch(function () {
+          try {
+            render(data);
+          } catch (error) {
+            liveAnalyticsEvent('feed_render_failure', null, {delivery_state: normalizeDeliveryState(data)});
+            renderMinimalFallback(data, error);
+          }
+        }, function (error) {
           liveAnalyticsEvent('feed_load_failure', null, {delivery_state: 'unavailable'});
           viewport.setAttribute('aria-busy', 'false');
           if (root.classList.contains('is-ready')) {
@@ -4091,6 +4132,7 @@
           if (pause) pause.hidden = true;
           track.innerHTML = '<span class="scsi-live-intelligence__connecting">LIVE INTELLIGENCE TEMPORARILY UNAVAILABLE</span>';
           setDeliveryState('unavailable', 'Unavailable');
+          try { console.warn('Site Intelligence Live Intelligence fetch failed.', error); } catch (_) {}
         });
       };
 
@@ -4844,7 +4886,6 @@
       const appBase = root.dataset.appBase || window.location.origin + '/';
       const status = root.querySelector('[data-home-status]');
       const signals = root.querySelector('[data-home-signals]');
-      const signalCount = root.querySelector('[data-home-signal-count]');
       const refresh = root.querySelector('[data-home-refresh]');
       if (!endpoint || !status || !signals) return;
 
@@ -4860,15 +4901,19 @@
         const currentStatus = payload.status || {};
         status.dataset.state = currentStatus.state || 'online';
         status.querySelector('strong').textContent = currentStatus.label || 'Site Intelligence Online';
-        (Array.isArray(payload.metrics) ? payload.metrics : []).forEach(function (metric) {
-          const card = root.querySelector('[data-home-metric="' + CSS.escape(String(metric.id || '')) + '"]');
+        const metricCards = Array.prototype.slice.call(root.querySelectorAll('[data-home-metric-slot]'));
+        (Array.isArray(payload.metrics) ? payload.metrics : []).slice(0, metricCards.length).forEach(function (metric, index) {
+          const card = metricCards[index];
           if (!card) return;
+          card.dataset.homeMetric = String(metric.id || 'metric_' + index);
+          const term = card.querySelector('dt');
+          const definition = card.querySelector('dd');
+          if (term) term.textContent = metric.label || String(metric.id || 'coverage metric').replace(/_/g, ' ');
           const value = Number(metric.value);
-          card.querySelector('dd').textContent = Number.isFinite(value) ? value.toLocaleString() : '—';
+          if (definition) definition.textContent = Number.isFinite(value) ? value.toLocaleString() : '—';
           card.title = metric.basis || '';
         });
         const highlights = Array.isArray(payload.highlights) ? payload.highlights : [];
-        if (signalCount) signalCount.textContent = String(Number.isFinite(Number(payload.featured_signal_count)) ? Number(payload.featured_signal_count) : highlights.length);
         signals.innerHTML = highlights.length ? highlights.map(function (item) {
           return '<a class="scsi-home-summary__signal" href="' + escapeHtml(appUrl(item.href)) + '">' +
             '<span>' + escapeHtml(item.category || 'Public signal') + '</span>' +
@@ -4886,7 +4931,6 @@
       }).catch(function () {
         status.dataset.state = 'degraded';
         status.querySelector('strong').textContent = 'Live summary temporarily unavailable';
-        if (signalCount) signalCount.textContent = '—';
         signals.innerHTML = '<p class="scsi-home-summary__empty">The homepage summary could not refresh. Use the entry points below to open Site Intelligence directly.</p>';
         signals.setAttribute('aria-busy', 'false');
         if (refresh) refresh.textContent = 'Live counts are unavailable; no values have been estimated or fabricated.';

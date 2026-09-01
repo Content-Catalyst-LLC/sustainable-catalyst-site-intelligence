@@ -24,8 +24,8 @@ javascript = text("wordpress-plugin/sustainable-catalyst-site-intelligence/asset
 stylesheet = text("wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.css")
 readme = text("README.md")
 
-require('APP_VERSION = "4.39.0"' in version, "backend APP_VERSION is not 4.39.0")
-require("Version: 4.39.0" in plugin and "site-intelligence-v4.39.0" in plugin, "WordPress release identity mismatch")
+require('APP_VERSION = "4.39.1"' in version, "backend APP_VERSION is not 4.39.1")
+require("Version: 4.39.1" in plugin and "site-intelligence-v4.39.1" in plugin, "WordPress release identity mismatch")
 for route in ("/v1/public/site-intelligence/summary", "/public/site-intelligence/summary"):
     require(route in main, f"missing public homepage route {route}")
 for token in ("SCHEMA_VERSION", "country_identity_registry_v43523.json", "live_intelligence_source_registry_v320.json", "truth_boundaries", "entry_points"):
@@ -52,4 +52,4 @@ if errors:
     for error in errors:
         print("FAIL:", error, file=sys.stderr)
     raise SystemExit(1)
-print("PASS: v4.39.0 homepage summary release contract")
+print("PASS: v4.39.1 homepage summary release contract")

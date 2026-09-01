@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Browser certification for v4.39.0 R2 Science Core-decoupling.
+"""Browser certification for v4.39.1 R2 Science Core-decoupling.
 
 Reproduces the reported production condition: Platform Core is unconfigured.
 The Science domain selector must still expose and launch Ocean and Space.
@@ -24,12 +24,12 @@ from app.main import app
 def main() -> int:
     browser_path = find_browser()
     if not browser_path:
-        print("ERROR: Chromium or Chrome is required for the v4.39.0 R2 Science browser gate.")
+        print("ERROR: Chromium or Chrome is required for the v4.39.1 R2 Science browser gate.")
         return 2
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
-        print("ERROR: Playwright is required for the v4.39.0 R2 Science browser gate.")
+        print("ERROR: Playwright is required for the v4.39.1 R2 Science browser gate.")
         return 2
 
     client = TestClient(app)
@@ -108,7 +108,7 @@ def main() -> int:
 
     assert not errors, errors
     print(json.dumps({"browser": browser_path, "initial": initial, "ocean": ocean, "space": space, "errors": errors}, indent=2))
-    print("PASS: v4.39.0 R2 Science remains usable with Platform Core unconfigured and launches both Ocean and Space.")
+    print("PASS: v4.39.1 R2 Science remains usable with Platform Core unconfigured and launches both Ocean and Space.")
     return 0
 
 

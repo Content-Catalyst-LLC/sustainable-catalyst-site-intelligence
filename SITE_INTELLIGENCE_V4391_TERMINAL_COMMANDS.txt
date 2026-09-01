@@ -1,0 +1,27 @@
+SITE INTELLIGENCE v4.39.1 — TERMINAL COMMANDS
+
+MACOS APPLY + VALIDATE + GITHUB PUSH
+
+cd ~/Downloads
+rm -rf sustainable-catalyst-site-intelligence-v4.39.1-release
+unzip -q sustainable-catalyst-site-intelligence-v4.39.1-release-bundle.zip -d sustainable-catalyst-site-intelligence-v4.39.1-release
+cd sustainable-catalyst-site-intelligence-v4.39.1-release
+chmod +x install_and_push_site_intelligence_v4_39_1_macos.sh
+./install_and_push_site_intelligence_v4_39_1_macos.sh "$HOME/Downloads/sustainable-catalyst-site-intelligence"
+
+MANUAL GITHUB PUSH IF THE RELEASE IS ALREADY APPLIED
+
+cd ~/Downloads/sustainable-catalyst-site-intelligence
+git status
+git add -A
+git commit -m "Site Intelligence v4.39.1 — Homepage Live Intelligence Asset Integrity & Rendering Recovery"
+git tag -a v4.39.1 -m "Site Intelligence v4.39.1 — Homepage Live Intelligence Asset Integrity & Rendering Recovery"
+git push origin "$(git branch --show-current)"
+git push origin v4.39.1
+
+PUBLIC HEALTH
+
+curl -sS https://site-intelligence-api.sustainablecatalyst.com/health | python3 -m json.tool
+curl -sS 'https://site-intelligence-api.sustainablecatalyst.com/public/live-intelligence/homepage?limit=8&channel=global' | python3 -m json.tool
+curl -sS 'https://sustainablecatalyst.com/wp-json/sc-site-intelligence/v1/live-intelligence/homepage?limit=8&channel=global' | python3 -m json.tool
+curl -sS 'https://sustainablecatalyst.com/wp-json/sc-site-intelligence/v1/homepage-summary' | python3 -m json.tool

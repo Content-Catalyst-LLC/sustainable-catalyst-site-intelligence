@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-"""Country Intelligence presentation and evidence hierarchy for Site Intelligence v4.39.0.
+"""Country Intelligence presentation and evidence hierarchy for Site Intelligence v4.39.1.
 
 This module is deliberately presentation-only and network-free. It does not create,
 average, or upgrade evidence. It translates canonical observation semantics into a

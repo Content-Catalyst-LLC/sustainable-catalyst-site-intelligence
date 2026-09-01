@@ -7,8 +7,9 @@ from typing import Any
 
 from .config import Settings
 
-RELEASE_VERSION = "4.39.0"
+RELEASE_VERSION = "4.39.1"
 CONTRACT = "security-observability-performance-scale-assurance"
+ROOT = Path(__file__).resolve().parents[2]
 BACKEND_ROOT = Path(__file__).resolve().parents[1]
 POLICY_PATH = BACKEND_ROOT / "data/security_observability_performance_policy_v3310.json"
 

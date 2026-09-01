@@ -10,7 +10,7 @@ PYTHON="${PYTHON:-python3}"
 import hashlib,json,sys
 from pathlib import Path
 root=Path(sys.argv[1]); manifest=json.loads((root/'MANIFEST.json').read_text())
-assert manifest.get('release')=='4.39.0'
+assert manifest.get('release')=='4.39.1'
 assert manifest.get('file_count')==len(manifest.get('files',[]))
 for row in manifest['files']:
     path=root/row['path']
@@ -41,4 +41,4 @@ if [[ "${SC_SI_SKIP_TESTS:-0}" != "1" ]]; then
     fi
 fi
 
-echo "SUCCESS: Site Intelligence v4.39.0 passed homepage summary contract, manifest, JSON, Python syntax, JavaScript, and available runtime validation."
+echo "SUCCESS: Site Intelligence v4.39.1 passed homepage summary contract, manifest, JSON, Python syntax, JavaScript, and available runtime validation."

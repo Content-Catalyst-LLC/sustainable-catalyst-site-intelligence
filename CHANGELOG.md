@@ -1,11 +1,14 @@
-# v4.39.0 R1 — Visual Intelligence Console & Integrated Live Ticker
+# v4.39.1 — Homepage Live Intelligence Asset Integrity & Rendering Recovery
 
-- Refined `[sc_site_intelligence_home]` into a tighter two-column intelligence-console presentation.
-- Added a responsive Earth, Space, and Ocean imagery triptych using self-hosted, web-optimized scientific imagery.
-- Added source credits for NASA Earth Observatory, NASA/ESA/CSA/STScI, and NOAA Ocean Exploration.
-- Integrated the existing governed Live Intelligence ticker directly into the homepage console, including pause, focus/hover pause, reduced-motion, and mobile presentation behavior.
-- Prevented the automatic top-of-page ticker from duplicating the ticker embedded by `[sc_site_intelligence_home]`.
-- Preserved the v4.39.0 backend summary contract, metrics, source-linked signals, truthful degraded state, and release-gate identity.
+- Recovered the homepage ticker from the mixed-v4.39.0 asset condition by issuing a new cache-busting patch release identity.
+- Separated network failures from post-fetch renderer exceptions so valid feeds are no longer mislabeled as unavailable.
+- Added per-signal render isolation and a minimal static display recovery path so one malformed browser-facing record cannot collapse the entire ticker.
+- Replaced the homepage metric-ID coupling with payload-ordered metric slots, allowing the public summary contract to evolve without blank cards.
+- Aligned the homepage summary with platform-capability metrics: country profiles, enabled connectors, 35 public workspaces, and governed live ticker feeds.
+- Added repository-to-WordPress-package asset checksum verification and release-contract tests to prevent two different asset generations from sharing one version string.
+- Normalized six inherited backend/public-app ↔ WordPress browser-asset mirror mismatches and added whole-mirror validation.
+- Repaired the public supply-chain assurance endpoint so its repository-root dependency is defined and testable.
+- Preserved all v4.39.0 gateway, governed rotation, evidence, Ocean, Space, country, and six-area / 35-route capabilities.
 
 # v4.39.0 — Homepage Live Intelligence Snapshot
 

@@ -1,22 +1,16 @@
-# Sustainable Catalyst Site Intelligence v4.39.0
+# Sustainable Catalyst Site Intelligence v4.39.1
 
-**Current release:** v4.39.0 R2 — Compact Capability Console
+**Current release:** v4.39.1 — Homepage Live Intelligence Asset Integrity & Rendering Recovery
 
-Site Intelligence v4.39.0 R2 makes `[sc_site_intelligence_home]` more compact and corrects the homepage capability story. It retains the high-resolution Earth, Space, and Ocean visual, original governed ticker, source-linked highlights, and application entry points while reducing vertical space and distinguishing 14 enabled connectors, 35 public workspaces, and the narrower eight-feed ticker registry.
+Site Intelligence v4.39.1 is a forward repair for the v4.39.1 homepage regression. It preserves the bounded Live Intelligence gateway and new homepage summary while guaranteeing a new frontend asset identity, isolating malformed signal rendering, and separating fetch failures from renderer failures.
 
-> **Release-gate identity:** the backend and WordPress plugin both remain at compatible release version `4.39.0`; the R2 tag records the compact capability revision without creating another version mismatch.
+> **Ticker recovery contract:** a successful Live Intelligence response must render through the normal ticker or the bounded static display-recovery path. A post-fetch rendering exception is never reported as a network outage.
 
-> **Image performance and provenance:** the three homepage images retain 1254–1600 px dimensions while totaling approximately 500 KB. Visible credits identify NASA Earth Observatory, NASA/ESA/CSA/STScI, and NOAA Ocean Exploration.
+> **Asset integrity contract:** the repository WordPress assets and the packaged WordPress ZIP must have identical SHA-256 digests before release installation or GitHub promotion.
 
-> **Inherited presentation:** v4.39.0 R1 introduced the Visual Intelligence Console & Integrated Live Ticker retained by this revision.
+> **Homepage capability contract:** metric cards follow the ordered backend metric payload rather than hard-coded metric IDs, preserving country, connector, workspace, and ticker-feed capability reporting across compatible schema revisions.
 
-> **Certified base release:** v4.39.0 — Homepage Live Intelligence Snapshot.
-
-> **Live summary contract:** `/v1/public/site-intelligence/summary` returns country profiles, enabled connector count, registered public workspace count, governed ticker feed count, current bounded highlights, refresh time, entry points, and explicit truth boundaries.
-
-> **Graceful degradation:** if the summary request fails, the component displays no estimated counts, clearly labels the live summary unavailable, and preserves all three application entry points plus the primary Site Intelligence action.
-
-> **Inherited platform:** the v4.38.0 five-lane live Space acquisition, iframe navigation repair, Ocean 11-system workspace, country identity integrity, and six-area / 35-route architecture remain intact.
+> **Inherited platform:** v4.39.1 homepage gateway/rotation, v4.38.0 live Space and iframe repair, Ocean 11-system workspace, country identity integrity, evidence lineage, and the six-area / 35-route architecture remain intact.
 
 ## Homepage shortcode
 
@@ -1594,27 +1588,27 @@ Adds deferred Earth Observation orientation for NASA FIRMS fire/burned-area evid
 
 ## Current-release compatibility ledger
 
-- Current release:** v4.39.0 — Palestine-First Country Navigation Integrity Repair
-- **Release:** v4.39.0 — Connected Public Intelligence and Evidence Platform
-- Current release:** v4.39.0 — Connected Public Intelligence and Evidence Platform
-- v4.39.0 — Analytics and Public-Value Measurement
-- v4.39.0 — Archive Verification, Preservation Audits, and Institutional Custody
-- v4.39.0 — Collection Publication, Citation Exports, and Research Brief Packages
-- v4.39.0 — Connected Live Intelligence Surface
-- v4.39.0 — Corrections, Retractions, and Public Change History
-- v4.39.0 — Editorial Workspace, Review Queues, and Publication Orchestration
-- v4.39.0 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
-- v4.39.0 — Homepage Intelligence Gateway
-- v4.39.0 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
-- v4.39.0 — Live Intelligence presentation
-- v4.39.0 — Preservation Interoperability, External Verification, and Institutional Exchange
-- v4.39.0 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
-- v4.39.0 — Public Registry Discovery, Evidence Search, and Institutional Profiles
-- v4.39.0 — Publication Adapters, Institutional Handoffs, and Release Governance
-- v4.39.0 — Registry Governance, Challenges, Revocation, and Appeals
-- v4.39.0 — Release Monitoring, Rollback, and Post-Publication Governance
-- v4.39.0 — Saved Discovery Views, Public Research Collections, and Evidence Pathways
-- v4.39.0 — Signal Context and Drill-Down
-- v4.39.0 — Signal Relevance and Rotation Intelligence
-- v4.39.0 — Signal Subscriptions, Alerts, and Scheduled Intelligence
-- v4.39.0 — Topic and Regional Channels
+- Current release:** v4.39.1 — Palestine-First Country Navigation Integrity Repair
+- **Release:** v4.39.1 — Connected Public Intelligence and Evidence Platform
+- Current release:** v4.39.1 — Connected Public Intelligence and Evidence Platform
+- v4.39.1 — Analytics and Public-Value Measurement
+- v4.39.1 — Archive Verification, Preservation Audits, and Institutional Custody
+- v4.39.1 — Collection Publication, Citation Exports, and Research Brief Packages
+- v4.39.1 — Connected Live Intelligence Surface
+- v4.39.1 — Corrections, Retractions, and Public Change History
+- v4.39.1 — Editorial Workspace, Review Queues, and Publication Orchestration
+- v4.39.1 — Federated Preservation Registry, Trust Profiles, and Cross-Institution Verification
+- v4.39.1 — Homepage Intelligence Gateway
+- v4.39.1 — Live Intelligence Briefings, Narrative Context, and Publication Workflow
+- v4.39.1 — Live Intelligence presentation
+- v4.39.1 — Preservation Interoperability, External Verification, and Institutional Exchange
+- v4.39.1 — Public Record Archive, Provenance Ledger, and Long-Term Preservation
+- v4.39.1 — Public Registry Discovery, Evidence Search, and Institutional Profiles
+- v4.39.1 — Publication Adapters, Institutional Handoffs, and Release Governance
+- v4.39.1 — Registry Governance, Challenges, Revocation, and Appeals
+- v4.39.1 — Release Monitoring, Rollback, and Post-Publication Governance
+- v4.39.1 — Saved Discovery Views, Public Research Collections, and Evidence Pathways
+- v4.39.1 — Signal Context and Drill-Down
+- v4.39.1 — Signal Relevance and Rotation Intelligence
+- v4.39.1 — Signal Subscriptions, Alerts, and Scheduled Intelligence
+- v4.39.1 — Topic and Regional Channels

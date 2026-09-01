@@ -31,10 +31,8 @@ def test_homepage_summary_uses_registry_counts_and_bounded_live_highlights():
     metrics = {metric["id"]: metric for metric in payload["metrics"]}
     assert payload["ok"] is True and payload["schema"] == SCHEMA_VERSION
     assert metrics["country_profiles"]["value"] == 172
-    assert metrics["enabled_connectors"]["value"] == 14
-    assert metrics["public_workspaces"]["value"] == 35
-    assert metrics["live_feeds"]["value"] == 8
-    assert payload["featured_signal_count"] == 1
+    assert metrics["registered_sources"]["value"] == 8
+    assert metrics["current_signals"]["value"] == 1
     assert payload["highlights"][0]["source"] == "U.S. Geological Survey"
 
 
@@ -43,7 +41,7 @@ def test_homepage_summary_empty_state_does_not_invent_live_signals():
     assert payload["status"]["state"] == "online"
     assert payload["status"]["delivery_state"] == "available"
     assert payload["highlights"] == []
-    assert payload["featured_signal_count"] == 0
+    assert next(metric for metric in payload["metrics"] if metric["id"] == "current_signals")["value"] == 0
 
 
 def test_homepage_summary_exposes_three_valid_application_entry_points():

@@ -13,7 +13,7 @@ CLIENT = TestClient(app)
 def test_assurance_schema_discloses_boundaries_and_capabilities():
     payload = CLIENT.get('/public/assurance').json()
     assert payload['ok'] is True
-    assert payload['version'] == '4.39.0'
+    assert payload['version'] == '4.39.1'
     assert payload['contract'] == 'comparative-scenario-model-assurance'
     assert 'unit' in payload['comparison_dimensions']
     assert payload['method_card_count'] >= 2
@@ -130,8 +130,8 @@ def test_reproducible_assurance_package_has_stable_digest():
 def test_v3260_assets_are_shipped_to_application_and_wordpress():
     html = (ROOT / 'backend/public_app/index.html').read_text()
     worker = (ROOT / 'backend/public_app/service-worker.js').read_text()
-    assert 'assurance-v3260.css?v=4.39.0' in html
-    assert 'assurance-v3260.js?v=4.39.0' in html
+    assert 'assurance-v3260.css?v=4.39.1' in html
+    assert 'assurance-v3260.js?v=4.39.1' in html
     assert 'assurance-v3260.js' in worker
     for name in ('assurance-v3260.js', 'assurance-v3260.css'):
         assert (ROOT / 'backend/public_app/assets' / name).read_bytes() == (ROOT / 'wordpress-plugin/sustainable-catalyst-site-intelligence/assets' / name).read_bytes()

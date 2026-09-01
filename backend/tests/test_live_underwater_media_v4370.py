@@ -22,7 +22,7 @@ def settings(token=""):
 def test_provider_catalog_has_three_independent_lanes_and_onc_is_optional():
     payload = provider_catalog(settings())
     assert payload["ok"] is True
-    assert payload["version"] == "4.39.0"
+    assert payload["version"] == "4.39.1"
     assert payload["default_provider"] == "fathomnet"
     assert payload["provider_count"] == 3
     providers = {row["id"]: row for row in payload["providers"]}
@@ -152,7 +152,7 @@ def test_public_readiness_and_provider_routes_are_live_without_onc_credential():
     providers = CLIENT.get("/public/underwater-media/providers")
     ready = CLIENT.get("/public/underwater-media/readiness")
     assert providers.status_code == 200 and ready.status_code == 200
-    assert providers.json()["version"] == "4.39.0"
+    assert providers.json()["version"] == "4.39.1"
     assert ready.json()["ok"] is True
     old = CLIENT.get("/public/underwater-observation/readiness").json()
     assert old["checks"]["live_media_extension_ready"] is True
@@ -162,7 +162,7 @@ def test_public_readiness_and_provider_routes_are_live_without_onc_credential():
 def test_frontend_is_live_media_first_and_has_no_fake_zero_zero_default():
     js = (ROOT / "backend/public_app/assets/underwater-observation-v4800.js").read_text()
     css = (ROOT / "backend/public_app/assets/underwater-observation-v4800.css").read_text()
-    assert 'const VERSION="4.39.0"' in js
+    assert 'const VERSION="4.39.1"' in js
     assert "/public/underwater-media/search" in js
     assert "/public/underwater-media/providers" in js
     assert "Search live media" in js
@@ -175,13 +175,13 @@ def test_frontend_is_live_media_first_and_has_no_fake_zero_zero_default():
 
 
 def test_release_identity_is_v4370_and_ocean_inherits_live_underwater_readiness():
-    assert CLIENT.get("/public/build-info").json()["version"] == "4.39.0"
+    assert CLIENT.get("/public/build-info").json()["version"] == "4.39.1"
     ocean = CLIENT.get("/public/ocean-observation/readiness").json()
     assert ocean["ok"] is True
-    assert ocean["version"] == "4.39.0"
+    assert ocean["version"] == "4.39.1"
     assert ocean["systems"]["underwater"]["ok"] is True
     plugin = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
-    assert "Version: 4.39.0" in plugin and "site-intelligence-v4.39.0" in plugin
+    assert "Version: 4.39.1" in plugin and "site-intelligence-v4.39.1" in plugin
 
 
 def test_deployment_verification_requires_live_underwater_control_plane_but_not_onc_token():

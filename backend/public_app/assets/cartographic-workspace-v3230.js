@@ -1,6 +1,6 @@
 (function(window,document){
   "use strict";
-  const VERSION="4.39.0";
+  const VERSION="4.39.1";
   const OVERVIEW_IDS=["map"];
   let overviewLayout=null;
   let evidenceRail=null;
@@ -52,7 +52,7 @@
 
   async function loadCountryCatalog(){
     if(countryCatalog)return countryCatalog;
-    // v4.39.0: map focus consumes the same first-party identity plane as the
+    // v4.39.1: map focus consumes the same first-party identity plane as the
     // selector. Live country metadata can enrich it but cannot define whether an
     // ISO3 code exists. This prevents a partial upstream catalog from leaving the
     // map focused on the previously selected country.

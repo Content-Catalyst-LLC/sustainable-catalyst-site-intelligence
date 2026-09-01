@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-RELEASE="4.39.0"
+RELEASE="4.39.1"
 SCRIPT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SOURCE_ROOT="$SCRIPT_ROOT"
 REPO_DIR="${1:-$HOME/Downloads/sustainable-catalyst-site-intelligence}"

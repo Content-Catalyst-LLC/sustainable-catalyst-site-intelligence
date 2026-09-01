@@ -1750,58 +1750,29 @@
 .scsi-site-intelligence-launch-embed{max-width:1600px;margin-inline:auto}
 @media(max-width:760px){.scsi-site-intelligence-launch-embed{width:100vw;margin-left:calc(50% - 50vw);border-radius:0}}
 
-/* v4.39.0 R1 — homepage intelligence console refinement */
-.scsi-home-summary{--scsi-home-green:#82f59a;--scsi-home-green-soft:rgba(130,245,154,.1);--scsi-home-line:rgba(130,245,154,.2);--scsi-home-panel:rgba(10,16,12,.84);position:relative;max-width:1280px;margin:clamp(1rem,2.5vw,2.5rem) auto;padding:clamp(1.1rem,2.3vw,2rem);overflow:hidden;border:1px solid #263128;border-radius:24px;background:linear-gradient(145deg,#050806 0%,#070d09 58%,#040705 100%);color:#f6f8f6;box-shadow:0 24px 64px rgba(0,0,0,.18);isolation:isolate}
-.scsi-home-summary::before{content:"";position:absolute;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(circle at 82% 8%,rgba(70,255,112,.12),transparent 27%),radial-gradient(circle at 8% 92%,rgba(44,145,255,.07),transparent 24%),linear-gradient(rgba(130,245,154,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(130,245,154,.025) 1px,transparent 1px);background-size:auto,auto,36px 36px,36px 36px}
-.scsi-home-summary::after{content:"";position:absolute;right:-9rem;bottom:-12rem;z-index:-1;width:28rem;height:28rem;border:1px solid rgba(130,245,154,.08);border-radius:50%;box-shadow:0 0 0 4rem rgba(130,245,154,.018),0 0 0 8rem rgba(130,245,154,.012);pointer-events:none}
-.scsi-home-summary__header{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,360px);gap:clamp(1.5rem,3.6vw,3.5rem);align-items:center}
-.scsi-home-summary__intro{min-width:0}
-.scsi-home-summary__eyebrow{display:flex;align-items:center;gap:.65rem;margin:0 0 .75rem;color:var(--scsi-home-green);font:700 .7rem/1.2 "SFMono-Regular",Consolas,monospace;letter-spacing:.17em;text-transform:uppercase}
-.scsi-home-summary__eyebrow::before{content:"";width:1.5rem;height:1px;background:currentColor;box-shadow:0 0 10px currentColor}
-.scsi-home-summary h2{max-width:720px;margin:0;color:#fff;font-size:clamp(2.05rem,3.8vw,3.65rem);line-height:.98;letter-spacing:-.045em}
-.scsi-home-summary__lede{max-width:720px;margin:.75rem 0 0;color:#b8c2ba;font-size:clamp(.92rem,1.15vw,1.05rem);line-height:1.58}
-.scsi-home-summary__scope{display:flex;flex-wrap:wrap;gap:.42rem;margin-top:.9rem}
-.scsi-home-summary__scope span{display:inline-flex;align-items:center;gap:.42rem;padding:.42rem .62rem;border:1px solid rgba(255,255,255,.1);border-radius:999px;background:rgba(255,255,255,.025);color:#a9b4ab;font:650 .64rem/1 "SFMono-Regular",Consolas,monospace;letter-spacing:.06em;text-transform:uppercase}
-.scsi-home-summary__scope span::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--scsi-home-green);box-shadow:0 0 8px rgba(130,245,154,.65)}
-.scsi-home-summary__visual-column{display:grid;gap:.55rem;justify-items:stretch;min-width:0}
-.scsi-home-summary__status{display:inline-flex;align-items:center;justify-self:end;gap:.55rem;margin:0;padding:.58rem .78rem;border:1px solid var(--scsi-home-line);border-radius:999px;background:rgba(5,13,8,.86);color:var(--scsi-home-green);font:700 .66rem/1.2 "SFMono-Regular",Consolas,monospace;letter-spacing:.06em;white-space:nowrap}
-.scsi-home-summary__status span{width:7px;height:7px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor}
+/* v4.39.1 — lightweight homepage Site Intelligence snapshot */
+.scsi-home-summary{--scsi-home-green:#7df58f;--scsi-home-line:rgba(125,245,143,.24);position:relative;max-width:1440px;margin:clamp(1.5rem,4vw,4rem) auto;padding:clamp(1.25rem,3vw,2.75rem);overflow:hidden;border:1px solid #242a25;border-radius:24px;background:#050806;color:#f6f8f6;box-shadow:0 24px 70px rgba(0,0,0,.18);isolation:isolate}
+.scsi-home-summary::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 90% 5%,rgba(56,255,99,.1),transparent 30%),linear-gradient(rgba(125,245,143,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(125,245,143,.035) 1px,transparent 1px);background-size:auto,34px 34px,34px 34px}
+.scsi-home-summary__header{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2rem;align-items:start}
+.scsi-home-summary__eyebrow{margin:0 0 .65rem;color:var(--scsi-home-green);font:700 .72rem/1.2 "SFMono-Regular",Consolas,monospace;letter-spacing:.17em;text-transform:uppercase}
+.scsi-home-summary h2{margin:0;color:#fff;font-size:clamp(2rem,4.5vw,4.35rem);line-height:.98;letter-spacing:-.045em}
+.scsi-home-summary__lede{max-width:830px;margin:1rem 0 0;color:#bdc5be;font-size:clamp(1rem,1.5vw,1.2rem);line-height:1.7}
+.scsi-home-summary__status{display:inline-flex;align-items:center;gap:.55rem;margin:0;padding:.65rem .85rem;border:1px solid var(--scsi-home-line);border-radius:999px;background:rgba(6,18,9,.78);color:var(--scsi-home-green);font:700 .7rem/1.2 "SFMono-Regular",Consolas,monospace;letter-spacing:.07em;white-space:nowrap}
+.scsi-home-summary__status span{width:8px;height:8px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor}
 .scsi-home-summary__status[data-state="connecting"]{color:#d8c67e}.scsi-home-summary__status[data-state="degraded"]{color:#efbd72}
-.scsi-home-summary__visual{position:relative;min-height:210px;overflow:hidden;border:1px solid rgba(130,245,154,.18);border-radius:17px;background:#030604;box-shadow:inset 0 1px 0 rgba(255,255,255,.04),inset 0 -40px 80px rgba(0,0,0,.22)}
-.scsi-home-summary__visual::before{content:"CAPABILITY VIEW";position:absolute;top:.72rem;left:.82rem;z-index:4;padding:.3rem .42rem;border:1px solid rgba(130,245,154,.2);border-radius:999px;background:rgba(2,7,4,.82);color:#a2b5a6;font:700 .55rem/1 "SFMono-Regular",Consolas,monospace;letter-spacing:.14em}
-.scsi-home-summary__visual-media{position:absolute;inset:0;display:grid;grid-template-columns:1.35fr 1fr;grid-template-rows:1fr 1fr;gap:2px;background:#071009}
-.scsi-home-summary__visual-frame{position:relative;min-width:0;min-height:0;margin:0;overflow:hidden;background:#020403}
-.scsi-home-summary__visual-frame--earth{grid-row:1/3}
-.scsi-home-summary__visual-frame img{display:block;width:100%;height:100%;object-fit:cover;filter:saturate(.88) contrast(1.08) brightness(.72);transform:scale(1.01);transition:filter .35s ease,transform .7s ease}
-.scsi-home-summary__visual-frame--earth img{object-position:50% 50%}.scsi-home-summary__visual-frame--space img{object-position:52% 48%}.scsi-home-summary__visual-frame--ocean img{object-position:52% 56%}
-.scsi-home-summary__visual-frame::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.02) 35%,rgba(1,5,3,.86) 100%),linear-gradient(120deg,rgba(130,245,154,.06),transparent 55%);pointer-events:none}
-.scsi-home-summary__visual-frame:hover img{filter:saturate(1) contrast(1.05) brightness(.9);transform:scale(1.04)}
-.scsi-home-summary__visual-frame figcaption{position:absolute;left:.75rem;right:.65rem;bottom:.62rem;z-index:3;display:grid;gap:.18rem;color:#fff}.scsi-home-summary__visual-frame figcaption strong{font:750 .7rem/1.1 "SFMono-Regular",Consolas,monospace;letter-spacing:.09em;text-transform:uppercase}.scsi-home-summary__visual-frame figcaption span{color:#9eb0a1;font:600 .55rem/1.25 "SFMono-Regular",Consolas,monospace;letter-spacing:.04em}
-.scsi-home-summary__visual-overlay{position:absolute;inset:0;z-index:3;display:block;width:100%;height:100%;min-height:210px;pointer-events:none}
-.scsi-home-summary__orbit{fill:none;stroke:rgba(130,245,154,.3);stroke-width:1;vector-effect:non-scaling-stroke}.scsi-home-summary__orbit--outer{stroke-dasharray:4 7;stroke:rgba(130,245,154,.55)}
-.scsi-home-summary__node circle:first-child{fill:rgba(130,245,154,.03);stroke:rgba(130,245,154,.5);transform-box:fill-box;transform-origin:center;animation:scsi-home-signal-pulse 3.4s ease-out infinite}.scsi-home-summary__node circle:last-child{fill:var(--scsi-home-green);filter:drop-shadow(0 0 5px var(--scsi-home-green))}.scsi-home-summary__node--two circle:first-child{animation-delay:.8s}.scsi-home-summary__node--three circle:first-child{animation-delay:1.6s}.scsi-home-summary__node--four circle:first-child{animation-delay:2.4s}
-.scsi-home-summary__image-credit{margin:0;color:#657269;font:500 .56rem/1.45 "SFMono-Regular",Consolas,monospace}.scsi-home-summary__image-credit a{color:#819187!important;text-decoration-color:rgba(130,245,154,.35)!important;text-underline-offset:.15em}.scsi-home-summary__image-credit a:hover,.scsi-home-summary__image-credit a:focus-visible{color:var(--scsi-home-green)!important}
-.scsi-home-summary__ticker{margin-top:clamp(1rem,2vw,1.4rem);overflow:hidden;border:1px solid rgba(130,245,154,.2);border-radius:12px;background:#020403;box-shadow:0 12px 34px rgba(0,0,0,.2),inset 0 1px 0 rgba(130,245,154,.05)}
-.scsi-home-summary__ticker .scsi-live-intelligence{border:0;border-radius:0;background:rgba(2,4,3,.94)}
-.scsi-home-summary__ticker .scsi-live-intelligence__label{background:#071009}
-.scsi-home-summary__ticker .scsi-live-intelligence__pause{background:#071009}
-.scsi-home-summary__metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.6rem;margin:clamp(1rem,2vw,1.35rem) 0 0}
-.scsi-home-summary__metrics div{display:flex;flex-direction:column-reverse;gap:.28rem;min-width:0;padding:.78rem .88rem;border:1px solid rgba(255,255,255,.085);border-radius:12px;background:rgba(255,255,255,.022);box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}
-.scsi-home-summary__metrics dt{color:#7f8d82;font:650 .59rem/1.3 "SFMono-Regular",Consolas,monospace;letter-spacing:.075em;text-transform:uppercase}.scsi-home-summary__metrics dd{margin:0;color:#f8fbf8;font-size:clamp(1.35rem,2vw,1.85rem);font-weight:760;line-height:1;letter-spacing:-.035em}
-.scsi-home-summary__signals-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-top:1rem}.scsi-home-summary__signals-head p,.scsi-home-summary__signals-head span{margin:0;font:700 .59rem/1.3 "SFMono-Regular",Consolas,monospace;letter-spacing:.1em;text-transform:uppercase}.scsi-home-summary__signals-head p{color:var(--scsi-home-green)}.scsi-home-summary__signals-head span{color:#748077}.scsi-home-summary__signals-head b{color:#c8d2ca}
-.scsi-home-summary__signals{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.6rem;margin-top:.45rem}
-.scsi-home-summary__signals>p{grid-column:1/-1;margin:0;padding:1.1rem;border:1px solid rgba(255,255,255,.085);border-radius:14px;background:var(--scsi-home-panel);color:#9eaaa0}
-.scsi-home-summary__signal{position:relative;display:grid;grid-template-rows:auto auto 1fr auto;gap:.3rem;min-height:128px;padding:.78rem .82rem;overflow:hidden;border:1px solid rgba(255,255,255,.085);border-radius:12px;background:var(--scsi-home-panel);color:#fff!important;text-decoration:none!important;transition:border-color .18s ease,background .18s ease,transform .18s ease}.scsi-home-summary__signal::after{content:"";position:absolute;right:-2rem;bottom:-2rem;width:5rem;height:5rem;border:1px solid rgba(130,245,154,.08);border-radius:50%}.scsi-home-summary__signal:hover,.scsi-home-summary__signal:focus-visible{border-color:rgba(130,245,154,.65);background:#0d1710;outline:0;transform:translateY(-2px)}.scsi-home-summary__signal span{color:var(--scsi-home-green);font:700 .56rem/1.25 "SFMono-Regular",Consolas,monospace;letter-spacing:.075em;text-transform:uppercase}.scsi-home-summary__signal strong{font-size:.82rem;line-height:1.28}.scsi-home-summary__signal b{color:#dce3dd;font-size:.76rem;line-height:1.35}.scsi-home-summary__signal small{color:#7c8980;font-size:.63rem;line-height:1.3}
-.scsi-home-summary__entries{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.6rem;margin-top:1rem}.scsi-home-summary__entries a{position:relative;display:grid;gap:.22rem;min-height:78px;padding:.78rem 2.7rem .78rem .85rem;border:1px solid rgba(255,255,255,.1);border-radius:12px;background:rgba(255,255,255,.02);color:#fff!important;text-decoration:none!important;transition:border-color .18s ease,background .18s ease}.scsi-home-summary__entries a:hover,.scsi-home-summary__entries a:focus-visible{border-color:var(--scsi-home-green);background:var(--scsi-home-green-soft);outline:0}.scsi-home-summary__entries strong{font-size:.86rem}.scsi-home-summary__entries span{color:#88948b;font-size:.69rem;line-height:1.35}.scsi-home-summary__entries b{position:absolute;right:.85rem;top:.78rem;color:var(--scsi-home-green);font-size:1rem}
-.scsi-home-summary__footer{display:flex;align-items:center;justify-content:space-between;gap:1.25rem;margin-top:1rem;padding-top:.9rem;border-top:1px solid rgba(255,255,255,.07)}.scsi-home-summary__footer p{max-width:760px;margin:0;color:#748077;font-size:.66rem;line-height:1.45}.scsi-home-summary__cta{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:.58rem .95rem;border:1px solid #f5f7f5;border-radius:999px;background:#f5f7f5;color:#090b09!important;font-size:.88rem;font-weight:750;text-decoration:none!important;white-space:nowrap}.scsi-home-summary__cta:hover,.scsi-home-summary__cta:focus-visible{background:var(--scsi-home-green);border-color:var(--scsi-home-green);outline:2px solid #fff;outline-offset:3px}
+.scsi-home-summary__metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:clamp(1.5rem,3vw,2.5rem) 0 0;border-block:1px solid var(--scsi-home-line)}
+.scsi-home-summary__metrics div{display:flex;flex-direction:column-reverse;gap:.3rem;padding:1.15rem 1rem;border-right:1px solid var(--scsi-home-line)}.scsi-home-summary__metrics div:first-child{padding-left:0}.scsi-home-summary__metrics div:last-child{border-right:0}
+.scsi-home-summary__metrics dt{color:#8f9b91;font:650 .68rem/1.3 "SFMono-Regular",Consolas,monospace;letter-spacing:.08em;text-transform:uppercase}.scsi-home-summary__metrics dd{margin:0;color:#fff;font-size:clamp(1.55rem,3vw,2.5rem);font-weight:750;line-height:1}
+.scsi-home-summary__signals{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1px;margin-top:1.5rem;background:var(--scsi-home-line);border:1px solid var(--scsi-home-line);border-radius:15px;overflow:hidden}
+.scsi-home-summary__signals>p{grid-column:1/-1;margin:0;padding:1.2rem;background:#09100b;color:#9eaaa0}
+.scsi-home-summary__signal{display:grid;grid-template-rows:auto auto 1fr auto;gap:.42rem;min-height:170px;padding:1rem;background:#09100b;color:#fff!important;text-decoration:none!important}.scsi-home-summary__signal:hover,.scsi-home-summary__signal:focus-visible{background:#0e1b11;outline:2px solid var(--scsi-home-green);outline-offset:-3px}.scsi-home-summary__signal span{color:var(--scsi-home-green);font:700 .62rem/1.3 "SFMono-Regular",Consolas,monospace;letter-spacing:.08em;text-transform:uppercase}.scsi-home-summary__signal strong{font-size:.95rem;line-height:1.35}.scsi-home-summary__signal b{color:#dce3dd;font-size:.86rem;line-height:1.45}.scsi-home-summary__signal small{color:#829086;font-size:.7rem}
+.scsi-home-summary__entries{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:1.5rem}.scsi-home-summary__entries a{position:relative;display:grid;gap:.35rem;min-height:104px;padding:1rem 3rem 1rem 1rem;border:1px solid #2a302b;border-radius:13px;background:rgba(255,255,255,.025);color:#fff!important;text-decoration:none!important}.scsi-home-summary__entries a:hover,.scsi-home-summary__entries a:focus-visible{border-color:var(--scsi-home-green);background:rgba(125,245,143,.06);outline:0}.scsi-home-summary__entries strong{font-size:.95rem}.scsi-home-summary__entries span{color:#929c94;font-size:.78rem;line-height:1.45}.scsi-home-summary__entries b{position:absolute;right:1rem;top:1rem;color:var(--scsi-home-green);font-size:1.05rem}
+.scsi-home-summary__footer{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;margin-top:1.5rem}.scsi-home-summary__footer p{max-width:760px;margin:0;color:#7f8b81;font-size:.73rem;line-height:1.5}.scsi-home-summary__cta{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:.7rem 1.1rem;border:1px solid #f5f7f5;border-radius:999px;background:#f5f7f5;color:#090b09!important;font-weight:750;text-decoration:none!important;white-space:nowrap}.scsi-home-summary__cta:hover,.scsi-home-summary__cta:focus-visible{background:var(--scsi-home-green);border-color:var(--scsi-home-green);outline:2px solid #fff;outline-offset:3px}
 .scsi-home-summary__notice{margin:1rem 0 0;color:#efbd72}
-@keyframes scsi-home-signal-pulse{0%{opacity:.9;transform:scale(.7)}70%,100%{opacity:0;transform:scale(1.9)}}
-@media(max-width:960px){.scsi-home-summary__header{grid-template-columns:minmax(0,1fr) minmax(280px,340px);gap:2rem}.scsi-home-summary__signals,.scsi-home-summary__metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:760px){.scsi-home-summary__header{grid-template-columns:1fr}.scsi-home-summary__visual-column{max-width:620px}.scsi-home-summary__status{justify-self:start}.scsi-home-summary__visual{min-height:230px}.scsi-home-summary__visual-overlay{min-height:230px}}
-@media(max-width:700px){.scsi-home-summary{width:100vw;margin-inline:calc(50% - 50vw);border-radius:0}.scsi-home-summary__entries,.scsi-home-summary__signals{grid-template-columns:1fr}.scsi-home-summary__footer{align-items:flex-start;flex-direction:column}.scsi-home-summary__cta{width:100%}}
-@media(max-width:440px){.scsi-home-summary__metrics{grid-template-columns:1fr 1fr;gap:.5rem}.scsi-home-summary__metrics div{padding:.85rem}.scsi-home-summary__scope{gap:.38rem}.scsi-home-summary__scope span{font-size:.57rem}.scsi-home-summary__visual-media{grid-template-columns:1.2fr 1fr}.scsi-home-summary__visual-frame figcaption span{display:none}}
-@media(prefers-reduced-motion:reduce){.scsi-home-summary *{scroll-behavior:auto!important;transition:none!important}.scsi-home-summary__node circle:first-child{animation:none!important;opacity:.65}}
-@media(forced-colors:active){.scsi-home-summary,.scsi-home-summary__visual,.scsi-home-summary__metrics div,.scsi-home-summary__signal,.scsi-home-summary__entries a{border-color:CanvasText;background:Canvas;color:CanvasText}.scsi-home-summary__cta{border:1px solid LinkText;background:Canvas;color:LinkText!important}}
+@media(max-width:960px){.scsi-home-summary__signals{grid-template-columns:repeat(2,minmax(0,1fr))}.scsi-home-summary__metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.scsi-home-summary__metrics div:nth-child(2){border-right:0}.scsi-home-summary__metrics div:nth-child(-n+2){border-bottom:1px solid var(--scsi-home-line)}.scsi-home-summary__metrics div:nth-child(3){padding-left:0}}
+@media(max-width:700px){.scsi-home-summary{width:100vw;margin-inline:calc(50% - 50vw);border-radius:0}.scsi-home-summary__header{grid-template-columns:1fr}.scsi-home-summary__status{justify-self:start}.scsi-home-summary__entries,.scsi-home-summary__signals{grid-template-columns:1fr}.scsi-home-summary__footer{align-items:flex-start;flex-direction:column}.scsi-home-summary__cta{width:100%}}
+@media(prefers-reduced-motion:reduce){.scsi-home-summary *{scroll-behavior:auto!important;transition:none!important}}
+@media(forced-colors:active){.scsi-home-summary,.scsi-home-summary__signal,.scsi-home-summary__entries a{border-color:CanvasText;background:Canvas;color:CanvasText}.scsi-home-summary__cta{border:1px solid LinkText;background:Canvas;color:LinkText!important}}
 
 /* v2.12.1 — production offline, mobile, and embed reliability */
 .scsi-standalone-app,
@@ -2096,7 +2067,7 @@
 @media(prefers-reduced-motion:reduce){.scsi-live-intelligence__delivery{display:inline-flex}.scsi-live-intelligence__lamp{box-shadow:none}}
 @media(forced-colors:active){.scsi-live-intelligence__delivery{border-color:CanvasText;color:CanvasText}}
 
-/* Site Intelligence v4.39.0 — Live Intelligence presentation, motion, and accessibility controls. */
+/* Site Intelligence v4.39.1 — Live Intelligence presentation, motion, and accessibility controls. */
 .scsi-live-intelligence [hidden]{display:none!important}
 .scsi-live-intelligence__announcer{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
 .scsi-live-intelligence__noscript{grid-column:1/-1;margin:0;padding:.7rem 1rem;border-top:1px solid #214d29;background:#050906;color:var(--scsi-live-green);font-size:.72rem;line-height:1.5}
@@ -2156,13 +2127,13 @@
   .scsi-live-intelligence__controls button{border:1px solid ButtonText;background:ButtonFace;color:ButtonText;text-shadow:none}
 }
 
-/* v4.39.0 Homepage Intelligence Gateway */
+/* v4.39.1 Homepage Intelligence Gateway */
 .scsi-live-intelligence[data-surface="homepage"]{contain:layout paint;isolation:isolate}
 .scsi-live-intelligence[data-surface="homepage"] .scsi-live-intelligence__signal[data-destination-type="signal_context"]{cursor:pointer}
 .scsi-live-intelligence[data-surface="homepage"] .scsi-live-intelligence__signal[data-signal-family]{text-underline-offset:.22em}
 @media print{.scsi-live-intelligence[data-surface="homepage"]{position:static!important}.scsi-live-intelligence[data-surface="homepage"] .scsi-live-intelligence__pause,.scsi-live-intelligence[data-surface="homepage"] .scsi-live-intelligence__controls{display:none!important}}
 
-/* Site Intelligence v4.39.0 — connected Live Intelligence surfaces. */
+/* Site Intelligence v4.39.1 — connected Live Intelligence surfaces. */
 .scsi-live-intelligence--surface-static_strip,
 .scsi-live-intelligence--surface-publication,
 .scsi-live-intelligence--surface-library,
@@ -2195,7 +2166,7 @@
   display: none;
 }
 
-/* Site Intelligence v4.39.0 — reviewed Live Intelligence watchlists, alerts, digests, and source-linked briefings. */
+/* Site Intelligence v4.39.1 — reviewed Live Intelligence watchlists, alerts, digests, and source-linked briefings. */
 .scsi-live-subscriptions {
   --scsi-subscription-border: rgba(17, 24, 39, .16);
   overflow: hidden;
@@ -2289,7 +2260,7 @@
 
 .scsi-live-preservation-exchange__output { min-height: 6rem; }
 
-/* Site Intelligence v4.39.0 — public registry discovery and evidence-linked institutional profiles. */
+/* Site Intelligence v4.39.1 — public registry discovery and evidence-linked institutional profiles. */
 .scsi-live-registry-discovery__form {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(11rem, 0.35fr) auto;
@@ -2319,7 +2290,7 @@
 }
 
 
-/* Site Intelligence v4.39.0 — saved discovery views, public research collections, and evidence pathways. */
+/* Site Intelligence v4.39.1 — saved discovery views, public research collections, and evidence pathways. */
 .scsi-live-registry-collections__status { margin: .75rem 0; font-size: .9rem; }
 .scsi-live-registry-collections__views,
 .scsi-live-registry-collections__items { display: grid; gap: .85rem; margin-top: 1rem; }
@@ -2335,7 +2306,7 @@
 .scsi-live-registry-collections__steps code { display: block; max-width: 100%; overflow-wrap: anywhere; font-size: .72rem; }
 
 
-/* Site Intelligence v4.39.0 — public registry research briefs */
+/* Site Intelligence v4.39.1 — public registry research briefs */
 .scsi-live-registry-publications__status { margin: .75rem 0; font-size: .9rem; }
 .scsi-live-registry-publications__items { display: grid; gap: 1rem; margin-top: 1rem; }
 .scsi-live-registry-publications__brief { border-top: 1px solid currentColor; padding-top: 1.1rem; }
@@ -2349,11 +2320,11 @@
 .scsi-live-registry-publications__citation-card span { display: block; font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; opacity: .72; }
 .scsi-live-registry-publications__citation-card code { overflow-wrap: anywhere; font-size: .72rem; }
 
-/* v4.39.0 map presentation */
+/* v4.39.1 map presentation */
 .sc-site-intelligence-map,.scsi-map,.scsi-live-map{min-height:480px;background:#07131d;border-radius:14px;overflow:hidden}
 .sc-site-intelligence-frame{background:#05090d!important}
 
-/* v4.39.0 — fixed full-application viewport and WordPress host isolation */
+/* v4.39.1 — fixed full-application viewport and WordPress host isolation */
 .scsi-standalone-app[data-scsi-fixed-app]{content-visibility:visible!important;contain:none!important;height:var(--scsi-fixed-app-height)!important;min-height:var(--scsi-fixed-app-height)!important;max-height:var(--scsi-fixed-app-height)!important;overflow:hidden!important}
 .scsi-standalone-app[data-scsi-fixed-app] iframe{height:var(--scsi-fixed-app-height)!important;min-height:var(--scsi-fixed-app-height)!important;max-height:var(--scsi-fixed-app-height)!important;transition:none!important;overflow:auto!important}
 .scsi-standalone-app[data-scsi-fixed-app] .scsi-app-loading{height:var(--scsi-fixed-app-height)!important}

@@ -11,7 +11,7 @@ CLIENT=TestClient(app)
 def settings(**kw): return Settings(_env_file=None, **kw)
 
 def test_release_and_catalog_contract():
-    assert APP_VERSION=='4.39.0'
+    assert APP_VERSION=='4.39.1'
     cat=c.connector_catalog(settings())
     assert cat['connector_count']==45
     assert cat['live_connector_count']==28
