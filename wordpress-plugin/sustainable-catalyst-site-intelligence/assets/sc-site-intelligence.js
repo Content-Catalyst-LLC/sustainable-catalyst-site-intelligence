@@ -4844,6 +4844,7 @@
       const appBase = root.dataset.appBase || window.location.origin + '/';
       const status = root.querySelector('[data-home-status]');
       const signals = root.querySelector('[data-home-signals]');
+      const signalCount = root.querySelector('[data-home-signal-count]');
       const refresh = root.querySelector('[data-home-refresh]');
       if (!endpoint || !status || !signals) return;
 
@@ -4867,6 +4868,7 @@
           card.title = metric.basis || '';
         });
         const highlights = Array.isArray(payload.highlights) ? payload.highlights : [];
+        if (signalCount) signalCount.textContent = String(Number.isFinite(Number(payload.featured_signal_count)) ? Number(payload.featured_signal_count) : highlights.length);
         signals.innerHTML = highlights.length ? highlights.map(function (item) {
           return '<a class="scsi-home-summary__signal" href="' + escapeHtml(appUrl(item.href)) + '">' +
             '<span>' + escapeHtml(item.category || 'Public signal') + '</span>' +
@@ -4884,6 +4886,7 @@
       }).catch(function () {
         status.dataset.state = 'degraded';
         status.querySelector('strong').textContent = 'Live summary temporarily unavailable';
+        if (signalCount) signalCount.textContent = '—';
         signals.innerHTML = '<p class="scsi-home-summary__empty">The homepage summary could not refresh. Use the entry points below to open Site Intelligence directly.</p>';
         signals.setAttribute('aria-busy', 'false');
         if (refresh) refresh.textContent = 'Live counts are unavailable; no values have been estimated or fabricated.';

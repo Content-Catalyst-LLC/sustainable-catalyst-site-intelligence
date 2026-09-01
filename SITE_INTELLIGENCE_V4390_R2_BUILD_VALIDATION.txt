@@ -1,0 +1,25 @@
+Site Intelligence v4.39.0 R2 — Build Validation
+
+Release identity
+- Backend APP_VERSION: 4.39.0
+- WordPress plugin version: 4.39.0
+- Git tag: v4.39.0-r2
+
+Validated release contracts
+- R2 compact layout and capability metric contract: PASS
+- R1 imagery and integrated ticker contract: PASS
+- v4.39.0 homepage summary contract: PASS
+- Static release and manifest contract: PASS
+
+Validated data and code
+- Immutable manifest: 2,584 entries verified
+- JSON/GeoJSON: 135 files parsed
+- Python syntax: PASS
+- JavaScript syntax: PASS
+- Shell syntax: PASS
+- Homepage summary registry evaluation: 172 country profiles, 14 enabled connectors, 35 public workspaces, 8 live ticker feeds
+
+Runtime note
+- The local environment did not include pytest/FastAPI packages, so the verifier used the supported deterministic no-runtime-test path.
+- The targeted summary builder was executed directly and returned the expected registry-derived metrics.
+- PHP CLI was not available locally; the inherited v4.39.0 PHP source had previously passed release validation, and R2 changes were limited to bounded shortcode markup/attributes.

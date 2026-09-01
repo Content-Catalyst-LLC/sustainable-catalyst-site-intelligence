@@ -6482,7 +6482,8 @@ final class SC_Site_Intelligence_Plugin {
         ];
         $ticker = $this->live_intelligence_shortcode([
             'surface' => 'homepage',
-            'limit' => '12',
+            'limit' => '16',
+            'max_visible' => '16',
             'placement' => 'content',
             'label' => 'Live Intelligence',
         ]);
@@ -6537,10 +6538,14 @@ final class SC_Site_Intelligence_Plugin {
                 </div>
             <?php endif; ?>
             <dl class="scsi-home-summary__metrics" aria-label="Site Intelligence coverage summary">
-                <?php foreach ([['country_profiles', 'country profiles'], ['registered_sources', 'registered live feeds'], ['enabled_sources', 'enabled by default'], ['current_signals', 'current signals']] as $metric): ?>
+                <?php foreach ([['country_profiles', 'country profiles'], ['enabled_connectors', 'enabled connectors'], ['public_workspaces', 'public workspaces'], ['live_feeds', 'live ticker feeds']] as $metric): ?>
                     <div data-home-metric="<?php echo esc_attr($metric[0]); ?>"><dt><?php echo esc_html($metric[1]); ?></dt><dd>—</dd></div>
                 <?php endforeach; ?>
             </dl>
+            <div class="scsi-home-summary__signals-head">
+                <p>Featured now</p>
+                <span><b data-home-signal-count>—</b> current public signals</span>
+            </div>
             <div class="scsi-home-summary__signals" data-home-signals aria-live="polite" aria-busy="true">
                 <p>Loading the latest bounded public signals…</p>
             </div>

@@ -1,16 +1,18 @@
 # Sustainable Catalyst Site Intelligence v4.39.0
 
-**Current release:** v4.39.0 R1 — Visual Intelligence Console & Integrated Live Ticker
+**Current release:** v4.39.0 R2 — Compact Capability Console
 
-Site Intelligence v4.39.0 R1 refines `[sc_site_intelligence_home]` into a lightweight visual intelligence console. It combines self-hosted high-resolution NASA and NOAA imagery, a subtle capability overlay, the original governed Live Intelligence ticker, registry-derived coverage counts, up to four current source-linked signals, and direct World, Earth, Ocean, and Space pathways without loading the full iframe application.
+Site Intelligence v4.39.0 R2 makes `[sc_site_intelligence_home]` more compact and corrects the homepage capability story. It retains the high-resolution Earth, Space, and Ocean visual, original governed ticker, source-linked highlights, and application entry points while reducing vertical space and distinguishing 14 enabled connectors, 35 public workspaces, and the narrower eight-feed ticker registry.
 
-> **Presentation-only revision:** the backend and WordPress plugin both remain at compatible release version `4.39.0`; the R1 tag records the visual refinement without triggering a new version-gate cycle.
+> **Release-gate identity:** the backend and WordPress plugin both remain at compatible release version `4.39.0`; the R2 tag records the compact capability revision without creating another version mismatch.
 
 > **Image performance and provenance:** the three homepage images retain 1254–1600 px dimensions while totaling approximately 500 KB. Visible credits identify NASA Earth Observatory, NASA/ESA/CSA/STScI, and NOAA Ocean Exploration.
 
+> **Inherited presentation:** v4.39.0 R1 introduced the Visual Intelligence Console & Integrated Live Ticker retained by this revision.
+
 > **Certified base release:** v4.39.0 — Homepage Live Intelligence Snapshot.
 
-> **Live summary contract:** `/v1/public/site-intelligence/summary` returns the current registered country-profile count, registered and default-enabled Live Intelligence feeds, current bounded signals, refresh time, entry points, and explicit truth boundaries.
+> **Live summary contract:** `/v1/public/site-intelligence/summary` returns country profiles, enabled connector count, registered public workspace count, governed ticker feed count, current bounded highlights, refresh time, entry points, and explicit truth boundaries.
 
 > **Graceful degradation:** if the summary request fails, the component displays no estimated counts, clearly labels the live summary unavailable, and preserves all three application entry points plus the primary Site Intelligence action.
 

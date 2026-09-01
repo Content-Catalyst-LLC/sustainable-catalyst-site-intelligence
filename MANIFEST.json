@@ -1,6 +1,6 @@
 {
   "release": "4.39.0",
-  "file_count": 2578,
+  "file_count": 2585,
   "files": [
     {
       "path": ".gitignore",
@@ -19,8 +19,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 97592,
-      "sha256": "9c0dc1e091f135f9b20501c98e71c4393d631aaaab1899e4a3902dba80c098f3"
+      "bytes": 97691,
+      "sha256": "776c006d9ba620a1cec2dc4c5b0dda392ef244e938d342982abf745edb13e33f"
     },
     {
       "path": "RELEASE_NOTES_SITE_INTELLIGENCE_V2100.md",
@@ -761,6 +761,11 @@
       "path": "RELEASE_NOTES_SITE_INTELLIGENCE_V4390_R1.md",
       "bytes": 1571,
       "sha256": "b56d2c4d5678b9f7cd9335358a32b3a24d48b1feb4ce271931a615bbe71d42d1"
+    },
+    {
+      "path": "RELEASE_NOTES_SITE_INTELLIGENCE_V4390_R2.md",
+      "bytes": 1599,
+      "sha256": "211af21637a7627e554bb5b15e1d0fa1008543031892b209439a454f0f771a99"
     },
     {
       "path": "RELEASE_NOTES_SITE_INTELLIGENCE_V4400.md",
@@ -3213,6 +3218,21 @@
       "sha256": "25294c5380e770b09a408c6356b45dbdf8824f09ddf8c88859315433da445a07"
     },
     {
+      "path": "SITE_INTELLIGENCE_V4390_R2_BUILD_VALIDATION.txt",
+      "bytes": 1112,
+      "sha256": "88bcc2ef49db9be38190177a8f7cba936b588ced688d8e6e5be2eb16d637d935"
+    },
+    {
+      "path": "SITE_INTELLIGENCE_V4390_R2_INSTALL_AND_TEST.md",
+      "bytes": 1362,
+      "sha256": "edf0ae6c68742de52382fcc4c6b8628ae1e13c735a94d2a15127f40d6ad43b1a"
+    },
+    {
+      "path": "SITE_INTELLIGENCE_V4390_R2_TERMINAL_COMMANDS.txt",
+      "bytes": 1512,
+      "sha256": "7c888e3ac025321bcc269a6003cb20a66758bdcc5ef31daf2028a76acae3aac8"
+    },
+    {
       "path": "SITE_INTELLIGENCE_V4390_TERMINAL_COMMANDS.txt",
       "bytes": 937,
       "sha256": "08a2578114b01281b76cfe5bdb3a7f81bbf8da24c834734d1364e42f8c9f74e4"
@@ -3814,8 +3834,8 @@
     },
     {
       "path": "backend/app/homepage_summary_v4390.py",
-      "bytes": 5497,
-      "sha256": "2692527f1e51dbe81b941a2473e85e6b4b9c12394b21b1725aecf2ba6750cd0b"
+      "bytes": 6739,
+      "sha256": "08957462b303b8e91e859b5184fef18821fbbed83f79176a227e7048ea3699ba"
     },
     {
       "path": "backend/app/human_development_intelligence.py",
@@ -6139,8 +6159,8 @@
     },
     {
       "path": "backend/tests/test_homepage_summary_v4390.py",
-      "bytes": 3105,
-      "sha256": "34760c16562642cf9644188127922f8a527c8c31d90b6848161ce45f14b69a3e"
+      "bytes": 3146,
+      "sha256": "6bf26c53d20f027b621ca1e70b841e7b8ae0ed0061af78326834ef14fcfae6bd"
     },
     {
       "path": "backend/tests/test_human_development_intelligence_v190.py",
@@ -8396,6 +8416,11 @@
       "path": "install_and_push_site_intelligence_v4_39_0_r1_macos.sh",
       "bytes": 2677,
       "sha256": "c8090dae5aa27ec584fa0746450d078530d6f4749c477d6fc51d09806a3e1f47"
+    },
+    {
+      "path": "install_and_push_site_intelligence_v4_39_0_r2_macos.sh",
+      "bytes": 2661,
+      "sha256": "71f68d91af0d42d77e8f93062fe15b816784293343964a53bf08ed3cd443e493"
     },
     {
       "path": "promote_site_intelligence_v3_22_6_to_github_and_render_macos.sh",
@@ -11668,6 +11693,11 @@
       "sha256": "91f99301127cbeb23fff25b1682d40f304dfad2795c81b8b829c99aec55d5612"
     },
     {
+      "path": "scripts/validate_v4390_r2_release_contract.py",
+      "bytes": 2550,
+      "sha256": "e3878d857cdd5b94d2be66b07f05dbdac498c935f842db6e6d254ae4f00c5402"
+    },
+    {
       "path": "scripts/validate_v4390_release.py",
       "bytes": 668,
       "sha256": "f82503967eeddd61593c7eacb9db673a23ea7b1edb6f881564f1eada44ae5cbe"
@@ -12176,6 +12206,11 @@
       "path": "verify_site_intelligence_v4_39_0_r1_macos.sh",
       "bytes": 429,
       "sha256": "fdf3c787a2fde5896d14f1ef9b5e980188752e1e7163b84dd60861de6a707113"
+    },
+    {
+      "path": "verify_site_intelligence_v4_39_0_r2_macos.sh",
+      "bytes": 441,
+      "sha256": "f1343a75424b4561d2495d55d37cdd347db4c53fd3e4136ada96a76c05d3577f"
     },
     {
       "path": "verify_site_intelligence_v4_3_0_macos.sh",
@@ -12704,13 +12739,13 @@
     },
     {
       "path": "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.css",
-      "bytes": 100226,
-      "sha256": "cd8984b54ebef65bbe9e8a64cdf8fe1aec4e27c480f47aeb72d36a89186ce365"
+      "bytes": 100741,
+      "sha256": "3bfc3f64053e81748fb6bc2e3b21c6146b4b6b626dfd18d2d84ceafab7f299e6"
     },
     {
       "path": "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/sc-site-intelligence.js",
-      "bytes": 292821,
-      "sha256": "cd2b763cc300214592bb4dd620b36eb4965860a931602a40b10ed9eb2e9b2359"
+      "bytes": 293128,
+      "sha256": "c7d356df1a81717f63be724a464f96f2498544b14f9a63b2ab7fb2a47dfefccb"
     },
     {
       "path": "wordpress-plugin/sustainable-catalyst-site-intelligence/assets/science-v240.css",
@@ -12889,8 +12924,8 @@
     },
     {
       "path": "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php",
-      "bytes": 520782,
-      "sha256": "341560b2dbbf77fdcd22dcc13f39a07ad4c4eb2f2bf79cc031250a2595300de9"
+      "bytes": 521011,
+      "sha256": "b22c47c3a1770d258f988058d7c5019e44cb6e5afaf6552dab09ddd5095186ff"
     }
   ]
 }

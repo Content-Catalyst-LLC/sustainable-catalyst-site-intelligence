@@ -13,6 +13,8 @@ SCHEMA_VERSION = "sc-site-intelligence-home-summary/1.0"
 DATA_DIR = Path(__file__).resolve().parents[1] / "data"
 COUNTRY_REGISTRY = DATA_DIR / "country_identity_registry_v43523.json"
 SOURCE_REGISTRY = DATA_DIR / "live_intelligence_source_registry_v320.json"
+CONNECTOR_REGISTRY = DATA_DIR / "connector_operations_registry_v2130.json"
+WORKSPACE_POLICY = DATA_DIR / "unified_public_intelligence_policy_v4000.json"
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -42,6 +44,25 @@ def _source_counts() -> tuple[int, int]:
     return len(sources), enabled
 
 
+def _enabled_connector_count() -> int:
+    registry = _read_json(CONNECTOR_REGISTRY)
+    connectors = registry.get("connectors") if isinstance(registry.get("connectors"), list) else []
+    return sum(1 for connector in connectors if isinstance(connector, Mapping) and connector.get("enabled") is True)
+
+
+def _public_workspace_count() -> int:
+    policy = _read_json(WORKSPACE_POLICY)
+    areas = policy.get("primary_areas") if isinstance(policy.get("primary_areas"), list) else []
+    routes = {
+        str(route).strip()
+        for area in areas
+        if isinstance(area, Mapping)
+        for route in (area.get("routes") if isinstance(area.get("routes"), list) else [])
+        if str(route).strip()
+    }
+    return len(routes)
+
+
 def _highlight(signal: Mapping[str, Any]) -> dict[str, Any]:
     primary = signal.get("primary_destination") if isinstance(signal.get("primary_destination"), Mapping) else {}
     return {
@@ -59,7 +80,9 @@ def build_homepage_summary(live_payload: Mapping[str, Any] | None = None) -> dic
     """Build a small, auditable payload without booting the full public app."""
     payload = dict(live_payload or {})
     signals = [signal for signal in (payload.get("signals") or []) if isinstance(signal, Mapping)]
-    source_count, enabled_source_count = _source_counts()
+    source_count, _ = _source_counts()
+    enabled_connector_count = _enabled_connector_count()
+    public_workspace_count = _public_workspace_count()
     country_count = _country_count()
     gateway = payload.get("gateway") if isinstance(payload.get("gateway"), Mapping) else {}
     represented_source_count = max(0, int(gateway.get("represented_source_count") or 0))
@@ -80,10 +103,11 @@ def build_homepage_summary(live_payload: Mapping[str, Any] | None = None) -> dic
         },
         "metrics": [
             {"id": "country_profiles", "value": country_count, "label": "country profiles", "basis": "first-party country identity registry"},
-            {"id": "registered_sources", "value": source_count, "label": "registered live feeds", "basis": "Live Intelligence source registry"},
-            {"id": "enabled_sources", "value": enabled_source_count, "label": "enabled by default", "basis": "Live Intelligence source policy"},
-            {"id": "current_signals", "value": live_count, "label": "current signals", "basis": "bounded homepage refresh"},
+            {"id": "enabled_connectors", "value": enabled_connector_count, "label": "enabled connectors", "basis": "connector operations registry; availability and credentials vary by connector"},
+            {"id": "public_workspaces", "value": public_workspace_count, "label": "public workspaces", "basis": "registered public intelligence routes across six primary areas"},
+            {"id": "live_feeds", "value": source_count, "label": "live ticker feeds", "basis": "governed Live Intelligence source registry"},
         ],
+        "featured_signal_count": live_count,
         "represented_source_count": represented_source_count,
         "latest_refresh": generated_at,
         "highlights": [_highlight(signal) for signal in signals[:4]],
@@ -94,7 +118,8 @@ def build_homepage_summary(live_payload: Mapping[str, Any] | None = None) -> dic
         ],
         "primary_action": {"label": "Open Site Intelligence", "href": "/app/?view=overview"},
         "truth_boundaries": [
-            "Counts describe registered platform coverage and the current bounded response; they do not imply uniform observations for every country or source.",
+            "Counts distinguish registered platform workspaces and connectors from the narrower governed Live Intelligence ticker feed set.",
+            "Enabled connectors may be live, cached, metadata-only, fallback-safe, or dependent on optional backend credentials.",
             "Live signals retain source, geography, freshness, methodology, and limitation context.",
             "The homepage summary degrades independently and does not boot the full Site Intelligence application.",
         ],
