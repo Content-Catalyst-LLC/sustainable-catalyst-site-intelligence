@@ -25,9 +25,9 @@
     }
     throw last;
   }
-  const APP_VERSION="4.39.0";
-  const RELEASE_LINEAGE="v4.39.0";
-  const SCIENCE_CONTROLLER_SRC="/app/assets/science-v240.js?v=4.39.0";
+  const APP_VERSION="4.39.2";
+  const RELEASE_LINEAGE="v4.39.2";
+  const SCIENCE_CONTROLLER_SRC="/app/assets/science-v240.js?v=4.39.2";
   let scienceControllerPromise=null;
   function scienceControllerCurrent(){
     try{return window.SCScienceV240?.open&&window.SCScienceV240?.status?.().repair==="4.39.0"?window.SCScienceV240:null}catch{return null}
