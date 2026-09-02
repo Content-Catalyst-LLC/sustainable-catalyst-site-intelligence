@@ -2358,3 +2358,54 @@
 .scsi-standalone-app[data-scsi-fixed-app] iframe{height:var(--scsi-fixed-app-height)!important;min-height:var(--scsi-fixed-app-height)!important;max-height:var(--scsi-fixed-app-height)!important;transition:none!important;overflow:auto!important}
 .scsi-standalone-app[data-scsi-fixed-app] .scsi-app-loading{height:var(--scsi-fixed-app-height)!important}
 @media(max-width:760px){.scsi-standalone-app[data-scsi-fixed-app]{width:100vw;max-width:100vw;margin-inline:calc(50% - 50vw);height:var(--scsi-fixed-app-height)!important;min-height:var(--scsi-fixed-app-height)!important;max-height:var(--scsi-fixed-app-height)!important}.scsi-standalone-app[data-scsi-fixed-app] iframe{height:var(--scsi-fixed-app-height)!important;min-height:var(--scsi-fixed-app-height)!important;max-height:var(--scsi-fixed-app-height)!important}}
+
+/* Site Intelligence v4.39.2 R5 — Safari-safe homepage capability view
+   Preserve the approved visual design while giving WebKit a definite
+   containing block for the absolutely positioned triptych and SVG overlay. */
+.scsi-home-summary__visual{
+  height:210px;
+  min-height:210px;
+}
+.scsi-home-summary__visual-media{
+  height:100%;
+  min-height:0;
+}
+.scsi-home-summary__visual-frame{
+  min-width:0;
+  min-height:0;
+  overflow:hidden;
+}
+.scsi-home-summary__visual-frame img{
+  position:absolute;
+  inset:0;
+  display:block;
+  width:100%;
+  height:100%;
+  max-width:none;
+  max-height:none;
+  object-fit:cover;
+}
+.scsi-home-summary__visual-overlay{
+  height:100%;
+  min-height:0;
+}
+.scsi-live-intelligence__viewport{
+  -webkit-mask-image:linear-gradient(
+    90deg,
+    transparent,
+    #000 1.5rem,
+    #000 calc(100% - 1.5rem),
+    transparent
+  );
+}
+@media(max-width:760px){
+  .scsi-home-summary__visual{
+    height:230px;
+    min-height:230px;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .scsi-live-intelligence__viewport{
+    -webkit-mask-image:none;
+  }
+}

@@ -14,6 +14,7 @@ if (!defined('ABSPATH')) {
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
     const VERSION = '4.39.2';
+    const ASSET_VERSION = '4.39.2-r5';
     const RELEASE_ID = 'site-intelligence-v4.39.2';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
@@ -3143,21 +3144,31 @@ final class SC_Site_Intelligence_Plugin {
     public function rest_live_intelligence(WP_REST_Request $request) {
         $category = sanitize_key((string) $request->get_param('category'));
         $limit = max(1, min(24, absint($request->get_param('limit') ?: 16)));
-        $feeds = self::sanitize_live_intelligence_feeds((string) $request->get_param('feeds'), true);
+        $surface = sanitize_key((string) $request->get_param('surface'));
+        $valid_surfaces = ['feed', 'homepage', 'static_strip', 'channel', 'publication', 'library', 'advisory', 'lab', 'external_embed'];
+        if (!in_array($surface, $valid_surfaces, true)) { $surface = 'feed'; }
+
+        // The homepage is a governed global surface. Let the backend select the
+        // currently enabled healthy feeds rather than forwarding a stale
+        // WordPress allowlist that can make the backend reject the request.
+        $feeds = $surface === 'homepage'
+            ? []
+            : self::sanitize_live_intelligence_feeds((string) $request->get_param('feeds'), true);
+
         $exclude = self::sanitize_live_intelligence_feeds((string) $request->get_param('exclude'), false);
         $max_per_source = max(1, min(5, absint($request->get_param('max_per_source') ?: 2)));
         $channel = self::sanitize_live_intelligence_channel((string) $request->get_param('channel'));
         $region = sanitize_text_field((string) $request->get_param('region'));
         $country = sanitize_text_field((string) $request->get_param('country'));
-        $surface = sanitize_key((string) $request->get_param('surface'));
-        $valid_surfaces = ['feed', 'homepage', 'static_strip', 'channel', 'publication', 'library', 'advisory', 'lab', 'external_embed'];
-        if (!in_array($surface, $valid_surfaces, true)) { $surface = 'feed'; }
+
         $query = [
             'limit' => $limit,
-            'feeds' => implode(',', $feeds),
             'max_per_source' => $max_per_source,
             'channel' => $channel,
         ];
+        if (!empty($feeds)) {
+            $query['feeds'] = implode(',', $feeds);
+        }
         if ($region !== '') { $query['region'] = $region; }
         if ($country !== '') { $query['country'] = $country; }
         if ($category !== '') {
@@ -4004,6 +4015,11 @@ final class SC_Site_Intelligence_Plugin {
             $allow_overrides ? (string) $atts['feeds'] : (string) ($options['live_intelligence_feeds'] ?? ''),
             true
         );
+        if ($surface === 'homepage') {
+            // Homepage uses the backend's governed global feed selection.
+            // Other shortcode surfaces retain explicit feed filtering.
+            $feeds = [];
+        }
         $exclude = $allow_overrides ? self::sanitize_live_intelligence_feeds((string) $atts['exclude'], false) : [];
         $max_per_source = max(1, min(5, absint(
             $allow_overrides ? $atts['max_per_source'] : ($options['live_intelligence_max_per_source'] ?? '2')
@@ -4600,9 +4616,9 @@ final class SC_Site_Intelligence_Plugin {
         $options = self::options();
         $base = plugin_dir_url(__FILE__) . 'assets/';
         wp_enqueue_style('scsi-map-engine', $base . 'vector-cartography-v3230.css', [], self::VERSION);
-        wp_enqueue_style('sc-site-intelligence', $base . 'sc-site-intelligence.css', ['scsi-map-engine'], self::VERSION);
+        wp_enqueue_style('sc-site-intelligence', $base . 'sc-site-intelligence.css', ['scsi-map-engine'], self::ASSET_VERSION);
         wp_enqueue_script('scsi-map-engine', $base . 'vector-cartography-v3230.js', [], self::VERSION, true);
-        wp_enqueue_script('sc-site-intelligence', $base . 'sc-site-intelligence.js', ['scsi-map-engine'], self::VERSION, true);
+        wp_enqueue_script('sc-site-intelligence', $base . 'sc-site-intelligence.js', ['scsi-map-engine'], self::ASSET_VERSION, true);
         wp_localize_script('sc-site-intelligence', 'SCSiteIntelligence', [
             'restBase' => esc_url_raw(rest_url(self::REST_NAMESPACE)),
             'restNonce' => wp_create_nonce('wp_rest'),
