@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
     const VERSION = '4.39.2';
-    const ASSET_VERSION = '4.39.2-r5';
+    const ASSET_VERSION = '4.39.2-r6';
     const RELEASE_ID = 'site-intelligence-v4.39.2';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
@@ -3147,6 +3147,9 @@ final class SC_Site_Intelligence_Plugin {
         $surface = sanitize_key((string) $request->get_param('surface'));
         $valid_surfaces = ['feed', 'homepage', 'static_strip', 'channel', 'publication', 'library', 'advisory', 'lab', 'external_embed'];
         if (!in_array($surface, $valid_surfaces, true)) { $surface = 'feed'; }
+        if ($surface === 'homepage') {
+            $limit = min($limit, 12);
+        }
 
         // The homepage is a governed global surface. Let the backend select the
         // currently enabled healthy feeds rather than forwarding a stale
@@ -6498,8 +6501,8 @@ final class SC_Site_Intelligence_Plugin {
         ];
         $ticker = $this->live_intelligence_shortcode([
             'surface' => 'homepage',
-            'limit' => '16',
-            'max_visible' => '16',
+            'limit' => '8',
+            'max_visible' => '8',
             'placement' => 'content',
             'label' => 'Live Intelligence',
         ]);
