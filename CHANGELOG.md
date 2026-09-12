@@ -1,3 +1,13 @@
+# Changelog
+
+## 4.40.0.2 — Homepage Intelligence Contract & Ticker Recovery
+
+- Restores the homepage capability contract to country profiles, enabled connectors, public workspaces, and governed live ticker feeds.
+- Separates bounded current-signal counts from capability metrics.
+- Embeds the governed Live Intelligence ticker directly inside `[sc_site_intelligence_home]` so the homepage widget no longer depends on Astra header/breadcrumb placement.
+- Preserves measured ticker travel, hover/focus/manual pause, reduced-motion behavior, mobile rotation, analytics, source context, and v4.40.0 Energy Systems consumer compatibility.
+- Advances the release-bound static registry compatibility markers to 4.40.0.2.
+
 # v4.39.0 — Homepage Live Intelligence Snapshot
 
 - Added the homepage-specific `[sc_site_intelligence_home]` shortcode without changing the full `[sc_site_intelligence_app]` embed.

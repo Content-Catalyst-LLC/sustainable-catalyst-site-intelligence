@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 4.40.0.1
+ * Version: 4.40.0.2
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,8 +13,8 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '4.40.0.1';
-    const RELEASE_ID = 'site-intelligence-v4.40.0.1';
+    const VERSION = '4.40.0.2';
+    const RELEASE_ID = 'site-intelligence-v4.40.0.2';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -6489,10 +6489,22 @@ final class SC_Site_Intelligence_Plugin {
                 <p class="scsi-home-summary__status" data-home-status data-state="connecting"><span aria-hidden="true"></span><strong>Connecting to Site Intelligence</strong></p>
             </div>
             <dl class="scsi-home-summary__metrics" aria-label="Site Intelligence coverage summary">
-                <?php foreach ([['country_profiles', 'country profiles'], ['registered_sources', 'registered live feeds'], ['enabled_sources', 'enabled by default'], ['current_signals', 'current signals']] as $metric): ?>
+                <?php foreach ([['country_profiles', 'country profiles'], ['enabled_connectors', 'enabled connectors'], ['public_workspaces', 'public workspaces'], ['live_feeds', 'live ticker feeds']] as $metric): ?>
                     <div data-home-metric="<?php echo esc_attr($metric[0]); ?>"><dt><?php echo esc_html($metric[1]); ?></dt><dd>—</dd></div>
                 <?php endforeach; ?>
             </dl>
+            <div class="scsi-home-summary__live-ticker" data-home-live-ticker>
+                <?php echo $this->live_intelligence_shortcode([
+                    'surface' => 'homepage',
+                    'placement' => 'content',
+                    'limit' => '8',
+                    'max_visible' => '8',
+                    'presentation' => 'ticker',
+                    'mobile_mode' => 'rotator',
+                    'label' => 'Live Intelligence',
+                    'motion' => 'slow',
+                ]); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+            </div>
             <div class="scsi-home-summary__signals" data-home-signals aria-live="polite" aria-busy="true">
                 <p>Loading the latest bounded public signals…</p>
             </div>

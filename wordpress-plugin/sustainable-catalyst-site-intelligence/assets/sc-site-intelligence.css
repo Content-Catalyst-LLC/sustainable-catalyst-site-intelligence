@@ -2330,3 +2330,9 @@
 .scsi-standalone-app[data-scsi-fixed-app] iframe{height:var(--scsi-fixed-app-height)!important;min-height:var(--scsi-fixed-app-height)!important;max-height:var(--scsi-fixed-app-height)!important;transition:none!important;overflow:auto!important}
 .scsi-standalone-app[data-scsi-fixed-app] .scsi-app-loading{height:var(--scsi-fixed-app-height)!important}
 @media(max-width:760px){.scsi-standalone-app[data-scsi-fixed-app]{width:100vw;max-width:100vw;margin-inline:calc(50% - 50vw);height:var(--scsi-fixed-app-height)!important;min-height:var(--scsi-fixed-app-height)!important;max-height:var(--scsi-fixed-app-height)!important}.scsi-standalone-app[data-scsi-fixed-app] iframe{height:var(--scsi-fixed-app-height)!important;min-height:var(--scsi-fixed-app-height)!important;max-height:var(--scsi-fixed-app-height)!important}}
+/* v4.40.0.2 — homepage intelligence contract & integrated ticker recovery */
+.scsi-home-summary__live-ticker{margin:1rem 0 0;border:1px solid var(--scsi-home-line);border-radius:12px;overflow:hidden;background:#020403}
+.scsi-home-summary__live-ticker .scsi-live-intelligence{margin:0;border:0;min-height:50px;box-shadow:none}
+.scsi-home-summary__live-ticker .scsi-live-intelligence__label{background:#050906}
+.scsi-home-summary__live-ticker .scsi-live-intelligence__viewport{min-height:50px}
+@media(max-width:700px){.scsi-home-summary__live-ticker{margin-inline:-.2rem;border-radius:10px}.scsi-home-summary__live-ticker .scsi-live-intelligence__delivery{display:none}}

@@ -1,0 +1,45 @@
+SITE INTELLIGENCE v4.40.0.2 — TERMINAL COMMANDS
+
+1) MACOS — APPLY / TEST / COMMIT / TAG / PUSH
+
+cd ~/Downloads
+rm -rf sc-site-v44002-patch
+unzip -q sustainable-catalyst-site-intelligence-v4.40.0.2-tiny-patch.zip \
+  -d sc-site-v44002-patch
+cd sc-site-v44002-patch
+chmod +x apply_and_push_site_intelligence_v4_40_0_2_macos.sh
+./apply_and_push_site_intelligence_v4_40_0_2_macos.sh \
+  "$HOME/Downloads/sustainable-catalyst-site-intelligence"
+
+2) MACOS — COPY BACKEND + UPGRADER TO CONTABO
+
+cd ~/Downloads
+scp -i ~/.ssh/id_ed25519 \
+  -o IdentitiesOnly=yes \
+  sustainable-catalyst-site-intelligence-backend-v4.40.0.2.zip \
+  upgrade_site_intelligence_backend_v4_40_0_2_contabo.sh \
+  catalystadmin@94.72.113.77:/tmp/
+
+ssh -i ~/.ssh/id_ed25519 \
+  -o IdentitiesOnly=yes \
+  catalystadmin@94.72.113.77
+
+3) CONTABO — DEPLOY / VERIFY
+
+chmod +x /tmp/upgrade_site_intelligence_backend_v4_40_0_2_contabo.sh
+/tmp/upgrade_site_intelligence_backend_v4_40_0_2_contabo.sh
+
+EXPECTED BACKEND CONTRACT:
+country_profiles = 172
+enabled_connectors = 14
+public_workspaces = 35
+live_feeds = 8
+featured_signal_count = separate / refresh-dependent
+
+4) WORDPRESS — ONLY AFTER BACKEND PASS
+
+Upload and replace with:
+sustainable-catalyst-site-intelligence-v4.40.0.2-wordpress.zip
+
+Then clear WordPress caches/transients and hard-refresh the homepage.
+Acceptance: 172 / 14 / 35 / 8 plus a visible moving integrated ticker.

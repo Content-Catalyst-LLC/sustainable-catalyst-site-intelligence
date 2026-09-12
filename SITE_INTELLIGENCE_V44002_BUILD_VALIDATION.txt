@@ -1,0 +1,30 @@
+Site Intelligence v4.40.0.2 — Build Validation
+Release: Homepage Intelligence Contract & Ticker Recovery
+
+PASS — backend APP_VERSION / expected WordPress version / release name aligned to 4.40.0.2
+PASS — capability metric contract restored to country_profiles / enabled_connectors / public_workspaces / live_feeds
+PASS — current registries resolve to 172 country profiles / 14 enabled connectors / 35 public workspaces / 8 governed live feeds
+PASS — featured_signal_count remains separate from capability metrics
+PASS — homepage WordPress shortcode embeds the governed Live Intelligence ticker directly inside the widget
+PASS — v4.40.0.1 measured ticker implementation preserved
+PASS — fixed -50% ticker travel remains absent
+PASS — status/feed-count fallback no longer substitutes for capability metrics
+PASS — 27 release-bound static registry/policy files identify Site Intelligence 4.40.0.2
+PASS — Energy Systems consumer remains 4.40.0
+PASS — Python syntax validation
+PASS — JavaScript syntax validation
+PASS — PHP syntax validation
+PASS — focused current-release regression suite: 9 passed
+
+Focused tests:
+- backend/tests/test_homepage_intelligence_contract_v44002.py
+- backend/tests/test_homepage_live_runtime_repair_v44001.py
+- backend/tests/test_source_reconciliation_v4400.py
+- backend/tests/test_energy_runtime_consumer.py
+
+Release gate:
+- GitHub promotion must pass before backend deployment.
+- Contabo backend deployment and public verification must pass before WordPress installation.
+- Browser acceptance must verify 172 / 14 / 35 / 8 and visible ticker motion before the release is considered complete.
+PASS — exact tiny-patch installer exercised end-to-end against a disposable clean v4.40.0.1 Git checkout and local bare origin
+PASS — installer created commit, annotated v4.40.0.2 tag, pushed main, pushed tag, and finished with a clean working tree

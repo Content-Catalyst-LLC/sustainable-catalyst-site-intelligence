@@ -4951,7 +4951,6 @@
   function setupSiteIntelligenceHomeSummary() {
     document.querySelectorAll('[data-scsi-home-summary]').forEach(function (root) {
       const endpoint = root.dataset.endpoint || '';
-      const statusEndpoint = root.dataset.statusEndpoint || (cfg.restBase ? cfg.restBase + '/live-intelligence/status' : '');
       const appBase = root.dataset.appBase || window.location.origin + '/';
       const status = root.querySelector('[data-home-status]');
       const signals = root.querySelector('[data-home-signals]');
@@ -4984,14 +4983,6 @@
         card.title = metric.basis || '';
         return true;
       }
-      function fetchStatusFallback() {
-        if (!statusEndpoint) return Promise.resolve(null);
-        return fetch(statusEndpoint, {headers: headers, credentials: 'same-origin'}).then(function (response) {
-          if (!response.ok) throw new Error('Live Intelligence status request failed.');
-          return response.json();
-        }).catch(function () { return null; });
-      }
-
       fetch(endpoint, {headers: headers, credentials: 'same-origin'}).then(function (response) {
         if (!response.ok) throw new Error('Homepage summary request failed.');
         return response.json();
@@ -5001,23 +4992,12 @@
         status.querySelector('strong').textContent = currentStatus.label || 'Site Intelligence Online';
         const metrics = metricMap(payload);
         const highlights = Array.isArray(payload.highlights) ? payload.highlights : [];
-        // Canonical v4.40.0.1 ids plus compatibility aliases from the v4.39.1 homepage contract.
+        // v4.40.0.2 restores the capability contract. Signal-refresh counts are
+        // deliberately not substituted into capability slots.
         renderMetric('country_profiles', metrics.country_profiles);
-        const registeredRendered = renderMetric('registered_sources', metrics.registered_sources || metrics.live_feeds);
-        const enabledRendered = renderMetric('enabled_sources', metrics.enabled_sources);
-        const currentRendered = renderMetric('current_signals', metrics.current_signals || (typeof payload.featured_signal_count !== 'undefined' ? {value: payload.featured_signal_count, basis: 'bounded homepage refresh'} : null));
-        if (!currentRendered && highlights.length) renderMetric('current_signals', {value: highlights.length, basis: 'bounded homepage highlights returned by this refresh'});
-        if (!registeredRendered || !enabledRendered) {
-          fetchStatusFallback().then(function (liveStatus) {
-            if (!liveStatus) return;
-            if (!registeredRendered && Array.isArray(liveStatus.available_feeds)) {
-              renderMetric('registered_sources', {value: liveStatus.available_feeds.length, basis: 'active Live Intelligence runtime feed registry'});
-            }
-            if (!enabledRendered && Array.isArray(liveStatus.default_feeds)) {
-              renderMetric('enabled_sources', {value: liveStatus.default_feeds.length, basis: 'active Live Intelligence default feed registry'});
-            }
-          });
-        }
+        renderMetric('enabled_connectors', metrics.enabled_connectors);
+        renderMetric('public_workspaces', metrics.public_workspaces);
+        renderMetric('live_feeds', metrics.live_feeds);
         signals.innerHTML = highlights.length ? highlights.map(function (item) {
           return '<a class="scsi-home-summary__signal" href="' + escapeHtml(appUrl(item.href)) + '">' +
             '<span>' + escapeHtml(item.category || 'Public signal') + '</span>' +
