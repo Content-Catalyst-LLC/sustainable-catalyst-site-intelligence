@@ -471,6 +471,8 @@ from .live_intelligence_reliability_v361 import (
     build_live_intelligence, build_channel_feed, live_intelligence_status,
     live_intelligence_ranking_policy, channel_directory as live_intelligence_channel_directory,
     channel_definition as live_intelligence_channel_definition, channel_policy as live_intelligence_channel_policy,
+    FEED_REGISTRY as LIVE_INTELLIGENCE_FEED_REGISTRY,
+    DEFAULT_FEEDS as LIVE_INTELLIGENCE_DEFAULT_FEEDS,
 )
 from .live_intelligence_presentation_v362 import presentation_policy as live_intelligence_presentation_policy
 from .live_intelligence_gateway_v370 import (
@@ -9982,7 +9984,11 @@ def public_site_intelligence_homepage_summary_endpoint(settings: Settings = Depe
         # The endpoint itself remains truthful and useful when every upstream feed
         # is unavailable; no live records or health claims are manufactured.
         payload = {"signals": [], "generated_at": datetime.now(timezone.utc).isoformat(), "gateway": {}}
-    return build_homepage_summary(payload)
+    return build_homepage_summary(
+        payload,
+        registered_source_count=len(LIVE_INTELLIGENCE_FEED_REGISTRY),
+        enabled_source_count=len(LIVE_INTELLIGENCE_DEFAULT_FEEDS),
+    )
 
 
 @app.get("/public/live-intelligence/status")

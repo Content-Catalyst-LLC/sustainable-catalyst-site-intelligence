@@ -1,0 +1,57 @@
+Site Intelligence v4.40.0.1 — Homepage Live Intelligence Runtime Repair
+Build validation record
+
+Baseline integrity
+------------------
+- Built from the exact v4.40.0 repository artifact shipped inside the Energy Systems v1.2.0 release bundle.
+- Exact v4.40.0 repository artifact SHA-256: d25b020f5562389656333740bd153ec5627b9bc2d834668d2735dac9df0614da
+- Applied the later v4.40.0 r1 source-reconciliation payload before the v4.40.0.1 repair.
+- Energy Systems Site Intelligence consumer remains component version 4.40.0; no consumer behavior was changed by this patch.
+
+Repair contract
+---------------
+- Backend application version: 4.40.0.1
+- WordPress plugin version: 4.40.0.1
+- Release ID: site-intelligence-v4.40.0.1
+- Release name: Homepage Live Intelligence Runtime Repair
+- 27 release-bound static policy/registry files identify runtime compatibility version 4.40.0.1.
+- Homepage source counts are bound to the active Live Intelligence runtime FEED_REGISTRY and DEFAULT_FEEDS.
+- WordPress accepts canonical metric ids and the v4.39.1 live_feeds compatibility alias.
+- Missing source-count metrics fall back only to the public Live Intelligence status registry arrays.
+- Current-signal fallback remains bounded to the homepage payload.
+- Numeric zero remains numeric zero rather than an unavailable dash.
+- Ticker travel is measured from rendered geometry rather than fixed at -50%.
+- Ticker duplicates are inert/non-focusable and sized to cover wide viewports.
+- Ticker geometry remeasures after refresh/resize while reduced-motion behavior remains non-autoplay.
+
+Automated validation
+--------------------
+- Dependency-light release validator: PASS.
+- Focused regression set: 9 passed.
+  - v4.40.0.1 homepage runtime repair: 4 passed.
+  - v4.40.0 source reconciliation compatibility: 3 passed.
+  - Energy Systems runtime consumer preservation: 2 passed.
+- app.main import: PASS; 1,349 routes registered and homepage summary route present.
+- Python compilation for changed backend modules: PASS.
+- JavaScript syntax (Node): PASS.
+- WordPress PHP syntax: PASS.
+- macOS installer shell syntax: PASS.
+- Contabo upgrader shell syntax: PASS.
+- Tiny-patch installer end-to-end simulation: PASS; clean main sync, validation, commit, annotated tag v4.40.0.1, main push, and tag push all completed against a disposable Git origin.
+
+Historical-test note
+--------------------
+Some retained pre-v4.40 historical tests pin old application version strings such as 4.39.0 or 4.39.2. Those historical identity assertions are not a valid current-release gate. Functional tests from those families remain preserved; the v4.40.0.1 gate uses the current release contract above.
+
+Production acceptance required after deployment
+-----------------------------------------------
+1. Backend /health reports 4.40.0.1.
+2. Backend homepage summary exposes numeric country_profiles, registered_sources, enabled_sources, and current_signals.
+3. Public backend endpoint reports the same contract.
+4. WordPress plugin reports 4.40.0.1 and loads assets with ver=4.40.0.1.
+5. Homepage counters render numbers instead of dashes when authoritative data is available.
+6. Live Intelligence ticker moves automatically under standard motion settings and loops without a blank gap.
+7. Hover/focus/manual pause and reduced-motion behavior remain correct.
+8. Existing Site Intelligence entry points and signal links remain functional.
+
+Do not proceed to the next Site Intelligence build until backend deployment verification and browser acceptance both pass.

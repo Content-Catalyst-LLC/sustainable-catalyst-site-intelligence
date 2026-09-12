@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
  * Description: Embeds the Sustainable Catalyst Auditable Public Observatory and its source-aware public intelligence workspaces.
- * Version: 4.40.0
+ * Version: 4.40.0.1
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,8 +13,8 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '4.40.0';
-    const RELEASE_ID = 'site-intelligence-v4.40.0';
+    const VERSION = '4.40.0.1';
+    const RELEASE_ID = 'site-intelligence-v4.40.0.1';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -6474,11 +6474,12 @@ final class SC_Site_Intelligence_Plugin {
             ['label' => 'Ocean & Space', 'description' => 'Marine and space observation workspaces', 'query' => ['view' => 'science']],
         ];
         $endpoint = rest_url(self::REST_NAMESPACE . '/homepage-summary');
+        $status_endpoint = rest_url(self::REST_NAMESPACE . '/live-intelligence/status');
         $instance_id = 'scsi-home-' . wp_generate_uuid4();
 
         ob_start();
         ?>
-        <section id="<?php echo esc_attr($instance_id); ?>" class="scsi-home-summary" data-scsi-home-summary data-endpoint="<?php echo esc_url($endpoint); ?>" data-app-base="<?php echo esc_url($app_base); ?>" aria-labelledby="<?php echo esc_attr($instance_id); ?>-title">
+        <section id="<?php echo esc_attr($instance_id); ?>" class="scsi-home-summary" data-scsi-home-summary data-endpoint="<?php echo esc_url($endpoint); ?>" data-status-endpoint="<?php echo esc_url($status_endpoint); ?>" data-app-base="<?php echo esc_url($app_base); ?>" aria-labelledby="<?php echo esc_attr($instance_id); ?>-title">
             <div class="scsi-home-summary__header">
                 <div>
                     <p class="scsi-home-summary__eyebrow">Public Intelligence</p>

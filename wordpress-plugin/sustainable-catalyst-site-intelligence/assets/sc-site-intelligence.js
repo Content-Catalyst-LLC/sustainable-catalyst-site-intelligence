@@ -3799,6 +3799,9 @@
       let categoryLabels = {};
       let analyticsComponentRecorded = false;
       let analyticsReducedMotionRecorded = false;
+      let tickerResizeTimer = 0;
+      let tickerResizeObserver = null;
+      let tickerContent = '';
       const analyticsSignalImpressions = new Set();
       try { categoryLabels = JSON.parse(root.dataset.categoryLabels || '{}'); } catch (error) { categoryLabels = {}; }
 
@@ -3968,7 +3971,7 @@
         } catch (error) {
           try {
             window.dispatchEvent(new CustomEvent('scsi:live-intelligence-render-error', {detail: {
-              version: cfg.version || '4.39.2',
+              version: cfg.version || '4.39.0',
               signalId: String((signal && signal.signal_id) || ''),
               message: String((error && error.message) || error || 'render error')
             }}));
@@ -4056,10 +4059,44 @@
         if (effectiveMode !== 'rotator' || reducedMotion.matches || root.classList.contains('is-paused') || root.classList.contains('is-focus-paused') || root.classList.contains('is-hover-paused') || signals.length < 2 || document.hidden) return;
         rotationTimer = window.setInterval(function () { showCurrentSignal(currentIndex + 1, false); }, mobileInterval);
       };
+      const configureTickerTrack = function () {
+        if (effectiveMode !== 'ticker' || !tickerContent || reducedMotion.matches) {
+          root.removeAttribute('data-scsi-ticker-ready');
+          track.style.removeProperty('--scsi-live-travel');
+          return;
+        }
+        track.innerHTML = '<div class="scsi-live-intelligence__set" data-scsi-ticker-set="primary">' + tickerContent + '</div>';
+        const primarySet = track.querySelector('[data-scsi-ticker-set="primary"]');
+        if (!primarySet) return;
+        const travel = Math.ceil(primarySet.getBoundingClientRect().width);
+        const viewportWidth = Math.ceil(viewport.getBoundingClientRect().width);
+        if (!travel || !viewportWidth) {
+          root.removeAttribute('data-scsi-ticker-ready');
+          return;
+        }
+        const copyCount = Math.max(2, Math.ceil(viewportWidth / travel) + 2);
+        let duplicates = '';
+        for (let index = 1; index < copyCount; index += 1) {
+          duplicates += '<div class="scsi-live-intelligence__set" aria-hidden="true" inert>' + tickerContent + '</div>';
+        }
+        track.insertAdjacentHTML('beforeend', duplicates);
+        track.querySelectorAll('.scsi-live-intelligence__set[aria-hidden="true"] a, .scsi-live-intelligence__set[aria-hidden="true"] button').forEach(function (control) { control.tabIndex = -1; });
+        track.style.setProperty('--scsi-live-travel', (-travel) + 'px');
+        root.dataset.scsiTickerReady = '1';
+        // Restart from the canonical origin after every live refresh or geometry change.
+        track.style.animation = 'none';
+        void track.offsetWidth;
+        track.style.removeProperty('animation');
+      };
+      const scheduleTickerLayout = function () {
+        if (tickerResizeTimer) window.clearTimeout(tickerResizeTimer);
+        tickerResizeTimer = window.setTimeout(configureTickerTrack, 90);
+      };
       const renderTicker = function () {
         let content = signals.map(function (signal, index) { return safeItemHtml(signal, true, index); }).filter(Boolean).join('');
         if (!content) content = signals.map(function (signal, index) { return minimalSignalHtml(signal, true, index); }).join('');
-        track.innerHTML = '<div class="scsi-live-intelligence__set">' + content + '</div><div class="scsi-live-intelligence__set" aria-hidden="true">' + content + '</div>';
+        tickerContent = content;
+        configureTickerTrack();
       };
       const renderStatic = function () {
         let content = signals.map(function (signal, index) { return safeItemHtml(signal, index < signals.length - 1, index); }).filter(Boolean).join('');
@@ -4076,6 +4113,10 @@
         stopRotation();
         effectiveMode = resolveMode();
         updatePresentationClasses(effectiveMode);
+        if (effectiveMode !== 'ticker') {
+          root.removeAttribute('data-scsi-ticker-ready');
+          track.style.removeProperty('--scsi-live-travel');
+        }
         if (effectiveMode === 'hidden') return;
         if (effectiveMode === 'manual' || effectiveMode === 'rotator') {
           if (currentIndex >= signals.length) currentIndex = 0;
@@ -4246,6 +4287,12 @@
       if (mobileQuery.addEventListener) mobileQuery.addEventListener('change', handlePresentationChange); else mobileQuery.addListener(handlePresentationChange);
       if (reducedMotion.addEventListener) reducedMotion.addEventListener('change', handlePresentationChange); else reducedMotion.addListener(handlePresentationChange);
       document.addEventListener('visibilitychange', function () { if (document.hidden) stopRotation(); else startRotation(); });
+      if ('ResizeObserver' in window) {
+        tickerResizeObserver = new ResizeObserver(function () { if (effectiveMode === 'ticker') scheduleTickerLayout(); });
+        tickerResizeObserver.observe(viewport);
+      } else {
+        window.addEventListener('resize', scheduleTickerLayout, {passive: true});
+      }
       load();
       window.setInterval(load, refreshInterval);
     });
@@ -4904,16 +4951,45 @@
   function setupSiteIntelligenceHomeSummary() {
     document.querySelectorAll('[data-scsi-home-summary]').forEach(function (root) {
       const endpoint = root.dataset.endpoint || '';
+      const statusEndpoint = root.dataset.statusEndpoint || (cfg.restBase ? cfg.restBase + '/live-intelligence/status' : '');
       const appBase = root.dataset.appBase || window.location.origin + '/';
       const status = root.querySelector('[data-home-status]');
       const signals = root.querySelector('[data-home-signals]');
-      const signalCount = root.querySelector('[data-home-signal-count]');
       const refresh = root.querySelector('[data-home-refresh]');
       if (!endpoint || !status || !signals) return;
 
       function appUrl(href) {
         try { return new URL(String(href || ''), appBase).toString(); }
         catch (_) { return appBase; }
+      }
+      function metricNumber(value) {
+        if (value === null || typeof value === 'undefined' || String(value).trim() === '') return null;
+        const number = Number(value);
+        return Number.isFinite(number) && number >= 0 ? number : null;
+      }
+      function metricMap(payload) {
+        const result = {};
+        (Array.isArray(payload.metrics) ? payload.metrics : []).forEach(function (metric) {
+          const id = String(metric && metric.id || '');
+          if (id) result[id] = metric;
+        });
+        return result;
+      }
+      function renderMetric(id, metric) {
+        const card = root.querySelector('[data-home-metric="' + CSS.escape(id) + '"]');
+        if (!card || !metric) return false;
+        const value = metricNumber(metric.value);
+        if (value === null) return false;
+        card.querySelector('dd').textContent = value.toLocaleString();
+        card.title = metric.basis || '';
+        return true;
+      }
+      function fetchStatusFallback() {
+        if (!statusEndpoint) return Promise.resolve(null);
+        return fetch(statusEndpoint, {headers: headers, credentials: 'same-origin'}).then(function (response) {
+          if (!response.ok) throw new Error('Live Intelligence status request failed.');
+          return response.json();
+        }).catch(function () { return null; });
       }
 
       fetch(endpoint, {headers: headers, credentials: 'same-origin'}).then(function (response) {
@@ -4923,15 +4999,25 @@
         const currentStatus = payload.status || {};
         status.dataset.state = currentStatus.state || 'online';
         status.querySelector('strong').textContent = currentStatus.label || 'Site Intelligence Online';
-        (Array.isArray(payload.metrics) ? payload.metrics : []).forEach(function (metric) {
-          const card = root.querySelector('[data-home-metric="' + CSS.escape(String(metric.id || '')) + '"]');
-          if (!card) return;
-          const value = Number(metric.value);
-          card.querySelector('dd').textContent = Number.isFinite(value) ? value.toLocaleString() : '—';
-          card.title = metric.basis || '';
-        });
+        const metrics = metricMap(payload);
         const highlights = Array.isArray(payload.highlights) ? payload.highlights : [];
-        if (signalCount) signalCount.textContent = String(Number.isFinite(Number(payload.featured_signal_count)) ? Number(payload.featured_signal_count) : highlights.length);
+        // Canonical v4.40.0.1 ids plus compatibility aliases from the v4.39.1 homepage contract.
+        renderMetric('country_profiles', metrics.country_profiles);
+        const registeredRendered = renderMetric('registered_sources', metrics.registered_sources || metrics.live_feeds);
+        const enabledRendered = renderMetric('enabled_sources', metrics.enabled_sources);
+        const currentRendered = renderMetric('current_signals', metrics.current_signals || (typeof payload.featured_signal_count !== 'undefined' ? {value: payload.featured_signal_count, basis: 'bounded homepage refresh'} : null));
+        if (!currentRendered && highlights.length) renderMetric('current_signals', {value: highlights.length, basis: 'bounded homepage highlights returned by this refresh'});
+        if (!registeredRendered || !enabledRendered) {
+          fetchStatusFallback().then(function (liveStatus) {
+            if (!liveStatus) return;
+            if (!registeredRendered && Array.isArray(liveStatus.available_feeds)) {
+              renderMetric('registered_sources', {value: liveStatus.available_feeds.length, basis: 'active Live Intelligence runtime feed registry'});
+            }
+            if (!enabledRendered && Array.isArray(liveStatus.default_feeds)) {
+              renderMetric('enabled_sources', {value: liveStatus.default_feeds.length, basis: 'active Live Intelligence default feed registry'});
+            }
+          });
+        }
         signals.innerHTML = highlights.length ? highlights.map(function (item) {
           return '<a class="scsi-home-summary__signal" href="' + escapeHtml(appUrl(item.href)) + '">' +
             '<span>' + escapeHtml(item.category || 'Public signal') + '</span>' +
@@ -4949,7 +5035,6 @@
       }).catch(function () {
         status.dataset.state = 'degraded';
         status.querySelector('strong').textContent = 'Live summary temporarily unavailable';
-        if (signalCount) signalCount.textContent = '—';
         signals.innerHTML = '<p class="scsi-home-summary__empty">The homepage summary could not refresh. Use the entry points below to open Site Intelligence directly.</p>';
         signals.setAttribute('aria-busy', 'false');
         if (refresh) refresh.textContent = 'Live counts are unavailable; no values have been estimated or fabricated.';

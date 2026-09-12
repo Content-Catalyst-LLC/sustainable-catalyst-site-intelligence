@@ -1,0 +1,36 @@
+SITE INTELLIGENCE v4.40.0.1 — HOMEPAGE LIVE INTELLIGENCE RUNTIME REPAIR
+
+MAC — APPLY, VALIDATE, COMMIT, TAG, PUSH
+cd ~/Downloads
+rm -rf sc-site-v44001-patch
+unzip -q sustainable-catalyst-site-intelligence-v4.40.0.1-tiny-patch.zip -d sc-site-v44001-patch
+cd sc-site-v44001-patch
+chmod +x apply_and_push_site_intelligence_v4_40_0_1_macos.sh
+./apply_and_push_site_intelligence_v4_40_0_1_macos.sh "$HOME/Downloads/sustainable-catalyst-site-intelligence"
+
+MAC — COPY BACKEND RELEASE TO CONTABO
+cd ~/Downloads
+scp -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes \
+  sustainable-catalyst-site-intelligence-backend-v4.40.0.1.zip \
+  upgrade_site_intelligence_backend_v4_40_0_1_contabo.sh \
+  catalystadmin@94.72.113.77:/tmp/
+ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes catalystadmin@94.72.113.77
+
+VPS — DEPLOY AND VERIFY BACKEND
+chmod +x /tmp/upgrade_site_intelligence_backend_v4_40_0_1_contabo.sh
+/tmp/upgrade_site_intelligence_backend_v4_40_0_1_contabo.sh
+
+WORDPRESS — ONLY AFTER BACKEND PASS
+Upload: sustainable-catalyst-site-intelligence-v4.40.0.1-wordpress.zip
+Choose: Replace current with uploaded
+
+BLUEHOST — CLEAR CACHE
+cd /home1/pctrqumy/public_html
+wp cache flush
+PREFIX="$(wp db prefix)"
+wp db query "DELETE FROM ${PREFIX}options WHERE option_name LIKE '_transient_scsi_%' OR option_name LIKE '_transient_timeout_scsi_%';"
+
+PUBLIC VERIFY
+curl -fsS https://site-intelligence-api.sustainablecatalyst.com/health | python3 -m json.tool
+curl -fsS https://site-intelligence-api.sustainablecatalyst.com/v1/public/site-intelligence/summary | python3 -m json.tool
+curl -fsS https://sustainablecatalyst.com/wp-json/sc-site-intelligence/v1/homepage-summary | python3 -m json.tool

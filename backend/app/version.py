@@ -1,4 +1,4 @@
-APP_VERSION = "4.40.0"
+APP_VERSION = "4.40.0.1"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Energy Systems Target-Side Runtime Consumer"
+RELEASE_NAME = "Homepage Live Intelligence Runtime Repair"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION
