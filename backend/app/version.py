@@ -1,4 +1,4 @@
-APP_VERSION = "4.39.2"
+APP_VERSION = "4.40.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Connected Public Intelligence and Evidence Platform"
+RELEASE_NAME = "Energy Systems Target-Side Runtime Consumer"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

@@ -12089,3 +12089,8 @@ def public_solid_waste_manifest(source: str = Query(default="openstreetmap-waste
     except (ValueError,TypeError) as exc: raise HTTPException(status_code=400,detail=str(exc))
 @app.get("/public/solid-waste-circular-materials/readiness")
 def public_solid_waste_readiness(): return build_solid_waste_readiness()
+
+
+# Energy Systems Intelligence v1.2.0 target-side runtime consumer.
+from .energy_runtime_consumer import router as energy_runtime_consumer_router
+app.include_router(energy_runtime_consumer_router)
