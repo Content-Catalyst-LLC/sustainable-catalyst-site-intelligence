@@ -6,14 +6,14 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
-CONSUMER_VERSION = '4.40.0'
+CONSUMER_VERSION = '4.41.0'
 TARGET_KEY = 'site-intelligence'
 PRODUCT = 'Site Intelligence'
 CONSUMER_CONTRACT = 'sc-energy-runtime-site-intelligence-handoff/1.0'
 HANDOFF_SCHEMA = "sc-energy-runtime-handoff/1.0"
 RECEIPT_SCHEMA = "sc-energy-runtime-consumer-receipt/1.0"
 EXPECTED_SECTIONS = ['identity', 'technologies_and_resources', 'global_context', 'provenance', 'review']
-BOUNDARY = 'Handoff acceptance does not establish site suitability, current-year status, technical potential, or causal attribution.'
+BOUNDARY = 'Handoff acceptance does not establish site suitability, current-year status, technical potential, grid reliability, outage status, or causal attribution.'
 
 router = APIRouter(prefix="/v1/energy-runtime", tags=["energy-runtime-consumer"])
 
@@ -86,6 +86,8 @@ def framework() -> dict[str, Any]:
             "payload_section_validation": True,
             "deterministic_receipt": True,
             "provenance_preservation": True,
+            "spatial_global_energy_available": True,
+            "spatial_global_framework_route": "/v1/energy-spatial/framework",
             "automatic_execution": False,
             "persistence": False,
             "credential_forwarding": False,

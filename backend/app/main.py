@@ -12098,3 +12098,8 @@ def public_solid_waste_readiness(): return build_solid_waste_readiness()
 # Energy Systems Intelligence v1.2.0 target-side runtime consumer.
 from .energy_runtime_consumer import router as energy_runtime_consumer_router
 app.include_router(energy_runtime_consumer_router)
+
+
+# Site Intelligence v4.41.0 — Spatial & Global Energy Intelligence.
+from .energy_spatial_global_v4410 import router as energy_spatial_global_router
+app.include_router(energy_spatial_global_router)

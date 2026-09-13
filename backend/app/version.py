@@ -1,4 +1,4 @@
-APP_VERSION = "4.40.0.3"
+APP_VERSION = "4.41.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Live Intelligence Ticker Pace & Readability Repair"
+RELEASE_NAME = "Spatial & Global Energy Intelligence"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION
