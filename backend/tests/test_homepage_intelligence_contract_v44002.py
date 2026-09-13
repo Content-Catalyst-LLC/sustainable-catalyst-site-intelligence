@@ -8,10 +8,10 @@ def _metrics(payload):
     return {item["id"]: item["value"] for item in payload["metrics"]}
 
 
-def test_v44002_release_identity():
-    assert APP_VERSION == "4.40.0.2"
+def test_current_release_identity_preserves_v44002_homepage_contract():
+    assert APP_VERSION == "4.40.0.3"
     assert EXPECTED_WORDPRESS_PLUGIN_VERSION == APP_VERSION
-    assert RELEASE_NAME == "Homepage Intelligence Contract & Ticker Recovery"
+    assert RELEASE_NAME == "Live Intelligence Ticker Pace & Readability Repair"
 
 
 def test_homepage_capability_contract_is_restored():
@@ -41,8 +41,8 @@ def test_homepage_markup_embeds_live_ticker_and_correct_slots():
     js = (plugin / "assets" / "sc-site-intelligence.js").read_text(encoding="utf-8")
     css = (plugin / "assets" / "sc-site-intelligence.css").read_text(encoding="utf-8")
 
-    assert "Version: 4.40.0.2" in php
-    assert "site-intelligence-v4.40.0.2" in php
+    assert "Version: 4.40.0.3" in php
+    assert "site-intelligence-v4.40.0.3" in php
     for marker in ["enabled_connectors", "public_workspaces", "live_feeds", "data-home-live-ticker"]:
         assert marker in php
     assert "'surface' => 'homepage'" in php

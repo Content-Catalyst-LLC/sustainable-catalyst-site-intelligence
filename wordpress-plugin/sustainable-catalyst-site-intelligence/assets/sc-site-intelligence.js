@@ -4059,10 +4059,29 @@
         if (effectiveMode !== 'rotator' || reducedMotion.matches || root.classList.contains('is-paused') || root.classList.contains('is-focus-paused') || root.classList.contains('is-hover-paused') || signals.length < 2 || document.hidden) return;
         rotationTimer = window.setInterval(function () { showCurrentSignal(currentIndex + 1, false); }, mobileInterval);
       };
+      const clearTickerPace = function () {
+        track.style.removeProperty('--scsi-live-duration');
+        track.style.removeProperty('--scsi-live-mobile-duration');
+        delete root.dataset.scsiTickerPixelsPerSecond;
+        delete root.dataset.scsiTickerDurationSeconds;
+        delete root.dataset.scsiTickerTravelPixels;
+      };
+      const calculateTickerPace = function (travel) {
+        // v4.40.0.3: keep the visual crawl speed stable as signal length changes.
+        const targetPixelsPerSecond = mobileQuery.matches ? 23 : 28;
+        const minimumDurationSeconds = mobileQuery.matches ? 90 : 75;
+        const maximumDurationSeconds = mobileQuery.matches ? 260 : 220;
+        const measuredDurationSeconds = travel / targetPixelsPerSecond;
+        return {
+          pixelsPerSecond: targetPixelsPerSecond,
+          durationSeconds: Math.min(maximumDurationSeconds, Math.max(minimumDurationSeconds, measuredDurationSeconds))
+        };
+      };
       const configureTickerTrack = function () {
         if (effectiveMode !== 'ticker' || !tickerContent || reducedMotion.matches) {
           root.removeAttribute('data-scsi-ticker-ready');
           track.style.removeProperty('--scsi-live-travel');
+          clearTickerPace();
           return;
         }
         track.innerHTML = '<div class="scsi-live-intelligence__set" data-scsi-ticker-set="primary">' + tickerContent + '</div>';
@@ -4072,6 +4091,7 @@
         const viewportWidth = Math.ceil(viewport.getBoundingClientRect().width);
         if (!travel || !viewportWidth) {
           root.removeAttribute('data-scsi-ticker-ready');
+          clearTickerPace();
           return;
         }
         const copyCount = Math.max(2, Math.ceil(viewportWidth / travel) + 2);
@@ -4081,7 +4101,14 @@
         }
         track.insertAdjacentHTML('beforeend', duplicates);
         track.querySelectorAll('.scsi-live-intelligence__set[aria-hidden="true"] a, .scsi-live-intelligence__set[aria-hidden="true"] button').forEach(function (control) { control.tabIndex = -1; });
+        const pace = calculateTickerPace(travel);
+        const durationValue = pace.durationSeconds.toFixed(2) + 's';
         track.style.setProperty('--scsi-live-travel', (-travel) + 'px');
+        track.style.setProperty('--scsi-live-duration', durationValue);
+        track.style.setProperty('--scsi-live-mobile-duration', durationValue);
+        root.dataset.scsiTickerPixelsPerSecond = String(pace.pixelsPerSecond);
+        root.dataset.scsiTickerDurationSeconds = pace.durationSeconds.toFixed(2);
+        root.dataset.scsiTickerTravelPixels = String(travel);
         root.dataset.scsiTickerReady = '1';
         // Restart from the canonical origin after every live refresh or geometry change.
         track.style.animation = 'none';
@@ -4116,6 +4143,7 @@
         if (effectiveMode !== 'ticker') {
           root.removeAttribute('data-scsi-ticker-ready');
           track.style.removeProperty('--scsi-live-travel');
+          clearTickerPace();
         }
         if (effectiveMode === 'hidden') return;
         if (effectiveMode === 'manual' || effectiveMode === 'rotator') {

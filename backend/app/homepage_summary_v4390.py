@@ -1,4 +1,4 @@
-"""Public-safe homepage summary for Site Intelligence v4.40.0.2.
+"""Public-safe homepage summary for Site Intelligence v4.40.0.3.
 
 The homepage capability strip is deliberately distinct from the bounded signal
 refresh.  Capability counts describe registered product coverage; signal counts

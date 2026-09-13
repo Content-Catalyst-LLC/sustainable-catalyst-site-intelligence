@@ -1641,3 +1641,10 @@
 - Added ONC Oceans 3.0 / SeaTube, FathomNet, and NOAA Ocean Exploration visual-evidence source contracts.
 - Added underwater media and annotation normalization, evidence manifests, rights/credit metadata, and non-fabrication controls.
 - Added a deferred Underwater Observation browser panel after Seafloor & Bathymetric Intelligence without changing the v4 six-area/35-route architecture.
+
+## v4.40.0.3 — Live Intelligence Ticker Pace & Readability Repair
+
+- Replaces the fixed 42-second desktop / 36-second mobile Live Intelligence ticker cycles with measured distance-based pacing.
+- Targets approximately 28 px/s on desktop and 23 px/s on mobile with bounded duration safeguards.
+- Preserves the v4.40.0.2 homepage capability contract, integrated governed ticker, pause/focus/reduced-motion behavior, signal content, and Energy Systems consumer behavior.
+- Adds ticker pace diagnostics to the runtime DOM for production acceptance.

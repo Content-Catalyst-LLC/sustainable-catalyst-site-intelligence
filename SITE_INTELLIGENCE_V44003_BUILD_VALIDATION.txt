@@ -1,0 +1,53 @@
+Site Intelligence v4.40.0.3 — Build Validation
+
+Release: Live Intelligence Ticker Pace & Readability Repair
+Baseline: v4.40.0.2 — Homepage Intelligence Contract & Ticker Recovery
+
+PASS — backend APP_VERSION / expected WordPress plugin version aligned to 4.40.0.3
+PASS — release name aligned to Live Intelligence Ticker Pace & Readability Repair
+PASS — WordPress plugin identity / release ID aligned to 4.40.0.3
+PASS — v4.40.0.2 homepage capability contract preserved: 172 / 14 / 35 / 8
+PASS — featured signal count remains separate from capability metrics
+PASS — integrated homepage governed Live Intelligence ticker preserved
+PASS — measured ticker travel preserved
+PASS — fixed 42-second desktop ticker cycle removed
+PASS — fixed 36-second mobile ticker cycle removed
+PASS — distance-based ticker pace added
+PASS — desktop target pace = 28 px/s
+PASS — mobile target pace = 23 px/s
+PASS — desktop duration bounds = 75–220 seconds
+PASS — mobile duration bounds = 90–260 seconds
+PASS — CSS defensive fallback durations = 96s desktop / 118s mobile
+PASS — DOM diagnostics expose measured travel, duration, and pixels-per-second
+PASS — hover pause preserved
+PASS — focus pause preserved
+PASS — manual pause preserved
+PASS — prefers-reduced-motion behavior preserved
+PASS — duplicate ticker sets remain aria-hidden / inert and non-focusable
+PASS — 27 release-bound static policy/registry files identify 4.40.0.3
+PASS — Energy Systems runtime consumer remains 4.40.0
+PASS — Python compile validation
+PASS — JavaScript syntax validation with node --check
+PASS — PHP syntax validation with php -l
+PASS — shell syntax validation for macOS installer and Contabo upgrader
+PASS — focused regression suite: 12 passed
+PASS — dependency-light v4.40.0.3 release validator
+PASS — disposable Git installer simulation from exact v4.40.0.2 repository baseline
+PASS — simulation committed current patch
+PASS — simulation created annotated v4.40.0.3 tag
+PASS — simulation pushed main to disposable origin
+PASS — simulation pushed v4.40.0.3 tag to disposable origin
+
+Focused tests:
+- backend/tests/test_live_intelligence_ticker_pace_v44003.py
+- backend/tests/test_homepage_intelligence_contract_v44002.py
+- backend/tests/test_homepage_live_runtime_repair_v44001.py
+- backend/tests/test_source_reconciliation_v4400.py
+- backend/tests/test_energy_runtime_consumer.py
+
+Acceptance boundary:
+The release is certified for deployment testing. Final production acceptance still requires:
+1. GitHub main + v4.40.0.3 tag promotion.
+2. Contabo backend deployment and verification.
+3. WordPress v4.40.0.3 replacement only after backend PASS.
+4. Browser acceptance confirming the ticker remains visible, continuous, and comfortably readable at the slower measured pace.

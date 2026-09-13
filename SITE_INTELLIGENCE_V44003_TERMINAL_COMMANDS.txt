@@ -1,0 +1,22 @@
+=== MACOS / GITHUB ===
+cd ~/Downloads
+rm -rf sc-site-v44003-patch
+unzip -q sustainable-catalyst-site-intelligence-v4.40.0.3-tiny-patch.zip -d sc-site-v44003-patch
+cd sc-site-v44003-patch
+chmod +x apply_and_push_site_intelligence_v4_40_0_3_macos.sh
+./apply_and_push_site_intelligence_v4_40_0_3_macos.sh "$HOME/Downloads/sustainable-catalyst-site-intelligence"
+
+=== COPY BACKEND TO CONTABO ===
+cd ~/Downloads
+scp -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes \
+  sustainable-catalyst-site-intelligence-backend-v4.40.0.3.zip \
+  upgrade_site_intelligence_backend_v4_40_0_3_contabo.sh \
+  catalystadmin@94.72.113.77:/tmp/
+ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes catalystadmin@94.72.113.77
+
+=== CONTABO ===
+chmod +x /tmp/upgrade_site_intelligence_backend_v4_40_0_3_contabo.sh
+/tmp/upgrade_site_intelligence_backend_v4_40_0_3_contabo.sh
+
+=== WORDPRESS ONLY AFTER BACKEND PASS ===
+Upload sustainable-catalyst-site-intelligence-v4.40.0.3-wordpress.zip and replace current plugin.

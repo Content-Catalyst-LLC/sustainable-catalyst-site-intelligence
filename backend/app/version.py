@@ -1,4 +1,4 @@
-APP_VERSION = "4.40.0.2"
+APP_VERSION = "4.40.0.3"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Homepage Intelligence Contract & Ticker Recovery"
+RELEASE_NAME = "Live Intelligence Ticker Pace & Readability Repair"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION
