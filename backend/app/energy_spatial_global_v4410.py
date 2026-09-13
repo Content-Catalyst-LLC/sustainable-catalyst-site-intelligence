@@ -135,6 +135,7 @@ def framework() -> dict[str, Any]:
             "connector_source_registry": True,
             "automatic_external_fetch": False,
             "site_suitability_scoring": False,
+            "technical_potential_inference": False,
             "technology_ranking": False,
             "automatic_recommendation": False,
             "grid_reliability_determination": False,

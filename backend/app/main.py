@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 import hashlib
 import hmac
 import time
-from typing import Any, Mapping, Optional
+from typing import Any, Dict, Mapping, Optional
 
 from fastapi import Body, Depends, FastAPI, Header, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
