@@ -81,3 +81,33 @@ backend/data/live_intelligence_archive_audits_v3160/
 backend/data/live_intelligence_preservation_exchange_v3170/
 backend/data/live_intelligence_preservation_registry_v3180/
 backend/data/live_intelligence_registry_governance_v3190/
+
+# Repository-root release hygiene
+/release-staging/
+/dist-v*/
+/*.zip
+/*.tgz
+/*.tar.gz
+/MANIFEST.json
+
+# Generated release notes, validation, audit, install, verification, and command artifacts.
+/RELEASE_NOTES_*.md
+/SITE_INTELLIGENCE_*_BUILD_VALIDATION.txt
+/SITE_INTELLIGENCE_*_PACKAGE_VERIFICATION.txt
+/SITE_INTELLIGENCE_*_FINAL_PACKAGE_RECEIPT.txt
+/SITE_INTELLIGENCE_*_TERMINAL_COMMANDS.txt
+/SITE_INTELLIGENCE_*_INSTALL_AND_TEST.md
+/SITE_INTELLIGENCE_*_AUDIT.md
+/SITE_INTELLIGENCE_*_REPAIR*.md
+/SITE_INTELLIGENCE_*_SOURCE_RECONCILIATION.md
+/SITE_INTELLIGENCE_*_CHECKLIST.md
+/ENERGY_RUNTIME_CONSUMER_*.md
+
+# Version-specific operational helpers belong under scripts/ or deploy/, not repository root.
+/apply_and_push_site_intelligence_*.sh
+/deploy_and_validate_site_intelligence_*.sh
+/install_and_push_site_intelligence_*.sh
+/promote_site_intelligence_*.sh
+/upgrade_site_intelligence_*.sh
+/verify_site_intelligence_*.sh
+/*.py
