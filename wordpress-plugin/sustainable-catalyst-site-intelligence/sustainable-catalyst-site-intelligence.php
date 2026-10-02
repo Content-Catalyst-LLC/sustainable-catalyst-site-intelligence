@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
- * Description: Sustainable Catalyst Site Intelligence v4.41.0 with Spatial & Global Energy Intelligence, preserving source-aware geospatial evidence boundaries.
- * Version: 4.41.0
+ * Description: Sustainable Catalyst Site Intelligence v4.42.0 with Shortcode Registry Containment & WordPress Runtime Hardening.
+ * Version: 4.42.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,8 +13,8 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '4.41.0';
-    const RELEASE_ID = 'site-intelligence-v4.41.0';
+    const VERSION = '4.42.0';
+    const RELEASE_ID = 'site-intelligence-v4.42.0';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -42,6 +42,7 @@ final class SC_Site_Intelligence_Plugin {
         add_action('template_redirect', [$this, 'render_live_intelligence_signal_page']);
         add_action('wp', [$this, 'register_live_intelligence_placement']);
         add_filter('body_class', [$this, 'live_intelligence_body_classes']);
+        add_action('init', [$this, 'prune_unused_shortcodes'], PHP_INT_MAX);
         add_shortcode('sc_live_intelligence', [$this, 'live_intelligence_shortcode']);
         add_shortcode('sc_live_intelligence_static', [$this, 'live_intelligence_static_shortcode']);
         add_shortcode('sc_live_intelligence_channel', [$this, 'live_intelligence_channel_shortcode']);
@@ -272,6 +273,118 @@ final class SC_Site_Intelligence_Plugin {
         add_shortcode('sc_site_intelligence_diagnostic_summary', [$this, 'diagnostic_summary_shortcode']);
         add_shortcode('sc_site_intelligence_connection_check', [$this, 'connection_check_shortcode']);
         add_shortcode('sc_site_intelligence_release_status', [$this, 'release_status_shortcode']);
+    }
+
+    /**
+     * Keep the WordPress shortcode registry below PCRE compilation limits.
+     *
+     * Site Intelligence historically registered its entire feature catalog
+     * globally. On the production Sustainable Catalyst stack that pushed the
+     * aggregate WordPress shortcode regex beyond the host PCRE pattern-size
+     * ceiling. Keep only shortcodes that are currently published plus the
+     * canonical public entry points. Feature methods, REST routes, backend
+     * integrations, and administration surfaces remain available.
+     */
+    public function prune_unused_shortcodes() {
+        global $shortcode_tags;
+
+        $keep = array_fill_keys([
+            'sc_site_intelligence_app',
+            'sc_site_intelligence_home',
+            'sc_site_intelligence_dashboard',
+            'sc_public_dashboard_studio_navigation',
+            'sc_public_country_intelligence',
+            'sc_site_intelligence_unmapped',
+            'sc_site_intelligence_events',
+            'sc_site_intelligence_opportunities',
+            'sc_public_environmental_monitoring_dashboard',
+            'sc_external_data_health',
+            'sc_climate_energy_intelligence',
+            'sc_external_cache_status',
+            'sc_search_intelligence',
+            'sc_search_opportunities',
+            'sc_public_intelligence_dashboard',
+            'sc_public_cross_domain_comparison',
+            'sc_public_climate_energy_dashboard',
+            'sc_advanced_external_data_health',
+            'sc_environmental_monitoring_intelligence',
+            'sc_urban_resilience_intelligence',
+            'sc_biodiversity_land_use_intelligence',
+            'sc_metadata_intelligence',
+            'sc_internal_link_intelligence',
+            'sc_seo_recommendations',
+            'sc_public_dashboard_visual_qa',
+            'sc_public_site_intelligence',
+            'sc_public_knowledge_overview',
+            'sc_public_climate_energy_summary',
+            'sc_public_methodology',
+            'sc_public_dashboard_studio',
+            'sc_comparative_intelligence',
+            'sc_public_cross_domain_dashboard_directory',
+            'sc_public_biodiversity_land_use_dashboard',
+            'sc_public_knowledge_system_dashboard',
+            'sc_public_search_discovery_dashboard',
+            'sc_public_source_methodology',
+            'sc_site_intelligence_admin_overview',
+            'sc_site_intelligence_shortcode_catalog',
+            'sc_site_intelligence_module_status',
+            'sc_site_intelligence_diagnostic_summary',
+            'sc_site_intelligence_connection_check',
+            'sc_live_intelligence',
+            'sc_indexing_intelligence',
+            'sc_sitemap_coverage',
+            'sc_404_intelligence',
+            'sc_content_strategy_intelligence',
+            'sc_topic_momentum',
+            'sc_update_priorities',
+            'sc_publishing_opportunities',
+            'sc_site_intelligence_public_landing',
+            'sc_site_intelligence_public_page_builder',
+            'sc_public_dashboard_shortcode_bundle',
+            'sc_public_dashboard_directory',
+            'sc_public_dashboard_readiness',
+            'sc_site_intelligence_report',
+            'sc_search_intelligence_report',
+            'sc_content_strategy_report',
+            'sc_external_sources_report',
+            'sc_climate_energy_report',
+            'sc_indexing_report',
+            'sc_report_export_bundle',
+            'sc_ai_brief_status',
+            'sc_ai_site_intelligence_brief',
+            'sc_ai_search_brief',
+            'sc_ai_publishing_brief',
+            'sc_ai_external_sources_brief',
+            'sc_ai_public_dashboard_brief',
+            'sc_site_intelligence_release_status',
+
+            /* Protected canonical entry points. */
+            'sc_earth_observation_studio',
+            'sc_live_event_intelligence',
+            'sc_global_country_intelligence',
+            'sc_site_intelligence_embed',
+        ], true);
+
+        foreach ((array) $shortcode_tags as $tag => $callback) {
+            $ours = false;
+
+            if (
+                is_array($callback)
+                && isset($callback[0])
+                && $callback[0] === $this
+            ) {
+                $ours = true;
+            } elseif (
+                is_string($callback)
+                && 0 === strpos($callback, 'scsi_')
+            ) {
+                $ours = true;
+            }
+
+            if ($ours && !isset($keep[$tag])) {
+                remove_shortcode($tag);
+            }
+        }
     }
 
     public static function defaults() {

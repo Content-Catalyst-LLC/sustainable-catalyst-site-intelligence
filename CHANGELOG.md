@@ -1,3 +1,12 @@
+# v4.42.0 — Shortcode Registry Containment & WordPress Runtime Hardening
+
+- Converts the production shortcode-registry containment repair into the canonical Site Intelligence release.
+- Prevents Site Intelligence's full feature catalog from pushing WordPress's generated shortcode regex beyond the host PCRE pattern-size limit.
+- Keeps the 68 shortcode surfaces currently published in Sustainable Catalyst content registered, plus canonical entry points for Site Intelligence, Earth Observation Studio, Live Event Intelligence, Global Country Intelligence, and Site Intelligence Embed.
+- Leaves Site Intelligence feature methods, REST routes, backend integrations, administration surfaces, and analytical capabilities intact.
+- Aligns the Python backend release identity with WordPress at v4.42.0.
+- Production acceptance target: full WordPress shortcode regex compiles successfully with Site Intelligence active; no new `preg_match_all(): regular expression is too large` warnings.
+
 # Changelog
 
 ## 4.40.0.2 — Homepage Intelligence Contract & Ticker Recovery
