@@ -1,0 +1,36 @@
+name: Package WordPress Plugin
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'wordpress-plugin/**'
+      - '.github/workflows/package-wordpress-plugin.yml'
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Read plugin version
+        id: version
+        shell: bash
+        run: |
+          VERSION=$(grep -m1 -E '^ \* Version:' wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php | sed -E 's/^ \* Version:[[:space:]]*//')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Build installable ZIP
+        shell: bash
+        run: |
+          mkdir -p dist
+          cd wordpress-plugin
+          zip -qr "../dist/sustainable-catalyst-site-intelligence-v${{ steps.version.outputs.version }}-wordpress.zip" sustainable-catalyst-site-intelligence
+
+      - name: Upload WordPress ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: sustainable-catalyst-site-intelligence-v${{ steps.version.outputs.version }}-wordpress
+          path: dist/sustainable-catalyst-site-intelligence-v${{ steps.version.outputs.version }}-wordpress.zip
+          if-no-files-found: error
