@@ -1,4 +1,4 @@
-APP_VERSION = "4.41.0"
+APP_VERSION = "4.42.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Spatial & Global Energy Intelligence"
+RELEASE_NAME = "Shortcode Registry Containment & WordPress Runtime Hardening"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION
