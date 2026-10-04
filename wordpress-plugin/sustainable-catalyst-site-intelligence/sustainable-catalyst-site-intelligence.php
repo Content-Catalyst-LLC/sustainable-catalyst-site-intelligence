@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
- * Description: Sustainable Catalyst Site Intelligence v4.42.0 with Shortcode Registry Containment & WordPress Runtime Hardening.
- * Version: 4.42.0
+ * Description: Sustainable Catalyst Site Intelligence v4.42.1 with Release Identity, Static Policy & Certification Reconciliation.
+ * Version: 4.42.1
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,8 +13,8 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '4.42.0';
-    const RELEASE_ID = 'site-intelligence-v4.42.0';
+    const VERSION = '4.42.1';
+    const RELEASE_ID = 'site-intelligence-v4.42.1';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';

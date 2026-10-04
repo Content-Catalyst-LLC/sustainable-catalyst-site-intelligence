@@ -142,7 +142,7 @@ def framework() -> dict[str, Any]:
             "outage_declaration": False,
             "current_year_inference": False,
         },
-        "boundary": "Site Intelligence v4.41.0 organizes explicit spatial and global energy evidence. Distances, extents, counts, and descriptive summaries are evidence orientation, not site suitability, technical potential, grid reliability, outage status, investment advice, or technology ranking.",
+        "boundary": f"Site Intelligence v{APP_VERSION} organizes explicit spatial and global energy evidence. Distances, extents, counts, and descriptive summaries are evidence orientation, not site suitability, technical potential, grid reliability, outage status, investment advice, or technology ranking.",
     }
 
 

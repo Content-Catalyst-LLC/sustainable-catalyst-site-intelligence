@@ -6,7 +6,9 @@ from typing import Any
 
 from fastapi import APIRouter, HTTPException
 
-CONSUMER_VERSION = '4.41.0'
+from .version import APP_VERSION
+
+CONSUMER_VERSION = APP_VERSION
 TARGET_KEY = 'site-intelligence'
 PRODUCT = 'Site Intelligence'
 CONSUMER_CONTRACT = 'sc-energy-runtime-site-intelligence-handoff/1.0'

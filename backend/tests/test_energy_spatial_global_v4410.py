@@ -3,6 +3,7 @@ import pytest
 
 from app.main import app
 from app.energy_spatial_global_v4410 import profile, compare, validate_result
+from app.version import APP_VERSION
 
 client = TestClient(app)
 
@@ -23,7 +24,7 @@ def test_framework_and_registry_routes():
     f=client.get('/v1/energy-spatial/framework').json()
     assert f['ok'] is True
     assert f['version']=='1.5.0'
-    assert f['site_intelligence_version']=='4.41.0'
+    assert f['site_intelligence_version']==APP_VERSION
     assert f['capabilities']['site_suitability_scoring'] is False
     reg=client.get('/v1/energy-spatial/source-registry').json()
     assert {x['key'] for x in reg['sources']} >= {'openstreetmap-power','eia-open-data','ember-electricity-data','entsoe-transparency'}

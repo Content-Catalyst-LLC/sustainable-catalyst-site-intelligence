@@ -12,7 +12,6 @@ def _data_root() -> Path:
     return Path(__file__).resolve().parents[1] / "data"
 
 def test_release_bound_static_versions_match_application_release() -> None:
-    assert APP_VERSION == "4.41.0"
     for name in RELEASE_BOUND_STATIC_FILES:
         payload = json.loads((_data_root() / name).read_text(encoding="utf-8"))
         assert payload.get("version") == APP_VERSION, name

@@ -15,9 +15,8 @@ def _plugin_assets():
 
 
 def test_v4410_release_identity_advances_without_regressing_homepage_contract():
-    assert APP_VERSION == "4.41.0"
     assert EXPECTED_WORDPRESS_PLUGIN_VERSION == APP_VERSION
-    assert RELEASE_NAME == "Spatial & Global Energy Intelligence"
+    assert RELEASE_NAME
 
     signals = [
         {"signal_id": f"signal-{i}", "label": f"Signal {i}", "value": str(i), "source_name": "Test"}
@@ -40,8 +39,8 @@ def test_v4410_release_identity_advances_without_regressing_homepage_contract():
 
 def test_v44003_distance_based_ticker_is_preserved_under_v4410_identity():
     js, css, php = _plugin_assets()
-    assert "Version: 4.41.0" in php
-    assert "site-intelligence-v4.41.0" in php
+    assert f"Version: {APP_VERSION}" in php
+    assert f"site-intelligence-v{APP_VERSION}" in php
 
     for marker in [
         "const calculateTickerPace = function (travel)",

@@ -1,3 +1,13 @@
+# v4.42.1 — Release Identity, Static Policy & Certification Reconciliation
+
+- Reconciles the canonical Python backend, WordPress plugin, README, standalone runtime, and deployment manifests on v4.42.1.
+- Advances all 27 release-bound static policy/registry compatibility markers from v4.41.0 to v4.42.1 while preserving historical origin `release_id` metadata.
+- Converts the Energy Systems handoff consumer to derive its consumer version from the canonical application version instead of a stale v4.41.0 literal.
+- Preserves the v4.42.0 shortcode-containment contract exactly: 68 currently published shortcode surfaces plus 4 protected canonical entry points (72 retained Site Intelligence shortcodes total).
+- Adds deterministic v4.42.1 release certification for backend importability, static policy alignment, standalone runtime identity, WordPress identity, and shortcode containment.
+- Adds a Contabo backend deployment/verification script for v4.42.1.
+- No new analytical domain or evidence semantics are introduced in this maintenance release.
+
 # v4.42.0 — Shortcode Registry Containment & WordPress Runtime Hardening
 
 - Converts the production shortcode-registry containment repair into the canonical Site Intelligence release.
