@@ -1,3 +1,11 @@
+## 4.51.0 — Spatial Research Object & Cross-Product Handoffs
+
+- Adds canonical content-addressed spatial research objects and manifests.
+- Adds preview-only handoff adapters for Workspace, Knowledge Library, Research Librarian, Research Lab, Workbench, Decision Studio, and Platform Core.
+- Preserves v4.46–v4.50 evidence, analysis, graph, live-event, and source-federation digests without mutating source records.
+- Adds reproducible multi-target spatial research packages with explicit no-delivery/no-remote-write boundaries.
+- Advances the modular capability registry to generation 1.8.0.
+
 # v4.50.0 — Global Source Federation & Regional Authority Registry
 
 - Adds a first-class global source federation and regional authority registry over existing Site Intelligence connectors and evidence precedence contracts.

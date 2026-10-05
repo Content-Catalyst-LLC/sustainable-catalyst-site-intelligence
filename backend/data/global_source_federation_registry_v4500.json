@@ -1,37 +1,138 @@
 {
   "schema": "sc-site-intelligence-global-source-federation-registry/1.0",
-  "version": "4.50.0",
+  "version": "4.51.0",
   "registry_version": "1.0.0",
   "title": "Global Source Federation & Regional Authority Registry",
   "source_catalog_schema": "sc-site-intelligence-source-authority/1.0",
   "selection_schema": "sc-site-intelligence-source-selection/1.0",
   "federation_plan_schema": "sc-site-intelligence-source-federation-plan/1.0",
   "trust_evaluation_schema": "sc-site-intelligence-source-trust-evaluation/1.0",
-  "scope_types": ["global", "regional", "country", "multinational"],
-  "federation_modes": ["live", "discovery", "auth-required", "registered", "reference"],
+  "scope_types": [
+    "global",
+    "regional",
+    "country",
+    "multinational"
+  ],
+  "federation_modes": [
+    "live",
+    "discovery",
+    "auth-required",
+    "registered",
+    "reference"
+  ],
   "authority_classes": [
-    {"id": "national-statistical-authority", "authority_rank": 100, "description": "First-party national statistical authority within its published jurisdiction and semantic scope."},
-    {"id": "official-sector-authority", "authority_rank": 95, "description": "First-party public sector, operational, scientific, or administrative authority for a defined domain."},
-    {"id": "regional-statistical-authority", "authority_rank": 93, "description": "Official regional statistical authority operating across a defined multinational region."},
-    {"id": "intergovernmental-custodian", "authority_rank": 90, "description": "Intergovernmental organization acting as custodian or first-party publisher for a defined international dataset or operational service."},
-    {"id": "international-harmonized", "authority_rank": 80, "description": "Cross-country harmonized source suitable for comparable statistics when semantic compatibility is preserved."},
-    {"id": "scientific-observatory", "authority_rank": 80, "description": "Scientific observation or research data authority with explicit source and methodology boundaries."},
-    {"id": "regulatory-authority", "authority_rank": 80, "description": "Regulatory or compliance authority within its legal scope."},
-    {"id": "research-consortium", "authority_rank": 65, "description": "Research or community scientific consortium; authority depends on the supplied dataset and methodology."},
-    {"id": "humanitarian-coordination", "authority_rank": 65, "description": "Humanitarian coordination/discovery source preserving publisher-level attribution and verification boundaries."},
-    {"id": "open-community-supplemental", "authority_rank": 45, "description": "Open/community source used as supplemental context and never silently elevated above official exact-concept evidence."}
+    {
+      "id": "national-statistical-authority",
+      "authority_rank": 100,
+      "description": "First-party national statistical authority within its published jurisdiction and semantic scope."
+    },
+    {
+      "id": "official-sector-authority",
+      "authority_rank": 95,
+      "description": "First-party public sector, operational, scientific, or administrative authority for a defined domain."
+    },
+    {
+      "id": "regional-statistical-authority",
+      "authority_rank": 93,
+      "description": "Official regional statistical authority operating across a defined multinational region."
+    },
+    {
+      "id": "intergovernmental-custodian",
+      "authority_rank": 90,
+      "description": "Intergovernmental organization acting as custodian or first-party publisher for a defined international dataset or operational service."
+    },
+    {
+      "id": "international-harmonized",
+      "authority_rank": 80,
+      "description": "Cross-country harmonized source suitable for comparable statistics when semantic compatibility is preserved."
+    },
+    {
+      "id": "scientific-observatory",
+      "authority_rank": 80,
+      "description": "Scientific observation or research data authority with explicit source and methodology boundaries."
+    },
+    {
+      "id": "regulatory-authority",
+      "authority_rank": 80,
+      "description": "Regulatory or compliance authority within its legal scope."
+    },
+    {
+      "id": "research-consortium",
+      "authority_rank": 65,
+      "description": "Research or community scientific consortium; authority depends on the supplied dataset and methodology."
+    },
+    {
+      "id": "humanitarian-coordination",
+      "authority_rank": 65,
+      "description": "Humanitarian coordination/discovery source preserving publisher-level attribution and verification boundaries."
+    },
+    {
+      "id": "open-community-supplemental",
+      "authority_rank": 45,
+      "description": "Open/community source used as supplemental context and never silently elevated above official exact-concept evidence."
+    }
   ],
   "regional_groups": [
-    {"region_id": "africa", "title": "Africa", "country_region_values": ["Africa"]},
-    {"region_id": "asia", "title": "Asia", "country_region_values": ["Asia"]},
-    {"region_id": "europe", "title": "Europe", "country_region_values": ["Europe"]},
-    {"region_id": "north-america", "title": "North America", "country_region_values": ["North America"]},
-    {"region_id": "south-america", "title": "South America", "country_region_values": ["South America"]},
-    {"region_id": "oceania", "title": "Oceania", "country_region_values": ["Oceania"]},
-    {"region_id": "antarctica", "title": "Antarctica", "country_region_values": ["Antarctica"]}
+    {
+      "region_id": "africa",
+      "title": "Africa",
+      "country_region_values": [
+        "Africa"
+      ]
+    },
+    {
+      "region_id": "asia",
+      "title": "Asia",
+      "country_region_values": [
+        "Asia"
+      ]
+    },
+    {
+      "region_id": "europe",
+      "title": "Europe",
+      "country_region_values": [
+        "Europe"
+      ]
+    },
+    {
+      "region_id": "north-america",
+      "title": "North America",
+      "country_region_values": [
+        "North America"
+      ]
+    },
+    {
+      "region_id": "south-america",
+      "title": "South America",
+      "country_region_values": [
+        "South America"
+      ]
+    },
+    {
+      "region_id": "oceania",
+      "title": "Oceania",
+      "country_region_values": [
+        "Oceania"
+      ]
+    },
+    {
+      "region_id": "antarctica",
+      "title": "Antarctica",
+      "country_region_values": [
+        "Antarctica"
+      ]
+    }
   ],
   "selection_policy": {
-    "order": ["semantic-compatibility", "declared-jurisdiction-precedence", "jurisdiction-specificity", "authority-class", "freshness", "record-status", "stable-source-id"],
+    "order": [
+      "semantic-compatibility",
+      "declared-jurisdiction-precedence",
+      "jurisdiction-specificity",
+      "authority-class",
+      "freshness",
+      "record-status",
+      "stable-source-id"
+    ],
     "semantic_compatibility_required": true,
     "user_trust_can_filter": true,
     "user_trust_changes_authority_rank": false,
@@ -47,33 +148,565 @@
     "separate_from_authority": true,
     "separate_from_quality": true,
     "default_profile": "neutral-no-source-blocks",
-    "supported_filters": ["allowed_source_ids", "blocked_source_ids", "allowed_authority_classes", "allowed_federation_modes"]
+    "supported_filters": [
+      "allowed_source_ids",
+      "blocked_source_ids",
+      "allowed_authority_classes",
+      "allowed_federation_modes"
+    ]
   },
   "sources": [
-    {"source_id":"world_bank","name":"World Bank Open Data","provider":"World Bank","authority_class":"international-harmonized","scope_type":"global","iso3":[],"regions":[],"domains":["development","economics","population","energy","water","climate"],"languages":["en"],"federation_mode":"live","connector_family":"world-bank","truth_precedence_eligible":true,"quality_status":"harmonized-international-series"},
-    {"source_id":"faostat","name":"FAOSTAT","provider":"Food and Agriculture Organization of the United Nations","authority_class":"intergovernmental-custodian","scope_type":"global","iso3":[],"regions":[],"domains":["agriculture","food","land","emissions"],"languages":["en","fr","es"],"federation_mode":"live","connector_family":"faostat","truth_precedence_eligible":true,"quality_status":"official-intergovernmental"},
-    {"source_id":"ilostat","name":"ILOSTAT","provider":"International Labour Organization","authority_class":"intergovernmental-custodian","scope_type":"global","iso3":[],"regions":[],"domains":["labor","employment","economics"],"languages":["en","fr","es"],"federation_mode":"live","connector_family":"ilostat","truth_precedence_eligible":true,"quality_status":"official-intergovernmental"},
-    {"source_id":"oecd-sdmx","name":"OECD Data","provider":"Organisation for Economic Co-operation and Development","authority_class":"international-harmonized","scope_type":"multinational","iso3":[],"regions":[],"domains":["economics","energy","environment","social"],"languages":["en","fr"],"federation_mode":"live","connector_family":"oecd-sdmx","truth_precedence_eligible":true,"quality_status":"official-harmonized"},
-    {"source_id":"eurostat","name":"Eurostat","provider":"European Commission / Eurostat","authority_class":"regional-statistical-authority","scope_type":"regional","iso3":[],"regions":["Europe"],"domains":["economics","population","energy","environment","agriculture","transport"],"languages":["en","de","fr"],"federation_mode":"live","connector_family":"eurostat-statistics","truth_precedence_eligible":true,"quality_status":"official-regional-statistics"},
-    {"source_id":"unhcr-refugee-statistics","name":"UNHCR Refugee Statistics","provider":"United Nations High Commissioner for Refugees","authority_class":"intergovernmental-custodian","scope_type":"global","iso3":[],"regions":[],"domains":["humanitarian","displacement","population"],"languages":["en"],"federation_mode":"live","connector_family":"unhcr-population","truth_precedence_eligible":true,"quality_status":"official-intergovernmental"},
-    {"source_id":"reliefweb","name":"ReliefWeb","provider":"United Nations Office for the Coordination of Humanitarian Affairs","authority_class":"humanitarian-coordination","scope_type":"global","iso3":[],"regions":[],"domains":["humanitarian","disasters","conflict"],"languages":["en","fr","es","ar"],"federation_mode":"auth-required","connector_family":"reliefweb-v2","truth_precedence_eligible":false,"quality_status":"curated-metadata-publisher-attribution-required"},
-    {"source_id":"gdacs","name":"Global Disaster Alert and Coordination System","provider":"United Nations / European Commission GDACS","authority_class":"intergovernmental-custodian","scope_type":"global","iso3":[],"regions":[],"domains":["disasters","hazards","live-events"],"languages":["en"],"federation_mode":"live","connector_family":"gdacs-events","truth_precedence_eligible":true,"quality_status":"official-operational-alerting"},
-    {"source_id":"nasa_eonet","name":"NASA EONET","provider":"NASA Earth Observatory Natural Event Tracker","authority_class":"scientific-observatory","scope_type":"global","iso3":[],"regions":[],"domains":["earth-observation","hazards","live-events"],"languages":["en"],"federation_mode":"live","connector_family":"nasa-eonet","truth_precedence_eligible":true,"quality_status":"official-scientific-event-metadata"},
-    {"source_id":"nasa-cmr","name":"NASA Common Metadata Repository","provider":"NASA EOSDIS","authority_class":"scientific-observatory","scope_type":"global","iso3":[],"regions":[],"domains":["earth-observation","climate","hydrology","atmosphere"],"languages":["en"],"federation_mode":"discovery","connector_family":"nasa-cmr","truth_precedence_eligible":false,"quality_status":"official-dataset-discovery"},
-    {"source_id":"copernicus-era5","name":"Copernicus Climate Data Store ERA5","provider":"European Centre for Medium-Range Weather Forecasts / Copernicus","authority_class":"scientific-observatory","scope_type":"global","iso3":[],"regions":[],"domains":["climate","atmosphere","weather"],"languages":["en"],"federation_mode":"auth-required","connector_family":"copernicus-era5","truth_precedence_eligible":true,"quality_status":"official-reanalysis"},
-    {"source_id":"obis","name":"Ocean Biodiversity Information System","provider":"IOC-UNESCO OBIS","authority_class":"research-consortium","scope_type":"global","iso3":[],"regions":[],"domains":["ocean","biodiversity","species"],"languages":["en"],"federation_mode":"live","connector_family":"obis-occurrences","truth_precedence_eligible":true,"quality_status":"scientific-federated-occurrence-data"},
-    {"source_id":"gbif","name":"Global Biodiversity Information Facility","provider":"GBIF","authority_class":"research-consortium","scope_type":"global","iso3":[],"regions":[],"domains":["biodiversity","species","ecology"],"languages":["en"],"federation_mode":"live","connector_family":"gbif-occurrences","truth_precedence_eligible":true,"quality_status":"scientific-federated-occurrence-data"},
-    {"source_id":"usgs_earthquakes","name":"USGS Earthquakes","provider":"U.S. Geological Survey","authority_class":"official-sector-authority","scope_type":"global","iso3":[],"regions":[],"domains":["geosphere","earthquakes","live-events"],"languages":["en"],"federation_mode":"live","connector_family":"usgs-earthquakes","truth_precedence_eligible":true,"quality_status":"official-event-source"},
-    {"source_id":"pcbs-pxweb","name":"Palestinian Central Bureau of Statistics PxWeb","provider":"Palestinian Central Bureau of Statistics","authority_class":"national-statistical-authority","scope_type":"country","iso3":["PSE"],"regions":[],"domains":["population","economics","labor","development"],"languages":["ar","en"],"federation_mode":"live","connector_family":"pcbs-pxweb","truth_precedence_eligible":true,"quality_status":"official-national-statistics"},
-    {"source_id":"pcbs-pxweb-sdgs","name":"Palestinian Central Bureau of Statistics SDG PxWeb","provider":"Palestinian Central Bureau of Statistics","authority_class":"national-statistical-authority","scope_type":"country","iso3":["PSE"],"regions":[],"domains":["sustainable-development","energy","water","population"],"languages":["ar","en"],"federation_mode":"live","connector_family":"pcbs-pxweb","truth_precedence_eligible":true,"quality_status":"official-national-statistics"},
-    {"source_id":"statistics-canada-wds","name":"Statistics Canada Web Data Service","provider":"Statistics Canada","authority_class":"national-statistical-authority","scope_type":"country","iso3":["CAN"],"regions":[],"domains":["population","economics","labor","environment"],"languages":["en","fr"],"federation_mode":"live","connector_family":"statcan-wds","truth_precedence_eligible":true,"quality_status":"official-national-statistics"},
-    {"source_id":"uk-ons-api","name":"Office for National Statistics API","provider":"UK Office for National Statistics","authority_class":"national-statistical-authority","scope_type":"country","iso3":["GBR"],"regions":[],"domains":["population","economics","labor","development"],"languages":["en"],"federation_mode":"live","connector_family":"ons-observations","truth_precedence_eligible":true,"quality_status":"official-national-statistics"},
-    {"source_id":"australian-bureau-statistics-sdmx","name":"Australian Bureau of Statistics SDMX","provider":"Australian Bureau of Statistics","authority_class":"national-statistical-authority","scope_type":"country","iso3":["AUS"],"regions":[],"domains":["population","economics","labor","development"],"languages":["en"],"federation_mode":"live","connector_family":"abs-sdmx","truth_precedence_eligible":true,"quality_status":"official-national-statistics"},
-    {"source_id":"us-bls-public-data-api","name":"U.S. Bureau of Labor Statistics Public Data API","provider":"U.S. Bureau of Labor Statistics","authority_class":"national-statistical-authority","scope_type":"country","iso3":["USA"],"regions":[],"domains":["labor","prices","economics"],"languages":["en"],"federation_mode":"live","connector_family":"bls-timeseries","truth_precedence_eligible":true,"quality_status":"official-national-statistics"},
-    {"source_id":"noaa_nws","name":"NOAA / National Weather Service","provider":"NOAA / National Weather Service","authority_class":"official-sector-authority","scope_type":"country","iso3":["USA"],"regions":[],"domains":["weather","hazards","live-events"],"languages":["en"],"federation_mode":"live","connector_family":"noaa-nws","truth_precedence_eligible":true,"quality_status":"official-weather-source"},
-    {"source_id":"usgs-water-ogc","name":"USGS Water Data","provider":"U.S. Geological Survey","authority_class":"official-sector-authority","scope_type":"country","iso3":["USA"],"regions":[],"domains":["hydrology","water","monitoring"],"languages":["en"],"federation_mode":"live","connector_family":"usgs-water-ogc","truth_precedence_eligible":true,"quality_status":"official-water-observation"},
-    {"source_id":"epa-echo","name":"EPA ECHO","provider":"U.S. Environmental Protection Agency","authority_class":"regulatory-authority","scope_type":"country","iso3":["USA"],"regions":[],"domains":["environment","facilities","regulation"],"languages":["en"],"federation_mode":"live","connector_family":"epa-echo","truth_precedence_eligible":true,"quality_status":"official-regulatory-data"},
-    {"source_id":"openstreetmap","name":"OpenStreetMap","provider":"OpenStreetMap contributors","authority_class":"open-community-supplemental","scope_type":"global","iso3":[],"regions":[],"domains":["infrastructure","water","mining","industrial","transport"],"languages":[],"federation_mode":"live","connector_family":"osm","truth_precedence_eligible":false,"quality_status":"community-mapped-supplemental"}
+    {
+      "source_id": "world_bank",
+      "name": "World Bank Open Data",
+      "provider": "World Bank",
+      "authority_class": "international-harmonized",
+      "scope_type": "global",
+      "iso3": [],
+      "regions": [],
+      "domains": [
+        "development",
+        "economics",
+        "population",
+        "energy",
+        "water",
+        "climate"
+      ],
+      "languages": [
+        "en"
+      ],
+      "federation_mode": "live",
+      "connector_family": "world-bank",
+      "truth_precedence_eligible": true,
+      "quality_status": "harmonized-international-series"
+    },
+    {
+      "source_id": "faostat",
+      "name": "FAOSTAT",
+      "provider": "Food and Agriculture Organization of the United Nations",
+      "authority_class": "intergovernmental-custodian",
+      "scope_type": "global",
+      "iso3": [],
+      "regions": [],
+      "domains": [
+        "agriculture",
+        "food",
+        "land",
+        "emissions"
+      ],
+      "languages": [
+        "en",
+        "fr",
+        "es"
+      ],
+      "federation_mode": "live",
+      "connector_family": "faostat",
+      "truth_precedence_eligible": true,
+      "quality_status": "official-intergovernmental"
+    },
+    {
+      "source_id": "ilostat",
+      "name": "ILOSTAT",
+      "provider": "International Labour Organization",
+      "authority_class": "intergovernmental-custodian",
+      "scope_type": "global",
+      "iso3": [],
+      "regions": [],
+      "domains": [
+        "labor",
+        "employment",
+        "economics"
+      ],
+      "languages": [
+        "en",
+        "fr",
+        "es"
+      ],
+      "federation_mode": "live",
+      "connector_family": "ilostat",
+      "truth_precedence_eligible": true,
+      "quality_status": "official-intergovernmental"
+    },
+    {
+      "source_id": "oecd-sdmx",
+      "name": "OECD Data",
+      "provider": "Organisation for Economic Co-operation and Development",
+      "authority_class": "international-harmonized",
+      "scope_type": "multinational",
+      "iso3": [],
+      "regions": [],
+      "domains": [
+        "economics",
+        "energy",
+        "environment",
+        "social"
+      ],
+      "languages": [
+        "en",
+        "fr"
+      ],
+      "federation_mode": "live",
+      "connector_family": "oecd-sdmx",
+      "truth_precedence_eligible": true,
+      "quality_status": "official-harmonized"
+    },
+    {
+      "source_id": "eurostat",
+      "name": "Eurostat",
+      "provider": "European Commission / Eurostat",
+      "authority_class": "regional-statistical-authority",
+      "scope_type": "regional",
+      "iso3": [],
+      "regions": [
+        "Europe"
+      ],
+      "domains": [
+        "economics",
+        "population",
+        "energy",
+        "environment",
+        "agriculture",
+        "transport"
+      ],
+      "languages": [
+        "en",
+        "de",
+        "fr"
+      ],
+      "federation_mode": "live",
+      "connector_family": "eurostat-statistics",
+      "truth_precedence_eligible": true,
+      "quality_status": "official-regional-statistics"
+    },
+    {
+      "source_id": "unhcr-refugee-statistics",
+      "name": "UNHCR Refugee Statistics",
+      "provider": "United Nations High Commissioner for Refugees",
+      "authority_class": "intergovernmental-custodian",
+      "scope_type": "global",
+      "iso3": [],
+      "regions": [],
+      "domains": [
+        "humanitarian",
+        "displacement",
+        "population"
+      ],
+      "languages": [
+        "en"
+      ],
+      "federation_mode": "live",
+      "connector_family": "unhcr-population",
+      "truth_precedence_eligible": true,
+      "quality_status": "official-intergovernmental"
+    },
+    {
+      "source_id": "reliefweb",
+      "name": "ReliefWeb",
+      "provider": "United Nations Office for the Coordination of Humanitarian Affairs",
+      "authority_class": "humanitarian-coordination",
+      "scope_type": "global",
+      "iso3": [],
+      "regions": [],
+      "domains": [
+        "humanitarian",
+        "disasters",
+        "conflict"
+      ],
+      "languages": [
+        "en",
+        "fr",
+        "es",
+        "ar"
+      ],
+      "federation_mode": "auth-required",
+      "connector_family": "reliefweb-v2",
+      "truth_precedence_eligible": false,
+      "quality_status": "curated-metadata-publisher-attribution-required"
+    },
+    {
+      "source_id": "gdacs",
+      "name": "Global Disaster Alert and Coordination System",
+      "provider": "United Nations / European Commission GDACS",
+      "authority_class": "intergovernmental-custodian",
+      "scope_type": "global",
+      "iso3": [],
+      "regions": [],
+      "domains": [
+        "disasters",
+        "hazards",
+        "live-events"
+      ],
+      "languages": [
+        "en"
+      ],
+      "federation_mode": "live",
+      "connector_family": "gdacs-events",
+      "truth_precedence_eligible": true,
+      "quality_status": "official-operational-alerting"
+    },
+    {
+      "source_id": "nasa_eonet",
+      "name": "NASA EONET",
+      "provider": "NASA Earth Observatory Natural Event Tracker",
+      "authority_class": "scientific-observatory",
+      "scope_type": "global",
+      "iso3": [],
+      "regions": [],
+      "domains": [
+        "earth-observation",
+        "hazards",
+        "live-events"
+      ],
+      "languages": [
+        "en"
+      ],
+      "federation_mode": "live",
+      "connector_family": "nasa-eonet",
+      "truth_precedence_eligible": true,
+      "quality_status": "official-scientific-event-metadata"
+    },
+    {
+      "source_id": "nasa-cmr",
+      "name": "NASA Common Metadata Repository",
+      "provider": "NASA EOSDIS",
+      "authority_class": "scientific-observatory",
+      "scope_type": "global",
+      "iso3": [],
+      "regions": [],
+      "domains": [
+        "earth-observation",
+        "climate",
+        "hydrology",
+        "atmosphere"
+      ],
+      "languages": [
+        "en"
+      ],
+      "federation_mode": "discovery",
+      "connector_family": "nasa-cmr",
+      "truth_precedence_eligible": false,
+      "quality_status": "official-dataset-discovery"
+    },
+    {
+      "source_id": "copernicus-era5",
+      "name": "Copernicus Climate Data Store ERA5",
+      "provider": "European Centre for Medium-Range Weather Forecasts / Copernicus",
+      "authority_class": "scientific-observatory",
+      "scope_type": "global",
+      "iso3": [],
+      "regions": [],
+      "domains": [
+        "climate",
+        "atmosphere",
+        "weather"
+      ],
+      "languages": [
+        "en"
+      ],
+      "federation_mode": "auth-required",
+      "connector_family": "copernicus-era5",
+      "truth_precedence_eligible": true,
+      "quality_status": "official-reanalysis"
+    },
+    {
+      "source_id": "obis",
+      "name": "Ocean Biodiversity Information System",
+      "provider": "IOC-UNESCO OBIS",
+      "authority_class": "research-consortium",
+      "scope_type": "global",
+      "iso3": [],
+      "regions": [],
+      "domains": [
+        "ocean",
+        "biodiversity",
+        "species"
+      ],
+      "languages": [
+        "en"
+      ],
+      "federation_mode": "live",
+      "connector_family": "obis-occurrences",
+      "truth_precedence_eligible": true,
+      "quality_status": "scientific-federated-occurrence-data"
+    },
+    {
+      "source_id": "gbif",
+      "name": "Global Biodiversity Information Facility",
+      "provider": "GBIF",
+      "authority_class": "research-consortium",
+      "scope_type": "global",
+      "iso3": [],
+      "regions": [],
+      "domains": [
+        "biodiversity",
+        "species",
+        "ecology"
+      ],
+      "languages": [
+        "en"
+      ],
+      "federation_mode": "live",
+      "connector_family": "gbif-occurrences",
+      "truth_precedence_eligible": true,
+      "quality_status": "scientific-federated-occurrence-data"
+    },
+    {
+      "source_id": "usgs_earthquakes",
+      "name": "USGS Earthquakes",
+      "provider": "U.S. Geological Survey",
+      "authority_class": "official-sector-authority",
+      "scope_type": "global",
+      "iso3": [],
+      "regions": [],
+      "domains": [
+        "geosphere",
+        "earthquakes",
+        "live-events"
+      ],
+      "languages": [
+        "en"
+      ],
+      "federation_mode": "live",
+      "connector_family": "usgs-earthquakes",
+      "truth_precedence_eligible": true,
+      "quality_status": "official-event-source"
+    },
+    {
+      "source_id": "pcbs-pxweb",
+      "name": "Palestinian Central Bureau of Statistics PxWeb",
+      "provider": "Palestinian Central Bureau of Statistics",
+      "authority_class": "national-statistical-authority",
+      "scope_type": "country",
+      "iso3": [
+        "PSE"
+      ],
+      "regions": [],
+      "domains": [
+        "population",
+        "economics",
+        "labor",
+        "development"
+      ],
+      "languages": [
+        "ar",
+        "en"
+      ],
+      "federation_mode": "live",
+      "connector_family": "pcbs-pxweb",
+      "truth_precedence_eligible": true,
+      "quality_status": "official-national-statistics"
+    },
+    {
+      "source_id": "pcbs-pxweb-sdgs",
+      "name": "Palestinian Central Bureau of Statistics SDG PxWeb",
+      "provider": "Palestinian Central Bureau of Statistics",
+      "authority_class": "national-statistical-authority",
+      "scope_type": "country",
+      "iso3": [
+        "PSE"
+      ],
+      "regions": [],
+      "domains": [
+        "sustainable-development",
+        "energy",
+        "water",
+        "population"
+      ],
+      "languages": [
+        "ar",
+        "en"
+      ],
+      "federation_mode": "live",
+      "connector_family": "pcbs-pxweb",
+      "truth_precedence_eligible": true,
+      "quality_status": "official-national-statistics"
+    },
+    {
+      "source_id": "statistics-canada-wds",
+      "name": "Statistics Canada Web Data Service",
+      "provider": "Statistics Canada",
+      "authority_class": "national-statistical-authority",
+      "scope_type": "country",
+      "iso3": [
+        "CAN"
+      ],
+      "regions": [],
+      "domains": [
+        "population",
+        "economics",
+        "labor",
+        "environment"
+      ],
+      "languages": [
+        "en",
+        "fr"
+      ],
+      "federation_mode": "live",
+      "connector_family": "statcan-wds",
+      "truth_precedence_eligible": true,
+      "quality_status": "official-national-statistics"
+    },
+    {
+      "source_id": "uk-ons-api",
+      "name": "Office for National Statistics API",
+      "provider": "UK Office for National Statistics",
+      "authority_class": "national-statistical-authority",
+      "scope_type": "country",
+      "iso3": [
+        "GBR"
+      ],
+      "regions": [],
+      "domains": [
+        "population",
+        "economics",
+        "labor",
+        "development"
+      ],
+      "languages": [
+        "en"
+      ],
+      "federation_mode": "live",
+      "connector_family": "ons-observations",
+      "truth_precedence_eligible": true,
+      "quality_status": "official-national-statistics"
+    },
+    {
+      "source_id": "australian-bureau-statistics-sdmx",
+      "name": "Australian Bureau of Statistics SDMX",
+      "provider": "Australian Bureau of Statistics",
+      "authority_class": "national-statistical-authority",
+      "scope_type": "country",
+      "iso3": [
+        "AUS"
+      ],
+      "regions": [],
+      "domains": [
+        "population",
+        "economics",
+        "labor",
+        "development"
+      ],
+      "languages": [
+        "en"
+      ],
+      "federation_mode": "live",
+      "connector_family": "abs-sdmx",
+      "truth_precedence_eligible": true,
+      "quality_status": "official-national-statistics"
+    },
+    {
+      "source_id": "us-bls-public-data-api",
+      "name": "U.S. Bureau of Labor Statistics Public Data API",
+      "provider": "U.S. Bureau of Labor Statistics",
+      "authority_class": "national-statistical-authority",
+      "scope_type": "country",
+      "iso3": [
+        "USA"
+      ],
+      "regions": [],
+      "domains": [
+        "labor",
+        "prices",
+        "economics"
+      ],
+      "languages": [
+        "en"
+      ],
+      "federation_mode": "live",
+      "connector_family": "bls-timeseries",
+      "truth_precedence_eligible": true,
+      "quality_status": "official-national-statistics"
+    },
+    {
+      "source_id": "noaa_nws",
+      "name": "NOAA / National Weather Service",
+      "provider": "NOAA / National Weather Service",
+      "authority_class": "official-sector-authority",
+      "scope_type": "country",
+      "iso3": [
+        "USA"
+      ],
+      "regions": [],
+      "domains": [
+        "weather",
+        "hazards",
+        "live-events"
+      ],
+      "languages": [
+        "en"
+      ],
+      "federation_mode": "live",
+      "connector_family": "noaa-nws",
+      "truth_precedence_eligible": true,
+      "quality_status": "official-weather-source"
+    },
+    {
+      "source_id": "usgs-water-ogc",
+      "name": "USGS Water Data",
+      "provider": "U.S. Geological Survey",
+      "authority_class": "official-sector-authority",
+      "scope_type": "country",
+      "iso3": [
+        "USA"
+      ],
+      "regions": [],
+      "domains": [
+        "hydrology",
+        "water",
+        "monitoring"
+      ],
+      "languages": [
+        "en"
+      ],
+      "federation_mode": "live",
+      "connector_family": "usgs-water-ogc",
+      "truth_precedence_eligible": true,
+      "quality_status": "official-water-observation"
+    },
+    {
+      "source_id": "epa-echo",
+      "name": "EPA ECHO",
+      "provider": "U.S. Environmental Protection Agency",
+      "authority_class": "regulatory-authority",
+      "scope_type": "country",
+      "iso3": [
+        "USA"
+      ],
+      "regions": [],
+      "domains": [
+        "environment",
+        "facilities",
+        "regulation"
+      ],
+      "languages": [
+        "en"
+      ],
+      "federation_mode": "live",
+      "connector_family": "epa-echo",
+      "truth_precedence_eligible": true,
+      "quality_status": "official-regulatory-data"
+    },
+    {
+      "source_id": "openstreetmap",
+      "name": "OpenStreetMap",
+      "provider": "OpenStreetMap contributors",
+      "authority_class": "open-community-supplemental",
+      "scope_type": "global",
+      "iso3": [],
+      "regions": [],
+      "domains": [
+        "infrastructure",
+        "water",
+        "mining",
+        "industrial",
+        "transport"
+      ],
+      "languages": [],
+      "federation_mode": "live",
+      "connector_family": "osm",
+      "truth_precedence_eligible": false,
+      "quality_status": "community-mapped-supplemental"
+    }
   ],
   "principles": [
     "original-source-identity-is-preserved",

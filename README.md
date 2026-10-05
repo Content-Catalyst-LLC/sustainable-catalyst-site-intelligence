@@ -2,8 +2,12 @@
 
 Sustainable Catalyst Site Intelligence is the geospatial, country, Earth-observation, ocean, space, infrastructure, environmental, and live public-intelligence layer of the Sustainable Catalyst platform.
 
-**Current release:** v4.50.0 — Global Source Federation & Regional Authority Registry
+**Current release:** v4.51.0 — Spatial Research Object & Cross-Product Handoffs
 
+
+### v4.51 Spatial Research Object & Cross-Product Handoffs
+
+Site Intelligence now packages a complete spatial investigation as a content-addressed research object spanning canonical evidence, spatiotemporal results, relationship graphs, live events, and source-federation context. Provider-neutral preview handoffs are available for Workspace, Knowledge Library, Research Librarian, Research Lab, Workbench, Decision Studio, and Platform Core. Handoffs never perform implicit delivery, publication, remote writes, or source mutation.
 
 ### v4.50 Global Source Federation
 

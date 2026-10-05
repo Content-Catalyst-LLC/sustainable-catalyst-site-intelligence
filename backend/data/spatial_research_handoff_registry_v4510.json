@@ -1,0 +1,70 @@
+{
+  "schema": "sc-site-intelligence-spatial-research-handoff-registry/1.0",
+  "version": "4.51.0",
+  "registry_version": "1.0.0",
+  "title": "Spatial Research Object & Cross-Product Handoff Registry",
+  "research_object_schema": "sc-site-intelligence-spatial-research-object/1.0",
+  "handoff_schema": "sc-site-intelligence-cross-product-handoff/1.0",
+  "package_schema": "sc-site-intelligence-spatial-research-package/1.0",
+  "targets": [
+    {
+      "target_id": "workspace",
+      "label": "Workspace",
+      "packet_type": "spatial-research-project",
+      "mode": "preview-only",
+      "description": "Portable project state, evidence references, analysis state and resumable spatial context."
+    },
+    {
+      "target_id": "knowledge-library",
+      "label": "Knowledge Library",
+      "packet_type": "spatial-evidence-source-bundle",
+      "mode": "preview-only",
+      "description": "Evidence/source bundle suitable for preservation, cataloging and research-package composition."
+    },
+    {
+      "target_id": "research-librarian",
+      "label": "Research Librarian",
+      "packet_type": "spatial-research-guidance-context",
+      "mode": "preview-only",
+      "description": "Research question, scope, evidence lineage, source authority context and explicit evidence gaps."
+    },
+    {
+      "target_id": "research-lab",
+      "label": "Research Lab",
+      "packet_type": "reproducible-spatial-study",
+      "mode": "preview-only",
+      "description": "Reproducible study inputs, query/graph references, hypotheses and method context."
+    },
+    {
+      "target_id": "workbench",
+      "label": "Workbench",
+      "packet_type": "spatial-computational-package",
+      "mode": "preview-only",
+      "description": "Computational inputs, geometry/time scope, evidence digests and analysis references for calculation/modeling."
+    },
+    {
+      "target_id": "decision-studio",
+      "label": "Decision Studio",
+      "packet_type": "spatial-decision-context",
+      "mode": "preview-only",
+      "description": "Decision context with exposures, scenarios, assumptions, uncertainties and supporting evidence references."
+    },
+    {
+      "target_id": "platform-core",
+      "label": "Platform Core",
+      "packet_type": "portable-spatial-research-object",
+      "mode": "preview-only",
+      "description": "Canonical object/provenance contract for cross-product identity and lineage exchange."
+    }
+  ],
+  "boundaries": [
+    "handoffs-are-provider-neutral-preview-packets",
+    "no-target-delivery-is-attempted-by-site-intelligence",
+    "source-evidence-is-referenced-by-content-digest-and-not-mutated",
+    "derived-analysis-remains-distinct-from-source-observation",
+    "potential-exposure-is-not-confirmed-impact-or-causality",
+    "authority-quality-and-user-trust-remain-separate",
+    "credentials-secrets-and-private-session-material-are-rejected",
+    "downstream-products-must-validate-packets-before-import"
+  ]
+}

@@ -1,4 +1,4 @@
-APP_VERSION = "4.50.0"
+APP_VERSION = "4.51.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Global Source Federation & Regional Authority Registry"
+RELEASE_NAME = "Spatial Research Object & Cross-Product Handoffs"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION
