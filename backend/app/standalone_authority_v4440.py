@@ -52,7 +52,7 @@ NAVIGATION: tuple[NavigationItem, ...] = (
     NavigationItem("federation", "Federation", "Standards and exchange", "connectors-federation", "platform", 270),
     NavigationItem("governance", "Governance", "Security and production", "law-governance", "platform", 280),
     NavigationItem("country", "Country", "Place-based evidence", "human-development", "intelligence", 290),
-    NavigationItem("events", "Events", "Live event intelligence", "live-intelligence", "live", 300),
+    NavigationItem("events", "Events", "Live geospatial fusion", "live-geospatial-fusion", "live", 300),
     NavigationItem("compare", "Compare", "Two-country context", "analytics-modeling", "analysis", 310),
     NavigationItem("thematic", "Themes", "Focused intelligence", "analytics-modeling", "analysis", 320),
     NavigationItem("briefing", "Briefing", "Briefs and exports", "research-evidence", "research", 330),
@@ -144,6 +144,7 @@ def build_bootstrap(routes: Iterable[object], surface: str | None = None) -> dic
             "spatial_evidence_registry": "/public/spatial-evidence/registry",
             "spatiotemporal_registry": "/public/spatiotemporal/registry",
             "spatial_graph_registry": "/public/spatial-graph/registry",
+            "live_geospatial_registry": "/public/live-geospatial/registry",
         },
         "assets": {
             "manifest": "/app/manifest.webmanifest",

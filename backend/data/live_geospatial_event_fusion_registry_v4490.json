@@ -1,0 +1,67 @@
+{
+  "schema": "sc-site-intelligence-live-geospatial-event-fusion-registry/1.0",
+  "version": "4.49.0",
+  "registry_version": "1.0.0",
+  "title": "Live Geospatial Event Fusion Registry",
+  "event_object_schema": "sc-site-intelligence-live-geospatial-event/1.0",
+  "event_cluster_schema": "sc-site-intelligence-live-event-cluster/1.0",
+  "fusion_result_schema": "sc-site-intelligence-live-geospatial-fusion-result/1.0",
+  "spatial_semantics": "bounding-box-first",
+  "temporal_semantics": "explicit-interval-or-observation-time",
+  "identity_semantics": "strict-deterministic-no-fuzzy-merge",
+  "lifecycle_states": ["detected", "active", "updated", "resolved", "retracted"],
+  "lifecycle_transitions": {
+    "detected": ["active", "updated", "resolved", "retracted"],
+    "active": ["updated", "resolved", "retracted"],
+    "updated": ["active", "updated", "resolved", "retracted"],
+    "resolved": ["updated", "retracted"],
+    "retracted": []
+  },
+  "severity_levels": [
+    {"level": "unknown", "rank": 0},
+    {"level": "informational", "rank": 1},
+    {"level": "minor", "rank": 2},
+    {"level": "moderate", "rank": 3},
+    {"level": "severe", "rank": 4},
+    {"level": "extreme", "rank": 5}
+  ],
+  "event_types": [
+    "earthquake", "volcano", "flood", "drought", "wildfire", "storm", "weather-alert",
+    "infrastructure-incident", "power-outage", "water-service-disruption", "transport-disruption",
+    "maritime-event", "humanitarian-event", "security-event", "environmental-event", "platform-event", "other"
+  ],
+  "source_adapters": [
+    {"feed_id": "usgs_earthquakes", "adapter": "usgs-geojson", "geospatial": true},
+    {"feed_id": "nasa_eonet", "adapter": "nasa-eonet-v3", "geospatial": true},
+    {"feed_id": "noaa_nws", "adapter": "noaa-nws-geojson", "geospatial": true},
+    {"feed_id": "reliefweb", "adapter": "generic-with-required-geometry", "geospatial": "conditional"},
+    {"feed_id": "platform_status", "adapter": "generic-with-required-geometry", "geospatial": "conditional"}
+  ],
+  "fusion_relationships": [
+    {
+      "relationship_type": "event-intersects",
+      "meaning": "Event bounding box intersects an evidence object or graph-node bounding box.",
+      "impact_confirmed": false
+    },
+    {
+      "relationship_type": "potentially-exposed-to-event",
+      "meaning": "An evidence object or graph node spatially intersects an event and may be exposed; impact is not established.",
+      "impact_confirmed": false
+    },
+    {
+      "relationship_type": "temporally-overlaps-event",
+      "meaning": "The declared validity/observation intervals overlap.",
+      "impact_confirmed": false
+    }
+  ],
+  "principles": [
+    "source-event-identity-is-preserved",
+    "cross-source-reconciliation-is-strict-and-deterministic",
+    "no-fuzzy-event-merge-without-an-explicit-correlation-key",
+    "spatial-intersection-does-not-establish-impact-or-causality",
+    "confirmed-impact-must-come-from-explicit-source-evidence",
+    "event-fusion-does-not-mutate-source-evidence-or-infrastructure-graphs",
+    "all-derived-results-preserve-source-content-digests",
+    "freshness-is-evaluated-against-an-explicit-analysis-time"
+  ]
+}

@@ -1,4 +1,4 @@
-APP_VERSION = "4.48.0"
+APP_VERSION = "4.49.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Spatial Relationship & Infrastructure Graph"
+RELEASE_NAME = "Live Geospatial Event Fusion"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

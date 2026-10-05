@@ -1,5 +1,16 @@
 # Changelog
 
+## 4.49.0 — Live Geospatial Event Fusion
+
+- Added canonical `sc-site-intelligence-live-geospatial-event/1.0` objects backed by v4.46 spatial evidence.
+- Added source adapters for USGS earthquake GeoJSON, NASA EONET v3, and geospatial NOAA/NWS alerts, plus bounded generic live-source normalization.
+- Added strict deterministic cross-source reconciliation using explicit correlation keys and exact content fingerprints; fuzzy merging is prohibited.
+- Added lifecycle transitions, source-preserving severity, explicit freshness evaluation, live event spatial/time query, event-to-layer fusion, and event-to-graph fusion.
+- Added provenance-preserving live situational snapshots without mutating source evidence or infrastructure graphs.
+- Added 13 modular `/public/live-geospatial/*` endpoints and a first-class `live-geospatial-fusion` capability family.
+- Advanced the corrected Contabo promotion contract to 31 release-bound static files.
+- Preserved the WordPress thin-shell role and 72-shortcode compatibility ceiling.
+
 ## 4.48.0 — Spatial Relationship & Infrastructure Graph
 
 - Added a deterministic graph over canonical v4.46 spatial evidence objects.
@@ -1729,4 +1740,12 @@
 - Replaces the fixed 42-second desktop / 36-second mobile Live Intelligence ticker cycles with measured distance-based pacing.
 - Targets approximately 28 px/s on desktop and 23 px/s on mobile with bounded duration safeguards.
 - Preserves the v4.40.0.2 homepage capability contract, integrated governed ticker, pause/focus/reduced-motion behavior, signal content, and Energy Systems consumer behavior.
-- Adds ticker pace diagnostics to the runtime DOM for production acceptance.
+- Adds ticker pace diagnostics to the runtime DOM for production acceptance.## 4.49.0 — Live Geospatial Event Fusion
+
+- Added canonical live geospatial event objects and source-adapter normalization.
+- Added deterministic cross-source event reconciliation without fuzzy merging.
+- Added event lifecycle, severity, freshness, spatial/temporal query, layer fusion, graph fusion, and situational snapshots.
+- Preserved v4.46 evidence, v4.47 spatiotemporal, and v4.48 graph contracts.
+- Promoted the live geospatial fusion registry through the corrected Contabo static-policy deployment path.
+
+
