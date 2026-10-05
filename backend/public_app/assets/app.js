@@ -25,9 +25,9 @@
     }
     throw last;
   }
-  const APP_VERSION="4.44.0";
-  const RELEASE_LINEAGE="v4.44.0";
-  const SCIENCE_CONTROLLER_SRC="/app/assets/science-v240.js?v=4.44.0";
+  const APP_VERSION="4.45.0";
+  const RELEASE_LINEAGE="v4.45.0";
+  const SCIENCE_CONTROLLER_SRC="/app/assets/science-v240.js?v=4.45.0";
   const STANDALONE_BOOTSTRAP_ENDPOINT="/public/app/bootstrap";
   const STANDALONE_HANDSHAKE_ENDPOINT="/public/app/runtime-handshake";
   let standaloneBootstrap=null;
@@ -48,8 +48,9 @@
     standaloneBootstrap=bootstrap;
     applyRegistryNavigation(bootstrap.navigation);
     const app=qs("#app");if(app){app.dataset.applicationAuthority=bootstrap.authority?.backend||"fastapi";app.dataset.runtimeMode=bootstrap.runtime?.mode||surface;app.dataset.capabilityRegistryVersion=bootstrap.capability_registry?.version||""}
-    window.SCSIStandaloneAuthorityV4440={version:APP_VERSION,contractVersion:bootstrap.contract_version,bootstrap:()=>standaloneBootstrap,refresh:establishStandaloneAuthority,session:()=>standaloneBootstrap?.session||null,navigation:()=>standaloneBootstrap?.navigation||null};
-    setAuthorityState("ready",surface==="wordpress-embed"?"Standalone runtime verified · WordPress integration mode":"Canonical standalone runtime verified · capability registry online");
+    window.SCSIStandaloneAuthorityV4450={version:APP_VERSION,contractVersion:bootstrap.contract_version,bootstrap:()=>standaloneBootstrap,refresh:establishStandaloneAuthority,session:()=>standaloneBootstrap?.session||null,navigation:()=>standaloneBootstrap?.navigation||null};
+    if(surface==="wordpress-embed")window.parent?.postMessage({type:"scsi-wordpress-bridge-ready",version:APP_VERSION,bridgeVersion:"1.0.0",runtimeMode:bootstrap.runtime?.mode},"*");
+    setAuthorityState("ready",surface==="wordpress-embed"?"Standalone runtime verified · WordPress thin-shell bridge":"Canonical standalone runtime verified · capability registry online");
     window.dispatchEvent(new CustomEvent("scsi:standalone-authority-ready",{detail:{version:APP_VERSION,mode:bootstrap.runtime?.mode,routeCount:bootstrap.capability_registry?.route_count}}));
     return bootstrap;
   }

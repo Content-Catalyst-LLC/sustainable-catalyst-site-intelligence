@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
- * Description: Sustainable Catalyst Site Intelligence v4.44.0 with Standalone Site Intelligence Application Authority.
- * Version: 4.44.0
+ * Description: Sustainable Catalyst Site Intelligence v4.45.0 with WordPress Thin-Shell & Embed Bridge.
+ * Version: 4.45.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,8 +13,10 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '4.44.0';
-    const RELEASE_ID = 'site-intelligence-v4.44.0';
+    const VERSION = '4.45.0';
+    const RELEASE_ID = 'site-intelligence-v4.45.0';
+    const BRIDGE_CONTRACT_VERSION = '1.0.0';
+    const WORDPRESS_ROLE = 'thin-shell-and-embed-bridge';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -962,6 +964,39 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function register_rest_routes() {
+        // v4.45.0 thin-shell bridge: WordPress exposes only integration-facing
+        // bootstrap/navigation/compatibility surfaces here. Product feature
+        // authority remains in the FastAPI standalone application.
+        register_rest_route(self::REST_NAMESPACE, '/bridge', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_wordpress_bridge'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/bridge/bootstrap', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_wordpress_bridge_bootstrap'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/bridge/navigation', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_wordpress_bridge_navigation'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/bridge/embed-contract', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_wordpress_embed_contract'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/bridge/auth-handoff', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_wordpress_auth_handoff'],
+            'permission_callback' => '__return_true',
+        ]);
+        register_rest_route(self::REST_NAMESPACE, '/bridge/compatibility', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'rest_wordpress_bridge_compatibility'],
+            'permission_callback' => '__return_true',
+        ]);
         register_rest_route(self::REST_NAMESPACE, '/live-intelligence', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'rest_live_intelligence'],
@@ -2092,6 +2127,38 @@ final class SC_Site_Intelligence_Plugin {
             return 'Site Intelligence backend or site proxy returned a gateway error. Try the direct Render endpoint, then redeploy or retry the WordPress proxy after the origin is healthy.';
         }
         return sanitize_text_field(wp_trim_words(wp_strip_all_tags($raw_body), 24, '…'));
+    }
+
+    public function rest_wordpress_bridge() {
+        $result = $this->backend_request('public/integrations/wordpress/bridge');
+        if (is_wp_error($result)) { return $result; }
+        $result['wordpress_host'] = [
+            'plugin_version' => self::VERSION,
+            'release_id' => self::RELEASE_ID,
+            'role' => self::WORDPRESS_ROLE,
+            'bridge_contract_version' => self::BRIDGE_CONTRACT_VERSION,
+        ];
+        return $result;
+    }
+
+    public function rest_wordpress_bridge_bootstrap() {
+        return $this->backend_request('public/app/bootstrap?surface=wordpress-embed');
+    }
+
+    public function rest_wordpress_bridge_navigation() {
+        return $this->backend_request('public/app/navigation');
+    }
+
+    public function rest_wordpress_embed_contract() {
+        return $this->backend_request('public/integrations/wordpress/embed-contract');
+    }
+
+    public function rest_wordpress_auth_handoff() {
+        return $this->backend_request('public/integrations/wordpress/auth-handoff');
+    }
+
+    public function rest_wordpress_bridge_compatibility() {
+        return $this->backend_request('public/integrations/wordpress/compatibility');
     }
 
     private function backend_request($endpoint, $method = 'GET', $body = null) {
@@ -6643,7 +6710,10 @@ final class SC_Site_Intelligence_Plugin {
     private function app_embed_url($backend, $query = []) {
         $query = is_array($query) ? $query : [];
         $query['release'] = self::VERSION;
-        $query['embed'] = 'wordpress';
+        $query['embed'] = 'wordpress'; // backwards-compatible marker
+        $query['surface'] = 'wordpress-embed';
+        $query['bridge'] = 'wordpress';
+        $query['bridge_version'] = self::BRIDGE_CONTRACT_VERSION;
         return esc_url(add_query_arg($query, rtrim((string) $backend, '/') . '/app/'));
     }
 
@@ -6667,7 +6737,7 @@ final class SC_Site_Intelligence_Plugin {
 
         $frame_id = 'scsi-app-' . wp_generate_uuid4();
         return sprintf(
-            '<div class="scsi-standalone-app scsi-fixed-application-viewport" data-scsi-fixed-app data-scsi-embed-mode="fixed" data-scsi-fixed-height="%3$d" data-scsi-release="%5$s" style="--scsi-fixed-app-height:%3$dpx"><div class="scsi-app-loading" role="status" aria-live="polite">Opening Site Intelligence…</div><iframe id="%4$s" src="%1$s" title="%2$s" loading="eager" fetchpriority="high" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen; clipboard-write" scrolling="yes" data-scsi-embed-frame data-scsi-eager-app="1" data-scsi-embed-mode="fixed" data-scsi-fixed-height="%3$d" data-scsi-min-height="%3$d" data-scsi-mobile-min-height="%3$d" data-scsi-max-height="%3$d" style="width:100%%;height:%3$dpx;min-height:%3$dpx;max-height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a"></iframe><p class="scsi-embed-fallback"><a href="%1$s" target="_blank" rel="noopener noreferrer">Open Site Intelligence in a new tab</a></p></div>',
+            '<div class="scsi-standalone-app scsi-fixed-application-viewport" data-scsi-fixed-app data-scsi-embed-mode="fixed" data-scsi-fixed-height="%3$d" data-scsi-release="%5$s" data-scsi-wordpress-role="thin-shell-and-embed-bridge" data-scsi-bridge-version="1.0.0" style="--scsi-fixed-app-height:%3$dpx"><div class="scsi-app-loading" role="status" aria-live="polite">Opening Site Intelligence…</div><iframe id="%4$s" src="%1$s" title="%2$s" loading="eager" fetchpriority="high" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen; clipboard-write" scrolling="yes" data-scsi-embed-frame data-scsi-eager-app="1" data-scsi-embed-mode="fixed" data-scsi-fixed-height="%3$d" data-scsi-min-height="%3$d" data-scsi-mobile-min-height="%3$d" data-scsi-max-height="%3$d" style="width:100%%;height:%3$dpx;min-height:%3$dpx;max-height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a"></iframe><p class="scsi-embed-fallback"><a href="%1$s" target="_blank" rel="noopener noreferrer">Open Site Intelligence in a new tab</a></p></div>',
             $src,
             $title,
             $height,
@@ -7609,12 +7679,17 @@ if (!function_exists('scsi_site_intelligence_embed_shortcode_v2110')) {
         $theme = in_array($atts['theme'], ['system','light','dark'], true) ? $atts['theme'] : 'system';
         $chrome = in_array($atts['chrome'], ['full','compact','none'], true) ? $atts['chrome'] : 'compact';
         $height = max(420, min(2200, intval($atts['height'])));
-        $backend = function_exists('scsi_backend_url') ? scsi_backend_url() : get_option('scsi_backend_url', '');
+        $options = SC_Site_Intelligence_Plugin::options();
+        $backend = rtrim((string) ($options['backend_url'] ?? ''), '/');
         if (!$backend) return '<div class="scsi-notice">Site Intelligence backend is not configured.</div>';
         $query = ['view' => $view, 'embed' => '1', 'theme' => $theme, 'chrome' => $chrome];
         if (!empty($atts['institution'])) $query['institution'] = sanitize_text_field($atts['institution']);
-        $src = $this->app_embed_url($backend, $query);
-        return '<div class="scsi-embed scsi-generic-public-embed"><iframe title="Sustainable Catalyst Site Intelligence — ' . esc_attr($view) . '" src="' . $src . '" style="width:100%;height:' . esc_attr($height) . 'px;border:0" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="clipboard-write; fullscreen"></iframe></div>';
+        $query['release'] = SC_Site_Intelligence_Plugin::VERSION;
+        $query['surface'] = 'wordpress-embed';
+        $query['bridge'] = 'wordpress';
+        $query['bridge_version'] = SC_Site_Intelligence_Plugin::BRIDGE_CONTRACT_VERSION;
+        $src = esc_url(add_query_arg($query, rtrim((string) $backend, '/') . '/app/'));
+        return '<div class="scsi-embed scsi-generic-public-embed" data-scsi-wordpress-role="thin-shell-and-embed-bridge" data-scsi-bridge-version="' . esc_attr(SC_Site_Intelligence_Plugin::BRIDGE_CONTRACT_VERSION) . '"><iframe title="Sustainable Catalyst Site Intelligence — ' . esc_attr($view) . '" src="' . $src . '" style="width:100%;height:' . esc_attr($height) . 'px;border:0" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="clipboard-write; fullscreen"></iframe></div>';
     }
 }
 add_shortcode('sc_site_intelligence_embed', 'scsi_site_intelligence_embed_shortcode_v2110');

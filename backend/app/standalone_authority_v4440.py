@@ -6,7 +6,7 @@ from typing import Iterable
 from .route_registry_v4430 import capability_manifest
 from .version import APP_VERSION, RELEASE_NAME
 
-STANDALONE_CONTRACT_VERSION = "1.0.0"
+STANDALONE_CONTRACT_VERSION = "1.1.0"
 SESSION_CONTRACT_VERSION = "1.0.0"
 CANONICAL_APP_PATH = "/app/"
 CACHE_GENERATION = f"scsi-v{APP_VERSION}"
@@ -122,7 +122,7 @@ def build_bootstrap(routes: Iterable[object], surface: str | None = None) -> dic
             "frontend": "standalone-web-app",
             "canonical_app_path": CANONICAL_APP_PATH,
             "canonical": True,
-            "wordpress_role": "optional-integration-and-publication-surface",
+            "wordpress_role": "thin-shell-and-embed-bridge",
         },
         "runtime": {
             "mode": mode,

@@ -3706,18 +3706,18 @@
       if (record.wrapper) record.wrapper.style.setProperty('--scsi-embed-height', height + 'px');
     }
     window.addEventListener('message', function (event) {
-      if (!event.data || !['scsi-height','scsi-bootstrap-ready','scsi-shell-ready'].includes(event.data.type)) return;
+      if (!event.data || !['scsi-height','scsi-bootstrap-ready','scsi-shell-ready','scsi-wordpress-bridge-ready'].includes(event.data.type)) return;
       records.forEach(function (record) {
         if (!record.origin || event.origin !== record.origin) return;
         if (event.source !== record.frame.contentWindow) return;
-        if (event.data.type === 'scsi-bootstrap-ready' || event.data.type === 'scsi-shell-ready') { record.loaded=true; if(record.wrapper)record.wrapper.classList.add('is-loaded'); return; }
+        if (event.data.type === 'scsi-bootstrap-ready' || event.data.type === 'scsi-shell-ready' || event.data.type === 'scsi-wordpress-bridge-ready') { record.loaded=true; if(record.wrapper)record.wrapper.classList.add('is-loaded'); return; }
         var expectedVersion=String(cfg.version||'');
         var observedVersion=String(event.data.version||'');
         if (expectedVersion && observedVersion && observedVersion !== expectedVersion) {
           if (record.wrapper) record.wrapper.classList.add('scsi-release-mismatch');
           if (!record.reloadedForVersion) {
             record.reloadedForVersion=true;
-            try { var next=new URL(record.frame.src); next.searchParams.set('release',expectedVersion); next.searchParams.set('embed','wordpress'); next.searchParams.set('cache_bust',String(Date.now())); record.frame.src=next.toString(); } catch (error) {}
+            try { var next=new URL(record.frame.src); next.searchParams.set('release',expectedVersion); next.searchParams.set('embed','wordpress'); next.searchParams.set('surface','wordpress-embed'); next.searchParams.set('bridge','wordpress'); next.searchParams.set('bridge_version','1.0.0'); next.searchParams.set('cache_bust',String(Date.now())); record.frame.src=next.toString(); } catch (error) {}
           }
           return;
         }

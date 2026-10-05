@@ -1,4 +1,4 @@
-APP_VERSION = "4.44.0"
+APP_VERSION = "4.45.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Standalone Site Intelligence Application Authority"
+RELEASE_NAME = "WordPress Thin-Shell & Embed Bridge"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

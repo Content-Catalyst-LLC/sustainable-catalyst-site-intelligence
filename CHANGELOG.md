@@ -1,3 +1,14 @@
+# v4.45.0 — WordPress Thin-Shell & Embed Bridge
+
+- Declares FastAPI and the standalone `/app/` runtime as Site Intelligence product authority.
+- Adds a dedicated `wordpress-integration` capability family and four modular FastAPI integration contracts.
+- Narrows WordPress to navigation entry points, embed hosting, release compatibility, optional auth handoff, and publication shell responsibilities.
+- Adds WordPress REST bridge/bootstrap/navigation/embed/compatibility surfaces that proxy canonical FastAPI contracts.
+- Adds versioned WordPress embed query markers and an origin-checked browser bridge handshake.
+- Repairs the protected `[sc_site_intelligence_embed]` compatibility path so it no longer relies on invalid `$this` context.
+- Preserves the 72-shortcode published compatibility ceiling while prohibiting new feature-specific WordPress shortcodes.
+- Retains the v4.43+ Contabo deployment model that preserves dynamic production data while replacing 27 release-bound static policies.
+
 # v4.44.0 — Standalone Site Intelligence Application Authority
 
 - Promotes the existing FastAPI-served `/app/` surface to the canonical Site Intelligence application authority.

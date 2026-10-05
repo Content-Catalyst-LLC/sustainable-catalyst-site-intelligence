@@ -726,7 +726,7 @@ html,body,#app,#main{max-width:100%;overflow-x:hidden}
 .evidence-drawer{max-width:100vw}
 .country-knowledge-panel{margin-top:14px}.knowledge-context-grid,.knowledge-media-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.knowledge-context-card{min-height:0}.knowledge-context-card>span,.country-federation-strip>span{font-size:8px;font-weight:900;letter-spacing:.1em;color:#6fe2ff}.knowledge-context-card p,.knowledge-boundary{color:#8f9aa7;font-size:10px;line-height:1.55}.knowledge-media-grid{grid-template-columns:repeat(4,1fr);margin-top:10px}.knowledge-media-card{overflow:hidden;color:#fff;text-decoration:none}.knowledge-media-card img{width:100%;height:100px;object-fit:cover}.knowledge-media-card span,.knowledge-media-card small{display:block;font-size:9px;padding:4px}.country-federation-strip{display:flex;gap:7px;flex-wrap:wrap;padding:9px;margin-bottom:9px;border:1px solid rgba(111,226,255,.12)}.country-federation-strip b,.country-federation-strip small{font-size:8px;color:#9aa6b2}@media(max-width:760px){.knowledge-context-grid,.knowledge-media-grid{grid-template-columns:1fr}}
 
-/* v4.44.0 standalone application authority */
+/* v4.45.0 standalone application authority */
 .standalone-authority-bar{display:flex;align-items:center;gap:.55rem;padding:.45rem 1rem;border-bottom:1px solid rgba(255,255,255,.08);background:#080b0f;color:#cfd6df;font-size:.72rem;letter-spacing:.03em}
 .standalone-authority-bar strong{color:#fff;font-size:.72rem;text-transform:uppercase;letter-spacing:.08em}
 .standalone-authority-bar .authority-dot{width:.48rem;height:.48rem;border-radius:50%;background:#d6a400;box-shadow:0 0 .6rem rgba(214,164,0,.35)}
