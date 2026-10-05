@@ -1,0 +1,85 @@
+{
+  "schema": "sc-site-intelligence-predictive-spatial-consumer-registry/1.0",
+  "version": "4.52.0",
+  "registry_version": "1.0.0",
+  "title": "Predictive Spatial Intelligence Consumer Registry",
+  "providers": [
+    {
+      "provider_id": "workspace",
+      "label": "Sustainable Catalyst Workspace",
+      "authority": "compute-and-model-execution",
+      "accepted_artifacts": [
+        "forecast",
+        "prediction",
+        "probability",
+        "uncertainty",
+        "calibration",
+        "model-evaluation"
+      ],
+      "network_fetch_by_site_intelligence": false,
+      "notes": "Workspace remains execution authority; Site Intelligence consumes exported predictive artifacts and receipts."
+    },
+    {
+      "provider_id": "platform-core",
+      "label": "Sustainable Catalyst Platform Core",
+      "authority": "shared-object-and-provenance-contracts",
+      "accepted_artifacts": [
+        "predictive-model-reference",
+        "forecast-provenance",
+        "uncertainty-provenance",
+        "scenario-reference"
+      ],
+      "network_fetch_by_site_intelligence": false,
+      "notes": "Core provides shared identity and provenance contracts rather than Site Intelligence training models."
+    },
+    {
+      "provider_id": "site-intelligence-model-governance",
+      "label": "Site Intelligence Model & Forecast Governance",
+      "authority": "legacy-published-forecast-catalog",
+      "accepted_artifacts": [
+        "model-card",
+        "forecast-record",
+        "forecast-evaluation",
+        "calibration-evidence"
+      ],
+      "network_fetch_by_site_intelligence": false,
+      "notes": "Existing /public/models, /public/forecasts and /public/forecast-evaluations remain available."
+    },
+    {
+      "provider_id": "external-published",
+      "label": "External Published Predictive Source",
+      "authority": "source-published-model-output",
+      "accepted_artifacts": [
+        "published-forecast",
+        "published-probability",
+        "published-scenario"
+      ],
+      "network_fetch_by_site_intelligence": false,
+      "notes": "Source identity, model/version, validity, uncertainty and limitations must be explicit."
+    }
+  ],
+  "boundaries": [
+    "prediction-is-derived-model-output-not-observation",
+    "probability-is-not-truth",
+    "site-intelligence-is-a-consumer-not-model-training-authority",
+    "no-automatic-model-selection-or-retraining",
+    "spatial-overlap-is-not-confirmed-impact-or-causality",
+    "calibration-and-uncertainty-remain-explicit",
+    "source-evidence-digests-are-preserved",
+    "research-objects-are-linked-not-mutated",
+    "credentials-secrets-and-private-session-material-are-rejected"
+  ],
+  "endpoints": {
+    "schema": "/public/predictive-spatial/schema",
+    "providers": "/public/predictive-spatial/providers",
+    "normalize": "/public/predictive-spatial/normalize",
+    "validate": "/public/predictive-spatial/validate",
+    "bind": "/public/predictive-spatial/bind",
+    "query": "/public/predictive-spatial/query",
+    "compare": "/public/predictive-spatial/compare",
+    "scenario": "/public/predictive-spatial/scenario",
+    "calibration": "/public/predictive-spatial/calibration",
+    "research_context": "/public/predictive-spatial/research-context",
+    "compatibility": "/public/predictive-spatial/compatibility"
+  }
+}

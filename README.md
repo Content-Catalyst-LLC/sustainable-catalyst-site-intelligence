@@ -2,8 +2,16 @@
 
 Sustainable Catalyst Site Intelligence is the geospatial, country, Earth-observation, ocean, space, infrastructure, environmental, and live public-intelligence layer of the Sustainable Catalyst platform.
 
-**Current release:** v4.51.0 — Spatial Research Object & Cross-Product Handoffs
+**Current release:** v4.52.0 — Predictive Spatial Intelligence Consumer
 
+
+
+### v4.52 Predictive Spatial Intelligence Consumer
+
+- Consumes provider-neutral forecast, probability, uncertainty, calibration, and scenario artifacts from Workspace/Core, existing Site Intelligence model governance, or explicit published external sources.
+- Binds predictive artifacts to the canonical v4.46 spatial layer registry without converting model output into observation truth.
+- Adds deterministic query, comparison, scenario, calibration-context, spatial binding, and v4.51 research-context contracts.
+- Site Intelligence does not train, retrain, automatically select, or rank predictive models in this release.
 
 ### v4.51 Spatial Research Object & Cross-Product Handoffs
 

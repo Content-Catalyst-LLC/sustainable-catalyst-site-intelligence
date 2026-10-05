@@ -1,3 +1,11 @@
+## 4.52.0 — Predictive Spatial Intelligence Consumer
+
+- Added canonical predictive spatial intelligence object and provider-neutral consumer registry.
+- Added spatial binding, query, comparison, scenario, calibration, and research-context operations.
+- Preserved model-conditional semantics: predictions are not observations, probabilities are not truth, and spatial overlap is not confirmed impact.
+- Added first-class Workspace/Core consumption boundaries without model training, retraining, or automatic model selection.
+- Advanced capability registry to 1.9.0 and Contabo release-bound promotion to 34 files.
+
 ## 4.51.0 — Spatial Research Object & Cross-Product Handoffs
 
 - Adds canonical content-addressed spatial research objects and manifests.

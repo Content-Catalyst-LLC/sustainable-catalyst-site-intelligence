@@ -59,6 +59,7 @@ NAVIGATION: tuple[NavigationItem, ...] = (
     NavigationItem("sources", "Sources", "Global federation & regional authority", "global-source-federation", "research", 340),
     NavigationItem("saved", "Saved", "Local research paths", "standalone-application", "research", 350),
     NavigationItem("research-object", "Research object", "Portable spatial research & handoffs", "spatial-research-handoffs", "research", 360),
+    NavigationItem("predictive-spatial", "Predictive", "Forecasts, probability & uncertainty", "predictive-spatial-intelligence", "analysis", 370),
 )
 
 
@@ -148,6 +149,7 @@ def build_bootstrap(routes: Iterable[object], surface: str | None = None) -> dic
             "live_geospatial_registry": "/public/live-geospatial/registry",
             "source_federation_registry": "/public/source-federation/registry",
             "spatial_research_registry": "/public/spatial-research/registry",
+            "predictive_spatial_registry": "/public/predictive-spatial/registry",
         },
         "assets": {
             "manifest": "/app/manifest.webmanifest",

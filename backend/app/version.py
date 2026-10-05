@@ -1,4 +1,4 @@
-APP_VERSION = "4.51.0"
+APP_VERSION = "4.52.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Spatial Research Object & Cross-Product Handoffs"
+RELEASE_NAME = "Predictive Spatial Intelligence Consumer"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION
