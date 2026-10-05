@@ -1,3 +1,13 @@
+# v4.43.0 — Modular FastAPI Route & Capability Registry
+
+- Introduces the first explicit FastAPI router package under `backend/app/routers/`.
+- Extracts system/runtime and data-truth/provenance route families from the monolithic application module without changing public URLs.
+- Adds `/public/capabilities`, `/public/capabilities/{capability_id}`, `/public/routes/registry`, and `/public/routes/summary`.
+- Inventories the complete FastAPI API surface with capability ownership, source module, HTTP methods, and modularization state.
+- Preserves the 68 published + 4 protected WordPress shortcode containment contract.
+- Fixes Contabo deployment semantics so dynamic production data remains preserved while release-bound static policies are advanced with the release.
+- Keeps standalone `/app/`, v4.41 spatial/energy contracts, and cross-product public APIs backward compatible.
+
 # v4.42.1 — Release Identity, Static Policy & Certification Reconciliation
 
 - Reconciles the canonical Python backend, WordPress plugin, README, standalone runtime, and deployment manifests on v4.42.1.

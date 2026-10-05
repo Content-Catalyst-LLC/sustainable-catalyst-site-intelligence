@@ -1,4 +1,4 @@
-APP_VERSION = "4.42.1"
+APP_VERSION = "4.43.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Release Identity, Static Policy & Certification Reconciliation"
+RELEASE_NAME = "Modular FastAPI Route & Capability Registry"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

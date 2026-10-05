@@ -1,8 +1,3 @@
 -r requirements.txt
-# FastAPI/Starlette TestClient dependency used only for local and CI validation.
-# Starlette 0.50 uses HTTPX; later Starlette releases use the Pydantic-maintained HTTPX2 package.
-httpx>=0.27,<0.29
-httpx2>=2.7,<2.8
-
-# Complete production-shell browser gate. Uses installed Chrome/Chromium; no bundled browser download required.
-playwright>=1.55,<2.0
+pytest>=8.4,<9
+httpx>=0.28,<0.29

@@ -2,9 +2,14 @@
 
 Sustainable Catalyst Site Intelligence is the geospatial, country, Earth-observation, ocean, space, infrastructure, environmental, and live public-intelligence layer of the Sustainable Catalyst platform.
 
-**Current release:** v4.42.1 — Release Identity, Static Policy & Certification Reconciliation
+**Current release:** v4.43.0 — Modular FastAPI Route & Capability Registry
 
 ## Architecture
+
+### v4.43 modular route architecture
+
+Site Intelligence v4.43.0 begins the staged decomposition of the FastAPI application. Foundational system/runtime routes and data-truth/provenance routes now live in explicit `APIRouter` modules under `backend/app/routers/`. The machine-readable capability registry inventories the complete API surface, reports router ownership, and exposes migration state without changing existing public URLs. Remaining legacy routes stay compatible in `main.py` and can be moved family-by-family in later releases.
+
 
 Site Intelligence combines source-aware geospatial evidence, country intelligence, environmental observation, infrastructure context, and public-facing analytical workspaces while preserving explicit source and evidence boundaries.
 
