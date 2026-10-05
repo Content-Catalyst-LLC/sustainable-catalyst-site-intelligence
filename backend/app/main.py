@@ -14,7 +14,7 @@ from fastapi.responses import PlainTextResponse, FileResponse, Response, HTMLRes
 
 from .config import Settings, get_settings
 from .version import APP_VERSION
-from .routers import capabilities_router, data_truth_router, standalone_router, system_router, wordpress_bridge_router, spatial_evidence_router, spatiotemporal_router, spatial_graph_router, live_geospatial_router
+from .routers import capabilities_router, data_truth_router, standalone_router, system_router, wordpress_bridge_router, spatial_evidence_router, spatiotemporal_router, spatial_graph_router, live_geospatial_router, source_federation_router
 from .build_info import public_build_info as build_public_build_info, public_deployment_status as build_public_deployment_status
 from .deployment_gate_v3226 import build_release_gate
 from .deployment_receipt_v3226 import public_deployment_receipt as build_public_deployment_receipt
@@ -1015,6 +1015,7 @@ app.include_router(spatial_evidence_router)
 app.include_router(spatiotemporal_router)
 app.include_router(spatial_graph_router)
 app.include_router(live_geospatial_router)
+app.include_router(source_federation_router)
 
 
 @app.get("/public/browser-reliability")

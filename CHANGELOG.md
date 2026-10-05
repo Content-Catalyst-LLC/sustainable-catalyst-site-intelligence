@@ -1,3 +1,13 @@
+# v4.50.0 — Global Source Federation & Regional Authority Registry
+
+- Adds a first-class global source federation and regional authority registry over existing Site Intelligence connectors and evidence precedence contracts.
+- Adds source identity, authority class, jurisdiction/region scope, domain, language, federation-mode, and quality metadata without collapsing those fields into a single trust score.
+- Adds deterministic source selection that requires semantic compatibility before declared jurisdiction precedence, jurisdiction specificity, authority, freshness, and record status.
+- Keeps caller/user trust preferences as explicit filters that never rewrite source authority, quality, or provenance.
+- Adds country/region authority discovery and preview-only federation plans with no automatic network fetch, import, or remote write.
+- Preserves v4.35 source-precedence semantics, v4.46 spatial evidence, v4.49 live fusion, institutional federation boundaries, and the WordPress thin-shell role.
+- Extends the corrected Contabo deployment contract to promote 32 release-bound static files, including the new v4.50 federation registry.
+
 # Changelog
 
 ## 4.49.0 — Live Geospatial Event Fusion

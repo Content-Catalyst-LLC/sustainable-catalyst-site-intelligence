@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
- * Description: Sustainable Catalyst Site Intelligence v4.49.0 with Live Geospatial Event Fusion.
- * Version: 4.49.0
+ * Description: Sustainable Catalyst Site Intelligence v4.50.0 with Global Source Federation & Regional Authority Registry.
+ * Version: 4.50.0
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,8 +13,8 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '4.49.0';
-    const RELEASE_ID = 'site-intelligence-v4.49.0';
+    const VERSION = '4.50.0';
+    const RELEASE_ID = 'site-intelligence-v4.50.0';
     const BRIDGE_CONTRACT_VERSION = '1.0.0';
     const WORDPRESS_ROLE = 'thin-shell-and-embed-bridge';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';

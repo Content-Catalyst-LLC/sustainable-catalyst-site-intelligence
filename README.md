@@ -2,7 +2,12 @@
 
 Sustainable Catalyst Site Intelligence is the geospatial, country, Earth-observation, ocean, space, infrastructure, environmental, and live public-intelligence layer of the Sustainable Catalyst platform.
 
-**Current release:** v4.49.0 — Live Geospatial Event Fusion
+**Current release:** v4.50.0 — Global Source Federation & Regional Authority Registry
+
+
+### v4.50 Global Source Federation
+
+Site Intelligence now exposes a first-class global/regional source authority registry over its existing connector ecosystem. Source identity, jurisdiction scope, authority class, regional eligibility, language, federation mode, quality signals, and deterministic selection are machine-readable, while user trust choices remain separate from source authority and provenance. Federation planning is preview-only and performs no automatic remote fetch, import, or write.
 
 ### v4.49 Live Geospatial Fusion
 
