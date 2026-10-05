@@ -1,3 +1,14 @@
+# Changelog
+
+## 4.48.0 — Spatial Relationship & Infrastructure Graph
+
+- Added a deterministic graph over canonical v4.46 spatial evidence objects.
+- Added explicit infrastructure relationship types with declared directionality and provenance.
+- Added automatic bounding-box spatial relationships using v4.47 semantics without inventing semantic dependencies.
+- Added graph build, query, neighborhood, path, connectivity and critical-node analysis endpoints.
+- Added content-addressed graph, edge, path, neighborhood and analysis results with source evidence digest lineage.
+- Preserved v4.46 spatial evidence, v4.47 spatiotemporal analysis, standalone authority and WordPress thin-shell compatibility.
+
 # v4.47.0 — Spatiotemporal Query & Cross-Layer Analysis Engine
 
 - Added deterministic query plans over canonical v4.46 spatial evidence objects with layer/domain/capability, WGS84 bbox, temporal interval, and property filters.

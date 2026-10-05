@@ -1,0 +1,31 @@
+{
+  "schema": "sc-site-intelligence-spatial-relationship-registry/1.0",
+  "version": "4.48.0",
+  "registry_version": "1.0.0",
+  "title": "Spatial Relationship & Infrastructure Graph Relationship Registry",
+  "spatial_semantics": "bounding-box-first",
+  "relationship_count": 12,
+  "relationships": [
+    {"relationship_type":"spatial-intersects","title":"Spatially Intersects","directed":false,"derivation":"automatic","description":"Source and target WGS84 bounding boxes intersect under v4.47 bounding-box semantics."},
+    {"relationship_type":"co-located-with","title":"Co-located With","directed":false,"derivation":"automatic","description":"Source and target share the same canonical WGS84 bounding box."},
+    {"relationship_type":"connected-to","title":"Connected To","directed":false,"derivation":"explicit","description":"Caller-asserted physical, operational, or logical connectivity."},
+    {"relationship_type":"depends-on","title":"Depends On","directed":true,"derivation":"explicit","description":"Source depends on target for operation, service, material, energy, data, or access."},
+    {"relationship_type":"supplies","title":"Supplies","directed":true,"derivation":"explicit","description":"Source supplies energy, material, water, data, capacity, or another resource to target."},
+    {"relationship_type":"serves","title":"Serves","directed":true,"derivation":"explicit","description":"Source provides a service to target."},
+    {"relationship_type":"upstream-of","title":"Upstream Of","directed":true,"derivation":"explicit","description":"Source is upstream of target in a physical, network, material, energy, or dependency flow."},
+    {"relationship_type":"downstream-of","title":"Downstream Of","directed":true,"derivation":"explicit","description":"Source is downstream of target in a physical, network, material, energy, or dependency flow."},
+    {"relationship_type":"part-of","title":"Part Of","directed":true,"derivation":"explicit","description":"Source is a constituent or component of target."},
+    {"relationship_type":"exposed-to","title":"Exposed To","directed":true,"derivation":"explicit","description":"Source is exposed to a hazard, event, condition, or external influence represented by target."},
+    {"relationship_type":"monitors","title":"Monitors","directed":true,"derivation":"explicit","description":"Source observes, senses, or monitors target."},
+    {"relationship_type":"adjacent-to","title":"Adjacent To","directed":false,"derivation":"explicit","description":"Caller-asserted adjacency where exact topology or distance is supplied externally."}
+  ],
+  "principles": [
+    "nodes-reference-canonical-spatial-evidence",
+    "automatic-edges-use-declared-bounding-box-semantics",
+    "semantic-infrastructure-relationships-are-never-inferred-without-an-explicit-assertion",
+    "edge-provenance-preserves-source-object-digests",
+    "graph-and-query-results-are-deterministic-and-content-addressed",
+    "directionality-is-declared-by-the-relationship-registry",
+    "graph-analysis-does-not-mutate-source-evidence"
+  ]
+}

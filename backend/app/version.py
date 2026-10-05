@@ -1,4 +1,4 @@
-APP_VERSION = "4.47.0"
+APP_VERSION = "4.48.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Spatiotemporal Query & Cross-Layer Analysis Engine"
+RELEASE_NAME = "Spatial Relationship & Infrastructure Graph"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION
