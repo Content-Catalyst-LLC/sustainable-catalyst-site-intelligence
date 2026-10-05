@@ -42,7 +42,7 @@ def public_route_registry(
     return {
         "ok": True,
         "version": APP_VERSION,
-        "registry_version": "1.0.0",
+        "registry_version": "1.1.0",
         "total": total,
         "offset": offset,
         "limit": limit,

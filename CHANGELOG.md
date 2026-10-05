@@ -1,3 +1,15 @@
+# v4.44.0 — Standalone Site Intelligence Application Authority
+
+- Promotes the existing FastAPI-served `/app/` surface to the canonical Site Intelligence application authority.
+- Adds `/public/app/bootstrap`, `/public/app/runtime-handshake`, `/public/app/navigation`, and `/public/app/session-contract`.
+- Moves standalone shell, manifest, service-worker, offline, and deep-link routes into a modular FastAPI router.
+- Drives navigation metadata from the v4.43 capability registry while preserving all existing workspace routes.
+- Establishes exact frontend/backend runtime-version handshaking and explicit standalone vs WordPress-embed runtime modes.
+- Defines browser-local session, URL-state, saved-view, and offline-cache persistence contracts without requiring hosted profiles.
+- Hardens PWA release identity, cache generation, manifest start URL, and standalone runtime status presentation.
+- Retains WordPress as an optional integration and publication surface; no canonical shortcodes are removed.
+- Preserves the corrected Contabo static-policy deployment behavior introduced after the v4.42.1 production repair.
+
 # v4.43.0 — Modular FastAPI Route & Capability Registry
 
 - Introduces the first explicit FastAPI router package under `backend/app/routers/`.

@@ -14,7 +14,7 @@ from fastapi.responses import PlainTextResponse, FileResponse, Response, HTMLRes
 
 from .config import Settings, get_settings
 from .version import APP_VERSION
-from .routers import capabilities_router, data_truth_router, system_router
+from .routers import capabilities_router, data_truth_router, standalone_router, system_router
 from .build_info import public_build_info as build_public_build_info, public_deployment_status as build_public_deployment_status
 from .deployment_gate_v3226 import build_release_gate
 from .deployment_receipt_v3226 import public_deployment_receipt as build_public_deployment_receipt
@@ -958,7 +958,10 @@ async def public_experience_headers(request, call_next):
         if "X-Frame-Options" in response.headers:
             del response.headers["X-Frame-Options"]
     response.headers.setdefault("X-SC-Site-Intelligence-Version", APP_VERSION)
-    if path in {"/health", "/public/build-info", "/public/deployment-status", "/public/deployment-receipt", "/public/release-gate"}:
+    if is_app_surface or path.startswith("/public/app/"):
+        response.headers.setdefault("X-SC-Application-Authority", "fastapi")
+        response.headers.setdefault("X-SC-Canonical-App", "/app/")
+    if path in {"/health", "/public/build-info", "/public/deployment-status", "/public/deployment-receipt", "/public/release-gate", "/public/app/bootstrap", "/public/app/runtime-handshake", "/public/app/navigation", "/public/app/session-contract"}:
         response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         response.headers["Pragma"] = "no-cache"
         response.headers["Expires"] = "0"
@@ -1001,9 +1004,9 @@ async def public_experience_headers(request, call_next):
     return response
 
 
-# v4.43.0: foundational route families are registered through modular APIRouters.
-# Remaining legacy route families stay in this module and are inventoried by the
-# capability registry for staged extraction in subsequent releases.
+# v4.44.0: v4.43 foundational route families remain modularized and the
+# standalone application authority is now registered after the static asset mount.
+# Remaining legacy route families stay inventoried for staged extraction.
 app.include_router(system_router)
 app.include_router(data_truth_router)
 app.include_router(capabilities_router)
@@ -11761,28 +11764,14 @@ def admin_connected_intelligence_reindex_preview_endpoint(settings: Settings = D
     return {"ok": True, "version": APP_VERSION, "preview": True, "write_performed": False, "record_count": len(center.records()), "diagnostics": center.diagnostics()}
 
 # Site Intelligence standalone public application.
+# v4.44.0: FastAPI is authoritative for the canonical /app/ surface. Static
+# assets stay mounted directly while shell/deep-link/bootstrap contracts are
+# owned by the modular standalone router.
 from pathlib import Path as _Path
 PUBLIC_APP_DIR = _Path(__file__).resolve().parent.parent / "public_app"
 if PUBLIC_APP_DIR.exists():
     app.mount("/app/assets", StaticFiles(directory=str(PUBLIC_APP_DIR / "assets")), name="site-intelligence-app-assets")
-
-    @app.get("/app/manifest.webmanifest", include_in_schema=False)
-    def standalone_manifest():
-        return FileResponse(str(PUBLIC_APP_DIR / "manifest.webmanifest"), media_type="application/manifest+json")
-
-    @app.get("/app/service-worker.js", include_in_schema=False)
-    def standalone_service_worker():
-        return FileResponse(str(PUBLIC_APP_DIR / "service-worker.js"), media_type="application/javascript")
-
-    @app.get("/app/offline.html", include_in_schema=False)
-    def standalone_offline_page():
-        return FileResponse(str(PUBLIC_APP_DIR / "offline.html"), media_type="text/html")
-
-    @app.get("/app", include_in_schema=False)
-    @app.get("/app/", include_in_schema=False)
-    @app.get("/app/{route:path}", include_in_schema=False)
-    def standalone_public_app(route: str = ""):
-        return FileResponse(str(PUBLIC_APP_DIR / "index.html"))
+    app.include_router(standalone_router)
 
 @app.get("/public/water-sanitation-infrastructure")
 def public_water_sanitation_overview(): return build_water_sanitation_overview()

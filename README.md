@@ -2,7 +2,7 @@
 
 Sustainable Catalyst Site Intelligence is the geospatial, country, Earth-observation, ocean, space, infrastructure, environmental, and live public-intelligence layer of the Sustainable Catalyst platform.
 
-**Current release:** v4.43.0 — Modular FastAPI Route & Capability Registry
+**Current release:** v4.44.0 — Standalone Site Intelligence Application Authority
 
 ## Architecture
 

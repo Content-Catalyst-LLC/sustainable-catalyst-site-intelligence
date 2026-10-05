@@ -20,6 +20,7 @@ class CapabilitySpec:
 
 
 CAPABILITIES: tuple[CapabilitySpec, ...] = (
+    CapabilitySpec("standalone-application", "Standalone Application Authority", "platform", "Canonical FastAPI-served Site Intelligence application, bootstrap, runtime handshake, navigation, session, offline shell, and deep-link contracts.", ("/public/app/", "/app"), "backend.app.routers.standalone"),
     CapabilitySpec("system-runtime", "System Runtime", "platform", "Health, release identity, deployment, runtime recovery, and map interaction contracts.", ("/", "/health", "/public/build-info", "/public/deployment-", "/public/release-gate", "/public/runtime-", "/public/maps/", "/public/bootstrap-recovery", "/public/browser-reliability", "/public/embed-isolation", "/public/mutation-observer-recovery", "/public/performance-offline", "/public/startup-stability"), "backend.app.routers.system"),
     CapabilitySpec("capability-registry", "Capability Registry", "platform", "Machine-readable capability and route discovery for Site Intelligence.", ("/public/capabilities", "/public/routes/"), "backend.app.routers.capabilities"),
     CapabilitySpec("data-truth", "Data Truth & Provenance", "evidence", "Country/source truth, control plane, record provenance, and workspace evidence.", ("/public/data-truth", "/public/record-truth", "/public/workspace-evidence", "/public/country-evidence", "/public/source-"), "backend.app.routers.data_truth"),
@@ -99,7 +100,7 @@ def capability_manifest(routes: Iterable[object]) -> dict:
     return {
         "ok": True,
         "version": APP_VERSION,
-        "registry_version": "1.0.0",
+        "registry_version": "1.1.0",
         "capability_count": len(capabilities),
         "route_count": len(inventory),
         "modularized_route_count": sum(1 for item in inventory if item["modularized"]),

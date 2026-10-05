@@ -25,9 +25,34 @@
     }
     throw last;
   }
-  const APP_VERSION="4.43.0";
-  const RELEASE_LINEAGE="v4.43.0";
-  const SCIENCE_CONTROLLER_SRC="/app/assets/science-v240.js?v=4.43.0";
+  const APP_VERSION="4.44.0";
+  const RELEASE_LINEAGE="v4.44.0";
+  const SCIENCE_CONTROLLER_SRC="/app/assets/science-v240.js?v=4.44.0";
+  const STANDALONE_BOOTSTRAP_ENDPOINT="/public/app/bootstrap";
+  const STANDALONE_HANDSHAKE_ENDPOINT="/public/app/runtime-handshake";
+  let standaloneBootstrap=null;
+  function standaloneSurface(){return FIXED_WORDPRESS_EMBED?"wordpress-embed":"standalone"}
+  function setAuthorityState(state,message){const bar=qs("#standaloneAuthorityBar"),status=qs("#standaloneAuthorityStatus"),version=qs("#standaloneAuthorityVersion");if(bar)bar.dataset.state=state||"connecting";if(status)status.textContent=message||"";if(version)version.textContent=`v${APP_VERSION}`}
+  function applyRegistryNavigation(model){
+    const items=Array.isArray(model?.items)?model.items:[];
+    const byRoute=new Map(items.map(item=>[item.route,item]));
+    qsa("#primaryNavigation .nav-item[data-route]").forEach(button=>{const item=byRoute.get(button.dataset.route);if(!item)return;button.dataset.capabilityId=item.capability_id||"";button.dataset.navGroup=item.group||"";button.dataset.registryAvailable=String(item.available!==false);const title=button.querySelector("span"),detail=button.querySelector("small");if(title&&item.title)title.textContent=item.title;if(detail&&item.description)detail.textContent=item.description});
+    document.documentElement.dataset.scsiNavigationSource="capability-registry";
+  }
+  async function establishStandaloneAuthority(){
+    setAuthorityState("connecting","Discovering FastAPI runtime and capabilities…");
+    const surface=standaloneSurface();
+    const bootstrap=await api(`${STANDALONE_BOOTSTRAP_ENDPOINT}?surface=${encodeURIComponent(surface)}`,{timeout:6000});
+    const handshake=await api(`${STANDALONE_HANDSHAKE_ENDPOINT}?client_version=${encodeURIComponent(APP_VERSION)}&surface=${encodeURIComponent(surface)}`,{timeout:6000});
+    if(!bootstrap?.ok||bootstrap?.version!==APP_VERSION||!handshake?.compatible)throw new Error(`standalone_runtime_mismatch:${bootstrap?.version||"unknown"}`);
+    standaloneBootstrap=bootstrap;
+    applyRegistryNavigation(bootstrap.navigation);
+    const app=qs("#app");if(app){app.dataset.applicationAuthority=bootstrap.authority?.backend||"fastapi";app.dataset.runtimeMode=bootstrap.runtime?.mode||surface;app.dataset.capabilityRegistryVersion=bootstrap.capability_registry?.version||""}
+    window.SCSIStandaloneAuthorityV4440={version:APP_VERSION,contractVersion:bootstrap.contract_version,bootstrap:()=>standaloneBootstrap,refresh:establishStandaloneAuthority,session:()=>standaloneBootstrap?.session||null,navigation:()=>standaloneBootstrap?.navigation||null};
+    setAuthorityState("ready",surface==="wordpress-embed"?"Standalone runtime verified · WordPress integration mode":"Canonical standalone runtime verified · capability registry online");
+    window.dispatchEvent(new CustomEvent("scsi:standalone-authority-ready",{detail:{version:APP_VERSION,mode:bootstrap.runtime?.mode,routeCount:bootstrap.capability_registry?.route_count}}));
+    return bootstrap;
+  }
   let scienceControllerPromise=null;
   function scienceControllerCurrent(){
     try{return window.SCScienceV240?.open&&window.SCScienceV240?.status?.().repair==="4.39.0"?window.SCScienceV240:null}catch{return null}
@@ -2055,7 +2080,7 @@
     window.addEventListener("message",event=>{if(event.data?.type==="SC_SI_REQUEST_HEIGHT")reportHeight()});
     if("ResizeObserver" in window)new ResizeObserver(reportHeight).observe(document.body);
   }
-  async function startApplication(){try{await init()}catch(error){console.error("[Site Intelligence] Application startup recovered.",error);const status=qs("#statusText");if(status)status.textContent="Limited startup";finishLaunch({state:"limited",message:"Site Intelligence opened in recovery mode. Retry individual services from the active workspace."})}}
+  async function startApplication(){try{try{await establishStandaloneAuthority()}catch(authorityError){console.warn("[Site Intelligence] Standalone authority discovery degraded.",authorityError);setAuthorityState("limited","Runtime discovery limited · application recovery active")}await init()}catch(error){console.error("[Site Intelligence] Application startup recovered.",error);const status=qs("#statusText");if(status)status.textContent="Limited startup";finishLaunch({state:"limited",message:"Site Intelligence opened in recovery mode. Retry individual services from the active workspace."})}}
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",()=>{startApplication()},{once:true});else startApplication();
 })();
 
