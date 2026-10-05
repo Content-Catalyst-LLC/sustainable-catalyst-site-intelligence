@@ -530,6 +530,7 @@ class Settings(BaseSettings):
     spatial_evidence_analysis_path: str = "backend/data/spatial_evidence_v2150/analyses_v2150.jsonl"
     spatial_evidence_policy_path: str = "backend/data/spatial_evidence_policy_v2150.json"
     spatial_evidence_layer_catalog_path: str = "backend/data/spatial_layer_catalog_v2150.json"
+    spatial_layer_registry_v4460_path: str = "backend/data/spatial_layer_registry_v4460.json"
     spatial_evidence_max_features: int = Field(default=5000, ge=1, le=50000)
     spatial_evidence_max_payload_bytes: int = Field(default=10000000, ge=10000, le=100000000)
     spatial_evidence_max_records: int = Field(default=10000, ge=100, le=100000)

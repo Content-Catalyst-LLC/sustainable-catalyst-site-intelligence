@@ -1,4 +1,4 @@
-APP_VERSION = "4.45.0"
+APP_VERSION = "4.46.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "WordPress Thin-Shell & Embed Bridge"
+RELEASE_NAME = "Unified Spatial Evidence Object & Layer Registry"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

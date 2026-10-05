@@ -1,3 +1,12 @@
+# v4.46.0 — Unified Spatial Evidence Object & Layer Registry
+
+- Added a canonical `sc-site-intelligence-spatial-evidence-object/2.0` interchange object with WGS84 geometry, stable layer identity, source/provenance lineage, temporal validity, quality metadata, visibility, bounding box, and SHA-256 content digest.
+- Added a source-controlled cross-domain registry spanning 18 spatial layer families across environmental, infrastructure, human, ocean, country, and live-event intelligence.
+- Added modular `/public/spatial-evidence/*` discovery, normalization, validation, domain, schema, and compatibility routes.
+- Preserved all existing `/public/spatial/*` studio analysis routes and the legacy layer catalog as read-only compatibility surfaces.
+- Advanced the capability registry to 1.3.0 and added a first-class `spatial-evidence-registry` capability family.
+- Extended the corrected Contabo deployment contract to promote 28 release-bound static files, including the v4.46 spatial layer registry.
+
 # v4.45.0 — WordPress Thin-Shell & Embed Bridge
 
 - Declares FastAPI and the standalone `/app/` runtime as Site Intelligence product authority.

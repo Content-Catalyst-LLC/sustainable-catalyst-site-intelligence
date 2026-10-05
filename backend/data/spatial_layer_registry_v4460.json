@@ -1,0 +1,942 @@
+{
+  "schema": "sc-site-intelligence-spatial-layer-registry/2.0",
+  "version": "4.46.0",
+  "registry_version": "1.0.0",
+  "title": "Unified Spatial Evidence Layer Registry",
+  "coordinate_reference_system": "EPSG:4326",
+  "evidence_object_schema": "sc-site-intelligence-spatial-evidence-object/2.0",
+  "layer_count": 18,
+  "layers": [
+    {
+      "layer_id": "climate-baselines-extremes",
+      "title": "Climate Baselines, Anomalies & Extremes",
+      "domain": "climate",
+      "capability_id": "earth-environment",
+      "description": "Canonical Site Intelligence registry entry for climate baselines, anomalies & extremes evidence.",
+      "geometry_types": [
+        "Point",
+        "Polygon",
+        "MultiPolygon",
+        "RasterFootprint"
+      ],
+      "internal_endpoints": {
+        "overview": "/public/climate",
+        "catalog": "/public/climate/catalog"
+      },
+      "spatial_contract": {
+        "crs": "EPSG:4326",
+        "coverage": "source-defined",
+        "resolution": "source-defined",
+        "bbox_required_for_indexing": true
+      },
+      "temporal_contract": {
+        "temporal": true,
+        "observation_time_supported": true,
+        "valid_time_supported": true,
+        "resolution": "source-defined"
+      },
+      "evidence_contract": {
+        "schema": "sc-site-intelligence-spatial-evidence-object/2.0",
+        "source_identity_required": true,
+        "provenance_required": true,
+        "transformation_lineage_preserved": true,
+        "content_digest": "sha256"
+      },
+      "visibility": "public",
+      "public_safe": true,
+      "status": "registered",
+      "tags": [
+        "climate",
+        "temperature",
+        "precipitation",
+        "extremes"
+      ],
+      "source_contract": {
+        "authority": "source-specific",
+        "source_identity_preserved": true,
+        "license_context_preserved": true,
+        "trust_signal_separate_from_source_identity": true,
+        "record_provenance_endpoint": "/public/record-truth/manifest"
+      }
+    },
+    {
+      "layer_id": "atmosphere-air-quality",
+      "title": "Atmosphere, Air Quality & Aerosols",
+      "domain": "atmosphere",
+      "capability_id": "earth-environment",
+      "description": "Canonical Site Intelligence registry entry for atmosphere, air quality & aerosols evidence.",
+      "geometry_types": [
+        "Point",
+        "Polygon",
+        "MultiPolygon",
+        "RasterFootprint"
+      ],
+      "internal_endpoints": {
+        "overview": "/public/atmosphere",
+        "catalog": "/public/atmosphere/catalog"
+      },
+      "spatial_contract": {
+        "crs": "EPSG:4326",
+        "coverage": "source-defined",
+        "resolution": "source-defined",
+        "bbox_required_for_indexing": true
+      },
+      "temporal_contract": {
+        "temporal": true,
+        "observation_time_supported": true,
+        "valid_time_supported": true,
+        "resolution": "source-defined"
+      },
+      "evidence_contract": {
+        "schema": "sc-site-intelligence-spatial-evidence-object/2.0",
+        "source_identity_required": true,
+        "provenance_required": true,
+        "transformation_lineage_preserved": true,
+        "content_digest": "sha256"
+      },
+      "visibility": "public",
+      "public_safe": true,
+      "status": "registered",
+      "tags": [
+        "atmosphere",
+        "air-quality",
+        "aerosol"
+      ],
+      "source_contract": {
+        "authority": "source-specific",
+        "source_identity_preserved": true,
+        "license_context_preserved": true,
+        "trust_signal_separate_from_source_identity": true,
+        "record_provenance_endpoint": "/public/record-truth/manifest"
+      }
+    },
+    {
+      "layer_id": "hydrology-rivers-flood-drought",
+      "title": "Hydrology, Rivers, Flood & Drought",
+      "domain": "hydrology",
+      "capability_id": "earth-environment",
+      "description": "Canonical Site Intelligence registry entry for hydrology, rivers, flood & drought evidence.",
+      "geometry_types": [
+        "Point",
+        "LineString",
+        "Polygon",
+        "MultiPolygon",
+        "RasterFootprint"
+      ],
+      "internal_endpoints": {
+        "overview": "/public/hydrology",
+        "catalog": "/public/hydrology/catalog"
+      },
+      "spatial_contract": {
+        "crs": "EPSG:4326",
+        "coverage": "source-defined",
+        "resolution": "source-defined",
+        "bbox_required_for_indexing": true
+      },
+      "temporal_contract": {
+        "temporal": true,
+        "observation_time_supported": true,
+        "valid_time_supported": true,
+        "resolution": "source-defined"
+      },
+      "evidence_contract": {
+        "schema": "sc-site-intelligence-spatial-evidence-object/2.0",
+        "source_identity_required": true,
+        "provenance_required": true,
+        "transformation_lineage_preserved": true,
+        "content_digest": "sha256"
+      },
+      "visibility": "public",
+      "public_safe": true,
+      "status": "registered",
+      "tags": [
+        "hydrology",
+        "river",
+        "flood",
+        "drought"
+      ],
+      "source_contract": {
+        "authority": "source-specific",
+        "source_identity_preserved": true,
+        "license_context_preserved": true,
+        "trust_signal_separate_from_source_identity": true,
+        "record_provenance_endpoint": "/public/record-truth/manifest"
+      }
+    },
+    {
+      "layer_id": "geosphere-earthquake-volcano",
+      "title": "Geosphere, Earthquake & Volcano",
+      "domain": "geosphere",
+      "capability_id": "earth-environment",
+      "description": "Canonical Site Intelligence registry entry for geosphere, earthquake & volcano evidence.",
+      "geometry_types": [
+        "Point",
+        "LineString",
+        "Polygon",
+        "MultiPolygon"
+      ],
+      "internal_endpoints": {
+        "overview": "/public/geosphere",
+        "catalog": "/public/geosphere/catalog"
+      },
+      "spatial_contract": {
+        "crs": "EPSG:4326",
+        "coverage": "source-defined",
+        "resolution": "source-defined",
+        "bbox_required_for_indexing": true
+      },
+      "temporal_contract": {
+        "temporal": true,
+        "observation_time_supported": true,
+        "valid_time_supported": true,
+        "resolution": "source-defined"
+      },
+      "evidence_contract": {
+        "schema": "sc-site-intelligence-spatial-evidence-object/2.0",
+        "source_identity_required": true,
+        "provenance_required": true,
+        "transformation_lineage_preserved": true,
+        "content_digest": "sha256"
+      },
+      "visibility": "public",
+      "public_safe": true,
+      "status": "registered",
+      "tags": [
+        "geosphere",
+        "earthquake",
+        "volcano"
+      ],
+      "source_contract": {
+        "authority": "source-specific",
+        "source_identity_preserved": true,
+        "license_context_preserved": true,
+        "trust_signal_separate_from_source_identity": true,
+        "record_provenance_endpoint": "/public/record-truth/manifest"
+      }
+    },
+    {
+      "layer_id": "soils-land-degradation",
+      "title": "Soils, Land Degradation & Desertification",
+      "domain": "soils",
+      "capability_id": "earth-environment",
+      "description": "Canonical Site Intelligence registry entry for soils, land degradation & desertification evidence.",
+      "geometry_types": [
+        "Point",
+        "Polygon",
+        "MultiPolygon",
+        "RasterFootprint"
+      ],
+      "internal_endpoints": {
+        "overview": "/public/soils-land",
+        "catalog": "/public/soils-land/catalog"
+      },
+      "spatial_contract": {
+        "crs": "EPSG:4326",
+        "coverage": "source-defined",
+        "resolution": "source-defined",
+        "bbox_required_for_indexing": true
+      },
+      "temporal_contract": {
+        "temporal": true,
+        "observation_time_supported": true,
+        "valid_time_supported": true,
+        "resolution": "source-defined"
+      },
+      "evidence_contract": {
+        "schema": "sc-site-intelligence-spatial-evidence-object/2.0",
+        "source_identity_required": true,
+        "provenance_required": true,
+        "transformation_lineage_preserved": true,
+        "content_digest": "sha256"
+      },
+      "visibility": "public",
+      "public_safe": true,
+      "status": "registered",
+      "tags": [
+        "soil",
+        "land-degradation",
+        "desertification"
+      ],
+      "source_contract": {
+        "authority": "source-specific",
+        "source_identity_preserved": true,
+        "license_context_preserved": true,
+        "trust_signal_separate_from_source_identity": true,
+        "record_provenance_endpoint": "/public/record-truth/manifest"
+      }
+    },
+    {
+      "layer_id": "terrestrial-ecosystems-wildfire",
+      "title": "Terrestrial Ecosystems, Vegetation & Wildfire",
+      "domain": "ecosystems",
+      "capability_id": "earth-environment",
+      "description": "Canonical Site Intelligence registry entry for terrestrial ecosystems, vegetation & wildfire evidence.",
+      "geometry_types": [
+        "Point",
+        "Polygon",
+        "MultiPolygon",
+        "RasterFootprint"
+      ],
+      "internal_endpoints": {
+        "overview": "/public/terrestrial-ecosystems",
+        "catalog": "/public/terrestrial-ecosystems/catalog"
+      },
+      "spatial_contract": {
+        "crs": "EPSG:4326",
+        "coverage": "source-defined",
+        "resolution": "source-defined",
+        "bbox_required_for_indexing": true
+      },
+      "temporal_contract": {
+        "temporal": true,
+        "observation_time_supported": true,
+        "valid_time_supported": true,
+        "resolution": "source-defined"
+      },
+      "evidence_contract": {
+        "schema": "sc-site-intelligence-spatial-evidence-object/2.0",
+        "source_identity_required": true,
+        "provenance_required": true,
+        "transformation_lineage_preserved": true,
+        "content_digest": "sha256"
+      },
+      "visibility": "public",
+      "public_safe": true,
+      "status": "registered",
+      "tags": [
+        "ecosystem",
+        "vegetation",
+        "wildfire"
+      ],
+      "source_contract": {
+        "authority": "source-specific",
+        "source_identity_preserved": true,
+        "license_context_preserved": true,
+        "trust_signal_separate_from_source_identity": true,
+        "record_provenance_endpoint": "/public/record-truth/manifest"
+      }
+    },
+    {
+      "layer_id": "biodiversity-conservation",
+      "title": "Biodiversity, Species & Conservation",
+      "domain": "biodiversity",
+      "capability_id": "earth-environment",
+      "description": "Canonical Site Intelligence registry entry for biodiversity, species & conservation evidence.",
+      "geometry_types": [
+        "Point",
+        "Polygon",
+        "MultiPolygon"
+      ],
+      "internal_endpoints": {
+        "overview": "/public/biodiversity",
+        "catalog": "/public/biodiversity/catalog"
+      },
+      "spatial_contract": {
+        "crs": "EPSG:4326",
+        "coverage": "source-defined",
+        "resolution": "source-defined",
+        "bbox_required_for_indexing": true
+      },
+      "temporal_contract": {
+        "temporal": true,
+        "observation_time_supported": true,
+        "valid_time_supported": true,
+        "resolution": "source-defined"
+      },
+      "evidence_contract": {
+        "schema": "sc-site-intelligence-spatial-evidence-object/2.0",
+        "source_identity_required": true,
+        "provenance_required": true,
+        "transformation_lineage_preserved": true,
+        "content_digest": "sha256"
+      },
+      "visibility": "public",
+      "public_safe": true,
+      "status": "registered",
+      "tags": [
+        "biodiversity",
+        "species",
+        "conservation"
+      ],
+      "source_contract": {
+        "authority": "source-specific",
+        "source_identity_preserved": true,
+        "license_context_preserved": true,
+        "trust_signal_separate_from_source_identity": true,
+        "record_provenance_endpoint": "/public/record-truth/manifest"
+      }
+    },
+    {
+      "layer_id": "wetlands-inland-water",
+      "title": "Wetlands, Inland Waters & Aquatic Habitat",
+      "domain": "wetlands",
+      "capability_id": "earth-environment",
+      "description": "Canonical Site Intelligence registry entry for wetlands, inland waters & aquatic habitat evidence.",
+      "geometry_types": [
+        "Point",
+        "LineString",
+        "Polygon",
+        "MultiPolygon"
+      ],
+      "internal_endpoints": {
+        "overview": "/public/wetlands-inland-water",
+        "catalog": "/public/wetlands-inland-water/catalog"
+      },
+      "spatial_contract": {
+        "crs": "EPSG:4326",
+        "coverage": "source-defined",
+        "resolution": "source-defined",
+        "bbox_required_for_indexing": true
+      },
+      "temporal_contract": {
+        "temporal": true,
+        "observation_time_supported": true,
+        "valid_time_supported": true,
+        "resolution": "source-defined"
+      },
+      "evidence_contract": {
+        "schema": "sc-site-intelligence-spatial-evidence-object/2.0",
+        "source_identity_required": true,
+        "provenance_required": true,
+        "transformation_lineage_preserved": true,
+        "content_digest": "sha256"
+      },
+      "visibility": "public",
+      "public_safe": true,
+      "status": "registered",
+      "tags": [
+        "wetlands",
+        "inland-water",
+        "aquatic-habitat"
+      ],
+      "source_contract": {
+        "authority": "source-specific",
+        "source_identity_preserved": true,
+        "license_context_preserved": true,
+        "trust_signal_separate_from_source_identity": true,
+        "record_provenance_endpoint": "/public/record-truth/manifest"
+      }
+    },
+    {
+      "layer_id": "agriculture-food-systems",
+      "title": "Agriculture, Crops & Food Systems",
+      "domain": "agriculture",
+      "capability_id": "earth-environment",
+      "description": "Canonical Site Intelligence registry entry for agriculture, crops & food systems evidence.",
+      "geometry_types": [
+        "Point",
+        "Polygon",
+        "MultiPolygon"
+      ],
+      "internal_endpoints": {
+        "overview": "/public/agriculture-food",
+        "catalog": "/public/agriculture-food/catalog"
+      },
+      "spatial_contract": {
+        "crs": "EPSG:4326",
+        "coverage": "source-defined",
+        "resolution": "source-defined",
+        "bbox_required_for_indexing": true
+      },
+      "temporal_contract": {
+        "temporal": true,
+        "observation_time_supported": true,
+        "valid_time_supported": true,
+        "resolution": "source-defined"
+      },
+      "evidence_contract": {
+        "schema": "sc-site-intelligence-spatial-evidence-object/2.0",
+        "source_identity_required": true,
+        "provenance_required": true,
+        "transformation_lineage_preserved": true,
+        "content_digest": "sha256"
+      },
+      "visibility": "public",
+      "public_safe": true,
+      "status": "registered",
+      "tags": [
+        "agriculture",
+        "crop",
+        "food-system"
+      ],
+      "source_contract": {
+        "authority": "source-specific",
+        "source_identity_preserved": true,
+        "license_context_preserved": true,
+        "trust_signal_separate_from_source_identity": true,
+        "record_provenance_endpoint": "/public/record-truth/manifest"
+      }
+    },
+    {
+      "layer_id": "energy-power-systems",
+      "title": "Energy & Power Systems",
+      "domain": "energy",
+      "capability_id": "infrastructure-energy",
+      "description": "Canonical Site Intelligence registry entry for energy & power systems evidence.",
+      "geometry_types": [
+        "Point",
+        "LineString",
+        "Polygon",
+        "MultiPolygon"
+      ],
+      "internal_endpoints": {
+        "overview": "/v1/energy-spatial/framework"
+      },
+      "spatial_contract": {
+        "crs": "EPSG:4326",
+        "coverage": "source-defined",
+        "resolution": "source-defined",
+        "bbox_required_for_indexing": true
+      },
+      "temporal_contract": {
+        "temporal": true,
+        "observation_time_supported": true,
+        "valid_time_supported": true,
+        "resolution": "source-defined"
+      },
+      "evidence_contract": {
+        "schema": "sc-site-intelligence-spatial-evidence-object/2.0",
+        "source_identity_required": true,
+        "provenance_required": true,
+        "transformation_lineage_preserved": true,
+        "content_digest": "sha256"
+      },
+      "visibility": "public",
+      "public_safe": true,
+      "status": "registered",
+      "tags": [
+        "energy",
+        "electricity",
+        "generation",
+        "grid"
+      ],
+      "source_contract": {
+        "authority": "source-specific",
+        "source_identity_preserved": true,
+        "license_context_preserved": true,
+        "trust_signal_separate_from_source_identity": true,
+        "record_provenance_endpoint": "/public/record-truth/manifest"
+      }
+    },
+    {
+      "layer_id": "transportation-networks",
+      "title": "Transportation Networks, Ports, Airports & Transit",
+      "domain": "transportation",
+      "capability_id": "infrastructure-energy",
+      "description": "Canonical Site Intelligence registry entry for transportation networks, ports, airports & transit evidence.",
+      "geometry_types": [
+        "Point",
+        "LineString",
+        "MultiLineString",
+        "Polygon"
+      ],
+      "internal_endpoints": {
+        "overview": "/public/transportation-infrastructure",
+        "catalog": "/public/transportation-infrastructure/catalog"
+      },
+      "spatial_contract": {
+        "crs": "EPSG:4326",
+        "coverage": "source-defined",
+        "resolution": "source-defined",
+        "bbox_required_for_indexing": true
+      },
+      "temporal_contract": {
+        "temporal": true,
+        "observation_time_supported": true,
+        "valid_time_supported": true,
+        "resolution": "source-defined"
+      },
+      "evidence_contract": {
+        "schema": "sc-site-intelligence-spatial-evidence-object/2.0",
+        "source_identity_required": true,
+        "provenance_required": true,
+        "transformation_lineage_preserved": true,
+        "content_digest": "sha256"
+      },
+      "visibility": "public",
+      "public_safe": true,
+      "status": "registered",
+      "tags": [
+        "transportation",
+        "port",
+        "airport",
+        "transit"
+      ],
+      "source_contract": {
+        "authority": "source-specific",
+        "source_identity_preserved": true,
+        "license_context_preserved": true,
+        "trust_signal_separate_from_source_identity": true,
+        "record_provenance_endpoint": "/public/record-truth/manifest"
+      }
+    },
+    {
+      "layer_id": "water-sanitation-infrastructure",
+      "title": "Water Supply, Wastewater & Sanitation",
+      "domain": "water-infrastructure",
+      "capability_id": "infrastructure-energy",
+      "description": "Canonical Site Intelligence registry entry for water supply, wastewater & sanitation evidence.",
+      "geometry_types": [
+        "Point",
+        "LineString",
+        "MultiLineString",
+        "Polygon"
+      ],
+      "internal_endpoints": {
+        "overview": "/public/water-sanitation-infrastructure",
+        "catalog": "/public/water-sanitation-infrastructure/catalog"
+      },
+      "spatial_contract": {
+        "crs": "EPSG:4326",
+        "coverage": "source-defined",
+        "resolution": "source-defined",
+        "bbox_required_for_indexing": true
+      },
+      "temporal_contract": {
+        "temporal": true,
+        "observation_time_supported": true,
+        "valid_time_supported": true,
+        "resolution": "source-defined"
+      },
+      "evidence_contract": {
+        "schema": "sc-site-intelligence-spatial-evidence-object/2.0",
+        "source_identity_required": true,
+        "provenance_required": true,
+        "transformation_lineage_preserved": true,
+        "content_digest": "sha256"
+      },
+      "visibility": "public",
+      "public_safe": true,
+      "status": "registered",
+      "tags": [
+        "water",
+        "wastewater",
+        "sanitation",
+        "infrastructure"
+      ],
+      "source_contract": {
+        "authority": "source-specific",
+        "source_identity_preserved": true,
+        "license_context_preserved": true,
+        "trust_signal_separate_from_source_identity": true,
+        "record_provenance_endpoint": "/public/record-truth/manifest"
+      }
+    },
+    {
+      "layer_id": "digital-connectivity",
+      "title": "Broadband, Internet & Digital Connectivity",
+      "domain": "connectivity",
+      "capability_id": "infrastructure-energy",
+      "description": "Canonical Site Intelligence registry entry for broadband, internet & digital connectivity evidence.",
+      "geometry_types": [
+        "Point",
+        "LineString",
+        "Polygon",
+        "MultiPolygon"
+      ],
+      "internal_endpoints": {
+        "overview": "/public/digital-connectivity",
+        "catalog": "/public/digital-connectivity/catalog"
+      },
+      "spatial_contract": {
+        "crs": "EPSG:4326",
+        "coverage": "source-defined",
+        "resolution": "source-defined",
+        "bbox_required_for_indexing": true
+      },
+      "temporal_contract": {
+        "temporal": true,
+        "observation_time_supported": true,
+        "valid_time_supported": true,
+        "resolution": "source-defined"
+      },
+      "evidence_contract": {
+        "schema": "sc-site-intelligence-spatial-evidence-object/2.0",
+        "source_identity_required": true,
+        "provenance_required": true,
+        "transformation_lineage_preserved": true,
+        "content_digest": "sha256"
+      },
+      "visibility": "public",
+      "public_safe": true,
+      "status": "registered",
+      "tags": [
+        "broadband",
+        "internet",
+        "connectivity"
+      ],
+      "source_contract": {
+        "authority": "source-specific",
+        "source_identity_preserved": true,
+        "license_context_preserved": true,
+        "trust_signal_separate_from_source_identity": true,
+        "record_provenance_endpoint": "/public/record-truth/manifest"
+      }
+    },
+    {
+      "layer_id": "human-settlements-built-environment",
+      "title": "Human Settlements, Urbanization & Built Environment",
+      "domain": "settlements",
+      "capability_id": "human-development",
+      "description": "Canonical Site Intelligence registry entry for human settlements, urbanization & built environment evidence.",
+      "geometry_types": [
+        "Point",
+        "Polygon",
+        "MultiPolygon"
+      ],
+      "internal_endpoints": {
+        "overview": "/public/human-settlements",
+        "catalog": "/public/human-settlements/catalog"
+      },
+      "spatial_contract": {
+        "crs": "EPSG:4326",
+        "coverage": "source-defined",
+        "resolution": "source-defined",
+        "bbox_required_for_indexing": true
+      },
+      "temporal_contract": {
+        "temporal": true,
+        "observation_time_supported": true,
+        "valid_time_supported": true,
+        "resolution": "source-defined"
+      },
+      "evidence_contract": {
+        "schema": "sc-site-intelligence-spatial-evidence-object/2.0",
+        "source_identity_required": true,
+        "provenance_required": true,
+        "transformation_lineage_preserved": true,
+        "content_digest": "sha256"
+      },
+      "visibility": "public",
+      "public_safe": true,
+      "status": "registered",
+      "tags": [
+        "settlement",
+        "urbanization",
+        "built-environment"
+      ],
+      "source_contract": {
+        "authority": "source-specific",
+        "source_identity_preserved": true,
+        "license_context_preserved": true,
+        "trust_signal_separate_from_source_identity": true,
+        "record_provenance_endpoint": "/public/record-truth/manifest"
+      }
+    },
+    {
+      "layer_id": "mining-critical-materials",
+      "title": "Mining, Mineral Resources & Critical Materials",
+      "domain": "mining",
+      "capability_id": "infrastructure-energy",
+      "description": "Canonical Site Intelligence registry entry for mining, mineral resources & critical materials evidence.",
+      "geometry_types": [
+        "Point",
+        "Polygon",
+        "MultiPolygon"
+      ],
+      "internal_endpoints": {
+        "overview": "/public/mining-critical-materials",
+        "catalog": "/public/mining-critical-materials/catalog"
+      },
+      "spatial_contract": {
+        "crs": "EPSG:4326",
+        "coverage": "source-defined",
+        "resolution": "source-defined",
+        "bbox_required_for_indexing": true
+      },
+      "temporal_contract": {
+        "temporal": true,
+        "observation_time_supported": true,
+        "valid_time_supported": true,
+        "resolution": "source-defined"
+      },
+      "evidence_contract": {
+        "schema": "sc-site-intelligence-spatial-evidence-object/2.0",
+        "source_identity_required": true,
+        "provenance_required": true,
+        "transformation_lineage_preserved": true,
+        "content_digest": "sha256"
+      },
+      "visibility": "public",
+      "public_safe": true,
+      "status": "registered",
+      "tags": [
+        "mining",
+        "mineral",
+        "critical-materials"
+      ],
+      "source_contract": {
+        "authority": "source-specific",
+        "source_identity_preserved": true,
+        "license_context_preserved": true,
+        "trust_signal_separate_from_source_identity": true,
+        "record_provenance_endpoint": "/public/record-truth/manifest"
+      }
+    },
+    {
+      "layer_id": "ocean-marine-systems",
+      "title": "Ocean & Marine Systems",
+      "domain": "ocean",
+      "capability_id": "ocean-marine",
+      "description": "Canonical Site Intelligence registry entry for ocean & marine systems evidence.",
+      "geometry_types": [
+        "Point",
+        "LineString",
+        "Polygon",
+        "MultiPolygon",
+        "RasterFootprint"
+      ],
+      "internal_endpoints": {
+        "overview": "/public/ocean-observation",
+        "catalog": "/public/ocean-observation/catalog"
+      },
+      "spatial_contract": {
+        "crs": "EPSG:4326",
+        "coverage": "source-defined",
+        "resolution": "source-defined",
+        "bbox_required_for_indexing": true
+      },
+      "temporal_contract": {
+        "temporal": true,
+        "observation_time_supported": true,
+        "valid_time_supported": true,
+        "resolution": "source-defined"
+      },
+      "evidence_contract": {
+        "schema": "sc-site-intelligence-spatial-evidence-object/2.0",
+        "source_identity_required": true,
+        "provenance_required": true,
+        "transformation_lineage_preserved": true,
+        "content_digest": "sha256"
+      },
+      "visibility": "public",
+      "public_safe": true,
+      "status": "registered",
+      "tags": [
+        "ocean",
+        "marine",
+        "observation"
+      ],
+      "source_contract": {
+        "authority": "source-specific",
+        "source_identity_preserved": true,
+        "license_context_preserved": true,
+        "trust_signal_separate_from_source_identity": true,
+        "record_provenance_endpoint": "/public/record-truth/manifest"
+      }
+    },
+    {
+      "layer_id": "country-regional-context",
+      "title": "Country & Regional Context",
+      "domain": "country",
+      "capability_id": "human-development",
+      "description": "Canonical Site Intelligence registry entry for country & regional context evidence.",
+      "geometry_types": [
+        "Point",
+        "Polygon",
+        "MultiPolygon"
+      ],
+      "internal_endpoints": {
+        "overview": "/public/countries"
+      },
+      "spatial_contract": {
+        "crs": "EPSG:4326",
+        "coverage": "source-defined",
+        "resolution": "source-defined",
+        "bbox_required_for_indexing": true
+      },
+      "temporal_contract": {
+        "temporal": true,
+        "observation_time_supported": true,
+        "valid_time_supported": true,
+        "resolution": "source-defined"
+      },
+      "evidence_contract": {
+        "schema": "sc-site-intelligence-spatial-evidence-object/2.0",
+        "source_identity_required": true,
+        "provenance_required": true,
+        "transformation_lineage_preserved": true,
+        "content_digest": "sha256"
+      },
+      "visibility": "public",
+      "public_safe": true,
+      "status": "registered",
+      "tags": [
+        "country",
+        "region",
+        "administrative"
+      ],
+      "source_contract": {
+        "authority": "source-specific",
+        "source_identity_preserved": true,
+        "license_context_preserved": true,
+        "trust_signal_separate_from_source_identity": true,
+        "record_provenance_endpoint": "/public/record-truth/manifest"
+      }
+    },
+    {
+      "layer_id": "live-events-hazards",
+      "title": "Live Events, Hazards & Early Warning",
+      "domain": "events",
+      "capability_id": "live-intelligence",
+      "description": "Canonical Site Intelligence registry entry for live events, hazards & early warning evidence.",
+      "geometry_types": [
+        "Point",
+        "LineString",
+        "Polygon",
+        "MultiPolygon"
+      ],
+      "internal_endpoints": {
+        "overview": "/public/events"
+      },
+      "spatial_contract": {
+        "crs": "EPSG:4326",
+        "coverage": "source-defined",
+        "resolution": "source-defined",
+        "bbox_required_for_indexing": true
+      },
+      "temporal_contract": {
+        "temporal": true,
+        "observation_time_supported": true,
+        "valid_time_supported": true,
+        "resolution": "source-defined"
+      },
+      "evidence_contract": {
+        "schema": "sc-site-intelligence-spatial-evidence-object/2.0",
+        "source_identity_required": true,
+        "provenance_required": true,
+        "transformation_lineage_preserved": true,
+        "content_digest": "sha256"
+      },
+      "visibility": "public",
+      "public_safe": true,
+      "status": "registered",
+      "tags": [
+        "event",
+        "hazard",
+        "monitoring",
+        "early-warning"
+      ],
+      "source_contract": {
+        "authority": "source-specific",
+        "source_identity_preserved": true,
+        "license_context_preserved": true,
+        "trust_signal_separate_from_source_identity": true,
+        "record_provenance_endpoint": "/public/record-truth/manifest"
+      }
+    }
+  ],
+  "legacy_compatibility": {
+    "catalog_schema": "sc-site-intelligence-spatial-layer-catalog/1.0",
+    "catalog_endpoint": "/public/spatial/layers",
+    "status": "preserved-read-only-compatibility",
+    "replacement": "/public/spatial-evidence/layers"
+  },
+  "principles": [
+    "Registry entries describe spatial evidence capabilities; they do not duplicate source datasets.",
+    "Original source identity, observation time, spatial resolution, license context, and every derived transformation remain explicit.",
+    "WGS84 EPSG:4326 is the canonical interchange CRS for normalized evidence objects; source CRS metadata is preserved in provenance when transformation occurs.",
+    "Spatial overlap, proximity, temporal coincidence, or co-location do not by themselves establish causation.",
+    "Public registry metadata never authorizes exposure of restricted or private source payloads."
+  ]
+}

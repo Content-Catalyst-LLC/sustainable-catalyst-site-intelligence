@@ -14,7 +14,7 @@ from fastapi.responses import PlainTextResponse, FileResponse, Response, HTMLRes
 
 from .config import Settings, get_settings
 from .version import APP_VERSION
-from .routers import capabilities_router, data_truth_router, standalone_router, system_router, wordpress_bridge_router
+from .routers import capabilities_router, data_truth_router, standalone_router, system_router, wordpress_bridge_router, spatial_evidence_router
 from .build_info import public_build_info as build_public_build_info, public_deployment_status as build_public_deployment_status
 from .deployment_gate_v3226 import build_release_gate
 from .deployment_receipt_v3226 import public_deployment_receipt as build_public_deployment_receipt
@@ -1004,13 +1004,14 @@ async def public_experience_headers(request, call_next):
     return response
 
 
-# v4.44.0: v4.43 foundational route families remain modularized and the
-# standalone application authority is now registered after the static asset mount.
-# Remaining legacy route families stay inventoried for staged extraction.
+# v4.46.0: foundational route families remain modularized and the unified
+# spatial evidence object/layer registry is now a first-class cross-domain contract.
+# Legacy spatial analysis routes remain intact for compatibility.
 app.include_router(system_router)
 app.include_router(data_truth_router)
 app.include_router(capabilities_router)
 app.include_router(wordpress_bridge_router)
+app.include_router(spatial_evidence_router)
 
 
 @app.get("/public/browser-reliability")

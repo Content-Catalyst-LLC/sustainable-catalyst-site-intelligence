@@ -40,7 +40,7 @@ NAVIGATION: tuple[NavigationItem, ...] = (
     NavigationItem("integration", "API & embeds", "Institutional integration", "connectors-federation", "platform", 150),
     NavigationItem("experience", "Offline & access", "Mobile and performance", "standalone-application", "platform", 160),
     NavigationItem("earth", "Earth", "Satellite and orbital", "earth-environment", "science", 170),
-    NavigationItem("spatial", "Spatial", "Areas and evidence", "analytics-modeling", "analysis", 180),
+    NavigationItem("spatial", "Spatial", "Unified evidence & layers", "spatial-evidence-registry", "analysis", 180),
     NavigationItem("harmonization", "Harmonize", "Comparable series", "connectors-federation", "analysis", 190),
     NavigationItem("models", "Models", "Forecasts and warnings", "analytics-modeling", "analysis", 200),
     NavigationItem("evidence", "Evidence", "Claims and contradictions", "research-evidence", "research", 210),
@@ -141,6 +141,7 @@ def build_bootstrap(routes: Iterable[object], surface: str | None = None) -> dic
             "runtime_handshake": "/public/app/runtime-handshake",
             "navigation": "/public/app/navigation",
             "session_contract": "/public/app/session-contract",
+            "spatial_evidence_registry": "/public/spatial-evidence/registry",
         },
         "assets": {
             "manifest": "/app/manifest.webmanifest",
