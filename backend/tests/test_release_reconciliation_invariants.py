@@ -24,7 +24,8 @@ RELEASE_BOUND_STATIC_FILES = (
     "mutation_observer_recovery_policy_v32362.json", "performance_offline_policy_v3236.json",
     "research_evidence_integration_policy_v3270.json", "scheduled_monitoring_policy_v2210.json",
     "spatial_evidence_policy_v2150.json", "startup_stability_policy_v32364.json",
-    "unified_analytical_state_policy_v3250.json",
+    "unified_analytical_state_policy_v3250.json", "spatial_layer_registry_v4460.json",
+    "spatiotemporal_operator_registry_v4470.json",
 )
 PROTECTED_CANONICAL_SHORTCODES = {
     "sc_earth_observation_studio", "sc_live_event_intelligence",
@@ -72,7 +73,7 @@ def test_release_identity_remains_coherent() -> None:
 
 def test_release_bound_static_policy_versions_follow_application() -> None:
     data_root = _repo_root() / "backend/data"
-    assert len(RELEASE_BOUND_STATIC_FILES) == 27
+    assert len(RELEASE_BOUND_STATIC_FILES) == 29
     for name in RELEASE_BOUND_STATIC_FILES:
         payload = json.loads((data_root / name).read_text(encoding="utf-8"))
         assert payload.get("version") == APP_VERSION, name

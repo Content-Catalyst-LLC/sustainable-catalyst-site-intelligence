@@ -1,3 +1,13 @@
+# v4.47.0 — Spatiotemporal Query & Cross-Layer Analysis Engine
+
+- Added deterministic query plans over canonical v4.46 spatial evidence objects with layer/domain/capability, WGS84 bbox, temporal interval, and property filters.
+- Added cross-layer spatial/temporal joins that preserve both source content digests and explicitly declare bounding-box-first spatial semantics.
+- Added grouped cross-layer aggregation and overlap analysis without rewriting or mutating source evidence.
+- Added a source-controlled spatiotemporal operator registry and explicit query/result/join/analysis schemas.
+- Added eight modular `/public/spatiotemporal/*` endpoints and a first-class `spatiotemporal-analysis` capability family.
+- Preserved the v4.46 spatial-evidence registry and all legacy `/public/spatial/*` APIs as compatible inputs/surfaces.
+- Advanced the corrected Contabo promotion contract to 29 release-bound static files.
+
 # v4.46.0 — Unified Spatial Evidence Object & Layer Registry
 
 - Added a canonical `sc-site-intelligence-spatial-evidence-object/2.0` interchange object with WGS84 geometry, stable layer identity, source/provenance lineage, temporal validity, quality metadata, visibility, bounding box, and SHA-256 content digest.

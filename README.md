@@ -2,9 +2,13 @@
 
 Sustainable Catalyst Site Intelligence is the geospatial, country, Earth-observation, ocean, space, infrastructure, environmental, and live public-intelligence layer of the Sustainable Catalyst platform.
 
-**Current release:** v4.46.0 — Unified Spatial Evidence Object & Layer Registry
+**Current release:** v4.47.0 — Spatiotemporal Query & Cross-Layer Analysis Engine
 
 ## Architecture
+
+### v4.47 spatiotemporal analysis architecture
+
+Site Intelligence v4.47.0 consumes the canonical v4.46 spatial evidence object and layer registry through a deterministic, stateless query engine. It adds WGS84 bounding-box spatial predicates, temporal interval predicates, property filters, cross-layer joins, grouped aggregation, content-addressed query plans/results, and provenance-preserving source-digest lineage without changing source records or legacy spatial APIs.
 
 ### v4.43 modular route architecture
 

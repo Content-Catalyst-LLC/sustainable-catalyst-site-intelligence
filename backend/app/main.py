@@ -14,7 +14,7 @@ from fastapi.responses import PlainTextResponse, FileResponse, Response, HTMLRes
 
 from .config import Settings, get_settings
 from .version import APP_VERSION
-from .routers import capabilities_router, data_truth_router, standalone_router, system_router, wordpress_bridge_router, spatial_evidence_router
+from .routers import capabilities_router, data_truth_router, standalone_router, system_router, wordpress_bridge_router, spatial_evidence_router, spatiotemporal_router
 from .build_info import public_build_info as build_public_build_info, public_deployment_status as build_public_deployment_status
 from .deployment_gate_v3226 import build_release_gate
 from .deployment_receipt_v3226 import public_deployment_receipt as build_public_deployment_receipt
@@ -1004,14 +1004,15 @@ async def public_experience_headers(request, call_next):
     return response
 
 
-# v4.46.0: foundational route families remain modularized and the unified
-# spatial evidence object/layer registry is now a first-class cross-domain contract.
+# v4.47.0: the v4.46 spatial evidence registry remains authoritative and now
+# feeds a first-class spatiotemporal query / cross-layer analysis engine.
 # Legacy spatial analysis routes remain intact for compatibility.
 app.include_router(system_router)
 app.include_router(data_truth_router)
 app.include_router(capabilities_router)
 app.include_router(wordpress_bridge_router)
 app.include_router(spatial_evidence_router)
+app.include_router(spatiotemporal_router)
 
 
 @app.get("/public/browser-reliability")
@@ -11766,7 +11767,7 @@ def admin_connected_intelligence_reindex_preview_endpoint(settings: Settings = D
     return {"ok": True, "version": APP_VERSION, "preview": True, "write_performed": False, "record_count": len(center.records()), "diagnostics": center.diagnostics()}
 
 # Site Intelligence standalone public application.
-# v4.45.0: FastAPI remains authoritative for /app/ while WordPress is a thin shell/embed bridge. Static
+# v4.47.0: FastAPI remains authoritative for /app/ while WordPress is a thin shell/embed bridge. Static
 # assets stay mounted directly while shell/deep-link/bootstrap contracts are
 # owned by the modular standalone router.
 from pathlib import Path as _Path

@@ -1,4 +1,4 @@
-APP_VERSION = "4.46.0"
+APP_VERSION = "4.47.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Unified Spatial Evidence Object & Layer Registry"
+RELEASE_NAME = "Spatiotemporal Query & Cross-Layer Analysis Engine"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

@@ -1,0 +1,42 @@
+{
+  "schema": "sc-site-intelligence-spatiotemporal-operator-registry/1.0",
+  "version": "4.47.0",
+  "registry_version": "1.0.0",
+  "title": "Spatiotemporal Query & Cross-Layer Operator Registry",
+  "spatial_semantics": "bounding-box-first",
+  "coordinate_reference_system": "EPSG:4326",
+  "spatial_predicates": [
+    {"operator": "intersects", "description": "Object bounding box intersects the query or peer bounding box."},
+    {"operator": "within", "description": "Object bounding box is fully within the query or peer bounding box."},
+    {"operator": "contains", "description": "Object bounding box fully contains the query or peer bounding box."},
+    {"operator": "disjoint", "description": "Object bounding box does not intersect the query or peer bounding box."}
+  ],
+  "temporal_predicates": [
+    {"operator": "overlaps", "description": "Object/peer temporal intervals overlap."},
+    {"operator": "within", "description": "Object temporal interval is within the query/peer interval."},
+    {"operator": "contains", "description": "Object temporal interval contains the query/peer interval."},
+    {"operator": "before", "description": "Object interval ends before the query/peer interval starts."},
+    {"operator": "after", "description": "Object interval starts after the query/peer interval ends."},
+    {"operator": "at", "description": "Object interval contains the supplied instant."}
+  ],
+  "property_operators": [
+    "eq", "ne", "gt", "gte", "lt", "lte", "in", "contains", "exists"
+  ],
+  "aggregate_operators": [
+    "count", "sum", "mean", "min", "max"
+  ],
+  "join_contract": {
+    "spatial_predicates": ["intersects", "within", "contains", "disjoint"],
+    "temporal_predicates": ["overlaps", "within", "contains", "before", "after"],
+    "maximum_pairs": 5000,
+    "self_pairs": false
+  },
+  "principles": [
+    "query-plans-are-deterministic-and-content-addressed",
+    "source-object-digests-are-preserved-in-derived-results",
+    "no-silent-coordinate-transformation",
+    "temporal-filtering-excludes-timeless-records-unless-explicitly-enabled",
+    "bounding-box-relations-are-declared-and-never-presented-as-exact-topology",
+    "cross-layer-analysis-does-not-change-source-provenance"
+  ]
+}
