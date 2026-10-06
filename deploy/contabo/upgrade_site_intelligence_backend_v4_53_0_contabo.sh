@@ -184,55 +184,6 @@ assert parity_audit()["ok"] is True
 assert economics_analysis({"records":[]})["analysis"]["investment_advice"] is False
 assert law_analysis({"records":[]})["analysis"]["legal_conclusion"] is False
 print("PASS: Site Intelligence v4.53.0 scenario exposure change and advanced domain parity verified")
-PYVERIFY'
-from app.main import app
-from app.version import APP_VERSION, EXPECTED_WORDPRESS_PLUGIN_VERSION, RELEASE_NAME
-from app.route_registry_v4430 import capability_manifest, route_inventory
-from app.predictive_spatial_consumer_v4520 import registry_manifest, normalize_prediction, validate_prediction, compare_predictions
-
-assert APP_VERSION == "4.52.0", APP_VERSION
-assert EXPECTED_WORDPRESS_PLUGIN_VERSION == APP_VERSION
-assert RELEASE_NAME == "Predictive Spatial Intelligence Consumer"
-paths = {getattr(route, "path", None) for route in app.routes}
-for required in (
-    "/health", "/public/build-info", "/public/release-gate", "/public/capabilities",
-    "/public/spatial-evidence/registry", "/public/spatiotemporal/registry", "/public/spatial-graph/registry",
-    "/public/live-geospatial/registry", "/public/source-federation/registry", "/public/spatial-research/registry",
-    "/public/predictive-spatial/registry", "/public/predictive-spatial/schema", "/public/predictive-spatial/providers",
-    "/public/predictive-spatial/normalize", "/public/predictive-spatial/validate", "/public/predictive-spatial/bind",
-    "/public/predictive-spatial/query", "/public/predictive-spatial/compare", "/public/predictive-spatial/scenario",
-    "/public/predictive-spatial/calibration", "/public/predictive-spatial/research-context", "/public/predictive-spatial/compatibility",
-):
-    assert required in paths, required
-manifest = capability_manifest(app.routes)
-assert manifest["version"] == APP_VERSION
-assert manifest["registry_version"] == "1.9.0", manifest["registry_version"]
-assert manifest["route_count"] == 1431, manifest["route_count"]
-assert manifest["modularized_route_count"] == 122, manifest["modularized_route_count"]
-assert manifest["capability_count"] == 23, manifest["capability_count"]
-assert manifest["unclassified_route_count"] == 0, manifest["unclassified_route_count"]
-family = next(item for item in manifest["capabilities"] if item["capability_id"] == "predictive-spatial-intelligence")
-assert family["route_count"] == 12 and family["modularized_route_count"] == 12, family
-keys=[(method,row["path"]) for row in route_inventory(app.routes) for method in row["methods"]]
-assert len(keys) == len(set(keys)), "duplicate method/path contracts"
-registry = registry_manifest()
-assert registry["provider_count"] == 4
-request = {
-    "target_layer_id":"hydrology-rivers-flood-drought",
-    "bbox":[-90.5,38.4,-89.8,38.9],
-    "issued_at":"2026-10-05T12:00:00Z",
-    "valid_time":{"start":"2026-10-06T00:00:00Z","end":"2026-10-07T00:00:00Z"},
-    "model":{"model_id":"deploy-fixture","model_version":"1.0","provider":"workspace"},
-    "values":[{"period":"day-1","probability":0.7}],
-    "uncertainty":{"method":"fixture"},
-    "calibration":{"status":"fixture"},
-}
-obj=normalize_prediction(request)["prediction"]
-assert validate_prediction(obj)["valid"] is True
-other=normalize_prediction({**request,"model":{"model_id":"deploy-fixture-b","model_version":"1.0","provider":"workspace"},"values":[{"period":"day-1","probability":0.6}]})["prediction"]
-comparison=compare_predictions({"predictions":[obj,other]})["comparison"]
-assert comparison["automatic_model_ranking"] is False and comparison["preferred_prediction"] is None
-print("PASS: Site Intelligence v4.52.0 predictive spatial intelligence consumer verified")
 PYVERIFY
 
 echo "PASS: $PRODUCT v$VERSION backend deployed and verified."
