@@ -1,0 +1,133 @@
+{
+  "schema": "sc-site-intelligence-advanced-domain-workspace-registry/1.0",
+  "version": "4.53.0",
+  "registry_version": "1.0.0",
+  "title": "Advanced Domain Workspace Parity Registry",
+  "domains": [
+    {
+      "domain_id": "international-law",
+      "label": "International Law & Global Governance",
+      "base_endpoints": [
+        "/public/international-law-observatory",
+        "/public/international-law-observatory/records",
+        "/public/international-law-observatory/timeline",
+        "/public/international-law-observatory/authority-matrix"
+      ],
+      "advanced_capabilities": [
+        "evidence",
+        "comparison",
+        "scenario",
+        "provenance",
+        "research-handoff",
+        "export",
+        "diagnostics"
+      ],
+      "research_tools": [
+        "authority-distribution",
+        "legal-body-analysis",
+        "country-coverage",
+        "subject-analysis",
+        "timeline-context",
+        "source-authority-preservation"
+      ]
+    },
+    {
+      "domain_id": "economics",
+      "label": "Economics, Markets & Sustainability",
+      "base_endpoints": [
+        "/public/economics-sustainability",
+        "/public/economics-sustainability/records",
+        "/public/economics-sustainability/series",
+        "/public/economics-sustainability/compare"
+      ],
+      "advanced_capabilities": [
+        "evidence",
+        "comparison",
+        "scenario",
+        "provenance",
+        "research-handoff",
+        "export",
+        "diagnostics"
+      ],
+      "research_tools": [
+        "comparability-groups",
+        "unit-frequency-preservation",
+        "cross-geography-analysis",
+        "time-series-context",
+        "scenario-linkage",
+        "source-method-review"
+      ]
+    },
+    {
+      "domain_id": "ocean",
+      "label": "Ocean & Marine Intelligence",
+      "base_endpoints": [
+        "/public/ocean-observation",
+        "/public/ocean-intelligence",
+        "/public/water-column",
+        "/public/seafloor-intelligence",
+        "/public/marine-biodiversity",
+        "/public/ocean-events",
+        "/public/marine-pollution",
+        "/public/ocean-governance"
+      ],
+      "advanced_capabilities": [
+        "evidence",
+        "comparison",
+        "scenario",
+        "provenance",
+        "research-handoff",
+        "export",
+        "diagnostics"
+      ],
+      "research_tools": [
+        "multi-variable-analysis",
+        "depth-stratification",
+        "mission-context",
+        "hazard-context",
+        "biodiversity-context",
+        "human-pressure",
+        "pollution",
+        "governance-overlap"
+      ]
+    },
+    {
+      "domain_id": "space",
+      "label": "Space & Astronomy Intelligence",
+      "base_endpoints": [
+        "/public/orbital-earth",
+        "/public/planetary-intelligence",
+        "/public/astronomical-observation",
+        "/public/solar-system-navigation",
+        "/public/exoplanet-habitability",
+        "/public/seti-technosignatures",
+        "/public/space-observation/providers"
+      ],
+      "advanced_capabilities": [
+        "evidence",
+        "comparison",
+        "scenario",
+        "provenance",
+        "research-handoff",
+        "export",
+        "diagnostics"
+      ],
+      "research_tools": [
+        "mission-context",
+        "target-analysis",
+        "observation-provenance",
+        "ephemeris-context",
+        "exoplanet-evidence",
+        "technosignature-evidence",
+        "live-space-provider-context"
+      ]
+    }
+  ],
+  "principles": [
+    "advanced-parity-without-fabricated-data",
+    "source-and-method-provenance-remain-visible",
+    "missing-data-stays-missing",
+    "automatic-causality-disabled",
+    "research-object-handoffs-are-explicit"
+  ]
+}

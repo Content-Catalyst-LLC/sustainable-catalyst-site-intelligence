@@ -1,3 +1,11 @@
+## 4.53.0 — Scenario, Exposure & Change Intelligence
+
+- Added scenario normalization/comparison, derived change, potential exposure, threshold, graph, live-event, predictive, and research-context contracts.
+- Added advanced workspace parity for International Law, Economics, Ocean, and Space.
+- Repaired Economics and International Law resilient initialization so optional catalog failures do not collapse the workspace.
+- Added advanced Ocean multi-variable/depth analysis and Space mission/target/observation analysis while preserving provenance and interpretation boundaries.
+- Advanced capability registry to 2.0.0 and release-bound promotion to 36 static registries/policies.
+
 ## 4.52.0 — Predictive Spatial Intelligence Consumer
 
 - Added canonical predictive spatial intelligence object and provider-neutral consumer registry.

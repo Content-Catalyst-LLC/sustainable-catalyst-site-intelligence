@@ -2,9 +2,16 @@
 
 Sustainable Catalyst Site Intelligence is the geospatial, country, Earth-observation, ocean, space, infrastructure, environmental, and live public-intelligence layer of the Sustainable Catalyst platform.
 
-**Current release:** v4.52.0 — Predictive Spatial Intelligence Consumer
+**Current release:** v4.53.0 — Scenario, Exposure & Change Intelligence
 
 
+
+### v4.53 Scenario, Exposure & Change Intelligence + Advanced Domain Parity
+
+- Adds deterministic scenario definition/comparison, derived change, potential exposure, threshold evaluation, and graph/live/predictive/research context while preserving observation-vs-model boundaries.
+- Repairs Economics and International Law workspace resilience so optional country/facet/catalog failures no longer collapse their public surfaces.
+- Adds advanced parity APIs and research panels for International Law, Economics, Ocean, and Space covering evidence, comparison, scenario, provenance, research handoff, export, and diagnostics.
+- Ocean gains multi-variable/depth-aware analysis across marine systems; Space gains mission/target/observation context across orbital, planetary, astronomy, solar-system, exoplanet, SETI, and live-space capabilities.
 
 ### v4.52 Predictive Spatial Intelligence Consumer
 

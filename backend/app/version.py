@@ -1,4 +1,4 @@
-APP_VERSION = "4.52.0"
+APP_VERSION = "4.53.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Predictive Spatial Intelligence Consumer"
+RELEASE_NAME = "Scenario, Exposure & Change Intelligence"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

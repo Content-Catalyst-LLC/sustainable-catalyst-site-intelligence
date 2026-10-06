@@ -150,6 +150,8 @@ def build_bootstrap(routes: Iterable[object], surface: str | None = None) -> dic
             "source_federation_registry": "/public/source-federation/registry",
             "spatial_research_registry": "/public/spatial-research/registry",
             "predictive_spatial_registry": "/public/predictive-spatial/registry",
+            "scenario_exposure_registry": "/public/scenario-exposure/registry",
+            "advanced_domain_registry": "/public/advanced-workspaces/registry",
         },
         "assets": {
             "manifest": "/app/manifest.webmanifest",

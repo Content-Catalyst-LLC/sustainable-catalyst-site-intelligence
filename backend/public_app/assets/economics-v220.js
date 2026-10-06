@@ -251,12 +251,14 @@
     const panel = qs("#economicsStudio"); if (!panel) return;
     panel.hidden = false; panel.setAttribute("aria-busy", "true"); document.body.classList.add("economics-route");
     try {
-      const [overview, facets, countries] = await Promise.all([
-        api("/public/economics-sustainability"),
-        api("/public/economics-sustainability/facets"),
-        api("/public/countries"),
+      const results = await Promise.allSettled([
+        api("/public/economics-sustainability"), api("/public/economics-sustainability/facets"), api("/public/countries")
       ]);
-      renderOverview(overview); state.facets = facets; fillCountries(countries); fillFacets(facets); applyUrl(); await loadRecords({sync: false});
+      const overview=results[0].status==="fulfilled"?results[0].value:{counts:{},integration:{state:"degraded",message:"Economics workspace ready with partial catalogs"}};
+      const facets=results[1].status==="fulfilled"?results[1].value:{};
+      const countries=results[2].status==="fulfilled"?results[2].value:{countries:[]};
+      renderOverview(overview); state.facets=facets; fillCountries(countries); fillFacets(facets); applyUrl();
+      try{await loadRecords({sync:false})}catch(error){setStatus("Economics workspace ready; official record catalog is temporarily unavailable","fallback");showEmpty("No official records available","Advanced v4.53 research tools remain available below.")}
     } catch (error) {
       setStatus("Economics records are temporarily unavailable", "error");
       showEmpty("Economics workspace unavailable", error.message || "The public data bridge did not respond.");

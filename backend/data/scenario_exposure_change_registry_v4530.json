@@ -1,0 +1,26 @@
+{
+  "schema": "sc-site-intelligence-scenario-exposure-change-registry/1.0",
+  "version": "4.53.0",
+  "registry_version": "1.0.0",
+  "title": "Scenario, Exposure & Change Intelligence",
+  "capabilities": [
+    "scenario-definition",
+    "scenario-comparison",
+    "derived-change",
+    "potential-exposure",
+    "threshold-evaluation",
+    "graph-context",
+    "live-event-context",
+    "predictive-context",
+    "research-context"
+  ],
+  "boundaries": [
+    "scenario-output-is-derived-context-not-observation",
+    "potential-exposure-is-not-confirmed-impact",
+    "threshold-crossing-is-not-causal-attribution",
+    "graph-adjacency-does-not-imply-failure-propagation",
+    "probability-is-not-truth",
+    "automatic-scenario-ranking-disabled",
+    "research-objects-are-not-mutated"
+  ]
+}
