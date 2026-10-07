@@ -1,0 +1,278 @@
+{
+  "schema": "sc-site-intelligence-advanced-domain-intelligence-registry/1.0",
+  "version": "4.55.2",
+  "registry_version": "1.0.0",
+  "title": "Advanced Domain Intelligence Workspace Expansion",
+  "capabilities": [
+    "evidence",
+    "filtering",
+    "comparison",
+    "mapping",
+    "time-context",
+    "scenario",
+    "provenance",
+    "research-handoff",
+    "reproducible-export",
+    "diagnostics"
+  ],
+  "domains": [
+    {
+      "domain_id": "dossiers",
+      "label": "Dossiers · Countries & Regions",
+      "workspace_route": "dossiers",
+      "controller": "SCDossiersV270",
+      "capabilities": [
+        "evidence",
+        "filtering",
+        "comparison",
+        "mapping",
+        "time-context",
+        "scenario",
+        "provenance",
+        "research-handoff",
+        "reproducible-export",
+        "diagnostics"
+      ],
+      "analysis_modes": [
+        "investigation",
+        "timeline",
+        "entity-network",
+        "cross-case",
+        "evidence-review"
+      ],
+      "research_workflow": [
+        "define-subject",
+        "collect-source-records",
+        "inspect-timeline",
+        "inspect-explicit-relationships",
+        "compare-cases",
+        "preserve-provenance",
+        "export-packet"
+      ],
+      "recommended_handoffs": [
+        "workspace",
+        "knowledge-library",
+        "research-librarian",
+        "research-lab",
+        "decision-studio"
+      ]
+    },
+    {
+      "domain_id": "economics",
+      "label": "Economics · Markets & Sustainability",
+      "workspace_route": "economics",
+      "controller": "SCEconomicsV220",
+      "capabilities": [
+        "evidence",
+        "filtering",
+        "comparison",
+        "mapping",
+        "time-context",
+        "scenario",
+        "provenance",
+        "research-handoff",
+        "reproducible-export",
+        "diagnostics"
+      ],
+      "analysis_modes": [
+        "macro-sustainability",
+        "country-comparison",
+        "time-series",
+        "trade-exposure",
+        "energy-intensity",
+        "scenario-context"
+      ],
+      "research_workflow": [
+        "select-indicators",
+        "preserve-unit-frequency",
+        "compare-geographies",
+        "inspect-time-series",
+        "review-source-methods",
+        "handoff-econometrics",
+        "export-packet"
+      ],
+      "recommended_handoffs": [
+        "workspace",
+        "workbench",
+        "research-lab",
+        "decision-studio",
+        "knowledge-library"
+      ]
+    },
+    {
+      "domain_id": "international-law",
+      "label": "International Law · Governance & Authority",
+      "workspace_route": "law",
+      "controller": "SCLawV230",
+      "capabilities": [
+        "evidence",
+        "filtering",
+        "comparison",
+        "mapping",
+        "time-context",
+        "scenario",
+        "provenance",
+        "research-handoff",
+        "reproducible-export",
+        "diagnostics"
+      ],
+      "analysis_modes": [
+        "authority-obligation",
+        "treaty-status",
+        "institution-comparison",
+        "legal-timeline",
+        "jurisdiction-context",
+        "subject-matrix"
+      ],
+      "research_workflow": [
+        "define-legal-question",
+        "collect-instruments",
+        "inspect-authority",
+        "inspect-status",
+        "compare-jurisdictions",
+        "preserve-citations",
+        "export-packet"
+      ],
+      "recommended_handoffs": [
+        "workspace",
+        "knowledge-library",
+        "research-librarian",
+        "research-lab",
+        "decision-studio"
+      ]
+    },
+    {
+      "domain_id": "science",
+      "label": "Science · Earth, Ocean & Space",
+      "workspace_route": "science",
+      "controller": "SCScienceV240",
+      "capabilities": [
+        "evidence",
+        "filtering",
+        "comparison",
+        "mapping",
+        "time-context",
+        "scenario",
+        "provenance",
+        "research-handoff",
+        "reproducible-export",
+        "diagnostics"
+      ],
+      "analysis_modes": [
+        "earth-systems",
+        "ocean-systems",
+        "space-astronomy",
+        "mission-dataset",
+        "multi-variable",
+        "observation-provenance"
+      ],
+      "research_workflow": [
+        "select-domain",
+        "select-dataset",
+        "inspect-observations",
+        "compare-variables",
+        "inspect-missions-instruments",
+        "preserve-provenance",
+        "handoff-computation",
+        "export-packet"
+      ],
+      "recommended_handoffs": [
+        "workspace",
+        "workbench",
+        "research-lab",
+        "knowledge-library"
+      ]
+    },
+    {
+      "domain_id": "humanitarian",
+      "label": "Humanitarian · Conflict & Displacement",
+      "workspace_route": "humanitarian",
+      "controller": "SCHumanitarianV250",
+      "capabilities": [
+        "evidence",
+        "filtering",
+        "comparison",
+        "mapping",
+        "time-context",
+        "scenario",
+        "provenance",
+        "research-handoff",
+        "reproducible-export",
+        "diagnostics"
+      ],
+      "analysis_modes": [
+        "conflict-events",
+        "displacement",
+        "humanitarian-access",
+        "population-exposure",
+        "country-comparison",
+        "event-timeline"
+      ],
+      "research_workflow": [
+        "define-area",
+        "collect-events",
+        "inspect-displacement",
+        "inspect-access",
+        "compare-time-periods",
+        "preserve-source-status",
+        "export-packet"
+      ],
+      "recommended_handoffs": [
+        "workspace",
+        "research-lab",
+        "decision-studio",
+        "knowledge-library"
+      ]
+    },
+    {
+      "domain_id": "resources",
+      "label": "Resources · Trade, Energy & Security",
+      "workspace_route": "resources",
+      "controller": "SCResourcesV260",
+      "capabilities": [
+        "evidence",
+        "filtering",
+        "comparison",
+        "mapping",
+        "time-context",
+        "scenario",
+        "provenance",
+        "research-handoff",
+        "reproducible-export",
+        "diagnostics"
+      ],
+      "analysis_modes": [
+        "trade-flows",
+        "energy-security",
+        "critical-resources",
+        "supply-chain",
+        "counterparty-concentration",
+        "disruption-scenario"
+      ],
+      "research_workflow": [
+        "select-resource-system",
+        "inspect-flows",
+        "inspect-counterparties",
+        "compare-geographies",
+        "review-dependency-context",
+        "handoff-modeling",
+        "export-packet"
+      ],
+      "recommended_handoffs": [
+        "workspace",
+        "workbench",
+        "research-lab",
+        "decision-studio",
+        "knowledge-library"
+      ]
+    }
+  ],
+  "boundaries": [
+    "no-fabricated-records",
+    "no-silent-unit-normalization",
+    "no-automatic-causality",
+    "no-automatic-legal-conclusion",
+    "no-automatic-security-risk-ranking",
+    "human-confirmation-required-for-handoffs"
+  ]
+}

@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.55.2 — Advanced Domain Intelligence Workspace Expansion
+- Expanded Dossiers, Economics, International Law, Science, Humanitarian, and Resources into advanced analytical workspaces rather than category-only surfaces.
+- Added 21 modular `/public/domain-intelligence` routes: registry/parity/compatibility plus profile, analysis, and reproducible research-packet contracts for all six domains.
+- Added domain-specific analytical modes, current-record browser analysis, explicit provenance boundaries, and human-confirmed cross-product handoffs.
+- Added an in-workspace Advanced Research surface that analyzes the official records already loaded by each workspace.
+- Advanced capability registry to 2.3.0 while preserving v4.55.1 runtime repair, v4.55 lineage, and the v4.46–v4.54 analytical stack.
+
+
 ## 4.55.1 — Core Workspace Runtime Repair
 - Repaired Dossiers, Economics, International Law, Science, Humanitarian, and Resources workspace runtime surfaces.
 - Aligned production-truth selectors with actual DOM studio IDs and current endpoint families.

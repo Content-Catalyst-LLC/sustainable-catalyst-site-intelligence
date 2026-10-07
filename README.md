@@ -1,9 +1,16 @@
-# Sustainable Catalyst Site Intelligence v4.55.1
+# Sustainable Catalyst Site Intelligence v4.55.2
 
 Sustainable Catalyst Site Intelligence is the geospatial, country, Earth-observation, ocean, space, infrastructure, environmental, and live public-intelligence layer of the Sustainable Catalyst platform.
 
-**Current release:** v4.55.1 — Core Workspace Runtime Repair
+**Current release:** v4.55.2 — Advanced Domain Intelligence Workspace Expansion
 
+
+### v4.55.2 Advanced Domain Intelligence Workspace Expansion
+
+- Converts Dossiers, Economics, International Law, Science, Humanitarian, and Resources from shallow category workspaces into first-class analytical research surfaces.
+- Adds current-record analysis modes, source-aware summaries, explicit comparison/time/scenario context, provenance boundaries, research workflows, and deterministic research packets.
+- Adds an Advanced Research panel directly inside all six standalone workspaces so users can analyze the records already loaded on screen.
+- Keeps missing data missing and disables automatic causal, legal, investment, culpability, and security-risk conclusions.
 
 
 ### v4.54 Reproducible Spatial Intelligence Packages
@@ -86,7 +93,7 @@ The exact repository state immediately before the September 29, 2026 cleanup is 
 
 Git history continues to preserve prior source and release artifacts. Generated release material should live in release bundles, Git history, or ignored staging directories rather than accumulating in the source-tree root.
 
-## v4.55.1 — Spatial Provenance & Transformation Lineage
+## v4.55.2 — Spatial Provenance & Transformation Lineage
 
 Adds content-addressed transformation events, explicit lineage chains and graphs, ancestor/descendant tracing, integrity verification, package-lineage context, and non-ranking lineage comparison across spatial evidence and derived analysis. Lineage is declared rather than inferred; missing history is reported rather than repaired.
 

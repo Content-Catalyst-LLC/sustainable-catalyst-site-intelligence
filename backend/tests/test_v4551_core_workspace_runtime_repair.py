@@ -21,19 +21,19 @@ def repo_root():
 
 
 def test_release_identity_and_route_inventory_unchanged():
-    assert APP_VERSION == "4.55.1"
-    assert RELEASE_NAME == "Core Workspace Runtime Repair"
+    assert APP_VERSION == "4.55.2"
+    assert RELEASE_NAME == "Advanced Domain Intelligence Workspace Expansion"
     m = capability_manifest(app.routes)
-    assert m["registry_version"] == "2.2.0"
-    assert m["route_count"] == 1479
-    assert m["modularized_route_count"] == 170
-    assert m["capability_count"] == 27
+    assert m["registry_version"] == "2.3.0"
+    assert m["route_count"] == 1500
+    assert m["modularized_route_count"] == 191
+    assert m["capability_count"] == 28
     assert m["unclassified_route_count"] == 0
 
 
 def test_production_truth_uses_real_workspace_surfaces_and_endpoint_families():
     directory = public_production_truth()
-    assert directory["version"] == "4.55.1"
+    assert directory["version"] == "4.55.2"
     contracts = {row["route_id"]: row for row in directory["routes"]}
     for route, (selector, endpoint, controller) in ROUTES.items():
         row = contracts[route]
@@ -58,13 +58,13 @@ def test_runtime_repair_asset_is_packaged_and_current():
         assert route in runtime
         assert selector in runtime
         assert controller in runtime
-    assert '/app/assets/workspace-runtime-repair-v4551.js?v=4.55.1' in index
+    assert '/app/assets/workspace-runtime-repair-v4551.js?v=4.55.2' in index
     assert index.index('workspace-runtime-repair-v4551.js') < index.index('production-truth-v3231.js')
 
 
 def test_production_truth_browser_contract_uses_active_release_not_4390():
     text = (repo_root()/"backend/public_app/assets/production-truth-v3231.js").read_text()
-    assert 'APP_ROOT.dataset.scsiRelease||"4.55.1"' in text
+    assert 'APP_ROOT.dataset.scsiRelease||"4.55.2"' in text
     assert 'const VERSION="4.39.0"' not in text
 
 
@@ -105,7 +105,7 @@ def test_all_six_primary_backend_families_respond_without_404():
 
 def test_wordpress_remains_thin_shell_and_version_aligned():
     php = (repo_root()/"wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
-    assert "Version: 4.55.1" in php
-    assert "const VERSION = '4.55.1';" in php
-    assert "const RELEASE_ID = 'site-intelligence-v4.55.1';" in php
+    assert "Version: 4.55.2" in php
+    assert "const VERSION = '4.55.2';" in php
+    assert "const RELEASE_ID = 'site-intelligence-v4.55.2';" in php
     assert "const WORDPRESS_ROLE = 'thin-shell-and-embed-bridge';" in php

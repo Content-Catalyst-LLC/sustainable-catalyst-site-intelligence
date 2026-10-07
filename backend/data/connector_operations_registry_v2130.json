@@ -1,6 +1,6 @@
 {
   "schema": "sc-site-intelligence-connector-operations/1.0",
-  "version": "2.13.0",
+  "version": "4.55.2",
   "generated_at": "2026-07-16T00:00:00Z",
   "connectors": [
     {
@@ -14,12 +14,33 @@
       "public_status": "live_cached_fallback",
       "credential_strategy": "none",
       "credential_env_names": [],
-      "expected_update": {"cadence": "daily", "max_age_hours": 30},
-      "schedule": {"interval_minutes": 360, "jitter_minutes": 20},
-      "quota": {"requests_per_minute": 8, "requests_per_day": 500},
-      "schema_contract": {"schema_version": "1.0", "required_fields": ["source", "indicators"]},
-      "transformations": ["normalize_source_state", "attach_ingestion_timestamp", "calculate_payload_digest"],
-      "datasets": ["climate-energy-timeseries"],
+      "expected_update": {
+        "cadence": "daily",
+        "max_age_hours": 30
+      },
+      "schedule": {
+        "interval_minutes": 360,
+        "jitter_minutes": 20
+      },
+      "quota": {
+        "requests_per_minute": 8,
+        "requests_per_day": 500
+      },
+      "schema_contract": {
+        "schema_version": "1.0",
+        "required_fields": [
+          "source",
+          "indicators"
+        ]
+      },
+      "transformations": [
+        "normalize_source_state",
+        "attach_ingestion_timestamp",
+        "calculate_payload_digest"
+      ],
+      "datasets": [
+        "climate-energy-timeseries"
+      ],
       "public_note": "Solar and meteorological context with cache and fallback boundaries."
     },
     {
@@ -33,12 +54,33 @@
       "public_status": "metadata_cached",
       "credential_strategy": "none",
       "credential_env_names": [],
-      "expected_update": {"cadence": "daily", "max_age_hours": 30},
-      "schedule": {"interval_minutes": 1440, "jitter_minutes": 45},
-      "quota": {"requests_per_minute": 4, "requests_per_day": 100},
-      "schema_contract": {"schema_version": "1.0", "required_fields": ["source", "layers"]},
-      "transformations": ["normalize_layer_metadata", "attach_ingestion_timestamp", "calculate_payload_digest"],
-      "datasets": ["earth-observation-layer-catalog"],
+      "expected_update": {
+        "cadence": "daily",
+        "max_age_hours": 30
+      },
+      "schedule": {
+        "interval_minutes": 1440,
+        "jitter_minutes": 45
+      },
+      "quota": {
+        "requests_per_minute": 4,
+        "requests_per_day": 100
+      },
+      "schema_contract": {
+        "schema_version": "1.0",
+        "required_fields": [
+          "source",
+          "layers"
+        ]
+      },
+      "transformations": [
+        "normalize_layer_metadata",
+        "attach_ingestion_timestamp",
+        "calculate_payload_digest"
+      ],
+      "datasets": [
+        "earth-observation-layer-catalog"
+      ],
       "public_note": "Earth-observation layer metadata; imagery remains served by the upstream provider."
     },
     {
@@ -52,12 +94,32 @@
       "public_status": "fallback_safe",
       "credential_strategy": "none",
       "credential_env_names": [],
-      "expected_update": {"cadence": "periodic", "max_age_hours": 168},
-      "schedule": {"interval_minutes": 1440, "jitter_minutes": 60},
-      "quota": {"requests_per_minute": 3, "requests_per_day": 60},
-      "schema_contract": {"schema_version": "1.0", "required_fields": ["source"]},
-      "transformations": ["normalize_emissions_context", "attach_ingestion_timestamp", "calculate_payload_digest"],
-      "datasets": ["emissions-context"],
+      "expected_update": {
+        "cadence": "periodic",
+        "max_age_hours": 168
+      },
+      "schedule": {
+        "interval_minutes": 1440,
+        "jitter_minutes": 60
+      },
+      "quota": {
+        "requests_per_minute": 3,
+        "requests_per_day": 60
+      },
+      "schema_contract": {
+        "schema_version": "1.0",
+        "required_fields": [
+          "source"
+        ]
+      },
+      "transformations": [
+        "normalize_emissions_context",
+        "attach_ingestion_timestamp",
+        "calculate_payload_digest"
+      ],
+      "datasets": [
+        "emissions-context"
+      ],
       "public_note": "Emissions-source context with conservative public language and no compliance determination."
     },
     {
@@ -71,12 +133,33 @@
       "public_status": "live_cached_fallback",
       "credential_strategy": "none",
       "credential_env_names": [],
-      "expected_update": {"cadence": "hourly", "max_age_hours": 3},
-      "schedule": {"interval_minutes": 60, "jitter_minutes": 10},
-      "quota": {"requests_per_minute": 5, "requests_per_day": 500},
-      "schema_contract": {"schema_version": "1.0", "required_fields": ["source", "indicators"]},
-      "transformations": ["normalize_alert_summary", "attach_ingestion_timestamp", "calculate_payload_digest"],
-      "datasets": ["weather-climate-context"],
+      "expected_update": {
+        "cadence": "hourly",
+        "max_age_hours": 3
+      },
+      "schedule": {
+        "interval_minutes": 60,
+        "jitter_minutes": 10
+      },
+      "quota": {
+        "requests_per_minute": 5,
+        "requests_per_day": 500
+      },
+      "schema_contract": {
+        "schema_version": "1.0",
+        "required_fields": [
+          "source",
+          "indicators"
+        ]
+      },
+      "transformations": [
+        "normalize_alert_summary",
+        "attach_ingestion_timestamp",
+        "calculate_payload_digest"
+      ],
+      "datasets": [
+        "weather-climate-context"
+      ],
       "public_note": "Weather and alert context; not an emergency-warning service."
     },
     {
@@ -89,13 +172,36 @@
       "enabled": true,
       "public_status": "optional_credentials",
       "credential_strategy": "optional_backend",
-      "credential_env_names": ["SC_SI_EIA_API_KEY"],
-      "expected_update": {"cadence": "daily", "max_age_hours": 48},
-      "schedule": {"interval_minutes": 360, "jitter_minutes": 20},
-      "quota": {"requests_per_minute": 4, "requests_per_day": 250},
-      "schema_contract": {"schema_version": "1.0", "required_fields": ["source", "indicators"]},
-      "transformations": ["normalize_energy_units", "attach_ingestion_timestamp", "calculate_payload_digest"],
-      "datasets": ["energy-price-context"],
+      "credential_env_names": [
+        "SC_SI_EIA_API_KEY"
+      ],
+      "expected_update": {
+        "cadence": "daily",
+        "max_age_hours": 48
+      },
+      "schedule": {
+        "interval_minutes": 360,
+        "jitter_minutes": 20
+      },
+      "quota": {
+        "requests_per_minute": 4,
+        "requests_per_day": 250
+      },
+      "schema_contract": {
+        "schema_version": "1.0",
+        "required_fields": [
+          "source",
+          "indicators"
+        ]
+      },
+      "transformations": [
+        "normalize_energy_units",
+        "attach_ingestion_timestamp",
+        "calculate_payload_digest"
+      ],
+      "datasets": [
+        "energy-price-context"
+      ],
       "public_note": "Official energy context; optional API key remains backend-only."
     },
     {
@@ -108,13 +214,37 @@
       "enabled": true,
       "public_status": "optional_credentials",
       "credential_strategy": "optional_backend",
-      "credential_env_names": ["SC_SI_EPA_AQS_EMAIL", "SC_SI_EPA_AQS_KEY"],
-      "expected_update": {"cadence": "daily", "max_age_hours": 48},
-      "schedule": {"interval_minutes": 360, "jitter_minutes": 20},
-      "quota": {"requests_per_minute": 4, "requests_per_day": 250},
-      "schema_contract": {"schema_version": "1.0", "required_fields": ["source", "indicators"]},
-      "transformations": ["normalize_monitor_metadata", "attach_ingestion_timestamp", "calculate_payload_digest"],
-      "datasets": ["air-quality-monitor-context"],
+      "credential_env_names": [
+        "SC_SI_EPA_AQS_EMAIL",
+        "SC_SI_EPA_AQS_KEY"
+      ],
+      "expected_update": {
+        "cadence": "daily",
+        "max_age_hours": 48
+      },
+      "schedule": {
+        "interval_minutes": 360,
+        "jitter_minutes": 20
+      },
+      "quota": {
+        "requests_per_minute": 4,
+        "requests_per_day": 250
+      },
+      "schema_contract": {
+        "schema_version": "1.0",
+        "required_fields": [
+          "source",
+          "indicators"
+        ]
+      },
+      "transformations": [
+        "normalize_monitor_metadata",
+        "attach_ingestion_timestamp",
+        "calculate_payload_digest"
+      ],
+      "datasets": [
+        "air-quality-monitor-context"
+      ],
       "public_note": "Air-quality monitoring context; not a regulatory compliance determination."
     },
     {
@@ -128,12 +258,33 @@
       "public_status": "live_cached_fallback",
       "credential_strategy": "none",
       "credential_env_names": [],
-      "expected_update": {"cadence": "annual", "max_age_hours": 8760},
-      "schedule": {"interval_minutes": 10080, "jitter_minutes": 180},
-      "quota": {"requests_per_minute": 8, "requests_per_day": 500},
-      "schema_contract": {"schema_version": "1.0", "required_fields": ["source", "indicators"]},
-      "transformations": ["normalize_geography", "attach_ingestion_timestamp", "calculate_payload_digest"],
-      "datasets": ["demographic-context"],
+      "expected_update": {
+        "cadence": "annual",
+        "max_age_hours": 8760
+      },
+      "schedule": {
+        "interval_minutes": 10080,
+        "jitter_minutes": 180
+      },
+      "quota": {
+        "requests_per_minute": 8,
+        "requests_per_day": 500
+      },
+      "schema_contract": {
+        "schema_version": "1.0",
+        "required_fields": [
+          "source",
+          "indicators"
+        ]
+      },
+      "transformations": [
+        "normalize_geography",
+        "attach_ingestion_timestamp",
+        "calculate_payload_digest"
+      ],
+      "datasets": [
+        "demographic-context"
+      ],
       "public_note": "Official demographic context with reference-period labels."
     },
     {
@@ -147,12 +298,32 @@
       "public_status": "registry_context",
       "credential_strategy": "none",
       "credential_env_names": [],
-      "expected_update": {"cadence": "periodic", "max_age_hours": 8760},
-      "schedule": {"interval_minutes": 10080, "jitter_minutes": 180},
-      "quota": {"requests_per_minute": 2, "requests_per_day": 50},
-      "schema_contract": {"schema_version": "1.0", "required_fields": ["source"]},
-      "transformations": ["normalize_land_context", "attach_ingestion_timestamp", "calculate_payload_digest"],
-      "datasets": ["land-cover-context"],
+      "expected_update": {
+        "cadence": "periodic",
+        "max_age_hours": 8760
+      },
+      "schedule": {
+        "interval_minutes": 10080,
+        "jitter_minutes": 180
+      },
+      "quota": {
+        "requests_per_minute": 2,
+        "requests_per_day": 50
+      },
+      "schema_contract": {
+        "schema_version": "1.0",
+        "required_fields": [
+          "source"
+        ]
+      },
+      "transformations": [
+        "normalize_land_context",
+        "attach_ingestion_timestamp",
+        "calculate_payload_digest"
+      ],
+      "datasets": [
+        "land-cover-context"
+      ],
       "public_note": "Registry and methodology context pending a dedicated raster or STAC ingestion path."
     },
     {
@@ -166,12 +337,33 @@
       "public_status": "live_cached_fallback",
       "credential_strategy": "none",
       "credential_env_names": [],
-      "expected_update": {"cadence": "daily", "max_age_hours": 48},
-      "schedule": {"interval_minutes": 1440, "jitter_minutes": 45},
-      "quota": {"requests_per_minute": 6, "requests_per_day": 300},
-      "schema_contract": {"schema_version": "1.0", "required_fields": ["source", "indicators"]},
-      "transformations": ["normalize_occurrence_context", "attach_ingestion_timestamp", "calculate_payload_digest"],
-      "datasets": ["biodiversity-occurrence-context"],
+      "expected_update": {
+        "cadence": "daily",
+        "max_age_hours": 48
+      },
+      "schedule": {
+        "interval_minutes": 1440,
+        "jitter_minutes": 45
+      },
+      "quota": {
+        "requests_per_minute": 6,
+        "requests_per_day": 300
+      },
+      "schema_contract": {
+        "schema_version": "1.0",
+        "required_fields": [
+          "source",
+          "indicators"
+        ]
+      },
+      "transformations": [
+        "normalize_occurrence_context",
+        "attach_ingestion_timestamp",
+        "calculate_payload_digest"
+      ],
+      "datasets": [
+        "biodiversity-occurrence-context"
+      ],
       "public_note": "Occurrence density context; not proof of complete species presence or absence."
     },
     {
@@ -185,12 +377,33 @@
       "public_status": "live_cached_fallback",
       "credential_strategy": "none",
       "credential_env_names": [],
-      "expected_update": {"cadence": "daily", "max_age_hours": 48},
-      "schedule": {"interval_minutes": 1440, "jitter_minutes": 45},
-      "quota": {"requests_per_minute": 6, "requests_per_day": 300},
-      "schema_contract": {"schema_version": "1.0", "required_fields": ["ok", "connector"]},
-      "transformations": ["normalize_public_connector_metadata", "attach_ingestion_timestamp", "calculate_payload_digest"],
-      "datasets": ["development-indicator-metadata"],
+      "expected_update": {
+        "cadence": "daily",
+        "max_age_hours": 48
+      },
+      "schedule": {
+        "interval_minutes": 1440,
+        "jitter_minutes": 45
+      },
+      "quota": {
+        "requests_per_minute": 6,
+        "requests_per_day": 300
+      },
+      "schema_contract": {
+        "schema_version": "1.0",
+        "required_fields": [
+          "ok",
+          "connector"
+        ]
+      },
+      "transformations": [
+        "normalize_public_connector_metadata",
+        "attach_ingestion_timestamp",
+        "calculate_payload_digest"
+      ],
+      "datasets": [
+        "development-indicator-metadata"
+      ],
       "public_note": "Development indicator metadata and public-safe source status."
     },
     {
@@ -204,12 +417,33 @@
       "public_status": "live_cached_fallback",
       "credential_strategy": "none",
       "credential_env_names": [],
-      "expected_update": {"cadence": "daily", "max_age_hours": 48},
-      "schedule": {"interval_minutes": 1440, "jitter_minutes": 45},
-      "quota": {"requests_per_minute": 6, "requests_per_day": 300},
-      "schema_contract": {"schema_version": "1.0", "required_fields": ["ok", "connector"]},
-      "transformations": ["normalize_public_connector_metadata", "attach_ingestion_timestamp", "calculate_payload_digest"],
-      "datasets": ["research-metadata"],
+      "expected_update": {
+        "cadence": "daily",
+        "max_age_hours": 48
+      },
+      "schedule": {
+        "interval_minutes": 1440,
+        "jitter_minutes": 45
+      },
+      "quota": {
+        "requests_per_minute": 6,
+        "requests_per_day": 300
+      },
+      "schema_contract": {
+        "schema_version": "1.0",
+        "required_fields": [
+          "ok",
+          "connector"
+        ]
+      },
+      "transformations": [
+        "normalize_public_connector_metadata",
+        "attach_ingestion_timestamp",
+        "calculate_payload_digest"
+      ],
+      "datasets": [
+        "research-metadata"
+      ],
       "public_note": "Research graph metadata without automated authority scoring."
     },
     {
@@ -223,12 +457,33 @@
       "public_status": "live_cached_fallback",
       "credential_strategy": "none",
       "credential_env_names": [],
-      "expected_update": {"cadence": "daily", "max_age_hours": 48},
-      "schedule": {"interval_minutes": 1440, "jitter_minutes": 45},
-      "quota": {"requests_per_minute": 6, "requests_per_day": 300},
-      "schema_contract": {"schema_version": "1.0", "required_fields": ["ok", "connector"]},
-      "transformations": ["normalize_public_connector_metadata", "attach_ingestion_timestamp", "calculate_payload_digest"],
-      "datasets": ["publication-metadata"],
+      "expected_update": {
+        "cadence": "daily",
+        "max_age_hours": 48
+      },
+      "schedule": {
+        "interval_minutes": 1440,
+        "jitter_minutes": 45
+      },
+      "quota": {
+        "requests_per_minute": 6,
+        "requests_per_day": 300
+      },
+      "schema_contract": {
+        "schema_version": "1.0",
+        "required_fields": [
+          "ok",
+          "connector"
+        ]
+      },
+      "transformations": [
+        "normalize_public_connector_metadata",
+        "attach_ingestion_timestamp",
+        "calculate_payload_digest"
+      ],
+      "datasets": [
+        "publication-metadata"
+      ],
       "public_note": "DOI and publication metadata with copyright boundaries."
     },
     {
@@ -242,12 +497,33 @@
       "public_status": "live_cached_fallback",
       "credential_strategy": "none",
       "credential_env_names": [],
-      "expected_update": {"cadence": "hourly", "max_age_hours": 4},
-      "schedule": {"interval_minutes": 60, "jitter_minutes": 10},
-      "quota": {"requests_per_minute": 5, "requests_per_day": 250},
-      "schema_contract": {"schema_version": "1.0", "required_fields": ["ok", "connector"]},
-      "transformations": ["normalize_public_connector_metadata", "attach_ingestion_timestamp", "calculate_payload_digest"],
-      "datasets": ["repository-metadata"],
+      "expected_update": {
+        "cadence": "hourly",
+        "max_age_hours": 4
+      },
+      "schedule": {
+        "interval_minutes": 60,
+        "jitter_minutes": 10
+      },
+      "quota": {
+        "requests_per_minute": 5,
+        "requests_per_day": 250
+      },
+      "schema_contract": {
+        "schema_version": "1.0",
+        "required_fields": [
+          "ok",
+          "connector"
+        ]
+      },
+      "transformations": [
+        "normalize_public_connector_metadata",
+        "attach_ingestion_timestamp",
+        "calculate_payload_digest"
+      ],
+      "datasets": [
+        "repository-metadata"
+      ],
       "public_note": "Public repository metadata without tokens, private issues, or local paths."
     },
     {
@@ -261,29 +537,218 @@
       "public_status": "metadata_cached",
       "credential_strategy": "mixed_optional_backend",
       "credential_env_names": [],
-      "expected_update": {"cadence": "daily", "max_age_hours": 48},
-      "schedule": {"interval_minutes": 360, "jitter_minutes": 20},
-      "quota": {"requests_per_minute": 4, "requests_per_day": 100},
-      "schema_contract": {"schema_version": "1.0", "required_fields": ["ok", "sources"]},
-      "transformations": ["normalize_source_registry", "attach_ingestion_timestamp", "calculate_payload_digest"],
-      "datasets": ["sustainable-development-source-registry"],
+      "expected_update": {
+        "cadence": "daily",
+        "max_age_hours": 48
+      },
+      "schedule": {
+        "interval_minutes": 360,
+        "jitter_minutes": 20
+      },
+      "quota": {
+        "requests_per_minute": 4,
+        "requests_per_day": 100
+      },
+      "schema_contract": {
+        "schema_version": "1.0",
+        "required_fields": [
+          "ok",
+          "sources"
+        ]
+      },
+      "transformations": [
+        "normalize_source_registry",
+        "attach_ingestion_timestamp",
+        "calculate_payload_digest"
+      ],
+      "datasets": [
+        "sustainable-development-source-registry"
+      ],
       "public_note": "Methodology and source-family registry; individual source availability remains explicit."
     }
   ],
   "jobs": [
-    {"job_id": "refresh-nasa-power", "connector_id": "nasa_power", "name": "Refresh NASA POWER", "operation": "refresh", "triggers": ["manual", "scheduled", "conditional"], "condition": "stale_or_failed", "enabled": true},
-    {"job_id": "refresh-nasa-gibs", "connector_id": "nasa_gibs", "name": "Refresh NASA GIBS metadata", "operation": "refresh", "triggers": ["manual", "scheduled", "conditional"], "condition": "stale_or_failed", "enabled": true},
-    {"job_id": "refresh-climate-trace", "connector_id": "climate_trace", "name": "Refresh Climate TRACE context", "operation": "refresh", "triggers": ["manual", "scheduled", "conditional"], "condition": "stale_or_failed", "enabled": true},
-    {"job_id": "refresh-noaa-weather-climate", "connector_id": "noaa_weather_climate", "name": "Refresh NOAA weather and climate context", "operation": "refresh", "triggers": ["manual", "scheduled", "conditional"], "condition": "stale_or_failed", "enabled": true},
-    {"job_id": "refresh-eia-energy", "connector_id": "eia_energy", "name": "Refresh EIA energy context", "operation": "refresh", "triggers": ["manual", "scheduled", "conditional"], "condition": "stale_or_failed", "enabled": true},
-    {"job_id": "refresh-epa-air-quality", "connector_id": "epa_aqs_air_quality", "name": "Refresh EPA air-quality context", "operation": "refresh", "triggers": ["manual", "scheduled", "conditional"], "condition": "stale_or_failed", "enabled": true},
-    {"job_id": "refresh-census-context", "connector_id": "census_context", "name": "Refresh Census context", "operation": "refresh", "triggers": ["manual", "scheduled", "conditional"], "condition": "stale_or_failed", "enabled": true},
-    {"job_id": "refresh-usgs-land-cover", "connector_id": "usgs_land_cover", "name": "Refresh USGS land-cover context", "operation": "refresh", "triggers": ["manual", "scheduled", "conditional"], "condition": "stale_or_failed", "enabled": true},
-    {"job_id": "refresh-gbif-biodiversity", "connector_id": "gbif_biodiversity", "name": "Refresh GBIF biodiversity context", "operation": "refresh", "triggers": ["manual", "scheduled", "conditional"], "condition": "stale_or_failed", "enabled": true},
-    {"job_id": "refresh-world-bank", "connector_id": "world_bank", "name": "Refresh World Bank metadata", "operation": "refresh", "triggers": ["manual", "scheduled", "conditional"], "condition": "stale_or_failed", "enabled": true},
-    {"job_id": "refresh-openalex", "connector_id": "openalex", "name": "Refresh OpenAlex metadata", "operation": "refresh", "triggers": ["manual", "scheduled", "conditional"], "condition": "stale_or_failed", "enabled": true},
-    {"job_id": "refresh-crossref", "connector_id": "crossref", "name": "Refresh Crossref metadata", "operation": "refresh", "triggers": ["manual", "scheduled", "conditional"], "condition": "stale_or_failed", "enabled": true},
-    {"job_id": "refresh-github", "connector_id": "github", "name": "Refresh GitHub repository metadata", "operation": "refresh", "triggers": ["manual", "scheduled", "conditional"], "condition": "stale_or_failed", "enabled": true},
-    {"job_id": "refresh-sustainable-development", "connector_id": "sustainable_development", "name": "Refresh sustainable-development source registry", "operation": "refresh", "triggers": ["manual", "scheduled", "conditional"], "condition": "stale_or_failed", "enabled": true}
+    {
+      "job_id": "refresh-nasa-power",
+      "connector_id": "nasa_power",
+      "name": "Refresh NASA POWER",
+      "operation": "refresh",
+      "triggers": [
+        "manual",
+        "scheduled",
+        "conditional"
+      ],
+      "condition": "stale_or_failed",
+      "enabled": true
+    },
+    {
+      "job_id": "refresh-nasa-gibs",
+      "connector_id": "nasa_gibs",
+      "name": "Refresh NASA GIBS metadata",
+      "operation": "refresh",
+      "triggers": [
+        "manual",
+        "scheduled",
+        "conditional"
+      ],
+      "condition": "stale_or_failed",
+      "enabled": true
+    },
+    {
+      "job_id": "refresh-climate-trace",
+      "connector_id": "climate_trace",
+      "name": "Refresh Climate TRACE context",
+      "operation": "refresh",
+      "triggers": [
+        "manual",
+        "scheduled",
+        "conditional"
+      ],
+      "condition": "stale_or_failed",
+      "enabled": true
+    },
+    {
+      "job_id": "refresh-noaa-weather-climate",
+      "connector_id": "noaa_weather_climate",
+      "name": "Refresh NOAA weather and climate context",
+      "operation": "refresh",
+      "triggers": [
+        "manual",
+        "scheduled",
+        "conditional"
+      ],
+      "condition": "stale_or_failed",
+      "enabled": true
+    },
+    {
+      "job_id": "refresh-eia-energy",
+      "connector_id": "eia_energy",
+      "name": "Refresh EIA energy context",
+      "operation": "refresh",
+      "triggers": [
+        "manual",
+        "scheduled",
+        "conditional"
+      ],
+      "condition": "stale_or_failed",
+      "enabled": true
+    },
+    {
+      "job_id": "refresh-epa-air-quality",
+      "connector_id": "epa_aqs_air_quality",
+      "name": "Refresh EPA air-quality context",
+      "operation": "refresh",
+      "triggers": [
+        "manual",
+        "scheduled",
+        "conditional"
+      ],
+      "condition": "stale_or_failed",
+      "enabled": true
+    },
+    {
+      "job_id": "refresh-census-context",
+      "connector_id": "census_context",
+      "name": "Refresh Census context",
+      "operation": "refresh",
+      "triggers": [
+        "manual",
+        "scheduled",
+        "conditional"
+      ],
+      "condition": "stale_or_failed",
+      "enabled": true
+    },
+    {
+      "job_id": "refresh-usgs-land-cover",
+      "connector_id": "usgs_land_cover",
+      "name": "Refresh USGS land-cover context",
+      "operation": "refresh",
+      "triggers": [
+        "manual",
+        "scheduled",
+        "conditional"
+      ],
+      "condition": "stale_or_failed",
+      "enabled": true
+    },
+    {
+      "job_id": "refresh-gbif-biodiversity",
+      "connector_id": "gbif_biodiversity",
+      "name": "Refresh GBIF biodiversity context",
+      "operation": "refresh",
+      "triggers": [
+        "manual",
+        "scheduled",
+        "conditional"
+      ],
+      "condition": "stale_or_failed",
+      "enabled": true
+    },
+    {
+      "job_id": "refresh-world-bank",
+      "connector_id": "world_bank",
+      "name": "Refresh World Bank metadata",
+      "operation": "refresh",
+      "triggers": [
+        "manual",
+        "scheduled",
+        "conditional"
+      ],
+      "condition": "stale_or_failed",
+      "enabled": true
+    },
+    {
+      "job_id": "refresh-openalex",
+      "connector_id": "openalex",
+      "name": "Refresh OpenAlex metadata",
+      "operation": "refresh",
+      "triggers": [
+        "manual",
+        "scheduled",
+        "conditional"
+      ],
+      "condition": "stale_or_failed",
+      "enabled": true
+    },
+    {
+      "job_id": "refresh-crossref",
+      "connector_id": "crossref",
+      "name": "Refresh Crossref metadata",
+      "operation": "refresh",
+      "triggers": [
+        "manual",
+        "scheduled",
+        "conditional"
+      ],
+      "condition": "stale_or_failed",
+      "enabled": true
+    },
+    {
+      "job_id": "refresh-github",
+      "connector_id": "github",
+      "name": "Refresh GitHub repository metadata",
+      "operation": "refresh",
+      "triggers": [
+        "manual",
+        "scheduled",
+        "conditional"
+      ],
+      "condition": "stale_or_failed",
+      "enabled": true
+    },
+    {
+      "job_id": "refresh-sustainable-development",
+      "connector_id": "sustainable_development",
+      "name": "Refresh sustainable-development source registry",
+      "operation": "refresh",
+      "triggers": [
+        "manual",
+        "scheduled",
+        "conditional"
+      ],
+      "condition": "stale_or_failed",
+      "enabled": true
+    }
   ]
 }

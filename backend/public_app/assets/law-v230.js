@@ -28,5 +28,5 @@
   function close(){const panel=qs("#lawStudio");if(panel)panel.hidden=true;document.body.classList.remove("law-route")}
   function bind(){qs("#lawApply")?.addEventListener("click",()=>loadRecords());qs("#lawReset")?.addEventListener("click",()=>{["#lawAuthority","#lawType","#lawBody","#lawCountry","#lawSubject"].forEach(s=>{if(qs(s))qs(s).value=""});if(qs("#lawSearch"))qs("#lawSearch").value="";loadRecords()});qs("#lawSearch")?.addEventListener("keydown",e=>{if(e.key==="Enter")loadRecords()});qs("#lawShare")?.addEventListener("click",async()=>{syncUrl();try{await navigator.clipboard.writeText(location.href)}catch{}});qs("#lawExport")?.addEventListener("click",downloadCsv);qs("#lawProfileApply")?.addEventListener("click",loadCountryProfile);qs("#lawWorkbench")?.addEventListener("click",()=>window.open("https://sustainablecatalyst.com/workbench/","_blank","noopener"));qs("#lawDecisionStudio")?.addEventListener("click",()=>window.open("https://sustainablecatalyst.com/decision-studio/","_blank","noopener"))}
   document.addEventListener("DOMContentLoaded",bind);
-  window.SCLawV230={open,close,status:()=>({version:VERSION,map:state.map,records:state.records.length})};
+  window.SCLawV230={open,close,status:()=>({version:VERSION,map:state.map,record_count:state.records.length,records:state.records})};
 })();

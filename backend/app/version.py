@@ -1,4 +1,4 @@
-APP_VERSION = "4.55.1"
+APP_VERSION = "4.55.2"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Core Workspace Runtime Repair"
+RELEASE_NAME = "Advanced Domain Intelligence Workspace Expansion"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

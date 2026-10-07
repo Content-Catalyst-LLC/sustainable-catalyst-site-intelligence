@@ -25,9 +25,9 @@
     }
     throw last;
   }
-  const APP_VERSION="4.55.1";
-  const RELEASE_LINEAGE="v4.55.1";
-  const SCIENCE_CONTROLLER_SRC="/app/assets/science-v240.js?v=4.55.1";
+  const APP_VERSION="4.55.2";
+  const RELEASE_LINEAGE="v4.55.2";
+  const SCIENCE_CONTROLLER_SRC="/app/assets/science-v240.js?v=4.55.2";
   const STANDALONE_BOOTSTRAP_ENDPOINT="/public/app/bootstrap";
   const STANDALONE_HANDSHAKE_ENDPOINT="/public/app/runtime-handshake";
   let standaloneBootstrap=null;

@@ -40,8 +40,8 @@ def _sample() -> dict:
 
 
 def test_release_identity() -> None:
-    assert APP_VERSION == "4.55.1"
-    assert RELEASE_NAME == "Core Workspace Runtime Repair"
+    assert APP_VERSION == "4.55.2"
+    assert RELEASE_NAME == "Advanced Domain Intelligence Workspace Expansion"
 
 
 def test_registry_manifest_is_cross_domain_and_versioned() -> None:
@@ -140,7 +140,7 @@ def test_legacy_spatial_studio_is_preserved() -> None:
 def test_capability_registry_has_first_class_spatial_evidence_family() -> None:
     manifest = capability_manifest(app.routes)
     assert manifest["version"] == APP_VERSION
-    assert manifest["registry_version"] == "2.2.0"
+    assert manifest["registry_version"] == "2.3.0"
     assert manifest["unclassified_route_count"] == 0
     spatial = next(item for item in manifest["capabilities"] if item["capability_id"] == "spatial-evidence-registry")
     assert spatial["route_count"] == 8

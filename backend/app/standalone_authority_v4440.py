@@ -154,6 +154,7 @@ def build_bootstrap(routes: Iterable[object], surface: str | None = None) -> dic
             "predictive_spatial_registry": "/public/predictive-spatial/registry",
             "scenario_exposure_registry": "/public/scenario-exposure/registry",
             "advanced_domain_registry": "/public/advanced-workspaces/registry",
+            "advanced_domain_intelligence_registry": "/public/domain-intelligence/registry",
             "reproducible_spatial_package_registry": "/public/reproducible-spatial-packages/registry",
             "spatial_lineage_registry": "/public/spatial-lineage/registry",
         },

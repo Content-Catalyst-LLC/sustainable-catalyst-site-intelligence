@@ -80,8 +80,8 @@ def _research_object() -> dict:
 
 
 def test_release_identity() -> None:
-    assert APP_VERSION == "4.55.1"
-    assert RELEASE_NAME == "Core Workspace Runtime Repair"
+    assert APP_VERSION == "4.55.2"
+    assert RELEASE_NAME == "Advanced Domain Intelligence Workspace Expansion"
 
 
 def test_registry_declares_four_provider_classes_and_boundaries() -> None:
@@ -251,10 +251,10 @@ def test_compatibility_preserves_prior_stack_and_legacy_model_governance() -> No
 def test_capability_registry_owns_predictive_routes() -> None:
     manifest = capability_manifest(app.routes)
     family = next(row for row in manifest["capabilities"] if row["capability_id"] == "predictive-spatial-intelligence")
-    assert manifest["registry_version"] == "2.2.0"
-    assert manifest["route_count"] == 1479
-    assert manifest["modularized_route_count"] == 170
-    assert manifest["capability_count"] == 27
+    assert manifest["registry_version"] == "2.3.0"
+    assert manifest["route_count"] == 1500
+    assert manifest["modularized_route_count"] == 191
+    assert manifest["capability_count"] == 28
     assert manifest["unclassified_route_count"] == 0
     assert family["route_count"] == 12
     assert family["modularized_route_count"] == 12
@@ -286,7 +286,7 @@ def test_release_bound_predictive_registry_and_prior_registries_are_current() ->
 
 def test_wordpress_remains_thin_shell_without_predictive_shortcode() -> None:
     php = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
-    assert "Version: 4.55.1" in php
-    assert "const VERSION = '4.55.1';" in php
+    assert "Version: 4.55.2" in php
+    assert "const VERSION = '4.55.2';" in php
     assert "const WORDPRESS_ROLE = 'thin-shell-and-embed-bridge';" in php
     assert "predictive_spatial_shortcode" not in php

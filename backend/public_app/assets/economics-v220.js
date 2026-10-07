@@ -285,5 +285,5 @@
     qs("#economicsDecisionStudio")?.addEventListener("click", () => window.open("https://sustainablecatalyst.com/decision-studio/", "_blank", "noopener"));
   }
   document.addEventListener("DOMContentLoaded", bind);
-  window.SCEconomicsV220 = {open, close, status: () => ({version: VERSION, map: state.map, records: state.records.length})};
+  window.SCEconomicsV220 = {open, close, status: () => ({version: VERSION, map: state.map, record_count: state.records.length, records: state.records})};
 })();
