@@ -8,4 +8,4 @@
 6. Verify API CORS from the standalone origin and `/public/web-app/manifest` reports WordPress runtime dependency `false`.
 7. Install the WordPress v4.55.3 bridge package only after backend/web verification. WordPress remains optional to Site Intelligence application execution.
 
-Production targets: backend `4.55.3`, capability registry `2.4.0`, 1506 routes, 197 modularized, 29 capabilities, 0 unclassified, 6 standalone-web routes, web container healthy on loopback port 8092.
+Production targets: backend `4.55.3`, capability registry `2.4.0`, 1506 routes, 197 modularized, 29 capabilities, 0 unclassified, 6 standalone-web routes, web container healthy on loopback port 8096.

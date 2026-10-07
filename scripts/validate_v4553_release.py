@@ -51,7 +51,7 @@ ok("primary WordPress app shortcode launches instead of embeds", "<iframe" not i
 backend_helper=(ROOT/"deploy/contabo/upgrade_site_intelligence_backend_v4_55_3_contabo.sh").read_text()
 web_helper=(ROOT/"deploy/contabo/upgrade_site_intelligence_web_v4_55_3_contabo.sh").read_text()
 ok("backend deploy helper current", 'VERSION="4.55.3"' in backend_helper and 'standalone_web_application_registry_v4553.json' in backend_helper)
-ok("web deploy helper current", 'VERSION="4.55.3"' in web_helper and '127.0.0.1:8092' in web_helper)
+ok("web deploy helper current", 'VERSION="4.55.3"' in web_helper and '127.0.0.1:8096' in web_helper)
 ok("Caddy standalone host contract exists", "intelligence.sustainablecatalyst.com" in (ROOT/"deploy/contabo/site-intelligence-web-v4553.Caddyfile").read_text())
 
 m=re.search(r'RELEASE_BOUND_POLICIES=\((.*?)\n\)',backend_helper,re.S)

@@ -94,7 +94,7 @@ def test_spa_server_supports_history_fallback_and_health():
     dockerfile=(ROOT/"web/Dockerfile").read_text()
     assert "try_files $uri $uri/ /index.html" in nginx
     assert "location = /healthz" in nginx
-    assert "127.0.0.1:8092:80" in compose
+    assert "127.0.0.1:8096:80" in compose
     assert "HEALTHCHECK" in dockerfile
 
 

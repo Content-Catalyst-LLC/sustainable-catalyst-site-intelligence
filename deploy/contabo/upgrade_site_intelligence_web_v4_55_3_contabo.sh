@@ -35,8 +35,8 @@ for _ in $(seq 1 60); do
   sleep 2
 done
 [[ "$ready" == 1 ]] || fail "$CONTAINER did not become healthy"
-curl -fsS http://127.0.0.1:8092/healthz | grep -q '^ok$' || fail "web health check failed"
-curl -fsS http://127.0.0.1:8092/economics/KEN | grep -q 'Standalone application' || fail "deep-link SPA fallback failed"
-curl -fsS http://127.0.0.1:8092/config.js | grep -q '4.55.3' || fail "web config release failed"
-echo "PASS: Site Intelligence v4.55.3 standalone web application deployed locally on 127.0.0.1:8092"
+curl -fsS http://127.0.0.1:8096/healthz | grep -q '^ok$' || fail "web health check failed"
+curl -fsS http://127.0.0.1:8096/economics/KEN | grep -q 'Standalone application' || fail "deep-link SPA fallback failed"
+curl -fsS http://127.0.0.1:8096/config.js | grep -q '4.55.3' || fail "web config release failed"
+echo "PASS: Site Intelligence v4.55.3 standalone web application deployed locally on 127.0.0.1:8096"
 echo "NEXT: expose intelligence.sustainablecatalyst.com through Caddy using deploy/contabo/site-intelligence-web-v4553.Caddyfile"
