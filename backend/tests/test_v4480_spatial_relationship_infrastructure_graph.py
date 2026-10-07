@@ -66,8 +66,8 @@ def _build() -> dict:
 
 
 def test_release_identity() -> None:
-    assert APP_VERSION == "4.55.0"
-    assert RELEASE_NAME == "Spatial Provenance & Transformation Lineage"
+    assert APP_VERSION == "4.55.1"
+    assert RELEASE_NAME == "Core Workspace Runtime Repair"
 
 
 def test_registry_and_schema_endpoints() -> None:

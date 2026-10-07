@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
- * Description: Sustainable Catalyst Site Intelligence v4.55.0 with Spatial Provenance & Transformation Lineage.
- * Version: 4.55.0
+ * Description: Sustainable Catalyst Site Intelligence v4.55.1 with Core Workspace Runtime Repair.
+ * Version: 4.55.1
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,8 +13,8 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '4.55.0';
-    const RELEASE_ID = 'site-intelligence-v4.55.0';
+    const VERSION = '4.55.1';
+    const RELEASE_ID = 'site-intelligence-v4.55.1';
     const BRIDGE_CONTRACT_VERSION = '1.0.0';
     const WORDPRESS_ROLE = 'thin-shell-and-embed-bridge';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';

@@ -25,9 +25,9 @@
     }
     throw last;
   }
-  const APP_VERSION="4.55.0";
-  const RELEASE_LINEAGE="v4.55.0";
-  const SCIENCE_CONTROLLER_SRC="/app/assets/science-v240.js?v=4.55.0";
+  const APP_VERSION="4.55.1";
+  const RELEASE_LINEAGE="v4.55.1";
+  const SCIENCE_CONTROLLER_SRC="/app/assets/science-v240.js?v=4.55.1";
   const STANDALONE_BOOTSTRAP_ENDPOINT="/public/app/bootstrap";
   const STANDALONE_HANDSHAKE_ENDPOINT="/public/app/runtime-handshake";
   let standaloneBootstrap=null;
@@ -74,6 +74,23 @@
     const panel=qs("#scienceStudio");if(!panel)return false;panel.hidden=false;panel.setAttribute("aria-busy","false");document.body.classList.add("science-route");
     const status=qs("#scienceStatus");if(status){status.dataset.state="error";const label=status.querySelector("span:last-child");if(label)label.textContent=message||"Science controller recovery is available; retry this workspace."}
     return true;
+  }
+  const CORE_WORKSPACE_RUNTIME={
+    economics:{controller:"SCEconomicsV220",surface:"#economicsStudio",status:"#economicsStatus"},
+    law:{controller:"SCLawV230",surface:"#lawStudio",status:"#lawStatus"},
+    science:{controller:"SCScienceV240",surface:"#scienceStudio",status:"#scienceStatus"},
+    humanitarian:{controller:"SCHumanitarianV250",surface:"#humanitarianStudio",status:"#humanitarianStatus"},
+    resources:{controller:"SCResourcesV260",surface:"#resourceStudio",status:"#resourceStatus"},
+    dossiers:{controller:"SCDossiersV270",surface:"#dossierStudio",status:"#dossierStatus"},
+  };
+  async function openCoreWorkspace(route){
+    const repair=window.SCSIWorkspaceRuntimeRepairV4551;
+    if(repair?.open)return repair.open(route);
+    const spec=CORE_WORKSPACE_RUNTIME[route];if(!spec)throw new Error(`Unknown core workspace: ${route}`);
+    const panel=qs(spec.surface);if(panel){panel.hidden=false;panel.setAttribute("aria-busy","true")}
+    const controller=window[spec.controller];
+    if(!controller?.open){if(panel)panel.setAttribute("aria-busy","false");throw new Error(`${spec.controller} is unavailable`)}
+    try{return await Promise.resolve(controller.open())}finally{if(panel){panel.hidden=false;panel.setAttribute("aria-busy","false")}}
   }
   async function openFeaturedScienceDomain(domain="space"){
     await navigateToRoute("science");
@@ -1761,14 +1778,14 @@
       closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
       closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
       closePublicLaunchPortfolio();closeAuditablePublicObservatory();
-      await window.SCEconomicsV220?.open?.();return;
+      await openCoreWorkspace("economics");return;
     }
     if(route==="law"){
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
       closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
       closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
       closePublicLaunchPortfolio();closeAuditablePublicObservatory();
-      await window.SCLawV230?.open?.();return;
+      await openCoreWorkspace("law");return;
     }
     if(route==="science"){
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
@@ -1777,8 +1794,7 @@
       closePublicLaunchPortfolio();closeAuditablePublicObservatory();
       const sciencePanel=qs("#scienceStudio");if(sciencePanel)sciencePanel.hidden=false;
       try{
-        const controller=await ensureScienceController();
-        const opened=await controller.open();
+        const opened=await openCoreWorkspace("science");
         if(opened===false||sciencePanel?.hidden)throw new Error("Science controller did not expose its workspace surface.");
       }catch(error){
         console.error("[Site Intelligence] Science controller recovery",error);
@@ -1791,21 +1807,21 @@
       closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
       closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
       closePublicLaunchPortfolio();closeAuditablePublicObservatory();
-      await window.SCHumanitarianV250?.open?.();return;
+      await openCoreWorkspace("humanitarian");return;
     }
     if(route==="resources"){
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
       closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
       closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
       closePublicLaunchPortfolio();closeAuditablePublicObservatory();
-      await window.SCResourcesV260?.open?.();return;
+      await openCoreWorkspace("resources");return;
     }
     if(route==="dossiers"){
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;
       closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();
       closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();
       closePublicLaunchPortfolio();closeAuditablePublicObservatory();
-      await window.SCDossiersV270?.open?.();return;
+      await openCoreWorkspace("dossiers");return;
     }
     if(route==="alerts"){
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;

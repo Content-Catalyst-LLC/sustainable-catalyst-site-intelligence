@@ -1,3 +1,12 @@
+# Changelog
+
+## 4.55.1 — Core Workspace Runtime Repair
+- Repaired Dossiers, Economics, International Law, Science, Humanitarian, and Resources workspace runtime surfaces.
+- Aligned production-truth selectors with actual DOM studio IDs and current endpoint families.
+- Made production-truth browser version derive from the active app release instead of stale 4.39.0.
+- Added resilient workspace bootstrap so optional catalog failures cannot hide the workspace shell.
+- Preserved v4.55 spatial provenance and transformation lineage contracts.
+
 # v4.55.0 — Spatial Provenance & Transformation Lineage
 
 - Added explicit content-addressed transformation events and lineage chains.

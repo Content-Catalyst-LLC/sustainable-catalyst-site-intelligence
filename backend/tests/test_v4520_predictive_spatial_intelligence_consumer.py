@@ -80,8 +80,8 @@ def _research_object() -> dict:
 
 
 def test_release_identity() -> None:
-    assert APP_VERSION == "4.55.0"
-    assert RELEASE_NAME == "Spatial Provenance & Transformation Lineage"
+    assert APP_VERSION == "4.55.1"
+    assert RELEASE_NAME == "Core Workspace Runtime Repair"
 
 
 def test_registry_declares_four_provider_classes_and_boundaries() -> None:
@@ -286,7 +286,7 @@ def test_release_bound_predictive_registry_and_prior_registries_are_current() ->
 
 def test_wordpress_remains_thin_shell_without_predictive_shortcode() -> None:
     php = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
-    assert "Version: 4.55.0" in php
-    assert "const VERSION = '4.55.0';" in php
+    assert "Version: 4.55.1" in php
+    assert "const VERSION = '4.55.1';" in php
     assert "const WORDPRESS_ROLE = 'thin-shell-and-embed-bridge';" in php
     assert "predictive_spatial_shortcode" not in php

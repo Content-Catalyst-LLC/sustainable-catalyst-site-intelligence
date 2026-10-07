@@ -45,8 +45,8 @@ def package_fixture():
     })["package"]
 
 def test_release_identity_and_inventory():
-    assert APP_VERSION=="4.55.0"
-    assert RELEASE_NAME=="Spatial Provenance & Transformation Lineage"
+    assert APP_VERSION=="4.55.1"
+    assert RELEASE_NAME=="Core Workspace Runtime Repair"
     m=capability_manifest(app.routes)
     assert m["registry_version"]=="2.2.0"
     assert m["route_count"]==1479
@@ -132,5 +132,5 @@ def test_standalone_and_wordpress_identity():
     standalone=(root/"backend/app/standalone_authority_v4440.py").read_text()
     php=(root/"wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
     assert "spatial_lineage_registry" in standalone and 'NavigationItem("lineage"' in standalone
-    assert "Version: 4.55.0" in php and "const VERSION = '4.55.0';" in php
+    assert "Version: 4.55.1" in php and "const VERSION = '4.55.1';" in php
     assert "const WORDPRESS_ROLE = 'thin-shell-and-embed-bridge';" in php

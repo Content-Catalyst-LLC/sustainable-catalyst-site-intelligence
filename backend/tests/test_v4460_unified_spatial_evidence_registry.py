@@ -40,8 +40,8 @@ def _sample() -> dict:
 
 
 def test_release_identity() -> None:
-    assert APP_VERSION == "4.55.0"
-    assert RELEASE_NAME == "Spatial Provenance & Transformation Lineage"
+    assert APP_VERSION == "4.55.1"
+    assert RELEASE_NAME == "Core Workspace Runtime Repair"
 
 
 def test_registry_manifest_is_cross_domain_and_versioned() -> None:
