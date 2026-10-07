@@ -1,0 +1,78 @@
+{
+  "schema": "sc-site-intelligence-reproducible-spatial-package-registry/1.0",
+  "version": "4.54.0",
+  "registry_version": "1.0.0",
+  "title": "Reproducible Spatial Intelligence Packages",
+  "default_profile": "reference-first",
+  "profiles": [
+    {
+      "profile_id": "reference-first",
+      "label": "Reference-first",
+      "description": "Preserve content-addressed identities and source digests while avoiding unnecessary replication."
+    },
+    {
+      "profile_id": "portable-snapshot",
+      "label": "Portable snapshot",
+      "description": "Carry embedded snapshots together with deterministic manifests for offline inspection and preservation."
+    },
+    {
+      "profile_id": "handoff-bundle",
+      "label": "Cross-product handoff bundle",
+      "description": "Prepare a sealed package for explicit downstream validation and import planning without implicit delivery."
+    }
+  ],
+  "export_targets": [
+    {
+      "target_id": "workspace",
+      "packet_type": "spatial-intelligence-package",
+      "delivery_mode": "preview-only"
+    },
+    {
+      "target_id": "knowledge-library",
+      "packet_type": "preservation-package",
+      "delivery_mode": "preview-only"
+    },
+    {
+      "target_id": "research-librarian",
+      "packet_type": "research-context-package",
+      "delivery_mode": "preview-only"
+    },
+    {
+      "target_id": "research-lab",
+      "packet_type": "reproducible-study-package",
+      "delivery_mode": "preview-only"
+    },
+    {
+      "target_id": "workbench",
+      "packet_type": "computational-input-package",
+      "delivery_mode": "preview-only"
+    },
+    {
+      "target_id": "decision-studio",
+      "packet_type": "decision-evidence-package",
+      "delivery_mode": "preview-only"
+    },
+    {
+      "target_id": "platform-core",
+      "packet_type": "shared-object-package",
+      "delivery_mode": "preview-only"
+    },
+    {
+      "target_id": "filesystem",
+      "packet_type": "portable-archive-plan",
+      "delivery_mode": "local-export-plan-only"
+    }
+  ],
+  "boundaries": [
+    "package-is-a-reproducibility-and-preservation-container-not-a-truth-claim",
+    "source-evidence-is-referenced-by-content-digest-and-not-mutated",
+    "derived-analysis-remains-distinct-from-observation",
+    "predictions-scenarios-exposure-and-thresholds-retain-model-conditional-semantics",
+    "package-verification-does-not-reexecute-analysis",
+    "reproduction-plans-never-auto-execute-compute",
+    "export-plans-never-perform-implicit-delivery-or-remote-write",
+    "credentials-secrets-private-keys-and-session-material-are-rejected",
+    "downstream-products-must-validate-before-import",
+    "human-authorization-is-required-before-any-rerun-or-publication"
+  ]
+}

@@ -49,8 +49,8 @@ def _objects() -> list[dict]:
 
 
 def test_release_identity() -> None:
-    assert APP_VERSION == "4.53.0"
-    assert RELEASE_NAME == "Scenario, Exposure & Change Intelligence"
+    assert APP_VERSION == "4.54.0"
+    assert RELEASE_NAME == "Reproducible Spatial Intelligence Packages"
 
 
 def test_engine_registry_and_operator_registry() -> None:
@@ -182,7 +182,7 @@ def test_compatibility_preserves_v446_and_legacy_spatial_surfaces() -> None:
 
 def test_capability_registry_has_spatiotemporal_family() -> None:
     manifest = capability_manifest(app.routes)
-    assert manifest["registry_version"] == "2.0.0"
+    assert manifest["registry_version"] == "2.1.0"
     assert manifest["unclassified_route_count"] == 0
     spatial = next(item for item in manifest["capabilities"] if item["capability_id"] == "spatiotemporal-analysis")
     assert spatial["route_count"] == 8

@@ -1,3 +1,10 @@
+## 4.54.0 — Reproducible Spatial Intelligence Packages
+
+- Added canonical deterministic spatial intelligence package, manifest, verification, reproduction-plan, export-plan, comparison, and research-context contracts.
+- Added sealed content-addressed packaging across v4.46–v4.53 evidence and derived analytical context without automatic re-execution.
+- Added explicit preview-only export plans for seven Sustainable Catalyst products plus local filesystem archives.
+- Advanced capability registry to 2.1.0 and release-bound promotion to 37 static registries/policies.
+
 ## 4.53.0 — Scenario, Exposure & Change Intelligence
 
 - Added scenario normalization/comparison, derived change, potential exposure, threshold, graph, live-event, predictive, and research-context contracts.

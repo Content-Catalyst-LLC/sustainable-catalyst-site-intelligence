@@ -2,9 +2,16 @@
 
 Sustainable Catalyst Site Intelligence is the geospatial, country, Earth-observation, ocean, space, infrastructure, environmental, and live public-intelligence layer of the Sustainable Catalyst platform.
 
-**Current release:** v4.53.0 — Scenario, Exposure & Change Intelligence
+**Current release:** v4.54.0 — Reproducible Spatial Intelligence Packages
 
 
+
+### v4.54 Reproducible Spatial Intelligence Packages
+
+- Adds deterministic, sealed spatial intelligence packages spanning v4.46–v4.53 evidence, analysis, graph, live-event, federation, predictive, scenario/exposure/change, and advanced-domain context.
+- Adds content-addressed manifests, integrity verification, inspection, package comparison, and human-authorized reproduction plans without automatically rerunning analysis.
+- Adds preview-only export plans for Workspace, Knowledge Library, Research Librarian, Research Lab, Workbench, Decision Studio, Platform Core, and local filesystem archives.
+- Rejects credentials and private session material, preserves observation-vs-derived boundaries, and requires downstream validation before import.
 
 ### v4.53 Scenario, Exposure & Change Intelligence + Advanced Domain Parity
 
