@@ -1,13 +1,15 @@
 from __future__ import annotations
 
+import os
 from typing import Iterable
 
 from .route_registry_v4430 import capability_manifest
 from .standalone_authority_v4440 import CANONICAL_APP_PATH, build_bootstrap
 from .version import APP_VERSION
 
-BRIDGE_CONTRACT_VERSION = "1.0.0"
-WORDPRESS_ROLE = "thin-shell-and-embed-bridge"
+BRIDGE_CONTRACT_VERSION = "1.1.0"
+WORDPRESS_ROLE = "public-site-launch-bridge"
+WEB_APP_URL = os.getenv("SC_SI_WEB_APP_URL", "https://intelligence.sustainablecatalyst.com").rstrip("/")
 CANONICAL_SHORTCODES = (
     "sc_site_intelligence_app",
     "sc_site_intelligence_embed",
@@ -29,12 +31,14 @@ def bridge_contract(routes: Iterable[object]) -> dict:
         "integration": "wordpress",
         "wordpress_role": WORDPRESS_ROLE,
         "product_authority": "fastapi",
-        "canonical_application": CANONICAL_APP_PATH,
+        "canonical_application": WEB_APP_URL + "/",
+        "legacy_embed_application": CANONICAL_APP_PATH,
         "runtime_mode": bootstrap["runtime"]["mode"],
         "responsibilities": {
             "wordpress": [
                 "navigation-entry-points",
-                "embed-hosting",
+                "standalone-application-launch-links",
+                "selected-public-view-embeds",
                 "release-compatibility-checks",
                 "optional-auth-handoff",
                 "publication-and-content-shell",
@@ -44,7 +48,7 @@ def bridge_contract(routes: Iterable[object]) -> dict:
                 "application-state-contracts",
                 "data-and-analysis-apis",
                 "capability-registry",
-                "standalone-application",
+                "standalone-web-application",
             ],
         },
         "boundaries": {
@@ -52,6 +56,9 @@ def bridge_contract(routes: Iterable[object]) -> dict:
             "wordpress_model_execution": False,
             "wordpress_data_authority": False,
             "wordpress_new_feature_shortcodes": False,
+            "wordpress_application_runtime": False,
+            "wordpress_routing_authority": False,
+            "wordpress_state_authority": False,
             "legacy_shortcode_compatibility": True,
         },
         "endpoints": {
@@ -79,6 +86,8 @@ def embed_contract() -> dict:
         "contract_version": BRIDGE_CONTRACT_VERSION,
         "mode": "iframe",
         "source": CANONICAL_APP_PATH,
+        "canonical_web_application": WEB_APP_URL + "/",
+        "legacy_embed_only": True,
         "surface": "wordpress-embed",
         "query_transport": {
             "release": APP_VERSION,

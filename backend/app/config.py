@@ -17,7 +17,9 @@ class Settings(BaseSettings):
     environment: str = "development"
     demo_mode: bool = True
     api_token: str = "dev-token-change-me"
-    cors_origins: str = "http://127.0.0.1:8091,http://localhost:8091,https://sustainablecatalyst.com"
+    cors_origins: str = "http://127.0.0.1:8091,http://localhost:8091,https://sustainablecatalyst.com,https://intelligence.sustainablecatalyst.com"
+    web_app_url: str = "https://intelligence.sustainablecatalyst.com"
+    public_api_url: str = "https://site-intelligence-api.sustainablecatalyst.com"
     cache_ttl_seconds: int = 900
     runtime_state_root: str = ""
     registry_path: str = "backend/data/site_registry.seed.json"
@@ -724,6 +726,11 @@ class Settings(BaseSettings):
     def cors_origin_list(self) -> List[str]:
         origins = [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
         origins.extend(origin.strip() for origin in self.public_embed_allowed_origins.split(",") if origin.strip())
+        # v4.55.3: the independent Site Intelligence web application is a
+        # first-party API caller even when an older production env file still
+        # carries the pre-decoupling CORS list.
+        if self.web_app_url.strip():
+            origins.append(self.web_app_url.strip().rstrip("/"))
         return list(dict.fromkeys(origins))
 
     @property

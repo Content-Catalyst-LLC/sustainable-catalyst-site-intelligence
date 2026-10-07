@@ -1,8 +1,8 @@
-# Sustainable Catalyst Site Intelligence v4.55.2
+# Sustainable Catalyst Site Intelligence v4.55.3
 
 Sustainable Catalyst Site Intelligence is the geospatial, country, Earth-observation, ocean, space, infrastructure, environmental, and live public-intelligence layer of the Sustainable Catalyst platform.
 
-**Current release:** v4.55.2 — Advanced Domain Intelligence Workspace Expansion
+**Current release:** v4.55.3 — Standalone Web Application Foundation & WordPress Decoupling
 
 
 ### v4.55.2 Advanced Domain Intelligence Workspace Expansion
@@ -46,6 +46,10 @@ Site Intelligence now exposes a first-class global/regional source authority reg
 
 Site Intelligence now normalizes live geospatial events into provenance-preserving evidence, reconciles strict cross-source identities, evaluates lifecycle/freshness against explicit analysis time, and fuses live events with v4.46 layers and v4.48 infrastructure graphs without treating spatial overlap as confirmed impact.
 
+
+## v4.55.3 standalone web application
+
+Site Intelligence now ships an independent `web/` application intended for `https://intelligence.sustainablecatalyst.com`. The FastAPI service remains the machine-facing authority at `https://site-intelligence-api.sustainablecatalyst.com`. WordPress is a public-site launch bridge only; the standalone application owns routing, country context, browser state, and API transport. The legacy FastAPI `/app/` shell is retained temporarily for compatibility but is no longer the preferred user application.
 
 ## Architecture
 

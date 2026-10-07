@@ -14,7 +14,7 @@ services:
       - key: SC_SI_RELEASE_CHANNEL
         value: production
       - key: SC_SI_RELEASE_ID
-        value: site-intelligence-v4.55.2
+        value: site-intelligence-v4.55.3
       - key: SC_SI_RUNTIME_STATE_ROOT
         value: /tmp/site-intelligence-runtime
       - key: SC_SI_EXPECTED_GIT_BRANCH
@@ -24,7 +24,11 @@ services:
       - key: SC_SI_DATA_TRUTH_ENABLED
         value: "true"
       - key: SC_SI_CORS_ORIGINS
-        value: https://sustainablecatalyst.com
+        value: https://sustainablecatalyst.com,https://intelligence.sustainablecatalyst.com
+      - key: SC_SI_WEB_APP_URL
+        value: https://intelligence.sustainablecatalyst.com
+      - key: SC_SI_PUBLIC_API_URL
+        value: https://site-intelligence-api.sustainablecatalyst.com
       - key: SC_SI_API_TOKEN
         sync: false
       - key: SC_SI_GA4_PROPERTY_ID

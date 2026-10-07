@@ -1,14 +1,16 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, asdict
+import os
 from typing import Iterable
 
 from .route_registry_v4430 import capability_manifest
 from .version import APP_VERSION, RELEASE_NAME
 
-STANDALONE_CONTRACT_VERSION = "1.1.0"
+STANDALONE_CONTRACT_VERSION = "1.2.0"
 SESSION_CONTRACT_VERSION = "1.0.0"
 CANONICAL_APP_PATH = "/app/"
+PREFERRED_WEB_APP_URL = os.getenv("SC_SI_WEB_APP_URL", "https://intelligence.sustainablecatalyst.com").rstrip("/")
 CACHE_GENERATION = f"scsi-v{APP_VERSION}"
 
 
@@ -125,14 +127,17 @@ def build_bootstrap(routes: Iterable[object], surface: str | None = None) -> dic
             "backend": "fastapi",
             "frontend": "standalone-web-app",
             "canonical_app_path": CANONICAL_APP_PATH,
+            "canonical_web_app_url": PREFERRED_WEB_APP_URL,
             "canonical": True,
-            "wordpress_role": "thin-shell-and-embed-bridge",
+            "legacy_fastapi_app_compatibility": True,
+            "wordpress_role": "public-site-launch-bridge",
         },
         "runtime": {
             "mode": mode,
             "api_base": "/",
-            "app_base": CANONICAL_APP_PATH,
-            "same_origin_api": True,
+            "app_base": PREFERRED_WEB_APP_URL + "/",
+            "legacy_app_base": CANONICAL_APP_PATH,
+            "same_origin_api": False,
             "deep_links": True,
             "offline_shell": True,
         },
@@ -191,4 +196,5 @@ def runtime_handshake(routes: Iterable[object], client_version: str | None, surf
         "cache_generation": CACHE_GENERATION,
         "canonical_app_path": CANONICAL_APP_PATH,
         "bootstrap_endpoint": "/public/app/bootstrap",
+        "preferred_web_app_url": PREFERRED_WEB_APP_URL,
     }

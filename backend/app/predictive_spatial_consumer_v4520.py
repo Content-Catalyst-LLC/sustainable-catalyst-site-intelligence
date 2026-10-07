@@ -568,7 +568,7 @@ def compatibility_manifest() -> dict[str, Any]:
         "v4_51_spatial_research": {"status": "preserved-and-consumed", "research_object_mutation": False},
         "legacy_model_governance": {"status": "preserved", "routes": ["/public/models", "/public/forecasts", "/public/forecast-evaluations"]},
         "workspace_core_consumption": {"mode": "provider-neutral-import", "network_fetch_by_consumer": False},
-        "wordpress_role": "thin-shell-and-embed-bridge",
+        "wordpress_role": "public-site-launch-bridge",
         "model_training_authority": False,
         "automatic_model_selection": False,
     }

@@ -103,4 +103,4 @@ def research_context(request:Mapping[str,Any]):
     d=_digest(core);return {"ok":True,"version":APP_VERSION,"research_context":{**core,"research_context_digest":d}}
 
 def compatibility_manifest():
-    return {"ok":True,"version":APP_VERSION,"legacy_economics_v220":"preserved-and-repaired","legacy_law_v230":"preserved-and-repaired","ocean_v4360":"preserved-and-advanced","science_space_v240":"preserved-and-advanced","wordpress_role":"thin-shell-and-embed-bridge"}
+    return {"ok":True,"version":APP_VERSION,"legacy_economics_v220":"preserved-and-repaired","legacy_law_v230":"preserved-and-repaired","ocean_v4360":"preserved-and-advanced","science_space_v240":"preserved-and-advanced","wordpress_role":"public-site-launch-bridge"}

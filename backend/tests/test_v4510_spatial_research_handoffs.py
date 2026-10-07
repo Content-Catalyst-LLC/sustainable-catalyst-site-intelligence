@@ -83,8 +83,8 @@ def _research_request() -> dict:
 
 
 def test_release_identity() -> None:
-    assert APP_VERSION == "4.55.2"
-    assert RELEASE_NAME == "Advanced Domain Intelligence Workspace Expansion"
+    assert APP_VERSION == "4.55.3"
+    assert RELEASE_NAME == "Standalone Web Application Foundation & WordPress Decoupling"
 
 
 def test_registry_declares_seven_provider_neutral_targets() -> None:
@@ -203,16 +203,16 @@ def test_compatibility_preserves_v446_through_v450_and_legacy_handoffs() -> None
     assert compat["v4_49_live_geospatial"]["impact_semantics"] == "potential-exposure-not-confirmed-impact"
     assert compat["v4_50_source_federation"]["trust_separate_from_authority"] is True
     assert compat["legacy_research_handoffs"]["status"] == "preserved"
-    assert compat["wordpress_role"] == "thin-shell-and-embed-bridge"
+    assert compat["wordpress_role"] == "public-site-launch-bridge"
 
 
 def test_capability_registry_owns_all_spatial_research_routes() -> None:
     manifest = capability_manifest(app.routes)
     family = next(row for row in manifest["capabilities"] if row["capability_id"] == "spatial-research-handoffs")
-    assert manifest["registry_version"] == "2.3.0"
-    assert manifest["route_count"] == 1500
-    assert manifest["modularized_route_count"] == 191
-    assert manifest["capability_count"] == 28
+    assert manifest["registry_version"] == "2.4.0"
+    assert manifest["route_count"] == 1506
+    assert manifest["modularized_route_count"] == 197
+    assert manifest["capability_count"] == 29
     assert manifest["unclassified_route_count"] == 0
     assert family["route_count"] == 10
     assert family["modularized_route_count"] == 10
@@ -243,7 +243,7 @@ def test_release_bound_registry_and_carried_forward_registries_are_current() -> 
 
 def test_wordpress_remains_thin_shell_with_no_spatial_research_shortcode() -> None:
     php = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
-    assert "Version: 4.55.2" in php
-    assert "const VERSION = '4.55.2';" in php
-    assert "const WORDPRESS_ROLE = 'thin-shell-and-embed-bridge';" in php
+    assert "Version: 4.55.3" in php
+    assert "const VERSION = '4.55.3';" in php
+    assert "const WORDPRESS_ROLE = 'public-site-launch-bridge';" in php
     assert "spatial_research_shortcode" not in php

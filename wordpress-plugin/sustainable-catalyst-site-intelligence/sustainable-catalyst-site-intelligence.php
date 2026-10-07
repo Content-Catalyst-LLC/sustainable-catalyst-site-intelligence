@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
- * Description: Sustainable Catalyst Site Intelligence v4.55.2 with Advanced Domain Intelligence Workspace Expansion.
- * Version: 4.55.2
+ * Description: Sustainable Catalyst Site Intelligence v4.55.3 public-site launch bridge for the standalone Site Intelligence web application.
+ * Version: 4.55.3
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,10 +13,11 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '4.55.2';
-    const RELEASE_ID = 'site-intelligence-v4.55.2';
-    const BRIDGE_CONTRACT_VERSION = '1.0.0';
-    const WORDPRESS_ROLE = 'thin-shell-and-embed-bridge';
+    const VERSION = '4.55.3';
+    const RELEASE_ID = 'site-intelligence-v4.55.3';
+    const BRIDGE_CONTRACT_VERSION = '1.1.0';
+    const WORDPRESS_ROLE = 'public-site-launch-bridge';
+    const STANDALONE_WEB_APP_URL = 'https://intelligence.sustainablecatalyst.com';
     const REST_NAMESPACE = 'sc-site-intelligence/v1';
     const BUILD_INFO_STATUS_OPTION = 'scsi_build_info_status';
     const INSTALLED_VERSION_OPTION = 'scsi_installed_plugin_version';
@@ -6718,30 +6719,22 @@ final class SC_Site_Intelligence_Plugin {
     }
 
     public function standalone_app_shortcode($atts = []) {
-        $options = self::options();
         $atts = shortcode_atts([
-            'height' => '900',
-            'title' => 'Site Intelligence application',
-            'path' => '/app/',
+            'title' => 'Site Intelligence',
+            'label' => 'Open Site Intelligence',
+            'path' => '/',
         ], $atts, 'sc_site_intelligence_app');
 
-        $backend = rtrim((string) ($options['backend_url'] ?? ''), '/');
-        if (!$backend) {
-            return '<div class="scsi-app-error">Configure the Site Intelligence backend URL before embedding the standalone application.</div>';
+        $path = '/' . ltrim((string) $atts['path'], '/');
+        if (strpos($path, '/app/') === 0) {
+            $path = '/';
         }
-
-        $height = max(620, min(1400, absint($atts['height'])));
-        $raw_src = $backend . '/' . ltrim((string) $atts['path'], '/');
-        $src = esc_url(add_query_arg(['release' => self::VERSION, 'embed' => 'wordpress'], $raw_src));
-        $title = esc_attr((string) $atts['title']);
-
-        $frame_id = 'scsi-app-' . wp_generate_uuid4();
+        $href = esc_url(rtrim(self::STANDALONE_WEB_APP_URL, '/') . $path);
         return sprintf(
-            '<div class="scsi-standalone-app scsi-fixed-application-viewport" data-scsi-fixed-app data-scsi-embed-mode="fixed" data-scsi-fixed-height="%3$d" data-scsi-release="%5$s" data-scsi-wordpress-role="thin-shell-and-embed-bridge" data-scsi-bridge-version="1.0.0" style="--scsi-fixed-app-height:%3$dpx"><div class="scsi-app-loading" role="status" aria-live="polite">Opening Site Intelligence…</div><iframe id="%4$s" src="%1$s" title="%2$s" loading="eager" fetchpriority="high" referrerpolicy="strict-origin-when-cross-origin" allow="fullscreen; clipboard-write" scrolling="yes" data-scsi-embed-frame data-scsi-eager-app="1" data-scsi-embed-mode="fixed" data-scsi-fixed-height="%3$d" data-scsi-min-height="%3$d" data-scsi-mobile-min-height="%3$d" data-scsi-max-height="%3$d" style="width:100%%;height:%3$dpx;min-height:%3$dpx;max-height:%3$dpx;border:0;border-radius:18px;display:block;background:#05070a"></iframe><p class="scsi-embed-fallback"><a href="%1$s" target="_blank" rel="noopener noreferrer">Open Site Intelligence in a new tab</a></p></div>',
-            $src,
-            $title,
-            $height,
-            esc_attr($frame_id),
+            '<section class="scsi-app-launcher" data-scsi-release="%4$s" data-scsi-wordpress-role="public-site-launch-bridge"><p class="scsi-eyebrow">Standalone application</p><h2>%1$s</h2><p>Site Intelligence now runs independently of WordPress. WordPress provides this launch link but does not own application routing, state, or API transport.</p><a class="scsi-public-cta" href="%2$s" target="_blank" rel="noopener noreferrer">%3$s <span aria-hidden="true">→</span></a></section>',
+            esc_html((string) $atts['title']),
+            $href,
+            esc_html((string) $atts['label']),
             esc_attr(self::VERSION)
         );
     }

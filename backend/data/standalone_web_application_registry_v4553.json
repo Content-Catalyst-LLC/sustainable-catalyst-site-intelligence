@@ -1,0 +1,94 @@
+{
+  "schema": "sc-site-intelligence-standalone-web-application-registry/1.0",
+  "version": "4.55.3",
+  "registry_version": "1.0.0",
+  "title": "Standalone Web Application Foundation & WordPress Decoupling",
+  "application_origin": "https://intelligence.sustainablecatalyst.com",
+  "api_origin": "https://site-intelligence-api.sustainablecatalyst.com",
+  "legacy_api_host_app_path": "/app/",
+  "wordpress_role": "public-site-launch-bridge",
+  "wordpress_runtime_dependency": false,
+  "api_proxy_required": false,
+  "same_origin_api_required": false,
+  "deep_links": true,
+  "history_fallback_required": true,
+  "country_context_propagation": true,
+  "authentication_bridge": {
+    "state": "transport-ready",
+    "credentials_mode": "include",
+    "client_supplied_roles_trusted": false,
+    "standalone_boot_requires_wordpress": false
+  },
+  "routes": [
+    {
+      "route_id": "home",
+      "pattern": "/",
+      "country_context": false
+    },
+    {
+      "route_id": "country",
+      "pattern": "/country/:country",
+      "country_context": true
+    },
+    {
+      "route_id": "dossiers",
+      "pattern": "/dossiers/:country",
+      "country_context": true
+    },
+    {
+      "route_id": "economics",
+      "pattern": "/economics/:country",
+      "country_context": true
+    },
+    {
+      "route_id": "law",
+      "pattern": "/law/:country",
+      "country_context": true
+    },
+    {
+      "route_id": "science",
+      "pattern": "/science/:country",
+      "country_context": true
+    },
+    {
+      "route_id": "earth",
+      "pattern": "/science/earth/:country",
+      "country_context": true
+    },
+    {
+      "route_id": "ocean",
+      "pattern": "/science/ocean",
+      "country_context": false
+    },
+    {
+      "route_id": "space",
+      "pattern": "/science/space",
+      "country_context": false
+    },
+    {
+      "route_id": "humanitarian",
+      "pattern": "/humanitarian/:country",
+      "country_context": true
+    },
+    {
+      "route_id": "resources",
+      "pattern": "/resources/:country",
+      "country_context": true
+    },
+    {
+      "route_id": "events",
+      "pattern": "/events",
+      "country_context": false
+    },
+    {
+      "route_id": "research",
+      "pattern": "/research",
+      "country_context": true
+    },
+    {
+      "route_id": "packages",
+      "pattern": "/packages/:package_id?",
+      "country_context": false
+    }
+  ]
+}

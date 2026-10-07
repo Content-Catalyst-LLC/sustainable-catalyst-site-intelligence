@@ -402,7 +402,7 @@ def compatibility_manifest() -> dict[str, Any]:
         "v4_49_live_geospatial": {"status": "preserved-and-consumed", "impact_semantics": "potential-exposure-not-confirmed-impact"},
         "v4_50_source_federation": {"status": "preserved-and-consumed", "trust_separate_from_authority": True},
         "legacy_research_handoffs": {"status": "preserved", "replacement": "v4.51 spatial-research handoff packets"},
-        "wordpress_role": "thin-shell-and-embed-bridge",
+        "wordpress_role": "public-site-launch-bridge",
         "delivery_attempted": False,
         "server_persistence": False,
     }

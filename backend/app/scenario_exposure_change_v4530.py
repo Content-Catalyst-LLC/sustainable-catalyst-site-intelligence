@@ -237,4 +237,4 @@ def research_context(request: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def compatibility_manifest() -> dict[str, Any]:
-    return {"ok": True, "version": APP_VERSION, "v4_46_evidence": "preserved", "v4_47_spatiotemporal": "consumed", "v4_48_graph": "context-only", "v4_49_live_events": "context-only", "v4_50_federation": "preserved", "v4_51_research": "consumed-without-mutation", "v4_52_predictive": "consumed", "wordpress_role": "thin-shell-and-embed-bridge"}
+    return {"ok": True, "version": APP_VERSION, "v4_46_evidence": "preserved", "v4_47_spatiotemporal": "consumed", "v4_48_graph": "context-only", "v4_49_live_events": "context-only", "v4_50_federation": "preserved", "v4_51_research": "consumed-without-mutation", "v4_52_predictive": "consumed", "wordpress_role": "public-site-launch-bridge"}

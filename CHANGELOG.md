@@ -1,3 +1,12 @@
+
+## 4.55.3 — Standalone Web Application Foundation & WordPress Decoupling
+
+- Added independent `web/` Site Intelligence application and Docker/nginx deployment.
+- Added path-based workspace routing and country-context propagation.
+- Added centralized cross-origin FastAPI client and first-party CORS contract.
+- Added `/public/web-app/*` machine-readable application contracts.
+- Demoted WordPress to `public-site-launch-bridge`; the primary Site Intelligence shortcode now launches the standalone app rather than hosting its runtime.
+- Retained `/app/` as temporary FastAPI-served compatibility only.
 # Changelog
 
 ## 4.55.2 — Advanced Domain Intelligence Workspace Expansion

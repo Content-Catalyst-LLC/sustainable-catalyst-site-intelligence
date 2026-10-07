@@ -387,6 +387,6 @@ def compatibility_manifest() -> dict[str, Any]:
         "v4550_spatial_lineage": "preserved",
         "v4540_reproducible_packages": "preserved",
         "v4530_advanced_domain_parity": "preserved-and-expanded",
-        "wordpress_role": "thin-shell-and-embed-bridge",
+        "wordpress_role": "public-site-launch-bridge",
         "browser_analysis_source": "currently-loaded-official-records",
     }

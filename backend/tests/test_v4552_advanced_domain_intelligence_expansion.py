@@ -15,13 +15,13 @@ def root(): return Path(__file__).resolve().parents[2]
 
 
 def test_release_identity():
-    assert APP_VERSION == "4.55.2"
-    assert RELEASE_NAME == "Advanced Domain Intelligence Workspace Expansion"
+    assert APP_VERSION == "4.55.3"
+    assert RELEASE_NAME == "Standalone Web Application Foundation & WordPress Decoupling"
 
 
 def test_registry_has_six_advanced_domains():
     r = registry_manifest()
-    assert r["version"] == "4.55.2"
+    assert r["version"] == "4.55.3"
     assert len(r["domains"]) == 6
     assert {x["domain_id"] for x in r["domains"]} == set(DOMAINS)
     for d in r["domains"]:
@@ -72,10 +72,10 @@ def test_research_packets_are_content_addressed_and_no_auto_delivery():
 
 def test_21_new_modular_routes_and_inventory():
     m = capability_manifest(app.routes)
-    assert m["registry_version"] == "2.3.0"
-    assert m["route_count"] == 1500
-    assert m["modularized_route_count"] == 191
-    assert m["capability_count"] == 28
+    assert m["registry_version"] == "2.4.0"
+    assert m["route_count"] == 1506
+    assert m["modularized_route_count"] == 197
+    assert m["capability_count"] == 29
     assert m["unclassified_route_count"] == 0
     family = next(x for x in m["capabilities"] if x["capability_id"] == "advanced-domain-intelligence")
     assert family["route_count"] == 21
@@ -100,13 +100,13 @@ def test_browser_expansion_is_loaded_and_uses_current_workspace_records():
     css = (r/"backend/public_app/assets/advanced-domain-intelligence-v4552.css").read_text()
     index = (r/"backend/public_app/index.html").read_text()
     sw = (r/"backend/public_app/service-worker.js").read_text()
-    assert 'const VERSION="4.55.2"' in js
+    assert 'const VERSION="4.55.3"' in js
     for route in ["dossiers","economics","law","science","humanitarian","resources"]:
         assert route in js
     assert "Analyze current records" in js
     assert "Build research packet" in js
-    assert "advanced-domain-intelligence-v4552.js?v=4.55.2" in index
-    assert "advanced-domain-intelligence-v4552.css?v=4.55.2" in index
+    assert "advanced-domain-intelligence-v4552.js?v=4.55.3" in index
+    assert "advanced-domain-intelligence-v4552.css?v=4.55.3" in index
     assert "advanced-domain-intelligence-v4552.js" in sw
     assert ".advanced-domain-intelligence-v4552" in css
 
@@ -123,7 +123,7 @@ def test_existing_controllers_expose_current_records_for_analysis():
 
 def test_wordpress_stays_thin_shell():
     php=(root()/"wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
-    assert "Version: 4.55.2" in php
-    assert "const VERSION = '4.55.2';" in php
-    assert "const RELEASE_ID = 'site-intelligence-v4.55.2';" in php
-    assert "const WORDPRESS_ROLE = 'thin-shell-and-embed-bridge';" in php
+    assert "Version: 4.55.3" in php
+    assert "const VERSION = '4.55.3';" in php
+    assert "const RELEASE_ID = 'site-intelligence-v4.55.3';" in php
+    assert "const WORDPRESS_ROLE = 'public-site-launch-bridge';" in php

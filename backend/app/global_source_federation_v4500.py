@@ -407,5 +407,5 @@ def compatibility_manifest() -> dict[str, Any]:
         "v4_49_live_geospatial": {"status": "preserved", "source_registry_interoperability": True},
         "institutional_federation_v2240": {"status": "preserved", "automatic_remote_fetch": False},
         "network_calls_performed": False,
-        "wordpress_role": "thin-shell-and-embed-bridge",
+        "wordpress_role": "public-site-launch-bridge",
     }

@@ -1,4 +1,4 @@
-APP_VERSION = "4.55.2"
+APP_VERSION = "4.55.3"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Advanced Domain Intelligence Workspace Expansion"
+RELEASE_NAME = "Standalone Web Application Foundation & WordPress Decoupling"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

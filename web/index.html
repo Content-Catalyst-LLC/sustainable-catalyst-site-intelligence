@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#080a0d">
+  <meta name="description" content="Sustainable Catalyst Site Intelligence standalone research application">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="/assets/styles.css?v=4.55.3">
+  <title>Sustainable Catalyst Site Intelligence</title>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="mark">SC</div><div><strong>Site Intelligence</strong><small>Standalone application</small></div></div>
+    <nav class="nav">
+      <div class="nav-group"><p class="nav-label">Context</p><a data-nav="country">Country</a><a data-nav="dossiers">Dossiers</a></div>
+      <div class="nav-group"><p class="nav-label">Domain intelligence</p><a data-nav="economics">Economics</a><a data-nav="law">International law</a><a data-nav="science">Science</a><a data-nav="humanitarian">Humanitarian</a><a data-nav="resources">Resources</a></div>
+      <div class="nav-group"><p class="nav-label">Science systems</p><a data-nav="earth">Earth</a><a data-nav="ocean">Ocean</a><a data-nav="space">Space</a></div>
+      <div class="nav-group"><p class="nav-label">Research</p><a data-nav="events">Events</a><a data-nav="research">Research</a><a data-nav="packages">Packages</a></div>
+    </nav>
+    <div class="authority"><small>APPLICATION AUTHORITY</small><strong>Independent web runtime</strong><code id="apiOrigin">API</code><small>WordPress not required for boot, routing, state, or API transport.</small></div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <div class="context"><label for="countrySelect">COUNTRY</label><select id="countrySelect"><option>Loading…</option></select><span class="pill" id="countryCode">KEN</span></div>
+      <div class="top-meta"><span class="pill">FASTAPI API</span><span class="pill" id="releaseVersion">v4.55.3</span></div>
+    </header>
+    <div id="view" class="content" aria-live="polite"></div>
+    <footer class="footer-note">Sustainable Catalyst · Site Intelligence · standalone web authority · v4.55.3</footer>
+  </main>
+</div>
+<script src="/config.js?v=4.55.3"></script>
+<script type="module" src="/assets/app.js?v=4.55.3"></script>
+</body>
+</html>
