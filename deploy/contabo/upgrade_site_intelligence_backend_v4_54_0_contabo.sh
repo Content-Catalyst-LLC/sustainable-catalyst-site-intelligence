@@ -60,8 +60,9 @@ RELEASE_BOUND_POLICIES=(
   global_source_federation_registry_v4500.json
   spatial_research_handoff_registry_v4510.json
   predictive_spatial_consumer_registry_v4520.json
-  scenario_exposure_change_registry_v4540.json
-  advanced_domain_workspace_registry_v4540.json
+  scenario_exposure_change_registry_v4530.json
+  advanced_domain_workspace_registry_v4530.json
+  reproducible_spatial_package_registry_v4540.json
 )
 
 if [[ ! -d "$BACKUP_ROOT" ]]; then
