@@ -1,4 +1,4 @@
-APP_VERSION = "4.54.0"
+APP_VERSION = "4.55.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Reproducible Spatial Intelligence Packages"
+RELEASE_NAME = "Spatial Provenance & Transformation Lineage"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

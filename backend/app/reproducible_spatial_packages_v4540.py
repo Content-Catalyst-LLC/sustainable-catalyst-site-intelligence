@@ -25,11 +25,11 @@ _SENSITIVE = re.compile(r"(?:api[_-]?key|password|secret|authorization|cookie|se
 _DIGEST_KEYS = (
     "package_digest", "research_digest", "content_digest", "result_digest", "graph_digest",
     "event_digest", "plan_digest", "prediction_digest", "scenario_digest", "change_digest",
-    "exposure_digest", "threshold_digest", "analysis_digest", "digest", "fingerprint",
+    "exposure_digest", "threshold_digest", "analysis_digest", "chain_digest", "event_digest", "digest", "fingerprint",
 )
 _COMPONENT_GROUPS = (
     "evidence_objects", "query_results", "graphs", "live_events", "federation_context",
-    "predictions", "scenarios", "changes", "exposures", "thresholds", "advanced_domain_context",
+    "predictions", "scenarios", "changes", "exposures", "thresholds", "advanced_domain_context", "lineage_chains",
 )
 
 
@@ -320,6 +320,7 @@ def reproduction_plan(request: Mapping[str, Any]) -> dict[str, Any]:
         "restore-spatial-research-object-and-scope",
         "restore-query-graph-live-source-and-domain-context",
         "restore-predictive-scenario-change-exposure-threshold-context",
+        "restore-spatial-provenance-and-transformation-lineage",
         "validate-runtime-and-schema-compatibility",
         "require-human-authorization-before-any-compute-rerun",
         "record-new-execution-receipts-without-overwriting-original-artifacts",

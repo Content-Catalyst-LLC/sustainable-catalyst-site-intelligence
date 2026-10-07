@@ -40,13 +40,13 @@ def fixture_request(profile="reference-first"):
     }
 
 def test_release_identity_and_inventory():
-    assert APP_VERSION=="4.54.0"
-    assert RELEASE_NAME=="Reproducible Spatial Intelligence Packages"
+    assert APP_VERSION=="4.55.0"
+    assert RELEASE_NAME=="Spatial Provenance & Transformation Lineage"
     m=capability_manifest(app.routes)
-    assert m["registry_version"]=="2.1.0"
-    assert m["route_count"]==1467
-    assert m["modularized_route_count"]==158
-    assert m["capability_count"]==26
+    assert m["registry_version"]=="2.2.0"
+    assert m["route_count"]==1479
+    assert m["modularized_route_count"]==170
+    assert m["capability_count"]==27
     assert m["unclassified_route_count"]==0
     family=next(x for x in m["capabilities"] if x["capability_id"]=="reproducible-spatial-packages")
     assert family["route_count"]==12 and family["modularized_route_count"]==12
@@ -155,5 +155,5 @@ def test_standalone_bootstrap_and_wordpress_thin_shell():
     standalone=(root/"backend/app/standalone_authority_v4440.py").read_text()
     php=(root/"wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
     assert "reproducible_spatial_package_registry" in standalone and 'NavigationItem("packages"' in standalone
-    assert "Version: 4.54.0" in php and "const VERSION = '4.54.0';" in php
+    assert "Version: 4.55.0" in php and "const VERSION = '4.55.0';" in php
     assert "const WORDPRESS_ROLE = 'thin-shell-and-embed-bridge';" in php

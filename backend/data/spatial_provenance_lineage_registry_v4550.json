@@ -1,0 +1,93 @@
+{
+  "schema": "sc-site-intelligence-spatial-provenance-lineage-registry/1.0",
+  "version": "4.55.0",
+  "registry_version": "1.0.0",
+  "title": "Spatial Provenance & Transformation Lineage",
+  "transformation_types": [
+    {
+      "type_id": "source-ingestion",
+      "label": "Source ingestion",
+      "category": "source"
+    },
+    {
+      "type_id": "normalization",
+      "label": "Normalization",
+      "category": "data"
+    },
+    {
+      "type_id": "reprojection",
+      "label": "Coordinate reprojection",
+      "category": "spatial"
+    },
+    {
+      "type_id": "resampling",
+      "label": "Spatial resampling",
+      "category": "spatial"
+    },
+    {
+      "type_id": "spatial-join",
+      "label": "Spatial join",
+      "category": "spatial"
+    },
+    {
+      "type_id": "filtering",
+      "label": "Filtering or subsetting",
+      "category": "data"
+    },
+    {
+      "type_id": "aggregation",
+      "label": "Aggregation",
+      "category": "analysis"
+    },
+    {
+      "type_id": "interpolation",
+      "label": "Interpolation",
+      "category": "analysis"
+    },
+    {
+      "type_id": "graph-derivation",
+      "label": "Graph derivation",
+      "category": "analysis"
+    },
+    {
+      "type_id": "model-binding",
+      "label": "Model or forecast binding",
+      "category": "model"
+    },
+    {
+      "type_id": "scenario-derivation",
+      "label": "Scenario derivation",
+      "category": "model"
+    },
+    {
+      "type_id": "exposure-analysis",
+      "label": "Exposure analysis",
+      "category": "analysis"
+    },
+    {
+      "type_id": "threshold-evaluation",
+      "label": "Threshold evaluation",
+      "category": "analysis"
+    },
+    {
+      "type_id": "visualization-derivation",
+      "label": "Visualization derivative",
+      "category": "presentation"
+    },
+    {
+      "type_id": "manual-annotation",
+      "label": "Manual annotation",
+      "category": "human"
+    }
+  ],
+  "boundaries": [
+    "lineage-records-declared-transformations-not-inferred-history",
+    "transformation-lineage-is-not-causal-attribution",
+    "derived-artifact-is-not-observation",
+    "missing-lineage-is-reported-not-repaired",
+    "verification-recomputes-integrity-without-rerunning-analysis",
+    "manual-annotations-remain-explicitly-human-asserted",
+    "package-and-research-objects-are-never-mutated",
+    "credentials-secrets-and-private-session-material-are-rejected"
+  ]
+}

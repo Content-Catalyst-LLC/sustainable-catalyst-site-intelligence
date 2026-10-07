@@ -1,3 +1,10 @@
+# v4.55.0 — Spatial Provenance & Transformation Lineage
+
+- Added explicit content-addressed transformation events and lineage chains.
+- Added lineage graphs, tracing, chain verification, package context, and lineage comparison.
+- Added 12 modular `/public/spatial-lineage` routes and capability registry 2.2.0.
+- Preserved non-causal, non-inferred, no-auto-repair lineage boundaries.
+
 ## 4.54.0 — Reproducible Spatial Intelligence Packages
 
 - Added canonical deterministic spatial intelligence package, manifest, verification, reproduction-plan, export-plan, comparison, and research-context contracts.
