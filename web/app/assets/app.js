@@ -1991,7 +1991,7 @@
       try{toast(`${event.detail?.group||"Data"} service recovered; refreshing this workspace.`);await navigateToRoute(state.route);reportHeight()}catch(error){console.warn("[Site Intelligence] Recovered workspace refresh failed.",error)}
     },1200);
   });
-  async function init(){setLaunch("Preparing the map and public evidence services.",18);
+  async function init(){const entryParams=new URLSearchParams(location.search);setLaunch("Preparing the map and public evidence services.",18);
     qs("#dateSelect").value=today();initMap();setLaunch("Loading map layers.",34);
     qsa(".layer-tab").forEach(b=>b.addEventListener("click",()=>setImagery(b.dataset.layer)));
     qs("#eventList")?.addEventListener("click",event=>{const row=event.target.closest("[data-event-id]");if(row)selectOverviewEvent(row.dataset.eventId,{sync:true})});
@@ -2076,9 +2076,9 @@
     qs("#savedCreate").addEventListener("click",openSaveViewDialog);qs("#savedImport").addEventListener("click",()=>qs("#savedImportFile").click());qs("#savedImportFile").addEventListener("change",event=>{const file=event.target.files?.[0];importSavedViewFile(file);event.target.value=""});qs("#savedExportAll").addEventListener("click",()=>downloadSavedJson({schema:"sc-saved-view-collection/1.0",application_version:APP_VERSION,exported_at:savedIso(),views:savedViewsState.items},"site-intelligence-saved-views.json"));qs("#savedClearAll").addEventListener("click",()=>{if(!savedViewsState.items.length)return;if(confirm("Delete all locally saved Site Intelligence views from this browser?")){savedViewsState.items=[];try{persistSavedViews();renderSavedViews();toast("Local saved views cleared")}catch{}}});qs("#saveViewCancel").addEventListener("click",()=>qs("#saveViewDialog").close());qs("#saveViewForm").addEventListener("submit",event=>{event.preventDefault();if(saveCurrentManifest(qs("#saveViewName").value))qs("#saveViewDialog").close()});
     qs("#closeEvidenceDrawer").addEventListener("click",closeEvidenceDrawer);qs("#evidenceBackdrop").addEventListener("click",closeEvidenceDrawer);document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeEvidenceDrawer();setMobileNavigation(false,{restoreFocus:true})}});
     window.matchMedia("(max-width: 760px)").addEventListener?.("change",event=>{if(!event.matches)setMobileNavigation(false)});
-    const params=new URLSearchParams(location.search);const initialCountry=String(params.get("country")||"KEN").trim().toUpperCase();const requestedView=params.get("view")||"overview";const initialView=[...Object.keys(savedViewDefinitions),"saved","launch","observatory"].includes(requestedView)?requestedView:"overview";const invalidRequestedView=requestedView!==initialView;qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";if(params.get("imageryDate"))qs("#dateSelect").value=params.get("imageryDate");
+    const params=entryParams;const initialCountry=String(params.get("country")||"KEN").trim().toUpperCase();const requestedView=params.get("view")||"overview";const initialView=[...Object.keys(savedViewDefinitions),"saved","launch","observatory"].includes(requestedView)?requestedView:"overview";const invalidRequestedView=requestedView!==initialView;qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";if(params.get("imageryDate"))qs("#dateSelect").value=params.get("imageryDate");
     setLaunch("Opening the application shell.",82);
-    const routeTask=Promise.resolve().then(()=>setRoute(initialView));
+    const routeTask=Promise.resolve().then(()=>setRoute(initialView)).then(()=>{const target=new URL(location.href);target.searchParams.set("view",initialView);target.searchParams.set("country",initialCountry);history.replaceState(null,"",target.pathname+target.search+target.hash)});
     applySharedControlState(initialView,params);
     finishLaunch({message:"Site Intelligence is ready. Public data services are connecting."});
     if(invalidRequestedView)toast("The requested view is unavailable; Overview was opened instead.");
