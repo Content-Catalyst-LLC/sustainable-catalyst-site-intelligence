@@ -1,4 +1,13 @@
 
+## 4.55.3.1 — API Reliability & Contract Truth Repair
+
+- Split process liveness from required data readiness.
+- Added truthful capability health with optional live domain probes.
+- Added canonical reliable routes for Economics, Law, Science, Humanitarian, Resources, and Dossiers.
+- Dependency failures now return HTTP 503 with `ok=false` on the reliable surface; valid empty connected queries are labeled `no-records`.
+- Capability maturity now defaults to `migration` instead of `production`.
+- Added a standalone-home API data-readiness state and release certification for the reliability contract.
+
 ## 4.55.3 — Standalone Web Application Foundation & WordPress Decoupling
 
 - Added independent `web/` Site Intelligence application and Docker/nginx deployment.

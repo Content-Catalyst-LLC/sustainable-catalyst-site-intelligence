@@ -40,13 +40,13 @@ def fixture_request(profile="reference-first"):
     }
 
 def test_release_identity_and_inventory():
-    assert APP_VERSION=="4.55.3"
-    assert RELEASE_NAME=="Standalone Web Application Foundation & WordPress Decoupling"
+    assert APP_VERSION=="4.55.3.1"
+    assert RELEASE_NAME=="API Reliability & Contract Truth Repair"
     m=capability_manifest(app.routes)
-    assert m["registry_version"]=="2.4.0"
-    assert m["route_count"]==1506
-    assert m["modularized_route_count"]==197
-    assert m["capability_count"]==29
+    assert m["registry_version"]=="2.5.0"
+    assert m["route_count"]==1515
+    assert m["modularized_route_count"]==206
+    assert m["capability_count"]==30
     assert m["unclassified_route_count"]==0
     family=next(x for x in m["capabilities"] if x["capability_id"]=="reproducible-spatial-packages")
     assert family["route_count"]==12 and family["modularized_route_count"]==12
@@ -155,5 +155,5 @@ def test_standalone_bootstrap_and_wordpress_thin_shell():
     standalone=(root/"backend/app/standalone_authority_v4440.py").read_text()
     php=(root/"wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
     assert "reproducible_spatial_package_registry" in standalone and 'NavigationItem("packages"' in standalone
-    assert "Version: 4.55.3" in php and "const VERSION = '4.55.3';" in php
+    assert "Version: 4.55.3.1" in php and "const VERSION = '4.55.3.1';" in php
     assert "const WORDPRESS_ROLE = 'public-site-launch-bridge';" in php

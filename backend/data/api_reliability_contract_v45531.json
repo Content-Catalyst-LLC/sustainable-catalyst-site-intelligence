@@ -1,0 +1,43 @@
+{
+  "schema": "sc-site-intelligence-api-reliability-contract/1.0",
+  "version": "4.55.3.1",
+  "release_name": "API Reliability & Contract Truth Repair",
+  "purpose": "Make API liveness, readiness, dependency availability, valid empty results, degraded partial results, and capability maturity distinguishable to clients and operators.",
+  "liveness": {
+    "route": "/health",
+    "meaning": "process-alive-only",
+    "asserts_dependencies": false
+  },
+  "readiness": {
+    "route": "/ready",
+    "required_dependency": "platform-core",
+    "unavailable_http_status": 503
+  },
+  "capability_health": {
+    "route": "/public/capability-health",
+    "configuration_probe_default": true,
+    "live_probe_parameter": "probe=true"
+  },
+  "reliable_domain_routes": [
+    "/public/reliable/economics/records",
+    "/public/reliable/law/records",
+    "/public/reliable/science/records",
+    "/public/reliable/humanitarian/records",
+    "/public/reliable/resources/records",
+    "/public/reliable/dossiers/country"
+  ],
+  "transport_semantics": {
+    "200": "dependency connected; records may be nonempty or legitimately empty",
+    "206": "usable partial/degraded response with records",
+    "503": "requested capability dependency unavailable, disabled, or unconfigured"
+  },
+  "guardrails": {
+    "legacy_routes_removed": false,
+    "legacy_payloads_silently_reinterpreted": false,
+    "http_200_equated_with_domain_readiness": false,
+    "empty_results_equated_with_dependency_failure": false,
+    "dependency_failure_reported_ok_true_on_reliable_surface": false,
+    "new_provider_integrations": false,
+    "new_domain_features": false
+  }
+}

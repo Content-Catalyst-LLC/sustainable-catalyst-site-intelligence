@@ -1,9 +1,18 @@
-# Sustainable Catalyst Site Intelligence v4.55.3
+# Sustainable Catalyst Site Intelligence v4.55.3.1
 
 Sustainable Catalyst Site Intelligence is the geospatial, country, Earth-observation, ocean, space, infrastructure, environmental, and live public-intelligence layer of the Sustainable Catalyst platform.
 
-**Current release:** v4.55.3 — Standalone Web Application Foundation & WordPress Decoupling
+**Current release:** v4.55.3.1 — API Reliability & Contract Truth Repair
 
+
+## v4.55.3.1 API Reliability & Contract Truth Repair
+
+- Separates process liveness (`/health`) from required data readiness (`/ready`).
+- Adds `/public/capability-health` with an explicit live-probe mode.
+- Adds six `/public/reliable/*` domain routes that distinguish `no-records` from dependency failure and use HTTP 503 when the requested dependency is unavailable.
+- Changes capability maturity default from `production` to `migration`; production maturity is now explicit.
+- Adds a visible API data-readiness state to the standalone home surface.
+- Adds no new providers or domain features; v4.55.3.2 remains the functional-parity recovery build.
 
 ### v4.55.2 Advanced Domain Intelligence Workspace Expansion
 
@@ -49,7 +58,7 @@ Site Intelligence now normalizes live geospatial events into provenance-preservi
 
 ## v4.55.3 standalone web application
 
-Site Intelligence now ships an independent `web/` application intended for `https://intelligence.sustainablecatalyst.com`. The FastAPI service remains the machine-facing authority at `https://site-intelligence-api.sustainablecatalyst.com`. WordPress is a public-site launch bridge only; the standalone application owns routing, country context, browser state, and API transport. The legacy FastAPI `/app/` shell is retained temporarily for compatibility but is no longer the preferred user application.
+Site Intelligence v4.55.3 ships an independent `web/` application intended for `https://intelligence.sustainablecatalyst.com`. The FastAPI service remains the machine-facing authority at `https://site-intelligence-api.sustainablecatalyst.com`. WordPress is a public-site launch bridge only; the standalone application owns routing, country context, browser state, and API transport. The legacy FastAPI `/app/` shell is retained temporarily for compatibility but is no longer the preferred user application.
 
 ## Architecture
 

@@ -1,4 +1,4 @@
-APP_VERSION = "4.55.3"
+APP_VERSION = "4.55.3.1"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Standalone Web Application Foundation & WordPress Decoupling"
+RELEASE_NAME = "API Reliability & Contract Truth Repair"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

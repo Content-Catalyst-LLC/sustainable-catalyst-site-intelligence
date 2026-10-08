@@ -41,6 +41,12 @@ def health(
 ):
     return {
         "ok": True,
+        "alive": True,
+        "state": "alive",
+        "scope": "process-only",
+        "dependency_readiness_asserted": False,
+        "readiness_route": "/ready",
+        "capability_health_route": "/public/capability-health",
         "service": settings.app_name,
         "version": settings.version,
         "environment": settings.environment,

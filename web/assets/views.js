@@ -20,10 +20,10 @@ function listRecords(rows,empty="No records returned for this context."){
 }
 
 export async function renderHome(ctx){
-  const [health,manifest]=await Promise.all([client.get("/health"),client.get("/public/web-app/manifest")]);
+  const [health,manifest,reliability]=await Promise.all([client.get("/health"),client.get("/public/web-app/manifest"),client.get("/public/capability-health")]);
   const c=ctx.countryCode;
   return shell("STANDALONE APPLICATION","Site Intelligence","Independent research application. WordPress is no longer in the runtime path.",
-    `${statusStrip([card("Backend",health.version,health.environment),card("Application",manifest.version,"standalone web"),card("Country context",c,"propagates across domain workspaces"),card("WordPress dependency",String(manifest.wordpress_runtime_dependency),manifest.wordpress_role)])}
+    `${statusStrip([card("Backend",health.version,"process "+(health.state||"alive")),card("Application",manifest.version,"standalone web"),card("API data readiness",reliability.overall_state||"unknown",reliability.probe?"live probe":"configuration state"),card("Country context",c,"propagates across domain workspaces"),card("WordPress dependency",String(manifest.wordpress_runtime_dependency),manifest.wordpress_role)])}
     <section class="panel"><h2>Research from context</h2><p>Open a domain lens for <strong>${esc(ctx.countryName||c)}</strong>. The country code is carried in the URL and used by workspace requests.</p><div class="launch-grid">${["country","dossiers","economics","law","science","humanitarian","resources"].map(id=>`<a data-nav="${id}" href="#">${esc(id)}</a>`).join("")}</div></section>`);
 }
 
@@ -102,7 +102,7 @@ export async function renderEvents(){
   catch(e){ return shell("LIVE INTELLIGENCE","Events","Standalone workspace",errorPanel(e)); }
 }
 export async function renderResearch(ctx){
-  return shell("RESEARCH","Research context · "+ctx.countryCode,"A persistent standalone research surface ready for project, evidence, package, and cross-product handoffs.",`<section class="panel"><h2>Foundation state</h2><p>v4.55.3 moves routing, context and API transport out of WordPress. Persistent hosted research projects remain governed by their existing backend contracts.</p></section>`);
+  return shell("RESEARCH","Research context · "+ctx.countryCode,"A persistent standalone research surface ready for project, evidence, package, and cross-product handoffs.",`<section class="panel"><h2>Foundation state</h2><p>v4.55.3.1 adds truthful API readiness and dependency-state contracts. Functional parity recovery remains the next release.</p></section>`);
 }
 export async function renderPackages(id){
   try{ const data=await client.get("/public/reproducible-spatial-packages/registry"); return shell("REPRODUCIBILITY",id?`Package ${id}`:"Packages","Reproducible spatial intelligence package contracts.",jsonPreview(data)); }
