@@ -137,7 +137,7 @@ for _ in $(seq 1 90); do
     healthy) ready=1; break ;;
     running)
       if docker inspect --format '{{if .State.Health}}yes{{else}}no{{end}}' "$CONTAINER" 2>/dev/null | grep -q '^no$'; then
-        if docker exec "$CONTAINER" python - <<'PY' >/dev/null 2>&1
+        if docker exec -i "$CONTAINER" python - <<'PY' >/dev/null 2>&1
 import urllib.request
 with urllib.request.urlopen('http://127.0.0.1:8091/health', timeout=3) as r:
     assert r.status == 200
@@ -197,7 +197,7 @@ PYVERIFY
 # Readiness is deliberately allowed to return 503: the release must deploy so it
 # can truthfully report an unavailable required dependency. Production data-ready
 # certification requires HTTP 200 and explicit live capability checks.
-readiness_status="$(docker exec "$CONTAINER" python - <<'PYREADY'
+readiness_status="$(docker exec -i "$CONTAINER" python - <<'PYREADY'
 import urllib.error, urllib.request
 url='http://127.0.0.1:8091/ready'
 try:
