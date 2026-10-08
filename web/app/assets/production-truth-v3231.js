@@ -62,7 +62,7 @@
       return {phase:'ready',reason:'Ocean Intelligence is ready · 11 marine systems visible.'};
     }
     if(!controllerAvailable(route))return {phase:'unavailable',reason:`The ${contract(route).label} controller is not packaged in this release.`};
-    const surface=surfaceFor(route);if(!surface)return {phase:'unavailable',reason:`The ${contract(route).label} route opened without a visible workspace surface.`};
+    const surface=surfaceFor(route);if(!surface){const panel=(NATIVE_SURFACES[route]||[]).map(selector=>qs(selector)).find(Boolean);if(panel)return {phase:'initial',reason:`Opening ${contract(route).label} workspace surface.`};return {phase:'unavailable',reason:`The ${contract(route).label} route opened without a visible workspace surface.`};}
     const text=(surface.textContent||'').replace(/\s+/g,' ').trim();
     const explicitFailure=surface.querySelector('[data-state="error"],[data-state="unavailable"],.workspace-error,.error-state,[role="alert"][data-severity="error"]');
     const configurationRequired=/platform core (?:public reading )?is not configured|core-unconfigured|configuration required/i.test(text);
