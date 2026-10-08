@@ -5,7 +5,7 @@
   const ENDPOINT="/public/workspaces/production-truth";
   const CORE_ROUTES=new Set(["overview","global","economics","law","science","humanitarian","resources","dossiers","alerts","scenarios","earth","spatial","harmonization","country","events","compare","thematic","briefing","sources"]);
   const CONTROLLERS={platform:"SCConnectedPlatformV300",global:"SCGlobalConditionsV210",economics:"SCEconomicsV220",law:"SCLawV230",science:"SCScienceV240",humanitarian:"SCHumanitarianV250",resources:"SCResourcesV260",dossiers:"SCDossiersV270",alerts:"SCAlertsV280",scenarios:"SCScenariosV290",research:"SCResearchV2100",integration:"SCIntegrationV2110",experience:"SCExperienceV2120",spatial:"SCSpatialV2150",harmonization:"SCHarmonizationV2160",models:"SCModelsV2170",evidence:"SCEvidenceV2180",graph:"SCKnowledgeGraphV2190",publishing:"SCIntelligencePublishingV2200",monitoring:"SCScheduledMonitoringV2210",workspaces:"SCInstitutionalWorkspacesV2220",workflows:"SCCrossPlatformWorkflowsV2230",federation:"SCInstitutionalFederationV2240",governance:"SCProductionGovernanceV2250"};
-  const NATIVE_SURFACES={overview:["#overviewLayout","#map"],observatory:["#auditablePublicObservatory"],launch:["#publicLaunchPortfolio"],earth:["#earthStudio","#earthMapA"],country:["#countryIntelligencePanel","#countryOverviewMap"],events:["#eventStudio","#eventExplorerMap"],compare:["#compareStudio","#compareMap"],thematic:["#thematicStudio","#thematicMap"],briefing:["#briefingStudio"],sources:["#sourceStudio"],saved:["#savedViewsStudio"]};
+  const NATIVE_SURFACES={economics:["#economicsStudio"],law:["#lawStudio"],science:["#scienceStudio"],humanitarian:["#humanitarianStudio"],resources:["#resourcesStudio","#resourceStudio"],overview:["#overviewLayout","#map"],observatory:["#auditablePublicObservatory"],launch:["#publicLaunchPortfolio"],earth:["#earthStudio","#earthMapA"],country:["#countryIntelligencePanel","#countryOverviewMap"],events:["#eventStudio","#eventExplorerMap"],compare:["#compareStudio","#compareMap"],thematic:["#thematicStudio","#thematicMap"],briefing:["#briefingStudio"],sources:["#sourceStudio"],saved:["#savedViewsStudio"]};
   const state={directory:null,route:null,phase:"initial",reason:"",timer:null,historyLock:false,lastRequestAt:0};
   let bar=null;
 
@@ -29,6 +29,7 @@
 
   function setPhase(phase,reason=""){
     buildBar();if(!bar)return;
+    if(state.phase===phase && state.reason===reason && bar.dataset.state===phase)return;
     state.phase=phase;state.reason=reason;bar.dataset.state=phase;
     const item=contract(state.route||currentRoute());
     const labels={initial:"Opening workspace",ready:"Workspace ready",empty:"No matching public records",degraded:"Workspace partially available",unavailable:"Workspace unavailable"};
@@ -107,7 +108,7 @@
     window.addEventListener('scsi:visible-map-health',event=>{if((state.route||currentRoute())==='overview')setPhase(event.detail?.ready?'ready':'degraded',event.detail?.ready?'':contract('overview').degraded_state)});
     window.addEventListener('error',event=>{if(event.filename&&/\/app\/assets\//.test(event.filename))setPhase('degraded','A workspace script reported an error; available public evidence remains visible.')});
     window.addEventListener('unhandledrejection',()=>setPhase('degraded','A workspace request did not complete; retry the active workspace.'));
-    const root=qs('#main')||document.body;new MutationObserver(()=>evaluateRoute(180)).observe(root,{subtree:true,childList:true,attributes:true,attributeFilter:['hidden','class','data-state','data-ocean-hydration-state','data-ocean-workspace-owner']});
+    const root=qs('#main')||document.body;new MutationObserver(records=>{if(records.every(record=>bar&&(record.target===bar||bar.contains(record.target))))return;evaluateRoute(180)}).observe(root,{subtree:true,childList:true,attributes:true,attributeFilter:['hidden','class','data-state','data-ocean-hydration-state','data-ocean-workspace-owner']});
   }
   function bind(){buildBar();state.route=currentRoute();bindHistory();bindSignals();loadDirectory();beginRoute(state.route);}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
