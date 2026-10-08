@@ -318,6 +318,11 @@ def build_economics_overview(settings: Any = None) -> dict[str, Any]:
         records, meta = _core_records_payload(settings, {"limit": 200})
     except RuntimeError as exc:
         error = str(exc)
+    source_fallback = False
+    if not records:
+        from .economics_world_bank_fallback_v4563 import get_country_records
+        records = get_country_records("KEN", limit=MAX_RECORDS)
+        source_fallback = bool(records)
     families = Counter(item["family"] for item in records)
     sources = Counter(item["source_id"] for item in records if item.get("source_id"))
     geographies = {item["geography_code"] for item in records if item.get("geography_code")}
@@ -329,7 +334,7 @@ def build_economics_overview(settings: Any = None) -> dict[str, Any]:
         "version": "2.2.0",
         "release_name": "Economics, Markets, and Sustainability Signals",
         "generated_at": generated_at,
-        "integration": _integration_state(settings, error=error),
+        "integration": ({**_integration_state(settings, error=error), "state": "source-fallback", "message": "Showing live World Bank Open Data sample coverage for Kenya; Platform Core contains no published observations.", "source": "world-bank"} if source_fallback else _integration_state(settings, error=error)),
         "counts": {
             "records_visible": len(records),
             "records_available": int(pagination.get("total") or len(records)),
