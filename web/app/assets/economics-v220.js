@@ -306,6 +306,7 @@
       url.searchParams.set("country", code);
       url.searchParams.set("geography_code", code);
       history.replaceState(null, "", url);
+      api("/public/economics-sustainability/facets?geography_code="+encodeURIComponent(code)).then(facets=>{state.facets=facets;fillFacets(facets);}).catch(()=>{});
       loadRecords({sync:false}).catch(error => {
         setStatus(`Economics records for ${code || "the selected geography"} are temporarily unavailable.`, "error");
         showEmpty("No official economics records available", error?.message || "The public data bridge did not respond.");
