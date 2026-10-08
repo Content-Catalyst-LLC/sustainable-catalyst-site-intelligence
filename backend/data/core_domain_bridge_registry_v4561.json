@@ -1,0 +1,81 @@
+{
+  "schema": "sc-site-intelligence-core-domain-bridge-registry/1.0",
+  "version": "4.56.1",
+  "release_name": "Platform Core International Law Bridge & Connector Activation",
+  "contract": "platform-core-cross-domain-bridge-recovery",
+  "base_release": "4.56.0",
+  "platform_core_authority": {
+    "provider_registry": true,
+    "connector_adapter_authority": true,
+    "ingestion_authority": true,
+    "site_intelligence_duplicates_core_connectors": false
+  },
+  "transport": {
+    "private_network": "sc-internal",
+    "preferred_private_base_url": "http://sc-core:8090",
+    "private_route_prefix": "/v1",
+    "public_route_prefix": "/api/v1",
+    "private_reads_require_public_api_key": false,
+    "public_reads_require_scoped_public_api_key": true,
+    "public_api_scope": "data:read",
+    "write_key_used_for_bridge_reads": false
+  },
+  "catalog_targets": {
+    "minimum_sources": 40,
+    "minimum_connectors": 39,
+    "core_catalog_reseed_is_idempotent": true
+  },
+  "workspace_coverage": {
+    "law": [
+      "international_law"
+    ],
+    "economics": [
+      "economics",
+      "finance",
+      "labour",
+      "company_finance",
+      "energy",
+      "agriculture",
+      "demographics",
+      "sustainability"
+    ],
+    "humanitarian": [
+      "humanitarian",
+      "demographics",
+      "international_law",
+      "sustainability"
+    ],
+    "science": [
+      "earth_science",
+      "atmospheric_science",
+      "hydrology",
+      "biomedical_science",
+      "chemistry",
+      "biodiversity",
+      "materials_science",
+      "astronomy",
+      "high_energy_astrophysics",
+      "infrared_astronomy",
+      "space_science"
+    ],
+    "resources": [
+      "energy",
+      "economics",
+      "agriculture",
+      "hydrology",
+      "earth_science",
+      "sustainability"
+    ],
+    "dossiers": [
+      "*"
+    ]
+  },
+  "source_policy": [
+    "Expose as many applicable Core source families as the workspace can safely interpret.",
+    "Preserve source identity, connector identity, domain, provenance, freshness, and authority boundaries.",
+    "Registration is not represented as successful ingestion.",
+    "Empty results are not replaced with fabricated records.",
+    "Parameterized connectors are invoked only through explicit governed Core workflows, never by an unauthenticated public read.",
+    "Library scholarly and institutional sources remain contextual research sources rather than being silently reclassified as Site Intelligence operational data."
+  ]
+}

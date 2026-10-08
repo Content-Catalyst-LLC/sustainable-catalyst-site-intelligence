@@ -17,13 +17,13 @@ client = TestClient(app)
 
 
 def test_release_identity_and_route_inventory():
-    assert APP_VERSION == "4.56.0"
-    assert RELEASE_NAME == "Standalone Production Consolidation & Certification"
+    assert APP_VERSION == "4.56.1"
+    assert RELEASE_NAME == "Platform Core International Law Bridge & Connector Activation"
     manifest = capability_manifest(app.routes)
-    assert manifest["registry_version"] == "2.7.0"
-    assert manifest["route_count"] == 1521
-    assert manifest["modularized_route_count"] == 212
-    assert manifest["capability_count"] == 32
+    assert manifest["registry_version"] == "2.8.0"
+    assert manifest["route_count"] == 1525
+    assert manifest["modularized_route_count"] == 216
+    assert manifest["capability_count"] == 33
     assert manifest["unclassified_route_count"] == 0
     family = next(item for item in manifest["capabilities"] if item["capability_id"] == "api-reliability")
     assert family["maturity"] == "production"
@@ -62,7 +62,7 @@ def test_ready_fails_truthfully_when_core_is_unconfigured():
 
 def test_contract_truth_manifest_defines_transport_semantics():
     payload = api_contract_truth_manifest()
-    assert payload["version"] == "4.56.0"
+    assert payload["version"] == "4.56.1"
     assert payload["canonical_routes"]["readiness"] == "/ready"
     text = " ".join(payload["truth_rules"])
     assert "HTTP 200" in text
@@ -128,7 +128,7 @@ def test_reliable_economics_route_does_not_claim_success_when_core_missing():
 def test_reliability_registry_is_release_bound_and_truthful():
     import json
     registry = json.loads((ROOT / "backend/data/api_reliability_contract_v45531.json").read_text())
-    assert registry["version"] == "4.56.0"
+    assert registry["version"] == "4.56.1"
     assert registry["guardrails"]["http_200_equated_with_domain_readiness"] is False
     assert registry["guardrails"]["dependency_failure_reported_ok_true_on_reliable_surface"] is False
     assert registry["guardrails"]["new_provider_integrations"] is False
@@ -143,6 +143,6 @@ def test_standalone_home_surfaces_reliability_state():
 
 def test_wordpress_remains_launch_bridge_only():
     php = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
-    assert "Version: 4.56.0" in php
-    assert "const VERSION = '4.56.0';" in php
+    assert "Version: 4.56.1" in php
+    assert "const VERSION = '4.56.1';" in php
     assert "const WORDPRESS_ROLE = 'public-site-launch-bridge';" in php

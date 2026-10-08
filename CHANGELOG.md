@@ -1,3 +1,12 @@
+# Changelog
+
+## 4.56.1 — Platform Core International Law Bridge & Connector Activation
+
+- Restores private sc-internal Platform Core reads for all six canonical Core-backed Site Intelligence workspaces.
+- Audits and activates the Core source/connector catalog without duplicating provider adapters in Site Intelligence.
+- Adds public-safe cross-domain source coverage and bridge diagnostics.
+- Preserves scoped public API reads for external Core deployments and never exposes Core credentials.
+
 # v4.56.0 — Standalone Production Consolidation & Certification
 
 - Certified the standalone Site Intelligence architecture and runtime authority split.

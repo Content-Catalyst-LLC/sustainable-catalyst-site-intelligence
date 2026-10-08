@@ -36,18 +36,18 @@ RELEASE_BOUND_POLICIES = (
     "advanced_domain_intelligence_registry_v4552.json", "standalone_web_application_registry_v4553.json",
     "api_reliability_contract_v45531.json", "live_probe_consistency_registry_v455311.json",
     "standalone_functional_parity_registry_v45532.json", "runtime_health_domain_context_registry_v455321.json",
-    "browser_api_transport_registry_v455322.json", "production_consolidation_registry_v4560.json",
+    "browser_api_transport_registry_v455322.json", "production_consolidation_registry_v4560.json", "core_domain_bridge_registry_v4561.json",
 )
 
 
 def test_release_identity_and_inventory_are_consolidated():
-    assert APP_VERSION == "4.56.0"
-    assert RELEASE_NAME == "Standalone Production Consolidation & Certification"
+    assert APP_VERSION == "4.56.1"
+    assert RELEASE_NAME == "Platform Core International Law Bridge & Connector Activation"
     inventory = capability_manifest(app.routes)
-    assert inventory["registry_version"] == "2.7.0"
-    assert inventory["route_count"] == 1521
-    assert inventory["modularized_route_count"] == 212
-    assert inventory["capability_count"] == 32
+    assert inventory["registry_version"] == "2.8.0"
+    assert inventory["route_count"] == 1525
+    assert inventory["modularized_route_count"] == 216
+    assert inventory["capability_count"] == 33
     assert inventory["unclassified_route_count"] == 0
     family = next(x for x in inventory["capabilities"] if x["capability_id"] == "production-certification")
     assert family["route_count"] == 3
@@ -87,7 +87,7 @@ def test_production_certification_routes_are_public_and_machine_readable():
 
 
 def test_all_release_bound_policy_versions_are_aligned():
-    assert len(RELEASE_BOUND_POLICIES) == 46
+    assert len(RELEASE_BOUND_POLICIES) == 47
     data_root = ROOT / "backend" / "data"
     for name in RELEASE_BOUND_POLICIES:
         payload = json.loads((data_root / name).read_text(encoding="utf-8"))
@@ -98,15 +98,15 @@ def test_public_surfaces_share_release_identity_and_wordpress_remains_non_author
     web_config = (ROOT / "web" / "config.js").read_text(encoding="utf-8")
     legacy_index = (ROOT / "backend" / "public_app" / "index.html").read_text(encoding="utf-8")
     plugin = (ROOT / "wordpress-plugin" / "sustainable-catalyst-site-intelligence" / "sustainable-catalyst-site-intelligence.php").read_text(encoding="utf-8")
-    assert 'release: "4.56.0"' in web_config
-    assert 'runtimeMode: "standalone-production-certified"' in web_config
-    assert 'v=4.56.0' in legacy_index
-    assert "const VERSION = '4.56.0';" in plugin
+    assert 'release: "4.56.1"' in web_config
+    assert 'runtimeMode: "standalone-production-certified-core-bridge"' in web_config
+    assert 'v=4.56.1' in legacy_index
+    assert "const VERSION = '4.56.1';" in plugin
     assert "const WORDPRESS_ROLE = 'public-site-launch-bridge';" in plugin
     assert "const STANDALONE_WEB_APP_URL = 'https://intelligence.sustainablecatalyst.com';" in plugin
 
 
 def test_release_does_not_claim_domain_data_activation():
     boundaries = manifest()["scope_boundaries"]
-    assert "No new domain-data activation." in boundaries
+    assert "Platform Core cross-domain read bridge activation only; Core remains provider and ingestion authority." in boundaries
     assert "No fabricated records or synthetic readiness." in boundaries

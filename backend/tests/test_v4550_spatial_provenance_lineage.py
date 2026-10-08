@@ -132,5 +132,5 @@ def test_standalone_and_wordpress_identity():
     standalone=(root/"backend/app/standalone_authority_v4440.py").read_text()
     php=(root/"wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
     assert "spatial_lineage_registry" in standalone and 'NavigationItem("lineage"' in standalone
-    assert "Version: 4.56.0" in php and "const VERSION = '4.56.0';" in php
+    assert "Version: 4.56.0" in php and "const VERSION = '4.56.1';" in php
     assert "const WORDPRESS_ROLE = 'public-site-launch-bridge';" in php

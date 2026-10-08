@@ -1,4 +1,4 @@
-APP_VERSION = "4.56.0"
+APP_VERSION = "4.56.1"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Standalone Production Consolidation & Certification"
+RELEASE_NAME = "Platform Core International Law Bridge & Connector Activation"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

@@ -1,6 +1,6 @@
 (()=>{
   "use strict";
-  const RELEASE="4.56.0";
+  const RELEASE="4.56.1";
   const cfg=window.__SC_SITE_INTELLIGENCE_CONFIG__||{};
   const apiOrigin=String(cfg.apiOrigin||"https://site-intelligence-api.sustainablecatalyst.com").replace(/\/$/,"");
   const appOrigin=String(cfg.appOrigin||location.origin||"").replace(/\/$/,"");

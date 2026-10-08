@@ -21,13 +21,13 @@ client = TestClient(app)
 
 
 def test_release_identity_and_route_inventory_are_stable():
-    assert APP_VERSION == "4.56.0"
-    assert RELEASE_NAME == "Standalone Production Consolidation & Certification"
+    assert APP_VERSION == "4.56.1"
+    assert RELEASE_NAME == "Platform Core International Law Bridge & Connector Activation"
     inventory = capability_manifest(app.routes)
-    assert inventory["registry_version"] == "2.7.0"
-    assert inventory["route_count"] == 1521
-    assert inventory["modularized_route_count"] == 212
-    assert inventory["capability_count"] == 32
+    assert inventory["registry_version"] == "2.8.0"
+    assert inventory["route_count"] == 1525
+    assert inventory["modularized_route_count"] == 216
+    assert inventory["capability_count"] == 33
     assert inventory["unclassified_route_count"] == 0
 
 

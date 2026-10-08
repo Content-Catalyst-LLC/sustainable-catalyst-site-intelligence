@@ -1,7 +1,7 @@
 {
   "schema": "sc-site-intelligence-production-certification/1.0",
-  "version": "4.56.0",
-  "release_name": "Standalone Production Consolidation & Certification",
+  "version": "4.56.1",
+  "release_name": "Platform Core International Law Bridge & Connector Activation",
   "contract": "standalone-production-consolidation-certification",
   "authority": {
     "web_origin": "https://intelligence.sustainablecatalyst.com",
@@ -12,17 +12,17 @@
     "fastapi_machine_authority": true
   },
   "expected_inventory": {
-    "registry_version": "2.7.0",
-    "route_count": 1521,
-    "modularized_route_count": 212,
-    "capability_count": 32,
+    "registry_version": "2.8.0",
+    "route_count": 1525,
+    "modularized_route_count": 216,
+    "capability_count": 33,
     "unclassified_route_count": 0
   },
   "certification_targets": {
     "required_workspace_count": 33,
     "required_functional_control_count": 12,
     "required_deep_link_alias_count": 11,
-    "release_bound_policy_count": 46
+    "release_bound_policy_count": 47
   },
   "runtime_truth": {
     "primary_health_path": "/health",
@@ -56,10 +56,10 @@
     "live_domain_availability_is_reported_not_fabricated": true
   },
   "scope_boundaries": [
-    "No new domain-data activation.",
+    "Platform Core cross-domain read bridge activation only; Core remains provider and ingestion authority.",
     "No fabricated records or synthetic readiness.",
     "No WordPress runtime authority.",
-    "No database migration.",
-    "No automatic source fetching or re-execution introduced by this release."
+    "No Site Intelligence database migration.",
+    "No unauthenticated public connector ingestion or automatic provider re-execution."
   ]
 }

@@ -13,8 +13,10 @@ import os
 import threading
 import time
 from typing import Any, Mapping
+
+from .version import APP_VERSION
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlencode, urljoin
+from urllib.parse import urlencode, urljoin, urlsplit
 from urllib.request import Request, urlopen
 
 RELEASE_SCHEMA = "sc-site-intelligence-global-conditions/1.0"
@@ -35,10 +37,28 @@ class CoreReadConfig:
     api_key: str
     timeout_seconds: float
     cache_ttl_seconds: int
+    internal_reads: bool = True
 
     @property
     def configured(self) -> bool:
         return bool(self.enabled and self.base_url)
+
+    @property
+    def internal_service(self) -> bool:
+        if not self.internal_reads or not self.base_url:
+            return False
+        host = (urlsplit(self.base_url).hostname or "").strip().lower()
+        return host in {"sc-core", "core", "localhost", "127.0.0.1", "::1"} or host.endswith((".internal", ".local"))
+
+    @property
+    def read_mode(self) -> str:
+        if not self.configured:
+            return "unconfigured"
+        if self.internal_service:
+            return "private-core-read"
+        if self.api_key:
+            return "scoped-public-api"
+        return "public-api-key-missing"
 
 
 def _as_bool(value: Any, default: bool = False) -> bool:
@@ -73,12 +93,14 @@ def core_read_config(settings: Any = None) -> CoreReadConfig:
     ).strip()
     timeout = float(os.getenv("SC_SI_GLOBAL_CONDITIONS_TIMEOUT_SECONDS", "9"))
     ttl = int(os.getenv("SC_SI_GLOBAL_CONDITIONS_CACHE_TTL_SECONDS", "90"))
+    internal_reads = _as_bool(os.getenv("SC_SI_PLATFORM_CORE_INTERNAL_READS", "true"), True)
     return CoreReadConfig(
         enabled=enabled,
         base_url=base_url,
         api_key=api_key,
         timeout_seconds=max(2.0, min(timeout, 30.0)),
         cache_ttl_seconds=max(15, min(ttl, 900)),
+        internal_reads=internal_reads,
     )
 
 
@@ -99,13 +121,13 @@ def _cache_set(key: str, value: Any, ttl: int) -> None:
         _CACHE[key] = (time.monotonic() + ttl, value)
 
 
-def _public_headers(config: CoreReadConfig) -> dict[str, str]:
+def _public_headers(config: CoreReadConfig, *, internal: bool = False) -> dict[str, str]:
     headers = {
         "Accept": "application/json",
-        "User-Agent": "Sustainable-Catalyst-Site-Intelligence/2.1.0",
+        "User-Agent": f"Sustainable-Catalyst-Site-Intelligence/{APP_VERSION}",
     }
-    if config.api_key:
-        headers["X-API-Key"] = config.api_key
+    if config.api_key and not internal:
+        headers["X-SC-Public-Key"] = config.api_key
         headers["Authorization"] = f"Bearer {config.api_key}"
     return headers
 
@@ -125,12 +147,16 @@ def _core_json(
         if value not in (None, "", [], ())
     }
     suffix = f"?{urlencode(query_items, doseq=True)}" if query_items else ""
-    url = urljoin(config.base_url + "/", path.lstrip("/")) + suffix
+    effective_path = path
+    internal = bool(config.internal_service)
+    if internal and effective_path.startswith("/api/v1/"):
+        effective_path = "/v1/" + effective_path[len("/api/v1/"):]
+    url = urljoin(config.base_url + "/", effective_path.lstrip("/")) + suffix
     key = cache_key or url
     cached = _cache_get(key)
     if cached is not None:
         return cached
-    request = Request(url, headers=_public_headers(config), method="GET")
+    request = Request(url, headers=_public_headers(config, internal=internal), method="GET")
     try:
         with urlopen(request, timeout=config.timeout_seconds) as response:  # noqa: S310
             if response.status < 200 or response.status >= 300:
@@ -234,6 +260,8 @@ def _state_payload(config: CoreReadConfig, state: str, message: str) -> dict[str
         "enabled": config.enabled,
         "state": state,
         "message": message,
+        "read_mode": config.read_mode,
+        "internal_service": config.internal_service,
         "credential_exposed": False,
     }
 

@@ -1,4 +1,4 @@
-"""v4.56.0 standalone production consolidation and certification contract.
+"""v4.56.1 production consolidation with Platform Core bridge activation.
 
 This release certifies the independent Site Intelligence runtime architecture.
 Static certification never claims that optional external domain dependencies are

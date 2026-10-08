@@ -21,13 +21,13 @@ def repo_root():
 
 
 def test_release_identity_and_route_inventory_unchanged():
-    assert APP_VERSION == "4.56.0"
-    assert RELEASE_NAME == "Standalone Production Consolidation & Certification"
+    assert APP_VERSION == "4.56.1"
+    assert RELEASE_NAME == "Platform Core International Law Bridge & Connector Activation"
     m = capability_manifest(app.routes)
-    assert m["registry_version"] == "2.7.0"
-    assert m["route_count"] == 1521
-    assert m["modularized_route_count"] == 212
-    assert m["capability_count"] == 32
+    assert m["registry_version"] == "2.8.0"
+    assert m["route_count"] == 1525
+    assert m["modularized_route_count"] == 216
+    assert m["capability_count"] == 33
     assert m["unclassified_route_count"] == 0
 
 
@@ -106,6 +106,6 @@ def test_all_six_primary_backend_families_respond_without_404():
 def test_wordpress_remains_thin_shell_and_version_aligned():
     php = (repo_root()/"wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
     assert "Version: 4.56.0" in php
-    assert "const VERSION = '4.56.0';" in php
+    assert "const VERSION = '4.56.1';" in php
     assert "const RELEASE_ID = 'site-intelligence-v4.56.0';" in php
     assert "const WORDPRESS_ROLE = 'public-site-launch-bridge';" in php

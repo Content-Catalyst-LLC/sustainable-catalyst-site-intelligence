@@ -15,8 +15,8 @@ def root(): return Path(__file__).resolve().parents[2]
 
 
 def test_release_identity():
-    assert APP_VERSION == "4.56.0"
-    assert RELEASE_NAME == "Standalone Production Consolidation & Certification"
+    assert APP_VERSION == "4.56.1"
+    assert RELEASE_NAME == "Platform Core International Law Bridge & Connector Activation"
 
 
 def test_registry_has_six_advanced_domains():
@@ -72,10 +72,10 @@ def test_research_packets_are_content_addressed_and_no_auto_delivery():
 
 def test_21_new_modular_routes_and_inventory():
     m = capability_manifest(app.routes)
-    assert m["registry_version"] == "2.7.0"
-    assert m["route_count"] == 1521
-    assert m["modularized_route_count"] == 212
-    assert m["capability_count"] == 32
+    assert m["registry_version"] == "2.8.0"
+    assert m["route_count"] == 1525
+    assert m["modularized_route_count"] == 216
+    assert m["capability_count"] == 33
     assert m["unclassified_route_count"] == 0
     family = next(x for x in m["capabilities"] if x["capability_id"] == "advanced-domain-intelligence")
     assert family["route_count"] == 21
@@ -124,6 +124,6 @@ def test_existing_controllers_expose_current_records_for_analysis():
 def test_wordpress_stays_thin_shell():
     php=(root()/"wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
     assert "Version: 4.56.0" in php
-    assert "const VERSION = '4.56.0';" in php
+    assert "const VERSION = '4.56.1';" in php
     assert "const RELEASE_ID = 'site-intelligence-v4.56.0';" in php
     assert "const WORDPRESS_ROLE = 'public-site-launch-bridge';" in php
