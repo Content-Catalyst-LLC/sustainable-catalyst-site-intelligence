@@ -6,7 +6,7 @@
   const appOrigin=String(cfg.appOrigin||location.origin||"").replace(/\/$/,"");
   const API_PREFIXES=["/public/","/api/","/health","/ready","/openapi.json","/docs"];
   const reliable=[
-    ["/public/economics-sustainability/records","/public/reliable/economics/records"],
+    // Economics uses its source-attributed Core/World Bank endpoint directly.
     ["/public/international-law-observatory/records","/public/reliable/law/records"],
     ["/public/scientific-earth-systems/records","/public/reliable/science/records"],
     ["/public/humanitarian-conflict-displacement/records","/public/reliable/humanitarian/records"],
