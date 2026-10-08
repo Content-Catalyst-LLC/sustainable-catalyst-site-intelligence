@@ -67,8 +67,8 @@ def _evidence(layer_id: str, object_id: str, lon: float, lat: float) -> dict:
 
 
 def test_release_identity() -> None:
-    assert APP_VERSION == "4.55.3.1.1"
-    assert RELEASE_NAME == "Live Probe Consistency & Domain Failure Normalization"
+    assert APP_VERSION == "4.55.3.2"
+    assert RELEASE_NAME == "Standalone Functional Parity Recovery"
 
 
 def test_registry_schema_sources_and_lifecycle_endpoints() -> None:
@@ -293,7 +293,7 @@ def test_http_error_boundary_and_compatibility_contract() -> None:
 def test_capability_registry_owns_all_live_geospatial_routes_and_no_duplicates() -> None:
     manifest = capability_manifest(app.routes)
     family = next(row for row in manifest["capabilities"] if row["capability_id"] == "live-geospatial-fusion")
-    assert manifest["registry_version"] == "2.5.1"
+    assert manifest["registry_version"] == "2.6.0"
     assert manifest["unclassified_route_count"] == 0
     assert family["route_count"] == 13
     assert family["modularized_route_count"] == 13

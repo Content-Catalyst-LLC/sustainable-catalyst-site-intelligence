@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-VERSION="4.55.3.1.1"
+VERSION="4.55.3.2"
 PRODUCT="Site Intelligence"
-ARCHIVE="${1:-/tmp/sustainable-catalyst-site-intelligence-backend-v4.55.3.1.1.zip}"
+ARCHIVE="${1:-/tmp/sustainable-catalyst-site-intelligence-backend-v4.55.3.2.zip}"
 ROOT="${SC_TARGET_ROOT:-/opt/sustainable-catalyst/site-intelligence}"
 LIVE_BACKEND="$ROOT/backend"
 COMPOSE="${SC_TARGET_COMPOSE:-$ROOT/compose.yml}"
@@ -23,7 +23,7 @@ unzip -q "$ARCHIVE" -d "$TMP/package"
 version_file="$(find "$TMP/package" -type f -path '*/backend/app/version.py' | head -1)"
 [[ -n "$version_file" ]] || fail "backend/app/version.py missing from package"
 SRC_BACKEND="$(dirname "$(dirname "$version_file")")"
-grep -q 'APP_VERSION = "4.55.3.1.1"' "$version_file" || fail "package APP_VERSION mismatch"
+grep -q 'APP_VERSION = "4.55.3.2"' "$version_file" || fail "package APP_VERSION mismatch"
 
 RELEASE_BOUND_POLICIES=(
   analytical_workspace_policy_v3234.json
@@ -139,7 +139,7 @@ from app.main import app
 from app.version import APP_VERSION, RELEASE_NAME
 from app.route_registry_v4430 import capability_manifest
 from app.api_reliability_v455311 import api_contract_truth_manifest, normalize_reliable_payload
-assert APP_VERSION == "4.55.3.1.1"
+assert APP_VERSION == "4.55.3.2"
 assert RELEASE_NAME == "Live Probe Consistency & Domain Failure Normalization"
 m=capability_manifest(app.routes)
 assert m["registry_version"] == "2.5.1"
@@ -153,7 +153,7 @@ manifest=api_contract_truth_manifest()
 assert manifest["canonical_probe_country"] == "KEN"
 out,status=normalize_reliable_payload({"ok":True,"state":"partial-live","records":[]}, capability="humanitarian")
 assert status == 206 and out["data_state"] == "partial-no-records"
-print("PASS: Site Intelligence v4.55.3.1.1 live-probe consistency contract verified")
+print("PASS: Site Intelligence v4.55.3.2 live-probe consistency contract verified")
 PYVERIFY
 
 # /ready may truthfully return 503 if a domain dependency is unavailable.

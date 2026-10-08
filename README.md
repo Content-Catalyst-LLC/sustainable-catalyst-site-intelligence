@@ -1,18 +1,17 @@
-# Sustainable Catalyst Site Intelligence v4.55.3.1.1
+# Sustainable Catalyst Site Intelligence v4.55.3.2
 
 Sustainable Catalyst Site Intelligence is the geospatial, country, Earth-observation, ocean, space, infrastructure, environmental, and live public-intelligence layer of the Sustainable Catalyst platform.
 
-**Current release:** v4.55.3.1.1 — Live Probe Consistency & Domain Failure Normalization
+**Current release:** v4.55.3.2 — Standalone Functional Parity Recovery
 
 
-## v4.55.3.1.1 API Reliability & Contract Truth Repair
+## v4.55.3.2 Standalone Functional Parity Recovery
 
-- Separates process liveness (`/health`) from required data readiness (`/ready`).
-- Adds `/public/capability-health` with an explicit live-probe mode.
-- Adds six `/public/reliable/*` domain routes that distinguish `no-records` from dependency failure and use HTTP 503 when the requested dependency is unavailable.
-- Changes capability maturity default from `production` to `migration`; production maturity is now explicit.
-- Adds a visible API data-readiness state to the standalone home surface.
-- Adds no new providers or domain features; v4.55.3.2 remains the functional-parity recovery build.
+- Promotes the proven interactive public application into the independent standalone web runtime.
+- Restores the full navigation, mapping, domain workspaces, research paths, evidence, graph, publishing, monitoring, saved views, exports, and cross-product handoff controls.
+- Adds a first-party API transport bridge that routes standalone requests to the canonical API origin and prefers the reliable record endpoints for Dossiers, Economics, Law, Science, Humanitarian, and Resources.
+- Preserves deep-link country context and explicit degraded/empty/error states; no demonstration records are injected.
+- Adds browser-level functional certification so HTTP 200 alone is not a release pass.
 
 ### v4.55.2 Advanced Domain Intelligence Workspace Expansion
 

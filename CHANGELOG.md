@@ -1,6 +1,6 @@
 # Changelog
 
-## 4.55.3.1.1 — Live Probe Consistency & Domain Failure Normalization
+## 4.55.3.2 — Live Probe Consistency & Domain Failure Normalization
 
 - Unified capability-health, readiness, and reliable routes behind one canonical probe implementation.
 - Normalized expected domain exceptions to structured JSON instead of raw 500 responses.
@@ -12,7 +12,7 @@
 - No new providers or domain features.
 
 
-## 4.55.3.1.1 — API Reliability & Contract Truth Repair
+## 4.55.3.2 — API Reliability & Contract Truth Repair
 
 - Split process liveness from required data readiness.
 - Added truthful capability health with optional live domain probes.

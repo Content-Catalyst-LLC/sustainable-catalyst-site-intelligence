@@ -9,10 +9,10 @@ from app.advanced_domain_workspaces_v4530 import domain_profile, law_analysis, e
 client=TestClient(app)
 
 def test_release_identity_and_capability_inventory():
-    assert APP_VERSION=="4.55.3.1.1"
-    assert RELEASE_NAME=="Live Probe Consistency & Domain Failure Normalization"
+    assert APP_VERSION=="4.55.3.2"
+    assert RELEASE_NAME=="Standalone Functional Parity Recovery"
     m=capability_manifest(app.routes)
-    assert m["registry_version"]=="2.5.1"
+    assert m["registry_version"]=="2.6.0"
     assert m["unclassified_route_count"]==0
     scenario=next(x for x in m["capabilities"] if x["capability_id"]=="scenario-exposure-change")
     domains=next(x for x in m["capabilities"] if x["capability_id"]=="advanced-domain-workspaces")
@@ -100,7 +100,7 @@ def test_frontend_advanced_parity_assets_and_resilient_initializers():
     js=(root/"backend/public_app/assets/advanced-domain-workspaces-v4530.js").read_text()
     econ=(root/"backend/public_app/assets/economics-v220.js").read_text()
     law=(root/"backend/public_app/assets/law-v230.js").read_text()
-    assert "advanced-domain-workspaces-v4530.js?v=4.55.3.1.1" in index
+    assert "advanced-domain-workspaces-v4530.js?v=4.55.3.2" in index
     assert 'wrap("SCEconomicsV220","economics")' in js and 'wrap("SCLawV230","international-law")' in js
     assert 'wrap("SCSIOceanObservationV4360","ocean")' in js and 'open("space")' in js
     assert "Promise.allSettled" in econ and "Promise.allSettled" in law

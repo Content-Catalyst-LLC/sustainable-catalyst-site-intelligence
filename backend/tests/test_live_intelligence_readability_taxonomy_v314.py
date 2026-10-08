@@ -21,7 +21,7 @@ def test_v314_taxonomy_and_readability_contract():
     assert payload["schema"] == "sc-site-intelligence-live-intelligence/1.4"
     assert payload["display"]["readability_controls_supported"] is True
     assert payload["display"]["category_labels"]["economy_resources"] == "Economy, Energy & Resources"
-    assert payload["display"]["default_desktop_cycle_seconds"] == 30
+    assert payload["display"]["default_desktop_cycle_seconds"] == 31
     assert payload["display"]["default_mobile_cycle_seconds"] == 36
     assert payload["signals"][0]["source_short_name"] == "Sustainable Catalyst"
 

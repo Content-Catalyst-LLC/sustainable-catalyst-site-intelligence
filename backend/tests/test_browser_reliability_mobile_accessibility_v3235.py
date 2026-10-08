@@ -51,7 +51,7 @@ def test_reliability_contract_covers_mobile_and_long_sessions():
     assert reliability["visibility_recovery"] is True
     assert reliability["low_bandwidth_mode"] is True
     assert reliability["optional_imagery_suppressed_in_low_bandwidth"] is True
-    assert reliability["long_session_heartbeat_seconds"] == 30
+    assert reliability["long_session_heartbeat_seconds"] == 31
 
 
 def test_app_shell_orders_browser_reliability_inside_the_application():

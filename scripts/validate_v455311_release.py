@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_VERSION = "4.55.3.1.1"
+EXPECTED_VERSION = "4.55.3.2"
 EXPECTED_REGISTRY = "2.5.1"
 EXPECTED_ROUTES = 1515
 EXPECTED_MODULAR = 206
@@ -23,7 +23,7 @@ def check(label, condition, detail=""):
         print(f"FAIL: {label}{': '+detail if detail else ''}")
 
 version=(ROOT/'backend/app/version.py').read_text()
-check('v4.55.3.1.1 release identity aligned', f'APP_VERSION = "{EXPECTED_VERSION}"' in version and 'Live Probe Consistency & Domain Failure Normalization' in version)
+check('v4.55.3.2 release identity aligned', f'APP_VERSION = "{EXPECTED_VERSION}"' in version and 'Live Probe Consistency & Domain Failure Normalization' in version)
 
 logic=(ROOT/'backend/app/api_reliability_v455311.py').read_text()
 check('shared canonical probe implementation installed', 'def probe_capability(' in logic and 'CANONICAL_CAPABILITIES' in logic)
@@ -56,15 +56,15 @@ check('standalone home requests live capability probe', 'probe:true' in views)
 check('standalone web port remains 8096', '127.0.0.1:8096:80' in (ROOT/'web/compose.yml').read_text())
 
 php=(ROOT/'wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php').read_text()
-check('WordPress identity aligned', 'Version: 4.55.3.1.1' in php and "const VERSION = '4.55.3.1.1';" in php)
+check('WordPress identity aligned', 'Version: 4.55.3.2' in php and "const VERSION = '4.55.3.2';" in php)
 check('WordPress remains launch bridge', "const WORDPRESS_ROLE = 'public-site-launch-bridge';" in php)
 
 helper=(ROOT/'deploy/contabo/upgrade_site_intelligence_backend_v4_55_3_1_1_contabo.sh').read_text()
-check('backend helper current', 'VERSION="4.55.3.1.1"' in helper and 'live_probe_consistency_registry_v455311.json' in helper)
+check('backend helper current', 'VERSION="4.55.3.2"' in helper and 'live_probe_consistency_registry_v455311.json' in helper)
 check('backend helper fixes docker heredoc stdin', 'docker exec -i "$CONTAINER" python -' in helper)
 check('backend helper accepts truthful readiness 503', '503)' in helper and 'domain-degraded' in helper)
 web_helper=(ROOT/'deploy/contabo/upgrade_site_intelligence_web_v4_55_3_1_1_contabo.sh').read_text()
-check('web helper current', 'VERSION="4.55.3.1.1"' in web_helper and '127.0.0.1:8096' in web_helper)
+check('web helper current', 'VERSION="4.55.3.2"' in web_helper and '127.0.0.1:8096' in web_helper)
 check('Caddy remains 8096', 'reverse_proxy 127.0.0.1:8096' in (ROOT/'deploy/contabo/site-intelligence-web-v455311.Caddyfile').read_text())
 
 m=re.search(r'RELEASE_BOUND_POLICIES=\((.*?)\n\)', helper, re.S)

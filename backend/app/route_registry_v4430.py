@@ -38,6 +38,7 @@ CAPABILITIES: tuple[CapabilitySpec, ...] = (
     CapabilitySpec("advanced-domain-intelligence", "Advanced Domain Intelligence Workspace Expansion", "research", "Deep analytical workspaces for Dossiers, Economics, International Law, Science, Humanitarian, and Resources with current-record analysis, domain-specific research modes, provenance boundaries, research packets, and explicit Sustainable Catalyst handoffs.", ("/public/domain-intelligence",), "backend.app.routers.domain_intelligence"),
     CapabilitySpec("standalone-web-application", "Standalone Web Application & WordPress Decoupling", "platform", "Independent Site Intelligence web application contract, deep-link router, API transport, context propagation, and WordPress non-authority guarantees.", ("/public/web-app",), "backend.app.routers.web_application", "production"),
     CapabilitySpec("api-reliability", "API Reliability, Live Probe Consistency & Failure Normalization", "platform", "Separates liveness from readiness, normalizes domain failures, canonicalizes country context, and guarantees capability-health parity with reliable routes.", ("/ready", "/public/api-contract-truth", "/public/capability-health", "/public/reliable/"), "backend.app.routers.reliability", "production"),
+    CapabilitySpec("standalone-functional-parity", "Standalone Functional Parity Recovery", "platform", "Migrated interactive public application, reliable API transport bridge, deep-link compatibility, browser interaction controls, and functional certification contracts.", ("/public/web-app/parity",), "backend.app.routers.functional_parity", "production"),
     CapabilitySpec("data-truth", "Data Truth & Provenance", "evidence", "Country/source truth, control plane, record provenance, and workspace evidence.", ("/public/data-truth", "/public/record-truth", "/public/workspace-evidence", "/public/country-evidence", "/public/source-"), "backend.app.routers.data_truth"),
     CapabilitySpec("earth-environment", "Earth & Environmental Intelligence", "earth", "Earth observation, climate, atmosphere, cryosphere, hydrology, soils, ecosystems, biodiversity, and planetary boundaries.", ("/public/earth-observation", "/public/climate", "/public/atmosphere", "/public/cryosphere", "/public/hydrology", "/public/geosphere", "/public/soils-land", "/public/terrestrial-ecosystems", "/public/biodiversity", "/public/wetlands", "/public/planetary-boundaries", "/public/scientific-earth-systems", "/public/coastal-change", "/public/agriculture-food"), "backend.app.main"),
     CapabilitySpec("ocean-marine", "Ocean & Marine Intelligence", "ocean", "Ocean observation, missions, water column, seafloor, marine biodiversity, pollution, governance, and live underwater evidence.", ("/public/ocean", "/public/water-column", "/public/seafloor", "/public/underwater", "/public/marine-"), "backend.app.main"),
@@ -115,7 +116,7 @@ def capability_manifest(routes: Iterable[object]) -> dict:
     return {
         "ok": True,
         "version": APP_VERSION,
-        "registry_version": "2.5.1",
+        "registry_version": "2.6.0",
         "capability_count": len(capabilities),
         "route_count": len(inventory),
         "modularized_route_count": sum(1 for item in inventory if item["modularized"]),

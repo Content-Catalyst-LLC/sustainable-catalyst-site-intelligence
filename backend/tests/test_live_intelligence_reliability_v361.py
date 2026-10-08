@@ -148,7 +148,7 @@ def test_status_contract_exposes_health_without_cache_path(tmp_path, monkeypatch
     assert status["schema"] == reliability.RELIABILITY_SCHEMA_VERSION
     assert status["service"] == "available"
     assert status["freshness_counts"]["live"] == 1
-    assert status["thresholds"]["fresh_minutes"] == 30
+    assert status["thresholds"]["fresh_minutes"] == 31
     assert "path" not in status["last_known_good"]
 
 

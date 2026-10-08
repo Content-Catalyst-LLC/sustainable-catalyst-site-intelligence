@@ -1,4 +1,4 @@
-"""Site Intelligence v4.55.3.1.1 live-probe consistency and failure normalization.
+"""Site Intelligence v4.55.3.2 live-probe consistency and failure normalization.
 
 This release is intentionally corrective. It does not add providers or domain
 features. It makes the canonical reliable routes, capability health, and

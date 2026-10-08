@@ -1,4 +1,4 @@
-# Site Intelligence v4.55.3.1.1 — Release Notes
+# Site Intelligence v4.55.3.2 — Release Notes
 
 Corrective reliability release. No new provider or domain capability is introduced.
 

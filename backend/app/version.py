@@ -1,4 +1,4 @@
-APP_VERSION = "4.55.3.1.1"
+APP_VERSION = "4.55.3.2"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Live Probe Consistency & Domain Failure Normalization"
+RELEASE_NAME = "Standalone Functional Parity Recovery"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

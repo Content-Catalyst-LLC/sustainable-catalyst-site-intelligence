@@ -1,0 +1,39 @@
+.scsi-runtime-toggle{position:fixed;right:18px;bottom:18px;z-index:12000;display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:8px 12px;border:1px solid rgba(255,255,255,.26);border-radius:999px;background:rgba(7,15,22,.94);color:#f4f8fb;box-shadow:0 10px 30px rgba(0,0,0,.32);font:700 12px/1.2 system-ui,sans-serif;cursor:pointer}
+.scsi-runtime-toggle:hover,.scsi-runtime-toggle:focus-visible{outline:2px solid rgba(189,228,247,.75);outline-offset:2px}
+.scsi-runtime-dot{width:9px;height:9px;border-radius:50%;background:#7fd6a5;box-shadow:0 0 0 3px rgba(127,214,165,.14)}
+.scsi-runtime-toggle[data-status="degraded"] .scsi-runtime-dot,.scsi-runtime-panel[data-status="degraded"] .scsi-runtime-summary strong{background:#f0c36b;color:#101820}
+.scsi-runtime-toggle[data-status="offline"] .scsi-runtime-dot,.scsi-runtime-panel[data-status="offline"] .scsi-runtime-summary strong{background:#ef7d7d;color:#101820}
+.scsi-runtime-toggle[data-status="checking"] .scsi-runtime-dot{background:#9bc9e5;animation:scsi-runtime-pulse 1.2s ease-in-out infinite}
+.scsi-runtime-panel{position:fixed;right:18px;bottom:68px;z-index:12001;width:min(440px,calc(100vw - 28px));max-height:min(78vh,720px);overflow:auto;border:1px solid rgba(255,255,255,.22);border-radius:10px;background:#0b141c;color:#eef5f8;box-shadow:0 20px 58px rgba(0,0,0,.48);font:500 13px/1.45 system-ui,sans-serif}
+.scsi-runtime-panel[hidden]{display:none!important}
+.scsi-runtime-header{position:sticky;top:0;z-index:2;display:flex;align-items:flex-start;justify-content:space-between;gap:18px;padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.12);background:rgba(11,20,28,.97)}
+.scsi-runtime-header p{margin:0 0 4px;color:#9fc4d7;font-size:10px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+.scsi-runtime-header h2{margin:0;color:#fff;font-size:18px;line-height:1.2}
+.scsi-runtime-close{width:34px;height:34px;border:1px solid rgba(255,255,255,.18);border-radius:6px;background:transparent;color:#fff;font-size:22px;line-height:1;cursor:pointer}
+.scsi-runtime-summary{display:flex;align-items:center;gap:10px;padding:13px 18px;border-bottom:1px solid rgba(255,255,255,.1)}
+.scsi-runtime-summary strong{display:inline-flex;padding:4px 8px;border-radius:999px;background:#7fd6a5;color:#101820;font-size:11px;text-transform:uppercase}
+.scsi-runtime-summary span{color:#bfd2dc;font-size:12px}
+.scsi-runtime-actions{display:flex;gap:8px;padding:12px 18px 0}
+.scsi-runtime-actions button{padding:7px 10px;border:1px solid rgba(255,255,255,.2);border-radius:5px;background:#132632;color:#eef7fb;font-weight:700;cursor:pointer}
+.scsi-runtime-body{padding:4px 18px 18px}
+.scsi-runtime-body section{padding:14px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+.scsi-runtime-body h3{margin:0 0 10px;color:#fff;font-size:13px}
+.scsi-runtime-list{display:grid;gap:7px}
+.scsi-runtime-row{display:grid;grid-template-columns:auto 1fr;column-gap:8px;align-items:center;padding:8px;border:1px solid rgba(255,255,255,.09);border-radius:6px;background:rgba(255,255,255,.025)}
+.scsi-runtime-row strong{font-size:12px}
+.scsi-runtime-row small{grid-column:2;color:#aabfc9;font-size:11px;overflow-wrap:anywhere}
+.scsi-runtime-state{align-self:start;min-width:42px;padding:3px 6px;border-radius:999px;text-align:center;font-size:9px;font-weight:800;text-transform:uppercase}
+.scsi-runtime-state.is-pass{background:rgba(127,214,165,.18);color:#a8ecc3}
+.scsi-runtime-state.is-fail{background:rgba(239,125,125,.18);color:#ffaaaa}
+.scsi-runtime-state.is-review{background:rgba(240,195,107,.17);color:#f8d796}
+.scsi-runtime-metric-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.scsi-runtime-metric-grid div{padding:10px;border:1px solid rgba(255,255,255,.09);border-radius:6px;background:rgba(255,255,255,.025)}
+.scsi-runtime-metric-grid strong,.scsi-runtime-metric-grid span{display:block}
+.scsi-runtime-metric-grid strong{color:#fff;font-size:14px;overflow-wrap:anywhere}
+.scsi-runtime-metric-grid span{margin-top:2px;color:#9fb5c0;font-size:10px;text-transform:uppercase}
+.scsi-runtime-muted,.scsi-runtime-footnote{color:#9fb5c0;font-size:11px}
+.scsi-runtime-footnote{margin:14px 0 0}
+@keyframes scsi-runtime-pulse{50%{opacity:.38;transform:scale(.82)}}
+@media(max-width:600px){.scsi-runtime-toggle{right:10px;bottom:10px}.scsi-runtime-panel{right:10px;bottom:58px;width:calc(100vw - 20px);max-height:78vh}}
+@media(prefers-reduced-motion:reduce){.scsi-runtime-toggle[data-status="checking"] .scsi-runtime-dot{animation:none}}
+@media print{.scsi-runtime-toggle,.scsi-runtime-panel{display:none!important}}
