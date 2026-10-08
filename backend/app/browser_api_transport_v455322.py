@@ -1,4 +1,4 @@
-"""v4.55.3.2.2 browser API transport and CORS repair contract."""
+"""v4.56.0 browser API transport and CORS repair contract."""
 from __future__ import annotations
 
 import json

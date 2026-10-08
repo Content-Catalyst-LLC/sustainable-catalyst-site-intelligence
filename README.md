@@ -1,8 +1,17 @@
-# Sustainable Catalyst Site Intelligence v4.55.3.2.2
+# Sustainable Catalyst Site Intelligence v4.56.0
 
 Sustainable Catalyst Site Intelligence is the geospatial, country, Earth-observation, ocean, space, infrastructure, environmental, and live public-intelligence layer of the Sustainable Catalyst platform.
 
-**Current release:** v4.55.3.2.2 — Browser API Transport & CORS Repair
+**Current release:** v4.56.0 — Standalone Production Consolidation & Certification
+
+## v4.56.0 Standalone Production Consolidation & Certification
+
+- Freezes the independent standalone web + FastAPI architecture after the v4.55.3.x repair line.
+- Adds machine-readable production certification, checklist, and content-addressed release snapshot endpoints.
+- Certifies 33 workspaces, 11 deep-link aliases, 12 functional controls, backend-first/web-second deployment, browser CORS, cache identity, backup/rollback, and WordPress non-authority.
+- Preserves truthful degraded readiness; optional source/domain failures are not promoted to false global Offline state.
+- Adds no database migration, no domain-data activation, and no fabricated records.
+
 
 
 ## v4.55.3.2 Standalone Functional Parity Recovery

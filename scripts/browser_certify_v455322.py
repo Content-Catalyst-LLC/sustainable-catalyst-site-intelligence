@@ -9,7 +9,7 @@ from playwright.sync_api import sync_playwright
 ROOT=Path(__file__).resolve().parents[1]
 WEB=ROOT/'web'
 API_HOST='site-intelligence-api.sustainablecatalyst.com'
-VERSION='4.55.3.2.2'
+VERSION='4.56.0'
 OPTIONAL_FAILURES={'/public/build-info','/public/deployment-receipt','/public/runtime-recovery'}
 
 def api_payload(url: str):

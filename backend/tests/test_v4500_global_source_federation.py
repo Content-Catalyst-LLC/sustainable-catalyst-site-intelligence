@@ -28,8 +28,8 @@ client = TestClient(app)
 
 
 def test_release_identity() -> None:
-    assert APP_VERSION == "4.55.3.2.2"
-    assert RELEASE_NAME == "Browser API Transport & CORS Repair"
+    assert APP_VERSION == "4.56.0"
+    assert RELEASE_NAME == "Standalone Production Consolidation & Certification"
 
 
 def test_registry_and_authority_contracts_are_machine_readable() -> None:
@@ -186,10 +186,10 @@ def test_http_routes_enforce_errors_and_expose_compatibility() -> None:
 def test_capability_registry_owns_all_source_federation_routes() -> None:
     manifest = capability_manifest(app.routes)
     family = next(row for row in manifest["capabilities"] if row["capability_id"] == "global-source-federation")
-    assert manifest["registry_version"] == "2.6.2"
-    assert manifest["route_count"] == 1518
-    assert manifest["modularized_route_count"] == 209
-    assert manifest["capability_count"] == 31
+    assert manifest["registry_version"] == "2.7.0"
+    assert manifest["route_count"] == 1521
+    assert manifest["modularized_route_count"] == 212
+    assert manifest["capability_count"] == 32
     assert manifest["unclassified_route_count"] == 0
     assert family["route_count"] == 10
     assert family["modularized_route_count"] == 10
@@ -223,7 +223,7 @@ def test_release_bound_source_registry_and_carried_forward_registries_are_curren
 
 def test_wordpress_remains_thin_shell_and_no_new_feature_shortcode_is_added() -> None:
     php = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
-    assert "Version: 4.55.3.2.2" in php
-    assert "const VERSION = '4.55.3.2.2';" in php
+    assert "Version: 4.56.0" in php
+    assert "const VERSION = '4.56.0';" in php
     assert "const WORDPRESS_ROLE = 'public-site-launch-bridge';" in php
     assert "source_federation_shortcode" not in php

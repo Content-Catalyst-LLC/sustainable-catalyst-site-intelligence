@@ -1,4 +1,4 @@
-"""v4.55.3.2.2 runtime-health truth and domain-context repair contract.
+"""v4.56.0 runtime-health truth and domain-context repair contract.
 
 This module is intentionally provider-neutral.  It mirrors the public browser
 contract in executable Python so deployment/certification can verify the

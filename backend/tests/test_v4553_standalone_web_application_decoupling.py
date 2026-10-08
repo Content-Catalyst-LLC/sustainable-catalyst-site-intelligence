@@ -14,13 +14,13 @@ ROOT=Path(__file__).resolve().parents[2]
 
 
 def test_release_identity_and_inventory():
-    assert APP_VERSION=="4.55.3.2.2"
-    assert RELEASE_NAME=="Browser API Transport & CORS Repair"
+    assert APP_VERSION=="4.56.0"
+    assert RELEASE_NAME=="Standalone Production Consolidation & Certification"
     m=capability_manifest(app.routes)
-    assert m["registry_version"]=="2.6.2"
-    assert m["route_count"]==1518
-    assert m["modularized_route_count"]==209
-    assert m["capability_count"]==31
+    assert m["registry_version"]=="2.7.0"
+    assert m["route_count"]==1521
+    assert m["modularized_route_count"]==212
+    assert m["capability_count"]==32
     assert m["unclassified_route_count"]==0
     family=next(x for x in m["capabilities"] if x["capability_id"]=="standalone-web-application")
     assert family["route_count"]==6 and family["modularized_route_count"]==6
@@ -109,7 +109,7 @@ def test_country_selection_drives_domain_paths_and_requests():
 
 def test_wordpress_plugin_is_launcher_not_application_host():
     php=(ROOT/"wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
-    assert "Version: 4.55.3.2.2" in php
+    assert "Version: 4.56.0" in php
     assert "const WORDPRESS_ROLE = 'public-site-launch-bridge';" in php
     assert "const STANDALONE_WEB_APP_URL = 'https://intelligence.sustainablecatalyst.com';" in php
     block=php[php.index('public function standalone_app_shortcode'):php.index('public function geospatial_map_shortcode')]

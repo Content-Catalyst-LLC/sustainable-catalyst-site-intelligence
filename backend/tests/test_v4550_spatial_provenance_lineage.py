@@ -45,13 +45,13 @@ def package_fixture():
     })["package"]
 
 def test_release_identity_and_inventory():
-    assert APP_VERSION=="4.55.3.2.2"
-    assert RELEASE_NAME=="Browser API Transport & CORS Repair"
+    assert APP_VERSION=="4.56.0"
+    assert RELEASE_NAME=="Standalone Production Consolidation & Certification"
     m=capability_manifest(app.routes)
-    assert m["registry_version"]=="2.6.2"
-    assert m["route_count"]==1518
-    assert m["modularized_route_count"]==209
-    assert m["capability_count"]==31
+    assert m["registry_version"]=="2.7.0"
+    assert m["route_count"]==1521
+    assert m["modularized_route_count"]==212
+    assert m["capability_count"]==32
     assert m["unclassified_route_count"]==0
     family=next(x for x in m["capabilities"] if x["capability_id"]=="spatial-provenance-lineage")
     assert family["route_count"]==12 and family["modularized_route_count"]==12
@@ -132,5 +132,5 @@ def test_standalone_and_wordpress_identity():
     standalone=(root/"backend/app/standalone_authority_v4440.py").read_text()
     php=(root/"wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
     assert "spatial_lineage_registry" in standalone and 'NavigationItem("lineage"' in standalone
-    assert "Version: 4.55.3.2.2" in php and "const VERSION = '4.55.3.2.2';" in php
+    assert "Version: 4.56.0" in php and "const VERSION = '4.56.0';" in php
     assert "const WORDPRESS_ROLE = 'public-site-launch-bridge';" in php

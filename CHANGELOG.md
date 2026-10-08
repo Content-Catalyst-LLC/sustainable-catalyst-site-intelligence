@@ -1,3 +1,10 @@
+# v4.56.0 — Standalone Production Consolidation & Certification
+
+- Certified the standalone Site Intelligence architecture and runtime authority split.
+- Added production certification API/checklist/release snapshot contracts.
+- Consolidated 33 workspaces, 11 deep links, 12 controls, CORS/runtime truth, rollback, release identity, and WordPress non-authority.
+- No domain-data activation or database migration.
+
 # v4.55.3.2.2 — Browser API Transport & CORS Repair
 
 - Repairs standalone browser-to-FastAPI CORS transport for runtime health.

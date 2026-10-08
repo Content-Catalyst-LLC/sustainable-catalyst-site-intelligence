@@ -16,13 +16,13 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def test_release_identity_and_route_inventory_remain_stable():
-    assert APP_VERSION == "4.55.3.2.2"
-    assert RELEASE_NAME == "Browser API Transport & CORS Repair"
+    assert APP_VERSION == "4.56.0"
+    assert RELEASE_NAME == "Standalone Production Consolidation & Certification"
     inventory = capability_manifest(app.routes)
-    assert inventory["registry_version"] == "2.6.2"
-    assert inventory["route_count"] == 1518
-    assert inventory["modularized_route_count"] == 209
-    assert inventory["capability_count"] == 31
+    assert inventory["registry_version"] == "2.7.0"
+    assert inventory["route_count"] == 1521
+    assert inventory["modularized_route_count"] == 212
+    assert inventory["capability_count"] == 32
     assert inventory["unclassified_route_count"] == 0
 
 
@@ -60,7 +60,7 @@ def test_domain_context_normalizes_country_into_domain_specific_keys():
 
 def test_standalone_bridge_propagates_deep_link_country_context():
     bridge = (ROOT / "web/app/assets/standalone-api-bridge-v45532.js").read_text()
-    assert 'const RELEASE="4.55.3.2.2"' in bridge
+    assert 'const RELEASE="4.56.0"' in bridge
     assert '["economics","science","resources"].includes(view)' in bridge
     assert 'q.set("geography_code",resolved)' in bridge
     assert "SCSIStandaloneBridgeV455321" in bridge
@@ -90,13 +90,13 @@ def test_economics_reads_global_country_and_has_truthful_zero_record_state():
 
 
 def test_current_web_release_and_service_worker_are_cache_busted():
-    assert 'release: "4.55.3.2.2"' in (ROOT / "web/config.js").read_text()
+    assert 'release: "4.56.0"' in (ROOT / "web/config.js").read_text()
     html = (ROOT / "web/index.html").read_text()
-    assert 'data-scsi-release="4.55.3.2.2"' in html
-    assert 'runtime-v3230.js?v=4.55.3.2.2' in html
+    assert 'data-scsi-release="4.56.0"' in html
+    assert 'runtime-v3230.js?v=4.56.0' in html
     assert 'economics-v220.js?v=2.2.0' in html  # controller identity remains domain v2.2; patched code is cache-busted by service worker/release shell.
     worker = (ROOT / "web/service-worker.js").read_text()
-    assert "4.55.3.2.2" in worker
+    assert "4.56.0" in worker
 
 
 def test_all_release_bound_registries_are_aligned():

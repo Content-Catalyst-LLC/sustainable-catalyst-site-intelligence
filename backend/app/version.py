@@ -1,4 +1,4 @@
-APP_VERSION = "4.55.3.2.2"
+APP_VERSION = "4.56.0"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Browser API Transport & CORS Repair"
+RELEASE_NAME = "Standalone Production Consolidation & Certification"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

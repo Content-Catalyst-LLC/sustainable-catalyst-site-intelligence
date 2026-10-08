@@ -1,0 +1,65 @@
+{
+  "schema": "sc-site-intelligence-production-certification/1.0",
+  "version": "4.56.0",
+  "release_name": "Standalone Production Consolidation & Certification",
+  "contract": "standalone-production-consolidation-certification",
+  "authority": {
+    "web_origin": "https://intelligence.sustainablecatalyst.com",
+    "api_origin": "https://site-intelligence-api.sustainablecatalyst.com",
+    "wordpress_origin": "https://sustainablecatalyst.com",
+    "wordpress_runtime_authority": false,
+    "standalone_web_runtime_authority": true,
+    "fastapi_machine_authority": true
+  },
+  "expected_inventory": {
+    "registry_version": "2.7.0",
+    "route_count": 1521,
+    "modularized_route_count": 212,
+    "capability_count": 32,
+    "unclassified_route_count": 0
+  },
+  "certification_targets": {
+    "required_workspace_count": 33,
+    "required_functional_control_count": 12,
+    "required_deep_link_alias_count": 11,
+    "release_bound_policy_count": 46
+  },
+  "runtime_truth": {
+    "primary_health_path": "/health",
+    "readiness_path": "/ready",
+    "capability_health_path": "/public/capability-health",
+    "offline_requires": [
+      "browser-network-offline",
+      "canonical-health-endpoint-unreachable"
+    ],
+    "domain_dependency_failure_state": "degraded",
+    "domain_degraded_readiness_may_return_503": true
+  },
+  "deployment_order": [
+    "backend",
+    "web"
+  ],
+  "rollback": {
+    "backup_required": true,
+    "backend_backup_required": true,
+    "web_backup_required": true,
+    "rollback_must_restore_previous_release": true
+  },
+  "certification": {
+    "browser_interaction_required": true,
+    "public_https_required": true,
+    "cors_preflight_required": true,
+    "deep_link_fallback_required": true,
+    "service_worker_release_identity_required": true,
+    "release_identity_parity_required": true,
+    "http_200_alone_is_not_pass": true,
+    "live_domain_availability_is_reported_not_fabricated": true
+  },
+  "scope_boundaries": [
+    "No new domain-data activation.",
+    "No fabricated records or synthetic readiness.",
+    "No WordPress runtime authority.",
+    "No database migration.",
+    "No automatic source fetching or re-execution introduced by this release."
+  ]
+}

@@ -21,13 +21,13 @@ client = TestClient(app)
 
 
 def test_release_identity_and_route_inventory_are_stable():
-    assert APP_VERSION == "4.55.3.2.2"
-    assert RELEASE_NAME == "Browser API Transport & CORS Repair"
+    assert APP_VERSION == "4.56.0"
+    assert RELEASE_NAME == "Standalone Production Consolidation & Certification"
     inventory = capability_manifest(app.routes)
-    assert inventory["registry_version"] == "2.6.2"
-    assert inventory["route_count"] == 1518
-    assert inventory["modularized_route_count"] == 209
-    assert inventory["capability_count"] == 31
+    assert inventory["registry_version"] == "2.7.0"
+    assert inventory["route_count"] == 1521
+    assert inventory["modularized_route_count"] == 212
+    assert inventory["capability_count"] == 32
     assert inventory["unclassified_route_count"] == 0
 
 

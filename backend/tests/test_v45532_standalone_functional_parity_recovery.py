@@ -15,13 +15,13 @@ client = TestClient(app)
 
 
 def test_release_identity_and_route_inventory():
-    assert APP_VERSION == "4.55.3.2.2"
-    assert RELEASE_NAME == "Browser API Transport & CORS Repair"
+    assert APP_VERSION == "4.56.0"
+    assert RELEASE_NAME == "Standalone Production Consolidation & Certification"
     m = capability_manifest(app.routes)
-    assert m["registry_version"] == "2.6.2"
-    assert m["route_count"] == 1518
-    assert m["modularized_route_count"] == 209
-    assert m["capability_count"] == 31
+    assert m["registry_version"] == "2.7.0"
+    assert m["route_count"] == 1521
+    assert m["modularized_route_count"] == 212
+    assert m["capability_count"] == 32
     assert m["unclassified_route_count"] == 0
     family = next(x for x in m["capabilities"] if x["capability_id"] == "standalone-functional-parity")
     assert family["route_count"] == 3
