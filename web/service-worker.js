@@ -1,4 +1,4 @@
-const RELEASE="4.55.3.1";
+const RELEASE="4.55.3.1.1";
 const CACHE=`sc-site-intelligence-web-${RELEASE}`;
 const SHELL=["/","/index.html","/config.js","/assets/styles.css","/assets/app.js","/assets/api-client.js","/assets/context-store.js","/assets/router.js","/assets/views.js","/assets/auth-bridge.js","/manifest.webmanifest"];
 self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting())));

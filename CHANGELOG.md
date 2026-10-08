@@ -1,5 +1,18 @@
+# Changelog
 
-## 4.55.3.1 — API Reliability & Contract Truth Repair
+## 4.55.3.1.1 — Live Probe Consistency & Domain Failure Normalization
+
+- Unified capability-health, readiness, and reliable routes behind one canonical probe implementation.
+- Normalized expected domain exceptions to structured JSON instead of raw 500 responses.
+- Corrected Science country-context handling: ISO country context now becomes metadata-query context rather than an unsupported `geography_code` argument.
+- Added ISO3/ISO2/name context resolution and safe alias fallback for connected empty domain queries.
+- Partial-live responses now use HTTP 206 even when the current filter returns zero records.
+- `/ready` now distinguishes Platform Core reachability from canonical domain operability.
+- Standalone domain views consume the reliable API surface and live capability-health probe.
+- No new providers or domain features.
+
+
+## 4.55.3.1.1 — API Reliability & Contract Truth Repair
 
 - Split process liveness from required data readiness.
 - Added truthful capability health with optional live domain probes.
@@ -16,7 +29,6 @@
 - Added `/public/web-app/*` machine-readable application contracts.
 - Demoted WordPress to `public-site-launch-bridge`; the primary Site Intelligence shortcode now launches the standalone app rather than hosting its runtime.
 - Retained `/app/` as temporary FastAPI-served compatibility only.
-# Changelog
 
 ## 4.55.2 — Advanced Domain Intelligence Workspace Expansion
 - Expanded Dossiers, Economics, International Law, Science, Humanitarian, and Resources into advanced analytical workspaces rather than category-only surfaces.

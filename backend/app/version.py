@@ -1,4 +1,4 @@
-APP_VERSION = "4.55.3.1"
+APP_VERSION = "4.55.3.1.1"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "API Reliability & Contract Truth Repair"
+RELEASE_NAME = "Live Probe Consistency & Domain Failure Normalization"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

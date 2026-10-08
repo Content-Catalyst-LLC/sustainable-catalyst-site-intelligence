@@ -45,10 +45,10 @@ def package_fixture():
     })["package"]
 
 def test_release_identity_and_inventory():
-    assert APP_VERSION=="4.55.3.1"
-    assert RELEASE_NAME=="API Reliability & Contract Truth Repair"
+    assert APP_VERSION=="4.55.3.1.1"
+    assert RELEASE_NAME=="Live Probe Consistency & Domain Failure Normalization"
     m=capability_manifest(app.routes)
-    assert m["registry_version"]=="2.5.0"
+    assert m["registry_version"]=="2.5.1"
     assert m["route_count"]==1515
     assert m["modularized_route_count"]==206
     assert m["capability_count"]==30
@@ -132,5 +132,5 @@ def test_standalone_and_wordpress_identity():
     standalone=(root/"backend/app/standalone_authority_v4440.py").read_text()
     php=(root/"wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
     assert "spatial_lineage_registry" in standalone and 'NavigationItem("lineage"' in standalone
-    assert "Version: 4.55.3.1" in php and "const VERSION = '4.55.3.1';" in php
+    assert "Version: 4.55.3.1.1" in php and "const VERSION = '4.55.3.1.1';" in php
     assert "const WORDPRESS_ROLE = 'public-site-launch-bridge';" in php

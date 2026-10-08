@@ -20,7 +20,7 @@ function listRecords(rows,empty="No records returned for this context."){
 }
 
 export async function renderHome(ctx){
-  const [health,manifest,reliability]=await Promise.all([client.get("/health"),client.get("/public/web-app/manifest"),client.get("/public/capability-health")]);
+  const [health,manifest,reliability]=await Promise.all([client.get("/health"),client.get("/public/web-app/manifest"),client.get("/public/capability-health",{probe:true,country:c})]);
   const c=ctx.countryCode;
   return shell("STANDALONE APPLICATION","Site Intelligence","Independent research application. WordPress is no longer in the runtime path.",
     `${statusStrip([card("Backend",health.version,"process "+(health.state||"alive")),card("Application",manifest.version,"standalone web"),card("API data readiness",reliability.overall_state||"unknown",reliability.probe?"live probe":"configuration state"),card("Country context",c,"propagates across domain workspaces"),card("WordPress dependency",String(manifest.wordpress_runtime_dependency),manifest.wordpress_role)])}
@@ -41,7 +41,7 @@ export async function renderCountry(ctx){
 export async function renderEconomics(ctx){
   try{
     const [records,facets]=await Promise.all([
-      client.get("/public/economics-sustainability/records",{geography_code:ctx.countryCode,limit:80}),
+      client.get("/public/reliable/economics/records",{geography_code:ctx.countryCode,limit:80}),
       client.get("/public/economics-sustainability/facets",{geography_code:ctx.countryCode})
     ]);
     const rows=recordsOf(records);
@@ -53,7 +53,7 @@ export async function renderEconomics(ctx){
 export async function renderLaw(ctx){
   try{
     const [records,profile]=await Promise.all([
-      client.get("/public/international-law-observatory/records",{country:ctx.countryCode,limit:80}),
+      client.get("/public/reliable/law/records",{country:ctx.countryCode,limit:80}),
       client.get("/public/international-law-observatory/country-profile",{country:ctx.countryCode,limit:80})
     ]);
     const rows=recordsOf(records);
@@ -68,7 +68,7 @@ export async function renderScience(ctx,sub="science"){
     if(sub==="earth") params.family="earth";
     const [discovery,records]=await Promise.all([
       client.get("/public/scientific-earth-systems/discovery"),
-      client.get("/public/scientific-earth-systems/records",params)
+      client.get("/public/reliable/science/records",{...params,geography_code:ctx.countryCode})
     ]);
     const rows=recordsOf(records);
     return shell("SCIENCE",`${sub==="earth"?"Earth systems":"Science"} · ${ctx.countryCode}`,"Scientific records, assets, observations and time-series discovery through the independent application.",
@@ -86,15 +86,15 @@ export async function renderSpace(){
 }
 
 export async function renderHumanitarian(ctx){
-  try{ const data=await client.get("/public/humanitarian-conflict-displacement/records",{country:ctx.countryCode,limit:80}); const rows=recordsOf(data); return shell("HUMANITARIAN","Humanitarian · "+ctx.countryCode,"Conflict, displacement, protection, hazards and humanitarian evidence with source limitations preserved.",`${statusStrip([card("Records",countOf(data),"current country"),card("Country",ctx.countryCode,"route context"),card("Targeting","disabled","responsible data")])}<section class="panel"><h2>Current evidence</h2>${listRecords(rows,"No matching humanitarian records are currently available for this context.")}</section>`); }
+  try{ const data=await client.get("/public/reliable/humanitarian/records",{country:ctx.countryCode,limit:80}); const rows=recordsOf(data); return shell("HUMANITARIAN","Humanitarian · "+ctx.countryCode,"Conflict, displacement, protection, hazards and humanitarian evidence with source limitations preserved.",`${statusStrip([card("Records",countOf(data),"current country"),card("Country",ctx.countryCode,"route context"),card("Targeting","disabled","responsible data")])}<section class="panel"><h2>Current evidence</h2>${listRecords(rows,"No matching humanitarian records are currently available for this context.")}</section>`); }
   catch(e){ return shell("HUMANITARIAN","Humanitarian · "+ctx.countryCode,"Standalone workspace",errorPanel(e)); }
 }
 export async function renderResources(ctx){
-  try{ const [data,profile]=await Promise.all([client.get("/public/trade-energy-resources/records",{geography_code:ctx.countryCode,limit:80}),client.get("/public/trade-energy-resources/country-profile",{country:ctx.countryCode,limit:80})]); const rows=recordsOf(data); return shell("RESOURCES","Trade, energy & resources · "+ctx.countryCode,"Trade flows, energy systems and resource-security evidence without automatic dependency or vulnerability claims.",`${statusStrip([card("Records",countOf(data),"current country"),card("Trade",arr(profile?.trade).length,"flow context"),card("Energy",arr(profile?.energy).length,"system context"),card("Country",ctx.countryCode,"route context")])}<section class="panel"><h2>Resource evidence</h2>${listRecords(rows,"No resource records are currently flowing for this context.")}</section>`); }
+  try{ const [data,profile]=await Promise.all([client.get("/public/reliable/resources/records",{geography_code:ctx.countryCode,limit:80}),client.get("/public/trade-energy-resources/country-profile",{country:ctx.countryCode,limit:80})]); const rows=recordsOf(data); return shell("RESOURCES","Trade, energy & resources · "+ctx.countryCode,"Trade flows, energy systems and resource-security evidence without automatic dependency or vulnerability claims.",`${statusStrip([card("Records",countOf(data),"current country"),card("Trade",arr(profile?.trade).length,"flow context"),card("Energy",arr(profile?.energy).length,"system context"),card("Country",ctx.countryCode,"route context")])}<section class="panel"><h2>Resource evidence</h2>${listRecords(rows,"No resource records are currently flowing for this context.")}</section>`); }
   catch(e){ return shell("RESOURCES","Trade, energy & resources · "+ctx.countryCode,"Standalone workspace",errorPanel(e)); }
 }
 export async function renderDossiers(ctx){
-  try{ const data=await client.get("/public/intelligence-dossiers/country",{country:ctx.countryCode,limit_per_domain:20}); return shell("DOSSIERS","Intelligence dossier · "+ctx.countryCode,"Cross-domain country dossier composed without hiding source state.",`${statusStrip([card("Country",ctx.countryCode,"active context"),card("Status",data?.ok===false?"degraded":"available","dossier service")])}${jsonPreview(data)}`); }
+  try{ const data=await client.get("/public/reliable/dossiers/country",{country:ctx.countryCode,limit_per_domain:20}); return shell("DOSSIERS","Intelligence dossier · "+ctx.countryCode,"Cross-domain country dossier composed without hiding source state.",`${statusStrip([card("Country",ctx.countryCode,"active context"),card("Status",data?.ok===false?"degraded":"available","dossier service")])}${jsonPreview(data)}`); }
   catch(e){ return shell("DOSSIERS","Intelligence dossier · "+ctx.countryCode,"Standalone workspace",errorPanel(e)); }
 }
 export async function renderEvents(){

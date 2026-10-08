@@ -1,0 +1,33 @@
+{
+  "schema": "sc-site-intelligence-live-probe-consistency-registry/1.0",
+  "version": "4.55.3.1.1",
+  "release_name": "Live Probe Consistency & Domain Failure Normalization",
+  "canonical_probe_country": "KEN",
+  "canonical_capabilities": [
+    "economics",
+    "law",
+    "science",
+    "humanitarian",
+    "resources",
+    "dossiers"
+  ],
+  "contracts": {
+    "shared_probe_implementation": true,
+    "science_geography_typeerror_normalized": true,
+    "country_identity_aliases": [
+      "iso3",
+      "iso2",
+      "name"
+    ],
+    "partial_live_http_status": 206,
+    "expected_failure_json_only": true,
+    "readiness_requires_domain_operability": true,
+    "core_reachable_is_not_domain_ready": true
+  },
+  "guardrails": {
+    "new_provider_integrations": false,
+    "new_domain_features": false,
+    "raw_unhandled_500_allowed_on_reliable_routes": false,
+    "capability_health_can_use_different_probe_logic": false
+  }
+}

@@ -1,11 +1,11 @@
-# Sustainable Catalyst Site Intelligence v4.55.3.1
+# Sustainable Catalyst Site Intelligence v4.55.3.1.1
 
 Sustainable Catalyst Site Intelligence is the geospatial, country, Earth-observation, ocean, space, infrastructure, environmental, and live public-intelligence layer of the Sustainable Catalyst platform.
 
-**Current release:** v4.55.3.1 — API Reliability & Contract Truth Repair
+**Current release:** v4.55.3.1.1 — Live Probe Consistency & Domain Failure Normalization
 
 
-## v4.55.3.1 API Reliability & Contract Truth Repair
+## v4.55.3.1.1 API Reliability & Contract Truth Repair
 
 - Separates process liveness (`/health`) from required data readiness (`/ready`).
 - Adds `/public/capability-health` with an explicit live-probe mode.

@@ -3,31 +3,28 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends, Query
 from fastapi.responses import JSONResponse
 
-from ..api_reliability_v45531 import (
+from ..api_reliability_v455311 import (
     api_contract_truth_manifest,
     build_capability_health,
     build_readiness,
-    normalize_reliable_payload,
+    probe_capability,
 )
 from ..config import Settings, get_settings
-from ..economics_markets_sustainability import build_economic_records
-from ..humanitarian_conflict_displacement_observatory import build_records as build_humanitarian_records
-from ..international_law_observatory import build_law_records
-from ..scientific_earth_systems_observatory import build_science_records
-from ..trade_energy_resource_security_observatory import build_records as build_resource_records
-from ..unified_country_regional_dossiers import build_country_dossier
 
 router = APIRouter(tags=["api-reliability"])
 
 
-def _respond(payload, capability: str):
-    normalized, status = normalize_reliable_payload(payload, capability=capability)
-    return JSONResponse(status_code=status, content=normalized)
+def _respond(capability: str, settings: Settings, *, country: str = "KEN", limit: int = 80, query: str = ""):
+    payload, status = probe_capability(capability, settings, country=country, limit=limit, query=query)
+    return JSONResponse(status_code=status, content=payload)
 
 
 @router.get("/ready")
-def readiness(settings: Settings = Depends(get_settings)):
-    payload = build_readiness(settings)
+def readiness(
+    country: str = Query(default="KEN", min_length=2, max_length=80),
+    settings: Settings = Depends(get_settings),
+):
+    payload = build_readiness(settings, country=country)
     return JSONResponse(status_code=200 if payload["ready"] else 503, content=payload)
 
 
@@ -39,62 +36,62 @@ def api_contract_truth():
 @router.get("/public/capability-health")
 def capability_health(
     probe: bool = Query(default=False),
+    country: str = Query(default="KEN", min_length=2, max_length=80),
     settings: Settings = Depends(get_settings),
 ):
-    return build_capability_health(settings, probe=probe)
+    return build_capability_health(settings, probe=probe, country=country)
 
 
 @router.get("/public/reliable/economics/records")
 def reliable_economics_records(
-    geography_code: str = Query(default=""),
+    geography_code: str = Query(default="KEN"),
     limit: int = Query(default=80, ge=1, le=300),
     settings: Settings = Depends(get_settings),
 ):
-    return _respond(build_economic_records(settings, geography_code=geography_code, limit=limit), "economics")
+    return _respond("economics", settings, country=geography_code, limit=limit)
 
 
 @router.get("/public/reliable/law/records")
 def reliable_law_records(
-    country: str = Query(default=""),
+    country: str = Query(default="KEN"),
     limit: int = Query(default=80, ge=1, le=300),
     settings: Settings = Depends(get_settings),
 ):
-    return _respond(build_law_records(settings, country=country, limit=limit), "law")
+    return _respond("law", settings, country=country, limit=limit)
 
 
 @router.get("/public/reliable/science/records")
 def reliable_science_records(
-    geography_code: str = Query(default=""),
+    geography_code: str = Query(default="KEN"),
     query: str = Query(default=""),
     limit: int = Query(default=80, ge=1, le=300),
     settings: Settings = Depends(get_settings),
 ):
-    return _respond(build_science_records(settings, geography_code=geography_code, query=query, limit=limit), "science")
+    return _respond("science", settings, country=geography_code, query=query, limit=limit)
 
 
 @router.get("/public/reliable/humanitarian/records")
 def reliable_humanitarian_records(
-    country: str = Query(default=""),
-    days: int = Query(default=30, ge=1, le=90),
+    country: str = Query(default="KEN"),
     limit: int = Query(default=80, ge=1, le=300),
     settings: Settings = Depends(get_settings),
 ):
-    return _respond(build_humanitarian_records(settings, country=country, days=days, limit=limit), "humanitarian")
+    return _respond("humanitarian", settings, country=country, limit=limit)
 
 
 @router.get("/public/reliable/resources/records")
 def reliable_resource_records(
-    geography_code: str = Query(default=""),
+    geography_code: str = Query(default="KEN"),
     limit: int = Query(default=80, ge=1, le=300),
     settings: Settings = Depends(get_settings),
 ):
-    return _respond(build_resource_records(settings, geography_code=geography_code, limit=limit), "resources")
+    return _respond("resources", settings, country=geography_code, limit=limit)
 
 
 @router.get("/public/reliable/dossiers/country")
 def reliable_country_dossier(
-    country: str = Query(..., min_length=2, max_length=20),
+    country: str = Query(..., min_length=2, max_length=80),
     limit_per_domain: int = Query(default=12, ge=5, le=60),
     settings: Settings = Depends(get_settings),
 ):
-    return _respond(build_country_dossier(settings, country=country, limit_per_domain=limit_per_domain), "dossiers")
+    return _respond("dossiers", settings, country=country, limit=limit_per_domain)
