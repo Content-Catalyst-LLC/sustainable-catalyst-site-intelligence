@@ -139,7 +139,7 @@ docker exec -i "$CONTAINER" python - <<'PYVERIFY'
 from app.main import app
 from app.version import APP_VERSION, RELEASE_NAME
 from app.route_registry_v4430 import capability_manifest
-from app.api_reliability_v455311 import api_contract_truth_manifest, normalize_reliable_payload
+from app.api_reliability_v45532 import api_contract_truth_manifest, normalize_reliable_payload
 assert APP_VERSION == "4.55.3.2"
 assert RELEASE_NAME == "Standalone Functional Parity Recovery"
 m=capability_manifest(app.routes)

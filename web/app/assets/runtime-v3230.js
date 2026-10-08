@@ -1,13 +1,13 @@
 (function (window, document) {
   "use strict";
 
-  const VERSION = "4.55.3.2";
+  const VERSION = "4.55.3.2.1";
   const EVENT_LIMIT = 30;
   const ENDPOINTS = [
     ["Service", "/health"],
     ["Build", "/public/build-info"],
     ["Deployment Receipt", "/public/deployment-receipt"],
-    ["Release Gate", "/public/release-gate?plugin_version=4.55.3.2&expected_release_id=site-intelligence-v4.55.3.2"],
+    ["Release Gate", "/public/release-gate?plugin_version=4.55.3.2.1&expected_release_id=site-intelligence-v4.55.3.2.1"],
     ["Runtime", "/public/runtime-health"],
     ["Recovery", "/public/runtime-recovery"],
     ["Geospatial", "/public/geospatial/diagnostics"],
@@ -151,11 +151,15 @@
 
   function overallStatus() {
     const failed = state.endpoints.filter(function (item) { return !item.ok; }).length;
+    const primaryService = state.endpoints.find(function (item) { return item.path === "/health" || item.label === "Service"; });
     const maps = mapSnapshot();
     const visibleSurfaces = (maps.surfaces || visibleMapContainers()).filter(function (surface) { return surface.visible !== false; });
     const degradedMaps = visibleSurfaces.some(function (surface) { return surface.degraded || surface.status === "degraded"; });
     const degradedServices = (serviceSnapshot().groups || []).some(function (group) { return group.degraded || group.circuitOpen; });
-    if (!state.online || failed >= 3) return "offline";
+    // Offline means the browser has lost network connectivity or the canonical
+    // Site Intelligence API health endpoint is unreachable. Optional or
+    // domain-specific failures are degradation, never proof the whole site is offline.
+    if (!state.online || (primaryService && !primaryService.ok)) return "offline";
     const activeErrors = state.errors.filter(function (item) { return item.active; }).length;
     if (failed || activeErrors || degradedMaps || degradedServices || state.contract?.status === "degraded") return "degraded";
     return state.running ? "checking" : "healthy";

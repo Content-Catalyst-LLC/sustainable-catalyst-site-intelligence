@@ -21,10 +21,10 @@ client = TestClient(app)
 
 
 def test_release_identity_and_inventory_unchanged_except_contract_revision():
-    assert APP_VERSION == "4.55.3.2"
-    assert RELEASE_NAME == "Standalone Functional Parity Recovery"
+    assert APP_VERSION == "4.55.3.2.1"
+    assert RELEASE_NAME == "Runtime Health Truth & Domain Context Repair"
     manifest = capability_manifest(app.routes)
-    assert manifest["registry_version"] == "2.6.0"
+    assert manifest["registry_version"] == "2.6.1"
     assert manifest["route_count"] == 1518
     assert manifest["modularized_route_count"] == 209
     assert manifest["capability_count"] == 31
@@ -155,7 +155,7 @@ def test_readiness_route_returns_503_when_default_runtime_has_no_configured_core
 
 def test_contract_manifest_requires_probe_parity_and_json_failures():
     manifest = api_contract_truth_manifest()
-    assert manifest["version"] == "4.55.3.2"
+    assert manifest["version"] == "4.55.3.2.1"
     rules = " ".join(manifest["truth_rules"])
     assert "same" in manifest["semantics"]["capability_health"].lower()
     assert "JSON" in rules
@@ -165,7 +165,7 @@ def test_contract_manifest_requires_probe_parity_and_json_failures():
 def test_new_release_registry_is_truthful_and_release_bound():
     import json
     data = json.loads((ROOT / "backend/data/live_probe_consistency_registry_v455311.json").read_text())
-    assert data["version"] == "4.55.3.2"
+    assert data["version"] == "4.55.3.2.1"
     assert data["contracts"]["readiness_requires_domain_operability"] is True
     assert data["guardrails"]["raw_unhandled_500_allowed_on_reliable_routes"] is False
     assert data["guardrails"]["new_provider_integrations"] is False

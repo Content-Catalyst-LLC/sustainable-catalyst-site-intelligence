@@ -1,8 +1,8 @@
-# Sustainable Catalyst Site Intelligence v4.55.3.2
+# Sustainable Catalyst Site Intelligence v4.55.3.2.1
 
 Sustainable Catalyst Site Intelligence is the geospatial, country, Earth-observation, ocean, space, infrastructure, environmental, and live public-intelligence layer of the Sustainable Catalyst platform.
 
-**Current release:** v4.55.3.2 — Standalone Functional Parity Recovery
+**Current release:** v4.55.3.2.1 — Runtime Health Truth & Domain Context Repair
 
 
 ## v4.55.3.2 Standalone Functional Parity Recovery

@@ -1,3 +1,11 @@
+# v4.55.3.2.1 — Runtime Health Truth & Domain Context Repair
+
+- Corrects standalone runtime health truth: optional/domain diagnostic failures now degrade the application; only browser network loss or canonical `/health` failure marks Site Intelligence offline.
+- Propagates deep-link and global country context into domain-specific query keys (`country` and `geography_code`).
+- Repairs Economics so `/economics/KEN` selects Kenya inside the workspace and renders a truthful connected/no-records state instead of claiming records are available.
+- Adds deterministic runtime/context registry, static validation, regression tests, and browser certification.
+- Does not fabricate or activate new economic data sources; substantive provider/data activation remains v4.55.4.
+
 # Changelog
 
 ## 4.55.3.2 — Live Probe Consistency & Domain Failure Normalization

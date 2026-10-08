@@ -1,6 +1,6 @@
 (()=>{
   "use strict";
-  const VERSION="4.55.3.2";
+  const VERSION="4.55.3.2.1";
   const API=window.SC_SITE_INTELLIGENCE_API||location.origin;
   const SPECS={
     dossiers:{domain:"dossiers",controller:"SCDossiersV270",surface:"#dossierStudio",label:"Dossiers",modes:["investigation","timeline","entity-network","cross-case","evidence-review"]},
@@ -61,5 +61,5 @@
   window.addEventListener("scsi:workspace-runtime-v4551",event=>enhance(event.detail?.route));
   document.addEventListener("DOMContentLoaded",()=>{const view=new URLSearchParams(location.search).get("view");if(SPECS[view])setTimeout(()=>enhance(view),250)});
   window.SCSIAdvancedDomainIntelligenceV4552={version:VERSION,specs:SPECS,enhance,run};
-  document.documentElement.dataset.advancedDomainIntelligence="4.55.3.2";
+  document.documentElement.dataset.advancedDomainIntelligence="4.55.3.2.1";
 })();

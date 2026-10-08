@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const VERSION = "2.2.0";
+  const VERSION = "2.2.0-r455321";
   const state = {
     map: null,
     base: null,
@@ -84,6 +84,14 @@
     const families = (overview?.families || []).filter(item => item.count > 0);
     qs("#economicsFamilySummary").innerHTML = families.length ? families.map(item => `<article><span>${esc(item.label)}</span><strong>${esc(item.count)}</strong><small>visible records</small></article>`).join("") : `<article><span>Core state</span><strong>${esc(integration.state || "unconfigured")}</strong><small>No values are fabricated locally.</small></article>`;
   }
+  function domainCountryContext() {
+    const params = new URLSearchParams(location.search);
+    return String(params.get("geography_code") || params.get("country") || qs("#countrySelect")?.value || "").toUpperCase();
+  }
+  function domainCountryLabel() {
+    const code = qs("#economicsCountry")?.value || domainCountryContext();
+    return state.countries.get(code)?.name || code || "the selected geography";
+  }
   function paramsFromControls() {
     const params = new URLSearchParams();
     const fields = {
@@ -110,7 +118,8 @@
     const params = new URLSearchParams(location.search);
     const mapping = {family:"#economicsFamily",source_id:"#economicsSource",geography_code:"#economicsCountry",indicator_code:"#economicsIndicator",frequency:"#economicsFrequency",query:"#economicsSearch"};
     Object.entries(mapping).forEach(([key, selector]) => {
-      const value = params.get(key); const node = qs(selector);
+      const value = key === "geography_code" ? (params.get(key) || params.get("country") || qs("#countrySelect")?.value) : params.get(key);
+      const node = qs(selector);
       if (!value || !node) return;
       if (node.tagName === "SELECT" && ![...node.options].some(option => option.value === value)) return;
       node.value = value;
@@ -124,7 +133,7 @@
     qs("#economicsReturnedCount").textContent = String(records.length);
     qs("#economicsLatestPeriod").textContent = latestPeriod(records);
     if (!records.length) {
-      showEmpty("No matching official records", "Adjust the filters or ingest economic connector data through Platform Core.");
+      showEmpty(`No matching official economics records for ${domainCountryLabel()}`, "The Platform Core connection is available, but no matching economics observations are currently published for this context.");
       renderMap([]); return;
     }
     qs("#economicsRecords").innerHTML = records.slice(0, 80).map(item => {
@@ -214,9 +223,14 @@
     setStatus("Loading official economics and sustainability records", "loading");
     if (sync) syncUrl();
     const payload = await api(`/public/economics-sustainability/records?${paramsFromControls()}`);
-    renderRecords(payload.records || []);
-    const stateName = payload.integration?.state;
-    setStatus(payload.integration?.message || `${payload.records?.length || 0} records loaded`, stateName === "connected" ? "ready" : stateName === "degraded" ? "error" : "fallback");
+    const records = payload.records || [];
+    renderRecords(records);
+    const stateName = payload.dependency_state || payload.integration?.state;
+    if (stateName === "connected" && records.length === 0) {
+      setStatus(`Connected to Platform Core; no official economics records matched ${domainCountryLabel()}.`, "fallback");
+    } else {
+      setStatus(payload.integration?.message || `${records.length} records loaded`, stateName === "connected" ? "ready" : stateName === "degraded" ? "error" : "fallback");
+    }
   }
   async function loadComparison() {
     const indicator = qs("#economicsCompareIndicator")?.value;
@@ -283,6 +297,20 @@
     qs("#economicsExport")?.addEventListener("click", downloadCsv);
     qs("#economicsWorkbench")?.addEventListener("click", () => window.open("https://sustainablecatalyst.com/workbench/", "_blank", "noopener"));
     qs("#economicsDecisionStudio")?.addEventListener("click", () => window.open("https://sustainablecatalyst.com/decision-studio/", "_blank", "noopener"));
+    qs("#countrySelect")?.addEventListener("change", event => {
+      if (qs("#economicsStudio")?.hidden) return;
+      const code = String(event.target.value || "").toUpperCase();
+      const selector = qs("#economicsCountry");
+      if (selector && [...selector.options].some(option => option.value === code)) selector.value = code;
+      const url = new URL(location.href);
+      url.searchParams.set("country", code);
+      url.searchParams.set("geography_code", code);
+      history.replaceState(null, "", url);
+      loadRecords({sync:false}).catch(error => {
+        setStatus(`Economics records for ${code || "the selected geography"} are temporarily unavailable.`, "error");
+        showEmpty("No official economics records available", error?.message || "The public data bridge did not respond.");
+      });
+    });
   }
   document.addEventListener("DOMContentLoaded", bind);
   window.SCEconomicsV220 = {open, close, status: () => ({version: VERSION, map: state.map, record_count: state.records.length, records: state.records})};

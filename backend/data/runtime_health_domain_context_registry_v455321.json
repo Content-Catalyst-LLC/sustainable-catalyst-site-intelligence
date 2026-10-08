@@ -1,0 +1,37 @@
+{
+  "version": "4.55.3.2.1",
+  "release_name": "Runtime Health Truth & Domain Context Repair",
+  "contract": "runtime-health-truth-domain-context-repair",
+  "runtime_health": {
+    "offline_requires": [
+      "browser-network-offline",
+      "canonical-health-endpoint-unavailable"
+    ],
+    "optional_endpoint_failure_state": "degraded",
+    "primary_health_path": "/health"
+  },
+  "domain_context": {
+    "canonical_country_query": "country",
+    "geography_code_domains": [
+      "economics",
+      "science",
+      "resources"
+    ],
+    "country_domains": [
+      "law",
+      "humanitarian",
+      "dossiers"
+    ],
+    "deep_link_example": "/economics/KEN -> view=economics&country=KEN&geography_code=KEN"
+  },
+  "economics_empty_state": {
+    "connected_zero_records": "connected-no-records",
+    "must_not_claim_records_available": true,
+    "fabricated_records": false
+  },
+  "scope_boundaries": [
+    "No provider expansion.",
+    "No fabricated economics records.",
+    "Substantive domain data activation remains v4.55.4."
+  ]
+}

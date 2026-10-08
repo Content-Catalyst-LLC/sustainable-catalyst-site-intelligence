@@ -15,10 +15,10 @@ client = TestClient(app)
 
 
 def test_release_identity_and_route_inventory():
-    assert APP_VERSION == "4.55.3.2"
-    assert RELEASE_NAME == "Standalone Functional Parity Recovery"
+    assert APP_VERSION == "4.55.3.2.1"
+    assert RELEASE_NAME == "Runtime Health Truth & Domain Context Repair"
     m = capability_manifest(app.routes)
-    assert m["registry_version"] == "2.6.0"
+    assert m["registry_version"] == "2.6.1"
     assert m["route_count"] == 1518
     assert m["modularized_route_count"] == 209
     assert m["capability_count"] == 31

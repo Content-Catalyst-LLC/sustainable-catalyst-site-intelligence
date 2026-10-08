@@ -36,15 +36,8 @@ for _ in $(seq 1 60); do
   sleep 2
 done
 [[ "$ready" == 1 ]] || fail "$CONTAINER did not become healthy"
-curl -fsS http://127.0.0.1:8096/healthz -o "$TMP/healthz.txt" || fail "web health check request failed"
-grep -q '^ok$' "$TMP/healthz.txt" || fail "web health check failed"
-
-curl -fsS http://127.0.0.1:8096/economics/KEN -o "$TMP/economics.html" || fail "economics deep-link request failed"
-grep -q 'Connected Public Intelligence and Evidence Platform' "$TMP/economics.html" || fail "economics deep-link functional app fallback failed"
-
-curl -fsS http://127.0.0.1:8096/science/KEN -o "$TMP/science.html" || fail "science deep-link request failed"
-grep -q 'standalone-api-bridge-v45532.js' "$TMP/science.html" || fail "science deep-link parity bridge failed"
-
-curl -fsS http://127.0.0.1:8096/config.js -o "$TMP/config.js" || fail "web config request failed"
-grep -q '4.55.3.2' "$TMP/config.js" || fail "web config release failed"
+curl -fsS http://127.0.0.1:8096/healthz | grep -q '^ok$' || fail "web health check failed"
+curl -fsS http://127.0.0.1:8096/economics/KEN | grep -q 'Connected Public Intelligence and Evidence Platform' || fail "economics deep-link functional app fallback failed"
+curl -fsS http://127.0.0.1:8096/science/KEN | grep -q 'standalone-api-bridge-v45532.js' || fail "science deep-link parity bridge failed"
+curl -fsS http://127.0.0.1:8096/config.js | grep -q '4.55.3.2' || fail "web config release failed"
 echo "PASS: Site Intelligence v4.55.3.2 standalone functional application deployed on 127.0.0.1:8096"

@@ -1,6 +1,6 @@
 (()=>{
   "use strict";
-  const RELEASE="4.55.3.2";
+  const RELEASE="4.55.3.2.1";
   const cfg=window.__SC_SITE_INTELLIGENCE_CONFIG__||{};
   const apiOrigin=String(cfg.apiOrigin||"https://site-intelligence-api.sustainablecatalyst.com").replace(/\/$/,"");
   const appOrigin=String(cfg.appOrigin||location.origin||"").replace(/\/$/,"");
@@ -34,8 +34,17 @@
     let key=parts[0],country="";
     if(key==="science"&&parts[1]==="earth"){key="science";country=parts[2]||""}else country=parts[1]||"";
     const view=aliases[key];
-    if(view){const q=new URLSearchParams(location.search);if(!q.has("view"))q.set("view",view);if(country&&!q.has("country"))q.set("country",country.toUpperCase());try{history.replaceState(null,"",location.pathname+"?"+q.toString())}catch{}}
+    if(view){
+      const q=new URLSearchParams(location.search);
+      if(!q.has("view"))q.set("view",view);
+      if(country&&!q.has("country"))q.set("country",country.toUpperCase());
+      const resolved=String(country||q.get("country")||"").toUpperCase();
+      if(resolved&&["economics","science","resources"].includes(view)&&!q.has("geography_code"))q.set("geography_code",resolved);
+      if(resolved&&["law","humanitarian","dossiers"].includes(view)&&!q.has("country"))q.set("country",resolved);
+      try{history.replaceState(null,"",location.pathname+"?"+q.toString())}catch{}
+    }
   }
   window.SCSIStandaloneBridgeV45532=Object.freeze({version:RELEASE,apiOrigin,appOrigin,rewritePath,toApi});
+  window.SCSIStandaloneBridgeV455321=window.SCSIStandaloneBridgeV45532;
   window.dispatchEvent(new CustomEvent("scsi:standalone-api-bridge-ready",{detail:{version:RELEASE,apiOrigin}}));
 })();
