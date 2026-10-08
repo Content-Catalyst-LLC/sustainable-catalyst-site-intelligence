@@ -1,4 +1,11 @@
-# v4.55.3.2.1 — Runtime Health Truth & Domain Context Repair
+# v4.55.3.2.2 — Browser API Transport & CORS Repair
+
+- Repairs standalone browser-to-FastAPI CORS transport for runtime health.
+- Allows `X-SCSI-Runtime-Diagnostic` in CORS while removing the header requirement from ordinary public GET probes.
+- Adds production preflight certification for the canonical standalone origin.
+- Keeps domain-data activation out of scope for v4.55.4.
+
+# v4.55.3.2.2 — Runtime Health Truth & Domain Context Repair
 
 - Corrects standalone runtime health truth: optional/domain diagnostic failures now degrade the application; only browser network loss or canonical `/health` failure marks Site Intelligence offline.
 - Propagates deep-link and global country context into domain-specific query keys (`country` and `geography_code`).

@@ -45,10 +45,10 @@ def package_fixture():
     })["package"]
 
 def test_release_identity_and_inventory():
-    assert APP_VERSION=="4.55.3.2.1"
-    assert RELEASE_NAME=="Runtime Health Truth & Domain Context Repair"
+    assert APP_VERSION=="4.55.3.2.2"
+    assert RELEASE_NAME=="Browser API Transport & CORS Repair"
     m=capability_manifest(app.routes)
-    assert m["registry_version"]=="2.6.1"
+    assert m["registry_version"]=="2.6.2"
     assert m["route_count"]==1518
     assert m["modularized_route_count"]==209
     assert m["capability_count"]==31
@@ -132,5 +132,5 @@ def test_standalone_and_wordpress_identity():
     standalone=(root/"backend/app/standalone_authority_v4440.py").read_text()
     php=(root/"wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
     assert "spatial_lineage_registry" in standalone and 'NavigationItem("lineage"' in standalone
-    assert "Version: 4.55.3.2.1" in php and "const VERSION = '4.55.3.2.1';" in php
+    assert "Version: 4.55.3.2.2" in php and "const VERSION = '4.55.3.2.2';" in php
     assert "const WORDPRESS_ROLE = 'public-site-launch-bridge';" in php

@@ -83,8 +83,8 @@ def _research_request() -> dict:
 
 
 def test_release_identity() -> None:
-    assert APP_VERSION == "4.55.3.2.1"
-    assert RELEASE_NAME == "Runtime Health Truth & Domain Context Repair"
+    assert APP_VERSION == "4.55.3.2.2"
+    assert RELEASE_NAME == "Browser API Transport & CORS Repair"
 
 
 def test_registry_declares_seven_provider_neutral_targets() -> None:
@@ -209,7 +209,7 @@ def test_compatibility_preserves_v446_through_v450_and_legacy_handoffs() -> None
 def test_capability_registry_owns_all_spatial_research_routes() -> None:
     manifest = capability_manifest(app.routes)
     family = next(row for row in manifest["capabilities"] if row["capability_id"] == "spatial-research-handoffs")
-    assert manifest["registry_version"] == "2.6.1"
+    assert manifest["registry_version"] == "2.6.2"
     assert manifest["route_count"] == 1518
     assert manifest["modularized_route_count"] == 209
     assert manifest["capability_count"] == 31
@@ -243,7 +243,7 @@ def test_release_bound_registry_and_carried_forward_registries_are_current() -> 
 
 def test_wordpress_remains_thin_shell_with_no_spatial_research_shortcode() -> None:
     php = (ROOT / "wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php").read_text()
-    assert "Version: 4.55.3.2.1" in php
-    assert "const VERSION = '4.55.3.2.1';" in php
+    assert "Version: 4.55.3.2.2" in php
+    assert "const VERSION = '4.55.3.2.2';" in php
     assert "const WORDPRESS_ROLE = 'public-site-launch-bridge';" in php
     assert "spatial_research_shortcode" not in php

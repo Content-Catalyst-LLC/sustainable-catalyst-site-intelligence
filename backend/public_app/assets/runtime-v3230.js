@@ -1,13 +1,13 @@
 (function (window, document) {
   "use strict";
 
-  const VERSION = "4.55.3.2.1";
+  const VERSION = "4.55.3.2.2";
   const EVENT_LIMIT = 30;
   const ENDPOINTS = [
     ["Service", "/health"],
     ["Build", "/public/build-info"],
     ["Deployment Receipt", "/public/deployment-receipt"],
-    ["Release Gate", "/public/release-gate?plugin_version=4.55.3.2.1&expected_release_id=site-intelligence-v4.55.3.2.1"],
+    ["Release Gate", "/public/release-gate?plugin_version=4.55.3.2.2&expected_release_id=site-intelligence-v4.55.3.2.2"],
     ["Runtime", "/public/runtime-health"],
     ["Recovery", "/public/runtime-recovery"],
     ["Geospatial", "/public/geospatial/diagnostics"],
@@ -74,7 +74,7 @@
     const started = performance.now();
     try {
       const response = await fetch(path, {
-        headers: { Accept: "application/json", "X-SCSI-Runtime-Diagnostic": VERSION },
+        headers: { Accept: "application/json" },
         cache: "no-store",
         credentials: "same-origin",
         signal: controller.signal,

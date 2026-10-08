@@ -1,4 +1,4 @@
-APP_VERSION = "4.55.3.2.1"
+APP_VERSION = "4.55.3.2.2"
 API_SCHEMA_VERSION = "2.0"
-RELEASE_NAME = "Runtime Health Truth & Domain Context Repair"
+RELEASE_NAME = "Browser API Transport & CORS Repair"
 EXPECTED_WORDPRESS_PLUGIN_VERSION = APP_VERSION

@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Sustainable Catalyst Site Intelligence
- * Description: Sustainable Catalyst Site Intelligence v4.55.3.2.1 public-site launch bridge for the standalone Site Intelligence web application.
- * Version: 4.55.3.2.1
+ * Description: Sustainable Catalyst Site Intelligence v4.55.3.2.2 public-site launch bridge for the standalone Site Intelligence web application.
+ * Version: 4.55.3.2.2
  * Author: Content Catalyst LLC
  * License: MIT
  */
@@ -13,8 +13,8 @@ if (!defined('ABSPATH')) {
 
 final class SC_Site_Intelligence_Plugin {
     const OPTION_KEY = 'sc_site_intelligence_options';
-    const VERSION = '4.55.3.2.1';
-    const RELEASE_ID = 'site-intelligence-v4.55.3.2.1';
+    const VERSION = '4.55.3.2.2';
+    const RELEASE_ID = 'site-intelligence-v4.55.3.2.2';
     const BRIDGE_CONTRACT_VERSION = '1.1.0';
     const WORDPRESS_ROLE = 'public-site-launch-bridge';
     const STANDALONE_WEB_APP_URL = 'https://intelligence.sustainablecatalyst.com';

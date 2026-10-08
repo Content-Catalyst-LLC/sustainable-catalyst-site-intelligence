@@ -1,4 +1,4 @@
-const RELEASE="4.55.3.2.1";
+const RELEASE="4.55.3.2.2";
 const REPAIR="v4552-advanced-domain-intelligence-expansion";
 const CACHE_PREFIX="scsi-";
 const VERSION=`${CACHE_PREFIX}v${RELEASE}-${REPAIR}`;

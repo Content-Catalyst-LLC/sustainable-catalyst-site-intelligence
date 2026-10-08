@@ -932,7 +932,7 @@ app.add_middleware(
     allow_origins=settings.cors_origin_list,
     allow_credentials=True,
     allow_methods=["GET", "POST", "OPTIONS"],
-    allow_headers=["Accept", "Content-Type", "Cache-Control", "Pragma", "X-SC-Intelligence-Token"],
+    allow_headers=["Accept", "Content-Type", "Cache-Control", "Pragma", "X-SC-Intelligence-Token", "X-SCSI-Runtime-Diagnostic"],
 )
 app.add_middleware(GZipMiddleware, minimum_size=1024, compresslevel=6)
 

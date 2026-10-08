@@ -1,0 +1,30 @@
+{
+  "version": "4.55.3.2.2",
+  "release_name": "Browser API Transport & CORS Repair",
+  "contract": "browser-api-transport-cors-repair",
+  "public_web_origin": "https://intelligence.sustainablecatalyst.com",
+  "public_api_origin": "https://site-intelligence-api.sustainablecatalyst.com",
+  "primary_health_path": "/health",
+  "runtime_transport": {
+    "ordinary_public_gets_require_custom_header": false,
+    "runtime_diagnostic_header": "X-SCSI-Runtime-Diagnostic",
+    "runtime_diagnostic_header_allowed_by_cors": true,
+    "credentials_mode": "include",
+    "offline_requires": [
+      "browser-network-offline",
+      "canonical-health-endpoint-unreachable"
+    ]
+  },
+  "production_preflight_gate": {
+    "origin": "https://intelligence.sustainablecatalyst.com",
+    "method": "GET",
+    "path": "/health",
+    "requested_header": "X-SCSI-Runtime-Diagnostic",
+    "expected_status": 200
+  },
+  "scope_boundaries": [
+    "No domain-data activation.",
+    "No fabricated economics records.",
+    "v4.55.4 remains responsible for substantive domain data activation."
+  ]
+}

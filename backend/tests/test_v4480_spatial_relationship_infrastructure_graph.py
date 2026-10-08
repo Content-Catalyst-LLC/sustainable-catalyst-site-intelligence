@@ -66,8 +66,8 @@ def _build() -> dict:
 
 
 def test_release_identity() -> None:
-    assert APP_VERSION == "4.55.3.2.1"
-    assert RELEASE_NAME == "Runtime Health Truth & Domain Context Repair"
+    assert APP_VERSION == "4.55.3.2.2"
+    assert RELEASE_NAME == "Browser API Transport & CORS Repair"
 
 
 def test_registry_and_schema_endpoints() -> None:
@@ -207,7 +207,7 @@ def test_compatibility_contract_preserves_prior_spatial_generations() -> None:
 
 def test_capability_registry_has_graph_family_and_no_unclassified_routes() -> None:
     manifest = capability_manifest(app.routes)
-    assert manifest["registry_version"] == "2.6.1"
+    assert manifest["registry_version"] == "2.6.2"
     assert manifest["unclassified_route_count"] == 0
     graph = next(item for item in manifest["capabilities"] if item["capability_id"] == "spatial-relationship-graph")
     assert graph["route_count"] == 9
