@@ -392,6 +392,19 @@ def build_economic_records(
     except RuntimeError as exc:
         records, meta = [], {}
         integration = _integration_state(settings, error=str(exc))
+    # Preserve Core as authority; a clearly attributed source read is distinct.
+    fallback_used = False
+    if not records and geography_code and source_id in ("", "world-bank"):
+        from .economics_world_bank_fallback_v4563 import get_country_records
+        records = get_country_records(geography_code, indicator_code=indicator_code, limit=limit)
+        fallback_used = bool(records)
+        if fallback_used:
+            integration = {
+                **integration,
+                "state": "source-fallback",
+                "message": "World Bank Open Data observations (live source read); no matching published Core economics records.",
+                "source": "world-bank",
+            }
     if family:
         family = family.strip().lower()
         records = [item for item in records if item["family"] == family]
