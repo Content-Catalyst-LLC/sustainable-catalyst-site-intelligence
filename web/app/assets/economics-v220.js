@@ -266,7 +266,7 @@
     panel.hidden = false; panel.setAttribute("aria-busy", "true"); document.body.classList.add("economics-route");
     try {
       const results = await Promise.allSettled([
-        api("/public/economics-sustainability"), api("/public/economics-sustainability/facets"), api("/public/countries")
+        api("/public/economics-sustainability"), api("/public/economics-sustainability/facets?geography_code="+encodeURIComponent(new URLSearchParams(location.search).get("country")||qs("#countrySelect")?.value||"KEN")), api("/public/countries")
       ]);
       const overview=results[0].status==="fulfilled"?results[0].value:{counts:{},integration:{state:"degraded",message:"Economics workspace ready with partial catalogs"}};
       const facets=results[1].status==="fulfilled"?results[1].value:{};
