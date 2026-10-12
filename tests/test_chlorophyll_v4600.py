@@ -30,3 +30,16 @@ def test_frontend_assets_exist():
   assert "ocean-biology-v4600.js?v=4.60.0" in (ROOT/p).read_text()
  js=(ROOT/"web/app/assets/ocean-biology-v4600.js").read_text()
  for a in ("ocean4600Fetch","ocean4600Grid","ocean4600Export","response_sha256"):assert a in js
+
+def test_noaa_axes_and_longitude_normalization():
+ calls=[]
+ payload=("time,latitude,longitude,chlor_a\nUTC,degrees_north,degrees_east,mg m-3\n2026-08-01T12:00:00Z,12,295,0.14\n").encode()
+ def fetch(url):
+  calls.append(url)
+  return payload
+ response=retrieve_chlorophyll_grid(12,-65,"2026-08-01",transport=fetch)
+ assert response["ok"],response
+ assert response["cells"][0]["longitude"]==-65
+ assert "2026-08-01T12:00:00Z" in calls[0]
+ assert "12.5000" in calls[0] and "11.5000" in calls[0]
+ assert "294.5000" in calls[0] and "295.5000" in calls[0]
