@@ -1692,6 +1692,13 @@ def public_ocean_surface_source(source_id: str):
 
 from .noaa_erddap_v4576 import retrieve_sst as retrieve_noaa_erddap_sst
 
+from .noaa_grid_v4577 import retrieve_grid as retrieve_noaa_sst_grid
+
+@app.get("/public/ocean-intelligence/noaa/sst/grid")
+def public_noaa_sst_grid(latitude: float = Query(..., ge=-85, le=85), longitude: float = Query(..., ge=-175, le=175), date: str = Query(...)):
+    try: return retrieve_noaa_sst_grid(latitude, longitude, date)
+    except ValueError as exc: raise HTTPException(status_code=400, detail=str(exc)) from exc
+
 @app.get("/public/ocean-intelligence/noaa/sst")
 def public_noaa_erddap_sst(latitude: float = Query(..., ge=-90, le=90), longitude: float = Query(..., ge=-180, le=180), date: str = Query(...)):
     try: return retrieve_noaa_erddap_sst(latitude, longitude, date)
