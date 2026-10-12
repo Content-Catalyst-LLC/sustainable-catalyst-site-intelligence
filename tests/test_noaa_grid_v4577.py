@@ -33,4 +33,12 @@ def test_renderer_and_frontend_registration():
     assert "ocean4577Grid" in script
     assert "ocean4577Fetch" in script
     for name in ("web/index.html","web/app/index.html"):
-        assert "v4575.js?v=4.57.7" in (root/name).read_text()
+        assert "v4575.js?v=4.57.8" in (root/name).read_text()
+
+
+def test_interactive_cell_inspector_and_truthful_fallback():
+    root=Path(__file__).resolve().parents[1]
+    script=(root/'web/app/assets/ocean-surface-visualization-v4575.js').read_text()
+    for part in ('data-ocean-cell', 'ocean4578Detail', 'ocean4578ZoomIn', 'ocean4578ZoomOut', 'ocean4578ZoomReset','ocean4578Locator','activeGrid.receipt.response_sha256'):
+        assert part in script
+    assert 'no interpolation, land mask, or basemap inferred' in script
