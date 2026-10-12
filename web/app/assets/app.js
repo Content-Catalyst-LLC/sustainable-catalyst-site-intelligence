@@ -1995,7 +1995,7 @@
     if(document.hidden||event.detail?.path==="/public/runtime-health"||event.detail?.path==="/public/runtime-recovery")return;
     clearTimeout(recoveryRefreshTimer);
     recoveryRefreshTimer=setTimeout(async()=>{
-      try{toast(`${event.detail?.group||"Data"} service recovered; refreshing this workspace.`);await navigateToRoute(state.route);reportHeight()}catch(error){console.warn("[Site Intelligence] Recovered workspace refresh failed.",error)}
+      try{window.dispatchEvent(new CustomEvent("scsi:service-recovery-observed",{detail:{group:event.detail?.group||"Data",route:state.route,country:state.country}}));reportHeight()}catch(error){console.warn("[Site Intelligence] Recovery status update failed.",error)}
     },1200);
   });
   async function init(){const entryParams=new URLSearchParams(location.search);setLaunch("Preparing the map and public evidence services.",18);
@@ -2085,7 +2085,7 @@
     window.matchMedia("(max-width: 760px)").addEventListener?.("change",event=>{if(!event.matches)setMobileNavigation(false)});
     const params=entryParams;const initialCountry=String(params.get("country")||"KEN").trim().toUpperCase();const requestedView=params.get("view")||"overview";const initialView=[...Object.keys(savedViewDefinitions),"saved","launch","observatory"].includes(requestedView)?requestedView:"overview";const invalidRequestedView=requestedView!==initialView;qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";if(params.get("imageryDate"))qs("#dateSelect").value=params.get("imageryDate");
     setLaunch("Opening the application shell.",82);
-    const routeTask=Promise.resolve().then(()=>setRoute(initialView)).then(()=>{const target=new URL(location.href);target.searchParams.set("view",initialView);target.searchParams.set("country",initialCountry);history.replaceState(null,"",target.pathname+target.search+target.hash)});
+    const routeTask=Promise.resolve().then(()=>{state.country=initialCountry;return navigateToRoute(initialView)}).then(()=>{const target=new URL(location.href);target.searchParams.set("view",initialView);target.searchParams.set("country",state.country);history.replaceState(null,"",target.pathname+target.search+target.hash)});
     applySharedControlState(initialView,params);
     finishLaunch({message:"Site Intelligence is ready. Public data services are connecting."});
     if(invalidRequestedView)toast("The requested view is unavailable; Overview was opened instead.");
