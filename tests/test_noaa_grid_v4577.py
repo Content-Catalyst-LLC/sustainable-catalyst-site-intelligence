@@ -33,7 +33,7 @@ def test_renderer_and_frontend_registration():
     assert "ocean4577Grid" in script
     assert "ocean4577Fetch" in script
     for name in ("web/index.html","web/app/index.html"):
-        assert "v4575.js?v=4.57.9" in (root/name).read_text()
+        assert "v4575.js?v=4.58.0" in (root/name).read_text()
 
 
 def test_interactive_cell_inspector_and_truthful_fallback():
@@ -49,4 +49,4 @@ def test_v4579_comparison_export_provenance_contracts():
     js=(root/"web/app/assets/ocean-surface-visualization-v4575.js").read_text()
     for term in ("ocean4579Date","ocean4579Fetch","ocean4579Export","ocean4579Difference","scsi-noaa-sst-comparison/1.0","scsi-ocean-evidence-package/4.57.9","response_sha256","unmatched_first","unmatched_second","scientific_accuracy_independently_verified:false","Exact 4-decimal latitude/longitude keys"):
         assert term in js
-    assert "v4575.js?v=4.57.9" in (root/"web/index.html").read_text()
+    assert "v4575.js?v=4.58.0" in (root/"web/index.html").read_text()
