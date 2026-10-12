@@ -31,7 +31,7 @@ def test_frontend_wired():
     assert "/public/ocean-intelligence/noaa/sst" in js
     assert "ocean4576Fetch" in js
     for p in ("web/index.html","web/app/index.html"):
-        assert "ocean-surface-visualization-v4575.js?v=4.57.8" in (root/p).read_text()
+        assert "ocean-surface-visualization-v4575.js?v=4.57.9" in (root/p).read_text()
 
 
 def test_original_ocean_evidence_panel_receives_retrieval():
