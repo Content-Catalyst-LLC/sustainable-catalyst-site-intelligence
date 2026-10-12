@@ -7,7 +7,7 @@ ASSET = ROOT / "web/app/assets/ocean-surface-visualization-v4575.js"
 
 def test_ocean_surface_visualization_asset_exists():
     script = ASSET.read_text()
-    assert 'scsi:ocean-surface-enter' in script
+    assert 'window.addEventListener("scsi:ocean-surface-enter",mount)' in script
     assert 'ocean4575Map' in script
     assert 'ocean4575Chart' in script
 
@@ -24,4 +24,4 @@ def test_source_truth_guardrails():
 def test_both_frontends_register_v4575():
     for page in ('web/index.html', 'web/app/index.html'):
         html = (ROOT / page).read_text()
-        assert '/app/assets/ocean-surface-visualization-v4575.js?v=4.57.5' in html
+        assert '/app/assets/ocean-surface-visualization-v4575.js?v=4.57.5.1' in html
