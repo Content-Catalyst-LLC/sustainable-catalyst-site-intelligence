@@ -1690,6 +1690,13 @@ def public_ocean_surface_catalog():
 def public_ocean_surface_source(source_id: str):
     return build_ocean_surface_source(source_id)
 
+from .noaa_erddap_v4576 import retrieve_sst as retrieve_noaa_erddap_sst
+
+@app.get("/public/ocean-intelligence/noaa/sst")
+def public_noaa_erddap_sst(latitude: float = Query(..., ge=-90, le=90), longitude: float = Query(..., ge=-180, le=180), date: str = Query(...)):
+    try: return retrieve_noaa_erddap_sst(latitude, longitude, date)
+    except ValueError as exc: raise HTTPException(status_code=400, detail=str(exc)) from exc
+
 @app.get("/public/ocean-intelligence/state")
 def public_ocean_surface_state(variable: str = Query(default="sea-surface-temperature"), source: str = Query(default=""), latitude: float = Query(default=0.0), longitude: float = Query(default=0.0), date: str = Query(default="")):
     try: return build_ocean_surface_state(variable, source, latitude, longitude, date)
