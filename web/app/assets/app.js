@@ -175,7 +175,9 @@
         const current=pendingRoute;pendingRoute="";
         document.documentElement.dataset.scsiRouteBusy="true";
         window.dispatchEvent(new CustomEvent("scsi:route-transition-start",{detail:{version:APP_VERSION,route:current}}));
-        history.replaceState(null,"",`?country=${encodeURIComponent(state.country)}&view=${encodeURIComponent(current)}`);
+        const nextParams=new URLSearchParams(startupRoutePending?location.search:"");
+        nextParams.set("country",state.country);nextParams.set("view",current);
+        history.replaceState(null,"",`?${nextParams.toString()}`);
         try{await setRoute(current);await window.SCSIWorkspaceReliabilityV43518?.enforce?.(current)}catch(error){ok=false;console.error("[Site Intelligence] Route failed",current,error);await window.SCSIWorkspaceReliabilityV43518?.enforce?.(current,error?.message||"registered route recovery");toast("That workspace opened with limited services.")}
         window.dispatchEvent(new CustomEvent("scsi:route-transition-end",{detail:{version:APP_VERSION,route:current,ok}}));
       }
