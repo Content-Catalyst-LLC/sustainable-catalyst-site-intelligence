@@ -4,7 +4,8 @@ import csv,hashlib,io,math
 from datetime import date as Date,datetime,timezone
 from urllib.parse import quote
 from urllib.error import HTTPError,URLError
-from .noaa_erddap_v4576 import BASE,DATASET,VARIABLE,_fetch
+from urllib.request import Request,urlopen
+from .noaa_erddap_v4576 import BASE,DATASET,VARIABLE
 
 def retrieve_grid(latitude:float,longitude:float,day:str,*,transport=None):
     try:
@@ -16,7 +17,7 @@ def retrieve_grid(latitude:float,longitude:float,day:str,*,transport=None):
     south,north=lat-.5,lat+.5;west,east=lon-.5,lon+.5
     constraint=f"{VARIABLE}[({d.isoformat()}T00:00:00Z)][({south:.4f}):10:({north:.4f})][({west:.4f}):10:({east:.4f})]"
     url=BASE+DATASET+".csv?"+quote(constraint,safe="[]():")
-    fetch=transport or _fetch
+    fetch=transport or _fetch_grid
     try:
         raw=fetch(url)
         if isinstance(raw,str):raw=raw.encode()
@@ -42,3 +43,10 @@ def retrieve_grid(latitude:float,longitude:float,day:str,*,transport=None):
         return {"ok":True,"status":"retrieved" if cells else "no_data","date":day,"unit":"degC","evidence_type":"satellite-derived","extent":{"south":south,"north":north,"west":west,"east":east},"cells":cells,"missing_count":missing,"receipt":receipt}
     except (HTTPError,URLError,TimeoutError,UnicodeError,ValueError,StopIteration,OverflowError) as exc:
         return {"ok":False,"status":"unavailable","cells":[],"message":str(exc)[:250]}
+
+
+def _fetch_grid(url):
+    req=Request(url,headers={"Accept":"text/csv","User-Agent":"SustainableCatalystOcean/4.57.7"})
+    with urlopen(req,timeout=15) as response:
+        if response.status!=200:raise ValueError("NOAA grid upstream returned non-200")
+        return response.read(262145)
