@@ -14,7 +14,7 @@ def retrieve_grid(latitude:float,longitude:float,day:str,*,transport=None):
     if d>Date.today():raise ValueError("Future dates cannot be observations")
     # Bounded 11x11 grid with 0.1 degree stride (approximate ERDDAP nearest resolution).
     south,north=lat-.5,lat+.5;west,east=lon-.5,lon+.5
-    constraint=f"{VARIABLE}[({d.isoformat()}T00:00:00Z)][({south:.4f}):({north:.4f})][({west:.4f}):({east:.4f})]"
+    constraint=f"{VARIABLE}[({d.isoformat()}T00:00:00Z)][({south:.4f}):10:({north:.4f})][({west:.4f}):10:({east:.4f})]"
     url=BASE+DATASET+".csv?"+quote(constraint,safe="[]():")
     fetch=transport or _fetch
     try:
