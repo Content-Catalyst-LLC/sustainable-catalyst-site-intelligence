@@ -1692,6 +1692,12 @@ def public_ocean_surface_source(source_id: str):
 
 from .noaa_erddap_v4576 import retrieve_sst as retrieve_noaa_erddap_sst
 
+from .salinity_v4610 import retrieve_salinity_grid
+
+@app.get("/public/ocean-intelligence/noaa/salinity/grid")
+def public_noaa_salinity_grid(latitude: float = Query(..., ge=-85, le=85), longitude: float = Query(..., ge=-175, le=175), date: str = Query(...)):
+    return retrieve_salinity_grid(latitude, longitude, date)
+
 from .chlorophyll_v4600 import retrieve_chlorophyll_grid
 
 @app.get("/public/ocean-intelligence/noaa/chlorophyll/grid")
