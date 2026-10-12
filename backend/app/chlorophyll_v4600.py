@@ -21,8 +21,12 @@ def retrieve_chlorophyll_grid(latitude,longitude,day,*,transport=None):
   south,north=lat-.5,lat+.5;west,east=lon-.5,lon+.5
   # Monthly composites are not daily observations. Select requested month's midpoint,
   # verify returned time belongs to requested calendar month before exposing cells.
-  selector=f"{d.year:04d}-{d.month:02d}-15T12:00:00Z"
-  constraint=f"{VARIABLE}[({selector})][({south:.4f}):3:({north:.4f})][({west:.4f}):3:({east:.4f})]"
+  selector=f"{d.year:04d}-{d.month:02d}-01T12:00:00Z"
+  # NOAA axis order: descending latitude, ascending longitude in 0..360.
+  west360=(west+360)%360
+  east360=(east+360)%360
+  if east360<=west360:raise ValueError("0/360 boundary crossing needs split queries")
+  constraint=f"{VARIABLE}[({selector})][({north:.4f}):3:({south:.4f})][({west360:.4f}):3:({east360:.4f})]"
   url=BASE+DATASET+".csv?"+quote(constraint,safe="[]():")
   raw=(transport or _fetch)(url)
   if isinstance(raw,str):raw=raw.encode()
@@ -45,7 +49,7 @@ def retrieve_chlorophyll_grid(latitude,longitude,day,*,transport=None):
    if value.lower() in ("nan","","null"):missing+=1;continue
    v=float(value);la=float(row[indices["latitude"]]);lo=float(row[indices["longitude"]])
    if not all(math.isfinite(x) for x in (v,la,lo)) or v<0 or v>1000:missing+=1;continue
-   cells.append({"latitude":la,"longitude":lo,"value":round(v,6)})
+   cells.append({"latitude":la,"longitude":lo-360 if lo>180 else lo,"value":round(v,6)})
   if not times:raise ValueError("No rows returned for requested month")
   if len(times)!=1:raise ValueError("Multiple composite timestamps in one query")
   receipt=dict(dataset_id=DATASET,variable_id=VARIABLE,source_url=url,response_sha256=hashlib.sha256(raw).hexdigest(),retrieved_at=datetime.now(timezone.utc).isoformat(),response_bytes=len(raw),network_response_received=True,quality_assessment="not independently performed")
