@@ -248,7 +248,9 @@
     return {categories:raw,source:params.get("mapSource")||"",days:Math.max(1,Math.min(365,Number(params.get("mapDays")||30))),cluster:params.get("mapCluster")!=="0",eventsVisible:params.get("mapEvents")!=="0",selected:params.get("mapSelected")||""};
   }
   function syncOverviewMapUrl(){
-    const params=new URLSearchParams(location.search);params.set("view",state.route||"overview");params.set("country",state.country);
+    // Do not allow the overview map to rewrite deep links before initial routing.
+    if(!state.route)return;
+    const params=new URLSearchParams(location.search);params.set("view",state.route);params.set("country",state.country);
     const f=state.overviewFilters;if(f.categories.length)params.set("mapCategories",f.categories.join(","));else params.delete("mapCategories");
     if(f.source)params.set("mapSource",f.source);else params.delete("mapSource");params.set("mapDays",String(f.days));params.set("mapCluster",f.cluster?"1":"0");params.set("mapEvents",f.eventsVisible?"1":"0");
     if(f.selected)params.set("mapSelected",f.selected);else params.delete("mapSelected");
@@ -1948,7 +1950,12 @@
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();return;
     }
     if(route==="earth"){
-      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();await openEarthStudio();return;
+      panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEventStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();await openEarthStudio();
+      const oceanParams=new URLSearchParams(location.search);
+      if(oceanParams.get("oceanMode")==="hub"){
+        await window.SCSIOceanObservationV4360?.open?.({skipRoute:true,system:oceanParams.get("oceanSystem")||""});
+      }
+      return;
     }
     if(route==="events"){
       panel.hidden=true;qs("#countryIntelligencePanel").hidden=true;closeEarthStudio();closeGlobalCountryExplorer();closeCompareStudio();closeThematicStudio();closeBriefingStudio();closeSourceStudio();closeSavedViews();await openEventStudio();return;
