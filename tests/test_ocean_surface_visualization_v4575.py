@@ -24,4 +24,4 @@ def test_source_truth_guardrails():
 def test_both_frontends_register_v4575():
     for page in ('web/index.html', 'web/app/index.html'):
         html = (ROOT / page).read_text()
-        assert '/app/assets/ocean-surface-visualization-v4575.js?v=4.57.6' in html
+        assert '/app/assets/ocean-surface-visualization-v4575.js?v=4.57.6.1' in html
