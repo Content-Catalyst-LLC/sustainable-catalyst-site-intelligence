@@ -1692,6 +1692,12 @@ def public_ocean_surface_source(source_id: str):
 
 from .noaa_erddap_v4576 import retrieve_sst as retrieve_noaa_erddap_sst
 
+from .ocean_contracts_v4590 import registry as ocean_variable_registry
+
+@app.get("/public/ocean-intelligence/variables/registry")
+def public_ocean_variable_registry():
+    return ocean_variable_registry()
+
 from .noaa_grid_v4577 import retrieve_grid as retrieve_noaa_sst_grid
 
 @app.get("/public/ocean-intelligence/noaa/sst/grid")
