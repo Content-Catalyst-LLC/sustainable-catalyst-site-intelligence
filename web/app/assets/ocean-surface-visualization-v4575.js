@@ -57,7 +57,7 @@ async function fetchComparison(){
  if(!activeGrid?.cells?.length||!activeGrid.receipt?.response_sha256){status.textContent="Retrieve the primary NOAA grid first.";return}
  if(variable!=="sea-surface-temperature"||source!=="noaa-coastwatch-erddap"||!day){status.textContent="NOAA SST and a second ISO date are required.";return}
  if(day===activeGrid.date){status.textContent="Choose a different comparison date.";return}
- comparisonBusy=true;comparisonGrid=null;comparisonResult=null;showComparison();status.textContent="Retrieving second NOAA grid…";
+ comparisonBusy=true;comparisonGrid=null;comparisonResult=null;const prior=q("#ocean4579Difference");if(prior)prior.textContent="";showComparison();status.textContent="Retrieving second NOAA grid…";
  try{
  const path="/public/ocean-intelligence/noaa/sst/grid?"+new URLSearchParams({latitude:String(lat),longitude:String(lon),date:day});
  const resp=await fetch(API+path,{headers:{Accept:"application/json"},cache:"no-store"}),data=await resp.json();
