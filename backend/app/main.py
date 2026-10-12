@@ -1692,6 +1692,12 @@ def public_ocean_surface_source(source_id: str):
 
 from .noaa_erddap_v4576 import retrieve_sst as retrieve_noaa_erddap_sst
 
+from .chlorophyll_v4600 import retrieve_chlorophyll_grid
+
+@app.get("/public/ocean-intelligence/noaa/chlorophyll/grid")
+def public_noaa_chlorophyll_grid(latitude: float = Query(..., ge=-68, le=68), longitude: float = Query(..., ge=-178, le=178), date: str = Query(...)):
+    return retrieve_chlorophyll_grid(latitude, longitude, date)
+
 from .ocean_contracts_v4590 import registry as ocean_variable_registry
 
 @app.get("/public/ocean-intelligence/variables/registry")
