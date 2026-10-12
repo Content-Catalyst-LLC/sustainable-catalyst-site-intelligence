@@ -13,7 +13,11 @@ def test_registry_distinguishes_defined_from_live():
     status={x["id"]:x["retrieval_status"] for x in info["variables"]}
     assert status["sea-surface-temperature"]=="live-verified"
     assert all(v=="not-connected" for k,v in status.items() if k!="sea-surface-temperature")
-    assert len(info["sources"])==1
+    assert len(info["sources"])==2
+    sources={s["id"]:s for s in info["sources"]}
+    assert sources["noaa-mur-sst"]["capability"]=="live-verified"
+    assert sources["noaa-snpp-chlorophyll-monthly"]["capability"]=="integration-pending"
+    assert status["chlorophyll-a"]=="not-connected"
     assert info["policy"]["forecasts_are_not_observations"]
 
 def test_normalized_sst_and_receipt():
