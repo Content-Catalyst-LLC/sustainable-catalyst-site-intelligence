@@ -134,6 +134,7 @@
     return `<div class="error-state"><div><strong>${escapeHtml(title)}</strong><span>${escapeHtml(text)}</span><br><button id="${id}" class="retry-button" type="button">Retry</button></div></div>`;
   }
 
+  let startupRoutePending=true;
   const state = {map:null,base:null,imagery:null,markers:null,markerIndex:new Map(),filteredEvents:[],heat:null,layers:null,events:null,country:"KEN",route:"overview",overviewFilters:{categories:[],source:"",days:30,cluster:true,eventsVisible:true,selected:""}};
   const SAVED_VIEW_SCHEMA="sc-saved-view/1.0";
   const SAVED_VIEW_STORAGE_KEY="sc_site_intelligence_saved_views_v1";
@@ -249,7 +250,7 @@
   }
   function syncOverviewMapUrl(){
     // Do not allow the overview map to rewrite deep links before initial routing.
-    if(!state.route)return;
+    if(startupRoutePending||!state.route||state.route!=="overview")return;
     const params=new URLSearchParams(location.search);params.set("view",state.route);params.set("country",state.country);
     const f=state.overviewFilters;if(f.categories.length)params.set("mapCategories",f.categories.join(","));else params.delete("mapCategories");
     if(f.source)params.set("mapSource",f.source);else params.delete("mapSource");params.set("mapDays",String(f.days));params.set("mapCluster",f.cluster?"1":"0");params.set("mapEvents",f.eventsVisible?"1":"0");
@@ -2085,7 +2086,7 @@
     window.matchMedia("(max-width: 760px)").addEventListener?.("change",event=>{if(!event.matches)setMobileNavigation(false)});
     const params=entryParams;const initialCountry=String(params.get("country")||"KEN").trim().toUpperCase();const requestedView=params.get("view")||"overview";const initialView=[...Object.keys(savedViewDefinitions),"saved","launch","observatory"].includes(requestedView)?requestedView:"overview";const invalidRequestedView=requestedView!==initialView;qs("#countrySelect").value=names[initialCountry]?initialCountry:"KEN";if(params.get("imageryDate"))qs("#dateSelect").value=params.get("imageryDate");
     setLaunch("Opening the application shell.",82);
-    const routeTask=Promise.resolve().then(()=>{state.country=initialCountry;return navigateToRoute(initialView)}).then(()=>{const target=new URL(location.href);target.searchParams.set("view",initialView);target.searchParams.set("country",state.country);history.replaceState(null,"",target.pathname+target.search+target.hash)});
+    const routeTask=Promise.resolve().then(()=>{state.country=initialCountry;return navigateToRoute(initialView)}).then(()=>{const target=new URL(location.href);target.searchParams.set("view",state.route);target.searchParams.set("country",state.country);history.replaceState(null,"",target.pathname+target.search+target.hash)}).finally(()=>{startupRoutePending=false});
     applySharedControlState(initialView,params);
     finishLaunch({message:"Site Intelligence is ready. Public data services are connecting."});
     if(invalidRequestedView)toast("The requested view is unavailable; Overview was opened instead.");
