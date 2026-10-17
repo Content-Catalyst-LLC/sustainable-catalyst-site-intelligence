@@ -1,0 +1,39 @@
+{
+  "schema": "scsi-ocean-reconciliation/1",
+  "branch_status": "work-in-progress",
+  "uploaded_snapshot_latest": "4.64.0",
+  "source_archive_contains_nasa_v4650": false,
+  "versions_to_reconcile": [
+    "4.57",
+    "4.58",
+    "4.59",
+    "4.60",
+    "4.61",
+    "4.62",
+    "4.63",
+    "4.64",
+    "4.65",
+    "4.66"
+  ],
+  "backend_files": [
+    "chlorophyll_v4600.py",
+    "salinity_v4610.py",
+    "currents_v4620.py",
+    "sea_level_v4630.py",
+    "marine_waves_v4640.py"
+  ],
+  "frontend_required": [
+    "ocean-biology-v4600.js",
+    "ocean-salinity-v4610.js",
+    "ocean-currents-v4620.js",
+    "ocean-sea-level-v4630.js",
+    "ocean-marine-waves-v4640.js",
+    "ocean-workbench-tabs-v4640.js",
+    "ocean-nasa-imagery-v4650.js",
+    "ocean-workbench-tabs-v4650.js",
+    "ocean-image-observation-v4660.js",
+    "ocean-workbench-tabs-v4660.js"
+  ],
+  "safe_to_merge": false,
+  "notes": "Audit inventory only: actual source files for recent overlays not yet committed."
+}
