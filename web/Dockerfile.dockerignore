@@ -1,0 +1,15 @@
+# Local metadata and interpreter caches are not build inputs.
+.git
+**/.git
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+**/.venv
+**/.venv-*
+**/venv
+**/node_modules
+.DS_Store
+**/.DS_Store
