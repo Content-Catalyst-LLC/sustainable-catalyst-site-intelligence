@@ -52,6 +52,10 @@ def country_identity_registry() -> dict[str, dict[str, Any]]:
     return dict(sorted(rows.items(), key=lambda item: (item[1].get("name") or item[0], item[0])))
 
 
+# Resolve an exact code, ISO2 alias or registered display/alternate name to a
+# stable registry key plus copied metadata. Unsupported aliases raise
+# ValueError; this is identity normalization, not geospatial containment or
+# proof that an environmental dataset covers the named country.
 def canonical_country(code_or_alias: str) -> tuple[str, dict[str, Any]]:
     requested = " ".join(str(code_or_alias or "").split())
     normalized = requested.upper()

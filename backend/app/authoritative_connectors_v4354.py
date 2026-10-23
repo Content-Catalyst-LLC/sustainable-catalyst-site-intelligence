@@ -178,6 +178,12 @@ _COOPS_PRODUCTS = {
 }
 
 
+# Query NOAA CO-OPS with a bounded, encoded station/product/date request. The
+# datum, units and time zone are part of the returned query provenance and
+# must travel with downstream figures; values from different settings should
+# not be compared as if they shared a baseline. Invalid requests raise
+# ValueError; provider errors raise RuntimeError. This connector fetches
+# observations/predictions but does not independently validate their accuracy.
 def noaa_coops_data(
     settings: Any,
     *,

@@ -161,6 +161,10 @@ def _metric_values(pairs: list[dict[str, float]]) -> dict[str, Any]:
     }
 
 
+# The configured JSON/JSONL governance files hold model cards, forecasts and
+# warning events. Public projections filter active/public records; a model
+# registration or computed error metric is not forecast validation. Callers
+# must preserve model version, intended/prohibited use and data provenance.
 class ModelForecastEarlyWarningCenter:
     def __init__(self, settings: Settings, now_fn: Callable[[], datetime] = _utc_now) -> None:
         self.settings = settings
