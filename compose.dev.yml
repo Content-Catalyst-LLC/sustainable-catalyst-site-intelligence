@@ -1,0 +1,19 @@
+# Development override; requires Docker Compose supporting !override.
+services:
+  site-intelligence:
+    container_name: sc-site-intelligence-dev
+    env_file: !override [.env.dev]
+    volumes: !override [site-intelligence-dev-data:/app/data]
+    mem_limit: 512m
+    networks:
+      wordpress-dev:
+        aliases: [sc-dev-site-api]
+      sc-internal:
+        aliases: [sc-site-intelligence]
+volumes:
+  site-intelligence-dev-data:
+
+networks:
+  wordpress-dev:
+    external: true
+    name: ${SC_DEV_WP_NETWORK:?Set the existing private WordPress development network}
