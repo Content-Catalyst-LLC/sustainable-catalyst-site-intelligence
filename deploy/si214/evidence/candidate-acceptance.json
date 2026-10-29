@@ -1,0 +1,279 @@
+{
+  "release": "SI-2.1.4",
+  "image": "sha256:39f53215867c34880d1c5b9e36508112c7571d55116cf79de9d7e7e10edfb842",
+  "health": {
+    "status": 200,
+    "payload": {
+      "ok": true,
+      "alive": true,
+      "state": "alive",
+      "scope": "process-only",
+      "dependency_readiness_asserted": false,
+      "readiness_route": "/ready",
+      "capability_health_route": "/public/capability-health",
+      "service": "Sustainable Catalyst Site Intelligence",
+      "version": "4.56.1",
+      "environment": "development",
+      "demo_mode": false,
+      "ga4_enabled": false,
+      "time": "2026-10-29T06:58:27.512794+00:00"
+    }
+  },
+  "domains": {
+    "economics": {
+      "status": 206,
+      "ok": true,
+      "data_state": "partial-records",
+      "dependency_state": "source-fallback",
+      "record_count": 2,
+      "context_resolution": {
+        "requested": "KEN",
+        "iso3": "KEN",
+        "iso2": "KE",
+        "name": "Kenya",
+        "resolved": true,
+        "attempted": [
+          "KEN"
+        ],
+        "matched": "KEN"
+      },
+      "source": "world-bank",
+      "source_states": null
+    },
+    "law": {
+      "status": 200,
+      "ok": true,
+      "data_state": "no-records",
+      "dependency_state": "connected",
+      "record_count": 0,
+      "context_resolution": {
+        "requested": "KEN",
+        "iso3": "KEN",
+        "iso2": "KE",
+        "name": "Kenya",
+        "resolved": true,
+        "attempted": [
+          "KEN",
+          "KE",
+          "Kenya"
+        ],
+        "matched": null
+      },
+      "source": null,
+      "source_states": null
+    },
+    "science": {
+      "status": 200,
+      "ok": true,
+      "data_state": "no-records",
+      "dependency_state": "connected",
+      "record_count": 0,
+      "context_resolution": {
+        "requested": "KEN",
+        "iso3": "KEN",
+        "iso2": "KE",
+        "name": "Kenya",
+        "resolved": true,
+        "context_mode": "metadata-query",
+        "attempted": [
+          "Kenya"
+        ],
+        "matched": "Kenya"
+      },
+      "source": null,
+      "source_states": null
+    },
+    "humanitarian": {
+      "status": 206,
+      "ok": true,
+      "data_state": "partial-no-records",
+      "dependency_state": "partial-live",
+      "record_count": 0,
+      "context_resolution": {
+        "requested": "KEN",
+        "iso3": "KEN",
+        "iso2": "KE",
+        "name": "Kenya",
+        "resolved": true,
+        "attempted": [
+          "KEN",
+          "KE"
+        ],
+        "matched": null
+      },
+      "source": null,
+      "source_states": {
+        "live": "connected",
+        "law": "connected",
+        "economics": "connected",
+        "events:usgs": "live",
+        "events:nasa-eonet": "live",
+        "events:reliefweb": "configuration-required"
+      }
+    },
+    "resources": {
+      "status": 200,
+      "ok": true,
+      "data_state": "no-records",
+      "dependency_state": "connected",
+      "record_count": 0,
+      "context_resolution": {
+        "requested": "KEN",
+        "iso3": "KEN",
+        "iso2": "KE",
+        "name": "Kenya",
+        "resolved": true,
+        "attempted": [
+          "KEN",
+          "KE"
+        ],
+        "matched": null
+      },
+      "source": null,
+      "source_states": null
+    },
+    "dossiers": {
+      "status": 206,
+      "ok": true,
+      "data_state": "partial-records",
+      "dependency_state": "degraded",
+      "record_count": 11,
+      "context_resolution": {
+        "requested": "KEN",
+        "iso3": "KEN",
+        "iso2": "KE",
+        "name": "Kenya",
+        "resolved": true,
+        "attempted": [
+          "KEN"
+        ],
+        "matched": "KEN"
+      },
+      "source": null,
+      "source_states": null
+    }
+  },
+  "readiness": {
+    "status": 200,
+    "ready": true,
+    "state": "domain-partial",
+    "required_dependencies": {
+      "platform_core": {
+        "ok": true,
+        "state": "connected",
+        "configured": true,
+        "detail": "Platform Core health probe succeeded."
+      }
+    }
+  },
+  "capability_health": {
+    "status": 200,
+    "overall_state": "degraded",
+    "capabilities": [
+      {
+        "capability": "economics",
+        "data_state": "partial-records",
+        "record_count": 5,
+        "http_status_if_requested": 206,
+        "source_attribution": []
+      },
+      {
+        "capability": "law",
+        "data_state": "no-records",
+        "record_count": 0,
+        "http_status_if_requested": 200,
+        "source_attribution": []
+      },
+      {
+        "capability": "science",
+        "data_state": "no-records",
+        "record_count": 0,
+        "http_status_if_requested": 200,
+        "source_attribution": []
+      },
+      {
+        "capability": "humanitarian",
+        "data_state": "partial-no-records",
+        "record_count": 0,
+        "http_status_if_requested": 206,
+        "source_attribution": [
+          {
+            "source": "live",
+            "state": "connected"
+          },
+          {
+            "source": "law",
+            "state": "connected"
+          },
+          {
+            "source": "economics",
+            "state": "connected"
+          }
+        ]
+      },
+      {
+        "capability": "resources",
+        "data_state": "no-records",
+        "record_count": 0,
+        "http_status_if_requested": 200,
+        "source_attribution": []
+      },
+      {
+        "capability": "dossiers",
+        "data_state": "partial-records",
+        "record_count": 11,
+        "http_status_if_requested": 206,
+        "source_attribution": [
+          {
+            "source": "baseline",
+            "state": "partial-live",
+            "record_count": 6
+          },
+          {
+            "source": "conditions",
+            "state": "connected",
+            "record_count": 0
+          },
+          {
+            "source": "economics",
+            "state": "source-fallback",
+            "record_count": 5
+          },
+          {
+            "source": "law",
+            "state": "connected",
+            "record_count": 0
+          },
+          {
+            "source": "science",
+            "state": "connected",
+            "record_count": 0
+          },
+          {
+            "source": "humanitarian",
+            "state": "partial-live",
+            "record_count": 0
+          },
+          {
+            "source": "resources",
+            "state": "connected",
+            "record_count": 0
+          }
+        ]
+      }
+    ]
+  },
+  "build_info": {
+    "git_commit": "7a15666cdd1f8152272f74dd69427d810a215e3d",
+    "version": "4.56.1",
+    "release_id": "SI-2.1.4"
+  },
+  "credential_checks": {
+    "SC_SI_PLATFORM_CORE_WRITE_API_KEY": true,
+    "SC_SI_PLATFORM_CORE_PUBLIC_API_KEY": true,
+    "SC_SI_GOOGLE_APPLICATION_CREDENTIALS_JSON": true,
+    "SC_SI_GOOGLE_APPLICATION_CREDENTIALS_FILE": true
+  },
+  "loopback_only": true,
+  "synthetic_production_auth_boundary": "PASS"
+}

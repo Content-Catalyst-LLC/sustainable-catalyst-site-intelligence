@@ -1,0 +1,38 @@
+{
+  "scope": "metadata only; no file bodies or credentials",
+  "production_execution": "NOT_AUTHORIZED",
+  "files": [
+    {
+      "path": "/app/backend/data/live_intelligence_analytics_state_v372.json",
+      "bytes_at_inspection": 2729
+    },
+    {
+      "path": "/app/backend/data/live_intelligence_last_known_good_v361.json",
+      "bytes_at_inspection": 135399
+    },
+    {
+      "path": "/app/backend/data/live_intelligence_rotation_state_v371.json",
+      "bytes_at_inspection": 346028
+    },
+    {
+      "path": "/app/backend/data/platform_core_queue.jsonl",
+      "bytes_at_inspection": 17586720
+    },
+    {
+      "path": "/app/data/live_intelligence_source_operations_history_v320.jsonl",
+      "bytes_at_inspection": 5092294
+    },
+    {
+      "path": "/app/data/country_last_known_good.json",
+      "bytes_at_inspection": 1789248
+    },
+    {
+      "path": "/app/data/live_intelligence_source_operations_state_v320.json",
+      "bytes_at_inspection": 3404
+    }
+  ],
+  "total_bytes": 24955822,
+  "state_writers_byte_identical": true,
+  "consistent_snapshot_verified": false,
+  "pi_live_state_backup_verified": false
+}
