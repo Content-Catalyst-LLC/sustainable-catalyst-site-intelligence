@@ -11,3 +11,8 @@ LABEL org.opencontainers.image.version="SI-2.1.4" \
 ENV SC_SI_GIT_COMMIT=${SOURCE_COMMIT} SC_SI_RELEASE_ID=SI-2.1.4
 COPY backend/app/ /app/app/
 COPY backend/data/ /app/data/
+
+# Narrow recovery correction; other static assets retain the pinned runtime base.
+COPY backend/public_app/index.html /app/public_app/index.html
+COPY backend/public_app/assets/bootstrap-v32361.js /app/public_app/assets/bootstrap-v32361.js
+COPY backend/public_app/assets/startup-stability-v32364.js /app/public_app/assets/startup-stability-v32364.js

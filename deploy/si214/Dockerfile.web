@@ -1,0 +1,8 @@
+# Existing immutable frontend base; no package install or unrelated assets.
+ARG RUNTIME_BASE
+FROM ${RUNTIME_BASE}
+ARG SOURCE_COMMIT
+LABEL org.opencontainers.image.version="SI-2.1.4" org.opencontainers.image.revision="${SOURCE_COMMIT}"
+COPY web/app/index.html /usr/share/nginx/html/app/index.html
+COPY web/app/assets/bootstrap-v32361.js /usr/share/nginx/html/app/assets/bootstrap-v32361.js
+COPY web/app/assets/startup-stability-v32364.js /usr/share/nginx/html/app/assets/startup-stability-v32364.js
