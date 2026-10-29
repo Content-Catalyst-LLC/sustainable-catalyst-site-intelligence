@@ -1,5 +1,7 @@
 # SI-2.1.4 — Recovery certification and deployment approval
 
+> Current deployment attempt: owner authorization received; BLOCKED on administrator execution access before any mutation. See DEPLOYMENT-STATUS.md. Earlier approval-pending text below is historical and superseded.
+
 **Recovery gate PASS. Production deployment NOT AUTHORIZED.** Application source remains `7a15666cdd1f8152272f74dd69427d810a215e3d`; no new numbered build or image replacement.
 
 ## Executed maintenance
