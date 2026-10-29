@@ -252,7 +252,7 @@ def test_capability_registry_owns_predictive_routes() -> None:
     manifest = capability_manifest(app.routes)
     family = next(row for row in manifest["capabilities"] if row["capability_id"] == "predictive-spatial-intelligence")
     assert manifest["registry_version"] == "2.8.0"
-    assert manifest["route_count"] == 1525
+    assert manifest["route_count"] == 1530
     assert manifest["modularized_route_count"] == 216
     assert manifest["capability_count"] == 33
     assert manifest["unclassified_route_count"] == 0

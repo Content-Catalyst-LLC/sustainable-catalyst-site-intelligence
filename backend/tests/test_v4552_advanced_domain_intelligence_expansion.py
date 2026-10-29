@@ -73,7 +73,7 @@ def test_research_packets_are_content_addressed_and_no_auto_delivery():
 def test_21_new_modular_routes_and_inventory():
     m = capability_manifest(app.routes)
     assert m["registry_version"] == "2.8.0"
-    assert m["route_count"] == 1525
+    assert m["route_count"] == 1530
     assert m["modularized_route_count"] == 216
     assert m["capability_count"] == 33
     assert m["unclassified_route_count"] == 0
