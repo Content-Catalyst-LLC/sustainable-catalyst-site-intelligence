@@ -1,6 +1,6 @@
 # SI-2.1.4 — Consolidated release and deployment preparation
 
-2026-10-29, America/Chicago. **BLOCKED for production execution.** Application source candidate is consolidated and running in Pi development. Production Site Intelligence has not been deployed or restarted. No new numbered release was introduced.
+2026-10-29, America/Chicago. **Recovery gate PASS; production execution awaits separate approval and explicit acceptance of 356 historical failures.** Application source candidate is consolidated and running in Pi development. Original production Site Intelligence was gracefully restarted only for the authorized recovery window; no candidate was deployed. No new numbered release was introduced.
 
 ## Verified candidate
 
@@ -15,7 +15,7 @@
 
 Full command: `python -m pytest -q backend/tests tests`. Candidate: **1,746 passed, 356 failed**. Untouched af0562bf baseline: **1,720 passed, 368 failed**. Failure-ID comparison: **12 resolved, zero newly failing IDs, 356 confirmed pre-existing failures**, detailed in regression-comparison.json/candidate-failures.json. These include obsolete release identity/packaging and older asset/contract assertions; no blanket version rewrite or silent exclusion. Do not describe the full suite as green. Initial collection failed because runtime lacked httpx; pinned test-only dependency corrected the isolated test environment. Runtime requirements were not upgraded.
 
-New operational proxy/snapshot guards: **9 tests passed** (narrow patch/inverse, duplicate/wrong/multiple-upstream refusal, snapshot completeness/hash/scope/symlink handling). Production Compose rendered successfully with `--no-env-resolution`; real environment values were not emitted. Operational shell commands, actual writer pause and private-state restore have NOT been executed/tested against production.
+New operational proxy/snapshot guards: **9 tests passed** (narrow patch/inverse, duplicate/wrong/multiple-upstream refusal, snapshot completeness/hash/scope/symlink handling). Production Compose rendered successfully with `--no-env-resolution`; real environment values were not emitted. Authorized production drain/snapshot/resume and isolated actual-state Pi restoration now passed; see RECOVERY-CERTIFICATION.md. No proxy switch or candidate production deployment executed.
 
 Pi live candidate: `/health` 200; `/ready` 200 with **domain-partial**, Core connected. Kenya probes:
 
@@ -38,30 +38,15 @@ The Pi now holds `/mnt/catalyst-ssd/backups/site-intelligence/SI-2.1.4/immutable
 
 Development uses .env.dev, no production Google/write credentials, loopback and existing Core-read overrides. Production proposal extends the EXISTING production Compose, reuses its protected env/credential paths, and uses a separate service/project/loopback port plus persistent state directories. It never deploys Pi overrides. No database, DNS, package, PHP/PostgreSQL/Docker or unrelated service change is included. Frontend unchanged: no web-image replacement needed.
 
-## Precise remaining blocker and corrective action
+## Recovery gate closed; separate deployment approval required
 
-Seven production runtime files remain in the old backend's unpersisted writable layer, totalling **24,955,822 bytes (23.80 MiB)** at read-only inspection. Paths: analytics/cache/rotation/Core queue under `/app/backend/data`, and operations history/state/country cache under `/app/data`. `state-scope.json` lists exact paths and sizes without record bodies. The 17.6 MB Core queue and history must not be assumed disposable cache. Checksums/stat metadata are not a consistent snapshot. **No live state or mounted Google credentials have been copied.**
+See RECOVERY-CERTIFICATION.md and recovery-certification.json for actual snapshot, Pi integrity/restore, unchanged configuration/protected services and limitations. The seven files are preserved; original SI resumed. Production baseline readiness remains HTTP 503 domain-degraded. No image, proxy or authentication change occurred.
 
-All six writer/parser modules match byte-for-byte between the deployed backend and candidate; no state-format migration introduced. However, actual state snapshot, protected Pi recovery and isolated stateful rollback/restore remain unverified. A straight `compose up` recreation is unsafe and MUST NOT be used. The original container/image/data must remain intact.
-
-An owned isolated Pi container verified the graceful-drain method: disable its automatic restart, send SIGTERM to the single app.main:app Uvicorn process, wait for container exit and require the shutdown-complete log marker. It completed in 1.226 seconds, exit 143, with no force-kill; the container was removed. This is not a production timing guarantee.
-
-Corrective action requires an explicitly authorized SI-only writer-quiescence/maintenance window and scope for these seven files: gracefully drain/stop only the old SI application, verify in-flight writes are complete, preserve an immutable local snapshot and a protected Pi copy with hashes, and verify isolated restoration without production credentials, egress or queue replay. Seed candidate directories with candidate static references, overlay only the seven authorized runtime files, and mount the same persisted runtime directories for candidate and rollback. Do not copy old static manifests over the corrected candidate registry; directory mounts must support atomic file replacement. Retain all snapshots; no overwrite/delete of the original layer.
-
-A backup permission/maintenance scope has not been supplied. No writer was paused. Do not synthesize the required state-receipt fields or claim that existing image recovery certifies live state. The initial receipt is deliberately expired/false and refuses execution. The separately authorized quiescence commands are:
-
-```bash
-# ONLY after approval of the SI-only window; not executed on production.
-docker update --restart=no sc-site-intelligence
-docker exec -i sc-site-intelligence python - --execute --approved-window APPROVED_WINDOW_ID < quiesce_uvicorn.py
-docker wait sc-site-intelligence
-```
-
-Verify the shutdown-complete marker and expected graceful exit, with no forced kill, before capturing state. If draining exceeds the approved window, abort snapshot/cutover and recover service under the approved procedure; do not kill writers or certify a partial snapshot. Record the original restart policy, leave the frozen original stopped to avoid dual writers, and restore that policy/start it only when aborting before any candidate writes. After candidate writes, use the old-image/shared-state rollback service instead. Primary recovery-key custody is already confirmed; no new custody/storage architecture approval cycle is requested. Pi is the designated recovery environment.
+Because writers resumed, future deployment MUST capture a fresh frozen snapshot and copy the latest seven files to new active directories; the certified archive is a recovery checkpoint, not permission to discard subsequent writes. Keep static candidate references in app-data, and overlay only authorized runtime files. Require owner deployment approval, accepted historical-test risk, administrator proxy access and target readiness before switching. On any pre-cutover failure, restore original restart policy/start/health; after candidate writes, preserve shared state and use old-image rollback.
 
 ## Exact guarded target commands — NOT APPROVAL TO EXECUTE
 
-Staging directory: `/home/catalystadmin/si-2.1.4-release`. After actual state recovery and approval are evidenced, install the supplied deployment-plan.json and approved state-receipt.json there. Review script hashes/authority independently; JSON flags alone are not proof of human approval. State receipt must bind source, expiry, original container, complete immutable snapshot paths/checksums, protected Pi archive/restore, writer quiescence and rollback compatibility. Global operations/config changes must be frozen for the narrow switch.
+Staging directory: `/home/catalystadmin/si-2.1.4-release`. After separate deployment approval, fresh writer quiescence and active-state seeding are evidenced, install the supplied deployment-plan.json and approved state-receipt.json there. Review script hashes/authority independently; JSON flags alone are not proof of human approval. State receipt must bind source, expiry, original container, complete immutable snapshot paths/checksums, protected Pi archive/restore, writer quiescence and rollback compatibility. Global operations/config changes must be frozen for the narrow switch.
 
 ```bash
 cd /home/catalystadmin/si-2.1.4-release
@@ -73,7 +58,7 @@ python3 guarded_proxy_switch.py --plan deployment-plan.json --receipt state-rece
  sudo python3 guarded_proxy_switch.py --plan deployment-plan.json --receipt state-receipt.json --direction deploy --execute
 ```
 
-The guard checks exact host/images/source/target health/readiness, no previous active writer, immutable snapshot hashes and baseline Caddy hash. Only the API block changes 8091→18091, validated then replaced atomically with a Caddy reload. No whole-file old backup is blindly restored over other projects. A consistent state capture may require a short SI API interruption; zero downtime is NOT promised and duration is unmeasured. Do not leave the service stopped if the owner-approved procedure aborts; use the approved rollback that preserves current state. No final deployment approval is requested while this gate is open.
+The guard checks exact host/images/source/target health/readiness, no previous active writer, immutable snapshot hashes and baseline Caddy hash. Only the API block changes 8091→18091, validated then replaced atomically with a Caddy reload. No whole-file old backup is blindly restored over other projects. A consistent state capture may require a short SI API interruption; zero downtime is NOT promised and duration is unmeasured. Do not leave the service stopped if the owner-approved procedure aborts; use the approved rollback that preserves current state. Recovery gate is closed; separate deployment approval and explicit historical-test risk acceptance are now requested. A new consistent cutover snapshot is still mandatory because production has resumed.
 
 Rollback AFTER a completed switch: first gracefully quiesce only the candidate using the separately approved drain procedure; verify it is stopped and preserve all new writes in the shared state directory. Do not restart the frozen original container against stale private state. With the independently verified shared-state format and receipt, the old image runs against the same persisted data:
 
@@ -89,6 +74,6 @@ Record the successful deployment guard's `proxy_after_sha256` in the approved re
 
 ## Protected-service evidence and final decision
 
-Both production SI containers retain their original IDs/images/start times; Caddy hash unchanged. Pi protected services unchanged. One exception prevents a blanket claim about the wider production window: `sc-lab` has the same container/image but a changed start time (02:54→08:21 UTC); it is healthy, restart count 0, OOM false, no retained event explaining cause. This workflow issued no Lab mutation command. Cause is not established; record/reconcile that operations event rather than asserting all unrelated start times stayed identical. No Lab diagnostic logs or data copied.
+Recovery certification passed; exact maintenance receipt and final public checks are retained. Original SI container/image/authentication and Caddy preserved. All unrelated containers retained IDs/images/start times during this maintenance. The separate Lab health watchdog has no SI dependency; earlier restart trigger remains unattributed. No production candidate deployment or public candidate acceptance is claimed.
 
-**BLOCKED**: live-state preservation/restore and approved writer-quiescence gate remains open; unrelated Lab restart attribution is unresolved. Release/source/native images and guarded commands are prepared. All pre-existing test failures are explicitly retained; no new failed IDs. No production cutover or production acceptance claimed. After approved execution, verify public app/API, process/readiness, Core and all six domain truth/record/source states, auth negatives/positives and unchanged unrelated services before reporting deployment success.
+**BLOCKED for production execution pending owner deployment approval, explicit acceptance/remediation of the 356 historical failures, and authorized administrator availability for the guarded proxy switch.** Fresh capture/state seeding are required operations inside that later approved deployment window. No technical recovery artifact remains missing. Verify public app/API, readiness, Core, six domain classifications/source/record availability and auth boundaries after approved cutover; abort to shared-state rollback on failed acceptance.
