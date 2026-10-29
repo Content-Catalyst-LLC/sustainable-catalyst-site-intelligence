@@ -1,5 +1,7 @@
 # SI-2.1.4 — Consolidated release and deployment preparation
 
+> Final disposition supersedes earlier status: BLOCKED on RISK-01, startup recovery release mismatch confirmed in pinned image. Owner authorization retained. See HISTORICAL-FAILURE-DISPOSITION.md and ADMINISTRATOR-EXECUTION-SHEET.md. No deployment permitted while this mandatory condition fails.
+
 > Current deployment attempt: owner authorization received; BLOCKED on administrator execution access before any mutation. See DEPLOYMENT-STATUS.md. Earlier approval-pending text below is historical and superseded.
 
 2026-10-29, America/Chicago. **Recovery gate PASS; production execution awaits separate approval and explicit acceptance of 356 historical failures.** Application source candidate is consolidated and running in Pi development. Original production Site Intelligence was gracefully restarted only for the authorized recovery window; no candidate was deployed. No new numbered release was introduced.

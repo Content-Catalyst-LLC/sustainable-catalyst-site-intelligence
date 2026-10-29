@@ -1,20 +1,13 @@
-# SI-2.1.4 — Controlled deployment attempt
+# SI-2.1.4 — Final deployment unblocking result
 
-**BLOCKED before production mutation.** Owner deployment authorization and conditional historical-test exception are recorded. Do not request that authorization again.
+**BLOCKED — RISK-01, confirmed critical startup-recovery defect in approved pinned image.**
 
-Pinned AMD64 candidate `sha256:69591b22b5d0a3514ee4c0922f5518cc8031b65734f0d6e969e96519c4f667eb`, source `7a15666cdd1f8152272f74dd69427d810a215e3d`, and old image `sha256:89195c76cf1788b98b59b1fad669cd2c507f1d8459b9b2f967782a6cb918c207` verified on vmi3544820. Original SI ID/image/running state and baseline Caddy hash verified unchanged.
+The full 356-ID disposition is complete: all356 also fail in untouched baseline; zero new failing IDs; 12 baseline failures resolved. Historical origin does not waive a defect. Both recovery scripts in approved AMD64 image hardcode release4.39.0 while its app DOM declares4.56.1. They return before installing recovery timers. A focused, network-free exact-source probe with main app.js unavailable leaves current-release app hidden; matching-release control reveals it. Actual pinned-image script hashes match the probe. This fails the owner's no-known-critical-recovery-defect condition.
 
-The preflight command `sudo -n -l` returned `sudo: a password is required`. The guarded switch requires root and the audit account cannot execute it unattended. No attempt was made to bypass host permissions using Docker. No writer was paused, fresh state copied, candidate started, Caddy changed or unrelated service operated in this attempt. Earlier certified recovery assets remain intact.
+No application fix, new build, image rebuild, writer pause, fresh state capture, proxy cutover, deployment or PR merge was performed. Existing certified backup/restore evidence remains intact. A disposable read-only network-none metadata inspection container was removed.
 
-Resume with an authorized Contabo administrator available for both switch and inverse rollback. At the coordinated cutover checkpoint, AFTER fresh frozen snapshot/Pi verification, state seeding, candidate readiness/authentication/integrity and routing checks and a genuine current deployment receipt, the reviewed administrator operation is:
+Required technical correction: current-release-safe startup recovery binding plus normal/failure-path verification in affected packaging and reviewed artifact provenance. No such correction/rebuild is authorized in this task, so the pinned artifact remains NO-GO. Administrator credentials cannot clear this defect.
 
-```bash
-cd /home/catalystadmin/si-2.1.4-release
-sudo python3 guarded_proxy_switch.py --plan deployment-plan.json --receipt state-receipt.json --direction deploy --execute
-```
+Secondary dependency: administrator must authenticate interactively on Contabo for guarded Caddy deployment/inverse. Prior sudo preflight required password; no newly verified administrator availability. Exact commands and ordered checkpoints are in ADMINISTRATOR-EXECUTION-SHEET.md. They remain on HOLD. Existing owner deployment authorization is retained; no renewal requested.
 
-This command is not ready to run now. The blocked receipt deliberately remains expired; do not substitute the earlier recovery-only receipt. Existing RELEASE-REPORT.md contains the pinned start and shared-state rollback sequence. Do not grant unrestricted passwordless sudo or transmit passwords through chat. An administrator may execute the reviewed commands interactively at the coordinated checkpoints.
-
-The historical exception is conditional. Zero new failing IDs remains verified by prior comparison; the suite is not green. A message-based triage of the 356 retained failures identified diagnostic/packaging and bridge exceptions that still require contextual assessment before certifying no critical security, authentication, integrity or recovery defect among them. This triage is not proof of a critical defect and is not a completed exception-safety assessment. No broad tests were repeated.
-
-Final result: **BLOCKED**, not deployed and not rolled back (no cutover occurred).
+Evidence: HISTORICAL-FAILURE-DISPOSITION.md; complete JSON/CSV356-row matrix; startup-critical-disposition-probe.json; pinned-image-startup-readback.json; historical-diagnostic-source-review.json; disposition-input-checksums.json.
