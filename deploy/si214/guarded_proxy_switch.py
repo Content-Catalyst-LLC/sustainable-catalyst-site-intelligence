@@ -12,12 +12,19 @@ def require(ok,why):
     if not ok:raise ValueError(why)
 
 
-def patch(text,old,new):
-    pattern=r'(?m)^site-intelligence-api\.sustainablecatalyst\.com\s*\{\n([^{}]*)\n\}'
+def patch_host(text,host,old,new):
+    pattern=r'(?m)^'+re.escape(host)+r'\s*\{\n([^{}]*)\n\}'
     matches=list(re.finditer(pattern,text));require(len(matches)==1,'unique simple SI API block required')
     m=matches[0];body=m.group();needle='reverse_proxy 127.0.0.1:'+str(old)
     require(len(re.findall(r'(?m)^[ \t]*reverse_proxy[ \t]+127\.0\.0\.1:'+re.escape(str(old))+r'[ \t]*$',body))==1 and len(re.findall(r'\breverse_proxy\b',body))==1,'unexpected SI upstream')
     return text[:m.start()]+body.replace(needle,'reverse_proxy 127.0.0.1:'+str(new),1)+text[m.end():]
+
+
+def patch(text,old,new):
+    return patch_host(text,'site-intelligence-api.sustainablecatalyst.com',old,new)
+
+def patch_frontend(text,old,new):
+    return patch_host(text,'intelligence.sustainablecatalyst.com',old,new)
 
 
 STATE_PATHS = {
@@ -70,8 +77,21 @@ def main():
     if deploy:
         with urllib.request.urlopen(f'http://127.0.0.1:{port}/ready',timeout=90) as f:require(f.status==200 and json.load(f).get('ready') is True,'target readiness failed')
         with urllib.request.urlopen(f'http://127.0.0.1:{port}/public/build-info',timeout=8) as f:require(json.load(f)['git_commit']==p['source_commit'],'target source mismatch')
+    if p.get('frontend_candidate_image'):
+        front='sc-site-intelligence-web-si214' if deploy else 'sc-site-intelligence-web'
+        fd=json.loads(subprocess.check_output(['docker','inspect',front],text=True))[0]
+        require(fd['State']['Running'] and fd['Image']==p['frontend_candidate_image' if deploy else 'frontend_rollback_image'],'frontend image not verified')
+        if not deploy:require(fd['Id']==p['frontend_old_container_id'],'original frontend identity changed')
+        frontport=18096 if deploy else 8096
+        with urllib.request.urlopen(f'http://127.0.0.1:{frontport}/healthz',timeout=8) as f:require(f.status==200,'frontend health failed')
+        if deploy:
+            for name,digest in p['frontend_assets_sha256'].items():
+                require(name in {'index.html','assets/bootstrap-v32361.js','assets/startup-stability-v32364.js'},'unexpected frontend asset scope')
+                with urllib.request.urlopen(f'http://127.0.0.1:{frontport}/app/{name}',timeout=8) as f:require(sha(f.read())==digest,'frontend recovery asset mismatch')
     config=Path('/etc/caddy/Caddyfile');old=config.read_bytes();expected=p['proxy_before_sha256'] if deploy else r['proxy_after_sha256'];require(sha(old)==expected,'concurrent proxy/config drift')
-    new=patch(old.decode(),8091 if deploy else 18091,18091 if deploy else 8091).encode()
+    newtext=patch(old.decode(),8091 if deploy else 18091,18091 if deploy else 8091)
+    if p.get('frontend_candidate_image'):newtext=patch_frontend(newtext,8096 if deploy else 18096,18096 if deploy else 8096)
+    new=newtext.encode()
     if not a.execute:
         print(json.dumps({'result':'DRY_RUN_ONLY','before_sha256':sha(old),'after_sha256':sha(new),'direction':a.direction}));return
     require(os.geteuid()==0,'authorized administrator required for proxy execution')

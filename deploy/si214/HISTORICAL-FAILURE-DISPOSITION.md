@@ -1,5 +1,7 @@
 # SI-2.1.4 — Complete historical-failure disposition
 
+> Correction closure (2026-10-30): RISK-01 is CLOSED for source01ea3645 and corrected images in CORRECTED-RELEASE-REPORT.md. Original356-row analysis below is historical; corrected run retains355 failed IDs with zero new failures. Do not deploy old69591b22 candidate.
+
 **BLOCKED — RISK-01: current-release startup recovery is nonfunctional on main-script failure.** No rebuild, code correction, new image, deployment or repeat recovery certification performed. Owner's exception excludes known critical recovery defects; it cannot cover this finding.
 
 ## Complete comparison and scope

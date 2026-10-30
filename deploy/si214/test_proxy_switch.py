@@ -31,3 +31,15 @@ class SnapshotGuards(unittest.TestCase):
   p=self.root/next(iter(self.expected));p.unlink();p.symlink_to('/etc/hosts')
   with self.assertRaises(ValueError):m.verify_snapshot(self.root,self.expected)
 if __name__=='__main__':unittest.main()
+
+
+def test_corrected_frontend_patch_and_inverse_preserve_other_hosts():
+    text="intelligence.sustainablecatalyst.com {\n reverse_proxy 127.0.0.1:8096\n}\nworkspace.sustainablecatalyst.com {\n reverse_proxy 127.0.0.1:8088\n}\n"
+    new=m.patch_frontend(text,8096,18096)
+    assert "127.0.0.1:8088" in new
+    assert m.patch_frontend(new,18096,8096)==text
+
+
+def test_corrected_frontend_wrong_upstream_refuses():
+    import pytest
+    with pytest.raises(ValueError):m.patch_frontend("intelligence.sustainablecatalyst.com {\n reverse_proxy 127.0.0.1:8097\n}\n",8096,18096)

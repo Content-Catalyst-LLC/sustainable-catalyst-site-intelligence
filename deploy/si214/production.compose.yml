@@ -24,6 +24,15 @@ services:
     container_name: sc-site-intelligence-si214-rollback
     profiles: [rollback]
     ports: !override ["127.0.0.1:8091:8091"]
+  site-intelligence-web-si214:
+    extends:
+      file: /opt/sustainable-catalyst/site-intelligence-web/compose.yml
+      service: site-intelligence-web
+    build: !reset null
+    image: ${SI214_WEB_IMAGE:?Verified corrected frontend image required}
+    container_name: sc-site-intelligence-web-si214
+    profiles: [candidate]
+    ports: !override ["127.0.0.1:18096:80"]
 networks:
   sc-internal:
     external: true

@@ -1,0 +1,22 @@
+{
+  "source_commit": "01ea3645617b38857f1316495f7dd0c77054a73d",
+  "checks": {
+    "backend": {
+      "health": 200,
+      "source": "01ea3645617b38857f1316495f7dd0c77054a73d",
+      "missing_auth": 401,
+      "wrong_auth": 401,
+      "valid_synthetic_auth": 200,
+      "unconfigured_readiness": 503,
+      "three_packaged_assets_exact": true
+    },
+    "frontend": {
+      "healthz": 200,
+      "three_packaged_assets_exact": true
+    }
+  },
+  "administrator_available": false,
+  "production_services_and_caddy_unchanged": true,
+  "containers_removed": true,
+  "production_deployed": false
+}

@@ -1,83 +1,70 @@
-# SI-2.1.4 — Consolidated release and deployment preparation
+# SI-2.1.4 — Corrected recovery candidate and deployment readiness
 
-> Final disposition supersedes earlier status: BLOCKED on RISK-01, startup recovery release mismatch confirmed in pinned image. Owner authorization retained. See HISTORICAL-FAILURE-DISPOSITION.md and ADMINISTRATOR-EXECUTION-SHEET.md. No deployment permitted while this mandatory condition fails.
+2026-10-30, America/Chicago. **Corrective release gate PASSED; deployment execution BLOCKED on interactive administrator availability.** No production image replacement, writer pause, fresh capture, Caddy change or merge occurred. No SI-2.1.5 introduced. Existing owner authorization retained.
 
-> Current deployment attempt: owner authorization received; BLOCKED on administrator execution access before any mutation. See DEPLOYMENT-STATUS.md. Earlier approval-pending text below is historical and superseded.
+## Exact artifacts
 
-2026-10-29, America/Chicago. **Recovery gate PASS; production execution awaits separate approval and explicit acceptance of 356 historical failures.** Application source candidate is consolidated and running in Pi development. Original production Site Intelligence was gracefully restarted only for the authorized recovery window; no candidate was deployed. No new numbered release was introduced.
+Application source: `01ea3645617b38857f1316495f7dd0c77054a73d`. Canonical application metadata remains `backend/app/version.py` APP_VERSION **4.56.1**, release ID **SI-2.1.4**. Source archive `SI-2.1.4-corrected-source.zip`, SHA-256 `e3ff478e066ba92c7c132a5a69b4ba153588ece5c2488414fd53b2a4257029e7`.
 
-## Verified candidate
+| Artifact | Corrected AMD64 image ID | Retained rollback image ID |
+|---|---|---|
+| Backend | `sha256:13290390307cf61e07217c942eabb649626a6127387ba781443726b6dae2ad5d` | `sha256:89195c76cf1788b98b59b1fad669cd2c507f1d8459b9b2f967782a6cb918c207` |
+| Standalone frontend | `sha256:13ba5b9fed664562765058da0e5ad1c20cf85fa3e3f6ec20faa42616709fcc43` | `sha256:3fd9e3aa84b189887c5d3a44509e5d3085301a51cf8f87ad4b39a48e9669feb9` |
 
-- Source commit `7a15666cdd1f8152272f74dd69427d810a215e3d`; package SHA-256 `a63f172784f1208d1d021c68d6ab33ab81668deadc2e822672e35b798431f816`. SI-2.1.1–SI-2.1.4 application corrections are consolidated under release ID SI-2.1.4, retaining application/schema version 4.56.1.
-- ARM64 image `sha256:39f53215867c34880d1c5b9e36508112c7571d55116cf79de9d7e7e10edfb842` runs as `sc-site-intelligence-dev` on Pi loopback 8091. Three original Compose files are byte-unchanged, including `compose.pi-core-read.yml`; original data mount preserved. All protected Pi containers retained IDs/images/start times.
-- Native AMD64 candidate `sha256:69591b22b5d0a3514ee4c0922f5518cc8031b65734f0d6e969e96519c4f667eb` built from pinned production runtime base, without package upgrades, secrets or live state. Isolated native smoke verified 351 static source/reference files, liveness, exact source/release ID, missing/invalid token 401, synthetic valid token 200 and truthful unconfigured-Core readiness 503. Temporary native test container removed. This is not public production acceptance.
-- Route inventory: 1,530 unique registrations, 33 capabilities, 216 modular routes, zero unclassified. The five `/v1/energy-spatial` routes were introduced in tracked commit `c6712618` before the stale assertions. Their existing infrastructure-energy ownership and public read-only/request-local POST contract are unchanged. All 12 count assertions plus registry reconciled; no extra routes/security exposure added.
-- Route-exposure audit covers all 1,530 registrations: 331 production-token dependencies, 128 handler-level auth hints and 1,071 with no token guard detected by static dependency/handler inspection. Static classification is not a proof of every handler; the deployed require_token AST matches the candidate and native auth negatives/positives passed. No auth registrations changed in SI-2.1.4.
-- Economics: deterministic tests preserve legitimate World Bank fallback 206 and invalid/unavailable dependency 503; failed dependencies are never relabelled healthy. Source-attribution metadata remains bounded; direct fallback identifies World Bank. No data fabricated.
+Both images built sequentially on Contabo from existing immutable bases, network-disabled build, no package install/upgrade or credentials. Only the affected SI artifacts were rebuilt. Backend retains accepted app/data source from the previous candidate and overlays exactly the corrected index and two scripts. Frontend overlays exactly its index and two scripts; nginx config, other assets and runtime base preserved. Previous candidates, original images and original production containers retained. Pi development service was not replaced; no ARM production image used.
 
-## Actual test evidence — no exclusions
+## RISK-01 correction and limits
 
-Full command: `python -m pytest -q backend/tests tests`. Candidate: **1,746 passed, 356 failed**. Untouched af0562bf baseline: **1,720 passed, 368 failed**. Failure-ID comparison: **12 resolved, zero newly failing IDs, 356 confirmed pre-existing failures**, detailed in regression-comparison.json/candidate-failures.json. These include obsolete release identity/packaging and older asset/contract assertions; no blanket version rewrite or silent exclusion. Do not describe the full suite as green. Initial collection failed because runtime lacked httpx; pinned test-only dependency corrected the isolated test environment. Runtime requirements were not upgraded.
+Both `bootstrap-v32361.js` and `startup-stability-v32364.js`, in backend/public_app and web/app, now use release4.56.1 pinned to canonical APP_VERSION with permanent alignment assertions. Their exact DOM-version checks remain: a mismatched version returns without installing recovery handlers/timers. No unconditional recovery bypass. Standalone page's erroneous4.56.2 root marker is aligned with4.56.1; only the two recovery script query keys are changed for cache refresh. Other static version strings were not bulk-rewritten.
 
-New operational proxy/snapshot guards: **9 tests passed** (narrow patch/inverse, duplicate/wrong/multiple-upstream refusal, snapshot completeness/hash/scope/symlink handling). Production Compose rendered successfully with `--no-env-resolution`; real environment values were not emitted. Authorized production drain/snapshot/resume and isolated actual-state Pi restoration now passed; see RECOVERY-CERTIFICATION.md. No proxy switch or candidate production deployment executed.
+On failed primary loading/execution, existing recovery timers reveal the shell and add one accessible alert with a retry button. It explicitly warns that research data and authenticated actions may be unavailable. The explicit retry reloads only after a user click/keyboard activation; normal initialization neither adds the alert nor automatically reloads. Auth/authorization, APIs, source attribution, state formats and persistence code unchanged. Application controls requiring failed primary JavaScript are not represented as working; the usable fallback action is retry, not fabricated research functionality.
 
-Pi live candidate: `/health` 200; `/ready` 200 with **domain-partial**, Core connected. Kenya probes:
+## Actually executed verification
 
-| Domain | HTTP | Actual classification / records |
-|---|---:|---|
-| Economics | 206 | World Bank source-fallback, 2 records |
-| Law | 200 | Connected, 0 records |
-| Science | 200 | Connected, 0 records |
-| Humanitarian | 206 | Partial-live, 0 records; ReliefWeb configuration required |
-| Resources | 200 | Connected, 0 records |
-| Dossiers | 206 | Partial records, 11 evidence records |
+- Permanent behavioral tests: **10 passed, 0 failed, 0 skipped**, executed on Pi Node. Covers both asset trees, metadata compatibility, mismatched-release rejection, primary load failure, primary execution exception, actual finishLaunch normal event path, visible limited shell, single retry control and explicit retry activation. Source: `tests/js/test_si214_recovery.cjs`.
+- Real Chrome local browser fixtures: **6/6 passed** (backend/frontend × normal/load failure/execution failure). Normal pages reach visible `ready` with no fallback notice. Both faults reach visible `limited` with one retry notice. Backend retry keyboard activation demonstrably reloads the document; server fixture events retained. CSP prevents external connections; upstream503 fixtures truthfully label unavailable test services. This is not real-account production acceptance. Headless Chromium launch was blocked by the local sandbox; tests were completed through the existing Chrome connector instead, with no security setting changes. Screenshot: corrected-recovery-browser.png.
+- Full unexcluded `python -m pytest -q backend/tests tests`: corrected **1,747 passed / 355 failed**, previous candidate **1,746 / 356**, untouched baseline **1,720 / 368**. **Zero new failing IDs** against either comparison. The formerly failing PWA diagnostic now passes; **13 baseline failures resolved**. No failure is silently excluded or labelled safe solely by age. Complete355-ID set and resolved IDs are recoverable from corrected-regression.xml/comparison and prior356-row disposition.
+- Operational safeguards after SI-frontend extension: **11 passed**. Existing snapshot/hash/symlink and narrow API inverse guards plus frontend narrow/inverse/unrelated-host/wrong-upstream guards. Three production Compose services explicitly rendered with candidate/rollback profiles; loopback ports18091,18096,8091 verified. An initial unprofiled render omitted services; it was not accepted as service validation.
+- Native isolated backend: health200; exact source; missing/wrong token401; valid synthetic token200; unconfigured-Core readiness503 remains truthful; three packaged assets match corrected source hashes. Native isolated frontend: healthz200 and exact corrected packaged asset hashes. Owned verifier containers removed. No production credentials, data or external networks used.
+- All production service IDs/images/start times and Caddy hash unchanged during native verification. Existing administrator preflight still fails without interactive authentication. Earlier live-state recovery certification remains PASS and was not repeated. Pi kernel warned that requested container memory limits are unsupported; limits are NOT claimed enforced. Regression used one CPU/one concurrent test container and completed; no simultaneous Pi image builds.
 
-Counts are observed query results, not guaranteed future coverage. Empty connected queries are not unavailable; partial upstream coverage remains partial. Production access checks used only synthetic credentials in isolation. Pi Core write/public keys and Google credential settings are empty; development API token differs from production (ephemeral HMAC comparison, no token/digest retained). Pi and Contabo remain separate; no ARM64 image deployed to AMD64 production.
+Known-critical disposition: **RISK-01 CLOSED for these corrected artifacts**, on behavior plus actual-image hash evidence. Prior security-assurance `ROOT` diagnostic exception, CSS budget overrun and science/WP mirror drift remain real disclosed noncritical limitations as analysed in HISTORICAL-FAILURE-DISPOSITION.md; no universal security certificate or full green suite is claimed. No known remaining critical auth, state-integrity or recovery defect identified within the reviewed scope. The355 historical exceptions remain conditional on actual production acceptance; abort on new security/data impact.
 
-## Production mechanism, rollback assets and differences
+## Recovery artifacts and current production
 
-Existing backend: `sc-site-intelligence`, image `sha256:89195c76cf1788b98b59b1fad669cd2c507f1d8459b9b2f967782a6cb918c207`, production Compose `/opt/sustainable-catalyst/site-intelligence/compose.yml`, loopback 8091. Existing frontend: `sc-site-intelligence-web`, image `sha256:3fd9e3aa84b189887c5d3a44509e5d3085301a51cf8f87ad4b39a48e9669feb9`, loopback 8096. Public API `site-intelligence-api.sustainablecatalyst.com` proxies 8091; public app `intelligence.sustainablecatalyst.com` proxies 8096. Existing API reports 4.56.1 and unavailable Git revision; host checkout is d370a3b5. Do not equate that checkout with every deployed byte. Rollback is pinned to the actual running image, not an inferred source checkout.
+Corrected images preserved on designated Pi SSD in `/mnt/catalyst-ssd/backups/site-intelligence/SI-2.1.4/corrected-images-01ea3645.tar`: **103,002,112 bytes**, SHA-256 **cf63cc5d56213e1cb2f022ad2acb22492c35df0503482caefd962c409b229c66**. Relay/Pi hashes, OCI descriptors, Docker load and exact AMD64 IDs verified; images not executed on ARM. Previous image archive and seven-file actual-state checkpoint remain intact. No secrets/mounted credentials/live state included in new image archive.
 
-The Pi now holds `/mnt/catalyst-ssd/backups/site-intelligence/SI-2.1.4/immutable-images.tar`: **102,929,920 bytes**, SHA-256 `46c67d321e08041b85f978a35b36522fd45c3fffd7538ee5c86fda62469ed2cb`. It contains old backend, unchanged frontend and candidate AMD64 images. Relay/destination SHA matched; OCI descriptors verified; Pi Docker image load and all three image IDs/architectures verified. Images were not executed on ARM64. Mounted credentials and writable layers are absent. Initial archive verification assumed legacy config IDs; corrected OCI descriptor handling passed. This certifies immutable image recovery only.
+Production remains original backend89195c76 and frontend3fd9e3aa, original Caddy routing8091/8096. Latest isolated acceptance records Caddy and all service starts unchanged, not a claim that corrected candidate is publicly deployed. Original public readiness baseline was503 domain-degraded. A new503 is not automatically a product failure if truthful, but no newly degraded domain is accepted. The prepared switch guard still requires candidate ready200/ready=true; if it refuses, stop instead of bypassing it.
 
-Development uses .env.dev, no production Google/write credentials, loopback and existing Core-read overrides. Production proposal extends the EXISTING production Compose, reuses its protected env/credential paths, and uses a separate service/project/loopback port plus persistent state directories. It never deploys Pi overrides. No database, DNS, package, PHP/PostgreSQL/Docker or unrelated service change is included. Frontend unchanged: no web-image replacement needed.
+## Exact deployment sequence — not yet executed
 
-## Recovery gate closed; separate deployment approval required
+Staged tools: `/home/catalystadmin/si-2.1.4-release/correction-01ea3645`. Administrator must be available in their own interactive Contabo terminal for switch AND inverse before writers are paused. No password is requested or captured. **Stop here until available.** The existing deployment authorization does not create sudo privileges.
 
-See RECOVERY-CERTIFICATION.md and recovery-certification.json for actual snapshot, Pi integrity/restore, unchanged configuration/protected services and limitations. The seven files are preserved; original SI resumed. Production baseline readiness remains HTTP 503 domain-degraded. No image, proxy or authentication change occurred.
-
-Because writers resumed, future deployment MUST capture a fresh frozen snapshot and copy the latest seven files to new active directories; the certified archive is a recovery checkpoint, not permission to discard subsequent writes. Keep static candidate references in app-data, and overlay only authorized runtime files. Require owner deployment approval, accepted historical-test risk, administrator proxy access and target readiness before switching. On any pre-cutover failure, restore original restart policy/start/health; after candidate writes, preserve shared state and use old-image rollback.
-
-## Exact guarded target commands — NOT APPROVAL TO EXECUTE
-
-Staging directory: `/home/catalystadmin/si-2.1.4-release`. After separate deployment approval, fresh writer quiescence and active-state seeding are evidenced, install the supplied deployment-plan.json and approved state-receipt.json there. Review script hashes/authority independently; JSON flags alone are not proof of human approval. State receipt must bind source, expiry, original container, complete immutable snapshot paths/checksums, protected Pi archive/restore, writer quiescence and rollback compatibility. Global operations/config changes must be frozen for the narrow switch.
+Then: fresh SI-only graceful drain → frozen seven-file snapshot → source/relay/Pi hash+metadata verification → seed candidate static app-data and overlay only fresh runtime files into shared app-data/backend-data → authenticate/verify candidate and all six truthful domains → guarded atomic SI API+frontend proxy switch → public/auth/data acceptance → shared-state rollback on failure. The original frontend remains running on8096 throughout; no restart required. Fresh state receipt required because production resumed after earlier backup. Do not fill flags to bypass actual work.
 
 ```bash
-cd /home/catalystadmin/si-2.1.4-release
-export SI214_IMAGE=sha256:69591b22b5d0a3514ee4c0922f5518cc8031b65734f0d6e969e96519c4f667eb
+cd /home/catalystadmin/si-2.1.4-release/correction-01ea3645
+export SI214_IMAGE=sha256:13290390307cf61e07217c942eabb649626a6127387ba781443726b6dae2ad5d
+export SI214_WEB_IMAGE=sha256:13ba5b9fed664562765058da0e5ad1c20cf85fa3e3f6ec20faa42616709fcc43
 export SI214_STATE=/home/catalystadmin/si-2.1.4-release/state/active
-# Old SI must already be safely quiesced; the receipt/paths must be real and verified.
-python3 guarded_proxy_switch.py --plan deployment-plan.json --receipt state-receipt.json --direction deploy --check-state-only &&
- docker compose -p site-intelligence-si214 -f production.compose.yml up -d --no-deps --no-build --wait --wait-timeout 120 site-intelligence-si214 &&
- sudo python3 guarded_proxy_switch.py --plan deployment-plan.json --receipt state-receipt.json --direction deploy --execute
+# Run ONLY after fresh snapshot, Pi verification, state seeding and real current receipt.
+python3 guarded_proxy_switch.py --plan corrected-deployment-plan.json --receipt corrected-state-receipt.json --direction deploy --check-state-only &&
+ docker compose -p site-intelligence-si214 -f production.compose.yml up -d --no-deps --no-build --wait --wait-timeout 120 site-intelligence-si214 site-intelligence-web-si214
+# Candidate auth/data/domain/routing verification checkpoint; only then authorized administrator:
+sudo python3 guarded_proxy_switch.py --plan corrected-deployment-plan.json --receipt corrected-state-receipt.json --direction deploy --execute
 ```
 
-The guard checks exact host/images/source/target health/readiness, no previous active writer, immutable snapshot hashes and baseline Caddy hash. Only the API block changes 8091→18091, validated then replaced atomically with a Caddy reload. No whole-file old backup is blindly restored over other projects. A consistent state capture may require a short SI API interruption; zero downtime is NOT promised and duration is unmeasured. Do not leave the service stopped if the owner-approved procedure aborts; use the approved rollback that preserves current state. Recovery gate is closed; separate deployment approval and explicit historical-test risk acceptance are now requested. A new consistent cutover snapshot is still mandatory because production has resumed.
+The updated guard verifies corrected frontend image, health and exact three recovery asset hashes. It atomically patches ONLY API8091→18091 and SI frontend8096→18096 in the same validated Caddy update. It preserves all unrelated blocks; administrator Caddy validation/reload remains mandatory. Record `proxy_after_sha256` in the actual receipt. Expired BLOCKED receipt remains unusable; owner authorization is not falsely represented as a fresh snapshot verification.
 
-Rollback AFTER a completed switch: first gracefully quiesce only the candidate using the separately approved drain procedure; verify it is stopped and preserve all new writes in the shared state directory. Do not restart the frozen original container against stale private state. With the independently verified shared-state format and receipt, the old image runs against the same persisted data:
+Rollback after any candidate writes: gracefully drain only corrected backend, retain new writes in the same active dirs, verify no SI dual writer, launch old backend image against shared state, verify old backend/auth/state and original frontend; inverse both SI routes. Never restart stale original layer over candidate writes.
 
 ```bash
-cd /home/catalystadmin/si-2.1.4-release
-# Set the same SI214_IMAGE/SI214_STATE values above; candidate must already be safely stopped.
-python3 guarded_proxy_switch.py --plan deployment-plan.json --receipt state-receipt.json --direction rollback --check-state-only &&
+# Same directory and exported variables. Candidate already safely quiesced.
+python3 guarded_proxy_switch.py --plan corrected-deployment-plan.json --receipt corrected-state-receipt.json --direction rollback --check-state-only &&
  docker compose -p site-intelligence-si214 -f production.compose.yml up -d --no-deps --no-build --wait --wait-timeout 120 site-intelligence-si214-rollback &&
- sudo python3 guarded_proxy_switch.py --plan deployment-plan.json --receipt state-receipt.json --direction rollback --execute
+ sudo python3 guarded_proxy_switch.py --plan corrected-deployment-plan.json --receipt corrected-state-receipt.json --direction rollback --execute
 ```
 
-Record the successful deployment guard's `proxy_after_sha256` in the approved receipt before rollback. The inverse changes only 18091→8091. If deployment aborted BEFORE the proxy switch, the API block already targets 8091: start the approved old-image rollback service on 8091, verify it and do not call an inverse for a switch that never happened. Any unexpected image/config/schema/hash, missing backup, concurrent writer or failed readiness aborts. Preserve snapshots and original stopped container; no destructive database downgrade, original data overwrite or unrelated restart.
+If proxy never switched, leave existing routes alone; start shared-state old backend on8091 and keep original frontend8096. Before any candidate has run/written, abort by restoring original restart policy and starting untouched original SI. Do not pause/restart Lab, Core, Workspace, Library, WordPress or any other service. No PR merge. Any missing recovery file, hash/auth failure, new domain degradation, proxy drift or unrelated impact aborts/rolls back. Administrator sheet lists exact sudo checkpoints.
 
-## Protected-service evidence and final decision
-
-Recovery certification passed; exact maintenance receipt and final public checks are retained. Original SI container/image/authentication and Caddy preserved. All unrelated containers retained IDs/images/start times during this maintenance. The separate Lab health watchdog has no SI dependency; earlier restart trigger remains unattributed. No production candidate deployment or public candidate acceptance is claimed.
-
-**BLOCKED for production execution pending owner deployment approval, explicit acceptance/remediation of the 356 historical failures, and authorized administrator availability for the guarded proxy switch.** Fresh capture/state seeding are required operations inside that later approved deployment window. No technical recovery artifact remains missing. Verify public app/API, readiness, Core, six domain classifications/source/record availability and auth boundaries after approved cutover; abort to shared-state rollback on failed acceptance.
+**Final readiness: corrected candidate technically verified; controlled production execution BLOCKED solely on authorized interactive administrator availability and the consequent unexecuted fresh cutover checkpoints.** No deployment timestamp exists because no deployment occurred.

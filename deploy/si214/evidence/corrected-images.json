@@ -1,0 +1,19 @@
+{
+  "source_commit": "01ea3645617b38857f1316495f7dd0c77054a73d",
+  "production_services_changed": false,
+  "package_installations": false,
+  "images": {
+    "backend": {
+      "image": "sha256:13290390307cf61e07217c942eabb649626a6127387ba781443726b6dae2ad5d",
+      "base": "sha256:89195c76cf1788b98b59b1fad669cd2c507f1d8459b9b2f967782a6cb918c207",
+      "tag": "sc-site-intelligence:si-2.1.4-recovery-amd64",
+      "architecture": "amd64"
+    },
+    "frontend": {
+      "image": "sha256:13ba5b9fed664562765058da0e5ad1c20cf85fa3e3f6ec20faa42616709fcc43",
+      "base": "sha256:3fd9e3aa84b189887c5d3a44509e5d3085301a51cf8f87ad4b39a48e9669feb9",
+      "tag": "sc-site-intelligence-web:si-2.1.4-recovery-amd64",
+      "architecture": "amd64"
+    }
+  }
+}

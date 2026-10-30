@@ -1,9 +1,17 @@
 {
   "release": "SI-2.1.4",
   "hostname": "vmi3544820",
-  "source_commit": "7a15666cdd1f8152272f74dd69427d810a215e3d",
-  "candidate_image": "sha256:69591b22b5d0a3514ee4c0922f5518cc8031b65734f0d6e969e96519c4f667eb",
+  "source_commit": "01ea3645617b38857f1316495f7dd0c77054a73d",
+  "candidate_image": "sha256:13290390307cf61e07217c942eabb649626a6127387ba781443726b6dae2ad5d",
   "rollback_image": "sha256:89195c76cf1788b98b59b1fad669cd2c507f1d8459b9b2f967782a6cb918c207",
   "old_container_id": "04b224cb2b38ca6ae28c3efb791807570aab622f1ea43724e5f1cca8f4f62a5d",
-  "proxy_before_sha256": "3d5202c2b6a3ae0859db31e05a34cbdb77380243984bb626da73765fb58b7b8c"
+  "proxy_before_sha256": "3d5202c2b6a3ae0859db31e05a34cbdb77380243984bb626da73765fb58b7b8c",
+  "frontend_candidate_image": "sha256:13ba5b9fed664562765058da0e5ad1c20cf85fa3e3f6ec20faa42616709fcc43",
+  "frontend_rollback_image": "sha256:3fd9e3aa84b189887c5d3a44509e5d3085301a51cf8f87ad4b39a48e9669feb9",
+  "frontend_old_container_id": "52adde09e28474bc48ac7e4edc995b695e5f7d7197cc9facb45581bf12195039",
+  "frontend_assets_sha256": {
+    "index.html": "0f9f6412a9a3d2023c9681ecbef1b3d408278a8f8d8f711afe9735048efc83b7",
+    "assets/bootstrap-v32361.js": "99cf5af312b7d98cb671c5258a111ae98b7e9c4443b1bac8eb3f00773a7c233a",
+    "assets/startup-stability-v32364.js": "799896b71e6476320ebcf8a419fb70b488bf25878e0c578bb53e89a81204d036"
+  }
 }
