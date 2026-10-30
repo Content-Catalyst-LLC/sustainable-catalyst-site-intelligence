@@ -1,0 +1,75 @@
+{
+  "events": [
+    {
+      "variant": "backend",
+      "mode": "load-failure",
+      "index_requested_at": "2026-10-30T05:38:22.386Z"
+    },
+    {
+      "variant": "backend",
+      "mode": "load-failure",
+      "primary_fault": true
+    },
+    {
+      "variant": "backend",
+      "mode": "load-failure",
+      "index_requested_at": "2026-10-30T05:38:39.295Z"
+    },
+    {
+      "variant": "backend",
+      "mode": "load-failure",
+      "primary_fault": true
+    },
+    {
+      "variant": "backend",
+      "mode": "execution-failure",
+      "index_requested_at": "2026-10-30T05:38:43.084Z"
+    },
+    {
+      "variant": "backend",
+      "mode": "execution-failure",
+      "primary_fault": true
+    },
+    {
+      "variant": "frontend",
+      "mode": "load-failure",
+      "index_requested_at": "2026-10-30T05:38:45.169Z"
+    },
+    {
+      "variant": "frontend",
+      "mode": "load-failure",
+      "primary_fault": true
+    },
+    {
+      "variant": "frontend",
+      "mode": "execution-failure",
+      "index_requested_at": "2026-10-30T05:38:47.040Z"
+    },
+    {
+      "variant": "frontend",
+      "mode": "execution-failure",
+      "primary_fault": true
+    },
+    {
+      "variant": "backend",
+      "mode": "normal",
+      "index_requested_at": "2026-10-30T05:38:58.981Z"
+    },
+    {
+      "variant": "frontend",
+      "mode": "normal",
+      "index_requested_at": "2026-10-30T05:39:00.642Z"
+    },
+    {
+      "variant": "frontend",
+      "mode": "execution-failure",
+      "index_requested_at": "2026-10-30T05:41:00.588Z"
+    },
+    {
+      "variant": "frontend",
+      "mode": "execution-failure",
+      "primary_fault": true
+    }
+  ],
+  "external_connections": "Denied by fixture CSP; no production data/authentication used"
+}

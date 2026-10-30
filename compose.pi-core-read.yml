@@ -1,0 +1,9 @@
+services:
+  site-intelligence:
+    environment:
+      SC_SI_PLATFORM_CORE_ENABLED: "true"
+      SC_SI_PLATFORM_CORE_INTERNAL_READS: "true"
+      SC_SI_PLATFORM_CORE_URL: "http://sc-core:8090"
+      SC_SI_PLATFORM_CORE_WRITE_API_KEY: ""
+      SC_SI_PLATFORM_CORE_PUBLIC_API_KEY: ""
+      SC_SI_GLOBAL_CONDITIONS_ENABLED: "true"

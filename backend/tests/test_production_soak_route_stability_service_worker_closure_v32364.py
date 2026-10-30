@@ -40,7 +40,8 @@ def test_service_worker_has_closed_update_lifecycle():
     assert 'SC_SI_GET_LIFECYCLE' in worker
     assert 'automaticReloads:0' in bootstrap
     assert 'activateWaitingWorker' in bootstrap
-    assert 'location.reload()' not in bootstrap.replace("retry()?.addEventListener('click',()=>location.reload(),{once:true});", "")
+    # Both callbacks require a user click; executable tests also assert zero normal-path reloads.
+    assert 'location.reload()' not in bootstrap.replace("retry()?.addEventListener('click',()=>location.reload(),{once:true});", "").replace("retry.addEventListener('click',()=>location.reload());", "")
 
 def test_wordpress_complete_application_is_eager_and_high_priority():
     php = read("wordpress-plugin/sustainable-catalyst-site-intelligence/sustainable-catalyst-site-intelligence.php")

@@ -1,0 +1,52 @@
+{
+  "release": "SI-2.1.4",
+  "status": "BLOCKED",
+  "source_commit": "7a15666cdd1f8152272f74dd69427d810a215e3d",
+  "application_version": "4.56.1",
+  "source_sha256": "a63f172784f1208d1d021c68d6ab33ab81668deadc2e822672e35b798431f816",
+  "arm64_image": "sha256:39f53215867c34880d1c5b9e36508112c7571d55116cf79de9d7e7e10edfb842",
+  "amd64_image": "sha256:69591b22b5d0a3514ee4c0922f5518cc8031b65734f0d6e969e96519c4f667eb",
+  "rollback_backend_image": "sha256:89195c76cf1788b98b59b1fad669cd2c507f1d8459b9b2f967782a6cb918c207",
+  "frontend_unchanged_image": "sha256:3fd9e3aa84b189887c5d3a44509e5d3085301a51cf8f87ad4b39a48e9669feb9",
+  "pi_image_archive_sha256": "46c67d321e08041b85f978a35b36522fd45c3fffd7538ee5c86fda62469ed2cb",
+  "tests": {
+    "candidate_passed": 1746,
+    "candidate_pre_existing_failed": 356,
+    "baseline_failed": 368,
+    "new_failed_ids": 0,
+    "resolved_failed_ids": 12,
+    "excluded_tests": 0,
+    "operational_guard_tests_passed": 9
+  },
+  "development_activated": true,
+  "production_deployed": false,
+  "blockers": [
+    "Authorized consistent live-state preservation and isolated Pi restore",
+    "SI-only writer-quiescence approval and verified graceful drain procedure",
+    "Unrelated Lab restart cause not established"
+  ],
+  "files": {
+    "SI-2.1.4-source.zip": "a63f172784f1208d1d021c68d6ab33ab81668deadc2e822672e35b798431f816",
+    "production.compose.yml": "851df7f15b9249260a1589f316554875d1b2c36d3b8779796fef0ac09201b225",
+    "guarded_proxy_switch.py": "6072dda70d3ff2560d92586a244ae99544cfd3f2115dd6f059fae563c9f390a2",
+    "test_proxy_switch.py": "b10fe008c4e267a05ea25d9c0bd80141e82dd6b2420d04a151f3dd4acf09b730",
+    "deployment-plan.json": "0094776afd2aec482a3e5ba9ac7dcc6bbb0c81570bf6b003796a541866753415",
+    "state-receipt.BLOCKED.json": "b327bb80dea5adf99394e01bed67a9ff563b4bfae5d5e40a1b6662e12bdad08f",
+    "state-scope.json": "930e3fa85ec1ef443f0c3034e2dfed33d0e2971f9747645e0a536451f49be257",
+    "RELEASE-REPORT.md": "8e99adb6ae9b5625aa7e1ebdb9570326f26f3b4a4a066c21859f9f180f9b4cf9",
+    "candidate-build.json": "112150877bb07abb11af22817a040e5377b584f9b861960ded283c3b3829be14",
+    "native-candidate.json": "c748ed2347472442ec1ba1617a7df973a78c37a4118ee97109453402f391455c",
+    "candidate-acceptance.json": "fb372b59a5fc541b66521e4018a71095c1bec96d3baf0167dbd7185300e952b5",
+    "development-activation.json": "d5b40541d025aaed442f649532f9c450a1e27acd158d0ba5a6789e83284bed12",
+    "route-reconciliation.json": "e4372e5fc6477c23e395145b8948d6067e6852e55f5689c70ca39f51d9d40124",
+    "regression-comparison.json": "9a2cac3e7f095d069ece3f4b0dc7846fe5995623e758c9beb02a97bab54cbd67",
+    "proxy-guard-tests.log": "1f2801b3086751a86a6949e3420c06927764dbfbf39d084e580f7a9409e9f92d",
+    "pi-image-recovery.json": "03a32008ad3949e0949ca546d0e87afbf935e9637fdf1ab34a722c00e45943e2",
+    "credential-boundary-check.json": "76e27babc51780a508c0d9e4886586c062851b8161fc0b768557cf2e2ce4f998",
+    "state-writer-source-comparison.json": "1a7d37c07b5566f8ea161b054ee820194688c531aa33c0937369fbb4eb83ed36",
+    "unrelated-service-observation.json": "0cb4f518f844e3312a8b105a4e4063077d7e5fdad20f3a51a1157edfa4811a1c",
+    "route-exposure-audit.json": "e1541cb2055fe646bc9859d1c7446185744a2b8fb7153df7bececd1601fc6e95",
+    "graceful-drain-verification.json": "7318469b1eb6fdb38febff6d0a2c130e1e30ba77505a8ea567e5f17eb9998b9e",
+    "quiesce_uvicorn.py": "0723a5746f4e44c2426c9ff00248a51421f2cb999bdcb28176bdc23b5adcb44a"
+  }
+}

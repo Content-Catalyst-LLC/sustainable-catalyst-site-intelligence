@@ -1,0 +1,50 @@
+{
+  "experience": {
+    "false_checks": {
+      "budget_first_party_css_bytes": false
+    },
+    "file_sizes": {
+      "application_html_bytes": 163365,
+      "first_party_javascript_bytes": 227407,
+      "first_party_css_bytes": 102785,
+      "first_party_shell_bytes": 493557
+    },
+    "budgets": {
+      "first_party_javascript_bytes": 260000,
+      "first_party_css_bytes": 102000,
+      "application_html_bytes": 172000,
+      "first_party_shell_bytes": 500000
+    }
+  },
+  "launch": {
+    "false_checks": {
+      "readme_launch_route": false
+    },
+    "file_sizes": null,
+    "budgets": null
+  },
+  "offline": {
+    "false_checks": {
+      "frontend_version_aligned": false
+    },
+    "file_sizes": null,
+    "budgets": null
+  },
+  "performance": {
+    "false_checks": {
+      "first_party_css_bytes": false
+    },
+    "file_sizes": {
+      "application_html_bytes": 163365,
+      "first_party_javascript_bytes": 227407,
+      "first_party_css_bytes": 102785,
+      "first_party_shell_bytes": 493557
+    },
+    "budgets": {
+      "first_party_javascript_bytes": 260000,
+      "first_party_css_bytes": 102000,
+      "application_html_bytes": 172000,
+      "first_party_shell_bytes": 500000
+    }
+  }
+}

@@ -1,15 +1,23 @@
 (()=>{
   'use strict';
-  const VERSION='4.39.0';
+  // Pinned to backend/app/version.py APP_VERSION; regression enforces release compatibility.
+  const VERSION='4.56.1';
   const ROOT_SELECTOR=`#app[data-scsi-release="${VERSION}"]`;
   const root=()=>document.querySelector(ROOT_SELECTOR),launch=()=>document.querySelector('#launchScreen'),message=()=>document.querySelector('#launchMessage'),progress=()=>document.querySelector('#launchProgressBar'),retry=()=>document.querySelector('#launchRetry');
   const state={version:VERSION,startedAt:performance.now(),ready:false,limited:false,workerState:'not-started',controllerAtStart:Boolean(navigator.serviceWorker?.controller),reloadScheduled:false,automaticReloads:0};
   let deadlineTimer=0,workerPromise=null;
   function announce(text,percent){if(message())message().textContent=text;if(progress()&&Number.isFinite(percent))progress().style.width=`${Math.max(0,Math.min(100,percent))}%`}
   function publish(){window.dispatchEvent(new CustomEvent('scsi:bootstrap-state',{detail:{version:VERSION,state:state.ready?(state.limited?'limited':'ready'):'starting',workerState:state.workerState,automaticReloads:state.automaticReloads}}))}
+  function recoveryNotice(app){
+    if(!app||document.querySelector('#scsiStartupRecoveryNotice'))return;
+    const notice=document.createElement('section');notice.id='scsiStartupRecoveryNotice';notice.setAttribute('role','alert');
+    const text=document.createElement('p');text.textContent='Application startup did not complete. The interface is in recovery mode; research data and authenticated actions may be unavailable. Retry the application.';
+    const retry=document.createElement('button');retry.type='button';retry.textContent='Retry application';retry.addEventListener('click',()=>location.reload());
+    notice.append(text,retry);app.prepend(notice);
+  }
   function reveal(mode='ready',text='Site Intelligence is ready.'){
     if(state.ready)return;state.ready=true;state.limited=mode!=='ready';clearTimeout(deadlineTimer);
-    const app=root();if(app){app.classList.remove('app-loading');app.classList.add('app-ready');app.dataset.startupState=mode;app.removeAttribute('aria-busy')}
+    const app=root();if(mode==='limited')recoveryNotice(app);if(app){app.classList.remove('app-loading');app.classList.add('app-ready');app.dataset.startupState=mode;app.removeAttribute('aria-busy')}
     announce(text,100);const screen=launch();if(screen){screen.classList.add('hidden');screen.setAttribute('aria-hidden','true')}if(retry())retry().hidden=true;publish();window.parent?.postMessage({type:'scsi-bootstrap-ready',version:VERSION,state:mode},'*');
   }
   function failOpen(reason){console.warn('[Site Intelligence] Startup recovered in limited mode.',reason||'startup deadline');reveal('limited','Site Intelligence opened with limited services. Data workspaces recover independently.')}

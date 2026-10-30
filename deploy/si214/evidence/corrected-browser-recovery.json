@@ -1,0 +1,56 @@
+{
+  "source_commit": "01ea3645617b38857f1316495f7dd0c77054a73d",
+  "browser": "Existing Chrome extension-controlled tab",
+  "fixture": "Local static source, CSP blocks external connections; all upstream endpoints unavailable503",
+  "results": [
+    {
+      "variant": "backend",
+      "mode": "load-failure",
+      "noticeCount": 1,
+      "retryVisible": true,
+      "state": "limited",
+      "visibility": "visible"
+    },
+    {
+      "variant": "backend",
+      "mode": "execution-failure",
+      "noticeCount": 1,
+      "retryVisible": true,
+      "state": "limited",
+      "visibility": "visible"
+    },
+    {
+      "variant": "frontend",
+      "mode": "load-failure",
+      "noticeCount": 1,
+      "retryVisible": true,
+      "state": "limited",
+      "visibility": "visible"
+    },
+    {
+      "variant": "frontend",
+      "mode": "execution-failure",
+      "noticeCount": 1,
+      "retryVisible": true,
+      "state": "limited",
+      "visibility": "visible"
+    },
+    {
+      "variant": "backend",
+      "mode": "normal",
+      "noticeCount": 0,
+      "state": "ready",
+      "visibility": "visible"
+    },
+    {
+      "variant": "frontend",
+      "mode": "normal",
+      "noticeCount": 0,
+      "state": "ready",
+      "visibility": "visible"
+    }
+  ],
+  "passed": 6,
+  "failed": 0,
+  "backendRetryKeyboardReloadVerified": true
+}

@@ -1,0 +1,169 @@
+{
+  "window": "SI214-owner-authorized-recovery-only-2026-10-29",
+  "production_deployment_authorized": false,
+  "started_utc": "2026-10-29T17:43:32.495071+00:00",
+  "snapshot_root": "/home/catalystadmin/si-2.1.4-release/recovery-20261029T174332Z",
+  "files": [
+    {
+      "path": "/app/backend/data/live_intelligence_analytics_state_v372.json",
+      "bytes": 2774,
+      "sha256": "373d47d0cdda6d056a827ce6d845f93fdf20396a788109baef91c129f651c73d",
+      "uid": 0,
+      "gid": 0,
+      "mode": 420,
+      "mtime": 1793295358
+    },
+    {
+      "path": "/app/backend/data/live_intelligence_last_known_good_v361.json",
+      "bytes": 135356,
+      "sha256": "125addc6f1914180a535593fa21892d932e8aba54e00689bab036608efd6f2d7",
+      "uid": 0,
+      "gid": 0,
+      "mode": 420,
+      "mtime": 1793295356
+    },
+    {
+      "path": "/app/backend/data/live_intelligence_rotation_state_v371.json",
+      "bytes": 346028,
+      "sha256": "dc6fc02885a0553acd31968935ed0c16a40276ad9bb41f5783d2643f1802a154",
+      "uid": 0,
+      "gid": 0,
+      "mode": 420,
+      "mtime": 1793295356
+    },
+    {
+      "path": "/app/backend/data/platform_core_queue.jsonl",
+      "bytes": 18626343,
+      "sha256": "a11a29322477ad29ce54977ce0d0a3bd7297cc7e7b8d36d5f2ad1b9a02625f7c",
+      "uid": 0,
+      "gid": 0,
+      "mode": 420,
+      "mtime": 1793295816
+    },
+    {
+      "path": "/app/data/live_intelligence_source_operations_history_v320.jsonl",
+      "bytes": 5260690,
+      "sha256": "d224972ed0965f52950fa21ba6b94ee67af722c01415ba1e71124b44157ab885",
+      "uid": 0,
+      "gid": 0,
+      "mode": 420,
+      "mtime": 1793295356
+    },
+    {
+      "path": "/app/data/country_last_known_good.json",
+      "bytes": 1797671,
+      "sha256": "6a4f4b2a050b2c6429bce8be8d96ca204d6eed525acf4f4ee0830919ea2574ce",
+      "uid": 0,
+      "gid": 0,
+      "mode": 420,
+      "mtime": 1793295804
+    },
+    {
+      "path": "/app/data/live_intelligence_source_operations_state_v320.json",
+      "bytes": 3410,
+      "sha256": "5a5a922ef824daf1cc33dedcb3a6c2ede1da562cb6be55c030a6660efe77915b",
+      "uid": 0,
+      "gid": 0,
+      "mode": 420,
+      "mtime": 1793295356
+    }
+  ],
+  "health_before": {
+    "/health": {
+      "status": 200,
+      "state": "alive",
+      "ready": null
+    },
+    "/ready": {
+      "status": 503,
+      "state": "domain-degraded",
+      "ready": false
+    }
+  },
+  "caddy_sha256": "3d5202c2b6a3ae0859db31e05a34cbdb77380243984bb626da73765fb58b7b8c",
+  "lab_watchdog_sha256": "f6519d91ecd0af66dffc27cf20a4e1256e27cd266042d22cd9e1848890964682",
+  "lab_dependency": "Separate project, own-port healthcheck, watchdog targets only sc-lab; no declared lifecycle dependency",
+  "drain_preflight": {
+    "uvicorn_process_count": 1,
+    "signal_sent": false,
+    "force_kill": false,
+    "approved_window": null
+  },
+  "quiescence_requested_utc": "2026-10-29T17:43:36.971688+00:00",
+  "drain": {
+    "uvicorn_process_count": 1,
+    "signal_sent": true,
+    "force_kill": false,
+    "approved_window": "SI214-owner-authorized-recovery-only-2026-10-29"
+  },
+  "exit_code": 143,
+  "graceful_shutdown_complete": true,
+  "archive_sha256": "85a86dee9139004f497d5e91e606e62e8f61cf5c1fe164fde0c5f7dbccced59f",
+  "archive_bytes": 26183680,
+  "snapshot_complete_utc": "2026-10-29T17:43:44.148374+00:00",
+  "frozen_source_second_read_match": true,
+  "health_after": {
+    "/health": {
+      "status": 200,
+      "state": "alive",
+      "ready": null
+    },
+    "/ready": {
+      "status": 503,
+      "state": "domain-degraded",
+      "ready": false
+    }
+  },
+  "resumed_utc": "2026-10-29T17:43:55.286281+00:00",
+  "original_container_and_image_preserved": true,
+  "authentication_configuration_unchanged": true,
+  "caddy_unchanged": true,
+  "unrelated_services_unchanged": true,
+  "restart_policy_restored": true,
+  "pi_backup": {
+    "sha256": "85a86dee9139004f497d5e91e606e62e8f61cf5c1fe164fde0c5f7dbccced59f",
+    "bytes": 26183680,
+    "path": "/mnt/catalyst-ssd/backups/site-intelligence/SI-2.1.4/recovery-20261029T174332Z/live-state.tar",
+    "relay_sha256": "85a86dee9139004f497d5e91e606e62e8f61cf5c1fe164fde0c5f7dbccced59f",
+    "plaintext_written_to_mac": false
+  },
+  "restore": {
+    "archive_sha256": "85a86dee9139004f497d5e91e606e62e8f61cf5c1fe164fde0c5f7dbccced59f",
+    "checks": {
+      "candidate": {
+        "seven_files_exact": true,
+        "permissions_uid_gid_mtime_exact": true,
+        "json_jsonl_valid": true,
+        "jsonl_record_counts": {
+          "platform_core_queue.jsonl": 8148,
+          "live_intelligence_source_operations_history_v320.jsonl": 16868
+        },
+        "six_production_state_modules_identical": true,
+        "country_cache_load_without_error": true,
+        "reexport_checksum_and_metadata_match": true
+      },
+      "rollback_parser_compatible_arm": {
+        "seven_files_exact": true,
+        "permissions_uid_gid_mtime_exact": true,
+        "json_jsonl_valid": true,
+        "jsonl_record_counts": {
+          "platform_core_queue.jsonl": 8148,
+          "live_intelligence_source_operations_history_v320.jsonl": 16868
+        },
+        "six_production_state_modules_identical": true,
+        "country_cache_load_without_error": true,
+        "reexport_checksum_and_metadata_match": true
+      }
+    },
+    "production_credentials_used": false,
+    "network": "none",
+    "architecture_limit": "Actual amd64 production rollback image preserved and load-verified; execution here uses ARM images with six byte-identical state modules.",
+    "started_utc": "2026-10-29T17:45:05.424136+00:00",
+    "completed_utc": "2026-10-29T17:45:14.032964+00:00",
+    "result": "PASS_ISOLATED_FILE_RESTORATION_AND_COMPATIBLE_ROLLBACK_PARSERS",
+    "owned_containers_removed": true
+  },
+  "recovery_gate": "PASS",
+  "deployment_approval_record": null,
+  "deployment_authorized": false
+}
