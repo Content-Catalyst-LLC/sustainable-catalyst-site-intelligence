@@ -1,0 +1,39 @@
+{
+  "schema": "sc-policy-field-evidence-register/1.0",
+  "studies": [
+    {
+      "id": "IL-PNAS-2024",
+      "location": "Illinois, United States",
+      "material": "Crushed basalt, 50 t/ha/yr",
+      "period": "4-year maize–soybean field trial",
+      "endpoint": "Cation-loss-derived cumulative CO2 removal potential",
+      "result": "10.5 ± 3.8 t CO2/ha cumulative potential",
+      "interpretation_limit": "Potential from cations; not a measured Wexford net removal rate.",
+      "citation": "Beerling et al. (2024)",
+      "doi": "10.1073/pnas.2319436121"
+    },
+    {
+      "id": "MN-FRONTIERS-2025",
+      "location": "Minnesota, United States",
+      "material": "Steel slag and coarse crushed basalt",
+      "period": "3-year trial",
+      "endpoint": "Soil/porewater geochemical changes",
+      "result": "Slag signal in acidic soils; no significant basalt signal",
+      "interpretation_limit": "Not a numerical basalt CDR estimate; feedstock and soil strongly matter.",
+      "citation": "Maxbauer et al. (2025)",
+      "doi": "10.3389/fclim.2025.1657058"
+    },
+    {
+      "id": "IE-APGEO-2024",
+      "location": "Southeast Ireland",
+      "material": "Crushed returned concrete, 7.5 t/ha",
+      "period": "10-month pilot",
+      "endpoint": "Estimated gross bicarbonate-export CDR",
+      "result": "0–0.52 t CO2/ha gross (nitrate-dependent)",
+      "interpretation_limit": "Concrete ≠ basalt; site-specific gross estimate, not net Wexford basalt CDR.",
+      "citation": "Applied Geochemistry (2024)",
+      "doi": "10.1016/j.apgeochem.2024.106056"
+    }
+  ],
+  "cross_study_warning": "Different materials, exposure periods, sites, acidity and endpoints: do NOT pool these estimates or transfer a CDR coefficient to Wexford. Controlled experiments and independent MRV are required."
+}
