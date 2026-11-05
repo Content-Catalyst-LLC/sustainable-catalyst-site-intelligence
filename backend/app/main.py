@@ -11894,3 +11894,6 @@ app.include_router(energy_runtime_consumer_router)
 # Site Intelligence v4.41.0 — Spatial & Global Energy Intelligence.
 from .energy_spatial_global_v4410 import router as energy_spatial_global_router
 app.include_router(energy_spatial_global_router)
+
+from app.scientific_soil_screening import router as scientific_soil_screening_router
+app.include_router(scientific_soil_screening_router)
