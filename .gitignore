@@ -111,3 +111,9 @@ backend/data/live_intelligence_registry_governance_v3190/
 /upgrade_site_intelligence_*.sh
 /verify_site_intelligence_*.sh
 /*.py
+
+# Private development activation settings
+.env.dev
+
+# Permit only the credential-free development example
+!.env.dev.example
