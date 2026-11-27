@@ -3920,6 +3920,24 @@ final class SC_Site_Intelligence_Plugin {
         return '<a class="' . esc_attr($class) . '" href="' . $url . '" target="_blank" rel="noopener noreferrer">' . esc_html($label) . '</a>';
     }
 
+    /**
+     * SC-SEO-05 R1: HTTP status for a signal page whose context could not be loaded.
+     * The backend answered "no such signal" (404/410, or 2xx without a signal):
+     *   - 410 for content-addressed event clusters (event.sc:cluster:<hex>), which never return once expired;
+     *   - 404 for every other id (rolling slots such as events.natural-leading-wildfire can reappear).
+     * Any other failure (unreachable backend, timeout, 401/403, 5xx, missing configuration) stays 503.
+     */
+    private static function live_signal_unavailable_status($context, $signal_id) {
+        if (is_wp_error($context)) {
+            $data = $context->get_error_data();
+            $origin_status = is_array($data) ? (int) ($data['status'] ?? 0) : 0;
+            if (!in_array($origin_status, [404, 410], true)) {
+                return 503;
+            }
+        }
+        return preg_match('/^event\.sc:cluster:[0-9a-f]{16,64}$/', (string) $signal_id) === 1 ? 410 : 404;
+    }
+
     public function render_live_intelligence_signal_page() {
         $raw_signal_id = (string) get_query_var('scsi_live_signal');
         if ($raw_signal_id === '') {
@@ -3928,8 +3946,17 @@ final class SC_Site_Intelligence_Plugin {
         $signal_id = sanitize_text_field(rawurldecode($raw_signal_id));
         $context = $this->backend_request('public/live-intelligence/signals/' . rawurlencode($signal_id));
         if (is_wp_error($context) || !is_array($context) || empty($context['signal'])) {
-            status_header(503);
+            // SC-SEO-05 R1: a signal the backend no longer has is 410/404, not a server outage.
+            // 503 + Retry-After is reserved for transport/backend failures. No failure state is indexable.
+            $unavailable_status = self::live_signal_unavailable_status($context, $signal_id);
+            status_header($unavailable_status);
             nocache_headers();
+            if (!headers_sent()) {
+                header('X-Robots-Tag: noindex, nofollow', true);
+                if ($unavailable_status === 503) {
+                    header('Retry-After: 300', true);
+                }
+            }
             get_header();
             echo '<main id="primary" class="site-main scsi-live-signal-context"><article class="scsi-live-signal-context__panel"><p class="scsi-eyebrow">Live Intelligence</p><h1>Signal context temporarily unavailable</h1><p>The ticker signal is no longer in the current feed or the Site Intelligence backend could not be reached. The original source may still be available from the ticker after the feed refreshes.</p><p><a class="scsi-live-signal-button" href="' . esc_url(home_url('/')) . '">Return to Sustainable Catalyst</a></p></article></main>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             get_footer();
