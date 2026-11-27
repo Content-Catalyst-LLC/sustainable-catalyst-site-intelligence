@@ -1,0 +1,24 @@
+{
+  "sha256": "46c67d321e08041b85f978a35b36522fd45c3fffd7538ee5c86fda62469ed2cb",
+  "bytes": 102929920,
+  "partial_path": "/mnt/catalyst-ssd/backups/site-intelligence/SI-2.1.4/immutable-images.tar.partial",
+  "restored_image_metadata": [
+    {
+      "id": "sha256:89195c76cf1788b98b59b1fad669cd2c507f1d8459b9b2f967782a6cb918c207",
+      "architecture": "amd64"
+    },
+    {
+      "id": "sha256:3fd9e3aa84b189887c5d3a44509e5d3085301a51cf8f87ad4b39a48e9669feb9",
+      "architecture": "amd64"
+    },
+    {
+      "id": "sha256:69591b22b5d0a3514ee4c0922f5518cc8031b65734f0d6e969e96519c4f667eb",
+      "architecture": "amd64"
+    }
+  ],
+  "result": "PASS_IMAGE_ARCHIVE_LOAD",
+  "architecture_note": "AMD64 images stored/loaded only; not executed on Pi ARM64",
+  "private_runtime_or_mounted_data_copied": false,
+  "archive_path": "/mnt/catalyst-ssd/backups/site-intelligence/SI-2.1.4/immutable-images.tar",
+  "relay_sha256_matches": true
+}

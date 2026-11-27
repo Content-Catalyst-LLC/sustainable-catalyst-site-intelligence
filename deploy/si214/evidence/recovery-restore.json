@@ -1,0 +1,36 @@
+{
+  "archive_sha256": "85a86dee9139004f497d5e91e606e62e8f61cf5c1fe164fde0c5f7dbccced59f",
+  "checks": {
+    "candidate": {
+      "seven_files_exact": true,
+      "permissions_uid_gid_mtime_exact": true,
+      "json_jsonl_valid": true,
+      "jsonl_record_counts": {
+        "platform_core_queue.jsonl": 8148,
+        "live_intelligence_source_operations_history_v320.jsonl": 16868
+      },
+      "six_production_state_modules_identical": true,
+      "country_cache_load_without_error": true,
+      "reexport_checksum_and_metadata_match": true
+    },
+    "rollback_parser_compatible_arm": {
+      "seven_files_exact": true,
+      "permissions_uid_gid_mtime_exact": true,
+      "json_jsonl_valid": true,
+      "jsonl_record_counts": {
+        "platform_core_queue.jsonl": 8148,
+        "live_intelligence_source_operations_history_v320.jsonl": 16868
+      },
+      "six_production_state_modules_identical": true,
+      "country_cache_load_without_error": true,
+      "reexport_checksum_and_metadata_match": true
+    }
+  },
+  "production_credentials_used": false,
+  "network": "none",
+  "architecture_limit": "Actual amd64 production rollback image preserved and load-verified; execution here uses ARM images with six byte-identical state modules.",
+  "started_utc": "2026-10-29T17:45:05.424136+00:00",
+  "completed_utc": "2026-10-29T17:45:14.032964+00:00",
+  "result": "PASS_ISOLATED_FILE_RESTORATION_AND_COMPATIBLE_ROLLBACK_PARSERS",
+  "owned_containers_removed": true
+}

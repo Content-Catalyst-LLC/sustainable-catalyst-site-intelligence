@@ -25,7 +25,7 @@ def test_release_identity_and_route_inventory_unchanged():
     assert RELEASE_NAME == "Platform Core International Law Bridge & Connector Activation"
     m = capability_manifest(app.routes)
     assert m["registry_version"] == "2.8.0"
-    assert m["route_count"] == 1525
+    assert m["route_count"] == 1530
     assert m["modularized_route_count"] == 216
     assert m["capability_count"] == 33
     assert m["unclassified_route_count"] == 0

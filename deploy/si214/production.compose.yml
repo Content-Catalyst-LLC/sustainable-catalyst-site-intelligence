@@ -1,0 +1,39 @@
+# Production only. Never combine with the Pi development overrides.
+services:
+  site-intelligence-si214:
+    extends:
+      file: /opt/sustainable-catalyst/site-intelligence/compose.yml
+      service: site-intelligence
+    build: !reset null
+    image: ${SI214_IMAGE:?Verified AMD64 candidate image ID required}
+    container_name: sc-site-intelligence-si214
+    profiles: [candidate]
+    env_file: !override [/opt/sustainable-catalyst/site-intelligence/.env.production]
+    ports: !override ["127.0.0.1:18091:8091"]
+    volumes: !override
+      - /opt/sustainable-catalyst/site-intelligence/secrets/google-service-account.json:/run/secrets/google-service-account.json:ro
+      - ${SI214_STATE:?Approved protected state root required}/app-data:/app/data
+      - ${SI214_STATE:?Approved protected state root required}/backend-data:/app/backend/data
+    networks:
+      sc-internal:
+        aliases: [sc-site-intelligence, site-intelligence]
+  site-intelligence-si214-rollback:
+    extends:
+      service: site-intelligence-si214
+    image: sha256:89195c76cf1788b98b59b1fad669cd2c507f1d8459b9b2f967782a6cb918c207
+    container_name: sc-site-intelligence-si214-rollback
+    profiles: [rollback]
+    ports: !override ["127.0.0.1:8091:8091"]
+  site-intelligence-web-si214:
+    extends:
+      file: /opt/sustainable-catalyst/site-intelligence-web/compose.yml
+      service: site-intelligence-web
+    build: !reset null
+    image: ${SI214_WEB_IMAGE:?Verified corrected frontend image required}
+    container_name: sc-site-intelligence-web-si214
+    profiles: [candidate]
+    ports: !override ["127.0.0.1:18096:80"]
+networks:
+  sc-internal:
+    external: true
+    name: sc-internal

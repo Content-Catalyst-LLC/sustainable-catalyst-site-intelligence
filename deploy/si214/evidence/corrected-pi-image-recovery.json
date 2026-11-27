@@ -1,0 +1,20 @@
+{
+  "sha256": "cf63cc5d56213e1cb2f022ad2acb22492c35df0503482caefd962c409b229c66",
+  "bytes": 103002112,
+  "partial_path": "/mnt/catalyst-ssd/backups/site-intelligence/SI-2.1.4/corrected-images-01ea3645.tar.partial",
+  "restored_image_metadata": [
+    {
+      "id": "sha256:13290390307cf61e07217c942eabb649626a6127387ba781443726b6dae2ad5d",
+      "architecture": "amd64"
+    },
+    {
+      "id": "sha256:13ba5b9fed664562765058da0e5ad1c20cf85fa3e3f6ec20faa42616709fcc43",
+      "architecture": "amd64"
+    }
+  ],
+  "result": "PASS_IMAGE_ARCHIVE_LOAD",
+  "architecture_note": "AMD64 images stored/loaded only; not executed on Pi ARM64",
+  "private_runtime_or_mounted_data_copied": false,
+  "archive_path": "/mnt/catalyst-ssd/backups/site-intelligence/SI-2.1.4/corrected-images-01ea3645.tar",
+  "relay_sha256_matches": true
+}

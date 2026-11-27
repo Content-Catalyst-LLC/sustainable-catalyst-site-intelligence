@@ -45,7 +45,7 @@ def test_release_identity_and_inventory_are_consolidated():
     assert RELEASE_NAME == "Platform Core International Law Bridge & Connector Activation"
     inventory = capability_manifest(app.routes)
     assert inventory["registry_version"] == "2.8.0"
-    assert inventory["route_count"] == 1525
+    assert inventory["route_count"] == 1530
     assert inventory["modularized_route_count"] == 216
     assert inventory["capability_count"] == 33
     assert inventory["unclassified_route_count"] == 0

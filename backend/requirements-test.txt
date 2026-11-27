@@ -1,0 +1,3 @@
+-r requirements.txt
+# Starlette TestClient dependency; not required by the production server.
+httpx==0.28.1

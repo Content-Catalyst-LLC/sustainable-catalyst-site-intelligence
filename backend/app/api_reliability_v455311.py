@@ -135,6 +135,29 @@ def normalize_reliable_payload(payload: Mapping[str, Any], *, capability: str) -
     elif state in PARTIAL_STATES:
         status, ok = 206, True
         data_state = "partial-records" if count > 0 else "partial-no-records"
+    elif state == "source-fallback":
+        records = source.get("records")
+        integration = source.get("integration")
+        integration_failed = (
+            isinstance(integration, Mapping)
+            and integration.get("configured") is False
+        )
+        valid_records = (
+            isinstance(records, list)
+            and len(records) > 0
+            and all(isinstance(row, Mapping) and bool(row) for row in records)
+        )
+        if (
+            valid_records
+            and legacy_ok is not False
+            and not integration_failed
+            and not source.get("failure")
+        ):
+            status, ok = 206, True
+            data_state = "partial-records"
+        else:
+            status, ok = 503, False
+            data_state = "dependency-unavailable"
     elif state in DEGRADED_STATES and count > 0:
         status, ok = 206, True
         data_state = "partial-records"
@@ -306,6 +329,44 @@ def _configured_capabilities(settings: Any = None) -> list[dict[str, Any]]:
     return rows
 
 
+
+def _public_source_attribution(payload: Mapping[str, Any]) -> list[dict[str, Any]]:
+    """Bounded diagnostic metadata; never emit source messages or payloads."""
+    allowed = set("abcdefghijklmnopqrstuvwxyz0123456789_-")
+    result = []
+
+    def add(identifier: Any, value: Any) -> None:
+        name = str(identifier).lower()[:64]
+        if not name or any(ch not in allowed for ch in name):
+            return
+        if isinstance(value, Mapping):
+            state = value.get("state") or "unknown"
+            count = value.get("record_count")
+        else:
+            state = value
+            count = None
+        state = str(state).lower()[:40]
+        if not state or any(ch not in allowed for ch in state):
+            state = "unknown"
+        entry = {"source": name, "state": state}
+        if isinstance(count, int) and not isinstance(count, bool):
+            entry["record_count"] = max(0, count)
+        result.append(entry)
+
+    states = payload.get("source_states")
+    if isinstance(states, Mapping):
+        for key, value in list(states.items())[:12]:
+            add(key, value)
+
+    coverage = payload.get("coverage")
+    if isinstance(coverage, list):
+        for item in coverage[:12]:
+            if isinstance(item, Mapping):
+                add(item.get("domain") or item.get("id") or "", item)
+
+    return result[:12]
+
+
 def build_capability_health(settings: Any = None, *, probe: bool = False, country: str = CANONICAL_PROBE_COUNTRY) -> dict[str, Any]:
     if not probe:
         capabilities = _configured_capabilities(settings)
@@ -342,6 +403,7 @@ def build_capability_health(settings: Any = None, *, probe: bool = False, countr
                 "live_probe": True,
                 "detail": normalized.get("truth_detail") or "",
                 "context_resolution": normalized.get("context_resolution") or {},
+                "source_attribution": _public_source_attribution(normalized),
             })
     rows.sort(key=lambda item: CANONICAL_CAPABILITIES.index(item["capability"]))
     unavailable = sum(1 for row in rows if row["http_status_if_requested"] >= 500)

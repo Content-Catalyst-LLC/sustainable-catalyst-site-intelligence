@@ -1,0 +1,27 @@
+{
+  "scope": "Focused, network-free execution of pinned existing scripts with main app.js unavailable; not browser/live production certification",
+  "source_commit": "7a15666cdd1f8152272f74dd69427d810a215e3d",
+  "files": {
+    "bootstrap-v32361.js": "92bb0f4f5aeb4a7259255d69c8818f7c83a17d6e651395bba19069d2ba8940d4",
+    "startup-stability-v32364.js": "0a40bc5ab07460e7bc4e4d79a79dfbefcdc2e90ba0a97979b8c540fb37a208cd"
+  },
+  "candidate": {
+    "release": "4.56.1",
+    "registered_timer_delays": [],
+    "bootstrap_initialized": false,
+    "startup_stability_initialized": false,
+    "app_hidden_after_recovery_timers": true
+  },
+  "matching_version_control": {
+    "release": "4.39.0",
+    "registered_timer_delays": [
+      4500,
+      600,
+      1500,
+      4500
+    ],
+    "bootstrap_initialized": true,
+    "startup_stability_initialized": true,
+    "app_hidden_after_recovery_timers": false
+  }
+}

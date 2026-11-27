@@ -1,6 +1,7 @@
 (()=>{
   'use strict';
-  const VERSION='4.39.0';
+  // Pinned to backend/app/version.py APP_VERSION; regression enforces release compatibility.
+  const VERSION='4.56.1';
   const SHELL_TARGET_MS=1500;
   const HARD_FAIL_OPEN_MS=4500;
   const startedAt=performance.now();
@@ -8,10 +9,17 @@
   const qs=(selector)=>document.querySelector(selector);
   function dispatch(type,detail={}){window.dispatchEvent(new CustomEvent(type,{detail:{version:VERSION,...detail}}))}
   function markPhase(phase,reason=phase){state.phase=phase;state.lastReason=reason;const app=qs('#app');if(app)app.dataset.scsiStartupPhase=phase;dispatch('scsi:startup-phase',{phase,reason,elapsedMs:Math.round(performance.now()-startedAt)})}
+  function recoveryNotice(app){
+    if(!app||document.querySelector('#scsiStartupRecoveryNotice'))return;
+    const notice=document.createElement('section');notice.id='scsiStartupRecoveryNotice';notice.setAttribute('role','alert');
+    const text=document.createElement('p');text.textContent='Application startup did not complete. The interface is in recovery mode; research data and authenticated actions may be unavailable. Retry the application.';
+    const retry=document.createElement('button');retry.type='button';retry.textContent='Retry application';retry.addEventListener('click',()=>location.reload());
+    notice.append(text,retry);app.prepend(notice);
+  }
   function revealShell(reason='shell-ready',mode='limited'){
     if(state.shellReady)return false;
     state.shellReady=true;state.hardFailOpen=reason==='hard-fail-open';markPhase('shell-ready',reason);
-    const app=qs('#app');if(app){app.classList.remove('app-loading');app.classList.add('app-ready');app.dataset.startupState=app.dataset.startupState||mode;app.removeAttribute('aria-busy')}
+    const app=qs('#app');if(mode==='limited')recoveryNotice(app);if(app){app.classList.remove('app-loading');app.classList.add('app-ready');app.dataset.startupState=app.dataset.startupState||mode;app.removeAttribute('aria-busy')}
     const launch=qs('#launchScreen');if(launch){launch.classList.add('hidden');launch.setAttribute('aria-hidden','true')}
     const retry=qs('#launchRetry');if(retry)retry.hidden=true;
     window.parent?.postMessage({type:'scsi-shell-ready',version:VERSION,state:mode,reason},'*');

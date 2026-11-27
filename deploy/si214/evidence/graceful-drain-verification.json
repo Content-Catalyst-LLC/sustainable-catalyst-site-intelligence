@@ -1,0 +1,11 @@
+{
+  "scope": "owned isolated Pi container only; no production writer pause",
+  "signal_code": "import os,signal,json\nfrom pathlib import Path\npids=[]\nfor p in Path('/proc').iterdir():\n if not p.name.isdigit():continue\n try:a=(p/'cmdline').read_bytes().split(b'\\0')\n except OSError:continue\n if b'app.main:app' in a and any(x==b'uvicorn' or x.endswith(b'/uvicorn') for x in a):pids.append(int(p.name))\nassert len(pids)==1,pids\nos.kill(pids[0],signal.SIGTERM)\nprint(json.dumps({'signal_sent':True,'uvicorn_process_count':len(pids)}))\n",
+  "result": "PASS_GRACEFUL_DRAIN",
+  "elapsed_seconds": 1.226,
+  "exit_code": 143,
+  "restart_policy_after_quiescence": "no",
+  "shutdown_complete_logged": true,
+  "no_force_kill_used": true,
+  "owned_container_removed": true
+}

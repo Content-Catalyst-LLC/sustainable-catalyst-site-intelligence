@@ -1,0 +1,42 @@
+{
+  "compose_rendered_with_profiles": true,
+  "services": {
+    "site-intelligence-si214": {
+      "image": "sha256:13290390307cf61e07217c942eabb649626a6127387ba781443726b6dae2ad5d",
+      "ports": [
+        {
+          "mode": "ingress",
+          "host_ip": "127.0.0.1",
+          "target": 8091,
+          "published": "18091",
+          "protocol": "tcp"
+        }
+      ]
+    },
+    "site-intelligence-si214-rollback": {
+      "image": "sha256:89195c76cf1788b98b59b1fad669cd2c507f1d8459b9b2f967782a6cb918c207",
+      "ports": [
+        {
+          "mode": "ingress",
+          "host_ip": "127.0.0.1",
+          "target": 8091,
+          "published": "8091",
+          "protocol": "tcp"
+        }
+      ]
+    },
+    "site-intelligence-web-si214": {
+      "image": "sha256:13ba5b9fed664562765058da0e5ad1c20cf85fa3e3f6ec20faa42616709fcc43",
+      "ports": [
+        {
+          "mode": "ingress",
+          "host_ip": "127.0.0.1",
+          "target": 80,
+          "published": "18096",
+          "protocol": "tcp"
+        }
+      ]
+    }
+  },
+  "production_executed": false
+}

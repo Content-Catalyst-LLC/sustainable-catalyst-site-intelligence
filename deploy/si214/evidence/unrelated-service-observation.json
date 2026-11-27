@@ -1,0 +1,13 @@
+{
+  "container": "sc-lab",
+  "same_container_and_image_as_baseline": true,
+  "baseline_started_at": "2026-10-29T02:54:13.050014788Z",
+  "observed_started_at": "2026-10-29T08:21:23.077589782Z",
+  "restart_count": 0,
+  "oom_killed": false,
+  "status": "running",
+  "health": "healthy",
+  "retained_events": [],
+  "cause": "NOT_ESTABLISHED; no sc-lab mutation commands issued by this release workflow",
+  "impact": "Cannot certify all unrelated start times unchanged; SI containers and proxy unchanged"
+}

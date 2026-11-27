@@ -1,0 +1,19 @@
+{
+  "release": "SI-2.1.4",
+  "application_version": "4.56.1",
+  "source_commit": "7a15666cdd1f8152272f74dd69427d810a215e3d",
+  "source_sha256": "a63f172784f1208d1d021c68d6ab33ab81668deadc2e822672e35b798431f816",
+  "source_archive": "/mnt/catalyst-ssd/pi-site-intelligence-2.0/si214-release/SI-2.1.4-source.zip",
+  "arm64_image": "sha256:39f53215867c34880d1c5b9e36508112c7571d55116cf79de9d7e7e10edfb842",
+  "runtime_base_image": "sha256:0b4fc378b033c017234de3d08d599065e7b736085dc46bb09d1acc6c75a3d847",
+  "architecture": "arm64",
+  "labels": {
+    "com.docker.compose.project": "sc-dev-site-intelligence",
+    "com.docker.compose.service": "site-intelligence",
+    "com.docker.compose.version": "5.6.1",
+    "com.sustainablecatalyst.application-version": "4.56.1",
+    "com.sustainablecatalyst.base-image-id": "sha256:0b4fc378b033c017234de3d08d599065e7b736085dc46bb09d1acc6c75a3d847",
+    "org.opencontainers.image.revision": "7a15666cdd1f8152272f74dd69427d810a215e3d",
+    "org.opencontainers.image.version": "SI-2.1.4"
+  }
+}

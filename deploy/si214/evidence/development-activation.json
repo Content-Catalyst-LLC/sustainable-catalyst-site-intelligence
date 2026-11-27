@@ -1,0 +1,25 @@
+{
+  "image": "sha256:39f53215867c34880d1c5b9e36508112c7571d55116cf79de9d7e7e10edfb842",
+  "old_image_preserved": "sha256:0b4fc378b033c017234de3d08d599065e7b736085dc46bb09d1acc6c75a3d847",
+  "three_compose_files_unchanged": true,
+  "data_mounts_preserved": true,
+  "health": {
+    "ok": true,
+    "alive": true,
+    "state": "alive",
+    "scope": "process-only",
+    "dependency_readiness_asserted": false,
+    "readiness_route": "/ready",
+    "capability_health_route": "/public/capability-health",
+    "service": "Sustainable Catalyst Site Intelligence",
+    "version": "4.56.1",
+    "environment": "development",
+    "demo_mode": false,
+    "ga4_enabled": false,
+    "time": "2026-10-29T09:47:11.569901+00:00"
+  },
+  "release_id": "SI-2.1.4",
+  "source_commit": "7a15666cdd1f8152272f74dd69427d810a215e3d",
+  "protected_services_unchanged": true,
+  "changed_protected_services": []
+}

@@ -1,0 +1,26 @@
+{
+  "source_commit": "01ea3645617b38857f1316495f7dd0c77054a73d",
+  "passed": 1747,
+  "failed": 355,
+  "new_vs_previous_candidate": [],
+  "new_vs_untouched_baseline": [],
+  "resolved_vs_previous_candidate": [
+    "backend.tests.test_offline_mobile_accessibility_performance_v2120::test_pwa_diagnostics_and_public_routes"
+  ],
+  "resolved_vs_baseline": [
+    "backend.tests.test_offline_mobile_accessibility_performance_v2120::test_pwa_diagnostics_and_public_routes",
+    "backend.tests.test_v4500_global_source_federation::test_capability_registry_owns_all_source_federation_routes",
+    "backend.tests.test_v4510_spatial_research_handoffs::test_capability_registry_owns_all_spatial_research_routes",
+    "backend.tests.test_v4520_predictive_spatial_intelligence_consumer::test_capability_registry_owns_predictive_routes",
+    "backend.tests.test_v4551_core_workspace_runtime_repair::test_release_identity_and_route_inventory_unchanged",
+    "backend.tests.test_v4552_advanced_domain_intelligence_expansion::test_21_new_modular_routes_and_inventory",
+    "backend.tests.test_v455311_live_probe_consistency_failure_normalization::test_release_identity_and_inventory_unchanged_except_contract_revision",
+    "backend.tests.test_v45531_api_reliability_contract_truth::test_release_identity_and_route_inventory",
+    "backend.tests.test_v455321_runtime_health_domain_context_repair::test_release_identity_and_route_inventory_remain_stable",
+    "backend.tests.test_v455322_browser_api_transport_cors_repair::test_release_identity_and_route_inventory_are_stable",
+    "backend.tests.test_v45532_standalone_functional_parity_recovery::test_release_identity_and_route_inventory",
+    "backend.tests.test_v4560_standalone_production_consolidation_certification::test_release_identity_and_inventory_are_consolidated",
+    "backend.tests.test_v4561_platform_core_domain_bridge_activation::test_release_identity_and_route_inventory"
+  ],
+  "excluded_tests": 0
+}

@@ -1,0 +1,67 @@
+{
+  "release": "SI-2.1.4",
+  "actual_count": 1530,
+  "stale_expected": 1525,
+  "difference": [
+    {
+      "path": "/v1/energy-spatial/compare",
+      "methods": [
+        "POST"
+      ],
+      "name": "route_compare",
+      "operation_id": null,
+      "capability_id": "infrastructure-energy",
+      "source_module": "app.energy_spatial_global_v4410",
+      "modularized": false
+    },
+    {
+      "path": "/v1/energy-spatial/framework",
+      "methods": [
+        "GET"
+      ],
+      "name": "route_framework",
+      "operation_id": null,
+      "capability_id": "infrastructure-energy",
+      "source_module": "app.energy_spatial_global_v4410",
+      "modularized": false
+    },
+    {
+      "path": "/v1/energy-spatial/profile",
+      "methods": [
+        "POST"
+      ],
+      "name": "route_profile",
+      "operation_id": null,
+      "capability_id": "infrastructure-energy",
+      "source_module": "app.energy_spatial_global_v4410",
+      "modularized": false
+    },
+    {
+      "path": "/v1/energy-spatial/source-registry",
+      "methods": [
+        "GET"
+      ],
+      "name": "route_source_registry",
+      "operation_id": null,
+      "capability_id": "infrastructure-energy",
+      "source_module": "app.energy_spatial_global_v4410",
+      "modularized": false
+    },
+    {
+      "path": "/v1/energy-spatial/validate-result",
+      "methods": [
+        "POST"
+      ],
+      "name": "route_validate_result",
+      "operation_id": null,
+      "capability_id": "infrastructure-energy",
+      "source_module": "app.energy_spatial_global_v4410",
+      "modularized": false
+    }
+  ],
+  "module_introduction_commit": "c67126182456074f6607aae5494888d3886a3226",
+  "expectation_introduction_commit": "2a0e767427daad610c393114b363c1ca78d192db",
+  "evidence": "Five tracked registrations and include_router in prior release source, predating stale 1525 assertions. Removing precisely this existing family yields 1525; no new routes added by SI-2.1.4.",
+  "unclassified": 0,
+  "unique_method_paths": 1530
+}

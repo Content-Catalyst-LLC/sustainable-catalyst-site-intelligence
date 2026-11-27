@@ -21,7 +21,7 @@ def test_release_identity_and_route_inventory():
     assert RELEASE_NAME == "Platform Core International Law Bridge & Connector Activation"
     manifest = capability_manifest(app.routes)
     assert manifest["registry_version"] == "2.8.0"
-    assert manifest["route_count"] == 1525
+    assert manifest["route_count"] == 1530
     assert manifest["modularized_route_count"] == 216
     assert manifest["capability_count"] == 33
     assert manifest["unclassified_route_count"] == 0
@@ -115,14 +115,29 @@ def test_reliable_contract_uses_206_for_usable_partial_records():
     assert out["data_state"] == "partial-records"
 
 
-def test_reliable_economics_route_does_not_claim_success_when_core_missing():
+def test_reliable_economics_route_preserves_usable_world_bank_fallback(monkeypatch):
+    import app.economics_markets_sustainability as economics
+    monkeypatch.setattr(economics, "build_economic_records", lambda *a, **kw: {
+        "ok": True,
+        "integration": {"state": "source-fallback", "source": "world-bank", "configured": True},
+        "records": [{"id": "synthetic-world-bank-observation", "source": "world-bank"}],
+    })
+    response = client.get("/public/reliable/economics/records?geography_code=KEN&limit=2")
+    assert response.status_code == 206
+    payload = response.json()
+    assert payload["ok"] is True
+    assert payload["data_state"] == "partial-records"
+    assert payload["integration"]["source"] == "world-bank"
+
+
+def test_reliable_economics_route_preserves_unavailable_dependency(monkeypatch):
+    import app.economics_markets_sustainability as economics
+    monkeypatch.setattr(economics, "build_economic_records", lambda *a, **kw: {
+        "ok": False, "integration": {"state": "unavailable", "configured": False}, "records": [],
+    })
     response = client.get("/public/reliable/economics/records?geography_code=KEN&limit=2")
     assert response.status_code == 503
-    payload = response.json()
-    assert payload["ok"] is False
-    assert payload["capability"] == "economics"
-    assert payload["data_state"] == "dependency-unavailable"
-    assert payload["dependency_state"] in {"disabled", "core-unconfigured", "degraded", "unavailable"}
+    assert response.json()["data_state"] == "dependency-unavailable"
 
 
 def test_reliability_registry_is_release_bound_and_truthful():

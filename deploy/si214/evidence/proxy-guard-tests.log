@@ -1,0 +1,14 @@
+test_duplicate_hostname_refused (test_proxy_switch.NarrowSwitch.test_duplicate_hostname_refused) ... ok
+test_multiple_upstreams_refused (test_proxy_switch.NarrowSwitch.test_multiple_upstreams_refused) ... ok
+test_port_prefix_not_treated_as_expected_port (test_proxy_switch.NarrowSwitch.test_port_prefix_not_treated_as_expected_port) ... ok
+test_roundtrip_and_unrelated_routes_preserved (test_proxy_switch.NarrowSwitch.test_roundtrip_and_unrelated_routes_preserved) ... ok
+test_wrong_upstream_refused (test_proxy_switch.NarrowSwitch.test_wrong_upstream_refused) ... ok
+test_complete_snapshot (test_proxy_switch.SnapshotGuards.test_complete_snapshot) ... ok
+test_symlink_refused (test_proxy_switch.SnapshotGuards.test_symlink_refused) ... ok
+test_wrong_hash (test_proxy_switch.SnapshotGuards.test_wrong_hash) ... ok
+test_wrong_scope (test_proxy_switch.SnapshotGuards.test_wrong_scope) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.012s
+
+OK

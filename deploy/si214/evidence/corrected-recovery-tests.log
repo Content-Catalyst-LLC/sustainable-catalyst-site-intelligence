@@ -1,0 +1,60 @@
+TAP version 13
+# Subtest: backend/public_app: page and script versions follow canonical release metadata
+ok 1 - backend/public_app: page and script versions follow canonical release metadata
+  ---
+  duration_ms: 11.346727
+  ...
+# Subtest: backend/public_app: primary load-failure, timers reveal usable retry interface
+ok 2 - backend/public_app: primary load-failure, timers reveal usable retry interface
+  ---
+  duration_ms: 19.4878
+  ...
+# Subtest: backend/public_app: primary execution-failure, timers reveal usable retry interface
+ok 3 - backend/public_app: primary execution-failure, timers reveal usable retry interface
+  ---
+  duration_ms: 8.730053
+  ...
+# Subtest: backend/public_app: mismatched release fails closed without bypass
+ok 4 - backend/public_app: mismatched release fails closed without bypass
+  ---
+  duration_ms: 5.553142
+  ...
+# Subtest: backend/public_app: actual primary finishLaunch prevents unnecessary recovery
+ok 5 - backend/public_app: actual primary finishLaunch prevents unnecessary recovery
+  ---
+  duration_ms: 13.558642
+  ...
+# Subtest: web/app: page and script versions follow canonical release metadata
+ok 6 - web/app: page and script versions follow canonical release metadata
+  ---
+  duration_ms: 6.436675
+  ...
+# Subtest: web/app: primary load-failure, timers reveal usable retry interface
+ok 7 - web/app: primary load-failure, timers reveal usable retry interface
+  ---
+  duration_ms: 6.326712
+  ...
+# Subtest: web/app: primary execution-failure, timers reveal usable retry interface
+ok 8 - web/app: primary execution-failure, timers reveal usable retry interface
+  ---
+  duration_ms: 7.032617
+  ...
+# Subtest: web/app: mismatched release fails closed without bypass
+ok 9 - web/app: mismatched release fails closed without bypass
+  ---
+  duration_ms: 4.9157
+  ...
+# Subtest: web/app: actual primary finishLaunch prevents unnecessary recovery
+ok 10 - web/app: actual primary finishLaunch prevents unnecessary recovery
+  ---
+  duration_ms: 10.543582
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 741.441763
